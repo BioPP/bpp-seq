@@ -18,7 +18,7 @@
 //	Exception("AlphabetException: " + text + (alpha != NULL ? "(" + (alpha -> getAlphabetType()) + ")" : "")),
 //	alphabet(alpha) {};
 AlphabetException::AlphabetException(const string & text, const Alphabet * alpha) :
-	Exception("AlphabetException: " + text + (alpha != NULL ? "(" + (alpha -> getAlphabetType()) + ")" : "")),
+	Exception("AlphabetException: " + text + (alpha != NULL ? "(" + (alpha -> getAlphabetType()) + ")" : string(""))),
 	alphabet(alpha) {};
 		
 const Alphabet * AlphabetException::getAlphabet() const { return alphabet; }
