@@ -52,6 +52,24 @@ class SiteTools: public SymbolListTools
 		static double variabilityShannon(const Site & site) throw (EmptySiteException);
 
 		static double variabilityFactorial(const Site & site) throw (EmptySiteException);
+
+		/**
+		 * @brief Give the number of distinct characters at a site.
+		 *
+		 * @param site A site
+		 * @return The number of distinct characters in the given site.
+		 */
+        static unsigned int getNumberOfDistinctCharacters(const Site & site) throw (EmptySiteException);
+
+		/**
+		 * @brief Tell if a site is a parsimony informative site.
+		 *
+		 * At least two distinct characters must be present.
+		 *
+		 * @param site A site.
+		 * @return True is the site is parsimony informative.
+		 */
+		static bool isParsimonyInformativeSite(const Site & site) throw (EmptySiteException);
 };
 
 #endif	//_SITETOOLS_H_

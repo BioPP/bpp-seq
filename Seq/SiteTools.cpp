@@ -98,3 +98,36 @@ double SiteTools::variabilityFactorial(const Site & site) throw (EmptySiteExcept
 }
 
 /******************************************************************************/
+
+unsigned int SiteTools::getNumberOfDistinctCharacters(const Site & site) throw (EmptySiteException)
+{
+    // Empty site checking
+	if(site.size() == 0) throw EmptySiteException("SiteTools::getNumberOfDistinctCharacters(): Incorrect specified site", &site);
+	// For all site's characters
+        if (SiteTools::isConstant(site)) return 1;
+        map<int,unsigned int> count = SymbolListTools::getCounts(site);
+        int S = 0;
+        for(map<int, unsigned int>::iterator it=count.begin(); it!=count.end(); it++){
+            if(it->second!=0) S++;
+        }
+        return S;
+}
+
+/******************************************************************************/
+
+bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteException)
+{
+    // Empty site checking
+	if(site.size() == 0) throw EmptySiteException("SiteTools::isSingleton: Incorrect specified site", &site);
+	// For all site's characters
+    if(SiteTools::isConstant(site)) return false;
+    map<int,unsigned int> count = SymbolListTools::getCounts(site);
+    unsigned int npars = 0;
+	for(map<int, unsigned int>::iterator it = count.begin(); it != count.end(); it++){
+        if(it -> second > 1) npars++;
+    }
+    if(npars > 1) return true;
+    return false;
+}
+
+/******************************************************************************/

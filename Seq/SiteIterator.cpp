@@ -29,8 +29,9 @@ SimpleSiteIterator::SimpleSiteIterator(const SiteContainer & sites): AbstractSit
 SimpleSiteIterator::~SimpleSiteIterator() {}
 
 const Site * SimpleSiteIterator::nextSite() {
-	return sites -> getSite(currentPosition);
+	const Site * s = sites -> getSite(currentPosition);
 	currentPosition++;
+	return s;
 }
 
 bool SimpleSiteIterator::hasMoreSites() const {
