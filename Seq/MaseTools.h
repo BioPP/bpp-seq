@@ -100,11 +100,11 @@ class MaseTools
          * @param maseComments Comments as described in the Mase+ format specification.
          * @return A vector of selection names.
          */
-        static map<string, unsigned int> getAvailableSequenceSelections(const Comments & maseHeader);
+		static map<string, unsigned int> getAvailableSequenceSelections(const Comments & maseHeader);
 
 		static SiteSelection getCodingPositions(const Comments & maseHeader);
 
-		unsigned int getStartPosition(const Comments & maseHeader);
+		static unsigned int getStartPosition(const Comments & maseHeader);
 
 };
 

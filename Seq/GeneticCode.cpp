@@ -23,15 +23,15 @@ const Alphabet * GeneticCode::getSourceAlphabet() const { return codonAlphabet; 
 
 const Alphabet * GeneticCode::getTargetAlphabet() const { return proteicAlphabet; }
 	
-bool GeneticCode::areSynonymes(      int i     ,       int j     ) const throw (BadIntException) {
+bool GeneticCode::areSynonymous(      int i     ,       int j     ) const throw (BadIntException) {
 	return (translate(i) == translate(j));
 }
 
-bool GeneticCode::areSynonymes(const string & i, const string & j) const throw (BadCharException) {
+bool GeneticCode::areSynonymous(const string & i, const string & j) const throw (BadCharException) {
 	return (translate(i) == translate(j));
 }
 
-vector<int>    GeneticCode::getSynonymes(      int      aminoacid) const throw (BadIntException) {
+vector<int>    GeneticCode::getSynonymous(      int      aminoacid) const throw (BadIntException) {
 	//test:
 	proteicAlphabet -> intToChar(aminoacid);
 	
@@ -42,7 +42,7 @@ vector<int>    GeneticCode::getSynonymes(      int      aminoacid) const throw (
 	return synonymes;	
 }
 
-vector<string> GeneticCode::getSynonymes(const string & aminoacid) const throw (BadCharException) {
+vector<string> GeneticCode::getSynonymous(const string & aminoacid) const throw (BadCharException) {
 	//test:
 	int aa = proteicAlphabet -> charToInt(aminoacid);
 	

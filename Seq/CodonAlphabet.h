@@ -25,8 +25,6 @@ using namespace std;
 class CodonAlphabet : public AbstractAlphabet
 {
 	public:
-		//Unresolved characters:
-		static const string UNRESOLVED;
 		//Constant used for stop codons:
 		static const string STOP;
 		//Constant used for init codon:
@@ -50,20 +48,26 @@ class CodonAlphabet : public AbstractAlphabet
 		int charToInt(string letter) const throw (BadCharException);
 		string getAlphabetType() const;
 	
+	private: //Private tools
+		bool containsUnresolved(string letter) const throw (BadCharException);
+		bool containsGap(string letter) const throw (BadCharException);
+		
 	public: //Codon specific methods:
 		/**
-		 * @brief <p>Get the int code for a codon given the int code of the three underlying positions.
-		 * The int code of each position must match the nucleic alphabet specified for this alphabet.</p>
+		 * @brief Get the int code for a codon given the int code of the three underlying positions.
+		 *
+		 * The int code of each position must match the nucleic alphabet specified for this alphabet.
 		 * @param pos1 Int description for position 1.
 		 * @param pos2 Int description for position 2.
 		 * @param pos2 Int description for position 3.
 		 * @return The int code of the codon.
 		 */
-		virtual int    getCodon(      int      pos1,       int      pos2,       int      pos3) const throw (BadIntException);
+		virtual int getCodon(int pos1, int pos2, int pos3) const throw (BadIntException);
 		/**
-		 * @brief <p>Get the char code for a codon given the char code of the three underlying positions.
+		 * @brief Get the char code for a codon given the char code of the three underlying positions.
+		 *
 		 * The char code of each position must match the nucleic alphabet specified for this alphabet.
-		 * NB: This performs pos1 + pos2 + pos3 after checking for each position validity.</p>
+		 * NB: This performs pos1 + pos2 + pos3 after checking for each position validity.
 		 * @param pos1 Char description for position 1.
 		 * @param pos2 Char description for position 2.
 		 * @param pos2 Char description for position 3.
@@ -71,63 +75,73 @@ class CodonAlphabet : public AbstractAlphabet
 		 */
 		virtual string getCodon(const string & pos1, const string & pos2, const string & pos3) const throw (BadCharException);
 		/**
-		 * @brief <p>Get the int code of the first position of a codon given its int description.</p>
+		 * @brief Get the int code of the first position of a codon given its int description.
+		 * 
 		 * @param codon The int description of the codon.
 		 * @retrun The int description of the first position of the codon.
 		 */
-		virtual int         getFirstPosition (int codon) const throw (BadIntException);
+		virtual int getFirstPosition(int codon) const throw (BadIntException);
 		/**
-		 * @brief <p>Get the int code of the second position of a codon given its int description.</p>
+		 * @brief Get the int code of the second position of a codon given its int description.
+		 * 
 		 * @param codon The int description of the codon.
 		 * @retrun The int description of the second position of the codon.
 		 */
-		virtual int         getSecondPosition(int codon) const throw (BadIntException);
+		virtual int getSecondPosition(int codon) const throw (BadIntException);
 		/**
-		 * @brief <p>Get the int code of the third position of a codon given its int description.</p>
+		 * @brief Get the int code of the third position of a codon given its int description.
+		 * 
 		 * @param codon The int description of the codon.
 		 * @retrun The int description of the third position of the codon.
 		 */
-		virtual int         getThirdPosition (int codon) const throw (BadIntException);
+		virtual int getThirdPosition(int codon) const throw (BadIntException);
 		/**
-		 * @brief <p>Get the int codes of each position of a codon given its int description.</p>
+		 * @brief Get the int codes of each position of a codon given its int description.
+		 * 
 		 * @param codon The int description of the codon.
 		 * @retrun The int description of the three positions of the codon.
 		 */
-		virtual vector<int> getPositions     (int codon) const throw (BadIntException);
+		virtual vector<int> getPositions(int codon) const throw (BadIntException);
 
 		/**
-		 * @brief <p>Get the char code of the first position of a codon given its char description.</p>
+		 * @brief Get the char code of the first position of a codon given its char description.
+		 * 
 		 * @param codon The char description of the codon.
 		 * @retrun The char description of the first position of the codon.
 		 */
-		virtual string         getFirstPosition (const string & codon) const throw (BadCharException);
+		virtual string getFirstPosition (const string & codon) const throw (BadCharException);
 		/**
-		 * @brief <p>Get the char code of the second position of a codon given its char description.</p>
+		 * @brief Get the char code of the second position of a codon given its char description.
+		 * 
 		 * @param codon The char description of the codon.
 		 * @retrun The char description of the second position of the codon.
 		 */
-		virtual string         getSecondPosition(const string & codon) const throw (BadCharException);
+		virtual string getSecondPosition(const string & codon) const throw (BadCharException);
 		/**
-		 * @brief <p>Get the char code of the third position of a codon given its char description.</p>
+		 * @brief Get the char code of the third position of a codon given its char description.
+		 * 
 		 * @param codon The char description of the codon.
 		 * @retrun The char description of the third position of the codon.
 		 */
-		virtual string         getThirdPosition (const string & codon) const throw (BadCharException);
+		virtual string getThirdPosition(const string & codon) const throw (BadCharException);
 		/**
-		 * @brief <p>Get the char codes of each position of a codon given its char description.</p>
+		 * @brief Get the char codes of each position of a codon given its char description.
+		 * 
 		 * @param codon The char description of the codon.
 		 * @retrun The char description of the three positions of the codon.
 		 */
-		virtual vector<string> getPositions     (const string & codon) const throw (BadCharException);
+		virtual vector<string> getPositions(const string & codon) const throw (BadCharException);
 		
 		/**
-		 * @brief <p>Tell whether a particular codon is a stop codon.</p>
+		 * @brief Tell whether a particular codon is a stop codon.
+		 * 
 		 * @param codon The int description of the codon to test.
 		 * @return True if the codon is a stop codon.
 		 */
-		virtual bool isStop(      int      codon) const = 0;
+		virtual bool isStop(int codon) const = 0;
 		/**
-		 * @brief <p>Tell whether a particular codon is a stop codon.</p>
+		 * @brief Tell whether a particular codon is a stop codon.
+		 * 
 		 * @param codon The char description of the codon to test.
 		 * @return True if the codon is a stop codon.
 		 */

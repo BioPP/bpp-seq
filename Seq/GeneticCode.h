@@ -50,10 +50,10 @@ class GeneticCode : public AbstractTranslator
 		}
 		
 	public:
-		bool areSynonymes(      int i     ,       int j     ) const throw (BadIntException);
-		bool areSynonymes(const string & i, const string & j) const throw (BadCharException);
-		vector<int>    getSynonymes(      int      aminoacid) const throw (BadIntException);
-		vector<string> getSynonymes(const string & aminoacid) const throw (BadCharException);
+		bool areSynonymous(      int i     ,       int j     ) const throw (BadIntException);
+		bool areSynonymous(const string & i, const string & j) const throw (BadCharException);
+		vector<int>    getSynonymous(      int      aminoacid) const throw (BadIntException);
+		vector<string> getSynonymous(const string & aminoacid) const throw (BadCharException);
 };
 
 

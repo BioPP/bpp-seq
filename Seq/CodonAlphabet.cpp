@@ -13,26 +13,48 @@
 #include <iostream>
 using namespace std;
 
-const string CodonAlphabet::UNRESOLVED = "Nn?Oo0";
 const string CodonAlphabet::STOP       = "Stop";
 const string CodonAlphabet::INIT       = "Init";
 
 CodonAlphabet::CodonAlphabet(const NucleicAlphabet * alpha) : AbstractAlphabet() { nucAlpha = alpha; }
 
-
 CodonAlphabet::~CodonAlphabet() {}
+
+bool CodonAlphabet::containsUnresolved(string letter) const throw (BadCharException)
+{
+	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
+	char s1 = letter[0];
+	char s2 = letter[1];
+	char s3 = letter[2];
+	return
+		(nucAlpha -> charToInt(TextTools::toString(s1)) >= 4
+	|| nucAlpha -> charToInt(TextTools::toString(s2)) >= 4
+	|| nucAlpha -> charToInt(TextTools::toString(s3)) >= 4);
+}
+
+bool CodonAlphabet::containsGap(string letter) const throw (BadCharException)
+{
+	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
+	char s1 = letter[0];
+	char s2 = letter[1];
+	char s3 = letter[2];
+	return
+		(nucAlpha -> charToInt(TextTools::toString(s1)) == -1
+	|| nucAlpha -> charToInt(TextTools::toString(s2)) == -1
+	|| nucAlpha -> charToInt(TextTools::toString(s3)) == -1);
+}
 
 string CodonAlphabet::getName(string letter) const throw (BadCharException) {
 	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
-	int i = letter.find_first_of(UNRESOLVED);
-	if(i >= 0 || i < (int)letter.size()) return alphabet[64].name;
+	if(containsUnresolved(letter)) return alphabet[65].name;
+	if(containsGap(letter)) return alphabet[0].name;
 	else return AbstractAlphabet::getName(letter);
 }
 		
-int    CodonAlphabet::charToInt(string letter) const throw (BadCharException) {
+int CodonAlphabet::charToInt(string letter) const throw (BadCharException) {
 	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::charToInt", this);
-	int i = letter.find_first_of(UNRESOLVED);
-	if(i >= 0 || i < (int)letter.size()) return 64;
+	if(containsUnresolved(letter)) return 61;
+	if(containsGap(letter)) return -1;
 	else return AbstractAlphabet::charToInt(letter);	
 }
 

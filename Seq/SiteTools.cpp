@@ -24,7 +24,7 @@ using namespace VectorFunctions;
 bool SiteTools::hasGap(const Site & site) {
 	// Main loop : for all characters in site
 	for (unsigned int i = 0 ; i < site.size() ; i++) {
-		if (site[i] < 0) return true;
+		if (site[i] == -1) return true;
 	}
 	return false;
 }
