@@ -22,17 +22,16 @@
 #include <Utils/FileTools.h>
 #include <Utils/StringTokenizer.h>
 
-void DCSE::read(const string & path, VectorSequenceContainer & sc) const throw (Exception)
+void DCSE::read(istream & input, VectorSequenceContainer & sc) const throw (Exception)
 {
 	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (!file) { throw IOException ("DCSE::read : fail to open file"); }
+	if (!input) { throw IOException ("DCSE::read : fail to open file"); }
 
 	// Initialization
   const Alphabet * alpha = sc.getAlphabet();
 	string line, name, sequence = "";
 
-	line = FileTools::getNextLine(file); // Copy current line in temporary string
+	line = FileTools::getNextLine(input); // Copy current line in temporary string
 	StringTokenizer st(line);
 	st.nextToken();
 	//First line ignored for now!
@@ -42,8 +41,8 @@ void DCSE::read(const string & path, VectorSequenceContainer & sc) const throw (
 	//cout << nbSpecies << " species and " << nbSites << " sites." << endl;
 
 	// Main loop : for all file lines
-	while(!file.eof()) {
-		line = FileTools::getNextLine(file); // Copy current line in temporary string
+	while(!input.eof()) {
+		line = FileTools::getNextLine(input); // Copy current line in temporary string
 		if(line == "") break;
 		unsigned int endOfSeq = line.find("     ");
 		if(endOfSeq == line.npos) break;
@@ -62,7 +61,6 @@ void DCSE::read(const string & path, VectorSequenceContainer & sc) const throw (
 		&& name.find("mask") == name.npos)
 			sc.addSequence(Sequence(name, sequence, alpha));
 	}
-	file.close();
 }
 
 const string DCSE::getFormatName() const { return "DCSE"; }

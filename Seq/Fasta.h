@@ -9,7 +9,7 @@
 #define _FASTA_H_
 
 #include "AbstractISequence.h"
-#include "OSequence.h"
+#include "AbstractOSequence.h"
 #include "Sequence.h"
 #include "SequenceContainer.h"
 #include "VectorSequenceContainer.h"
@@ -19,7 +19,7 @@
  *
  * Read and write from/to Fasta files.
  */
-class Fasta : public AbstractISequence, public OSequence
+class Fasta : public AbstractISequence, public AbstractOSequence
 {
 	protected:
 
@@ -43,14 +43,20 @@ class Fasta : public AbstractISequence, public OSequence
 	public:
 
 		/**
-		 * @name The ISEquence interface.
+		 * @name The ISequence interface.
 		 *
 		 * @{
 		 */
+		VectorSequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception) {
+			return AbstractISequence::read(input, alpha);
+		}
 		VectorSequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) {
 			return AbstractISequence::read(path, alpha);
 		}
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception);
+		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception) {
+			AbstractISequence::read(path, sc);
+		}
 		/** @} */
 
 		/*
@@ -69,9 +75,12 @@ class Fasta : public AbstractISequence, public OSequence
 		 *
 		 * @{
 		 */
-		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception);
-		//void write(const string & path, const Sequence * sequence, bool overwrite) const throw (Exception);
+		void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
+		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) {
+			AbstractOSequence::write(path, sc, overwrite);
+		}
 		/** @} */
+		//void write(const string & path, const Sequence * sequence, bool overwrite) const throw (Exception);
 		
 		/**
 		 * @name The IOSequence interface.

@@ -1,6 +1,7 @@
 H_FILES = \
 AbstractAlphabet.h\
 AbstractISequence.h\
+AbstractOSequence.h\
 AbstractSequenceContainer.h\
 AlignedSequenceContainer.h\
 AlphabetExceptions.h\
@@ -50,6 +51,7 @@ VectorSiteContainer.h
 CPP_FILES = \
 AbstractAlphabet.cpp\
 AbstractISequence.cpp\
+AbstractOSequence.cpp\
 AbstractSequenceContainer.cpp\
 AlignedSequenceContainer.cpp\
 AlphabetExceptions.cpp\

@@ -8,17 +8,15 @@
 
 // From the STL:
 #include <iostream>
-#include <fstream>
 #include <iomanip>
 using namespace std;
 
-void Clustal::read(const string & path, VectorSequenceContainer & sc) const throw (Exception)
+void Clustal::read(istream & input, VectorSequenceContainer & sc) const throw (Exception)
 {
 	//!!! ClustalX add 6 spaces at longest name.
 
 	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (!file) { throw IOException ("Clustal::read : fail to open file"); }
+	if (!input) { throw IOException ("Clustal::read : fail to open file"); }
 
   const Alphabet * alpha = sc.getAlphabet();
 	vector<Sequence> sequences;
@@ -26,9 +24,9 @@ void Clustal::read(const string & path, VectorSequenceContainer & sc) const thro
 	string lineRead("");
 
 	Comments comments(1);
-	comments[0] = FileTools::getNextLine(file); // First line gives file generator.
+	comments[0] = FileTools::getNextLine(input); // First line gives file generator.
 
-  lineRead = FileTools::getNextLine(file); // This is the first sequence of the first block.
+  lineRead = FileTools::getNextLine(input); // This is the first sequence of the first block.
 		
 	unsigned int beginSeq = lineRead.find_last_of("      ") + 1;
 	if(beginSeq == string::npos) throw IOException("Clustal::read. Bad intput file.");
@@ -39,24 +37,24 @@ void Clustal::read(const string & path, VectorSequenceContainer & sc) const thro
 	bool test = true;
 	do {
 		sequences.push_back(Sequence(lineRead.substr(0, beginSeq - 6), lineRead.substr(beginSeq), alpha));
-		getline(file, lineRead, '\n');
+		getline(input, lineRead, '\n');
 		countSequences++;
 		test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - 6));
-	} while(file && test);
+	} while(input && test);
 
 	// Read other blocks
-	lineRead = FileTools::getNextLine(file); // Read first sequence of next block.
+	lineRead = FileTools::getNextLine(input); // Read first sequence of next block.
 	while(lineRead != "") {
 		// Read next block:
 		for(unsigned int i = 0; i < countSequences; i++) {// Complete sequences
 			sequences[i].append(lineRead.substr(beginSeq));
-			getline(file, lineRead, '\n');
+			getline(input, lineRead, '\n');
 			if(TextTools::isEmpty(lineRead)) throw IOException("Clustal::read. Bad intput file.");
 		}
 		//lineRead = FileTools::getNextLine(file);
 		// Drop consensus line if it exists:
 		if(TextTools::isEmpty(lineRead.substr(0, beginSeq - 6)))
-			lineRead = FileTools::getNextLine(file);
+			lineRead = FileTools::getNextLine(input);
 	}
 
 	for(unsigned int i = 0; i < countSequences; i++) sc.addSequence(sequences[i]);

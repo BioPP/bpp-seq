@@ -8,7 +8,7 @@
 #define _PHYLIP_H_
 
 #include "AbstractISequence.h"
-#include "OSequence.h"
+#include "AbstractOSequence.h"
 #include "Sequence.h"
 #include "SequenceContainer.h"
 #include "VectorSequenceContainer.h"
@@ -18,7 +18,7 @@
 
 using namespace std;
 
-class Phylip: public AbstractISequence, public OSequence
+class Phylip: public AbstractISequence, public AbstractOSequence
 {
 	protected:
 
@@ -45,23 +45,47 @@ class Phylip: public AbstractISequence, public OSequence
 		virtual ~Phylip();
 
 	public:
-		// Methods to read a fasta file, with creation or not of vector type sequences container
+
+		/**
+		 * @name The ISequence interface.
+		 *
+		 * @{
+		 */
+		VectorSequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception) {
+			return AbstractISequence::read(input, alpha);
+		}
 		VectorSequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) {
 			return AbstractISequence::read(path, alpha);
 		}
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception);
+		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception) {
+			AbstractISequence::read(path, sc);
+		}
+		/** @} */
 
 		// Method to get number of sequences contained in specified file
 		int getNumberOfSequences(const string & path) const throw (Exception);
 
-		//Not implemented yet:
-		// Methods to write a sequence or sequence container in phylip file
-		// Specified file will be created if not exists, and else the new sequences will be added at end of file
-		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception);
+		/**
+		 * @name The OSequence interface.
+		 *
+		 * @{
+		 */
+		void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
+		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) {
+			AbstractOSequence::write(path, sc, overwrite);
+		}
+		/** @} */
 
-		// Methods to get name and description of fasta file format
-		const string getFormatName()        const;
+
+		/**
+		 * @name The IOSequence interface.
+		 *
+		 * @{
+		 */
+		const string getFormatName() const;
 		const string getFormatDescription() const;
+		/** @} */
 		
 	protected:
 		//Reading tools:

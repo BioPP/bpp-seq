@@ -62,17 +62,15 @@ const VectorSequenceContainer * Fasta::read(const string & path, const Alphabet 
 
 /****************************************************************************************/
 
-void Fasta::read(const string & path, VectorSequenceContainer & vsc) const throw (Exception)
+void Fasta::read(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
 {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) { throw IOException ("Fasta::read : fail to open file"); }
+	if (!input) { throw IOException ("Fasta::read : fail to open file"); }
 
 	string temp, name, sequence = "";  // Initialization
 
 	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
+	while (!input.eof()) {
+		getline(input, temp, '\n');  // Copy current line in temporary string
 
 		// If first character is >
 		if (temp[0] == '>') {
@@ -95,8 +93,6 @@ void Fasta::read(const string & path, VectorSequenceContainer & vsc) const throw
 		Sequence * seq = new Sequence(name, sequence, vsc.getAlphabet());
 		vsc.addSequence(* seq);
 	}
-
-	file.close();
 }
 
 /****************************************************************************************/
@@ -340,14 +336,10 @@ int Fasta::getNumberOfSequences(const string & path) const throw (Exception) {
 
 /****************************************************************************************/
 
-void Fasta::write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception)
+void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
 {
-	// Open file in specified mode
-	ofstream file(path.c_str(), overwrite ? (ios::out) : (ios::out|ios::app));
-
-
 	// Checking the existence of specified file, and possibility to open it in write mode
-	if (! file) { throw IOException ("Fasta::write : failed to open file"); }
+	if (! output) { throw IOException ("Fasta::write : failed to open file"); }
 
 	string seq, temp = "";  // Initialization
 
@@ -355,7 +347,7 @@ void Fasta::write(const string & path, const SequenceContainer & sc, bool overwr
 	vector<string> names = sc.getSequencesNames();
 	for (unsigned int i = 0 ; i < names.size() ; i ++) {
 		// Sequence's commentaries writing
-		file << ">" << names[i] << endl;
+		output << ">" << names[i] << endl;
 		
 		// Sequence cutting to specified characters number per line
 		seq = sc.toString(names[i]);
@@ -363,16 +355,14 @@ void Fasta::write(const string & path, const SequenceContainer & sc, bool overwr
 			if (seq.size() > _charsByLine) {
 				temp = seq;
 				temp.erase(temp.begin() + _charsByLine , temp.end());
-				file << temp  << endl;
+				output << temp  << endl;
 				seq.erase(seq.begin(), seq.begin() + _charsByLine);
 			} else {
-				file << seq << endl;
+				output << seq << endl;
 				seq = "";
 			}
 		}
 	}
-
-	file.close();
 }
 
 /****************************************************************************************/

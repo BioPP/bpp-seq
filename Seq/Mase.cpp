@@ -72,11 +72,9 @@ VectorSequenceContainer * Mase::read(const string & path, const Alphabet * alpha
 	return vsc;
 } */
 
-// Method to read a mase file, with filling of an existing vector type sequences container
-void Mase::read(const string & path, VectorSequenceContainer & vsc) const throw (Exception) {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) { throw IOException ("Mase::read : fail to open file"); }
+void Mase::read(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
+{
+	if (!input) { throw IOException ("Mase::read : fail to open file"); }
 	
 	// Initialization
 	Comments seqComments, fileComments;
@@ -87,8 +85,8 @@ void Mase::read(const string & path, VectorSequenceContainer & vsc) const throw 
 	fileComments = vsc.getGeneralComments();
 
 	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
+	while (!input.eof()) {
+		getline(input, temp, '\n');  // Copy current line in temporary string
 		
 		// If first character is ;
 		if (temp[0] == ';') {
@@ -131,12 +129,11 @@ void Mase::read(const string & path, VectorSequenceContainer & vsc) const throw 
 
 	// Set new general comments in VectorSequenceContainer (old + new comments)
 	vsc.setGeneralComments(fileComments);
-
-	file.close();
 }
 
 // Method to read mase file containing many sequences containers
 // (many groups of file commentaries (;;)
+/*
 vector<VectorSequenceContainer *> * Mase::multiContainersRead(const string & path, const Alphabet * alpha) const throw (Exception)
 {
 	// Checking the existence of specified file
@@ -214,7 +211,7 @@ vector<VectorSequenceContainer *> * Mase::multiContainersRead(const string & pat
 
 	return vect;
 }
-
+*/
 /*
 // Method to read one sequence from a fasta file by his number
 Sequence * Mase::readSequence(const string & path, unsigned int number, const Alphabet * alpha) const throw (Exception)
@@ -533,22 +530,16 @@ int Mase::getNumberOfSequences(const string & path) const throw (Exception) {
 
 */
 
-// Methods to write a sequence container in mase file
-// Specified file will be created if not exists, and else the new sequences will be added at end of file
-void Mase::write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception)
+void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
 {
-
-	// Open file in specified mode
-	ofstream file(path.c_str(), overwrite ? (ios::out) : (ios::out|ios::app));
-
 	// Checking the existence of specified file, and possibility to open it in write mode
-	if (! file) { throw IOException ("Mase::write : failed to open file"); }
+	if (!output) { throw IOException ("Mase::write : failed to open file"); }
 
 	Comments comments = sc.getGeneralComments();
 
 	// Writing all general commentaries in file
 	for (unsigned int i = 0 ; i < comments.size() ; i++) {
-		file << ";;" << comments[i] << endl;
+		output << ";;" << comments[i] << endl;
 	}
 
 	string seq, temp = "";  // Initialization
@@ -561,15 +552,15 @@ void Mase::write(const string & path, const SequenceContainer & sc, bool overwri
 		// Writing all sequence commentaries in file
 		// If no comments are associated with current sequence, an empy commentary line will be writed
 		if (comments.size() == 0) {
-			file << ";" << endl;
+			output << ";" << endl;
 		} else {
 			for (unsigned int j = 0 ; j < comments.size() ; j++) {
-				file << ";" << comments[j] << endl;
+				output << ";" << comments[j] << endl;
 			}
 		}
 
 		// Sequence name writing
-		file << names[i] << endl;
+		output << names[i] << endl;
 
 		// Sequence cutting to specified characters number per line
 		seq = sc.toString(names[i]);
@@ -577,17 +568,15 @@ void Mase::write(const string & path, const SequenceContainer & sc, bool overwri
 			if (seq.size() > _charsByLine) {
 				temp = seq;
 				temp.erase(temp.begin() + _charsByLine , temp.end());
-				file << temp  << endl;
+				output << temp  << endl;
 				seq.erase(seq.begin(), seq.begin() + _charsByLine);
 			}
 			else {
-				file << seq << endl;
+				output << seq << endl;
 				seq = "";
 			}
 		}
 	}
-
-	file.close();
 }
 
 // Methods to write a sequence in mase file

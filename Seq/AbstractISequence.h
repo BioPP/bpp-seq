@@ -25,8 +25,10 @@ class AbstractISequence: public ISequence {
 		 *
 		 * @{
 		 */ 
-		virtual void read(const string & path, VectorSequenceContainer & sc) const throw (Exception) = 0;
-		virtual VectorSequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception);
+		virtual void read(     istream & input, VectorSequenceContainer & sc) const throw (Exception) = 0;
+		virtual void read(const string & path , VectorSequenceContainer & sc) const throw (Exception);
+		virtual VectorSequenceContainer * read(     istream & input, const Alphabet * alpha) const throw (Exception);
+		virtual VectorSequenceContainer * read(const string & path , const Alphabet * alpha) const throw (Exception);
 		/** @} */
 };
 

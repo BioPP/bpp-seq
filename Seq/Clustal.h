@@ -12,23 +12,30 @@ class Clustal : public AbstractISequence  {
 	public:
 	
 		/**
-		 * @name The ISequence interface
+		 * @name The ISequence interface.
 		 *
 		 * @{
 		 */
+		VectorSequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception) {
+			return AbstractISequence::read(input, alpha);
+		}
 		VectorSequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) {
 			return AbstractISequence::read(path, alpha);
 		}
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception);
-		Sequence * readSequence(const string & path, unsigned int number, const Alphabet * alpha) const throw (Exception);
-		Sequence * readSequence(const string & path, unsigned int number) const throw (Exception);
-		Sequence * readSequence(const string & path, const string & name, const Alphabet * alpha) const throw (Exception);
-		Sequence * readSequence(const string & path, const string & name) const throw (Exception);
-		int getNumberOfSequences(const string & path) const throw (Exception);
+		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception) {
+			AbstractISequence::read(path, sc);
+		}
 		/** @} */
 
+		/**
+		 * @name The IOSequence interface.
+		 *
+		 * @{
+		 */
 		const string getFormatName() const;
 		const string getFormatDescription() const;
+		/** @} */
 };
 #endif
 

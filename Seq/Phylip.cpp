@@ -17,6 +17,8 @@
 
 using namespace std;
 
+/******************************************************************************/
+
 Phylip::Phylip(bool extended, bool sequential, unsigned int charsByLine): _charsByLine(charsByLine), _extended(extended), _sequential(sequential)
 {
 	//cout << (this -> extended ? "extended" : "classical") << endl;
@@ -33,6 +35,8 @@ Phylip::~Phylip() {}
 //	return temp;
 //} 
 
+/******************************************************************************/
+
 const vector<string> Phylip::splitNameAndSequence(const string & s) const {
 	vector<string> v(2);
 	if(_extended) {
@@ -45,6 +49,8 @@ const vector<string> Phylip::splitNameAndSequence(const string & s) const {
 	}
 	return v;
 }	
+
+/******************************************************************************/
 
 void Phylip::readSequential(istream & in, VectorSequenceContainer & vsc) const throw (Exception) {
 	string temp;
@@ -68,6 +74,8 @@ void Phylip::readSequential(istream & in, VectorSequenceContainer & vsc) const t
 		temp = FileTools::getNextLine(in);
 	}
 }
+
+/******************************************************************************/
 
 void Phylip::readInterleaved(istream & in, VectorSequenceContainer & vsc) const throw (Exception)
  {
@@ -105,19 +113,19 @@ void Phylip::readInterleaved(istream & in, VectorSequenceContainer & vsc) const 
 	}
 }
 	
-// Method to read a mase file, with filling of an existing vector type sequences container
-void Phylip::read(const string & path, VectorSequenceContainer & vsc) const throw (Exception) {
+/******************************************************************************/
+
+void Phylip::read(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
+{
 	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) { throw IOException ("Phylip::read: fail to open file"); }
+	if (!input) { throw IOException ("Phylip::read: fail to open file"); }
 	
-	if(_sequential) readSequential (file, vsc);
-	else            readInterleaved(file, vsc);
-		
-	file.close();
+	if(_sequential) readSequential (input, vsc);
+	else            readInterleaved(input, vsc);
 }
 
-// Method to get number of sequences contained in specified file
+/******************************************************************************/
+
 int Phylip::getNumberOfSequences(const string & path) const throw (Exception) {
 	// Checking the existence of specified file
 	ifstream file (path.c_str(), ios::in);
@@ -150,6 +158,8 @@ vector<string> Phylip::getSizedNames(const vector<string> & names) const {
 	}
 	return sizedNames;
 }
+
+/******************************************************************************/
 
 void Phylip::writeSequential(ostream & out, const SequenceContainer & sc, int charsByLine) const {
 	//cout << "Write sequential" << endl;
@@ -195,9 +205,9 @@ void Phylip::writeInterleaved(ostream & out, const SequenceContainer & sc, int c
 }
 
 /******************************************************************************/
-// Methods to write a sequence container in phylip file
-// Specified file will be created if not exists, and else the new sequences will be added at end of file
-void Phylip::write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) {
+
+void Phylip::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
+{
 	//First must check if all sequences are aligned:
 	if(sc.getNumberOfSequences() == 0)
 		throw Exception("Phylip::write. SequenceContainer appear to contain no sequence.");
@@ -205,22 +215,21 @@ void Phylip::write(const string & path, const SequenceContainer & sc, bool overw
 	if(!SequenceContainerTools::sequencesHaveTheSameLength(sc))
 		throw SequenceNotAlignedException("Phylip::write. Sequences have to e of same length.", NULL);
 	
-	// Open file in specified mode
-	ofstream file(path.c_str(), overwrite ? (ios::out) : (ios::out|ios::app));
-
 	// Checking the existence of specified file, and possibility to open it in write mode
-	if (! file) { throw IOException ("Phylip::write : failed to open file"); }
+	if (!output) { throw IOException ("Phylip::write : failed to open file"); }
 
-	if(_sequential) writeSequential (file, sc, _charsByLine);
-	else            writeInterleaved(file, sc, _charsByLine);
-		
-	file.close();
+	if(_sequential) writeSequential (output, sc, _charsByLine);
+	else            writeInterleaved(output, sc, _charsByLine);
 }
 
-// Method to get name of mase file format
+/******************************************************************************/
+
 const string Phylip::getFormatName() const { return "Phylip file, " + string(_extended ? "extended," : "") + string(_sequential ? "sequential" : "interleaved"); }
 
-// Method to get description of mase file format
+/******************************************************************************/
+
 const string Phylip::getFormatDescription() const {
 	return "Phylip file format, sequential and interleaved. PAML extension also supported.";
 }
+
+/******************************************************************************/

@@ -25,6 +25,15 @@ class OSequence : public IOSequence
 	public:
 
 		/**
+		 * @brief Write a container to a stream.
+		 *
+		 * @param output The output stream where to write.
+		 * @param sc        The container to write.
+		 * @throw Exception If the file is not in the specified format.
+		 */
+		virtual void write(ostream & output, const SequenceContainer & sc) const throw (Exception) = 0;
+
+		/**
 		 * @brief Write a container to a file.
 		 *
 		 * @param path      The path to the file to write.
