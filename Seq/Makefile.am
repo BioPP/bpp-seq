@@ -10,6 +10,7 @@ alphabets\
 AlphabetTools.h\
 Clustal.h\
 CodonAlphabet.h\
+CodonSiteTools.h\
 containers\
 DCSE.h\
 DefaultAlphabet.h\
@@ -61,6 +62,7 @@ AlphabetExceptions.cpp\
 AlphabetTools.cpp\
 Clustal.cpp\
 CodonAlphabet.cpp\
+CodonSiteTools.cpp\
 DCSE.cpp\
 DefaultAlphabet.cpp\
 DNA.cpp\
