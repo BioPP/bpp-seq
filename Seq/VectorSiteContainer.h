@@ -61,19 +61,18 @@ class VectorSiteContainer :
 		mutable vector<Sequence *> _sequences; //To store pointer toward sequences retrieves (cf. AlignedSequenceContainer).
 	
 	public:
-		// Class constructors
 		VectorSiteContainer(const vector<const Site *> & vs, const Alphabet * alpha) throw (Exception);
 		VectorSiteContainer(unsigned int size, const Alphabet * alpha);
 		VectorSiteContainer(const Alphabet * alpha);
 
-		// Copy constructors
+		VectorSiteContainer(const      VectorSiteContainer & vsc);
 		VectorSiteContainer(const            SiteContainer &  sc);
 		VectorSiteContainer(const OrderedSequenceContainer & osc);
 
+		VectorSiteContainer& operator = (const      VectorSiteContainer & vsc);
 		VectorSiteContainer& operator = (const            SiteContainer &  sc);
 		VectorSiteContainer& operator = (const OrderedSequenceContainer & osc);
 
-		// Class destructor
 		~VectorSiteContainer();
 
 	public:

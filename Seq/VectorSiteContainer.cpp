@@ -55,6 +55,8 @@ VectorSiteContainer::VectorSiteContainer(
 	Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
 }
 
+/*                                     ***                                    */
+  
 VectorSiteContainer::VectorSiteContainer(unsigned int size, const Alphabet * alpha):
 	AbstractSequenceContainer(alpha)
 {
@@ -68,9 +70,36 @@ VectorSiteContainer::VectorSiteContainer(unsigned int size, const Alphabet * alp
 	Sequence * s = NULL; _sequences = vector<Sequence *>(size, s);
 }
 
+/*                                     ***                                    */
+
 VectorSiteContainer::VectorSiteContainer(const Alphabet * alpha): AbstractSequenceContainer(alpha) {}
 
-// Copy constructors
+/*                                     ***                                    */
+
+	VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer & vsc):
+	AbstractSequenceContainer(vsc.getAlphabet())
+{
+	// Seq names:
+	int nbSeq = vsc.getNumberOfSequences();
+	_names.resize(nbSeq);
+	setSequencesNames(vsc.getSequencesNames(), true);
+	//Now try to add each site:
+	for(unsigned int i = 0; i < vsc.getNumberOfSites(); i++) {
+		addSite(* vsc.getSite(i), true); //This may throw an exception if position argument already exists or is size is not valid.
+	}
+	// Seq comments:
+	_comments.resize(nbSeq);
+	for(int i = 0; i < nbSeq; i++) {
+		_comments[i] = new Comments(vsc.getComments(i));
+	}
+	Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
+
+	// General comments:
+	setGeneralComments(vsc.getGeneralComments());
+}
+
+/*                                     ***                                    */
+
 VectorSiteContainer::VectorSiteContainer(const SiteContainer & sc):
 	AbstractSequenceContainer(sc.getAlphabet())
 {
@@ -93,6 +122,8 @@ VectorSiteContainer::VectorSiteContainer(const SiteContainer & sc):
 	setGeneralComments(sc.getGeneralComments());
 }
 
+/*                                     ***                                    */
+
 VectorSiteContainer::VectorSiteContainer(const OrderedSequenceContainer & osc):
 	AbstractSequenceContainer(osc.getAlphabet())
 {
@@ -103,6 +134,34 @@ VectorSiteContainer::VectorSiteContainer(const OrderedSequenceContainer & osc):
 	// General comments:
 	setGeneralComments(osc.getGeneralComments());
 }
+
+/******************************************************************************/
+
+VectorSiteContainer& VectorSiteContainer::operator = (const VectorSiteContainer & vsc) {
+	//Setting up alphabet:
+	_alphabet = vsc.getAlphabet();
+	//Seq names:
+	_names.resize(vsc.getNumberOfSequences());
+	setSequencesNames(vsc.getSequencesNames(), true);
+	//Now try to add each site:
+	for(unsigned int i = 0; i < vsc.getNumberOfSites(); i++) {
+		addSite(* vsc.getSite(i), true); //This may throw an exception if position argument already exists or is size is not valid.
+	}
+	//Seq comments:
+	unsigned int nbSeq = vsc.getNumberOfSequences();
+	_comments.resize(nbSeq);
+	for(unsigned int i = 0; i < nbSeq; i++) {
+		_comments[i] = new Comments(vsc.getComments(i));
+	}
+	Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
+
+	// General comments:
+	setGeneralComments(vsc.getGeneralComments());
+
+	return * this;
+}
+
+/*                                     ***                                    */
 
 VectorSiteContainer& VectorSiteContainer::operator = (const SiteContainer & sc) {
 	//Setting up alphabet:
@@ -128,6 +187,8 @@ VectorSiteContainer& VectorSiteContainer::operator = (const SiteContainer & sc) 
 	return * this;
 }
 
+/*                                     ***                                    */
+
 VectorSiteContainer& VectorSiteContainer::operator = (const OrderedSequenceContainer & osc)
 {
 	//Setting up alphabet:
@@ -143,7 +204,8 @@ VectorSiteContainer& VectorSiteContainer::operator = (const OrderedSequenceConta
 	return * this;
 }
 
-// Class destructor
+/**  Class destructor ************************************************************/
+
 VectorSiteContainer::~VectorSiteContainer() { clear(); }
 
 /******************************************************************************/
@@ -536,7 +598,7 @@ void VectorSiteContainer::realloc(unsigned int n) {
 
 vector<string> VectorSiteContainer::getSequencesNames() const
  {
-    vector<string> seqnames(_names.size());
+	vector<string> seqnames(_names.size());
 	for(unsigned int i = 0; i < _names.size(); i++) seqnames[i] = *_names[i];
 	return seqnames;
 }

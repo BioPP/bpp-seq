@@ -23,7 +23,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const Alphabet * alpha):
 	Site * s = NULL; sites = vector<Site *>(length, s);
 }
 
-/** Copy constructors: ********************************************************/
+/*                                        ***                                 */
 
 AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) : VectorSequenceContainer(sc)
 {
@@ -34,6 +34,20 @@ AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) : V
 	// General comments:
 	setGeneralComments(sc.getGeneralComments());
 }
+
+/*                                        ***                                 */
+
+AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContainer & asc) : VectorSequenceContainer(asc)
+{
+	length = asc.getNumberOfSites();
+	positions = asc.getSitePositions();
+	Site * s = NULL; sites = vector<Site *>(length, s);
+
+	// General comments:
+	setGeneralComments(asc.getGeneralComments());
+}
+
+/*                                        ***                                 */
 
 AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer & osc):
 	VectorSequenceContainer(osc.getAlphabet())
@@ -50,6 +64,30 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
 	// General comments:
 	setGeneralComments(osc.getGeneralComments());
 }
+
+/*                                        ***                                 */
+
+AlignedSequenceContainer & AlignedSequenceContainer::operator = (const AlignedSequenceContainer & asc) 
+{
+	// Initializing
+	length = asc.getNumberOfSites();
+	int max = asc.getNumberOfSequences();
+
+	_alphabet = asc.getAlphabet();
+
+	// Sequences insertion after size checking
+	for (int i = 0 ; i < max ; i++)	addSequence(*asc.getSequence(i), false);
+
+	positions = asc.getSitePositions();
+	Site * s = NULL; sites = vector<Site *>(length, s);
+
+	// General comments:
+	setGeneralComments(asc.getGeneralComments());
+
+	return * this;
+}
+
+/*                                        ***                                 */
 
 AlignedSequenceContainer & AlignedSequenceContainer::operator = (const SiteContainer & sc) 
 {
@@ -71,6 +109,8 @@ AlignedSequenceContainer & AlignedSequenceContainer::operator = (const SiteConta
 	return * this;
 }
 
+/*                                        ***                                 */
+
 AlignedSequenceContainer & AlignedSequenceContainer::operator = (const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException)
 {
 	// Initializing
@@ -87,8 +127,6 @@ AlignedSequenceContainer & AlignedSequenceContainer::operator = (const OrderedSe
 
 	// General comments:
 	setGeneralComments(osc.getGeneralComments());
-
-
 
 	return * this;
 }

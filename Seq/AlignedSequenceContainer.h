@@ -42,12 +42,12 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 	public:
 		// Class constructors
 		AlignedSequenceContainer(const Alphabet * alpha);
-
-		// Copy constructors
-		AlignedSequenceContainer(const SiteContainer & sc);
+		AlignedSequenceContainer(const AlignedSequenceContainer & asc);
+		AlignedSequenceContainer(const            SiteContainer &  sc);
 		AlignedSequenceContainer(const OrderedSequenceContainer & osc);
 
-		AlignedSequenceContainer & operator = (const SiteContainer & sc);
+		AlignedSequenceContainer & operator = (const AlignedSequenceContainer & asc);
+		AlignedSequenceContainer & operator = (const            SiteContainer &  sc);
 		AlignedSequenceContainer & operator = (const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
 
 		// Class destructor
