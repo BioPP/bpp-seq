@@ -94,7 +94,7 @@ double SiteTools::variabilityFactorial(const Site & site) throw (EmptySiteExcept
 	map<int, unsigned int> p = getCounts(site);
 	vector<unsigned int> c = MapTools::getValues(p);
 	unsigned int s = sum(c);
-	return std::log((double)fact(s) / (double)sum(fact(c)));
+        return std::log((double)fact(s) / (double)sum(VectorFunctions::fact(c)));
 }
 
 /******************************************************************************/
@@ -130,4 +130,14 @@ bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteEx
     return false;
 }
 
+/******************************************************************************/
+
+// Method to know if a site is a triplet or more (contain at least 3 character types, usefull for DNA or RNA sequences)
+bool SiteTools::isTriplet(const Site & site) throw (EmptySiteException) {
+	// Empty site checking
+	if(site.size() == 0) throw EmptySiteException("SiteTools::isTriplet: Incorrect specified site", &site);
+	// For all site's characters
+        if(SiteTools::getNumberOfDistinctCharacters(site)>=3) return true;
+        else return false;
+}
 /******************************************************************************/
