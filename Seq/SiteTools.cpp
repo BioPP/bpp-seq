@@ -115,10 +115,25 @@ unsigned int SiteTools::getNumberOfDistinctCharacters(const Site & site) throw (
 
 /******************************************************************************/
 
-bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteException)
+bool SiteTools::hasSingleton(const Site & site) throw (EmptySiteException)
 {
     // Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isSingleton: Incorrect specified site", &site);
+	// For all site's characters
+    if(SiteTools::isConstant(site)) return false;
+    map<int,unsigned int> count = SymbolListTools::getCounts(site);
+	for(map<int, unsigned int>::iterator it = count.begin(); it != count.end(); it++){
+        if(it -> second == 1) return true;
+    }
+    return false;
+}
+
+/******************************************************************************/
+
+bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteException)
+{
+    // Empty site checking
+	if(site.size() == 0) throw EmptySiteException("SiteTools::isParsimonyInformativeSite: Incorrect specified site", &site);
 	// For all site's characters
     if(SiteTools::isConstant(site)) return false;
     map<int,unsigned int> count = SymbolListTools::getCounts(site);
