@@ -184,23 +184,23 @@ map<string, unsigned int> MaseTools::getAvailableSiteSelections(const Comments &
 
 map<string, unsigned int> MaseTools::getAvailableSequenceSelections(const Comments & maseHeader)
 {
-    map<string, unsigned int> selections;
-    for(unsigned int i = 0; i < maseHeader.size(); i++) {
+	map<string, unsigned int> selections;
+   for(unsigned int i = 0; i < maseHeader.size(); i++) {
 		string current = maseHeader[i];
 
 		unsigned int index = current.find("@ of");
 		if(index < current.npos) {
-            StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
-            st.nextToken(); //skip next word: may be 'sequences' or else ;-)
-            unsigned int numberOfSequences = TextTools::fromString<unsigned int>(st.nextToken());
-            string name;
-            while(st.hasMoreToken()) {
-                name += st.nextToken();
-            }
-            selections[name] = numberOfSequences;
-        }
+      StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
+      st.nextToken(); //skip next word: may be 'sequences' or else ;-)
+      unsigned int numberOfSequences = TextTools::fromString<unsigned int>(st.nextToken());
+      string name;
+      while(st.hasMoreToken()) {
+        name += st.nextToken();
+      }
+      selections[name] = numberOfSequences;
     }
-    return selections;
+  }
+  return selections;
 }
 
 /******************************************************************************/

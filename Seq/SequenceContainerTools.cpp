@@ -23,9 +23,9 @@ SequenceContainer * SequenceContainerTools::createContainerOfSpecifiedSize(const
 /******************************************************************************/
 
 SequenceContainer * SequenceContainerTools::createContainerWithSequenceNames(
-    const Alphabet * alphabet,
-    const vector<string> & seqNames)
-    throw(Exception)
+  const Alphabet * alphabet,
+  const vector<string> & seqNames)
+  throw(Exception)
 {
 	SequenceContainer * sc = createContainerOfSpecifiedSize(alphabet, seqNames.size());
 	sc -> setSequencesNames(seqNames, true);
@@ -35,17 +35,32 @@ SequenceContainer * SequenceContainerTools::createContainerWithSequenceNames(
 /******************************************************************************/
 
 SequenceContainer * SequenceContainerTools::getSelectedSequences(
-    const OrderedSequenceContainer & sequences,
-    const SequenceSelection & selection)
+  const OrderedSequenceContainer & sequences,
+  const SequenceSelection & selection)
 {
-    VectorSequenceContainer * sc = new VectorSequenceContainer(sequences.getAlphabet());
-    for(unsigned int i = 0; i < selection.size(); i++) {
-        sc -> addSequence(*sequences.getSequence(selection[i]), false);
-        //We do not check names, we suppose that the container passed as an argument is correct.
-        //WARNING: what if selection contains many times the same indice? ...
-    }
-    sc -> setGeneralComments(sequences.getGeneralComments());
-    return sc;
+  VectorSequenceContainer * sc = new VectorSequenceContainer(sequences.getAlphabet());
+  for(unsigned int i = 0; i < selection.size(); i++) {
+    sc -> addSequence(*sequences.getSequence(selection[i]), false);
+    //We do not check names, we suppose that the container passed as an argument is correct.
+    //WARNING: what if selection contains many times the same indice? ...
+  }
+  sc -> setGeneralComments(sequences.getGeneralComments());
+  return sc;
+}
+
+/******************************************************************************/
+
+void SequenceContainerTools::keepOnlySelectedSequences(
+  OrderedSequenceContainer & sequences,
+  const SequenceSelection & selection)
+{
+  vector<string> names = sequences.getSequencesNames();
+	for(unsigned int i = 0; i < selection.size(); i++) {
+		// We need to do this because after removal the indices will not be the same!
+    // another solution would be to sort decreasingly the indices...		
+    sequences.deleteSequence(names[selection[i]]);
+    //WARNING: what if selection contains many times the same indice? ...
+  }
 }
 
 /******************************************************************************/

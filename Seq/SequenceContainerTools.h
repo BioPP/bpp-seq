@@ -76,6 +76,20 @@ class SequenceContainerTools
 		 * @return A new container with all selected sequences.
 		 */
 		static SequenceContainer * getSelectedSequences(const OrderedSequenceContainer & sequences, const SequenceSelection & selection);
+
+		/**
+		 * @brief Remove all sequences that are not in a given selection from a given container.
+		 *
+		 * A new VectorSequenceContainer is created with specified sequences.
+		 * The destruction of the container is up to the user.
+		 * Sequences are specified by their position, beginning at 0.
+		 * Redundant selection is not checked, so be careful with what you're doing!
+		 *
+		 * @param sequences The container from wich sequences are to be taken.
+		 * @param selection The positions of all sequences to retrieve.
+		 * @return A new container with all selected sequences.
+		 */
+		static void keepOnlySelectedSequences(OrderedSequenceContainer & sequences, const SequenceSelection & selection);
 		
 		/**
 		 * @brief Check if all sequences in a SequenceContainer have the same length.
