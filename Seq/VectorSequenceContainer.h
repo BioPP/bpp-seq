@@ -105,6 +105,14 @@ class VectorSequenceContainer : public AbstractSequenceContainer
 	public:
 		
 		/**
+		 * @name The Clonable interface.
+		 *
+		 * @{
+		 */
+		Clonable * clone() const;
+		/** @} */
+
+		/**
 		 * @name The SequenceContainer interface.
 		 *
 		 * @{

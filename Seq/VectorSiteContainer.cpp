@@ -148,6 +148,12 @@ VectorSiteContainer::~VectorSiteContainer() { clear(); }
 
 /******************************************************************************/
 
+Clonable * VectorSiteContainer::clone() const {
+	return dynamic_cast<SiteContainer *>(new VectorSiteContainer(*this));
+}
+
+/***************************************************************************/
+
 const Site * VectorSiteContainer::getSite(unsigned int i) const throw (IndexOutOfBoundsException)
 {
 	if(i >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getSite.", i, 0, getNumberOfSites() - 1);

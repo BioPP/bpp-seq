@@ -100,6 +100,14 @@ AlignedSequenceContainer::~AlignedSequenceContainer() {
 	for(unsigned int i = 0; i < sites.size(); i++) if(sites[i] != NULL) delete sites[i];	
 }
 
+/***************************************************************************/
+
+Clonable * AlignedSequenceContainer::clone() const {
+	return dynamic_cast<VectorSequenceContainer *>(new AlignedSequenceContainer(*this));
+}
+
+/***************************************************************************/
+
 // Method to get an site object from site container
 const Site * AlignedSequenceContainer::getSite(unsigned int i) const throw (IndexOutOfBoundsException)
 {

@@ -55,11 +55,19 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 
 	public:
 
-        /**
-         * @name The SiteContainer interface implementation:
-         *
-         * @{
-         */
+		/**
+		 * @name The Clonable interface.
+		 *
+		 * @{
+		 */
+		Clonable * clone() const;
+		/** @} */
+
+		/**
+		 * @name The SiteContainer interface implementation:
+             *
+             * @{
+             */
 		const Site * getSite(unsigned int pos) const throw (IndexOutOfBoundsException) ;
 		void setSite(unsigned int pos, const Site & site, bool checkPositions = true) throw (Exception) ;
 		Site * removeSite(unsigned int pos) throw (IndexOutOfBoundsException) ;
@@ -69,7 +77,7 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 		unsigned int getNumberOfSites() const;
 		Vint getSitePositions() const;
 		void reindexSites();
-        /** @} */
+		/** @} */
 		
 	// Redefined VectorSequenceContainer methods (to stop ambiguity of multi-inheritance)
 	// Only add- and setSequence methods are overloaded.

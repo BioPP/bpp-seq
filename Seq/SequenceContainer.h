@@ -11,6 +11,9 @@
 #include "Sequence.h"
 #include "SequenceContainerExceptions.h"
 
+// From Utils:
+#include <Utils/Clonable.h>
+
 // From the STL:
 #include <cstdlib>
 
@@ -45,7 +48,7 @@ using namespace std;
  * @see Sequence
  */
 
-class SequenceContainer
+class SequenceContainer: public Clonable
 {
 	public:	// Class destructor:
 		virtual ~SequenceContainer() {}

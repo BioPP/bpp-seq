@@ -55,7 +55,7 @@ class VectorSiteContainer :
 {
 	
 	protected:
-        vector<Site     *> _sites;
+		vector<Site     *> _sites;
 		vector<string   *> _names;
 		vector<Comments *> _comments; //Sequences comments.
 		mutable vector<Sequence *> _sequences; //To store pointer toward sequences retrieves (cf. AlignedSequenceContainer).
@@ -77,6 +77,15 @@ class VectorSiteContainer :
 		~VectorSiteContainer();
 
 	public:
+
+		/**
+		 * @name The Clonable interface.
+		 *
+		 * @{
+		 */
+		Clonable * clone() const;
+		/** @} */
+
 		/**
 		 * @name The SiteContainer interface implementation:
 		 *

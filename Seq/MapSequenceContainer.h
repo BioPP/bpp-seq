@@ -30,10 +30,10 @@ using namespace std;
 
 class MapSequenceContainer: public AbstractSequenceContainer
 {
-    protected:
-        map<string, Sequence *> _sequences;
+	protected:
+    map<string, Sequence *> _sequences;
         
-    public:
+  public:
 		// Class constructors
 		MapSequenceContainer(const map<string, Sequence *> & ms, const Alphabet * alpha);
 		MapSequenceContainer(const Alphabet * alpha);
@@ -47,11 +47,19 @@ class MapSequenceContainer: public AbstractSequenceContainer
 
 	public:
 
-        /**
-         * @name The SequenceContainer interface implementation:
-         *
-         * @{
-         */
+		/**
+		 * @name The Clonable interface.
+		 *
+		 * @{
+		 */
+		Clonable * clone() const;
+		/** @} */
+
+		/**
+             * @name The SequenceContainer interface implementation:
+             *
+             * @{
+             */
 		const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException);
 		void setSequence(const string & name, const Sequence & sequence, bool checkNames = true) throw (SequenceNotFoundException);
 		Sequence * removeSequence(const string & name) throw (SequenceNotFoundException);

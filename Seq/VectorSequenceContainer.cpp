@@ -81,6 +81,12 @@ VectorSequenceContainer::~VectorSequenceContainer() { clear(); }
 
 /******************************************************************************/
 
+Clonable * VectorSequenceContainer::clone() const {
+	return new VectorSequenceContainer(*this);
+}
+
+/***************************************************************************/
+
 const Sequence * VectorSequenceContainer::getSequence(unsigned int i) const throw (IndexOutOfBoundsException)
 {
 	// Specified sequence existence verification
