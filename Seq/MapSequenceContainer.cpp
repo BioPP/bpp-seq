@@ -251,6 +251,11 @@ void MapSequenceContainer::addSequence(const string & key, const Sequence & sequ
 		}
 	}
 	
+	// Check if the key is not used
+	for (map<string, Sequence *>::const_iterator i = _sequences.begin() ; i != _sequences.end() ; i++)
+		if (key == i->first)
+			throw Exception("MapSequenceContainer::addSequence: key already in use. (" + key + ")");
+	
 	// New sequence's alphabet and sequence container's alphabet matching verification
 	if (sequence.getAlphabet() -> getAlphabetType() == _alphabet -> getAlphabetType())
 		_sequences.insert(make_pair(key, dynamic_cast<Sequence *>(sequence.clone())));
