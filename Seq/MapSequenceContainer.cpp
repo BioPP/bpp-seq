@@ -2,7 +2,7 @@
  * File MapSequenceContainer.cpp
  * Authors : Guillaume Deuchst <GDeuchst@ifrance.com>
  *           Sylvain Gaillard <yragael2001@yahoo.fr>
- * Last modification : Friday June 25 2003
+ * Last modification : Monday July 19 2004
 */
 
 #include "MapSequenceContainer.h"
@@ -59,7 +59,7 @@ const Sequence * MapSequenceContainer::getSequence(unsigned int i) const throw (
 	// Specified sequence existence verification
 	if (i < _sequences.size()) {
 		map<string, Sequence *>::const_iterator it = _sequences.begin();
-		for (unsigned int j = 0 ; j <= i ; j++) { it++; }
+		for (unsigned int j = 0 ; j < i ; j++) { it++; }
 		return it -> second;
 	}
 	throw IndexOutOfBoundsException("MapSequenceContainer::getSequence", i, 0, _sequences.size() - 1);
@@ -79,7 +79,7 @@ Sequence * MapSequenceContainer::getSequence(unsigned int i) throw (IndexOutOfBo
 	// Specified sequence existence verification
 	if (i < _sequences.size()) {
 		map<string, Sequence *>::const_iterator it = _sequences.begin();
-		for (unsigned int j = 0 ; j <= i ; j++) { it++; }
+		for (unsigned int j = 0 ; j < i ; j++) { it++; }
 		return it -> second;
 	}
 	throw IndexOutOfBoundsException("MapSequenceContainer::getSequence", i, 0, _sequences.size() - 1);
