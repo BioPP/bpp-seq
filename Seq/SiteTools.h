@@ -29,14 +29,14 @@ class SiteTools: public SymbolListTools
 {
 	public:
 		~SiteTools() {}
-	
+
 	public:
 		// Method for know if a site contains gap(s) or not
 		static bool hasGap(const Site & site);
-	
+
 		// Method for know if a site contains undefined character or not
 		static bool hasUnknown(const Site & site);
-	
+
 		// Method fot know if a site is complete or not (doesn't contains gap or undefined character)
 		static bool isComplete(const Site & site);
 
@@ -45,7 +45,7 @@ class SiteTools: public SymbolListTools
  		 * whatever the position.
  		 */
 		static bool areSitesIdentical(const Site & site1, const Site & site2);
-	
+
 		// Method for know if a site is constant or not (contain one character type only)
 		static bool isConstant(const Site & site) throw (EmptySiteException);
 
@@ -67,9 +67,19 @@ class SiteTools: public SymbolListTools
 		 * At least two distinct characters must be present.
 		 *
 		 * @param site A site.
-		 * @return True is the site is parsimony informative.
+		 * @return True if the site is parsimony informative.
 		 */
 		static bool isParsimonyInformativeSite(const Site & site) throw (EmptySiteException);
+
+
+		/**
+		 * @brief Tell if a site has more than 2 distinct characters
+		 *
+		 * @param site A site.
+		 * @return True if the site has more than 2 distinct characters
+		 */
+         static bool isTriplet(const Site & site) throw (EmptySiteException);
+
 };
 
 #endif	//_SITETOOLS_H_
