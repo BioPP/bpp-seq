@@ -145,39 +145,41 @@ SequenceContainer * MaseTools::getSelectedSequences(
 
 map<string, unsigned int> MaseTools::getAvailableSiteSelections(const Comments & maseHeader)
 {
-    map<string, unsigned int> selections;
-    for(unsigned int i = 0; i < maseHeader.size(); i++) {
+  map<string, unsigned int> selections;
+  for(unsigned int i = 0; i < maseHeader.size(); i++) {
 		string current = maseHeader[i];
 
 		unsigned int index = current.find("# of");
 		if(index < current.npos) {
-            StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
-            st.nextToken(); //skip next word: may be 'sequences' or else ;-)
+			StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
+			st.nextToken(); //skip next word: may be 'sequences' or else ;-)
 			unsigned int numberOfSegments = TextTools::toInt(st.nextToken());
 			string name;
 			while(st.hasMoreToken()) {
-				name += st.nextToken();
+				name += " " +st.nextToken();
 			}
-			i++;//next line.
-            unsigned int counter = 0;
-            unsigned nbSites = 0;
+			unsigned int counter = 0;
+			unsigned nbSites = 0;
 			while(i < maseHeader.size()) {
-				current = maseHeader[i++];
+				i++;
+				current = maseHeader[i];
 				StringTokenizer st2(current);
-	 			//st.nextToken(); //Skip ';;'
+				//st.nextToken(); //Skip ';;'
 				while(st2.hasMoreToken()) {
 					StringTokenizer st3(st2.nextToken(), ",");
 					unsigned int begin = TextTools::toInt(st3.nextToken());
 					unsigned int end   = TextTools::toInt(st3.nextToken());
-                    counter++;
-                    nbSites += end - begin + 1;
-					if(counter == numberOfSegments) break;
+					counter++;
+					nbSites += end - begin + 1;
 				}
-                selections[name] = nbSites;
+				if(counter == numberOfSegments) {
+					selections[name] = nbSites;
+					break;
+				}
 			}
-        }
     }
-    return selections;
+	}
+  return selections;
 }
 
 /******************************************************************************/
@@ -185,7 +187,7 @@ map<string, unsigned int> MaseTools::getAvailableSiteSelections(const Comments &
 map<string, unsigned int> MaseTools::getAvailableSequenceSelections(const Comments & maseHeader)
 {
 	map<string, unsigned int> selections;
-   for(unsigned int i = 0; i < maseHeader.size(); i++) {
+	for(unsigned int i = 0; i < maseHeader.size(); i++) {
 		string current = maseHeader[i];
 
 		unsigned int index = current.find("@ of");
