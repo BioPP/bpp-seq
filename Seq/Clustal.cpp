@@ -36,7 +36,7 @@ void Clustal::read(istream & input, VectorSequenceContainer & sc) const throw (E
   //Read first sequences block:
 	bool test = true;
 	do {
-		sequences.push_back(Sequence(lineRead.substr(0, beginSeq - 6), lineRead.substr(beginSeq), alpha));
+		sequences.push_back(Sequence(TextTools::removeSurroundingWhiteSpaces(lineRead.substr(0, beginSeq - 6)), lineRead.substr(beginSeq), alpha));
 		getline(input, lineRead, '\n');
 		countSequences++;
 		test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - 6));
