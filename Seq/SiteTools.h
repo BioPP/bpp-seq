@@ -56,17 +56,26 @@ class SiteTools: public SymbolListTools
 		/**
 		 * @brief Give the number of distinct characters at a site.
 		 *
-		 * @param site A site
+		 * @param site a Site
 		 * @return The number of distinct characters in the given site.
 		 */
         static unsigned int getNumberOfDistinctCharacters(const Site & site) throw (EmptySiteException);
+
+		/**
+		 * @brief Tell if a site has singletons
+		 *
+		 *
+		 * @param site a Site.
+		 * @return True if the site has singletons.
+		 */
+		static bool hasSingleton(const Site & site) throw (EmptySiteException);
 
 		/**
 		 * @brief Tell if a site is a parsimony informative site.
 		 *
 		 * At least two distinct characters must be present.
 		 *
-		 * @param site A site.
+		 * @param site a Site.
 		 * @return True if the site is parsimony informative.
 		 */
 		static bool isParsimonyInformativeSite(const Site & site) throw (EmptySiteException);
@@ -75,7 +84,7 @@ class SiteTools: public SymbolListTools
 		/**
 		 * @brief Tell if a site has more than 2 distinct characters
 		 *
-		 * @param site A site.
+		 * @param site a Site.
 		 * @return True if the site has more than 2 distinct characters
 		 */
          static bool isTriplet(const Site & site) throw (EmptySiteException);
