@@ -55,11 +55,15 @@ void SequenceContainerTools::keepOnlySelectedSequences(
   const SequenceSelection & selection)
 {
   vector<string> names = sequences.getSequencesNames();
-	for(unsigned int i = 0; i < selection.size(); i++) {
+	for(unsigned int i = 0; i < names.size(); i++) {
 		// We need to do this because after removal the indices will not be the same!
-    // another solution would be to sort decreasingly the indices...		
-    sequences.deleteSequence(names[selection[i]]);
-    //WARNING: what if selection contains many times the same indice? ...
+    // another solution would be to sort decreasingly the indices...
+		bool test = false
+		for(unsigned int j = 0; j < selection.size() && !test; j++) {
+			test = (selection[j] == i);
+		}
+    if(!test) sequences.deleteSequence(i);
+    //WARNING: what if selection contains several times the same indice? ...
   }
 }
 
