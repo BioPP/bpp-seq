@@ -1,0 +1,16 @@
+#ifndef _ALPHABETS_
+#define _ALPHABETS_
+
+#include "Alphabet.h"
+#include "AbstractAlphabet.h"
+#include "NucleicAlphabet.h"
+#include "ProteinAlphabet.h"
+#include "CodonAlphabet.h"
+#include "StandardCodonAlphabet.h"
+#include "DNA.h"
+#include "RNA.h"
+#include "DefaultAlphabet.h"
+#include "AlphabetExceptions.h"
+#include "AlphabetTools."
+
+#endif //_ALPHABETS_

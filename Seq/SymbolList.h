@@ -92,7 +92,7 @@ class SymbolList: public Clonable {
 		SymbolList & operator = (const SymbolList & list);
 
 		// Class destructor
-		~SymbolList();
+		virtual ~SymbolList();
 
 	public:
 

@@ -6,9 +6,11 @@ AbstractSequenceContainer.h\
 AlignedSequenceContainer.h\
 AlphabetExceptions.h\
 Alphabet.h\
+alphabets\
 AlphabetTools.h\
 Clustal.h\
 CodonAlphabet.h\
+containers\
 DCSE.h\
 DefaultAlphabet.h\
 DNA.h\

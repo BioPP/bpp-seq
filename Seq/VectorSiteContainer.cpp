@@ -575,17 +575,18 @@ void VectorSiteContainer::clear()
 	//Delete all sequences retrieved:
 	for(unsigned int i = 0; i < _sequences.size(); i++) if(_sequences[i] != NULL) delete(_sequences[i]);
 
-    // Delete all sites pointers
+	// Delete all sites pointers
 	_sites.clear();
-    _names.clear();
-    _comments.clear();
-    _sequences.clear();
+	_names.clear();
+  _comments.clear();
+  _sequences.clear();
     
 }
 
 /******************************************************************************/
 
-void VectorSiteContainer::realloc(unsigned int n) {
+void VectorSiteContainer::realloc(unsigned int n)
+{
 	clear();
 	_sites.resize(n);
 	for(unsigned int i = 0; i < n; i++) {
@@ -597,7 +598,7 @@ void VectorSiteContainer::realloc(unsigned int n) {
 /******************************************************************************/
 
 vector<string> VectorSiteContainer::getSequencesNames() const
- {
+{
 	vector<string> seqnames(_names.size());
 	for(unsigned int i = 0; i < _names.size(); i++) seqnames[i] = *_names[i];
 	return seqnames;

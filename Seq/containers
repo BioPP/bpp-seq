@@ -1,0 +1,17 @@
+#ifndef _CONTAINERS_
+#define _CONTAINERS_
+
+#include "SequenceContainer.h"
+#include "AbstractSequenceContainer.h"
+#include "OrderedSequenceContainer.h"
+#include "VectorSequenceContainer.h"
+#include "MapSequenceContainer.h"
+#include "SiteContainer.h"
+#include "AlignedSequenceContainer.h"
+#include "VectorSiteContainer.h"
+#include "SequenceContainerExceptions.h"
+#include "SiteContainerExceptions.h"
+#include "SequenceContainerTools.h"
+#include "SiteContainerTools.h"
+
+#endif //_CONTAINERS_
