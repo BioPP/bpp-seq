@@ -45,7 +45,7 @@ const vector<string> Phylip::splitNameAndSequence(const string & s) const {
 		v[1] = TextTools::removeFirstWhiteSpaces      (s.substr(index + 2)); //There may be more than 6 white spaces.
 	} else {
 		v[0] = TextTools::removeSurroundingWhiteSpaces(s.substr(0, 10));
-		v[1] = s.substr(11);
+		v[1] = s.substr(10);
 	}
 	return v;
 }	
