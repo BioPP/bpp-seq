@@ -120,7 +120,7 @@ class SequenceContainerTools
 		 * addSequence() methode in the SequenceContainer interface (see the doc
 		 * of SequenceContainer for more details).
 		 * The type of the template must be the type of the SequenceContainer which
-		 * recieves the sequences. This SequenceContainer <b>must have<\b> an
+		 * recieves the sequences. This SequenceContainer <b>must have</b> an
 		 * addSequence() methode like:
 		 * <code>
 		 * void addSequence(const Sequence &sequence, bool checkNames=true);
@@ -128,17 +128,17 @@ class SequenceContainerTools
 		 * @param seqCont1 The SequenceContainer in which the sequences will be added.
 		 * @param seqCont2 The SequenceContainer from which the sequences are taken.
 		 */
-		template<class T>static void append(T & seqCont1, const SequenceContainer 
-				& seqCont2) throw (Exception) {
-					try {
-						vector<string> seqNames = seqCont2.getSequencesNames();
-						for (unsigned int i = 0 ; i < seqNames.size() ; i++)
-							seqCont1.addSequence(* seqCont2.getSequence(seqNames[i]));
-					}
-					catch (Exception e) {
-						throw e;
-					}
-				}
+		template<class T>static void append(T & seqCont1, const SequenceContainer & seqCont2)
+		throw (Exception)
+		{
+			try {
+				vector<string> seqNames = seqCont2.getSequencesNames();
+				for (unsigned int i = 0 ; i < seqNames.size() ; i++)
+					seqCont1.addSequence(* seqCont2.getSequence(seqNames[i]));
+			}	catch (Exception e) {
+				throw e;
+			}
+		}
 };
 
 

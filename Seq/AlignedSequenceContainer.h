@@ -65,20 +65,20 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 
 		/**
 		 * @name The SiteContainer interface implementation:
-             *
-             * @{
-             */
-		const Site * getSite(unsigned int pos) const throw (IndexOutOfBoundsException) ;
-		void setSite(unsigned int pos, const Site & site, bool checkPositions = true) throw (Exception) ;
-		Site * removeSite(unsigned int pos) throw (IndexOutOfBoundsException) ;
-		void deleteSite(unsigned int pos) throw (IndexOutOfBoundsException) ;
-		void addSite(const Site & site, bool checkPositions = true) throw (Exception);
-		void addSite(const Site & site, unsigned int pos, bool checkPositions = true) throw (Exception);
+     *
+     * @{
+     */
+  	const Site * getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) ;
+		void         setSite(unsigned int siteIndex, const Site & site, bool checkPosition = true) throw (Exception) ;
+		Site *    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
+		void      deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
+		void addSite(const Site & site, bool checkPosition = true) throw (Exception);
+		void addSite(const Site & site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);
 		unsigned int getNumberOfSites() const;
 		Vint getSitePositions() const;
 		void reindexSites();
 		/** @} */
-		
+
 	// Redefined VectorSequenceContainer methods (to stop ambiguity of multi-inheritance)
 	// Only add- and setSequence methods are overloaded.
 	public:
@@ -86,31 +86,31 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 		const Alphabet * getAlphabet() const {
 			return AbstractSequenceContainer::getAlphabet();
 		}
-		
+
 		// Method to get name of a sequence in sequence container
-		string getName(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::getName(i);
+		string getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return VectorSequenceContainer::getName(sequenceIndex);
 		}
 
 		// Method to get content of a sequence in sequence container
-		vector<int> getContent(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::getContent(i);
+		vector<int> getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return VectorSequenceContainer::getContent(sequenceIndex);
 		}
 		vector<int> getContent(const string & name) const throw (SequenceNotFoundException) {
 			return VectorSequenceContainer::getContent(name);
 		}
 
 		// Convert to string
-		string toString(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::toString(i);
+		string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return VectorSequenceContainer::toString(sequenceIndex);
 		}
 		string toString(const string & name) const throw (SequenceNotFoundException) {
 			return VectorSequenceContainer::toString(name);
 		}
 
 		// Method to get commentaries of a sequence in sequence container
-		Comments getComments(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::getComments(i);
+		Comments getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return VectorSequenceContainer::getComments(sequenceIndex);
 		}
 		Comments getComments(const string & name) const throw (SequenceNotFoundException) {
 			return VectorSequenceContainer::getComments(name);
@@ -122,13 +122,13 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 		}
 		
 
-		void setComments(unsigned int i, const Comments & comments) throw (IndexOutOfBoundsException) {
-			VectorSequenceContainer::setComments(i, comments);
+		void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) {
+			VectorSequenceContainer::setComments(sequenceIndex, comments);
 		}
 
 	// Method to get an sequence object from sequence container
-		const Sequence * getSequence(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::getSequence(i);
+		const Sequence * getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return VectorSequenceContainer::getSequence(sequenceIndex);
 		}
 		const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException) {
 			return VectorSequenceContainer::getSequence(name);
@@ -141,20 +141,20 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 		}
 
 		// Method to replace a sequence in sequence container
-		void setSequence(const string & name, const Sequence & sequence, bool checkNames = true) throw (Exception);
-		void setSequence(unsigned int i     , const Sequence & sequence, bool checkNames = true) throw (Exception);
+		void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception);
+		void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (Exception);
 
 		// Methods to extract (and remove) a sequence from sequence container
-		Sequence * removeSequence(unsigned int i) throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::removeSequence(i);
+		Sequence * removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException) {
+			return VectorSequenceContainer::removeSequence(sequenceIndex);
 		}
 		Sequence * removeSequence(const string & name) throw (SequenceNotFoundException) {
 			return VectorSequenceContainer::removeSequence(name);
 		}
 
 		// Methods to delete a sequence from sequence container
-		void deleteSequence(unsigned int i) throw (IndexOutOfBoundsException) {
-			VectorSequenceContainer::deleteSequence(i);
+		void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException) {
+			VectorSequenceContainer::deleteSequence(sequenceIndex);
 		}
 		void deleteSequence(const string & name) throw (SequenceNotFoundException) {
 			VectorSequenceContainer::deleteSequence(name);
@@ -162,8 +162,8 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 
 		// Methods to add sequence in sequence container
 		// CheckName : boolean for enable or disable sequence's name existence checking
-		void addSequence(const Sequence & sequence, bool checkNames = true) throw (Exception);
-		void addSequence(const Sequence & sequence, unsigned int pos, bool checkNames = true) throw (Exception);
+		void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
+		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
 
 		// Method to get number of sequences contained in sequence container
 		unsigned int getNumberOfSequences() const {

@@ -41,15 +41,15 @@ class SiteNotFoundException : public Exception {
 		 * @brief Build a new SiteNotFoundException object.
 		 *
 		 * @param text A message to be passed to the exception hierarchy.
-		 * @param id   A the id of the site that was to be found.
+		 * @param sId  A the id of the site that was to be found.
 		 */
-		SiteNotFoundException(const char *   text, const char *   sId = "");
+		SiteNotFoundException(const char *   text, const char * sId = "");
 
 		/**
 		 * @brief Build a new SiteNotFoundException object.
 		 *
 		 * @param text A message to be passed to the exception hierarchy.
-		 * @param id   A the id of the site that was to be found.
+		 * @param sId  A the id of the site that was to be found.
 		 */
 		SiteNotFoundException(const string & text, const string & sId = "");
 

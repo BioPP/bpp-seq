@@ -72,23 +72,13 @@ class AbstractSequenceContainer : public OrderedSequenceContainer
 		 *
 		 * @{
 		 */
-		virtual string getName(unsigned int i) const throw (IndexOutOfBoundsException);
-		virtual vector<int> getContent(unsigned int i) const throw (IndexOutOfBoundsException);
-		virtual string toString(unsigned int i) const throw (IndexOutOfBoundsException);
-		virtual Comments getComments(unsigned int i) const throw (IndexOutOfBoundsException);
-		virtual void setComments(unsigned int i, const Comments & comments) throw (IndexOutOfBoundsException) = 0;
+		virtual string getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+		virtual vector<int> getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+		virtual string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+		virtual Comments getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+		virtual void     setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) = 0;
 		/** @} */
 
-	protected:
-	
-		/**
-		 * @name Inner methods.
-		 *
-		 * @{
-		 */
-//		const   Sequence * getSequence(unsigned int i)      const throw (IndexOutOfBoundsException) = 0;
-//		const   Sequence * getSequence(const string & name) const throw (SequenceNotFoundException) = 0;
-		/** @} */
 };
 
 #endif // _ABSTRACTSEQUENCECONTAINER_H_

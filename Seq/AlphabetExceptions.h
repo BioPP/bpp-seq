@@ -86,7 +86,7 @@ class BadIntException : public AlphabetException {
 		//BadIntException(int badInt, const char *   text = "", const Alphabet * alpha = NULL);
 		/**
 		 * @brief Build a new BadIntException.
-		 * @param adInt The faulty integer.
+		 * @param badInt The faulty integer.
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param alpha A const pointer toward the alphabet that threw the exception.
 		 */

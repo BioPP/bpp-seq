@@ -130,7 +130,7 @@ class Site: public SymbolList
 		/**
 		 * @brief Set the position of this site.
 		 *
-		 * @param name The new position of the site.
+		 * @param position The new position of the site.
 		 */
 		virtual void setPosition(int position);
 };

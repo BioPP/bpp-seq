@@ -7,7 +7,7 @@
 #include "Mase.h"
 #include "StringSequenceTools.h"
 
-Mase::Mase(unsigned charsByLine): _charsByLine(charsByLine) {}
+Mase::Mase(unsigned int charsByLine): _charsByLine(charsByLine) {}
 
 // Method to read a mase file, with creation of a vector type sequences container
 /*

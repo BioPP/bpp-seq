@@ -6,6 +6,8 @@ AbstractSequenceContainer.h\
 AlignedSequenceContainer.h\
 AlphabetExceptions.h\
 Alphabet.h\
+AlphabetIndex1.h\
+AlphabetIndex2.h\
 alphabets\
 AlphabetTools.h\
 Clustal.h\
@@ -18,6 +20,8 @@ DNA.h\
 DNAToRNA.h\
 Fasta.h\
 GeneticCode.h\
+GranthamAAChemicalDistance.h\
+MiyataAAChemicalDistance.h\
 IOSequence.h\
 ISequence.h\
 ioseq\
@@ -69,6 +73,8 @@ DNA.cpp\
 DNAToRNA.cpp\
 Fasta.cpp\
 GeneticCode.cpp\
+GranthamAAChemicalDistance.cpp\
+MiyataAAChemicalDistance.cpp\
 MapSequenceContainer.cpp\
 Mase.cpp\
 MaseTools.cpp\
@@ -96,9 +102,14 @@ Translator.cpp\
 VectorSequenceContainer.cpp\
 VectorSiteContainer.cpp
 
+CPP_EXTRA = \
+__GranthamMatrixCode.cpp\
+__MiyataMatrixCode.cpp
+
 lib_LTLIBRARIES = libseq.la
 libseq_la_SOURCES = $(H_FILES) $(CPP_FILES)
-libseq_la_LDFLAGS = -version-info 1:0:0
+EXTRA_libseq_la_SOURCES = $(CPP_EXTRA)
+llibseq_la_LDFLAGS = -version-info 1:0:0
 
 library_includedir=$(includedir)/Seq
 library_include_HEADERS = $(H_FILES)

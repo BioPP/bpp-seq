@@ -29,14 +29,14 @@ class StringSequenceTools
 	public:
     
 		/**
-         * @brief Get a subsequence.
-         *
-         * @param sequence The input sequence.
-         * @param begin    The begining position (included).
-         * @param end      The ending position (included).
-         * @return A string with the subsequence.
-         * @throw Exception If position does not not match the interval [0, length].
-         */
+     * @brief Get a subsequence.
+     *
+     * @param sequence The input sequence.
+     * @param begin    The begining position (included).
+     * @param end      The ending position (included).
+     * @return A string with the subsequence.
+     * @throw Exception If position does not not match the interval [0, length].
+     */
 		static string subseq(const string & sequence, int begin, int end) throw (Exception);
 
 		/**
@@ -45,79 +45,81 @@ class StringSequenceTools
 		 * All new characters are filled with gaps.
 		 * If the specified size is < to the sequence size, the sequence will be truncated.
 		 *
+     * @param sequence The input sequence.
 		 * @param size The new size of the sequence.
 		 */
 		static string setToSizeR(const string & sequence, int size);
 
-        /**
+    /**
 		 * @brief Set up the size of a sequence from the left side.
 		 *
 		 * All new characters are filled with gaps.
 		 * If the specified size is < to the sequence size, the sequence will be truncated.
 		 *
+     * @param sequence The input sequence.
 		 * @param size The new size of the sequence.
 		 */
 		static string setToSizeL(const string & sequence, int size);
 
 		/**
-         * @brief Delete all occurence of a character in the sequence.
-         *
-         * @param sequence The sequence to parse.
-         * @param chars    The character to remove.
-         * @return         The sequence with all specified characters removed.
-         */
+     * @brief Delete all occurence of a character in the sequence.
+     *
+     * @param sequence The sequence to parse.
+     * @param chars    The character to remove.
+     * @return         The sequence with all specified characters removed.
+     */
 		static string deleteChar(const string & sequence, char chars);
 
-        /**
-         * @brief Delete all occurence of several characters in the sequence.
-         *
-         * @param sequence The sequence to parse.
-         * @param chars    The characters to remove.
-         * @return         The sequence with all specified characters removed.
-         */
+    /**
+     * @brief Delete all occurence of several characters in the sequence.
+     *
+     * @param sequence The sequence to parse.
+     * @param chars    The characters to remove.
+     * @return         The sequence with all specified characters removed.
+     */
 		static string deleteChar(const string & sequence, string chars);
 
 		/**
-         * @brief Tell if a sequence is a palindrome.
-         *
-         * @param Sequence the sequence to parse.
-         * @return true If the sequence is a palindrome.
-         */
+     * @brief Tell if a sequence is a palindrome.
+     *
+     * @param sequence the sequence to parse.
+     * @return true If the sequence is a palindrome.
+     */
 		static bool isPalindrome(const string & sequence);
 
-        /**
-         * @brief Reverse the sequence.
-         *
-         * @param sequence The sequence to reverse.
-         * @return The reversed sequence.
-         */
-        static string * reverse(const string & sequence);
+    /**
+     * @brief Reverse the sequence.
+     *
+     * @param sequence The sequence to reverse.
+     * @return The reversed sequence.
+     */
+    static string * reverse(const string & sequence);
 
-        // !!! Upgrade to Translators! !!!
-        /**
-         * @brief Get the complement of a sequence.
-         *
-         * For this method, sequence is supposed to be of type DNA.
-         *
-         * @param sequence The sequence to complement.
-         * @return The complementary sequence.
-         */
+    // !!! Upgrade to Translators! !!!
+    /**
+     * @brief Get the complement of a sequence.
+     *
+     * For this method, sequence is supposed to be of type DNA.
+     *
+     * @param sequence The sequence to complement.
+     * @return The complementary sequence.
+     */
 		static string * complement(const string & sequence);
 
-        /**
-         * @brief Calculate the local GC content of a sequence.
-         *
+    /**
+     * @brief Calculate the local GC content of a sequence.
+     *
 		 * GC contents are calculated using a window of specified size around the given position.
-         * Note : Calculus for last nucleotides (sequence's size - window size) will return
+     * Note : Calculus for last nucleotides (sequence's size - window size) will return
 		 * the last possible rate calculated.
-         *
-         * @param sequence The sequence to analyse.
-         * @param pos      The position where to compute the GC content.
-         * @param window   The size of the window to use.
-         * @param The GC content as a ratio (# of GC / window).
-         * @throw BadIntException If the sequence is not of type DNA or RNA.
-         * @throw Exception       Error in calculus (if the sequence contain gaps for instance).
-         */
+     *
+     * @param sequence The sequence to analyse.
+     * @param pos      The position where to compute the GC content.
+     * @param window   The size of the window to use.
+     * @return The GC content as a ratio (# of GC / window).
+     * @throw BadIntException If the sequence is not of type DNA or RNA.
+     * @throw Exception       Error in calculus (if the sequence contain gaps for instance).
+     */
 		static double getGCcontent(const string & sequence, unsigned int pos, unsigned int window) throw (BadIntegerException, Exception);
 
 		// Method to shuffle a sequence by windows and with or without throw in used values

@@ -18,7 +18,9 @@
 
 using namespace std;
 
-/* MapSequenceContainer class
+/**
+ * @brief MapSequenceContainer class
+ * 
  * Host sequence container's alphabet
  * Define specific methods to map sequences containers manipulation
  *
@@ -102,7 +104,7 @@ class MapSequenceContainer: public AbstractSequenceContainer
 		 * @{
 		 */
 		const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException);
-		void setSequence(const string & name, const Sequence & sequence, bool checkNames = true) throw (SequenceNotFoundException);
+		void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (SequenceNotFoundException);
 		Sequence * removeSequence(const string & name) throw (SequenceNotFoundException);
 		void deleteSequence(const string & name) throw (SequenceNotFoundException);
 		unsigned int getNumberOfSequences() const;
@@ -114,12 +116,12 @@ class MapSequenceContainer: public AbstractSequenceContainer
 		 *
 		 * @{
 		 */
-		const Sequence * getSequence(unsigned int i) const throw (IndexOutOfBoundsException);
-		unsigned int getSequencePosition(const string & name) const throw (SequenceNotFoundException);
-		void setSequence(unsigned int i, const Sequence & sequence, bool checkNames = true) throw (IndexOutOfBoundsException);
-		Sequence * removeSequence(unsigned int i) throw (IndexOutOfBoundsException);
-		void deleteSequence(unsigned int i) throw (IndexOutOfBoundsException);
-		void setComments(unsigned int i, const Comments & comments) throw (IndexOutOfBoundsException);
+		const Sequence * getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+		unsigned int     getSequencePosition(const string & name) const throw (SequenceNotFoundException);
+		void             setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (IndexOutOfBoundsException);
+		Sequence *    removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
+		void          deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
+		void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException);
 		vector<string> getSequencesNames() const;
 		void setSequencesNames(const vector<string> & names, bool checkNames) throw (Exception);
 		/** @} */

@@ -89,7 +89,7 @@ class MaseTools
         /**
          * @brief Get a list of all available site selections.
          *
-         * @param maseComments Comments as described in the Mase+ format specification.
+         * @param maseHeader Comments as described in the Mase+ format specification.
          * @return A vector of selection names.
          */
         static map<string, unsigned int> getAvailableSiteSelections(const Comments & maseHeader);
@@ -97,7 +97,7 @@ class MaseTools
         /**
          * @brief Get a list of all available sequences selections.
          *
-         * @param maseComments Comments as described in the Mase+ format specification.
+         * @param maseHeader Comments as described in the Mase+ format specification.
          * @return A vector of selection names.
          */
 		static map<string, unsigned int> getAvailableSequenceSelections(const Comments & maseHeader);

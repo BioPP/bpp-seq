@@ -44,7 +44,7 @@ class VectorSequenceContainer : public AbstractSequenceContainer
 		 * @brief Build a new container from a vector of pointers toward sequence objects.
 		 *
 		 * The addSequence() method is called uppon each Sequence object, hence each sequence is
-		 * <u>copied<u> into the container.
+		 * <i>copied</i> into the container.
 		 *
 		 * @param vs    The vector of pointers toward sequence objects.
 		 * @param alpha The alphabet to all sequences.
@@ -118,9 +118,9 @@ class VectorSequenceContainer : public AbstractSequenceContainer
 		 * @{
 		 */
 		const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException);
-		void setSequence(const string & name, const Sequence & sequence, bool checkNames = true) throw (Exception);
-		Sequence * removeSequence(const string & name) throw (SequenceNotFoundException);
-		void deleteSequence(const string & name) throw (SequenceNotFoundException);
+		void             setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception);
+		      Sequence * removeSequence(const string & name) throw (SequenceNotFoundException);
+		void             deleteSequence(const string & name) throw (SequenceNotFoundException);
 		unsigned int getNumberOfSequences() const;
 		vector<string> getSequencesNames() const;
 		void setSequencesNames(const vector<string> & names, bool checkNames = true) throw (Exception);
@@ -136,12 +136,12 @@ class VectorSequenceContainer : public AbstractSequenceContainer
 		void setComments(const string & name, const Comments & comments) throw (SequenceNotFoundException) {
 			AbstractSequenceContainer::setComments(name, comments);
 		}
-		void setComments(unsigned int i, const Comments & comments) throw (IndexOutOfBoundsException);
-		unsigned int     getSequencePosition(const string & name) const throw (SequenceNotFoundException);
-		const Sequence * getSequence(unsigned int i) const throw (IndexOutOfBoundsException);
-		void             setSequence(unsigned int i, const Sequence & sequence, bool checkNames = true) throw (Exception);
-		      Sequence * removeSequence(unsigned int i) throw (IndexOutOfBoundsException);
-		void             deleteSequence(unsigned int i) throw (IndexOutOfBoundsException);
+		void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException);
+		unsigned int        getSequencePosition(const string & name) const throw (SequenceNotFoundException);
+		const Sequence *    getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+		void                setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (Exception);
+		      Sequence * removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
+		void             deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
 		/** @} */
 		
 		/**
@@ -160,29 +160,29 @@ class VectorSequenceContainer : public AbstractSequenceContainer
 		 * but use it at your own risks!
 		 *
 		 * @param sequence The sequence to add.
-		 * @param checkNames Tell if the method must check the name of the sequence
+		 * @param checkName Tell if the method must check the name of the sequence
 		 * before adding it.
 		 * @throw Exception If the sequence couldn't be added to the container.
 		 */
-		void addSequence(const Sequence & sequence, bool checkNames = true) throw (Exception);
+		void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
 
 		/**
 		 * @brief Add a sequence to the container at a particular position.
 		 *
 		 * The sequence is copied into the container.
-		 * If checkNames is set to true, the method check if the name of the
+		 * If checkName is set to true, the method check if the name of the
 		 * sequence is already used in the container, and sends an exception if it
 		 * is the case. Otherwise, do not check the name: the method is hence faster,
 		 * but use it at your own risks!
 		 *
 		 * @param sequence The sequence to add.
-		 * @param pos      The position where to insert the new sequence.
+		 * @param sequenceIndex The position where to insert the new sequence.
 		 * All the following sequences will be pushed.
-		 * @param checkNames Tell if the method must check the name of the sequence
+		 * @param checkName Tell if the method must check the name of the sequence
 		 * before adding it.
 		 * @throw Exception If the sequence couldn't be added to the container.
 		 */
-		void addSequence(const Sequence & sequence, int pos, bool checkNames = true) throw (Exception);
+		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
 
 	protected:
 

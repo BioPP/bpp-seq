@@ -53,16 +53,16 @@ class ISequence : public IOSequence
 		 * @brief Add sequences to a container from a stream.
 		 *
 		 * @param input  The input stream to read.
-		 * @param alpha The alphabet to be associated to the container.
+		 * @param sc     The sequence container to update.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual void read(istream & path, VectorSequenceContainer & sc) const throw (Exception) = 0;
+		virtual void read(istream & input, VectorSequenceContainer & sc) const throw (Exception) = 0;
 
-/**
+		/**
 		 * @brief Add sequences to a container from a file.
 		 *
 		 * @param path  The path to the file to read.
-		 * @param alpha The alphabet to be associated to the container.
+		 * @param sc    The sequence container to update.
 		 * @throw Exception If the file is not in the specified format.
 		 */
 		virtual void read(const string & path, VectorSequenceContainer & sc) const throw (Exception) = 0;

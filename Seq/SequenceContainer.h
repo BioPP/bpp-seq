@@ -142,7 +142,7 @@ class SequenceContainer: public Clonable
 		 * @param names A vector of strings with all sequence names.
 		 * Its size must be strictly equal to the the size of the container (the number of
 		 * sequences).
-		 * @param checkName Tell if the container must check if the name of the sequence
+		 * @param checkNames Tell if the container must check if the name of the sequence
 		 * is already used in the container before adding it.
 		 * @throw Exception If there are redundant names in the input vector.
 		 */

@@ -50,7 +50,7 @@
 
 class VectorSiteContainer : 
 	public AbstractSequenceContainer,   //This container implements the SequenceContainer interface
-										//and use the AbstractSequenceContainer adapter.
+				                  						//and use the AbstractSequenceContainer adapter.
 	public SiteContainer				//This container is a SiteContainer.
 {
 	
@@ -90,12 +90,12 @@ class VectorSiteContainer :
 		 *
 		 * @{
 		 */
-		const Site * getSite(unsigned int i) const throw (IndexOutOfBoundsException);
-		void setSite(unsigned int i, const Site & site, bool checkPositions = true) throw (Exception);
-		Site * removeSite(unsigned int i) throw (IndexOutOfBoundsException);
-		void deleteSite(unsigned int i) throw (IndexOutOfBoundsException);
-		void addSite(const Site & site, bool checkPositions = true) throw (Exception);
-		void addSite(const Site & site, unsigned int pos, bool checkPositions = true) throw (Exception);
+		const Site * getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException);
+		void         setSite(unsigned int siteIndex, const Site & site, bool checkPosition = true) throw (Exception);
+		Site *    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
+		void      deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
+		void         addSite(const Site & site,                         bool checkPosition = true) throw (Exception);
+		void         addSite(const Site & site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);
 		unsigned int getNumberOfSites() const;
 		const vector<int> getPositions() const;
 		void reindexSites();
@@ -110,33 +110,33 @@ class VectorSiteContainer :
 		 *
 		 * @{
 		 */
-	
+
 		const Alphabet * getAlphabet() const {
 			return AbstractSequenceContainer::getAlphabet();
 		}
-		
-		string getName(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return AbstractSequenceContainer::getName(i);
+
+		string getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return AbstractSequenceContainer::getName(sequenceIndex);
 		}
 
-		vector<int> getContent(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return AbstractSequenceContainer::getContent(i);
+		vector<int> getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return AbstractSequenceContainer::getContent(sequenceIndex);
 		}
 
 		vector<int> getContent(const string & name) const throw (SequenceNotFoundException) {
 			return AbstractSequenceContainer::getContent(name);
-		}  
+		}
 
-		string toString(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return AbstractSequenceContainer::toString(i);
+		string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return AbstractSequenceContainer::toString(sequenceIndex);
 		}
 
 		string toString(const string & name) const throw (SequenceNotFoundException) {
 			return AbstractSequenceContainer::toString(name);
-		}  
+		}
 
-		Comments getComments(unsigned int i) const throw (IndexOutOfBoundsException) {
-			return AbstractSequenceContainer::getComments(i);
+		Comments getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
+			return AbstractSequenceContainer::getComments(sequenceIndex);
 		}
 
 		Comments getComments(const string & name) const throw (SequenceNotFoundException) {
@@ -161,27 +161,27 @@ class VectorSiteContainer :
 
 		//Theses methods are implemented for this class:
 		
-		void setComments(unsigned int i, const Comments & comments) throw (IndexOutOfBoundsException);
+		void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException);
 
 		// Method to get a sequence object from sequence container
-		const Sequence * getSequence(unsigned int i     ) const throw (IndexOutOfBoundsException);
-		const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException);
+		const Sequence * getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+		const Sequence * getSequence(const string & name       ) const throw (SequenceNotFoundException);
 
 		// Methods to get position of a sequence in sequence container from his name
 		// This method is used by delete and remove methods
 		unsigned int getSequencePosition(const string & name) const throw (SequenceNotFoundException);
 
-		void setSequence(const string & name, const Sequence & sequence, bool checkNames) throw (Exception);
-		void setSequence(unsigned int pos   , const Sequence & sequence, bool checkNames) throw (Exception);
+		void setSequence(const string & name,        const Sequence & sequence, bool checkName) throw (Exception);
+		void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName) throw (Exception);
 
-		Sequence * removeSequence(unsigned int i     ) throw (IndexOutOfBoundsException);
-		Sequence * removeSequence(const string & name) throw (SequenceNotFoundException);
+		Sequence * removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
+		Sequence * removeSequence(const string & name       ) throw (SequenceNotFoundException);
 
-		void deleteSequence(unsigned int i     ) throw (IndexOutOfBoundsException);
-		void deleteSequence(const string & name) throw (SequenceNotFoundException);
+		void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
+		void deleteSequence(const string & name       ) throw (SequenceNotFoundException);
 
-		void addSequence(const Sequence & sequence,                   bool checkNames = true) throw (Exception);
-		void addSequence(const Sequence & sequence, unsigned int pos, bool checkNames = true) throw (Exception);
+		void addSequence(const Sequence & sequence,                             bool checkName = true) throw (Exception);
+		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
 
 		unsigned int getNumberOfSequences() const;
 

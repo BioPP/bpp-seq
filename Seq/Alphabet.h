@@ -92,7 +92,7 @@ class Alphabet
 		/**
          * @name Conversion methods
          *
-         * @}
+         * @{
          */
 		
 		/**

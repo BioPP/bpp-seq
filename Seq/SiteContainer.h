@@ -43,39 +43,40 @@ class SiteContainer: public OrderedSequenceContainer
 		/**
 		 * @brief Get a site from the container.
 		 *
-		 * @param i The position of the site in the container.
+		 * @param siteIndex The position of the site in the container.
 		 * @return A site objet corresponding to site i in the alignment.
 		 * @throw IndexOutOfBoundsException If the specified site does not exists.
 		 */
-		virtual const Site * getSite(unsigned int i) const throw (IndexOutOfBoundsException) = 0;
+		virtual const Site * getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Set a site in the container.
 		 *
-		 * @param i             The position of the site in the container.
+		 * @param siteIndex     The position of the site in the container.
+		 * @param site          The site to set.
 		 * @param checkPosition Look if the position of the new site match a position attribute in the container.
 		 * @throw Exception If the specified site does not exists or is not correct.
 		 */
-		virtual void setSite(unsigned int i, const Site & site, bool checkPosition) throw (Exception) = 0;
+		virtual void setSite(unsigned int siteIndex, const Site & site, bool checkPosition) throw (Exception) = 0;
 
 		/**
 		 * @brief Remove a site from the container.
 		 *
 		 * The site is not deleted, a pointer toward it is returned.
 		 *
-		 * @param i The position of the site in the container.
+		 * @param siteIndex The position of the site in the container.
 		 * @return A pointer toward site i in the alignment.
 		 * @throw IndexOutOfBoundsException If the specified site does not exists.
 		 */
-		virtual Site * removeSite(unsigned int i) throw (IndexOutOfBoundsException) = 0;
+		virtual Site * removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Delete a site in the container.
 		 *
-		 * @param i The position of the site in the container.
+		 * @param siteIndex The position of the site in the container.
 		 * @throw IndexOutOfBoundsException If the specified site does not exists.
 		 */
-		virtual void deleteSite(unsigned int i) throw (IndexOutOfBoundsException) = 0;
+		virtual void deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Get the number of sites in the container.

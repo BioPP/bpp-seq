@@ -33,16 +33,16 @@ class SequenceNotFoundException : public Exception {
 		/**
 		 * @brief Build a new SequenceNotFoundException object.
 		 *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param id   A the id of the sequence that was to be found.
+		 * @param text  A message to be passed to the exception hierarchy.
+		 * @param seqId A the id of the sequence that was to be found.
 		 */
-		SequenceNotFoundException(const char *   text, const char *   seqId = "");
+		SequenceNotFoundException(const char * text, const char * seqId = "");
 
 		/**
 		 * @brief Build a new SequenceNotFoundException object.
 		 *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param id   A the id of the sequence that was to be found.
+		 * @param text  A message to be passed to the exception hierarchy.
+		 * @param seqId A the id of the sequence that was to be found.
 		 */
 		SequenceNotFoundException(const string & text, const string & seqId = "");
 	
