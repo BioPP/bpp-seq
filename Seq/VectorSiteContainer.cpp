@@ -404,7 +404,7 @@ Sequence * VectorSiteContainer::removeSequence(const string & name) throw (Seque
 void VectorSiteContainer::deleteSequence(unsigned int i) throw (IndexOutOfBoundsException)
 {
 	if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::demeteSequence.", i, 0, getNumberOfSequences() - 1);
-	for(unsigned int j = 0; j < _sites.size(); j++) _sites[i] -> deleteElement(i);
+	for(unsigned int j = 0; j < _sites.size(); j++) _sites[j] -> deleteElement(i);
 
 	//Now actualize names and comments:
 	delete _names[i]; _names.erase(_names.begin() + i);
