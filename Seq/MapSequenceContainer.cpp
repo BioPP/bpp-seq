@@ -1,7 +1,8 @@
 /*
  * File MapSequenceContainer.cpp
- * Author : Guillaume Deuchst <GDeuchst@ifrance.com>
- * Last modification : Wednesday July 30 2003
+ * Authors : Guillaume Deuchst <GDeuchst@ifrance.com>
+ *           Sylvain Gaillard <yragael2001@yahoo.fr>
+ * Last modification : Friday June 25 2003
 */
 
 #include "MapSequenceContainer.h"
@@ -46,6 +47,11 @@ MapSequenceContainer & MapSequenceContainer::operator = (const MapSequenceContai
 MapSequenceContainer::~MapSequenceContainer() 
 {
 	clear();
+}
+
+// The Clonble interface
+Clonable * MapSequenceContainer::clone() const {
+	return new MapSequenceContainer(* this);
 }
 
 // Methods to get an sequence object from sequence container
@@ -276,12 +282,56 @@ vector<string> MapSequenceContainer::getKeys() const {
 
 string MapSequenceContainer::getKey(unsigned int pos) const throw (IndexOutOfBoundsException)
 {
-	for (map<string, Sequence *>::const_iterator i = _sequences.begin() ; i != _sequences.end() ; i++) {
-		return i -> first;
-	}
-	throw IndexOutOfBoundsException("MapSequenceContainer::getKey", pos, 0, _sequences.size() - 1);
+	if (pos >= getNumberOfSequences())
+		throw IndexOutOfBoundsException("MapSequenceContainer::getKey", pos, 0, _sequences.size() - 1);
+	map<string, Sequence *>::const_iterator it = _sequences.begin();
+	for (unsigned int i = 0 ; i < pos ; i++) it++;
+	return it->first;
 }
 
+string MapSequenceContainer::getKey(const string & name) const throw (SequenceNotFoundException) {
+	try {
+		return getKey(getSequencePosition(name));
+	}
+	catch (SequenceNotFoundException & snfe) {
+		throw SequenceNotFoundException("MapSequenceContainer::getKey", snfe.getSequenceId());
+	}
+}
+	
+// Method to set the comments (OrderedSequenceContainer interface)
+void MapSequenceContainer::setComments(unsigned int pos, const Comments & comments) throw (IndexOutOfBoundsException) {
+	if (pos >= getNumberOfSequences())
+		throw IndexOutOfBoundsException("MapSequenceContainer::setComments", pos, 0, _sequences.size() - 1);
+	map<string, Sequence *>::iterator it = _sequences.begin();
+	for (unsigned int i = 0 ; i < pos ; i++) it++;
+	it->second->setComments(comments);
+}
+
+// Methods to deal with all sequences' names (OrderedSequenceContainer interface)
+vector<string> MapSequenceContainer::getSequencesNames() const {
+	vector<string> names;
+	for (map<string, Sequence *>::const_iterator it = _sequences.begin() ; it != _sequences.end() ; it++)
+		names.push_back(it->second->getName());
+	return names;
+}
+
+void MapSequenceContainer::setSequencesNames(const vector<string> & names, bool checkNames) throw (Exception) {
+	if(names.size() != getNumberOfSequences())
+		throw BadIntegerException("MapSequenceContainer::setSequenceNames : bad number of names", names.size());
+	if(checkNames) {
+		// check if there is no repeat names in teh vector
+		for (unsigned int i = 0 ; i < names.size() ; i++)
+			for (unsigned int j = 0 ; j < i ; j++)
+				if (names[j] == names[i])
+					throw Exception("MapSequenceContainer::setSequencesNames: Sequence's name already exists in container");
+	}
+	map<string, Sequence *>::iterator it = _sequences.begin();
+	for (unsigned int i = 0 ; i < names.size() ; i++) {
+		it->second->setName(names[i]);
+		it++;
+	}
+}
+	
 void MapSequenceContainer::clear()
 {
 	// Delete sequences
