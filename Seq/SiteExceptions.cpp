@@ -24,11 +24,11 @@
 /***************************************************************************/
 
 SiteException::SiteException(const char *   text, const Site * s) :
-	Exception(text + (s != NULL ? "(" + TextTools::toString(s -> getPosition()) + ")" : "")),
+	Exception(text + (s != NULL ? "(" + TextTools::toString(s -> getPosition()) + ")" : string(""))),
 	site(s) {};
     
 SiteException::SiteException(const string & text, const Site * s) :
-	Exception(text + (s != NULL ? "(" + TextTools::toString(s -> getPosition()) + ")" : "")),
+	Exception(text + (s != NULL ? "(" + TextTools::toString(s -> getPosition()) + ")" : string(""))),
 	site(s) {};
     
 SiteException::~SiteException() throw() {};

@@ -13,11 +13,11 @@
  *******************************************************************************/
 
 SequenceException::SequenceException(const char *   text, const Sequence * seq) :
-	Exception("SequenceException: " + string(text) + (seq != NULL ? "(" + seq -> getName() + ")" : "")),
+	Exception("SequenceException: " + string(text) + (seq != NULL ? "(" + seq -> getName() + ")" : string(""))),
 	sequence(seq) {};
 		
 SequenceException::SequenceException(const string & text, const Sequence * seq) :
-	Exception("SequenceException: " + text + (seq != NULL ? "(" + seq -> getName() + ")" : "")),
+	Exception("SequenceException: " + text + (seq != NULL ? "(" + seq -> getName() + ")" : string(""))),
 	sequence(seq) {};
 		
 SequenceException::~SequenceException() throw() {};
@@ -47,12 +47,12 @@ SequenceWithGapException::~SequenceWithGapException() throw () {};
 /******************************************************************************/
 	
 AlphabetMismatchException::AlphabetMismatchException(const char *   text, const Alphabet * alpha1, const Alphabet * alpha2) :
-	Exception("AlphabetMismatchException: " + string(text) + (alpha1 != NULL && alpha2 != NULL ? "(" + alpha1 -> getAlphabetType() + ", " + alpha2 -> getAlphabetType() + ")" : "")),
+	Exception("AlphabetMismatchException: " + string(text) + (alpha1 != NULL && alpha2 != NULL ? "(" + alpha1 -> getAlphabetType() + ", " + alpha2 -> getAlphabetType() + ")" : string(""))),
 	alphabet1(alpha1),
 	alphabet2(alpha2) {};
 		
 AlphabetMismatchException::AlphabetMismatchException(const string & text, const Alphabet * alpha1, const Alphabet * alpha2) :
-	Exception("AlphabetMismatchException: " + text + (alpha1 != NULL && alpha2 != NULL ? "(" + alpha1 -> getAlphabetType() + ", " + alpha2 -> getAlphabetType() + ")" : "")),
+	Exception("AlphabetMismatchException: " + text + (alpha1 != NULL && alpha2 != NULL ? "(" + alpha1 -> getAlphabetType() + ", " + alpha2 -> getAlphabetType() + ")" : string(""))),
 	alphabet1(alpha1),
 	alphabet2(alpha2) {};
 		
