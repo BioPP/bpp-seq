@@ -27,6 +27,8 @@ class RNA : public NucleicAlphabet
 		~RNA() {}
 
 	public:
+		vector<int   > getAlias(      int      state) const throw (BadIntException);
+		vector<string> getAlias(const string & state) const throw (BadCharException);
 		string getAlphabetType() const;
 };
 

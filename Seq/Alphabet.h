@@ -77,7 +77,7 @@ class Alphabet
 		 * @param letter The int description.
 		 * @return 'True' if the state in known.
 		 */
-		virtual bool  isIntInAlphabet(int letter) const = 0;
+		virtual bool isIntInAlphabet(int letter) const = 0;
 		
 		/**
 		 * @brief Tell if a state (specified by its char descritption) is allowed by the
@@ -110,13 +110,13 @@ class Alphabet
 		 * @return The int description.
 		 */
 		virtual int charToInt(const string & letter) const throw (BadCharException) = 0;
-        /** @} */
+		/** @} */
         
 		/**
-         * @name Sizes.
-         *
-         * @{
-         */
+		 * @name Sizes.
+		 *
+		 * @{
+		 */
 		
 		/**
 		 * @brief Get the number of allowed states in Alphabet (e.g. return 20 for DNA alphabet).
@@ -141,11 +141,31 @@ class Alphabet
 		 * @return The number of resolved states.
 		 */
 		virtual unsigned int getSize() const = 0;
-        /** @} */
+		/** @} */
         
 		// Some util:
 		
 		/**
+		 * @brief Get all resolved states that match a generic state.
+		 *
+		 * If the given state is not a generic code then the outpout vector will contain this sole code.
+		 *
+		 * @param state The alias to resolve.
+		 * @return A vector of resolved states.
+		 */
+		virtual vector<int> getAlias(int state) const throw (BadIntException) = 0;
+		
+		/**
+		 * @brief Get all resolved states that match a generic state.
+		 *
+		 * If the given state is not a generic code then the outpout vector will contain this sole code.
+		 *
+		 * @param state The alias to resolve.
+		 * @return A vector of resolved states.
+		 */
+		virtual vector<string> getAlias(const string & state) const throw (BadCharException) = 0;
+
+/**
 		 * @brief Identification method.
 		 *
 		 * Used to tell if two alphabet describe the same type of sequences.

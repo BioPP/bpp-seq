@@ -26,6 +26,8 @@ class DNA : public NucleicAlphabet
 		~DNA() {}
 	
 	public:
+		vector<int   > getAlias(      int      state) const throw (BadIntException);
+		vector<string> getAlias(const string & state) const throw (BadCharException);
 		string getAlphabetType() const;
 };
 

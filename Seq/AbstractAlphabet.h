@@ -64,19 +64,21 @@ class AbstractAlphabet : public Alphabet
 	
 	public:
     
-        /**
-         * @name Implement these methods from the Alphabet interface.
-         *
-         * @{
-         */
+    /**
+		 * @name Implement these methods from the Alphabet interface.
+		 *
+		 * @{
+		 */
 		unsigned int getNumberOfChars() const;
 		string getName(const string & letter) const throw (BadCharException);
 		string getName(int            letter) const throw (BadIntException);
 		int charToInt(const string & letter) const throw (BadCharException);
 		string intToChar(int letter) const throw (BadIntException);
-		virtual bool  isIntInAlphabet(      int      letter) const;
-		virtual bool isCharInAlphabet(const string & letter) const;
-        /** @} */
+		bool  isIntInAlphabet(      int      letter) const;
+		bool isCharInAlphabet(const string & letter) const;
+		vector<int   > getAlias(      int      state) const throw (BadIntException);
+		vector<string> getAlias(const string & state) const throw (BadCharException);
+		/** @} */
 };
 
 bool operator == (AbstractAlphabet::sletter &, AbstractAlphabet::sletter &);

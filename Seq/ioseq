@@ -1,0 +1,16 @@
+#ifndef _IOSEQ_
+#define _IOSEQ_
+
+#include "IOSequence.h"
+#include "ISequence.h"
+#include "OSequence.h"
+#include "AbstractISequence.h"
+#include "AbstractOSequence.h"
+#include "Fasta.h"
+#include "Mase.h"
+#include "Clustal.h"
+#include "Phylip.h"
+#include "DCSE.h"
+#include "MaseTools.h"
+
+#endif //_IOSEQ_

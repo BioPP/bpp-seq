@@ -19,6 +19,7 @@ Fasta.h\
 GeneticCode.h\
 IOSequence.h\
 ISequence.h\
+ioseq\
 MapSequenceContainer.h\
 Mase.h\
 MaseTools.h\

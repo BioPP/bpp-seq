@@ -86,6 +86,27 @@ bool AbstractAlphabet::isCharInAlphabet(const string & letter) const
 
 /****************************************************************************************/
 
+vector<int> AbstractAlphabet::getAlias(int state) const throw (BadIntException) 
+{
+	if(!isIntInAlphabet(state)) throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");
+	vector<int> v(1);
+	v[0] = state;
+	return v;
+}
+
+/****************************************************************************************/
+
+vector<string> AbstractAlphabet::getAlias(const string & state) const throw (BadCharException) 
+{
+	if(!isCharInAlphabet(state)) throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.");
+	vector<string> v(1);
+	v[0] = state;
+	return v;
+}
+
+
+/****************************************************************************************/
+
 bool operator == (AbstractAlphabet::sletter & l1, AbstractAlphabet::sletter & l2)
 {
     return (l1.name == l2.name);
