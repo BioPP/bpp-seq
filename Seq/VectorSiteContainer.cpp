@@ -385,7 +385,8 @@ Sequence * VectorSiteContainer::removeSequence(unsigned int i) throw (IndexOutOf
 	delete _names[i]; _names.erase(_names.begin() + i);
 	if(_comments[i] != NULL) delete _comments[i];
 	_comments.erase(_comments.begin() + i);
-	if(_sequences[i] != NULL) delete _sequences[i];
+	// We remove the sequence, so the destruction of the sequence is up to the user:
+	//if(_sequences[i] != NULL) delete _sequences[i];
 	_sequences.erase(_sequences.begin() + i);
 	return sequence;
 }
