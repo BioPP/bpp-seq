@@ -154,7 +154,7 @@ map<string, unsigned int> MaseTools::getAvailableSiteSelections(const Comments &
 			StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
 			st.nextToken(); //skip next word: may be 'sequences' or else ;-)
 			unsigned int numberOfSegments = TextTools::toInt(st.nextToken());
-			string name;
+			string name = st.nextToken();
 			while(st.hasMoreToken()) {
 				name += " " +st.nextToken();
 			}
@@ -195,7 +195,7 @@ map<string, unsigned int> MaseTools::getAvailableSequenceSelections(const Commen
       StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
       st.nextToken(); //skip next word: may be 'sequences' or else ;-)
       unsigned int numberOfSequences = TextTools::fromString<unsigned int>(st.nextToken());
-      string name;
+      string name = st.nextToken();
       while(st.hasMoreToken()) {
         name += st.nextToken();
       }
