@@ -21,11 +21,11 @@ typedef vector<unsigned int> SequenceSelection;
 class SequenceContainerTools
 {
 	/**
-	 * a few tools for generic SequenceContainers.
+	 * @ brief A few tools for generic SequenceContainers.
 	 */
 
 	public:
-		 ~SequenceContainerTools();
+		 ~SequenceContainerTools() {}
 	
 	public:
 		/**
@@ -75,7 +75,7 @@ class SequenceContainerTools
 		static SequenceContainer * getSelectedSequences(const OrderedSequenceContainer & sequences, const SequenceSelection & selection);
 		
 		/**
-		 * @brief Check if al  sequences in a SequenceContainer have the same length.
+		 * @brief Check if all sequences in a SequenceContainer have the same length.
 		 *
 		 * @param sequences The container to check.
 		 * @return True is all sequence have the same length.

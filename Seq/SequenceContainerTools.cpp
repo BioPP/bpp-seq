@@ -77,3 +77,5 @@ map<int, double> SequenceContainerTools::getFrequencies(const SequenceContainer 
 	}
 	return f;
 }
+
+/******************************************************************************/

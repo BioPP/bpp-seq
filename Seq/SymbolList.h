@@ -89,7 +89,7 @@ class SymbolList: public Clonable {
 		/**
 		 * @brief The assignment operator.
 		 */
-		SymbolList operator = (const SymbolList & list);
+		SymbolList & operator = (const SymbolList & list);
 
 		// Class destructor
 		~SymbolList();

@@ -641,5 +641,5 @@ const string Mase::getFormatName() const { return "MASE file"; }
 
 // Method to get description of mase file format
 const string Mase::getFormatDescription() const {
-	return "Optional file commentaries (preceded by ;;), sequence commentaries (preceded by ;), sequence name, sequence";
+	return "Optional file comments (preceeded by ;;), sequence comments (preceeded by ;), sequence name, sequence";
 }

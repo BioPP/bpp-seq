@@ -29,18 +29,20 @@ void Clustal::read(const string & path, VectorSequenceContainer & sc) const thro
 	comments[0] = FileTools::getNextLine(file); // First line gives file generator.
 
   lineRead = FileTools::getNextLine(file); // This is the first sequence of the first block.
-
-	unsigned int beginSeq = lineRead.find_last_of("      ") + 6;
+		
+	unsigned int beginSeq = lineRead.find_last_of("      ") + 1;
 	if(beginSeq == string::npos) throw IOException("Clustal::read. Bad intput file.");
 
 	unsigned int countSequences = 0;
 
   //Read first sequences block:
+	bool test = true;
 	do {
 		sequences.push_back(Sequence(lineRead.substr(0, beginSeq - 6), lineRead.substr(beginSeq), alpha));
 		getline(file, lineRead, '\n');
 		countSequences++;
-	} while(file && !TextTools::isEmpty(lineRead));
+		test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - 6));
+	} while(file && test);
 
 	// Read other blocks
 	lineRead = FileTools::getNextLine(file); // Read first sequence of next block.
@@ -51,35 +53,15 @@ void Clustal::read(const string & path, VectorSequenceContainer & sc) const thro
 			getline(file, lineRead, '\n');
 			if(TextTools::isEmpty(lineRead)) throw IOException("Clustal::read. Bad intput file.");
 		}
+		//lineRead = FileTools::getNextLine(file);
+		// Drop consensus line if it exists:
+		if(TextTools::isEmpty(lineRead.substr(0, beginSeq - 6)))
+			lineRead = FileTools::getNextLine(file);
 	}
 
 	for(unsigned int i = 0; i < countSequences; i++) sc.addSequence(sequences[i]);
 	sc.setGeneralComments(comments);
 }
 
-Sequence * Clustal::readSequence(const string & path, unsigned int number, const Alphabet * alpha) const throw (Exception)
-{
-
-}
-
-Sequence * Clustal::readSequence(const string & path, unsigned int number) const throw (Exception)
-{
-
-}
-
-Sequence * Clustal::readSequence(const string & path, const string & name, const Alphabet * alpha) const throw (Exception)
-{
-
-}
-
-Sequence * Clustal::readSequence(const string & path, const string & name) const throw (Exception)
-{
-
-}
-
-int Clustal::getNumberOfSequences(const string & path) const throw (Exception)
-{
-}
-
 const string Clustal::getFormatName() const { return "Clustal"; }
-const string Clustal::getFormatDescription() const { return "The Clustal alignment tool outpu format."; }
+const string Clustal::getFormatDescription() const { return "The Clustal alignment tool output format."; }

@@ -10,6 +10,7 @@
 // From Utils:
 #include <Utils/TextTools.h>
 #include <Utils/StringTokenizer.h>
+#include <Utils/FileTools.h>
 
 // From the STL:
 #include <sstream>
@@ -25,11 +26,12 @@ Phylip::Phylip(bool extended, bool sequential, unsigned int charsByLine): _chars
 
 Phylip::~Phylip() {}
 
-string Phylip::getNextNonEmptyLine(istream & in) {
-	string temp = "";
-	while(!in.eof() && TextTools::isEmpty(temp)) getline(in, temp, '\n');
-	return temp;
-} 
+//Replaced by the corresponding FileTools method.
+//string Phylip::getNextNonEmptyLine(istream & in) {
+//	string temp = "";
+//	while(!in.eof() && TextTools::isEmpty(temp)) getline(in, temp, '\n');
+//	return temp;
+//} 
 
 const vector<string> Phylip::splitNameAndSequence(const string & s) const {
 	vector<string> v(2);
@@ -49,7 +51,7 @@ void Phylip::readSequential(istream & in, VectorSequenceContainer & vsc) const t
 	
 	//Ignore first line:
 	getline(in, temp, '\n');  // Copy current line in temporary string
-	temp = getNextNonEmptyLine(in);
+	temp = FileTools::getNextLine(in);
 	
 	while(!in.eof()) {
 		// Read each sequence:
@@ -63,7 +65,7 @@ void Phylip::readSequential(istream & in, VectorSequenceContainer & vsc) const t
 		}
 		//end of this sequence:
 		vsc.addSequence(Sequence(name, seq, vsc.getAlphabet()), true);
-		temp = getNextNonEmptyLine(in);
+		temp = FileTools::getNextLine(in);
 	}
 }
 
@@ -76,7 +78,7 @@ void Phylip::readInterleaved(istream & in, VectorSequenceContainer & vsc) const 
 	StringTokenizer st(temp);
 	int nbSequences = TextTools::toInt(st.nextToken());
 	//int nbSites     = TextTools::toInt(st.nextToken());
-	temp = getNextNonEmptyLine(in);
+	temp = FileTools::getNextLine(in);
 	
 	vector<string> names, seqs;
 	// Read first block:
@@ -84,18 +86,19 @@ void Phylip::readInterleaved(istream & in, VectorSequenceContainer & vsc) const 
 		vector<string> v = splitNameAndSequence(temp);
 		names.push_back(v[0]);
 		seqs .push_back(v[1]);
+		getline(in, temp, '\n');  // read next line in file.
 	}
 	
 	//Then read all other blocks:
-	temp = getNextNonEmptyLine(in);
+	temp = FileTools::getNextLine(in);
 	while(!in.eof()) {
 		for(unsigned int i = 0; i < names.size(); i++) {
 			if(TextTools::isEmpty(temp))
 				throw IOException("Phylip::readInterleaved. Bad file,there are not the same number of sequence in each block.");
-			getline(in, temp, '\n');  // read next line in file.
 			seqs[i] += TextTools::removeWhiteSpaces(temp);			
+			getline(in, temp, '\n');  // read next line in file.
 		}
-		temp = getNextNonEmptyLine(in);
+		temp = FileTools::getNextLine(in);
 	}
 	for(unsigned int i = 0; i < names.size(); i++) {
 		vsc.addSequence(Sequence(names[i], seqs[i], vsc.getAlphabet()));
@@ -114,91 +117,12 @@ void Phylip::read(const string & path, VectorSequenceContainer & vsc) const thro
 	file.close();
 }
 
-/*
-// Method to read mase file containing many sequences containers
-// (many groups of file commentaries (;;)
-const vector<VectorSequenceContainer *> * Phylip::multiContainersRead(const string & path, const Alphabet * alpha) const throw (Exception) {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) { throw IOException ("Mase::multiContainersRead : fail to open file"); }
-
-	// Initialization
-	vector<VectorSequenceContainer *> * vect;
-	VectorSequenceContainer * vsc;
-	vector<const Sequence *> vs;
-
-	Comments seqComments, fileComments;
-	string temp, name, sequence = "";
-	bool fileComm, seqComm = false;
-
-	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
-
-		// If first character is ;
-		if (temp[0] == ';') {
-			// If second character is also ;
-			if (temp[1] == ';') {
-				// File commentaries isolation
-				temp.erase(0,2);  // Characters ;; deletion
-				if (temp != "") fileComments.push_back(temp);
-				fileComm = true;
-			} else {
-				// If file commentaries was just isolated
-				if (fileComm) {
-					// Creation and addition in vector of a new VectorSequenceContainer
-					vsc = new VectorSequenceContainer(vs, alpha);
-					vsc -> setGeneralComments(fileComments);
-					vect -> push_back(vsc);
-					vs.clear();
-					fileComm = false;
-				}
-
-				// If a name and a sequence were founded
-				if ((name != "") && (sequence != "")) {
-					// Addition in current temporary vector of sequence
-					vs.push_back(new Sequence(name, sequence, seqComments, alpha));
-					name = "";
-					sequence = "";
-					seqComments.clear();
-				}
-				
-				// Sequence commentaries isolation
-				temp.erase(temp.begin());  // Character ; deletion
-				if (temp != "") seqComments.push_back(temp);
-				seqComm = true;
-			}
-		} else {
-			// If sequence commentaries were just isolated
-			if (seqComm) {
-				// Sequence name isolation
-				name = temp;
-				seqComm = false;
-			} else sequence += temp;  // Sequence isolation
-		}
-	}
-
-	// Addition of the last sequence in file
-	if ((name != "") && (sequence != "")) vs.push_back(new Sequence(name, sequence, seqComments, alpha));
-
-	// Addition in vector of the last VectorSequenceContainer filled
-	if (vs.size() > 0) {
-		vsc = new VectorSequenceContainer(vs, alpha);
-		vsc -> setGeneralComments(fileComments);
-		vect -> push_back(vsc);
-	}
-
-	file.close();
-
-	return vect;
-}*/
-
 // Method to get number of sequences contained in specified file
 int Phylip::getNumberOfSequences(const string & path) const throw (Exception) {
 	// Checking the existence of specified file
 	ifstream file (path.c_str(), ios::in);
 	if (! file) { throw IOException ("Phylip::getNumberOfSequences: failed to open file"); }
-	string firstLine = getNextNonEmptyLine(file);
+	string firstLine = FileTools::getNextLine(file);
 	StringTokenizer st(firstLine, " \t");
 	istringstream iss(st.nextToken());
 	int nb;

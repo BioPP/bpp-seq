@@ -38,7 +38,7 @@ SymbolList::SymbolList(const vector<int> & list, const Alphabet * alpha) throw (
 
 SymbolList::SymbolList(const SymbolList & list): Clonable(), _alphabet(list.getAlphabet()), _content(list.getContent()) {}
 
-SymbolList SymbolList::operator = (const SymbolList & list)
+SymbolList & SymbolList::operator = (const SymbolList & list)
 {
 	_content  = list.getContent();
 	_alphabet = list.getAlphabet();
