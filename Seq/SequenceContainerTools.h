@@ -3,6 +3,9 @@
 // Created by: jdutheil <jdutheil@Deedlit>
 // Created on: Sat Oct  4 09:18:34 2003
 //
+// Last modification : Monday June 14 2004
+// By Sylvain Gaillard <yragael2001@yahoo.fr>
+//
 
 #ifndef _SEQUENCECONTAINERTOOLS_H_
 #define _SEQUENCECONTAINERTOOLS_H_
@@ -96,6 +99,32 @@ class SequenceContainerTools
 		 */
 		static map<int, double> getFrequencies(const SequenceContainer & sequences);
 	
+		/**
+		 * @brief Append all the sequences of a SequenceContainer to the end of another.
+		 *
+		 * This function is a template because of the non existance of the
+		 * addSequence() methode in the SequenceContainer interface (see the doc
+		 * of SequenceContainer for more details).
+		 * The type of the template must be the type of the SequenceContainer which
+		 * recieves the sequences. This SequenceContainer <b>must have<\b> an
+		 * addSequence() methode like:
+		 * <code>
+		 * void addSequence(const Sequence &sequence, bool checkNames=true);
+		 * <\code>
+		 * @param seqCont1 The SequenceContainer in which the sequences will be added.
+		 * @param seqCont2 The SequenceContainer from which the sequences are taken.
+		 */
+		template<class T>static void append(T & seqCont1, const SequenceContainer 
+				& seqCont2) throw (Exception) {
+					try {
+						vector<string> seqNames = seqCont2.getSequencesNames();
+						for (unsigned int i = 0 ; i < seqNames.size() ; i++)
+							seqCont1.addSequence(* seqCont2.getSequence(seqNames[i]));
+					}
+					catch (Exception e) {
+						throw e;
+					}
+				}
 };
 
 
