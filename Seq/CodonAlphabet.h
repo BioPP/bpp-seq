@@ -44,13 +44,13 @@ class CodonAlphabet : public AbstractAlphabet
 	
 	public:	// These methods are redefined from AbstractAlphabet:
 	
-		string getName(string letter) const throw (BadCharException);
-		int charToInt(string letter) const throw (BadCharException);
+		string getName(const string & letter) const throw (BadCharException);
+		int charToInt(const string & letter) const throw (BadCharException);
 		string getAlphabetType() const;
 	
 	private: //Private tools
-		bool containsUnresolved(string letter) const throw (BadCharException);
-		bool containsGap(string letter) const throw (BadCharException);
+		bool containsUnresolved(const string & letter) const throw (BadCharException);
+		bool containsGap(const string & letter) const throw (BadCharException);
 		
 	public: //Codon specific methods:
 		/**

@@ -88,7 +88,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @param j a int
 		 * @param ca a CodonAlphabet
 		 */
-		static unsigned int NumberOfDifferences(int i, int j, const CodonAlphabet & ca);
+		static unsigned int numberOfDifferences(int i, int j, const CodonAlphabet & ca);
 
 		/* @brief Compute the number of synonymous differences between two codons
 		 *
@@ -102,7 +102,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @param gc a GeneticCode
 		 * @param minchange a boolean set by default to false
 		 */
-        static double NumberOfSynonymousDifferences(int i, int j, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false);
+    static double numberOfSynonymousDifferences(int i, int j, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false);
 
 		/* @brief Compute the synonymous pi per codon site
 		 *

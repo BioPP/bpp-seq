@@ -126,7 +126,7 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site & site, const NucleicAlp
 }
 
 //Method to know the number of difference between two codons
-unsigned int CodonSiteTools::NumberOfDifferences(int i, int j, const CodonAlphabet & ca){
+unsigned int CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet & ca){
        	unsigned int nbdif = 0;
         if(ca.getFirstPosition(i)!=ca.getFirstPosition(j)) nbdif++;
        	if(ca.getSecondPosition(i)!=ca.getSecondPosition(j)) nbdif++;
@@ -135,11 +135,11 @@ unsigned int CodonSiteTools::NumberOfDifferences(int i, int j, const CodonAlphab
 }
 
 
-double CodonSiteTools::NumberOfSynonymousDifferences(int i, int j, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange){
+double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange){
         //Alphabet checking
         vector<int> ci=ca.getPositions(i);
         vector<int> cj=ca.getPositions(j);
-        switch(CodonSiteTools::NumberOfDifferences(i,j,ca)) {
+        switch(CodonSiteTools::numberOfDifferences(i,j,ca)) {
                 case 0 : return 0;
                 case 1 : {
 			 if(gc.areSynonymous(i,j)) return 1;
@@ -265,25 +265,25 @@ double CodonSiteTools::NumberOfSynonymousDifferences(int i, int j, const CodonAl
 //where n is the number of sequence, Xi and Xj the frequencies of each codon type occuring at the site, Pij the number of synonymous difference between these codon
 //Attention: pi is not normalized by the number of synonymous sites
 double CodonSiteTools::piSynonymous(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange) throw(Exception) {
-        //Empty site checking
-        if(site.size() == 0) throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic Incorrect specified site", &site);
-        //Alphabet checking
-        if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
-                //General polymorphism checking
-                if (CodonSiteTools::isConstant(site)) return 0;
-                //Computation
-                map<int,double> freq = SiteTools::getFrequencies(site);
-                double pi = 0;
-                for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++) {
-		        for(map<int,double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++) {
-			        pi += (it1->second)*(it2->second)*(CodonSiteTools::NumberOfSynonymousDifferences(it1->first,it2->first,ca,gc,minchange));
-		        }
-	        }
-                unsigned int n = site.size();
-                return pi*n/(n-1);
-        }
-        else throw AlphabetMismatchException("CodonSiteTools::piSynonymous: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
-
+	//Empty site checking
+  if(site.size() == 0)
+		throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic Incorrect specified site", &site);
+  //Alphabet checking
+  if(site.getAlphabet() -> getAlphabetType() == ca.getAlphabetType()) {
+    //General polymorphism checking
+    if (CodonSiteTools::isConstant(site)) return 0;
+    //Computation
+    map<int,double> freq = SiteTools::getFrequencies(site);
+    double pi = 0;
+    for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++) {
+	    for(map<int,double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++) {
+  	    pi += (it1 -> second) * (it2 -> second) * (CodonSiteTools::numberOfSynonymousDifferences(it1->first,it2->first,ca,gc,minchange));
+    	}
+	  }
+    unsigned int n = site.size();
+    return pi * n / (n - 1);
+  } else 
+		throw AlphabetMismatchException("CodonSiteTools::piSynonymous: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
 
 //Method to compute the non-synonymous pi per codon site
@@ -292,26 +292,27 @@ double CodonSiteTools::piSynonymous(const Site & site, const CodonAlphabet & ca,
 //Attention: pi is not normalized by the number of non-synonymous sites
 double CodonSiteTools::piNonSynonymous(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange) throw(Exception) {
 	//Empty site checking
-        if(site.size() == 0) throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic Incorrect specified site", &site);
-        //Alphabet checking
-        if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
-                //General polymorphism checking
-                if (CodonSiteTools::isConstant(site)) return 0;
-                if (CodonSiteTools::isSynonymousPolymorphic(site,na,ca)) return 0;
-                //Computation
-                map<int,double> freq = SiteTools::getFrequencies(site);
-                double pi = 0;
-                for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++) {
-		        for(map<int,double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++) {
-			        unsigned int nbtot=CodonSiteTools::NumberOfDifferences(it1->first,it2->first,ca);
-			        unsigned int nbsyn=CodonSiteTools::NumberOfSynonymousDifferences(it1->first,it2->first,ca, gc, minchange);
-			        pi += (it1->second)*(it2->second)*(nbtot-nbsyn);
-		        }
-	        }
-	        unsigned int n = site.size();
-	        return pi*n/(n-1);
-        }
-        else throw AlphabetMismatchException("CodonSiteTools::piNonSynonymous: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
+  if(site.size() == 0)
+		throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic Incorrect specified site", &site);
+  //Alphabet checking
+  if(site.getAlphabet() -> getAlphabetType() == ca.getAlphabetType()) {
+    //General polymorphism checking
+    if(CodonSiteTools::isConstant(site)) return 0;
+    if(CodonSiteTools::isSynonymousPolymorphic(site,na,ca)) return 0;
+    //Computation
+    map<int,double> freq = SiteTools::getFrequencies(site);
+    double pi = 0;
+    for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++) {
+		  for(map<int,double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++) {
+		    unsigned int nbtot = CodonSiteTools::numberOfDifferences(it1->first,it2->first, ca);
+		    double nbsyn = CodonSiteTools::numberOfSynonymousDifferences(it1->first, it2 -> first, ca, gc, minchange);
+		    pi += (it1 -> second) * (it2 -> second) * (nbtot - nbsyn);
+		  }
+	  }
+	  unsigned int n = site.size();
+	  return pi * n / (n - 1);
+  } else
+		throw AlphabetMismatchException("CodonSiteTools::piNonSynonymous: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
 
 

@@ -20,7 +20,7 @@ CodonAlphabet::CodonAlphabet(const NucleicAlphabet * alpha) : AbstractAlphabet()
 
 CodonAlphabet::~CodonAlphabet() {}
 
-bool CodonAlphabet::containsUnresolved(string letter) const throw (BadCharException)
+bool CodonAlphabet::containsUnresolved(const string & letter) const throw (BadCharException)
 {
 	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
 	char s1 = letter[0];
@@ -32,7 +32,7 @@ bool CodonAlphabet::containsUnresolved(string letter) const throw (BadCharExcept
 	|| nucAlpha -> charToInt(TextTools::toString(s3)) >= 4);
 }
 
-bool CodonAlphabet::containsGap(string letter) const throw (BadCharException)
+bool CodonAlphabet::containsGap(const string & letter) const throw (BadCharException)
 {
 	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
 	char s1 = letter[0];
@@ -44,14 +44,14 @@ bool CodonAlphabet::containsGap(string letter) const throw (BadCharException)
 	|| nucAlpha -> charToInt(TextTools::toString(s3)) == -1);
 }
 
-string CodonAlphabet::getName(string letter) const throw (BadCharException) {
+string CodonAlphabet::getName(const string & letter) const throw (BadCharException) {
 	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
 	if(containsUnresolved(letter)) return alphabet[65].name;
 	if(containsGap(letter)) return alphabet[0].name;
 	else return AbstractAlphabet::getName(letter);
 }
 		
-int CodonAlphabet::charToInt(string letter) const throw (BadCharException) {
+int CodonAlphabet::charToInt(const string & letter) const throw (BadCharException) {
 	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::charToInt", this);
 	if(containsUnresolved(letter)) return 61;
 	if(containsGap(letter)) return -1;
