@@ -112,6 +112,15 @@ class SequenceContainerTools
 		 * States are stored as their int code.
 		 */
 		static map<int, double> getFrequencies(const SequenceContainer & sequences);
+
+		/**
+		 * @brief Convert a SequenceContainer with a new alphabet.
+		 *
+		 * @param sequences The container to convert.
+		 * @param alphabet The alphabet into the container will be convert.
+		 * @return A new container.
+		 */		
+		static SequenceContainer* SequenceContainerTools::convertAlphabet(const SequenceContainer & sequences, const Alphabet * alphabet);
 	
 		/**
 		 * @brief Append all the sequences of a SequenceContainer to the end of another.

@@ -98,3 +98,14 @@ map<int, double> SequenceContainerTools::getFrequencies(const SequenceContainer 
 }
 
 /******************************************************************************/
+
+SequenceContainer* SequenceContainerTools::convertAlphabet(const SequenceContainer & sequences, const Alphabet *alphabet) {
+	SequenceContainer *sc = sequences.getEmptyContainer();
+	vector<string> seqNames = sequences.getSequencesNames();
+	for(unsigned int i = 1; i < seqNames.size(); i++) {
+		sc->setSequence(seqNames[i], Sequence(seqNames[i], sequences.toString(seqNames[i]), alphabet), false);
+	}
+	return sc;
+}
+
+/******************************************************************************/
