@@ -339,3 +339,14 @@ void MapSequenceContainer::clear()
 	// Delete all sequence pointers
 	_sequences.clear();
 }
+
+/******************************************************************************/
+
+SequenceContainer * MapSequenceContainer::getEmptyContainer() const
+{ 
+	MapSequenceContainer * msc = new MapSequenceContainer(_alphabet);
+	msc -> setGeneralComments(_comments);
+	return(msc);
+}
+
+/******************************************************************************/

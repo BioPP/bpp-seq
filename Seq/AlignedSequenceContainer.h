@@ -194,7 +194,9 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 
 		// Method to delete all sequences in sequence container
 		void clear();
-
+		
+		SequenceContainer * getEmptyContainer() const;
+	
 	protected:
 		// Protected method to verify sequence's size before insertion in sequence container
 		bool checkSize(const Sequence & sequence);

@@ -371,3 +371,16 @@ void AlignedSequenceContainer::clear()
 	length = 0;
 	VectorSequenceContainer::clear();
 }
+
+/******************************************************************************/
+
+SequenceContainer * AlignedSequenceContainer::getEmptyContainer() const
+{ 
+	AlignedSequenceContainer * asc = new AlignedSequenceContainer(_alphabet);
+	asc -> setGeneralComments(_comments);
+	return(dynamic_cast<AbstractSequenceContainer *>(asc));
+}
+
+/******************************************************************************/
+
+

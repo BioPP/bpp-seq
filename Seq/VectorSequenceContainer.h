@@ -125,6 +125,7 @@ class VectorSequenceContainer : public AbstractSequenceContainer
 		vector<string> getSequencesNames() const;
 		void setSequencesNames(const vector<string> & names, bool checkNames = true) throw (Exception);
 		void clear();
+		SequenceContainer * getEmptyContainer() const;
 		/** @} */
 
 

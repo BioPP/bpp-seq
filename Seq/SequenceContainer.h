@@ -191,6 +191,16 @@ class SequenceContainer: public Clonable
 		 * @brief Delete all sequences in the container.
 		 */
 		virtual void clear() = 0;
+
+		/**
+		 * @brief Return a copy of this container, but with no sequence inside.
+		 *
+		 * This method creates a new SequenceContainer objet.
+		 * The class of this container depends on the derivative class.
+		 *
+		 * @return A new empty container.
+		 */
+		virtual SequenceContainer * getEmptyContainer() const = 0;
 };
 
 #endif	// _SEQUENCECONTAINER_H_

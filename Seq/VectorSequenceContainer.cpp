@@ -311,3 +311,12 @@ void VectorSequenceContainer::setComments(unsigned int sequenceIndex, const Comm
 }
 
 /******************************************************************************/
+
+SequenceContainer * VectorSequenceContainer::getEmptyContainer() const
+{ 
+	VectorSequenceContainer * vsc = new VectorSequenceContainer(_alphabet);
+	vsc -> setGeneralComments(_comments);
+	return(vsc);
+}
+
+/******************************************************************************/

@@ -191,6 +191,9 @@ class VectorSiteContainer :
 
 		void clear();
 
+		SequenceContainer * getEmptyContainer() const;
+	
+		
 	protected:
 		// Create n void sites:
 		void realloc(unsigned int n);

@@ -636,3 +636,12 @@ void VectorSiteContainer::setComments(unsigned int i, const Comments & comments)
 }
 
 /******************************************************************************/
+
+SequenceContainer * VectorSiteContainer::getEmptyContainer() const
+{ 
+	VectorSiteContainer * vsc = new VectorSiteContainer(_alphabet);
+	vsc -> setGeneralComments(AbstractSequenceContainer::_comments);
+	return(dynamic_cast<AbstractSequenceContainer *>(vsc));
+}
+
+/******************************************************************************/

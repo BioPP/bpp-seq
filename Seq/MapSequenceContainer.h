@@ -109,6 +109,7 @@ class MapSequenceContainer: public AbstractSequenceContainer
 		void deleteSequence(const string & name) throw (SequenceNotFoundException);
 		unsigned int getNumberOfSequences() const;
 		void clear();
+		SequenceContainer * getEmptyContainer() const;
 		/** @} */
 
 		/**
