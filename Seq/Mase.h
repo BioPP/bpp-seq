@@ -1,9 +1,3 @@
-/*
- * File Mase.h
- * Author : Guillaume Deuchst <GDeuchst@ifrance.com>
- * Last modification : Tuesday August 21 2003
-*/
-
 // Secured inclusion of header's file
 #ifndef _MASE_H_
 #define _MASE_H_
