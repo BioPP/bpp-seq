@@ -44,17 +44,15 @@ void Clustal::read(istream & input, VectorSequenceContainer & sc) const throw (E
 
 	// Read other blocks
 	lineRead = FileTools::getNextLine(input); // Read first sequence of next block.
-	while(lineRead != "") {
+	while(!TextTools::isEmpty(lineRead)) {
 		// Read next block:
 		for(unsigned int i = 0; i < countSequences; i++) {// Complete sequences
-			sequences[i].append(lineRead.substr(beginSeq));
-			getline(input, lineRead, '\n');
 			if(TextTools::isEmpty(lineRead)) throw IOException("Clustal::read. Bad intput file.");
-		}
-		//lineRead = FileTools::getNextLine(file);
-		// Drop consensus line if it exists:
-		if(TextTools::isEmpty(lineRead.substr(0, beginSeq - 6)))
-			lineRead = FileTools::getNextLine(input);
+		 	sequences[i].append(lineRead.substr(beginSeq));
+			getline(input, lineRead, '\n');
+  	}
+		//At this point, lineRead is the first line after the current block.
+		lineRead = FileTools::getNextLine(input);
 	}
 
 	for(unsigned int i = 0; i < countSequences; i++) sc.addSequence(sequences[i]);
