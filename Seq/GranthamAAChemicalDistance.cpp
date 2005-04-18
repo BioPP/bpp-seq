@@ -8,6 +8,8 @@
 #include <string>
 
 #include "GranthamAAChemicalDistance.h"
+#include <NumCalc/NumTools.h>
+using namespace NumTools;
 
 GranthamAAChemicalDistance::GranthamAAChemicalDistance() throw (IOException)
 {
@@ -15,7 +17,7 @@ GranthamAAChemicalDistance::GranthamAAChemicalDistance() throw (IOException)
 	_alpha = new ProteicAlphabet();
 	
 	// Load the matrix:
-	_distanceMatrix = Matrix(20, 20);
+	_distanceMatrix = Mat(20, 20);
 	#include "__GranthamMatrixCode.cpp"
 }
 GranthamAAChemicalDistance::~GranthamAAChemicalDistance() { delete _alpha; }
@@ -25,7 +27,7 @@ throw (BadIntException) {
 	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", _alpha);
 	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", _alpha);
 	double d = _distanceMatrix(state1, state2);
-	return _sym ? abs(d) : d;
+	return _sym ? NumTools::abs<double>(d) : d;
 }
 
 double GranthamAAChemicalDistance::getIndex(const string & state1, const string & state2) const

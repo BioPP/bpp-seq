@@ -8,6 +8,8 @@
 #include <string>
 
 #include "MiyataAAChemicalDistance.h"
+#include <NumCalc/NumTools.h>
+using namespace NumTools;
 
 MiyataAAChemicalDistance::MiyataAAChemicalDistance() throw (IOException)
 {
@@ -15,7 +17,7 @@ MiyataAAChemicalDistance::MiyataAAChemicalDistance() throw (IOException)
 	_alpha = new ProteicAlphabet();
 	
 	// Load the matrix:
-	_distanceMatrix = Matrix(20, 20);
+	_distanceMatrix = Mat(20, 20);
 	#include "__MiyataMatrixCode.cpp"
 }
 MiyataAAChemicalDistance::~MiyataAAChemicalDistance() { delete _alpha; }
@@ -25,7 +27,7 @@ throw (BadIntException) {
 	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", _alpha);
 	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", _alpha);
 	double d = _distanceMatrix(state1, state2);
-	return _sym ? abs(d) : d;
+	return _sym ? NumTools::abs<double>(d) : d;
 }
 
 double MiyataAAChemicalDistance::getIndex(const string & state1, const string & state2) const

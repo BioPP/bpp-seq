@@ -18,10 +18,14 @@ using namespace std;
 // From Utils:
 #include <Utils/Exceptions.h>
 
+// From NumCalc:
+#include <NumCalc/Matrix.h>
+
 // From the MTL:
-#include <mtl/matrix.h>
-using namespace mtl;
-typedef matrix<double>::type Matrix;
+//#include <mtl/matrix.h>
+//using namespace mtl;
+//typedef matrix<double>::type Matrix;
+typedef RowMatrix<double> Mat;
 
 /**
  * @brief One dimensionnal alphabet index interface.
@@ -31,7 +35,7 @@ typedef matrix<double>::type Matrix;
 class GranthamAAChemicalDistance: public AlphabetIndex2<double> {
 
 	private:
-		Matrix _distanceMatrix;
+		Mat _distanceMatrix;
 		const ProteicAlphabet * _alpha;
 		bool _sym;
 
