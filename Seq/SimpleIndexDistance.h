@@ -1,7 +1,7 @@
 //
-// File: AlphabetIndex1.h
+// File: SimpleIndexDistance.h
 // Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
-// Created on: Mon Feb 21 17:42 2005
+// Created on: Tue Apr 21 2005
 //
 
 /*
@@ -75,42 +75,65 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ALPHABETINDEX1_H_
-#define _ALPHABETINDEX1_H_
+#ifndef _SIMPLEINDEXDISTANCE_H_
+#define _SIMPLEINDEXDISTANCE_H_
 
 // from the STL:
 #include <string>
+using namespace std;
+
+#include "AlphabetIndex2.h"
+#include "ProteicAlphabet.h"
+#include "AlphabetExceptions.h"
+
+// From Utils:
+#include <Utils/Exceptions.h>
+
+// From NumCalc:
+#include <NumCalc/Matrix.h>
+
+// From the MTL:
+//#include <mtl/matrix.h>
+//using namespace mtl;
+//typedef matrix<double>::type Matrix;
+typedef RowMatrix<double> Mat;
 
 /**
- * @brief One dimensionnal alphabet index interface.
+ * @brief Simple dissimilarity distance.
  *
- * Derivatives of this interface implement properties for a single state.
+ * Take a one-dimensional index end return the difference between the
+ * indexes of two states.
  */
-template <class T>
-class AlphabetIndex1 {
+template<class T>
+class SimpleIndexDistance: public AlphabetIndex2<T> {
+
+	private:
+		const AlphabetIndex1<T> * _index;
+		bool _sym;
 
 	public:
-		AlphabetIndex1() {}
-		virtual ~AlphabetIndex1() {}
+		SimpleIndexDistance(const AlphabetIndex1<T> * index) { _index = index; }
+		~SimpleIndexDistance();
 
 	public:
-		/**
-		 * @brief Get the index associated to a state.
-		 *
-		 * @param state The state to consider, as a int value.
-		 * @return The index associated to the state
-		 */
-		virtual T getIndex(int state) const = 0;
+		T getIndex(int state1, int state2) const throw (BadIntException)
+		{
+			if(state1 < 0 || state1 > 19) throw BadIntException(state1, "SimpleIndexDistance::getIndex(). Invalid state1.", _alpha);
+			if(state2 < 0 || state2 > 19) throw BadIntException(state2, "SimpleIndexDistance::getIndex(). Invalid state2.", _alpha);
+			T d = _index[state2] - _index[state1];
+			return _sym ? NumTools::abs<double>(d) : d;
+		}
+		
+		T getIndex(const string & state1, const string & state2) const throw (BadCharException) {
+			T d = _index[_alpha -> charToInt(state2)] - _index[_alpha -> charToInt(state1)];
+			return _sym ? abs(d) : d;
+		}
 
-		/**
-		 * @brief Get the index associated to a state.
-		 *
-		 * @param state The state to consider, as a string value.
-		 * @return The index associated to the state
-		 */
-		virtual T getIndex(const string & state) const = 0;
+	public:
+		void setSymmetric(bool yn) { _sym = yn; }
+		bool isSymmetric() const { return _sym; }
 
 };
 
-#endif //_ALPHABETINDEX1_H_
+#endif //_SIMPLEINDEXDISTANCE_H_
 

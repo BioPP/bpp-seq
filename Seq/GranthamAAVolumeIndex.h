@@ -1,7 +1,7 @@
 //
-// File: AlphabetIndex1.h
+// File: GranthamAAVolumeIndex.h
 // Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
-// Created on: Mon Feb 21 17:42 2005
+// Created on: Tue Apr 21 2005
 //
 
 /*
@@ -75,42 +75,58 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ALPHABETINDEX1_H_
-#define _ALPHABETINDEX1_H_
+#ifndef _GRANTHAMAAVOLUMEINDEX_H_
+#define _GRANTHAMAAVOLUMEINDEX_H_
 
-// from the STL:
-#include <string>
+#include <AlphabetIndex1.h>
+#include <ProteicAlphabet.h>
 
-/**
- * @brief One dimensionnal alphabet index interface.
- *
- * Derivatives of this interface implement properties for a single state.
- */
-template <class T>
-class AlphabetIndex1 {
+class GranthamAAVolumeIndex: public AlphabetIndex1<double> {
+
+	private:
+		vector<double> _polarity;
+		const ProteicAlphabet * _alpha;
 
 	public:
-		AlphabetIndex1() {}
-		virtual ~AlphabetIndex1() {}
+		GranthamAAVolumeIndex() {
+			_alpha = new ProteicAlphabet();
+			_polarity.resize(20);
+			_polarity[00] =  31.; //A
+			_polarity[01] = 124.; //R
+			_polarity[02] =  56.; //N
+			_polarity[03] =  54.; //D
+			_polarity[04] =  55.; //C
+			_polarity[05] =  85.; //Q
+			_polarity[06] =  83.; //E
+			_polarity[07] =   3.; //G
+			_polarity[08] =  96.; //H
+			_polarity[09] = 111.; //I
+			_polarity[10] = 111.; //L
+			_polarity[11] = 119.; //K
+			_polarity[12] = 105.; //M
+			_polarity[13] = 132.; //F
+			_polarity[14] =  32.5; //P
+			_polarity[15] =  32.; //S
+			_polarity[16] =  61.; //T
+			_polarity[17] = 170.; //W
+			_polarity[18] = 136.; //Y
+			_polarity[19] =  84.; //V
+		}
+
+		~GranthamAAPolarityIndex() {
+			delete _alpha;
+		}
 
 	public:
-		/**
-		 * @brief Get the index associated to a state.
-		 *
-		 * @param state The state to consider, as a int value.
-		 * @return The index associated to the state
-		 */
-		virtual T getIndex(int state) const = 0;
-
-		/**
-		 * @brief Get the index associated to a state.
-		 *
-		 * @param state The state to consider, as a string value.
-		 * @return The index associated to the state
-		 */
-		virtual T getIndex(const string & state) const = 0;
-
+		double getIndex(int state) const throw (BadIntException) {
+			if(state < 0 || state > 19) throw BadIntException(state1, "GranthamAAVolumeIndex::getIndex(). Invalid state.", _alpha);
+			return _polarity(state);
+		}
+		
+		double getIndex(const string & state) const throw (BadCharException) {
+			return _polarity(alpha -> charToInt(state));
+		}
 };
 
-#endif //_ALPHABETINDEX1_H_
+#endif //_GRANTHAMAAVOLUMEINDEX_H_
 

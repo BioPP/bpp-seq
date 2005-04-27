@@ -21,7 +21,10 @@ DNAToRNA.h\
 Fasta.h\
 GeneticCode.h\
 GranthamAAChemicalDistance.h\
+GranthamAAPolarityIndex.h\
+GranthamAAVolumeIndex.h\
 MiyataAAChemicalDistance.h\
+SimpleIndexDistance.h\
 IOSequence.h\
 ISequence.h\
 ioseq\
@@ -109,7 +112,7 @@ __MiyataMatrixCode.cpp
 lib_LTLIBRARIES = libseq.la
 libseq_la_SOURCES = $(H_FILES) $(CPP_FILES)
 EXTRA_libseq_la_SOURCES = $(CPP_EXTRA)
-llibseq_la_LDFLAGS = -version-info 1:0:0
+libseq_la_LDFLAGS = -version-info 1:0:0
 
 library_includedir=$(includedir)/Seq
 library_include_HEADERS = $(H_FILES)
