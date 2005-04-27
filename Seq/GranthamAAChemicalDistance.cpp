@@ -11,7 +11,7 @@
 #include <NumCalc/NumTools.h>
 using namespace NumTools;
 
-GranthamAAChemicalDistance::GranthamAAChemicalDistance() throw (IOException)
+GranthamAAChemicalDistance::GranthamAAChemicalDistance()
 {
 	// Build the alphabet:
 	_alpha = new ProteicAlphabet();

@@ -11,7 +11,7 @@
 #include <NumCalc/NumTools.h>
 using namespace NumTools;
 
-MiyataAAChemicalDistance::MiyataAAChemicalDistance() throw (IOException)
+MiyataAAChemicalDistance::MiyataAAChemicalDistance()
 {
 	// Build the alphabet:
 	_alpha = new ProteicAlphabet();

@@ -82,6 +82,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 using namespace std;
 
+#include "AlphabetIndex1.h"
 #include "AlphabetIndex2.h"
 #include "ProteicAlphabet.h"
 #include "AlphabetExceptions.h"
@@ -108,26 +109,30 @@ template<class T>
 class SimpleIndexDistance: public AlphabetIndex2<T> {
 
 	private:
-		const AlphabetIndex1<T> * _index;
+		AlphabetIndex1<T> * _index;
 		bool _sym;
 
 	public:
-		SimpleIndexDistance(const AlphabetIndex1<T> * index) { _index = index; }
-		~SimpleIndexDistance();
+		SimpleIndexDistance(const AlphabetIndex1<T> & index) { _index = (AlphabetIndex1<T> *)index.clone(); }
+		~SimpleIndexDistance() { delete _index; }
 
 	public:
 		T getIndex(int state1, int state2) const throw (BadIntException)
 		{
-			if(state1 < 0 || state1 > 19) throw BadIntException(state1, "SimpleIndexDistance::getIndex(). Invalid state1.", _alpha);
-			if(state2 < 0 || state2 > 19) throw BadIntException(state2, "SimpleIndexDistance::getIndex(). Invalid state2.", _alpha);
-			T d = _index[state2] - _index[state1];
+			if(state1 < 0 || state1 > 19) throw BadIntException(state1, "SimpleIndexDistance::getIndex(). Invalid state1.", _index -> getAlphabet());
+			if(state2 < 0 || state2 > 19) throw BadIntException(state2, "SimpleIndexDistance::getIndex(). Invalid state2.", _index -> getAlphabet());
+			T d = _index -> getIndex(state2) - _index -> getIndex(state1);
 			return _sym ? NumTools::abs<double>(d) : d;
 		}
 		
 		T getIndex(const string & state1, const string & state2) const throw (BadCharException) {
-			T d = _index[_alpha -> charToInt(state2)] - _index[_alpha -> charToInt(state1)];
-			return _sym ? abs(d) : d;
+			T d = _index -> getIndex(state2) - _index -> getIndex(state1);
+			return _sym ? NumTools::abs<double>(d) : d;
 		}
+
+		const Alphabet * getAlphabet() const { return _index -> getAlphabet(); }
+
+		Clonable * clone() const { return new SimpleIndexDistance<T>(* _index); }
 
 	public:
 		void setSymmetric(bool yn) { _sym = yn; }

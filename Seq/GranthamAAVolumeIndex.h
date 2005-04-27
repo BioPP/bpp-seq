@@ -78,8 +78,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _GRANTHAMAAVOLUMEINDEX_H_
 #define _GRANTHAMAAVOLUMEINDEX_H_
 
-#include <AlphabetIndex1.h>
-#include <ProteicAlphabet.h>
+#include "AlphabetIndex1.h"
+#include "ProteicAlphabet.h"
 
 class GranthamAAVolumeIndex: public AlphabetIndex1<double> {
 
@@ -91,16 +91,16 @@ class GranthamAAVolumeIndex: public AlphabetIndex1<double> {
 		GranthamAAVolumeIndex() {
 			_alpha = new ProteicAlphabet();
 			_polarity.resize(20);
-			_polarity[00] =  31.; //A
-			_polarity[01] = 124.; //R
-			_polarity[02] =  56.; //N
-			_polarity[03] =  54.; //D
-			_polarity[04] =  55.; //C
-			_polarity[05] =  85.; //Q
-			_polarity[06] =  83.; //E
-			_polarity[07] =   3.; //G
-			_polarity[08] =  96.; //H
-			_polarity[09] = 111.; //I
+			_polarity[ 0] =  31.; //A
+			_polarity[ 1] = 124.; //R
+			_polarity[ 2] =  56.; //N
+			_polarity[ 3] =  54.; //D
+			_polarity[ 4] =  55.; //C
+			_polarity[ 5] =  85.; //Q
+			_polarity[ 6] =  83.; //E
+			_polarity[ 7] =   3.; //G
+			_polarity[ 8] =  96.; //H
+			_polarity[ 9] = 111.; //I
 			_polarity[10] = 111.; //L
 			_polarity[11] = 119.; //K
 			_polarity[12] = 105.; //M
@@ -113,19 +113,23 @@ class GranthamAAVolumeIndex: public AlphabetIndex1<double> {
 			_polarity[19] =  84.; //V
 		}
 
-		~GranthamAAPolarityIndex() {
+		~GranthamAAVolumeIndex() {
 			delete _alpha;
 		}
 
 	public:
 		double getIndex(int state) const throw (BadIntException) {
-			if(state < 0 || state > 19) throw BadIntException(state1, "GranthamAAVolumeIndex::getIndex(). Invalid state.", _alpha);
-			return _polarity(state);
+			if(state < 0 || state > 19) throw BadIntException(state, "GranthamAAVolumeIndex::getIndex(). Invalid state.", _alpha);
+			return _polarity[state];
 		}
 		
 		double getIndex(const string & state) const throw (BadCharException) {
-			return _polarity(alpha -> charToInt(state));
+			return _polarity[_alpha -> charToInt(state)];
 		}
+
+		const Alphabet * getAlphabet() const { return _alpha; }
+
+		Clonable * clone() const { return new GranthamAAVolumeIndex(); }
 };
 
 #endif //_GRANTHAMAAVOLUMEINDEX_H_

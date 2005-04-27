@@ -78,8 +78,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _GRANTHAMAAPOLARITYINDEX_H_
 #define _GRANTHAMAAPOLARITYINDEX_H_
 
-#include <AlphabetIndex1.h>
-#include <ProteicAlphabet.h>
+#include "AlphabetIndex1.h"
+#include "ProteicAlphabet.h"
 
 class GranthamAAPolarityIndex: public AlphabetIndex1<double> {
 
@@ -91,16 +91,16 @@ class GranthamAAPolarityIndex: public AlphabetIndex1<double> {
 		GranthamAAPolarityIndex() {
 			_alpha = new ProteicAlphabet();
 			_polarity.resize(20);
-			_polarity[00] =  8.1; //A
-			_polarity[01] = 10.5; //R
-			_polarity[02] = 11.6; //N
-			_polarity[03] = 13.0; //D
-			_polarity[04] =  5.5; //C
-			_polarity[05] = 10.5; //Q
-			_polarity[06] = 12.3; //E
-			_polarity[07] =  9.0; //G
-			_polarity[08] = 10.4; //H
-			_polarity[09] =  5.2; //I
+			_polarity[ 0] =  8.1; //A
+			_polarity[ 1] = 10.5; //R
+			_polarity[ 2] = 11.6; //N
+			_polarity[ 3] = 13.0; //D
+			_polarity[ 4] =  5.5; //C
+			_polarity[ 5] = 10.5; //Q
+			_polarity[ 6] = 12.3; //E
+			_polarity[ 7] =  9.0; //G
+			_polarity[ 8] = 10.4; //H
+			_polarity[ 9] =  5.2; //I
 			_polarity[10] =  4.9; //L
 			_polarity[11] = 11.3; //K
 			_polarity[12] =  5.7; //M
@@ -119,13 +119,17 @@ class GranthamAAPolarityIndex: public AlphabetIndex1<double> {
 
 	public:
 		double getIndex(int state) const throw (BadIntException) {
-			if(state < 0 || state > 19) throw BadIntException(state1, "GranthamAAPolarityIndex::getIndex(). Invalid state.", _alpha);
-			return _polarity(state);
+			if(state < 0 || state > 19) throw BadIntException(state, "GranthamAAPolarityIndex::getIndex(). Invalid state.", _alpha);
+			return _polarity[state];
 		}
 		
 		double getIndex(const string & state) const throw (BadCharException) {
-			return _polarity(alpha -> charToInt(state));
+			return _polarity[_alpha -> charToInt(state)];
 		}
+
+		const Alphabet * getAlphabet() const { return _alpha; }
+
+		Clonable * clone() const { return new GranthamAAPolarityIndex(); }
 };
 
 #endif //_GRANTHAMAAPOLARITYINDEX_H_

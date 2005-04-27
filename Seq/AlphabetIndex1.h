@@ -78,7 +78,12 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _ALPHABETINDEX1_H_
 #define _ALPHABETINDEX1_H_
 
-// from the STL:
+#include "Alphabet.h"
+
+// From Utils:
+#include <Utils/Clonable.h>
+
+// From the STL:
 #include <string>
 
 /**
@@ -87,7 +92,7 @@ knowledge of the CeCILL license and that you accept its terms.
  * Derivatives of this interface implement properties for a single state.
  */
 template <class T>
-class AlphabetIndex1 {
+class AlphabetIndex1: public Clonable {
 
 	public:
 		AlphabetIndex1() {}
@@ -109,6 +114,13 @@ class AlphabetIndex1 {
 		 * @return The index associated to the state
 		 */
 		virtual T getIndex(const string & state) const = 0;
+
+		/**
+		 * @brief Get the alphabet associated to this index.
+		 *
+		 * @return Alphabet The alphabet associated to this index.
+		 */
+		virtual const Alphabet * getAlphabet() const = 0;
 
 };
 

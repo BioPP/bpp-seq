@@ -109,12 +109,14 @@ class GranthamAAChemicalDistance: public AlphabetIndex2<double> {
 		bool _sym;
 
 	public:
-		GranthamAAChemicalDistance() throw (IOException);
+		GranthamAAChemicalDistance();
 		~GranthamAAChemicalDistance();
 
 	public:
 		double getIndex(int state1, int state2) const throw (BadIntException);
 		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
+		const Alphabet * getAlphabet() const { return _alpha; };
+		Clonable * clone() const { return new GranthamAAChemicalDistance(); }
 
 	public:
 		void setSymmetric(bool yn) { _sym = yn; }
