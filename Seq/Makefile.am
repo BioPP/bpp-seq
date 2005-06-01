@@ -53,6 +53,12 @@ SiteIterator.h\
 SiteTools.h\
 StandardCodonAlphabet.h\
 StandardGeneticCode.h\
+VertebrateMitochondrialCodonAlphabet.h\
+VertebrateMitochondrialGeneticCode.h\
+InvertebrateMitochondrialCodonAlphabet.h\
+InvertebrateMitochondrialGeneticCode.h\
+EchinodermMitochondrialCodonAlphabet.h\
+EchinodermMitochondrialGeneticCode.h\
 StringSequenceTools.h\
 SymbolList.h\
 SymbolListTools.h\
@@ -99,6 +105,12 @@ SiteIterator.cpp\
 SiteTools.cpp\
 StandardCodonAlphabet.cpp\
 StandardGeneticCode.cpp\
+VertebrateMitochondrialCodonAlphabet.cpp\
+VertebrateMitochondrialGeneticCode.cpp\
+InvertebrateMitochondrialCodonAlphabet.cpp\
+InvertebrateMitochondrialGeneticCode.cpp\
+EchinodermMitochondrialCodonAlphabet.cpp\
+EchinodermMitochondrialGeneticCode.cpp\
 StringSequenceTools.cpp\
 SymbolList.cpp\
 SymbolListTools.cpp\

@@ -94,7 +94,7 @@ StandardGeneticCode::~StandardGeneticCode() {
 
 int    StandardGeneticCode::translate(int state) const throw (BadIntException)
 {
-	vector<int> positions = codonAlphabet -> getPositions(i);
+	vector<int> positions = codonAlphabet -> getPositions(state);
 	switch(positions[0]) {
 		//First position:
 		case 0 : //A
@@ -180,10 +180,10 @@ int    StandardGeneticCode::translate(int state) const throw (BadIntException)
 			}
 		}
 	}
-	throw BadIntException(i, "StandardGeneticCode::translate", codonAlphabet);
+	throw BadIntException(state, "StandardGeneticCode::translate", codonAlphabet);
 }
 
 string StandardGeneticCode::translate(const string & state) const throw (BadCharException)
 {
-	return proteicAlphabet -> intToChar(translate(codonAlphabet -> charToInt(c)));
+	return proteicAlphabet -> intToChar(translate(codonAlphabet -> charToInt(state)));
 }

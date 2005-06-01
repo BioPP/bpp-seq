@@ -26,7 +26,6 @@ using namespace VectorFunctions;
 #include <cmath>
 
 
-
 // Method to know if a codon site contains gap(s) or not
 bool CodonSiteTools::hasGap(const Site & site) {
 	for (unsigned int i = 0 ; i < site.size() ; i++) {
@@ -73,9 +72,6 @@ bool CodonSiteTools::isConstant(const Site & site) throw (EmptySiteException) {
 
 	return true;
 }
-
-
-
 
 //Method to know if a polymorphic codon site is polymorphic at only one site
 bool CodonSiteTools::isMonoSitePolymorphic(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca) throw (Exception) {
@@ -125,6 +121,27 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site & site, const NucleicAlp
     else throw AlphabetMismatchException("CodonSiteTools::isSynonymousPolymorphic: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
 
+//Method to know if polymorphism at a codon site is synonymous
+bool CodonSiteTools::isSynonymousPolymorphic(const Site & site, const GeneticCode & gc) throw (Exception) {
+        //Empty site checking
+    if(site.size() == 0) throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic Incorrect specified site", &site);
+    const CodonAlphabet *ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+    //Alphabet checking
+    if(site.getAlphabet()->getAlphabetType()==ca->getAlphabetType()){
+        // Global polymorphism checking
+        if (CodonSiteTools::isConstant(site)) return false;
+	// Synonymous polymorphism checking
+        vector<int> prot;
+        int first_aa = gc.translate(site[0]);
+	for(unsigned int i = 1; i < site.size(); i++) {
+	        int aa = gc.translate(site[i]);
+	        if (aa != first_aa) return false;
+        }
+   	return true;
+    }
+    else throw AlphabetMismatchException("CodonSiteTools::isSynonymousPolymorphic: alphabet is not CodonAlphabet", ca, site.getAlphabet());
+}
+
 //Method to know the number of difference between two codons
 unsigned int CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet & ca){
        	unsigned int nbdif = 0;
@@ -145,7 +162,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const CodonAl
 			 if(gc.areSynonymous(i,j)) return 1;
 			 return 0;
 		 }
-		 case 2 : {
+		case 2 : {
 			 if(gc.areSynonymous(i,j)) return 2;
                          vector<double> path(2,0); // Vector of number of synonymous changes per path (2 here)
                          vector<double> weight(2,1); //Weight to exclude path through stop codon
@@ -286,6 +303,33 @@ double CodonSiteTools::piSynonymous(const Site & site, const CodonAlphabet & ca,
 		throw AlphabetMismatchException("CodonSiteTools::piSynonymous: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
 
+//Method to compute the synonymous pi per codon site
+//Here, the following formula is used: pi = n/(n-1) Sum[Xi*Xj*Pij]
+//where n is the number of sequence, Xi and Xj the frequencies of each codon type occuring at the site, Pij the number of synonymous difference between these codon
+//Attention: pi is not normalized by the number of synonymous sites
+double CodonSiteTools::piSynonymous(const Site & site, const GeneticCode & gc, bool minchange) throw(Exception) {
+  const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+	//Empty site checking
+  if(site.size() == 0)
+		throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic Incorrect specified site", &site);
+  //Alphabet checking
+  if(site.getAlphabet() -> getAlphabetType() == ca->getAlphabetType()) {
+    //General polymorphism checking
+    if (CodonSiteTools::isConstant(site)) return 0;
+    //Computation
+    map<int,double> freq = SiteTools::getFrequencies(site);
+    double pi = 0;
+    for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++) {
+	    for(map<int,double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++) {
+  	    pi += (it1 -> second) * (it2 -> second) * (CodonSiteTools::numberOfSynonymousDifferences(it1->first,it2->first,*ca,gc,minchange));
+    	}
+	  }
+    unsigned int n = site.size();
+    return pi * n / (n - 1);
+  } else 
+		throw AlphabetMismatchException("CodonSiteTools::piSynonymous: alphabet is not CodonAlphabet", ca, site.getAlphabet());
+}
+
 //Method to compute the non-synonymous pi per codon site
 //Here, the following formula is used: pi = n/(n-1) Sum[Xi*Xj*Pij]
 //where n is the number of sequence, Xi and Xj the frequencies of each codon type occuring at the site, Pij the number of synonymous difference between these codon
@@ -315,11 +359,40 @@ double CodonSiteTools::piNonSynonymous(const Site & site, const NucleicAlphabet 
 		throw AlphabetMismatchException("CodonSiteTools::piNonSynonymous: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
 
+//Method to compute the non-synonymous pi per codon site
+//Here, the following formula is used: pi = n/(n-1) Sum[Xi*Xj*Pij]
+//where n is the number of sequence, Xi and Xj the frequencies of each codon type occuring at the site, Pij the number of synonymous difference between these codon
+//Attention: pi is not normalized by the number of non-synonymous sites
+double CodonSiteTools::piNonSynonymous(const Site & site, const GeneticCode & gc, bool minchange) throw(Exception) {
+  const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+	//Empty site checking
+  if(site.size() == 0)
+		throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic Incorrect specified site", &site);
+  //Alphabet checking
+  if(site.getAlphabet() -> getAlphabetType() == ca->getAlphabetType()) {
+    //General polymorphism checking
+    if(CodonSiteTools::isConstant(site)) return 0;
+    if(CodonSiteTools::isSynonymousPolymorphic(site,gc)) return 0;
+    //Computation
+    map<int,double> freq = SiteTools::getFrequencies(site);
+    double pi = 0;
+    for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++) {
+		  for(map<int,double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++) {
+		    unsigned int nbtot = CodonSiteTools::numberOfDifferences(it1->first,it2->first, *ca);
+		    double nbsyn = CodonSiteTools::numberOfSynonymousDifferences(it1->first, it2 -> first, *ca, gc, minchange);
+		    pi += (it1 -> second) * (it2 -> second) * (nbtot - nbsyn);
+		  }
+	  }
+	  unsigned int n = site.size();
+	  return pi * n / (n - 1);
+  } else
+		throw AlphabetMismatchException("CodonSiteTools::piNonSynonymous: alphabet is not CodonAlphabet", ca, site.getAlphabet());
+}
 
 //Method that gives the number of synonymous positions of a codon
 //Transition/transversion ratio is taken into account. Default option ratio=1
-double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, double ratio) {
-	if(ca.getName(ca.intToChar(i))=="STOP") return 0;
+double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, double ratio) throw(Exception) {
+	if(ca.getName(ca.intToChar(i))=="Stop") return 0;
         int acid=gc.translate(i);
 	switch (gc.getSynonymous(acid).size()){
 		case 1: return 0;
@@ -335,6 +408,36 @@ double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & 
 			if(i==8||i==9||i==10||i==11||i==57||i==59) return 2*ratio/(ratio+2);
 		}
 	}
+}
+
+//Method that gives the number of synonymous positions of a codon
+//Transition/transversion ratio is taken into account. Default option ratio=1
+double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc , bool stopflag, double ratio) throw(Exception) {
+	try {
+	if(ca.getName(ca.intToChar(i))=="Stop") return 0;
+	double nbsynpos = 0.0;
+	vector<int> codon = ca.getPositions(i);
+	int acid = gc.translate(i);
+	for (int pos=0; pos < 3; pos++) {
+		for (int an=0; an < 4; an++) {
+			if (an == codon[pos]) continue;
+			vector<int> mutcodon = codon;
+			mutcodon[pos] = an;
+			int intcodon = 	ca.getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
+			if(ca.getName(ca.intToChar(intcodon))=="Stop") continue;
+			int altacid = gc.translate(intcodon);
+			if (altacid == acid) { //if synonymous
+				if(((codon[pos] == 0 || codon[pos] == 2) && (mutcodon[pos] == 1 || mutcodon[pos] == 3)) || 
+				   ((codon[pos] == 1 || codon[pos] == 3) && (mutcodon[pos] == 0 || mutcodon[pos] == 2))) { // if it is a transversion
+					nbsynpos = nbsynpos + 1/(ratio+2);
+				} else { //if transition
+					nbsynpos = nbsynpos + ratio/(ratio+2);
+				}
+			}	
+		}
+	}
+	return nbsynpos;
+	} catch (...) {}
 }
 
 // Method that gives the mean number of synonymous position per codon site
@@ -355,8 +458,21 @@ double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const 
         else throw AlphabetMismatchException("CodonSiteTools::MeanNumberOfSynonymousPositions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
 
-
-
-
-
-
+// Method that gives the mean number of synonymous position per codon site
+//Transition/transversion ratio is taken into account. Default option ratio=1
+double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const GeneticCode & gc, double ratio) throw(Exception) {
+        const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+	//Empty site checking
+	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::MeanNumberOfSynonymousPositions Incorrect specified site", &site);
+        //Alphabet checking
+        if(site.getAlphabet()->getAlphabetType()==ca->getAlphabetType()){
+	        //Computation
+	        double NbSyn=0;
+	        map<int,double> freq = SiteTools::getFrequencies(site);
+			for(map<int,double>::iterator it = freq.begin(); it != freq.end(); it++) {
+				NbSyn += (it->second)*NumberOfSynonymousPositions(it->first,*ca,gc,false,ratio);
+			}
+        	return NbSyn;
+        }
+        else throw AlphabetMismatchException("CodonSiteTools::MeanNumberOfSynonymousPositions: alphabet is not CodonAlphabet", ca, site.getAlphabet());
+}

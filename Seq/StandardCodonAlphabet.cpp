@@ -89,9 +89,9 @@ StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) : Co
 	string stop2 = T + A + G;
 	string stop3 = T + G + A;
 	alphabet[0].num = -1;
-  alphabet[0].letter = "---";
-  alphabet[0].name = "Gap";
-
+  	alphabet[0].letter = "---";
+  	alphabet[0].name = "Gap";
+	
 	//Automatic construction:
 	int count = 1;
 	int num   = 0;
@@ -126,7 +126,7 @@ StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) : Co
 	}
 
 	alphabet[65].num = 61;
-  alphabet[65].letter = "NNN";
-  alphabet[65].name = "Unresolved codon";
+  	alphabet[65].letter = "NNN";
+  	alphabet[65].name = "Unresolved codon";
 }
 

@@ -83,6 +83,12 @@ class CodonSiteTools: public SymbolListTools
 		 */
 		static bool isSynonymousPolymorphic(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca) throw (Exception);
 
+		/* @brief Method to know if polymorphism at a codon site is synonymous
+		 * @param site a Site
+		 * @param na a GeneticCode
+		 */
+                static bool isSynonymousPolymorphic(const Site & site, const GeneticCode & gc) throw (Exception);
+
 		/* @brief Compute the number of differences between two codons
 		 * @param i a int
 		 * @param j a int
@@ -120,6 +126,22 @@ class CodonSiteTools: public SymbolListTools
 		 */
 		static double piSynonymous(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false) throw(Exception);
 
+		/* @brief Compute the synonymous pi per codon site
+		 *
+		 * the following formula is used:
+		 * @f[
+		 * pi = frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}\
+		 * @f]
+		 * where n is the number of sequence, Xi and Xj the frequencies of each codon type occuring at the site
+		 * Pij the number of synonymous difference between these codons
+		 * Be careful: here, pi is not normalized by the number of synonymous sites
+		 * @param site a Site
+		 * @param gc a GeneticCode
+		 * @minchange a bollean set by default to false
+		 */
+		static double piSynonymous(const Site & site, const GeneticCode & gc, bool minchange=false) throw(Exception);
+
+
 		/* @brief Compute the non-synonymous pi per codon site
 		 *
 		 * the following formula is used:
@@ -130,11 +152,27 @@ class CodonSiteTools: public SymbolListTools
 		 * Pij the number of nonsynonymous difference between these codons
 		 * Be careful: here, pi is not normalized by the number of non-synonymous sites
 		 * @param site a Site
+		 * @param na a NucleicAlphabet
 		 * @param ca a CodonAlphabet
 		 * @param gc a GeneticCode
 		 * @minchange a bollean set by default to false
 		 */
 		static double piNonSynonymous(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false) throw(Exception);
+
+		/* @brief Compute the non-synonymous pi per codon site
+		 *
+		 * the following formula is used:
+		 * @f[
+		 * pi = frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}\
+		 * @f]
+		 * where n is the number of sequence, Xi and Xj the frequencies of each codon type occuring at the site
+		 * Pij the number of nonsynonymous difference between these codons
+		 * Be careful: here, pi is not normalized by the number of non-synonymous sites
+		 * @param site a Site
+		 * @param gc a GeneticCode
+		 * @minchange a bollean set by default to false
+		 */
+		static double piNonSynonymous(const Site & site, const GeneticCode & gc, bool minchange = false) throw(Exception);
 
 		/* @brief Return the number of synonymous positions of a codon
 		 *
@@ -145,7 +183,19 @@ class CodonSiteTools: public SymbolListTools
 		 * @param gc a GeneticCode
 		 * @param ratio a double set by default to 1
 		 */
-		static double NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, double ratio=1);
+		static double NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, double ratio=1) throw(Exception);
+
+		/* @brief Return the number of synonymous positions of a codon
+		 *
+		 * a site is consider as x% synonymous if x% of the possible mutations are synonymous
+		 * Transition/transversion ratio can be taken into account (use the variable ratio)
+		 * @param i a int
+		 * @param ca a CodonAlphabet
+		 * @param gc a GeneticCode
+		 * @param stopflag a boolean set by default to true if you want to take gap into account
+		 * @param ratio a double set by default to 1
+		 */
+		static double NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, bool stopflag = true, double ratio=1.0) throw(Exception);
 
 		/* @brief Return the mean number of synonymous position per codon site
 		 *
@@ -157,6 +207,16 @@ class CodonSiteTools: public SymbolListTools
 		 * @param ratio a double set by default to 1
 		 */
 		static double MeanNumberOfSynonymousPositions(const Site & site,  const CodonAlphabet & ca, const GeneticCode & gc, double ratio=1) throw(Exception);
+
+		/* @brief Return the mean number of synonymous position per codon site
+		 *
+		 * a site is consider as x% synonymous if x% of the possible mutations are synonymous
+		 * Transition/transversion ratio can be taken into account (use the variable ratio)
+		 * @param site a Site
+		 * @param gc a GeneticCode
+		 * @param ratio a double set by default to 1
+		 */
+		static double MeanNumberOfSynonymousPositions(const Site & site, const GeneticCode & gc, double ratio=1) throw(Exception);
 
 
 };

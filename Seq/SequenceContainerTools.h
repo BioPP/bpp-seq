@@ -114,15 +114,6 @@ class SequenceContainerTools
 		static map<int, double> getFrequencies(const SequenceContainer & sequences);
 
 		/**
-		 * @brief Convert a SequenceContainer with a new alphabet.
-		 *
-		 * @param sequences The container to convert.
-		 * @param alphabet The alphabet into the container will be convert.
-		 * @return A new container.
-		 */		
-		static SequenceContainer* SequenceContainerTools::convertAlphabet(const SequenceContainer & sequences, const Alphabet * alphabet);
-	
-		/**
 		 * @brief Append all the sequences of a SequenceContainer to the end of another.
 		 *
 		 * This function is a template because of the non existance of the
@@ -148,6 +139,41 @@ class SequenceContainerTools
 				throw e;
 			}
 		}
+		
+		/**
+		 * @brief Convert a SequenceContainer with a new alphabet.
+		 *
+		 * This function is a template because of the non existance of the
+		 * addSequence() method in the SequenceContainer interface (see the doc
+		 * of SequenceContainer for more details).
+		 * The type of the template must be the type of the SequenceContainer which
+		 * recieves the sequences. This SequenceContainer <b>must have</b> an
+		 * addSequence() method like:
+		 * <code>
+		 * void addSequence(const Sequence &sequence, bool checkNames=true);
+		 * <\code>
+		 * It can be used with a VectorSequenceContainer or a VectorSiteContainer
+		 * but not with a MapSequenceContainer.
+		 * @param seqCont The container to convert.
+		 * @param alphabet The alphabet into the container will be convert.
+		 * @return A new container.
+		 */
+		template<class T> static T* convertAlphabet(const T & seqCont, const Alphabet *alphabet)
+		throw (Exception)
+		{	
+			try {
+				T *seqContNew = new T(alphabet);			
+				vector<string> seqNames = seqCont.getSequencesNames();
+				for(unsigned int i = 0; i < seqNames.size(); i++) {
+					Sequence seq = Sequence(seqNames[i], seqCont.toString(seqNames[i]), alphabet);
+					seqContNew->addSequence(seq);
+				}
+				return seqContNew;
+			}	catch (Exception e) {
+				throw e;
+			}
+		}		
+
 };
 
 
