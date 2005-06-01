@@ -32,6 +32,7 @@ MapSequenceContainer.h\
 Mase.h\
 MaseTools.h\
 NucleicAlphabet.h\
+NucleicAcidsReplication.h\
 OrderedSequenceContainer.h\
 OSequence.h\
 Phylip.h\
@@ -81,7 +82,7 @@ MiyataAAChemicalDistance.cpp\
 MapSequenceContainer.cpp\
 Mase.cpp\
 MaseTools.cpp\
-NucleicAlphabet.cpp\
+NucleicAcidsReplication.cpp\
 Phylip.cpp\
 ProteicAlphabet.cpp\
 RNA.cpp\

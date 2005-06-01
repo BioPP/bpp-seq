@@ -113,7 +113,7 @@ class AlphabetIndex2: public Clonable {
 		 * @brief Get the index associated to a pair of states.
 		 *
 		 * @param state1 First state to consider, as a string value.
-		 * @param state1 Second state to consider, as a string value.
+		 * @param state2 Second state to consider, as a string value.
 		 * @return The index associated to the pair of states
 		 */
 		virtual T getIndex(const string & state1, const string & state2) const = 0;

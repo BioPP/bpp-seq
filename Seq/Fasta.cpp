@@ -1,64 +1,83 @@
+//
+// File: Fasta.cpp
+// Created by: Guillaume Deuchst
+// Created on: Tue Aug 21 2003
+//
+
 /*
- * File Fasta.cpp
- * Author : Guillaume Deuchst <GDeuchst@ifrance.com>
- * Last modification : Tuesday August 21 2003
+Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
+
+Julien.Dutheil@univ-montp2.fr
+
+Ce logiciel est un programme informatique servant à fournir des classes
+pour l'analyse de séquences.
+
+Ce logiciel est régi par la licence CeCILL soumise au droit français et
+respectant les principes de diffusion des logiciels libres. Vous pouvez
+utiliser, modifier et/ou redistribuer ce programme sous les conditions
+de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+sur le site "http://www.cecill.info".
+
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
+
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des  connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL, et que vous en avez accepté les
+termes.
+*/
+
+/*
+Copyright or © or Copr. CNRS, (November 17, 2004)
+
+Julien.Dutheil@univ-montp2.fr
+
+This software is a computer program whose purpose is to provide classes
+for sequences analysis.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "Fasta.h"
 
 #include "StringSequenceTools.h"
-
-/** Class constructor *******************************************************************/
-
-Fasta::Fasta(unsigned int charsByLine): _charsByLine(charsByLine) {}
-
-/** Class destructor ********************************************************************/
-
-Fasta::~Fasta() {}
-
-/****************************************************************************************/
-
-// Method to read a fasta file, with creation of a vector type sequences container
-/*
-const VectorSequenceContainer * Fasta::read(const string & path, const Alphabet * alpha) const throw(Exception)
-{	
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) { throw IOException ("Fasta::read : fail to open file"); }
-
-	// Initialization
-	vector<const Sequence *> vs;
-	string temp, name, sequence = "";
-	
-	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n'); // Copy current line in temporary string
-		
-		// If first character is >
-		if (temp[0] == '>') {
-			// If a name and a sequence were founded
-			if ((name != "") && (sequence != "")) {
-				// New sequence addition in temporary vector of sequences
-				vs.push_back(new Sequence(name, sequence, alpha));
-				name = "";
-				sequence = "";
-			}
-			// Sequence name isolation
-			name = temp;
-			name.erase(name.begin());  // Character > deletion
-		} else sequence += temp;  // Sequence isolation
-	}
-
-	// Addition of the last sequence in file
-	if ((name != "") && (sequence != "")) vs.push_back(new Sequence(name, sequence, alpha));
-
-	file.close(); 
-
-	// Send founded sequences (in new VectorSequenceContainer)
-	VectorSequenceContainer * vsc = new VectorSequenceContainer(vs, alpha);
-    for(unsigned int i = 0; i < vs.size(); i++) delete vs[i];
-	return vsc;
-}*/
 
 /****************************************************************************************/
 
@@ -96,245 +115,6 @@ void Fasta::read(istream & input, VectorSequenceContainer & vsc) const throw (Ex
 }
 
 /****************************************************************************************/
-/*
-// Method to read one sequence from a fasta file by his number
-Sequence * Fasta::readSequence(const string & path, unsigned int number, const Alphabet * alpha) const throw (Exception) {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) {
-		throw IOException ("Fasta::readSequence : fail to open file");
-	}
-
-	// Initialization
-	unsigned int position = 0;
-	string temp, name, sequence = "";
-
-	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
-
-		// If first character is >
-		if (temp[0] == '>') {
-			// If a name and a sequence were founded
-			if ((name != "") && (sequence != "")) {
-				position++;
-				// Sending searched sequence when found
-				if (position == number) return new Sequence(name, sequence, alpha);
-				name = "";
-				sequence = "";
-			}
-			// Sequence name isolation
-			name = temp;
-			name.erase(name.begin());  // Character > deletion
-		} else sequence += temp;  // Sequence isolation
-	}
-	
-	// Sending last sequence in file if searched
-	if ((name != "") && (sequence != "")) {
-		position++;
-		if (position == number) return new Sequence(name, sequence, alpha);
-	}
-
-	file.close();
-
-	// If specified sequence number is upper then number of sequences in file, throw exception
-	if (number > position) throw IOException ("readSequence : Specified sequence number doesn't exists");
-
-	// If any reading error was met
-	throw IOException ("Fasta::readSequence : File format error");
-	return NULL;
-}
-
-// Method to read one sequence from a fasta file by his number and with an unknown alphabet
-Sequence * Fasta::readSequence(const string & path, unsigned int number) const throw (Exception) {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) {
-		throw IOException ("Fasta::readSequence : fail to open file");
-	}
-
-	// Initialization
-	unsigned int position = 0;
-	string temp, name, sequence = "";
-
-	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
-
-		// If first character is >
-		if (temp[0] == '>') {
-			// If a name and a sequence were founded
-			if ((name != "") && (sequence != "")) {
-				position++;
-				// Sending searched sequence when found
-				if (position == number) return new Sequence(name, sequence, StringSequenceTools::getAlphabetFromSequence(sequence));
-				name = "";
-				sequence = "";
-			}
-			// Sequence name isolation
-			name = temp;
-			name.erase(name.begin());  // Character > deletion
-		} else sequence += temp;  // Sequence isolation
-	}
-	
-	// Sending last sequence in file if searched
-	if ((name != "") && (sequence != "")) {
-		position++;
-		if (position == number) return new Sequence(name, sequence, StringSequenceTools::getAlphabetFromSequence(sequence));
-	}
-
-	file.close();
-
-	// If specified sequence number is upper then number of sequences in file, throw exception
-	if (number > position) throw IOException ("readSequence : Specified sequence number doesn't exists");
-
-	// If any reading error was met
-	throw IOException ("Fasta::readSequence : File format error");
-	return NULL;
-}
-
-// Method to read one sequence from a fasta file by his name
-Sequence * Fasta::readSequence(const string & path, const string & name, const Alphabet * alpha) const throw (Exception) {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) {
-		throw IOException ("Fasta::readSequence : fail to open file");
-	}
-
-	string temp, currentname, sequence = "";  // Initialization
-
-	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
-
-		// If first character is >
-		if (temp[0] == '>') {
-			// If a name and a sequence were founded
-			if ((currentname != "") && (sequence != "")) {
-				// Sending searched sequence when found
-				if (currentname == name) return new Sequence(name, sequence, alpha);
-				currentname = "";
-				sequence = "";
-			}
-			// Sequence name isolation
-			currentname = temp;
-			currentname.erase(currentname.begin());  // Character > deletion
-		} else sequence += temp;  // Sequence isolation
-	}
-	
-	// Sending last sequence in file if searched
-	if ((currentname != "") && (sequence != "")) {
-		if (currentname == name) return new Sequence(name, sequence, alpha);
-		else throw IOException ("readSequence : Specified name doesn't exists");
-	}
-
-	file.close();
-
-	// If any reading error was met
-	throw IOException ("Fasta::readSequence : File format error");
-	return NULL;
-}
-
-// Method to read one sequence from a fasta file by his name and with an unknown alphabet
-Sequence * Fasta::readSequence(const string & path, const string & name) const throw (Exception) {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) {
-		throw IOException ("Fasta::readSequence : fail to open file");
-	}
-
-	string temp, currentname, sequence = "";  // Initialization
-
-	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
-
-		// If first character is >
-		if (temp[0] == '>') {
-			// If a name and a sequence were founded
-			if ((currentname != "") && (sequence != "")) {
-				// Sending searched sequence when found
-				if (currentname == name) return new Sequence(name, sequence, StringSequenceTools::getAlphabetFromSequence(sequence));
-				currentname = "";
-				sequence = "";
-			}
-			// Sequence name isolation
-			currentname = temp;
-			currentname.erase(currentname.begin());  // Character > deletion
-		} else sequence += temp;  // Sequence isolation
-	}
-	
-	// Sending last sequence in file if searched
-	if ((currentname != "") && (sequence != "")) {
-		if (currentname == name) return new Sequence(name, sequence, StringSequenceTools::getAlphabetFromSequence(sequence));
-		else throw IOException ("readSequence : Specified name doesn't exists");
-	}
-
-	file.close();
-
-	// If any reading error was met
-	throw IOException ("Fasta::readSequence : File format error");
-	return NULL;
-}
-
-// Method to get number of sequence characters per line
-// (return the size of first sequence line found in file)
-int Fasta::getCharsByLine(const string & path) const throw (Exception) {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) { throw IOException ("Fasta::getCharsByLine : failed to open file"); }
-
-	string temp, name, sequence = "";  // Initialization
-
-	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
-
-		// If first character is >
-		if (temp[0] == '>') {
-			// If a name and a sequence were founded
-			if ((name != "") && (sequence != "")) {
-				file.close();
-				return sequence.size();  // Send size
-			}
-			// Sequence name isolation
-			name = temp;
-		} else if (sequence == "") sequence = temp;  // Sequence first line isolation
-	}
-
-	file.close();
-
-	// If any reading error was met
-	throw IOException ("Fasta::getCharsByLine : File format error");
-	return -1;
-}
-
-// Method to get number of sequences contained in specified file
-int Fasta::getNumberOfSequences(const string & path) const throw (Exception) {
-	// Checking the existence of specified file
-	ifstream file (path.c_str(), ios::in);
-	if (! file) { throw IOException ("Fasta::getNumberOfSequences : failed to open file"); }
-
-	// Initialization
-	int nb = 0;
-	string temp;
-
-	// Main loop : for all file lines
-	while (! file.eof()) {
-		getline(file,temp,'\n');  // Copy current line in temporary string
-
-		// If first character is >, new sequence is detected
-		if (temp[0] == '>') nb++;
-	}
-
-	file.close();
-
-	// Send result
-	return nb;
-}
-*/
-
-/****************************************************************************************/
 
 void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
 {
@@ -367,50 +147,3 @@ void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (E
 
 /****************************************************************************************/
 
-// Methods to write a sequence in fasta file
-// Specified file will be created if not exists, and else the new sequence will be added at end of file
-/*
-void Fasta::write(const string & path, const Sequence * sequence, bool overwrite) const throw (Exception)
-{
-
-	// Open file in specified mode
-	ofstream file(path.c_str(), overwrite ? (ios::out) : (ios::out|ios::app));
-
-	// Checking the existence of specified file, and possibility to open it in write mode
-	if (! file) { throw IOException ("Fasta::write : failed to open file"); }
-	
-	// Sequence's commentaries writing
-	file << ">" << sequence -> getName() << endl;
-
-	// Initialization
-	string seq, temp = "";
-
-	// Sequence cutting to specified characters number per line
-	seq = sequence -> toString();
-	while (seq != "") {
-		if (seq.size() > _charsByLine) {
-			temp = seq;
-			temp.erase(temp.begin() + _charsByLine , temp.end());
-			file << temp  << endl;
-			seq.erase(seq.begin(), seq.begin() + _charsByLine);
-		}
-		else {
-			file << seq << endl;
-			seq = "";
-		}
-	}
-	file.close();
-}
-*/
-
-/****************************************************************************************/
-
-const string Fasta::getFormatName() const { return "FASTA file"; }
-
-/****************************************************************************************/
-
-const string Fasta::getFormatDescription() const {
-	return "Sequence name (preceded by >) in one line, sequence content, no comments";
-}
-
-/****************************************************************************************/

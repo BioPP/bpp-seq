@@ -24,8 +24,8 @@ class AbstractOSequence: public OSequence {
 		 *
 		 * @{
 		 */ 
-		void write(     ostream & output, const SequenceContainer & sc                ) const throw (Exception) = 0;
-		void write(const string & path  , const SequenceContainer & sc, bool overwrite) const throw (Exception);
+		void write(     ostream & output, const SequenceContainer & sc                     ) const throw (Exception) = 0;
+		void write(const string & path  , const SequenceContainer & sc, bool overwrite=true) const throw (Exception);
 		/** @} */
 };
 
