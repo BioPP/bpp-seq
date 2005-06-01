@@ -50,7 +50,7 @@ InvertebrateMitochondrialCodonAlphabet::InvertebrateMitochondrialCodonAlphabet(c
 		}
 	}
 
-  alphabet[65].num = 61;
+  alphabet[65].num = num;
   alphabet[65].letter = "NNN";
   alphabet[65].name = "Unresolved codon";
 }

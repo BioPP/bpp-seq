@@ -92,6 +92,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <map>
 #include <ctype.h>
 #include <algorithm>
+#include <iostream>
 
 /****************************************************************************************/
 
