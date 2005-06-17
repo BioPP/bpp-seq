@@ -86,7 +86,7 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief The OSequence interface.
  */
-class OSequence : public IOSequence
+class OSequence : public virtual IOSequence
 {
 	public:
 		// Class destructor

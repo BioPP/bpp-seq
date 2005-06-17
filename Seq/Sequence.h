@@ -108,7 +108,7 @@ typedef vector<string> Comments;
  *
  * @see Alphabet
  */
-class Sequence: public SymbolList
+class Sequence: public virtual SymbolList
 {
 	protected:
 

@@ -1,6 +1,6 @@
 //
 // File: SymbolList.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
 // Created on: Fri Apr 9 2005
 //
 
@@ -101,7 +101,7 @@ using namespace std;
  *
  * @see Alphabet
  */
-class SymbolList: public Clonable {
+class SymbolList: public virtual Clonable {
 
   protected:
  		/**

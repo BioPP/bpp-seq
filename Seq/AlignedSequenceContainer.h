@@ -1,7 +1,79 @@
+//
+// File AlignedSequenceContainer.h
+// Created by: Guillaume Deuchst
+// //             Julien Dutheil
+// Last modification : Friday August 22 2003
+//
+
 /*
- * File AlignedSequenceContainer.h
- * Author : Guillaume Deuchst <GDeuchst@ifrance.com>
- * Last modification : Friday August 22 2003
+Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
+
+Julien.Dutheil@univ-montp2.fr
+
+Ce logiciel est un programme informatique servant à fournir des classes
+pour l'analyse de séquences.
+
+Ce logiciel est régi par la licence CeCILL soumise au droit français et
+respectant les principes de diffusion des logiciels libres. Vous pouvez
+utiliser, modifier et/ou redistribuer ce programme sous les conditions
+de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+sur le site "http://www.cecill.info".
+
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
+
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des  connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL, et que vous en avez accepté les
+termes.
+*/
+
+/*
+Copyright or © or Copr. CNRS, (November 17, 2004)
+
+Julien.Dutheil@univ-montp2.fr
+
+This software is a computer program whose purpose is to provide classes
+for sequences analysis.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _ALIGNEDSEQUENCECONTAINER_H_
@@ -21,7 +93,7 @@
  * This class can be instanciated (i.e. AlignedSequenceContainer asc * = new AlignedSequenceContainer(vsc);)
 */
 
-class AlignedSequenceContainer : public VectorSequenceContainer, public SiteContainer
+class AlignedSequenceContainer : public virtual VectorSequenceContainer, public virtual SiteContainer
 {
 	protected:
 		// Integer vector that contains sites's positions
@@ -79,118 +151,14 @@ class AlignedSequenceContainer : public VectorSequenceContainer, public SiteCont
 		void reindexSites();
 		/** @} */
 
-	// Redefined VectorSequenceContainer methods (to stop ambiguity of multi-inheritance)
-	// Only add- and setSequence methods are overloaded.
-	public:
-		// Method to get sequence container's alphabet
-		const Alphabet * getAlphabet() const {
-			return AbstractSequenceContainer::getAlphabet();
-		}
-
-		// Method to get name of a sequence in sequence container
-		string getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::getName(sequenceIndex);
-		}
-
-		// Method to get content of a sequence in sequence container
-		vector<int> getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::getContent(sequenceIndex);
-		}
-		vector<int> getContent(const string & name) const throw (SequenceNotFoundException) {
-			return VectorSequenceContainer::getContent(name);
-		}
-
-		// Convert to string
-		string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::toString(sequenceIndex);
-		}
-		string toString(const string & name) const throw (SequenceNotFoundException) {
-			return VectorSequenceContainer::toString(name);
-		}
-
-		// Method to get commentaries of a sequence in sequence container
-		Comments getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::getComments(sequenceIndex);
-		}
-		Comments getComments(const string & name) const throw (SequenceNotFoundException) {
-			return VectorSequenceContainer::getComments(name);
-		}
-
-		// Method to replace commentaries of a sequence in sequence container
-		void setComments(const string & name, const Comments & comments) throw (SequenceNotFoundException) {
-			VectorSequenceContainer::setComments(name, comments);
-		}
-		
-
-		void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) {
-			VectorSequenceContainer::setComments(sequenceIndex, comments);
-		}
-
-	// Method to get an sequence object from sequence container
-		const Sequence * getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::getSequence(sequenceIndex);
-		}
-		const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException) {
-			return VectorSequenceContainer::getSequence(name);
-		}
-
-		// Methods to get position of a sequence in sequence container from his name
-		// This method is used by delete and remove methods
-		unsigned int getSequencePosition(const string & name) const throw (SequenceNotFoundException) {
-			return VectorSequenceContainer::getSequencePosition(name);
-		}
-
 		// Method to replace a sequence in sequence container
 		void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception);
 		void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (Exception);
-
-		// Methods to extract (and remove) a sequence from sequence container
-		Sequence * removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException) {
-			return VectorSequenceContainer::removeSequence(sequenceIndex);
-		}
-		Sequence * removeSequence(const string & name) throw (SequenceNotFoundException) {
-			return VectorSequenceContainer::removeSequence(name);
-		}
-
-		// Methods to delete a sequence from sequence container
-		void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException) {
-			VectorSequenceContainer::deleteSequence(sequenceIndex);
-		}
-		void deleteSequence(const string & name) throw (SequenceNotFoundException) {
-			VectorSequenceContainer::deleteSequence(name);
-		}
 
 		// Methods to add sequence in sequence container
 		// CheckName : boolean for enable or disable sequence's name existence checking
 		void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
 		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
-
-		// Method to get number of sequences contained in sequence container
-		unsigned int getNumberOfSequences() const {
-			return VectorSequenceContainer::getNumberOfSequences();
-		}
-
-		// Method to get all names of sequences in sequence container
-		vector<string> getSequencesNames() const {
-			return VectorSequenceContainer::getSequencesNames();
-		}
-
-		// Method to replace all names of sequences in sequence container
-		// CheckName : boolean for enable or disable sequence's name existence checking
-		void setSequencesNames(const vector<string> & names, bool checkNames = true) throw (Exception) {
-			VectorSequenceContainer::setSequencesNames(names, checkNames);
-		}
-
-		// Methods to get, replace and delete sequence container's commentaries
-		Comments getGeneralComments() const {
-			return VectorSequenceContainer::getGeneralComments();
-		}
-		void setGeneralComments(const Comments & comments) {
-			VectorSequenceContainer::setGeneralComments(comments);
-		}
-		void deleteGeneralComments() {
-			VectorSequenceContainer::deleteGeneralComments();
-		}
 
 		// Method to delete all sequences in sequence container
 		void clear();

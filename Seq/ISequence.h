@@ -93,7 +93,7 @@ using namespace std;
 /**
  * @brief The ISequence interface.
  */
-class ISequence : public IOSequence
+class ISequence : public virtual IOSequence
 {
 	public:
 		// Class destructor

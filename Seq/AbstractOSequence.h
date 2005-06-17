@@ -7,12 +7,13 @@
 
 // From the STL:
 #include <string>
+#include <fstream>
 using namespace std;
 
 /**
  * @brief Low level implementation of the ISequence interface.
  */
-class AbstractOSequence: public OSequence {
+class AbstractOSequence: public virtual OSequence {
 
 	public: 
 		~AbstractOSequence() {}
@@ -25,7 +26,13 @@ class AbstractOSequence: public OSequence {
 		 * @{
 		 */ 
 		void write(     ostream & output, const SequenceContainer & sc                     ) const throw (Exception) = 0;
-		void write(const string & path  , const SequenceContainer & sc, bool overwrite=true) const throw (Exception);
+		void write(const string & path  , const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
+		{
+			// Open file in specified mode
+			ofstream output(path.c_str(), overwrite ? (ios::out) : (ios::out|ios::app));
+			write(output, sc);
+			output.close();
+		}
 		/** @} */
 };
 

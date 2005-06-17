@@ -21,8 +21,8 @@ InvertebrateMitochondrialGeneticCode::~InvertebrateMitochondrialGeneticCode() {
 	delete proteicAlphabet;	
 }
 
-int    InvertebrateMitochondrialGeneticCode::translate(      int i     ) const throw (BadIntException) {
-	vector<int> positions = codonAlphabet -> getPositions(i);
+int    InvertebrateMitochondrialGeneticCode::translate(int state) const throw (BadIntException) {
+	vector<int> positions = codonAlphabet -> getPositions(state);
 	switch(positions[0]) {
 		//First position:
 		case 0 : //A
@@ -107,9 +107,9 @@ int    InvertebrateMitochondrialGeneticCode::translate(      int i     ) const t
 			}
 		}
 	}
-	throw BadIntException(i, "InvertebrateMitochondrialGeneticCode::translate", codonAlphabet);
+	throw BadIntException(state, "InvertebrateMitochondrialGeneticCode::translate", codonAlphabet);
 }
 
-string InvertebrateMitochondrialGeneticCode::translate(const string & c) const throw (BadCharException) {
-	return proteicAlphabet -> intToChar(translate(codonAlphabet -> charToInt(c)));
+string InvertebrateMitochondrialGeneticCode::translate(const string & state) const throw (BadCharException) {
+	return proteicAlphabet -> intToChar(translate(codonAlphabet -> charToInt(state)));
 }

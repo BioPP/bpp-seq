@@ -103,14 +103,14 @@ const Sequence * VectorSequenceContainer::getSequence(const string & name) const
 	throw SequenceNotFoundException("VectorSequenceContainer::getSequence : Specified sequence doesn't exist", name);
 }
 
-Sequence * VectorSequenceContainer::getSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException)
+Sequence * VectorSequenceContainer::getSequenceInner(unsigned int sequenceIndex) throw (IndexOutOfBoundsException)
 {
 	// Specified sequence existence verification
 	if (sequenceIndex < _sequences.size()) return _sequences[sequenceIndex];
 	throw IndexOutOfBoundsException("VectorSequenceContainer::getSequence.", sequenceIndex, 0, _sequences.size() - 1);
 }
 
-Sequence * VectorSequenceContainer::getSequence(const string & name) throw (SequenceNotFoundException)
+Sequence * VectorSequenceContainer::getSequenceInner(const string & name) throw (SequenceNotFoundException)
 {
 	// Specified sequence name research into all sequences
 	for(unsigned int i = 0; i < _sequences.size(); i++) {

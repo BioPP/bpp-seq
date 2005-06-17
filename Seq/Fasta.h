@@ -89,7 +89,7 @@ knowledge of the CeCILL license and that you accept its terms.
  *
  * Read and write from/to Fasta files.
  */
-class Fasta : public AbstractISequence, public AbstractOSequence
+class Fasta : public virtual AbstractISequence, public virtual AbstractOSequence
 {
 	protected:
 
@@ -117,14 +117,27 @@ class Fasta : public AbstractISequence, public AbstractOSequence
 		 *
 		 * @{
 		 */
-		VectorSequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception) {
-			return AbstractISequence::read(input, alpha);
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		read(istream & input, const Alphabet * alpha) const throw (Exception)
+		{
+			return read(input, alpha);
 		}
-		VectorSequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) {
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		read(const string & path, const Alphabet * alpha) const throw (Exception)
+		{
 			return AbstractISequence::read(path, alpha);
 		}
 		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception) {
+		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception)
+		{
 			AbstractISequence::read(path, sc);
 		}
 		/** @} */
@@ -135,7 +148,8 @@ class Fasta : public AbstractISequence, public AbstractOSequence
 		 * @{
 		 */
 		void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
-		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) {
+		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception)
+		{
 			AbstractOSequence::write(path, sc, overwrite);
 		}
 		/** @} */

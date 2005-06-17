@@ -1,6 +1,6 @@
 //
 // File: Phylip.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
 // Created on: Mon Oct 27 12:22:56 2003
 //
 
@@ -233,3 +233,4 @@ const string Phylip::getFormatDescription() const {
 }
 
 /******************************************************************************/
+

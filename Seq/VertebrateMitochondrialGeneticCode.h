@@ -17,8 +17,8 @@ class VertebrateMitochondrialGeneticCode : public GeneticCode
 		virtual ~VertebrateMitochondrialGeneticCode();
 	
 	public:
-		int    translate(      int i     ) const throw (BadIntException);
-		string translate(const string & c) const throw (BadCharException);
+		int    translate(           int state) const throw (BadIntException);
+		string translate(const string & state) const throw (BadCharException);
 };
 
 

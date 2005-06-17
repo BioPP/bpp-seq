@@ -188,7 +188,7 @@ void AlignedSequenceContainer::setSite(unsigned int pos, const Site & site, bool
 	
 	// For all sequences
 	for (unsigned int j = 0 ; j < _sequences.size(); j++) {
-		VectorSequenceContainer::getSequence(j) -> setElement(pos, s[j]);
+		VectorSequenceContainer::getSequenceInner(j) -> setElement(pos, s[j]);
 	}
 	positions[pos] = site.getPosition();
 }
@@ -203,7 +203,7 @@ Site * AlignedSequenceContainer::removeSite(unsigned int pos) throw (IndexOutOfB
 
 	// For all sequences
 	for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
-		VectorSequenceContainer::getSequence(j) -> deleteElement(pos);
+		VectorSequenceContainer::getSequenceInner(j) -> deleteElement(pos);
 	}
 
 	// Delete site's position
@@ -227,7 +227,7 @@ void AlignedSequenceContainer::deleteSite(unsigned int pos) throw (IndexOutOfBou
 
 	// For all sequences
 	for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
-		VectorSequenceContainer::getSequence(j) -> deleteElement(pos);
+		VectorSequenceContainer::getSequenceInner(j) -> deleteElement(pos);
 	}
 
 	// Delete site's position
@@ -265,7 +265,7 @@ void AlignedSequenceContainer::addSite(const Site & site, bool checkPositions) t
 	
 	// For all sequences
 	for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
-		VectorSequenceContainer::getSequence(j) -> addElement(s[j]);
+		VectorSequenceContainer::getSequenceInner(j) -> addElement(s[j]);
 	}
 
 	length++;
@@ -300,7 +300,7 @@ void AlignedSequenceContainer::addSite(const Site & site, unsigned int pos, bool
 	
 	// For all sequences
 	for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
-		VectorSequenceContainer::getSequence(j) -> addElement(pos, site[j]);
+		VectorSequenceContainer::getSequenceInner(j) -> addElement(pos, site[j]);
 	}
 
 	length++;

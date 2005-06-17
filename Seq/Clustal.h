@@ -81,27 +81,60 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AbstractISequence.h"
 #include "AlignedSequenceContainer.h"
 
-class Clustal : public AbstractISequence  {
+// From the STL:
+#include <iostream>
+using namespace std;
+
+/**
+ * @brief The Clustal format.
+ *
+ * A AlignedSequenceContainer is used instead of a VectorSequenceContainer.
+ */
+class Clustal : public virtual AbstractISequence
+{
 
 	public:
 		Clustal() {};
 		~Clustal() {};
 
 	public:
-	
+
 		/**
 		 * @name The ISequence interface.
-		 *
+  	 *
 		 * @{
 		 */
-		AlignedSequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception) {
-			return dynamic_cast<AlignedSequenceContainer *>(AbstractISequence::read(input, alpha));
+#if defined(VIRTUAL_COV)
+		AlignedSequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception)
+		{
+			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
+			read(input, *asc);
+			return asc;
 		}
-		AlignedSequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) {
-			return dynamic_cast<AlignedSequenceContainer *>(AbstractISequence::read(path, alpha));
+		AlignedSequenceContainer * read(const string & path , const Alphabet * alpha) const throw (Exception)
+		{
+			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
+			AbstractISequence::read(path, *asc);
+			return asc;
 		}
+#else
+		SequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception)
+		{
+			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
+			read(input, *asc);
+			return asc;
+		}
+		SequenceContainer * read(const string & path , const Alphabet * alpha) const throw (Exception)
+		{
+			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
+			AbstractISequence::read(path, *asc);
+			return asc;
+		}
+#endif
+	
 		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception) {
+		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception)
+		{
 			AbstractISequence::read(path, sc);
 		}
 		/** @} */

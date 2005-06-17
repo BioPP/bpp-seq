@@ -84,12 +84,14 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <string>
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 /**
  * @brief Low level implementation of the ISequence interface.
  */
-class AbstractISequence: public ISequence {
+class AbstractISequence: public virtual ISequence {
 
 	public: 
 		~AbstractISequence() {}
@@ -102,9 +104,38 @@ class AbstractISequence: public ISequence {
 		 * @{
 		 */ 
 		virtual void read(     istream & input, VectorSequenceContainer & sc) const throw (Exception) = 0;
-		virtual void read(const string & path , VectorSequenceContainer & sc) const throw (Exception);
-		virtual VectorSequenceContainer * read(     istream & input, const Alphabet * alpha) const throw (Exception);
-		virtual VectorSequenceContainer * read(const string & path , const Alphabet * alpha) const throw (Exception);
+		virtual void read(const string & path , VectorSequenceContainer & sc) const throw (Exception)
+		{
+			ifstream input(path.c_str(), ios::in);
+			read(input, sc);
+			input.close();
+		}
+
+		virtual
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		read(istream & input, const Alphabet * alpha) const throw (Exception)
+		{
+			VectorSequenceContainer * vsc = new VectorSequenceContainer(alpha);
+			read(input, *vsc);
+			return vsc;
+		}
+
+		virtual
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		read(const string & path , const Alphabet * alpha) const throw (Exception)
+		{
+			VectorSequenceContainer * vsc = new VectorSequenceContainer(alpha);
+			read(path, *vsc);
+			return vsc;
+		}
 		/** @} */
 };
 

@@ -10,7 +10,7 @@
 
 #include "CodonAlphabet.h"
 /**
- * @brief <p>This class implements the invertebrate mitochondrial codon alphabet.</p>
+ * @brief This class implements the invertebrate mitochondrial codon alphabet.
  */
 class InvertebrateMitochondrialCodonAlphabet : public CodonAlphabet
 {
@@ -19,8 +19,7 @@ class InvertebrateMitochondrialCodonAlphabet : public CodonAlphabet
 		virtual ~InvertebrateMitochondrialCodonAlphabet();
 	
 	public:
-		/* Get the number of codons (without stops).
-		 */
+
 		unsigned int getSize() const;
 		unsigned int getNumberOfTypes() const;
 	

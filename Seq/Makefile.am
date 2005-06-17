@@ -68,8 +68,6 @@ VectorSiteContainer.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
-AbstractISequence.cpp\
-AbstractOSequence.cpp\
 AbstractSequenceContainer.cpp\
 AlignedSequenceContainer.cpp\
 AlphabetExceptions.cpp\
