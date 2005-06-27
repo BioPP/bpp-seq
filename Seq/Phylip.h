@@ -95,7 +95,7 @@ using namespace std;
  *
  * A AlignedSequenceContainer is used instead of a VectorSequenceContainer.
  */
-class Phylip: public AbstractISequence, public AbstractOSequence
+class Phylip: public virtual AbstractISequence, public virtual AbstractOSequence
 {
 	protected:
 
