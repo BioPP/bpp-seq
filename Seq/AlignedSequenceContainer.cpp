@@ -239,9 +239,7 @@ const Site * AlignedSequenceContainer::getSite(unsigned int i) const throw (Inde
   }
 
 	if(sites[i] != NULL) { delete sites[i]; }
-	cout << "ok1" << endl;
 	sites[i] = new Site(site, _alphabet, positions[i]);
-	cout << "ok2" << endl;
 	return sites[i];
 }
 
