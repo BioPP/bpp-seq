@@ -5,6 +5,7 @@
 #include "ISequence.h"
 #include "OSequence.h"
 #include "AbstractISequence.h"
+#include "AbstractISequence2.h"
 #include "AbstractOSequence.h"
 #include "Fasta.h"
 #include "Mase.h"

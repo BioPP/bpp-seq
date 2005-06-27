@@ -98,7 +98,7 @@ using namespace std;
  * The container is responsible for the creation and destruction of the sequence
  * objects it contains.
  */
-class VectorSequenceContainer : public AbstractSequenceContainer
+class VectorSequenceContainer : public virtual AbstractSequenceContainer
 {
 	protected:
 

@@ -1,3 +1,9 @@
+//
+// File: Clustal.cpp
+// Created by: Julien Dutheil
+// Created on: ?
+//
+
 /*
 Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
 
@@ -81,7 +87,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iomanip>
 using namespace std;
 
-void Clustal::read(istream & input, VectorSequenceContainer & sc) const throw (Exception)
+void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception)
 {
 	//!!! ClustalX add 6 spaces at longest name.
 
@@ -130,4 +136,6 @@ void Clustal::read(istream & input, VectorSequenceContainer & sc) const throw (E
 }
 
 const string Clustal::getFormatName() const { return "Clustal"; }
+
 const string Clustal::getFormatDescription() const { return "The Clustal alignment tool output format."; }
+

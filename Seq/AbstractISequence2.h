@@ -1,7 +1,7 @@
 //
-// File: DCSE.cpp
+// File: AbstractISequence2.h
 // Created by: Julien Dutheil
-// Created on: Wed Mar 3 2004
+// Created on: mon 27 jun 16:30 2005
 //
 
 /*
@@ -75,60 +75,133 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "AbstractISequence2.h"
-#include "Sequence.h"
-#include "SequenceContainer.h"
-#include "VectorSequenceContainer.h"
+#ifndef _ABSTRACTISEQUENCE2_H_
+#define _ABSTRACTISEQUENCE2_H_
 
-#include "DCSE.h"
+#include "AlignedSequenceContainer.h"
+#include "Alphabet.h"
+#include "ISequence.h"
 
-// From Utils:
-#include <Utils/TextTools.h>
-#include <Utils/FileTools.h>
-#include <Utils/StringTokenizer.h>
+// From the STL:
+#include <string>
+#include <iostream>
+#include <fstream>
+using namespace std;
 
-void DCSE::appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception)
-{
-	// Checking the existence of specified file
-	if (!input) { throw IOException ("DCSE::read : fail to open file"); }
+/**
+ * @brief Low level implementation of the ISequence interface.
+ *
+ * This is for Alignement readers.
+ */
+class AbstractISequence2: public virtual ISequence {
 
-	// Initialization
-  const Alphabet * alpha = sc.getAlphabet();
-	string line, name, sequence = "";
+	public: 
+		~AbstractISequence2() {}
 
-	line = FileTools::getNextLine(input); // Copy current line in temporary string
-	StringTokenizer st(line);
-	st.nextToken();
-	//First line ignored for now!
-	//int n1 = TextTools::toInt(st.nextToken());
-	//int n2 = TextTools::toInt(st.nextToken());
-	//int nbSites = n2 - n1
-	//cout << nbSpecies << " species and " << nbSites << " sites." << endl;
+	public:
 
-	// Main loop : for all file lines
-	while(!input.eof()) {
-		line = FileTools::getNextLine(input); // Copy current line in temporary string
-		if(line == "") break;
-		unsigned int endOfSeq = line.find("     ");
-		if(endOfSeq == line.npos) break;
-		sequence = string(line.begin(), line.begin() + endOfSeq);
-		sequence = TextTools::removeWhiteSpaces(sequence);
-		sequence = TextTools::removeChar(sequence, '{');
-		sequence = TextTools::removeChar(sequence, '}');
-		sequence = TextTools::removeChar(sequence, '[');
-		sequence = TextTools::removeChar(sequence, ']');
-		sequence = TextTools::removeChar(sequence, '(');
-		sequence = TextTools::removeChar(sequence, ')');
-		sequence = TextTools::removeChar(sequence, '^');
-		name     = string(line.begin() + endOfSeq + 1, line.end()),
-		name     = TextTools::removeFirstWhiteSpaces(name);
-		if(name.find("Helix numbering") == name.npos
-		&& name.find("mask") == name.npos)
-			sc.addSequence(Sequence(name, sequence, alpha));
-	}
-}
+		/**
+		 * @name ISequence methods:
+		 *
+		 * @{
+		 */ 
+		
+	public:
+		/**
+		 * @brief Add sequences to a container from a stream.
+		 *
+		 * @param input  The input stream to read.
+		 * @param sc     The sequence container to update.
+		 * @throw Exception If the file is not in the specified format.
+		 */
+		virtual void read(istream & input, AlignedSequenceContainer & sc) const throw (Exception)
+		{
+			appendFromStream(input, sc);
+		}
+		
+	protected:
+		/**
+		 * This is the only method to implement!
+		 */
+		virtual void appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception) = 0;
+	
+	public:
+		/**
+		 * @brief Add sequences to a container from a file.
+		 *
+		 * @param path  The path to the file to read.
+		 * @param sc    The sequence container to update.
+		 * @throw Exception If the file is not in the specified format.
+		 */
+		virtual void read(const string & path , AlignedSequenceContainer & sc) const throw (Exception)
+		{
+			appendFromFile(path, sc);
+		}
+		
+	protected:
+		virtual void appendFromFile(const string & path , AlignedSequenceContainer & sc) const throw (Exception)
+		{
+			ifstream input(path.c_str(), ios::in);
+			read(input, sc);
+			input.close();
+		}
 
-const string DCSE::getFormatName() const { return "DCSE"; }
+	public:
+		virtual
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		read(istream & input, const Alphabet * alpha) const throw (Exception)
+		{
+			return readFromStream(input, alpha);
+		}
 
-const string DCSE::getFormatDescription() const { return "RNA structure format"; }
+	protected:
+		virtual
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		readFromStream(istream & input, const Alphabet * alpha) const throw (Exception)
+		{
+			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
+			appendFromStream(input, *asc);
+			return asc;
+		}
+
+	public:
+		virtual
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		read(const string & path , const Alphabet * alpha) const throw (Exception)
+		{
+			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
+			read(path, *asc);
+			return asc;
+		}
+	
+	protected:
+		virtual
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		readFromFile(const string & path , const Alphabet * alpha) const throw (Exception)
+		{
+			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
+			appendFromFile(path, *asc);
+			return asc;
+		}
+		/** @} */
+};
+
+
+#endif // _ABSTRACTISEQUENCE2_H_
 

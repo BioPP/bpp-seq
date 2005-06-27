@@ -75,8 +75,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef ABSTRACTISEQUENCE_H
-#define ABSTRACTISEQUENCE_H
+#ifndef _ABSTRACTISEQUENCE_H_
+#define _ABSTRACTISEQUENCE_H_
 
 #include "VectorSequenceContainer.h"
 #include "Alphabet.h"
@@ -103,14 +103,48 @@ class AbstractISequence: public virtual ISequence {
 		 *
 		 * @{
 		 */ 
-		virtual void read(     istream & input, VectorSequenceContainer & sc) const throw (Exception) = 0;
+		
+	public:
+		/**
+		 * @brief Add sequences to a container from a stream.
+		 *
+		 * @param input  The input stream to read.
+		 * @param sc     The sequence container to update.
+		 * @throw Exception If the file is not in the specified format.
+		 */
+		virtual void read(istream & input, VectorSequenceContainer & sc) const throw (Exception)
+		{
+			appendFromStream(input, sc);
+		}
+		
+	protected:
+		/**
+		 * This is the only method to implement!
+		 */
+		virtual void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception) = 0;
+	
+	public:
+		/**
+		 * @brief Add sequences to a container from a file.
+		 *
+		 * @param path  The path to the file to read.
+		 * @param sc    The sequence container to update.
+		 * @throw Exception If the file is not in the specified format.
+		 */
 		virtual void read(const string & path , VectorSequenceContainer & sc) const throw (Exception)
+		{
+			appendFromFile(path, sc);
+		}
+		
+	protected:
+		virtual void appendFromFile(const string & path , VectorSequenceContainer & sc) const throw (Exception)
 		{
 			ifstream input(path.c_str(), ios::in);
 			read(input, sc);
 			input.close();
 		}
 
+	public:
 		virtual
 #if defined(VIRTUAL_COV)
 		VectorSequenceContainer *
@@ -119,11 +153,24 @@ class AbstractISequence: public virtual ISequence {
 #endif
 		read(istream & input, const Alphabet * alpha) const throw (Exception)
 		{
+			return readFromStream(input, alpha);
+		}
+
+	protected:
+		virtual
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		readFromStream(istream & input, const Alphabet * alpha) const throw (Exception)
+		{
 			VectorSequenceContainer * vsc = new VectorSequenceContainer(alpha);
-			read(input, *vsc);
+			appendFromStream(input, *vsc);
 			return vsc;
 		}
 
+	public:
 		virtual
 #if defined(VIRTUAL_COV)
 		VectorSequenceContainer *
@@ -136,7 +183,23 @@ class AbstractISequence: public virtual ISequence {
 			read(path, *vsc);
 			return vsc;
 		}
+	
+	protected:
+		virtual
+#if defined(VIRTUAL_COV)
+		VectorSequenceContainer *
+#else
+		SequenceContainer *
+#endif
+		readFromFile(const string & path , const Alphabet * alpha) const throw (Exception)
+		{
+			VectorSequenceContainer * vsc = new VectorSequenceContainer(alpha);
+			appendFromFile(path, *vsc);
+			return vsc;
+		}
 		/** @} */
 };
 
-#endif
+
+#endif //_ABSTRACTISEQUENCE_H_
+

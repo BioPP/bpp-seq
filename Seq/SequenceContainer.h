@@ -119,7 +119,7 @@ using namespace std;
  * @see Sequence
  */
 
-class SequenceContainer: public Clonable
+class SequenceContainer: public virtual Clonable
 {
 	public:	// Class destructor:
 		virtual ~SequenceContainer() {}
@@ -161,8 +161,6 @@ class SequenceContainer: public Clonable
 
 		/**
 		 * @brief Replace a sequence in the container.
-
-
 		 *
 		 * @param name      The name of the sequence.
 		 * @param sequence  The sequence to add.

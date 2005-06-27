@@ -78,7 +78,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _PHYLIP_H_
 #define _PHYLIP_H_
 
-#include "AbstractISequence.h"
+#include "AbstractISequence2.h"
 #include "AbstractOSequence.h"
 #include "Sequence.h"
 #include "SequenceContainer.h"
@@ -95,7 +95,7 @@ using namespace std;
  *
  * A AlignedSequenceContainer is used instead of a VectorSequenceContainer.
  */
-class Phylip: public virtual AbstractISequence, public virtual AbstractOSequence
+class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequence
 {
 	protected:
 
@@ -124,38 +124,11 @@ class Phylip: public virtual AbstractISequence, public virtual AbstractOSequence
 	public:
 
 		/**
-		 * @name The ISequence interface.
+		 * @name The AbstractISequence2 interface.
 		 *
 		 * @{
 		 */
-#if defined(VIRTUAL_COV)
-		AlignedSequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			read(input, *asc);
-			return asc;
-		}
-		AlignedSequenceContainer * read(const string & path , const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			AbstractISequence::read(path, *asc);
-			return asc;
-		}
-#else
-		SequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			read(input, *asc);
-			return asc;
-		}
-		SequenceContainer * read(const string & path , const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			AbstractISequence::read(path, *asc);
-			return asc;
-		}
-#endif
-		void read(istream & input, VectorSequenceContainer & vsc) const throw (Exception);
+		void appendFromStream(istream & input, AlignedSequenceContainer & vsc) const throw (Exception);
 		/** @} */
 
 		// Method to get number of sequences contained in specified file
@@ -187,8 +160,8 @@ class Phylip: public virtual AbstractISequence, public virtual AbstractOSequence
 		//Reading tools:
 		static string getNextNonEmptyLine(istream & in); 
 		const vector<string> splitNameAndSequence(const string & s) const; 
-		void readSequential (istream & in, VectorSequenceContainer & vsc) const throw (Exception);
-		void readInterleaved(istream & in, VectorSequenceContainer & vsc) const throw (Exception);
+		void readSequential (istream & in, AlignedSequenceContainer & asc) const throw (Exception);
+		void readInterleaved(istream & in, AlignedSequenceContainer & asc) const throw (Exception);
 		//Writing tools:
 		vector<string> getSizedNames(const vector<string> & names) const;
 		void writeSequential (ostream & out, const SequenceContainer & sc, int charsByLine) const;

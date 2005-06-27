@@ -81,7 +81,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /****************************************************************************************/
 
-void Fasta::read(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
+void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
 {
 	if (!input) { throw IOException ("Fasta::read : fail to open file"); }
 

@@ -1,5 +1,5 @@
 //
-// File: AbstractISequence.h
+// File: Clustal.h
 // Created by: Julien Dutheil
 // Created on: ?
 //
@@ -78,7 +78,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _CLUSTAL_H_
 #define _CLUSTAL_H_
 
-#include "AbstractISequence.h"
+#include "AbstractISequence2.h"
 #include "AlignedSequenceContainer.h"
 
 // From the STL:
@@ -90,7 +90,7 @@ using namespace std;
  *
  * A AlignedSequenceContainer is used instead of a VectorSequenceContainer.
  */
-class Clustal : public virtual AbstractISequence
+class Clustal : public virtual AbstractISequence2
 {
 
 	public:
@@ -100,43 +100,11 @@ class Clustal : public virtual AbstractISequence
 	public:
 
 		/**
-		 * @name The ISequence interface.
+		 * @name The AbstractISequence2 interface.
   	 *
 		 * @{
-		 */
-#if defined(VIRTUAL_COV)
-		AlignedSequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			read(input, *asc);
-			return asc;
-		}
-		AlignedSequenceContainer * read(const string & path , const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			AbstractISequence::read(path, *asc);
-			return asc;
-		}
-#else
-		SequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			read(input, *asc);
-			return asc;
-		}
-		SequenceContainer * read(const string & path , const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			AbstractISequence::read(path, *asc);
-			return asc;
-		}
-#endif
-	
-		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception)
-		{
-			AbstractISequence::read(path, sc);
-		}
+		 */	
+		void appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception);
 		/** @} */
 
 		/**

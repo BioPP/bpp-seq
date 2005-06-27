@@ -1,7 +1,79 @@
+//
+// File: AlignedSequenceContainer.cpp
+// Created by: Guillaume Deuchst
+//             Julien Dutheil
+// Created on: Friday August 22 2003
+//
+
 /*
- * File AlignedSequenceContainer.cpp
- * Author : Guillaume Deuchst <GDeuchst@ifrance.com>
- * Last modification : Friday August 22 2003
+Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
+
+Julien.Dutheil@univ-montp2.fr
+
+Ce logiciel est un programme informatique servant à fournir des classes
+pour l'analyse de séquences.
+
+Ce logiciel est régi par la licence CeCILL soumise au droit français et
+respectant les principes de diffusion des logiciels libres. Vous pouvez
+utiliser, modifier et/ou redistribuer ce programme sous les conditions
+de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+sur le site "http://www.cecill.info".
+
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
+
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des  connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL, et que vous en avez accepté les
+termes.
+*/
+
+/*
+Copyright or © or Copr. CNRS, (November 17, 2004)
+
+Julien.Dutheil@univ-montp2.fr
+
+This software is a computer program whose purpose is to provide classes
+for sequences analysis.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "AlignedSequenceContainer.h"
@@ -15,21 +87,25 @@ using namespace std;
 
 /** Class constructors: *******************************************************/
 
-AlignedSequenceContainer::AlignedSequenceContainer(const Alphabet * alpha):
-	VectorSequenceContainer(alpha)
+AlignedSequenceContainer::AlignedSequenceContainer(const Alphabet * alpha) :
+	VectorSequenceContainer(alpha),
+	AbstractSequenceContainer(alpha)
 {
 	length = 0;
 	reindexSites();
-	Site * s = NULL; sites = vector<Site *>(length, s);
+	//Site * s = NULL; sites = vector<Site *>(length, s);
 }
 
 /*                                        ***                                 */
 
-AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) : VectorSequenceContainer(sc)
+AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) : 
+	VectorSequenceContainer(sc),
+	AbstractSequenceContainer(sc.getAlphabet())
 {
 	length = sc.getNumberOfSites();
 	positions = sc.getSitePositions();
-	Site * s = NULL; sites = vector<Site *>(length, s);
+	//Site * s = NULL; sites = vector<Site *>(length, s);
+	sites.resize(length);
 
 	// General comments:
 	setGeneralComments(sc.getGeneralComments());
@@ -37,11 +113,14 @@ AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) : V
 
 /*                                        ***                                 */
 
-AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContainer & asc) : VectorSequenceContainer(asc)
+AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContainer & asc) : 
+	VectorSequenceContainer(asc),
+	AbstractSequenceContainer(asc.getAlphabet())
 {
 	length = asc.getNumberOfSites();
 	positions = asc.getSitePositions();
-	Site * s = NULL; sites = vector<Site *>(length, s);
+	//Site * s = NULL; sites = vector<Site *>(length, s);
+	sites.resize(length);
 
 	// General comments:
 	setGeneralComments(asc.getGeneralComments());
@@ -50,7 +129,8 @@ AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContaine
 /*                                        ***                                 */
 
 AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer & osc):
-	VectorSequenceContainer(osc.getAlphabet())
+	VectorSequenceContainer(osc.getAlphabet()),
+	AbstractSequenceContainer(osc.getAlphabet())
 {
 	// Initializing
 	length = 0;
@@ -59,7 +139,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
 	// Sequences insertion after size checking
 	for (int i = 0 ; i < max ; i++) addSequence(* osc.getSequence(i), false);
 	reindexSites();
-	Site * s = NULL; sites = vector<Site *>(length, s);
+	//Site * s = NULL; sites = vector<Site *>(length, s);
 
 	// General comments:
 	setGeneralComments(osc.getGeneralComments());
@@ -155,11 +235,13 @@ const Site * AlignedSequenceContainer::getSite(unsigned int i) const throw (Inde
 	unsigned int n = _sequences.size();
 	vector<int> site(n);
 	for (unsigned int j = 0 ; j < n ; j++) {
-        site[j] =  (_sequences[j] -> getContent())[i];
-    }
+    site[j] = (_sequences[j] -> getContent())[i];
+  }
 
 	if(sites[i] != NULL) { delete sites[i]; }
+	cout << "ok1" << endl;
 	sites[i] = new Site(site, _alphabet, positions[i]);
+	cout << "ok2" << endl;
 	return sites[i];
 }
 
@@ -348,7 +430,11 @@ void AlignedSequenceContainer::setSequence(const string & name, const Sequence &
 void AlignedSequenceContainer::addSequence(const Sequence & sequence, bool checkNames) throw (Exception)
 {
 	// if container has only one sequence
-	if (length == 0) length = sequence.size();
+	if (length == 0) {
+		length = sequence.size();
+		sites.resize(length);
+		reindexSites();
+	}
 	if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, checkNames);
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
 }

@@ -1,10 +1,8 @@
-/***************************************************************************
-                          DCSE.h  -  description
-                             -------------------
-    begin                : mer mar 3 2004
-    copyright            : (C) 2004 by Julien Dutheil
-    email                : Julien.Dutheil@univ-montp2.fr
- ***************************************************************************/
+//
+// File: DCSE.h
+// Created by: Julien Dutheil
+// Created on: Wed Mar 3 2004
+//
 
 /*
 Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
@@ -80,12 +78,12 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef DCSE_H
 #define DCSE_H
 
-#include "AbstractISequence.h"
+#include "AbstractISequence2.h"
 #include "Sequence.h"
 #include "SequenceContainer.h"
-#include "VectorSequenceContainer.h"
+#include "AlignedSequenceContainer.h"
 
-class DCSE : public virtual AbstractISequence
+class DCSE : public virtual AbstractISequence2
 {
     
 	public: 
@@ -95,32 +93,11 @@ class DCSE : public virtual AbstractISequence
 	public:
 	
 		/**
-		 * @name The ISequence interface.
+		 * @name The AbstractISequence2 interface.
 		 *
 		 * @{
 		 */
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
-		SequenceContainer *
-#endif
-		read(istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			return read(input, alpha);
-		}
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
-		SequenceContainer *
-#endif
-		read(const string & path, const Alphabet * alpha) const throw (Exception) {
-			return AbstractISequence::read(path, alpha);
-		}
-		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception)
-		{
-			AbstractISequence::read(path, sc);
-		}
+		void appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception);
 		/** @} */
 
 		

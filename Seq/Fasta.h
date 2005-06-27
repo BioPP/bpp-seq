@@ -113,33 +113,11 @@ class Fasta : public virtual AbstractISequence, public virtual AbstractOSequence
 	public:
 
 		/**
-		 * @name The ISequence interface.
+		 * @name The AbstractISequence interface.
 		 *
 		 * @{
 		 */
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
-		SequenceContainer *
-#endif
-		read(istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			return read(input, alpha);
-		}
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
-		SequenceContainer *
-#endif
-		read(const string & path, const Alphabet * alpha) const throw (Exception)
-		{
-			return AbstractISequence::read(path, alpha);
-		}
-		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception)
-		{
-			AbstractISequence::read(path, sc);
-		}
+		void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
 		/** @} */
 
 		/**

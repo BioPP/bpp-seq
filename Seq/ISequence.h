@@ -118,23 +118,6 @@ class ISequence : public virtual IOSequence
 		 */
 		virtual SequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) = 0;
 
-		/**
-		 * @brief Add sequences to a container from a stream.
-		 *
-		 * @param input  The input stream to read.
-		 * @param sc     The sequence container to update.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual void read(istream & input, VectorSequenceContainer & sc) const throw (Exception) = 0;
-
-		/**
-		 * @brief Add sequences to a container from a file.
-		 *
-		 * @param path  The path to the file to read.
-		 * @param sc    The sequence container to update.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual void read(const string & path, VectorSequenceContainer & sc) const throw (Exception) = 0;
 };
 
 #endif	// ISEQUENCE_H

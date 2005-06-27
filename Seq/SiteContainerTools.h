@@ -1,6 +1,6 @@
 //
 // File: SiteContainerTools.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Fri Dec 12 18:55:06 2003
 //
 

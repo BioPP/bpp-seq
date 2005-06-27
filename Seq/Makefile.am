@@ -1,6 +1,7 @@
 H_FILES = \
 AbstractAlphabet.h\
 AbstractISequence.h\
+AbstractISequence2.h\
 AbstractOSequence.h\
 AbstractSequenceContainer.h\
 AlignedSequenceContainer.h\

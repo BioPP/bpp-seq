@@ -1,3 +1,10 @@
+//
+// File: Mase.h
+// Created by: Guillaume Deuchst
+//             Julien Dutheil
+// Created on: ?
+//
+
 /*
 Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
 
@@ -102,49 +109,12 @@ class Mase : public virtual AbstractISequence, public virtual AbstractOSequence
 	public:
 
 		/**
-		 * @name The ISequence interface.
+		 * @name The AbstractISequence interface.
 		 *
 		 * @{
 		 */
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
-		SequenceContainer *
-#endif
-		read(istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			return read(input, alpha);
-		}
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
-		SequenceContainer *
-#endif
-		read(const string & path, const Alphabet * alpha) const throw (Exception)
-		{
-			return AbstractISequence::read(path, alpha);
-		}
-		void read(istream & input, VectorSequenceContainer & sc) const throw (Exception);
-		void read(const string & path, VectorSequenceContainer & sc) const throw (Exception)
-		{
-			AbstractISequence::read(path, sc);
-		}
+		void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
 		/** @} */
-
-		/*
-		// Methods to read one sequence from a fasta file, by his number or name, and with a known alphabet or not
-		Sequence * readSequence(const string & path, unsigned int number, const Alphabet * alpha) const throw (Exception);
-		Sequence * readSequence(const string & path, unsigned int number) const throw (Exception);
-		Sequence * readSequence(const string & path, const string & name, const Alphabet * alpha) const throw (Exception);
-		Sequence * readSequence(const string & path, const string & name) const throw (Exception);
-
-		// Method to get number of sequence characters per line
-		// (return the size of first sequence line found in file)
-		int getCharsByLine(const string & path) const throw (Exception);
-
-		// Method to get number of sequences contained in specified file
-		int getNumberOfSequences(const string & path) const throw (Exception);
-		*/
 
 		/**
 		 * @name The OSequence interface.
@@ -152,8 +122,7 @@ class Mase : public virtual AbstractISequence, public virtual AbstractOSequence
 		 * @{
 		 */
 		void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
-		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception)
-		{
+		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) {
 			AbstractOSequence::write(path, sc, overwrite);
 		}
 		/** @} */
