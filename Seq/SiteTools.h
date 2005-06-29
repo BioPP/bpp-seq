@@ -59,7 +59,7 @@ class SiteTools: public SymbolListTools
 		 * @param site a Site
 		 * @return The number of distinct characters in the given site.
 		 */
-        static unsigned int getNumberOfDistinctCharacters(const Site & site) throw (EmptySiteException);
+    static unsigned int getNumberOfDistinctCharacters(const Site & site) throw (EmptySiteException);
 
 		/**
 		 * @brief Tell if a site has singletons
@@ -87,7 +87,7 @@ class SiteTools: public SymbolListTools
 		 * @param site a Site.
 		 * @return True if the site has more than 2 distinct characters
 		 */
-         static bool isTriplet(const Site & site) throw (EmptySiteException);
+    static bool isTriplet(const Site & site) throw (EmptySiteException);
 
 };
 

@@ -79,7 +79,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define SYMBOLLISTTOOLS_H
 
 #include "SymbolList.h"
-
+#include "AlphabetExceptions.h"
 // From the STL:
 #include <map>
 using namespace std;
@@ -92,6 +92,29 @@ class SymbolListTools {
 	public:
 		static map<int, unsigned int> getCounts(const SymbolList & list);
 		static map<int, double> getFrequencies(const SymbolList & list);
+		/**
+ 		 * @brief Get the number of distinct positions.
+		 *
+		 * The comparison in achieved from position 0 to the minimum size of the two vectors.
+		 *
+		 * @param l1 SymbolList 1.
+		 * @param l2 SymbolList 2.
+		 * @return The number of distinct positions.
+		 * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
+		 */
+		static unsigned int getNumberOfDistinctPositions(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException);
+		
+		/**
+ 		 * @brief Get the number of positions without gap.
+		 *
+		 * The comparison in achieved from position 0 to the minimum size of the two vectors.
+		 *
+		 * @param l1 SymbolList 1.
+		 * @param l2 SymbolList 2.
+		 * @return The number of positions without gap.
+		 * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
+		 */
+		static unsigned int getNumberOfPositionsWithoutGap(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException);
 
 };
 
