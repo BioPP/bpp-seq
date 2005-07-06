@@ -17,8 +17,8 @@ GranthamAAChemicalDistance::GranthamAAChemicalDistance()
 	_alpha = new ProteicAlphabet();
 	
 	// Load the matrix:
-	_distanceMatrix = Mat(20, 20);
-	#include "__GranthamMatrixCode.cpp"
+	_distanceMatrix.resize(20, 20);
+	#include "__GranthamMatrixCode"
 }
 GranthamAAChemicalDistance::~GranthamAAChemicalDistance() { delete _alpha; }
 

@@ -17,8 +17,8 @@ MiyataAAChemicalDistance::MiyataAAChemicalDistance()
 	_alpha = new ProteicAlphabet();
 	
 	// Load the matrix:
-	_distanceMatrix = Mat(20, 20);
-	#include "__MiyataMatrixCode.cpp"
+	_distanceMatrix.resize(20, 20);
+	#include "__MiyataMatrixCode"
 }
 MiyataAAChemicalDistance::~MiyataAAChemicalDistance() { delete _alpha; }
 

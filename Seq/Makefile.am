@@ -118,8 +118,8 @@ VectorSequenceContainer.cpp\
 VectorSiteContainer.cpp
 
 CPP_EXTRA = \
-__GranthamMatrixCode.cpp\
-__MiyataMatrixCode.cpp
+__GranthamMatrixCode\
+__MiyataMatrixCode
 
 lib_LTLIBRARIES = libseq.la
 libseq_la_SOURCES = $(H_FILES) $(CPP_FILES)
