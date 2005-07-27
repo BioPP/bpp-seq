@@ -33,6 +33,6 @@ throw (BadIntException) {
 double GranthamAAChemicalDistance::getIndex(const string & state1, const string & state2) const
 throw (BadCharException) {
 	double d = _distanceMatrix(_alpha -> charToInt(state1), _alpha -> charToInt(state2));
-	return _sym ? abs(d) : d;
+	return _sym ? NumTools::abs(d) : d;
 }
 
