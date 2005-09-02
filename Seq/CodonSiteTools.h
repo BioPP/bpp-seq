@@ -108,7 +108,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @param gc a GeneticCode
 		 * @param minchange a boolean set by default to false
 		 */
-    static double numberOfSynonymousDifferences(int i, int j, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false);
+   	 	static double numberOfSynonymousDifferences(int i, int j, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false);
 
 		/* @brief Compute the synonymous pi per codon site
 		 *
@@ -197,7 +197,7 @@ class CodonSiteTools: public SymbolListTools
 		 */
 		static double NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, bool stopflag = true, double ratio=1.0) throw(Exception);
 
-		/* @brief Return the mean number of synonymous position per codon site
+		/* @brief Return the mean number of synonymous positions per codon site
 		 *
 		 * a site is consider as x% synonymous if x% of the possible mutations are synonymous
 		 * Transition/transversion ratio can be taken into account (use the variable ratio)
@@ -208,7 +208,7 @@ class CodonSiteTools: public SymbolListTools
 		 */
 		static double MeanNumberOfSynonymousPositions(const Site & site,  const CodonAlphabet & ca, const GeneticCode & gc, double ratio=1) throw(Exception);
 
-		/* @brief Return the mean number of synonymous position per codon site
+		/* @brief Return the mean number of synonymous positions per codon site
 		 *
 		 * a site is consider as x% synonymous if x% of the possible mutations are synonymous
 		 * Transition/transversion ratio can be taken into account (use the variable ratio)
@@ -218,6 +218,26 @@ class CodonSiteTools: public SymbolListTools
 		 */
 		static double MeanNumberOfSynonymousPositions(const Site & site, const GeneticCode & gc, double ratio=1) throw(Exception);
 
+
+
+		/* @brief Return the number of subsitutions per codon site
+		 *
+		 * no recombination is assumed
+		 * @param site a Site
+		 * @param na a NucleicAlphabet
+		 * @param ca a CodonAlphabet
+		 */
+		static double getNumberOfSubsitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca) throw(Exception);
+
+
+		/* @brief Return the number of Non Synonymous subsitutions per codon site
+		 *
+		 * It is assumed that the path linking amino acids only involved one substitution by step
+		 * @param site a Site
+		 * @param ca a CodonAlphabet
+		 * @param gc a GeneticCode
+		 */
+		static double getNumberOfNonSynonymousSubstitutions(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception);
 
 };
 

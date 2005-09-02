@@ -299,7 +299,7 @@ double CodonSiteTools::piSynonymous(const Site & site, const CodonAlphabet & ca,
 	  }
     unsigned int n = site.size();
     return pi * n / (n - 1);
-  } else 
+  } else
 		throw AlphabetMismatchException("CodonSiteTools::piSynonymous: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
 
@@ -326,7 +326,7 @@ double CodonSiteTools::piSynonymous(const Site & site, const GeneticCode & gc, b
 	  }
     unsigned int n = site.size();
     return pi * n / (n - 1);
-  } else 
+  } else
 		throw AlphabetMismatchException("CodonSiteTools::piSynonymous: alphabet is not CodonAlphabet", ca, site.getAlphabet());
 }
 
@@ -427,13 +427,13 @@ double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & 
 			if(ca.getName(ca.intToChar(intcodon))=="Stop") continue;
 			int altacid = gc.translate(intcodon);
 			if (altacid == acid) { //if synonymous
-				if(((codon[pos] == 0 || codon[pos] == 2) && (mutcodon[pos] == 1 || mutcodon[pos] == 3)) || 
+				if(((codon[pos] == 0 || codon[pos] == 2) && (mutcodon[pos] == 1 || mutcodon[pos] == 3)) ||
 				   ((codon[pos] == 1 || codon[pos] == 3) && (mutcodon[pos] == 0 || mutcodon[pos] == 2))) { // if it is a transversion
 					nbsynpos = nbsynpos + 1/(ratio+2);
 				} else { //if transition
 					nbsynpos = nbsynpos + ratio/(ratio+2);
 				}
-			}	
+			}
 		}
 	}
 	return nbsynpos;
@@ -461,7 +461,7 @@ double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const 
 // Method that gives the mean number of synonymous position per codon site
 //Transition/transversion ratio is taken into account. Default option ratio=1
 double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const GeneticCode & gc, double ratio) throw(Exception) {
-        const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+    const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
 	//Empty site checking
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::MeanNumberOfSynonymousPositions Incorrect specified site", &site);
         //Alphabet checking
@@ -475,4 +475,48 @@ double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const 
         	return NbSyn;
         }
         else throw AlphabetMismatchException("CodonSiteTools::MeanNumberOfSynonymousPositions: alphabet is not CodonAlphabet", ca, site.getAlphabet());
+}
+
+
+
+//Method that gives the total number of subsitutions per codon site
+//Overdefines the previous method : A site with a codon alphabet must be given
+//No recombination is assumed
+double CodonSiteTools::getNumberOfSubsitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca) throw(Exception){
+	//Empty site checking
+	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
+	//Alphabet checking
+	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
+		//Computation
+		vector<int> pos1,pos2,pos3;
+		for(unsigned int i = 0; i < site.size(); i++) {
+			pos1.push_back(ca.getFirstPosition(site[i]));
+			pos2.push_back(ca.getSecondPosition(site[i]));
+			pos3.push_back(ca.getThirdPosition(site[i]));
+		}
+	    Site s1(pos1,&na), s2(pos2,&na), s3(pos3,&na);
+		unsigned int Scodon = SiteTools::getNumberOfDistinctCharacters(site)-1;
+		unsigned int Sbase = SiteTools::getNumberOfDistinctCharacters(s1)+SiteTools::getNumberOfDistinctCharacters(s2)+SiteTools::getNumberOfDistinctCharacters(s3)-3;
+		if(Scodon >= Sbase) return Scodon;
+		else return Sbase;
+	}
+	else throw AlphabetMismatchException("CodonSiteTools::getNumberOfSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
+}
+
+//Method that gives the number of non-synonymous substitution per codon site
+//It is assumed that the path linking amino acids only involved one substitution by step
+double CodonSiteTools::getNumberOfNonSynonymousSubstitutions(const Site &site, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception){
+	//Empty site checking
+	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
+	//Alphabet checking
+	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
+		//computation
+		vector<int> prot;
+                const ProteicAlphabet * pa = new ProteicAlphabet();
+		for(unsigned int i = 0; i < site.size(); i++) prot.push_back(gc.translate(site[i]));
+		Site siteprot(prot,pa);
+                delete pa;
+		return SiteTools::getNumberOfDistinctCharacters(siteprot)-1;
+	}
+else throw AlphabetMismatchException("CodonSiteTools::getNumberOfNonSynonymousSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
