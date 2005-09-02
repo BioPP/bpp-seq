@@ -53,6 +53,8 @@ class SiteTools: public SymbolListTools
 
 		static double variabilityFactorial(const Site & site) throw (EmptySiteException);
 
+		static double heterozygosity(const Site & site) throw (EmptySiteException);
+
 		/**
 		 * @brief Give the number of distinct characters at a site.
 		 *
