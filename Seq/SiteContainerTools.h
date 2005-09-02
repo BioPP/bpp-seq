@@ -19,9 +19,9 @@ class SiteContainerTools
 	public:
 		SiteContainerTools() {}
 		 ~SiteContainerTools() {}
-	
+
 	public:
-		
+
 		/**
 		 * @brief Retrieves sites without gaps from SiteContainer.
 		 *
@@ -44,7 +44,7 @@ class SiteContainerTools
 		 * @return A pointer toward a new SiteContainer with only sites with no gaps.
 		 */
 		static SiteContainer * getCompleteSites(const SiteContainer & sites);
-		
+
 		/**
 		 * @brief Create a new container with a specified set of sites.
 		 *
@@ -60,6 +60,19 @@ class SiteContainerTools
 		 * @return A new container with all selected sites.
 		 */
 		static SiteContainer * getSelectedSites(const SiteContainer & sequences, const SiteSelection & selection);
+
+
+		/**
+		 * @brief create the consensus sequence of the alignment
+		 *
+		 * gap can be taken into account or not (default option)
+		 *
+		 * @param sc a site container
+		 * @param gapflag
+		 * @return Sequence
+		 */
+
+		static const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, bool gapflag = true);
 };
 
 
