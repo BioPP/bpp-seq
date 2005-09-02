@@ -97,6 +97,19 @@ double SiteTools::variabilityFactorial(const Site & site) throw (EmptySiteExcept
         return std::log((double)fact(s) / (double)sum(VectorFunctions::fact(c)));
 }
 
+
+/******************************************************************************/
+
+double SiteTools::heterozygosity(const Site & site) throw (EmptySiteException)
+{
+	// Empty site checking
+	if(site.size() == 0) throw EmptySiteException("SiteTools::heterozygosity: Incorrect specified site", &site);
+	map<int, double> p = getFrequencies(site);
+	vector<double> c = MapTools::getValues(p);
+	return 1 - norm(MapTools::getValues(p))*norm(MapTools::getValues(p));
+
+}
+
 /******************************************************************************/
 
 unsigned int SiteTools::getNumberOfDistinctCharacters(const Site & site) throw (EmptySiteException)
