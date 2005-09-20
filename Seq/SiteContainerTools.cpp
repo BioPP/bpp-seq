@@ -64,7 +64,7 @@ SiteContainer * SiteContainerTools::getSelectedSites(
 
 /******************************************************************************/
 
-const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, bool gapflag){
+const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, string name, bool gapflag){
 	Vint consensus;
 	SimpleSiteIterator ssi(sc);
 	const Site * site;
@@ -92,7 +92,7 @@ const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, bool
 		}
 		consensus.push_back(cons);
 	}
-	const Sequence * seqConsensus = new Sequence("consensus",consensus,sc.getSequence(0)->getAlphabet());
+	const Sequence * seqConsensus = new Sequence(name,consensus,sc.getSequence(0)->getAlphabet());
         return seqConsensus;
 }
 

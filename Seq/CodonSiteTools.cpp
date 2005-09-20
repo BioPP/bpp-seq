@@ -504,7 +504,6 @@ double CodonSiteTools::getNumberOfSubsitutions(const Site & site, const NucleicA
 }
 
 //Method that gives the number of non-synonymous substitution per codon site
-//It is assumed that the path linking amino acids only involved one substitution by step
 double CodonSiteTools::getNumberOfNonSynonymousSubstitutions(const Site &site, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception){
 	//Empty site checking
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
@@ -515,8 +514,94 @@ double CodonSiteTools::getNumberOfNonSynonymousSubstitutions(const Site &site, c
                 const ProteicAlphabet * pa = new ProteicAlphabet();
 		for(unsigned int i = 0; i < site.size(); i++) prot.push_back(gc.translate(site[i]));
 		Site siteprot(prot,pa);
+                map<int,unsigned int> count = SiteTools::getCounts(site);
+                unsigned int NaSup=0;
+                for(map<int,unsigned int>::iterator it1 = count.begin(); it1 != count.end(); it1++){
+                        unsigned int Nmin=3;
+                        for(map<int,unsigned int>::iterator it2 = count.begin(); it2 != count.end(); it2++){
+                                unsigned int Ntot = CodonSiteTools::numberOfDifferences(it1->first,it2->first,ca);
+                                unsigned int Ns = CodonSiteTools::numberOfSynonymousDifferences(it1->first,it2->first,ca,gc);
+                                if(Nmin>Ntot-Ns && it1->first!=it2->first) Nmin=Ntot-Ns;
+                        }
+                        if (Nmin>1) NaSup++;
+                }
+                if (NaSup>0) NaSup--;
                 delete pa;
-		return SiteTools::getNumberOfDistinctCharacters(siteprot)-1;
+		return SiteTools::getNumberOfDistinctCharacters(siteprot)-1+NaSup;
 	}
 else throw AlphabetMismatchException("CodonSiteTools::getNumberOfNonSynonymousSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
+}
+
+
+//Method that gives the number of fixed synonymous and non-synonymous differences per codon site
+vector<unsigned int> CodonSiteTools::getFixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception){
+	//Empty site checking
+	if(siteIn.size() == 0) throw EmptySiteException("CodonSiteTools::getFixedDifferences Incorrect specified site", &siteIn);
+	if(siteOut.size() == 0) throw EmptySiteException("CodonSiteTools::getFixedDifferences Incorrect specified site", &siteOut);
+	unsigned int Ntot = CodonSiteTools::numberOfDifferences(i,j,ca);
+	unsigned int Ns = (unsigned int) CodonSiteTools::numberOfSynonymousDifferences(i,j,ca,gc);
+	unsigned int Na = Ntot-Ns;
+	unsigned int Nfix = Ntot;
+	vector<int> pos1in,pos2in,pos3in, pos1out, pos2out, pos3out;
+	for(unsigned int i = 0; i < siteIn.size(); i++) {
+		pos1in.push_back(ca.getFirstPosition(siteIn[i]));
+		pos2in.push_back(ca.getSecondPosition(siteIn[i]));
+		pos3in.push_back(ca.getThirdPosition(siteIn[i]));
+		pos1out.push_back(ca.getFirstPosition(siteOut[i]));
+		pos2out.push_back(ca.getSecondPosition(siteOut[i]));
+		pos3out.push_back(ca.getThirdPosition(siteOut[i]));
+	}
+	Site s1in(pos1in,&na), s2in(pos2in,&na), s3in(pos3in,&na);
+	Site s1out(pos1out,&na), s2out(pos2out,&na), s3out(pos3out,&na);
+	bool test1 = false;
+	bool test2 = false;
+	bool test3 = false;
+	if( (!SiteTools::isConstant(s1in) || !SiteTools::isConstant(s1out)) && ca.getFirstPosition(i)!=ca.getFirstPosition(j) ){
+		test1 = true;
+		Nfix--;
+	}
+	if( (!SiteTools::isConstant(s2in) || !SiteTools::isConstant(s2out)) && ca.getSecondPosition(i)!=ca.getSecondPosition(j) ){
+		test2 = true;
+		Nfix--;
+	}
+	if( (!SiteTools::isConstant(s3in) || !SiteTools::isConstant(s3out)) && ca.getThirdPosition(i)!=ca.getThirdPosition(j) ){
+		test3 = true;
+		Nfix--;
+	}
+        //Suppression of differences when not fixed
+        vector<unsigned int> v(2);
+        if (Nfix==0) {
+                v[0]=0;
+                v[1]=0;
+                return v;
+        }
+        if(Nfix<Ntot){
+                if (Na==0) Ns=Nfix;
+                if (Ns==0) Na=Nfix;
+                else {
+                        if (Ntot==3) {
+                                if (Nfix==1){
+                                        if (test1 && test2) {Na=0;Ns=1;}
+                                        if (test1 && test3) {Na=1;Ns=0;}
+                                        else {Na--;Ns--;}
+                                }
+                                if (Nfix==2) {
+                                        if (test1) {Na=1;Ns=1;}
+                                        if (test2) Na--;
+                                        if (test3) Ns--;
+                                }
+                        }
+                        if (Ntot==2) {
+                                if (test1) {
+                                        if (ca.getSecondPosition(i)==ca.getSecondPosition(j)) Na--;
+                                        else Ns--;
+                                }
+                                if (test2) Na--;
+                                if (test3) Ns--;
+                        }
+                }
+        }
+	v[0]=Ns;
+	v[1]=Na;
+	return v;
 }

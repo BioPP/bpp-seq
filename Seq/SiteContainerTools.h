@@ -72,7 +72,7 @@ class SiteContainerTools
 		 * @return Sequence
 		 */
 
-		static const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, bool gapflag = true);
+		static const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc,string name="consensus", bool gapflag = true);
 };
 
 

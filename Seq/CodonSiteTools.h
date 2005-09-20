@@ -239,6 +239,19 @@ class CodonSiteTools: public SymbolListTools
 		 */
 		static double getNumberOfNonSynonymousSubstitutions(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception);
 
+
+		/* @brief Return a vector with the number of fixed synonymous and non-synonymous differences per codon site
+		 *
+		 * @param siteIn a Site
+		 * @param siteOut a Site
+		 * @param i an integer
+		 * @param j an integer
+		 * @param na a NucleicAlphabet
+		 * @param ca a CodonAlphabet
+		 * @param gc a GeneticCode
+		 */
+		static vector<unsigned int> getFixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception);
+
 };
 
 #endif	//_CONDONSITETOOLS_H_
