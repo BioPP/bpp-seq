@@ -510,24 +510,21 @@ double CodonSiteTools::getNumberOfNonSynonymousSubstitutions(const Site &site, c
 	//Alphabet checking
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
 		//computation
-		vector<int> prot;
-                const ProteicAlphabet * pa = new ProteicAlphabet();
-		for(unsigned int i = 0; i < site.size(); i++) prot.push_back(gc.translate(site[i]));
-		Site siteprot(prot,pa);
                 map<int,unsigned int> count = SiteTools::getCounts(site);
                 unsigned int NaSup=0;
+                unsigned int Nminmin=10;
                 for(map<int,unsigned int>::iterator it1 = count.begin(); it1 != count.end(); it1++){
-                        unsigned int Nmin=3;
+                        unsigned int Nmin=10;
                         for(map<int,unsigned int>::iterator it2 = count.begin(); it2 != count.end(); it2++){
                                 unsigned int Ntot = CodonSiteTools::numberOfDifferences(it1->first,it2->first,ca);
                                 unsigned int Ns = CodonSiteTools::numberOfSynonymousDifferences(it1->first,it2->first,ca,gc);
                                 if(Nmin>Ntot-Ns && it1->first!=it2->first) Nmin=Ntot-Ns;
                         }
-                        if (Nmin>1) NaSup++;
+                        NaSup+=Nmin;
+                        if (Nmin<Nminmin) Nminmin=Nmin;
+
                 }
-                if (NaSup>0) NaSup--;
-                delete pa;
-		return SiteTools::getNumberOfDistinctCharacters(siteprot)-1+NaSup;
+		return NaSup-Nminmin;
 	}
 else throw AlphabetMismatchException("CodonSiteTools::getNumberOfNonSynonymousSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
