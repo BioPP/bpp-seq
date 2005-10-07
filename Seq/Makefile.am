@@ -65,7 +65,8 @@ SymbolList.h\
 SymbolListTools.h\
 Translator.h\
 VectorSequenceContainer.h\
-VectorSiteContainer.h
+VectorSiteContainer.h\
+KleinAANetChargeIndex.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\

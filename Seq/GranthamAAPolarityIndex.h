@@ -1,49 +1,11 @@
 //
 // File: GranthamAAPolarityIndex.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Tue Apr 21 2005
 //
 
 /*
-Copyright ou © ou Copr. Julien Dutheil, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
-Copyright or © or Copr. Julien Dutheil, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
+Copyright or © or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -81,6 +43,22 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetIndex1.h"
 #include "ProteicAlphabet.h"
 
+/**
+ * @brief Polarity index used in Grantham (1974).
+ *
+ *Database: AAindex1
+ *Entry: GRAR740102
+ *H GRAR740102
+ *D Polarity (Grantham, 1974)
+ *R LIT:2004143b PMID:4843792
+ *A Grantham, R.
+ *T Amino acid difference formula to help explain protein evolution
+ *J Science 185, 862-864 (1974)
+ *I    A/L     R/K     N/M     D/F     C/P     Q/S     E/T     G/W     H/Y     I/V
+ *     8.1    10.5    11.6    13.0     5.5    10.5    12.3     9.0    10.4     5.2
+ *     4.9    11.3     5.7     5.2     8.0     9.2     8.6     5.4     6.2     5.9
+ * //
+ */
 class GranthamAAPolarityIndex: public AlphabetIndex1<double> {
 
 	private:

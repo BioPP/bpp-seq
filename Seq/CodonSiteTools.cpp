@@ -1,7 +1,40 @@
+//
+// File CodonSiteTools.cpp
+// Author : Sylvain Glémin
+// Last modification : ? October 2004
+//
+
 /*
- * File CodonTools.cpp
- * Author : Sylvain Glémin <glemin@univ-montp2.fr>
- * Last modification : ? October 2004
+Copyright or © or Copr. CNRS, (November 17, 2004)
+
+This software is a computer program whose purpose is to provide classes
+for sequences analysis.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use,
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info".
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability.
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or
+data to be ensured and,  more generally, to use and operate it in the
+same conditions as regards security.
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "CodonSiteTools.h"
@@ -391,7 +424,7 @@ double CodonSiteTools::piNonSynonymous(const Site & site, const GeneticCode & gc
 
 //Method that gives the number of synonymous positions of a codon
 //Transition/transversion ratio is taken into account. Default option ratio=1
-double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, double ratio) throw(Exception) {
+double CodonSiteTools::numberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, double ratio) throw(Exception) {
 	if(ca.getName(ca.intToChar(i))=="Stop") return 0;
         int acid=gc.translate(i);
 	switch (gc.getSynonymous(acid).size()){
@@ -412,7 +445,7 @@ double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & 
 
 //Method that gives the number of synonymous positions of a codon
 //Transition/transversion ratio is taken into account. Default option ratio=1
-double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc , bool stopflag, double ratio) throw(Exception) {
+double CodonSiteTools::numberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc , bool stopflag, double ratio) throw(Exception) {
 	try {
 	if(ca.getName(ca.intToChar(i))=="Stop") return 0;
 	double nbsynpos = 0.0;
@@ -442,7 +475,7 @@ double CodonSiteTools::NumberOfSynonymousPositions(int i, const CodonAlphabet & 
 
 // Method that gives the mean number of synonymous position per codon site
 //Transition/transversion ratio is taken into account. Default option ratio=1
-double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc, double ratio) throw(Exception) {
+double CodonSiteTools::meanNumberOfSynonymousPositions(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc, double ratio) throw(Exception) {
 	//Empty site checking
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::MeanNumberOfSynonymousPositions Incorrect specified site", &site);
         //Alphabet checking
@@ -451,7 +484,7 @@ double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const 
 	        double NbSyn=0;
 	        map<int,double> freq = SiteTools::getFrequencies(site);
 			for(map<int,double>::iterator it = freq.begin(); it != freq.end(); it++) {
-				NbSyn += (it->second)*NumberOfSynonymousPositions(it->first,ca,gc,ratio);
+				NbSyn += (it->second)*numberOfSynonymousPositions(it->first,ca,gc,ratio);
 			}
         return NbSyn;
         }
@@ -460,7 +493,7 @@ double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const 
 
 // Method that gives the mean number of synonymous position per codon site
 //Transition/transversion ratio is taken into account. Default option ratio=1
-double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const GeneticCode & gc, double ratio) throw(Exception) {
+double CodonSiteTools::meanNumberOfSynonymousPositions(const Site & site, const GeneticCode & gc, double ratio) throw(Exception) {
     const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
 	//Empty site checking
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::MeanNumberOfSynonymousPositions Incorrect specified site", &site);
@@ -470,7 +503,7 @@ double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const 
 	        double NbSyn=0;
 	        map<int,double> freq = SiteTools::getFrequencies(site);
 			for(map<int,double>::iterator it = freq.begin(); it != freq.end(); it++) {
-				NbSyn += (it->second)*NumberOfSynonymousPositions(it->first,*ca,gc,false,ratio);
+				NbSyn += (it->second)*numberOfSynonymousPositions(it->first,*ca,gc,false,ratio);
 			}
         	return NbSyn;
         }
@@ -482,7 +515,7 @@ double CodonSiteTools::MeanNumberOfSynonymousPositions(const Site & site, const 
 //Method that gives the total number of subsitutions per codon site
 //Overdefines the previous method : A site with a codon alphabet must be given
 //No recombination is assumed
-double CodonSiteTools::getNumberOfSubsitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca) throw(Exception){
+unsigned int CodonSiteTools::numberOfSubsitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca) throw(Exception){
 	//Empty site checking
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
 	//Alphabet checking
@@ -494,7 +527,7 @@ double CodonSiteTools::getNumberOfSubsitutions(const Site & site, const NucleicA
 			pos2.push_back(ca.getSecondPosition(site[i]));
 			pos3.push_back(ca.getThirdPosition(site[i]));
 		}
-	    Site s1(pos1,&na), s2(pos2,&na), s3(pos3,&na);
+	  Site s1(pos1,&na), s2(pos2,&na), s3(pos3,&na);
 		unsigned int Scodon = SiteTools::getNumberOfDistinctCharacters(site)-1;
 		unsigned int Sbase = SiteTools::getNumberOfDistinctCharacters(s1)+SiteTools::getNumberOfDistinctCharacters(s2)+SiteTools::getNumberOfDistinctCharacters(s3)-3;
 		if(Scodon >= Sbase) return Scodon;
@@ -504,34 +537,34 @@ double CodonSiteTools::getNumberOfSubsitutions(const Site & site, const NucleicA
 }
 
 //Method that gives the number of non-synonymous substitution per codon site
-double CodonSiteTools::getNumberOfNonSynonymousSubstitutions(const Site &site, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception){
+unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception){
 	//Empty site checking
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
 	//Alphabet checking
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
 		//computation
-                map<int,unsigned int> count = SiteTools::getCounts(site);
-                unsigned int NaSup=0;
-                unsigned int Nminmin=10;
-                for(map<int,unsigned int>::iterator it1 = count.begin(); it1 != count.end(); it1++){
-                        unsigned int Nmin=10;
-                        for(map<int,unsigned int>::iterator it2 = count.begin(); it2 != count.end(); it2++){
-                                unsigned int Ntot = CodonSiteTools::numberOfDifferences(it1->first,it2->first,ca);
-                                unsigned int Ns = CodonSiteTools::numberOfSynonymousDifferences(it1->first,it2->first,ca,gc);
-                                if(Nmin>Ntot-Ns && it1->first!=it2->first) Nmin=Ntot-Ns;
-                        }
-                        NaSup+=Nmin;
-                        if (Nmin<Nminmin) Nminmin=Nmin;
+    map<int,unsigned int> count = SiteTools::getCounts(site);
+    unsigned int NaSup=0;
+    unsigned int Nminmin=10;
+    for(map<int,unsigned int>::iterator it1 = count.begin(); it1 != count.end(); it1++){
+      unsigned int Nmin=10;
+      for(map<int,unsigned int>::iterator it2 = count.begin(); it2 != count.end(); it2++){
+        unsigned int Ntot = CodonSiteTools::numberOfDifferences(it1->first,it2->first,ca);
+        unsigned int Ns = (unsigned int)CodonSiteTools::numberOfSynonymousDifferences(it1->first,it2->first,ca,gc);
+        if(Nmin>Ntot-Ns && it1->first!=it2->first) Nmin=Ntot-Ns;
+      }
+      NaSup+=Nmin;
+      if (Nmin<Nminmin) Nminmin=Nmin;
 
-                }
+    }
 		return NaSup-Nminmin;
 	}
-else throw AlphabetMismatchException("CodonSiteTools::getNumberOfNonSynonymousSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
+  else throw AlphabetMismatchException("CodonSiteTools::getNumberOfNonSynonymousSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
 
 
 //Method that gives the number of fixed synonymous and non-synonymous differences per codon site
-vector<unsigned int> CodonSiteTools::getFixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception){
+vector<unsigned int> CodonSiteTools::fixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception){
 	//Empty site checking
 	if(siteIn.size() == 0) throw EmptySiteException("CodonSiteTools::getFixedDifferences Incorrect specified site", &siteIn);
 	if(siteOut.size() == 0) throw EmptySiteException("CodonSiteTools::getFixedDifferences Incorrect specified site", &siteOut);
@@ -540,13 +573,13 @@ vector<unsigned int> CodonSiteTools::getFixedDifferences(const Site & siteIn, co
 	unsigned int Na = Ntot-Ns;
 	unsigned int Nfix = Ntot;
 	vector<int> pos1in,pos2in,pos3in, pos1out, pos2out, pos3out;
-	for(unsigned int i = 0; i < siteIn.size(); i++) {
-		pos1in.push_back(ca.getFirstPosition(siteIn[i]));
-		pos2in.push_back(ca.getSecondPosition(siteIn[i]));
-		pos3in.push_back(ca.getThirdPosition(siteIn[i]));
-		pos1out.push_back(ca.getFirstPosition(siteOut[i]));
-		pos2out.push_back(ca.getSecondPosition(siteOut[i]));
-		pos3out.push_back(ca.getThirdPosition(siteOut[i]));
+	for(unsigned int k = 0; k < siteIn.size(); k++) {
+		pos1in.push_back(ca.getFirstPosition(siteIn[k]));
+		pos2in.push_back(ca.getSecondPosition(siteIn[k]));
+		pos3in.push_back(ca.getThirdPosition(siteIn[k]));
+		pos1out.push_back(ca.getFirstPosition(siteOut[k]));
+		pos2out.push_back(ca.getSecondPosition(siteOut[k]));
+		pos3out.push_back(ca.getThirdPosition(siteOut[k]));
 	}
 	Site s1in(pos1in,&na), s2in(pos2in,&na), s3in(pos3in,&na);
 	Site s1out(pos1out,&na), s2out(pos2out,&na), s3out(pos3out,&na);
@@ -602,3 +635,4 @@ vector<unsigned int> CodonSiteTools::getFixedDifferences(const Site & siteIn, co
 	v[1]=Na;
 	return v;
 }
+
