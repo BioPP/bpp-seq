@@ -66,7 +66,8 @@ SymbolListTools.h\
 Translator.h\
 VectorSequenceContainer.h\
 VectorSiteContainer.h\
-KleinAANetChargeIndex.h
+KleinAANetChargeIndex.h\
+SequenceApplicationTools.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
@@ -116,7 +117,8 @@ SymbolList.cpp\
 SymbolListTools.cpp\
 Translator.cpp\
 VectorSequenceContainer.cpp\
-VectorSiteContainer.cpp
+VectorSiteContainer.cpp\
+SequenceApplicationTools.cpp
 
 CPP_EXTRA = \
 __GranthamMatrixCode\
