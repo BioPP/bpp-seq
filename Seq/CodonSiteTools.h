@@ -85,7 +85,7 @@ class CodonSiteTools: public SymbolListTools
 
 		/**
 		 * @brief Method to know if a codon site contains stop codon or not
-		 * 
+		 *
 		 * @param site a Site
 		 * @param alpha a CodonAlphabet
 		 */
@@ -109,7 +109,7 @@ class CodonSiteTools: public SymbolListTools
 
 		/**
 		 * @brief Method to know if a polymorphic codon site is polymorphic at only one site
-		 * 
+		 *
 		 * @param site a Site
 		 * @param na a NucleicAlphabet
 		 * @param ca a CodonAlphabet
@@ -118,7 +118,7 @@ class CodonSiteTools: public SymbolListTools
 
 		/**
 		 * @brief Method to know if polymorphism at a codon site is synonymous
-		 * 
+		 *
 		 * @param site a Site
 		 * @param na a NucleicAlphabet
 		 * @param ca a CodonAlphabet
@@ -127,20 +127,34 @@ class CodonSiteTools: public SymbolListTools
 
 		/**
 		 * @brief Method to know if polymorphism at a codon site is synonymous
-		 * 
+		 *
 		 * @param site a Site
 		 * @param na a GeneticCode
 		 */
     static bool isSynonymousPolymorphic(const Site & site, const GeneticCode & gc) throw (Exception);
 
+
+
+		/**
+		 * @brief generate a codon site without rare variants
+		 *
+		 * rare variants are replaced by the most frequent allele
+		 * @param site a Site
+		 * @param na a NucleicAlphabet
+		 * @param ca a CodonAlphabet
+		 * @param freqmin a double, allele in frequency stricly lower than freqmin are replaced
+		 */
+	static Site * generateCodonSiteWithoutRareVariant(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, double freqmin) throw(Exception);
+
+
 		/**
 		 * @brief Compute the number of differences between two codons
-		 * 
+		 *
 		 * @param i a int
 		 * @param j a int
 		 * @param ca a CodonAlphabet
 		 */
-		static unsigned int numberOfDifferences(int i, int j, const CodonAlphabet & ca);
+	static unsigned int numberOfDifferences(int i, int j, const CodonAlphabet & ca);
 
 		/**
 		 * @brief Compute the number of synonymous differences between two codons
@@ -282,8 +296,9 @@ class CodonSiteTools: public SymbolListTools
 		 * @param site a Site
 		 * @param na a NucleicAlphabet
 		 * @param ca a CodonAlphabet
+		 * @param freqmin a double, to exclude snp in frequency strictly lower than freqmin
 		 */
-		static unsigned int numberOfSubsitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca) throw(Exception);
+		static unsigned int numberOfSubsitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, double freqmin =0) throw(Exception);
 
 
 		/**
@@ -291,10 +306,12 @@ class CodonSiteTools: public SymbolListTools
 		 *
 		 * It is assumed that the path linking amino acids only involved one substitution by step
 		 * @param site a Site
+		 * @param na a NucleicAlphabet
 		 * @param ca a CodonAlphabet
 		 * @param gc a GeneticCode
+		 * @param freqmin a double, to exclude snp in frequency strictly lower than freqmin
 		 */
-		static unsigned int numberOfNonSynonymousSubstitutions(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception);
+		static unsigned int numberOfNonSynonymousSubstitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc, double freqmin =0) throw(Exception);
 
 
 		/**

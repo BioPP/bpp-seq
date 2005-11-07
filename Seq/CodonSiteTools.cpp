@@ -175,6 +175,84 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site & site, const GeneticCod
     else throw AlphabetMismatchException("CodonSiteTools::isSynonymousPolymorphic: alphabet is not CodonAlphabet", ca, site.getAlphabet());
 }
 
+
+
+Site * CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, double freqmin) throw(Exception){
+	//Empty site checking
+	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
+	//Alphabet checking
+	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
+        if (SiteTools::isConstant(site)) {
+                Site * noRareVariant = new Site(site);
+                return noRareVariant;
+        }
+        else {
+		//Computation
+		vector<int> pos1,pos2,pos3;
+		for(unsigned int i = 0; i < site.size(); i++) {
+			pos1.push_back(ca.getFirstPosition(site[i]));
+			pos2.push_back(ca.getSecondPosition(site[i]));
+			pos3.push_back(ca.getThirdPosition(site[i]));
+		}
+		Site s1(pos1,&na), s2(pos2,&na), s3(pos3,&na);
+		map<int, double> freq1 = SiteTools::getFrequencies(s1);
+		map<int, double> freq2 = SiteTools::getFrequencies(s2);
+		map<int, double> freq3 = SiteTools::getFrequencies(s3);
+                if(!SiteTools::isConstant(s1)){
+		        int max = 0;
+		        double freqmax = 0;
+		        for(map<int,double>::iterator it = freq1.begin(); it != freq1.end(); it++) {
+			        if(it->second > freqmax){
+				        freqmax = it->second;
+				        max = it->first;
+			        }
+		        }
+		        for(unsigned int i = 0; i < s1.size(); i++) {
+			        if(freq1[s1.getValue(i)] < freqmin && freq1[s1.getValue(i)] > 0) s1.setElement(i,max);
+		        }
+                }
+                if(!SiteTools::isConstant(s2)){
+		        int max = 0;
+		        double freqmax = 0;
+		        for(map<int,double>::iterator it = freq2.begin(); it != freq2.end(); it++) {
+			        if(it->second > freqmax){
+				        freqmax = it->second;
+				        max = it->first;
+			        }
+		        }
+		        for(unsigned int i = 0; i < s2.size(); i++) {
+			        if(freq2[s2.getValue(i)] < freqmin && freq2[s2.getValue(i)] > 0) s2.setElement(i,max);
+		        }
+                }
+                if(!SiteTools::isConstant(s3)){
+		        int max = 0;
+		        double freqmax = 0;
+		        for(map<int,double>::iterator it = freq3.begin(); it != freq3.end(); it++) {
+			        if(it->second > freqmax){
+				        freqmax = it->second;
+				        max = it->first;
+			        }
+		        }
+		        for(unsigned int i = 0; i < s3.size(); i++) {
+			        if(freq3[s3.getValue(i)] < freqmin && freq2[s3.getValue(i)] > 0) s3.setElement(i,max);
+		        }
+                }
+   		vector<int> codon;
+		for(unsigned int i = 0; i < site.size(); i++) {
+			codon.push_back(ca.getCodon(s1[i],s2[i],s3[i]));
+		}
+		Site * noRareVariant = new Site(codon,&ca);
+		return noRareVariant;
+        }
+
+	}
+	else throw AlphabetMismatchException("CodonSiteTools::getNumberOfSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
+}
+
+
+
+
+
 //Method to know the number of difference between two codons
 unsigned int CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet & ca){
        	unsigned int nbdif = 0;
@@ -515,21 +593,26 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site & site, const 
 //Method that gives the total number of subsitutions per codon site
 //Overdefines the previous method : A site with a codon alphabet must be given
 //No recombination is assumed
-unsigned int CodonSiteTools::numberOfSubsitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca) throw(Exception){
+unsigned int CodonSiteTools::numberOfSubsitutions(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, double freqmin) throw(Exception){
 	//Empty site checking
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
 	//Alphabet checking
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
+                Site * newsite;
+                if(freqmin >0) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
+                else newsite = new Site(site);
 		//Computation
 		vector<int> pos1,pos2,pos3;
-		for(unsigned int i = 0; i < site.size(); i++) {
-			pos1.push_back(ca.getFirstPosition(site[i]));
-			pos2.push_back(ca.getSecondPosition(site[i]));
-			pos3.push_back(ca.getThirdPosition(site[i]));
+
+		for(unsigned int i = 0; i < newsite->size(); i++) {
+			pos1.push_back(ca.getFirstPosition(newsite->getValue(i)));
+			pos2.push_back(ca.getSecondPosition(newsite->getValue(i)));
+			pos3.push_back(ca.getThirdPosition(newsite->getValue(i)));
 		}
 	  Site s1(pos1,&na), s2(pos2,&na), s3(pos3,&na);
-		unsigned int Scodon = SiteTools::getNumberOfDistinctCharacters(site)-1;
+		unsigned int Scodon = SiteTools::getNumberOfDistinctCharacters(*newsite)-1;
 		unsigned int Sbase = SiteTools::getNumberOfDistinctCharacters(s1)+SiteTools::getNumberOfDistinctCharacters(s2)+SiteTools::getNumberOfDistinctCharacters(s3)-3;
+                delete newsite;
 		if(Scodon >= Sbase) return Scodon;
 		else return Sbase;
 	}
@@ -537,13 +620,16 @@ unsigned int CodonSiteTools::numberOfSubsitutions(const Site & site, const Nucle
 }
 
 //Method that gives the number of non-synonymous substitution per codon site
-unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site, const CodonAlphabet & ca, const GeneticCode & gc) throw(Exception){
+unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site, const NucleicAlphabet &na, const CodonAlphabet & ca, const GeneticCode & gc, double freqmin) throw(Exception){
 	//Empty site checking
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
 	//Alphabet checking
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
+                Site * newsite;
+                if(freqmin >0) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
+                else newsite = new Site(site);
 		//computation
-    map<int,unsigned int> count = SiteTools::getCounts(site);
+    map<int,unsigned int> count = SiteTools::getCounts(*newsite);
     unsigned int NaSup=0;
     unsigned int Nminmin=10;
     for(map<int,unsigned int>::iterator it1 = count.begin(); it1 != count.end(); it1++){
@@ -556,7 +642,7 @@ unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site
       NaSup+=Nmin;
       if (Nmin<Nminmin) Nminmin=Nmin;
 
-    }
+    }           delete newsite;
 		return NaSup-Nminmin;
 	}
   else throw AlphabetMismatchException("CodonSiteTools::getNumberOfNonSynonymousSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
