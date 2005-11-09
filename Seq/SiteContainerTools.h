@@ -69,7 +69,8 @@ class SiteContainerTools
 		 *
 		 * @param sc a site container
 		 * @param gapflag
-		 * @return Sequence
+		 * @param name the name of the sequence object that will be created. 
+		 * @return A new Sequence object with the consensus sequence.
 		 */
 
 		static const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc,string name="consensus", bool gapflag = true);

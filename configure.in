@@ -1,8 +1,8 @@
 AC_INIT(Seq/Sequence.h)
 AM_INIT_AUTOMAKE(Seq,0.1)
 AC_LANG_CPLUSPLUS
-AC_CHECK_LIB(utils,   main, , [AC_MSG_ERROR([Library utils not found.])])
-AC_CHECK_LIB(numcalc, main, , [AC_MSG_ERROR([Library numcalc not found.])])
+AC_CHECK_LIB(bpp-utils,   main, , [AC_MSG_ERROR([Library bpp-utils not found.])])
+AC_CHECK_LIB(bpp-numcalc, main, , [AC_MSG_ERROR([Library bpp-numcalc not found.])])
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_INSTALL

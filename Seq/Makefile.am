@@ -124,10 +124,10 @@ CPP_EXTRA = \
 __GranthamMatrixCode\
 __MiyataMatrixCode
 
-lib_LTLIBRARIES = libseq.la
-libseq_la_SOURCES = $(H_FILES) $(CPP_FILES)
-EXTRA_libseq_la_SOURCES = $(CPP_EXTRA)
-libseq_la_LDFLAGS = -version-info 1:0:0
+lib_LTLIBRARIES = libbpp-seq.la
+libbpp_seq_la_SOURCES = $(H_FILES) $(CPP_FILES)
+EXTRA_libbpp_seq_la_SOURCES = $(CPP_EXTRA)
+libbpp_seq_la_LDFLAGS = -version-info 1:0:0
 
 library_includedir=$(includedir)/Seq
 library_include_HEADERS = $(H_FILES)

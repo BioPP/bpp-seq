@@ -129,7 +129,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @brief Method to know if polymorphism at a codon site is synonymous
 		 *
 		 * @param site a Site
-		 * @param na a GeneticCode
+		 * @param gc a GeneticCode
 		 */
     static bool isSynonymousPolymorphic(const Site & site, const GeneticCode & gc) throw (Exception);
 
@@ -184,7 +184,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @param site a Site
 		 * @param ca a CodonAlphabet
 		 * @param gc a GeneticCode
-		 * @minchange a bollean set by default to false
+		 * @param minchange a bollean set by default to false
 		 */
 		static double piSynonymous(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false) throw(Exception);
 
@@ -200,7 +200,7 @@ class CodonSiteTools: public SymbolListTools
 		 * Be careful: here, pi is not normalized by the number of synonymous sites
 		 * @param site a Site
 		 * @param gc a GeneticCode
-		 * @minchange a bollean set by default to false
+		 * @param minchange a bollean set by default to false
 		 */
 		static double piSynonymous(const Site & site, const GeneticCode & gc, bool minchange=false) throw(Exception);
 
@@ -219,7 +219,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @param na a NucleicAlphabet
 		 * @param ca a CodonAlphabet
 		 * @param gc a GeneticCode
-		 * @minchange a bollean set by default to false
+		 * @param minchange a bollean set by default to false
 		 */
 		static double piNonSynonymous(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false) throw(Exception);
 
@@ -235,7 +235,7 @@ class CodonSiteTools: public SymbolListTools
 		 * Be careful: here, pi is not normalized by the number of non-synonymous sites
 		 * @param site a Site
 		 * @param gc a GeneticCode
-		 * @minchange a bollean set by default to false
+		 * @param minchange a bollean set by default to false
 		 */
 		static double piNonSynonymous(const Site & site, const GeneticCode & gc, bool minchange = false) throw(Exception);
 

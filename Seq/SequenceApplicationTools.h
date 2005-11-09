@@ -87,7 +87,7 @@ class SequenceApplicationTools
 		 * @brief Build a SequenceContainer object according to options.
 		 *
 		 * Options used are:
-		 * - sequence.format = [Fasta|Mase|Phylip|Clustal], the format of the sequence file.
+		 * - sequence.format = [Fasta|Mase|Phylip|Clustal|DCSE], the format of the sequence file.
 		 * - sequence.file = file_path, the path of the file to parse.
 		 * Options depending on other options:
 		 * - If Phylip format is to be used:
