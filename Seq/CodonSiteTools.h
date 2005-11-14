@@ -129,7 +129,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @brief Method to know if polymorphism at a codon site is synonymous
 		 *
 		 * @param site a Site
-		 * @param gc a GeneticCode
+		 * @param na a GeneticCode
 		 */
     static bool isSynonymousPolymorphic(const Site & site, const GeneticCode & gc) throw (Exception);
 
@@ -184,7 +184,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @param site a Site
 		 * @param ca a CodonAlphabet
 		 * @param gc a GeneticCode
-		 * @param minchange a bollean set by default to false
+		 * @minchange a bollean set by default to false
 		 */
 		static double piSynonymous(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false) throw(Exception);
 
@@ -200,7 +200,7 @@ class CodonSiteTools: public SymbolListTools
 		 * Be careful: here, pi is not normalized by the number of synonymous sites
 		 * @param site a Site
 		 * @param gc a GeneticCode
-		 * @param minchange a bollean set by default to false
+		 * @minchange a bollean set by default to false
 		 */
 		static double piSynonymous(const Site & site, const GeneticCode & gc, bool minchange=false) throw(Exception);
 
@@ -219,7 +219,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @param na a NucleicAlphabet
 		 * @param ca a CodonAlphabet
 		 * @param gc a GeneticCode
-		 * @param minchange a bollean set by default to false
+		 * @minchange a bollean set by default to false
 		 */
 		static double piNonSynonymous(const Site & site, const NucleicAlphabet & na, const CodonAlphabet & ca, const GeneticCode & gc, bool minchange=false) throw(Exception);
 
@@ -235,21 +235,10 @@ class CodonSiteTools: public SymbolListTools
 		 * Be careful: here, pi is not normalized by the number of non-synonymous sites
 		 * @param site a Site
 		 * @param gc a GeneticCode
-		 * @param minchange a bollean set by default to false
+		 * @minchange a bollean set by default to false
 		 */
 		static double piNonSynonymous(const Site & site, const GeneticCode & gc, bool minchange = false) throw(Exception);
 
-		/**
-		 * @brief Return the number of synonymous positions of a codon
-		 *
-		 * a site is consider as x% synonymous if x% of the possible mutations are synonymous
-		 * Transition/transversion ratio can be taken into account (use the variable ratio)
-		 * @param i a int
-		 * @param ca a CodonAlphabet
-		 * @param gc a GeneticCode
-		 * @param ratio a double set by default to 1
-		 */
-		static double numberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, double ratio=1) throw(Exception);
 
 		/**
 		 * @brief Return the number of synonymous positions of a codon
@@ -263,18 +252,6 @@ class CodonSiteTools: public SymbolListTools
 		 * @param ratio a double set by default to 1
 		 */
 		static double numberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, bool stopflag = true, double ratio=1.0) throw(Exception);
-
-		/**
-		 * @brief Return the mean number of synonymous positions per codon site
-		 *
-		 * a site is consider as x% synonymous if x% of the possible mutations are synonymous
-		 * Transition/transversion ratio can be taken into account (use the variable ratio)
-		 * @param site a Site
-		 * @param ca a CodonAlphabet
-		 * @param gc a GeneticCode
-		 * @param ratio a double set by default to 1
-		 */
-		static double meanNumberOfSynonymousPositions(const Site & site,  const CodonAlphabet & ca, const GeneticCode & gc, double ratio=1) throw(Exception);
 
 		/**
 		 * @brief Return the mean number of synonymous positions per codon site

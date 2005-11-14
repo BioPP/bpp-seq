@@ -500,26 +500,6 @@ double CodonSiteTools::piNonSynonymous(const Site & site, const GeneticCode & gc
 		throw AlphabetMismatchException("CodonSiteTools::piNonSynonymous: alphabet is not CodonAlphabet", ca, site.getAlphabet());
 }
 
-//Method that gives the number of synonymous positions of a codon
-//Transition/transversion ratio is taken into account. Default option ratio=1
-double CodonSiteTools::numberOfSynonymousPositions(int i, const CodonAlphabet & ca, const GeneticCode & gc, double ratio) throw(Exception) {
-	if(ca.getName(ca.intToChar(i))=="Stop") return 0;
-        int acid=gc.translate(i);
-	switch (gc.getSynonymous(acid).size()){
-		case 1: return 0;
-		case 2: return ratio/(ratio+2);
-		case 3: {
-                        if(i==14) return 2/(ratio+2);
-			return (ratio+1)/(ratio+2);
-		}
-		case 4:	return 1;
-		case 6: {
-			if(i==24||i==26||i==28||i==30||i==51||i==53) return 1+ratio/(ratio+2);
-			if(i==25||i==27||i==29||i==31||i==50||i==52) return 1;
-			if(i==8||i==9||i==10||i==11||i==57||i==59) return 2*ratio/(ratio+2);
-		}
-	}
-}
 
 //Method that gives the number of synonymous positions of a codon
 //Transition/transversion ratio is taken into account. Default option ratio=1
@@ -551,23 +531,6 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const CodonAlphabet & 
 	} catch (...) {}
 }
 
-// Method that gives the mean number of synonymous position per codon site
-//Transition/transversion ratio is taken into account. Default option ratio=1
-double CodonSiteTools::meanNumberOfSynonymousPositions(const Site & site, const CodonAlphabet & ca, const GeneticCode & gc, double ratio) throw(Exception) {
-	//Empty site checking
-	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::MeanNumberOfSynonymousPositions Incorrect specified site", &site);
-        //Alphabet checking
-        if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
-	        //Computation
-	        double NbSyn=0;
-	        map<int,double> freq = SiteTools::getFrequencies(site);
-			for(map<int,double>::iterator it = freq.begin(); it != freq.end(); it++) {
-				NbSyn += (it->second)*numberOfSynonymousPositions(it->first,ca,gc,ratio);
-			}
-        return NbSyn;
-        }
-        else throw AlphabetMismatchException("CodonSiteTools::MeanNumberOfSynonymousPositions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
-}
 
 // Method that gives the mean number of synonymous position per codon site
 //Transition/transversion ratio is taken into account. Default option ratio=1
