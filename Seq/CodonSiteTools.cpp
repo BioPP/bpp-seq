@@ -562,7 +562,7 @@ unsigned int CodonSiteTools::numberOfSubsitutions(const Site & site, const Nucle
 	//Alphabet checking
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
                 Site * newsite;
-                if(freqmin >0) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
+                if(freqmin > 0) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
                 else newsite = new Site(site);
 		//Computation
 		vector<int> pos1,pos2,pos3;
