@@ -234,7 +234,7 @@ Site * CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site & site, co
 			        }
 		        }
 		        for(unsigned int i = 0; i < s3.size(); i++) {
-			        if(freq3[s3.getValue(i)] < freqmin && freq2[s3.getValue(i)] > 0) s3.setElement(i,max);
+			        if(freq3[s3.getValue(i)] < freqmin && freq3[s3.getValue(i)] > 0) s3.setElement(i,max);
 		        }
                 }
    		vector<int> codon;
@@ -575,7 +575,7 @@ unsigned int CodonSiteTools::numberOfSubsitutions(const Site & site, const Nucle
 	  Site s1(pos1,&na), s2(pos2,&na), s3(pos3,&na);
 		unsigned int Scodon = SiteTools::getNumberOfDistinctCharacters(*newsite)-1;
 		unsigned int Sbase = SiteTools::getNumberOfDistinctCharacters(s1)+SiteTools::getNumberOfDistinctCharacters(s2)+SiteTools::getNumberOfDistinctCharacters(s3)-3;
-                delete newsite;
+		delete newsite;
 		if(Scodon >= Sbase) return Scodon;
 		else return Sbase;
 	}
@@ -604,9 +604,9 @@ unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site
       }
       NaSup+=Nmin;
       if (Nmin<Nminmin) Nminmin=Nmin;
-
-    }           delete newsite;
-		return NaSup-Nminmin;
+    }
+	delete newsite;
+	return NaSup-Nminmin;
 	}
   else throw AlphabetMismatchException("CodonSiteTools::getNumberOfNonSynonymousSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
