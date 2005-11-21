@@ -201,7 +201,6 @@ Site * CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site & site, co
 			pos1.push_back(ca.getFirstPosition(site[i]));
 			pos2.push_back(ca.getSecondPosition(site[i]));
 			pos3.push_back(ca.getThirdPosition(site[i]));
-			cout << pos1[i]<<pos2[i]<<pos3[i]<<endl;
 		}
 		Site s1(pos1,&na), s2(pos2,&na), s3(pos3,&na);
 		map<int,double> freq1 = SiteTools::getFrequencies(s1);
@@ -213,7 +212,6 @@ Site * CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site & site, co
 				codon.push_back(ca.getCodon(s1[i],s2[i],s3[i]));
 			}
 			else codon.push_back(newcodon);
-			cout<<codon[i]<<endl;
 		}
 		Site * noRareVariant = new Site(codon,&ca);
 		return noRareVariant;
