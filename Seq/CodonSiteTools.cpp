@@ -188,58 +188,32 @@ Site * CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site & site, co
         }
         else {
 		//Computation
+		map<int,double> freqcodon = SiteTools::getFrequencies(site);
+		int newcodon;
+		for(map<int,double>::iterator it = freqcodon.begin(); it != freqcodon.end(); it++) {
+			if(it->second > freqmin && !ca.isStop(it->second)) {
+				newcodon = it->first;
+				break;
+			}
+		}
 		vector<int> pos1,pos2,pos3;
 		for(unsigned int i = 0; i < site.size(); i++) {
 			pos1.push_back(ca.getFirstPosition(site[i]));
 			pos2.push_back(ca.getSecondPosition(site[i]));
 			pos3.push_back(ca.getThirdPosition(site[i]));
+			cout << pos1[i]<<pos2[i]<<pos3[i]<<endl;
 		}
 		Site s1(pos1,&na), s2(pos2,&na), s3(pos3,&na);
-		map<int, double> freq1 = SiteTools::getFrequencies(s1);
-		map<int, double> freq2 = SiteTools::getFrequencies(s2);
-		map<int, double> freq3 = SiteTools::getFrequencies(s3);
-                if(!SiteTools::isConstant(s1)){
-		        int max = 0;
-		        double freqmax = 0;
-		        for(map<int,double>::iterator it = freq1.begin(); it != freq1.end(); it++) {
-			        if(it->second > freqmax){
-				        freqmax = it->second;
-				        max = it->first;
-			        }
-		        }
-		        for(unsigned int i = 0; i < s1.size(); i++) {
-			        if(freq1[s1.getValue(i)] < freqmin && freq1[s1.getValue(i)] > 0) s1.setElement(i,max);
-		        }
-                }
-                if(!SiteTools::isConstant(s2)){
-		        int max = 0;
-		        double freqmax = 0;
-		        for(map<int,double>::iterator it = freq2.begin(); it != freq2.end(); it++) {
-			        if(it->second > freqmax){
-				        freqmax = it->second;
-				        max = it->first;
-			        }
-		        }
-		        for(unsigned int i = 0; i < s2.size(); i++) {
-			        if(freq2[s2.getValue(i)] < freqmin && freq2[s2.getValue(i)] > 0) s2.setElement(i,max);
-		        }
-                }
-                if(!SiteTools::isConstant(s3)){
-		        int max = 0;
-		        double freqmax = 0;
-		        for(map<int,double>::iterator it = freq3.begin(); it != freq3.end(); it++) {
-			        if(it->second > freqmax){
-				        freqmax = it->second;
-				        max = it->first;
-			        }
-		        }
-		        for(unsigned int i = 0; i < s3.size(); i++) {
-			        if(freq3[s3.getValue(i)] < freqmin && freq3[s3.getValue(i)] > 0) s3.setElement(i,max);
-		        }
-                }
-   		vector<int> codon;
+		map<int,double> freq1 = SiteTools::getFrequencies(s1);
+		map<int,double> freq2 = SiteTools::getFrequencies(s2);
+		map<int,double> freq3 = SiteTools::getFrequencies(s3);
+		vector<int> codon;
 		for(unsigned int i = 0; i < site.size(); i++) {
-			codon.push_back(ca.getCodon(s1[i],s2[i],s3[i]));
+			if(freq1[s1.getValue(i)] > freqmin && freq2[s2.getValue(i)] > freqmin && freq3[s3.getValue(i)] > freqmin){
+				codon.push_back(ca.getCodon(s1[i],s2[i],s3[i]));
+			}
+			else codon.push_back(newcodon);
+			cout<<codon[i]<<endl;
 		}
 		Site * noRareVariant = new Site(codon,&ca);
 		return noRareVariant;
@@ -561,9 +535,10 @@ unsigned int CodonSiteTools::numberOfSubsitutions(const Site & site, const Nucle
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
 	//Alphabet checking
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
-                Site * newsite;
-                if(freqmin > 0) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
-                else newsite = new Site(site);
+		if(SiteTools::isConstant(site)) return 0;
+		Site * newsite;
+		if(freqmin > 1/site.size()) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
+		else newsite = new Site(site);
 		//Computation
 		vector<int> pos1,pos2,pos3;
 
@@ -588,25 +563,26 @@ unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site
 	if(site.size() == 0) throw EmptySiteException("CodonSiteTools::getNumberOfSubsitutions Incorrect specified site", &site);
 	//Alphabet checking
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
-                Site * newsite;
-                if(freqmin >0) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
-                else newsite = new Site(site);
+		if(SiteTools::isConstant(site)) return 0;
+		Site * newsite;
+		if(freqmin > 1/site.size()) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
+		else newsite = new Site(site);
 		//computation
-    map<int,unsigned int> count = SiteTools::getCounts(*newsite);
-    unsigned int NaSup=0;
-    unsigned int Nminmin=10;
-    for(map<int,unsigned int>::iterator it1 = count.begin(); it1 != count.end(); it1++){
-      unsigned int Nmin=10;
-      for(map<int,unsigned int>::iterator it2 = count.begin(); it2 != count.end(); it2++){
-        unsigned int Ntot = CodonSiteTools::numberOfDifferences(it1->first,it2->first,ca);
-        unsigned int Ns = (unsigned int)CodonSiteTools::numberOfSynonymousDifferences(it1->first,it2->first,ca,gc);
-        if(Nmin>Ntot-Ns && it1->first!=it2->first) Nmin=Ntot-Ns;
-      }
-      NaSup+=Nmin;
-      if (Nmin<Nminmin) Nminmin=Nmin;
-    }
-	delete newsite;
-	return NaSup-Nminmin;
+		map<int,unsigned int> count = SiteTools::getCounts(*newsite);
+		unsigned int NaSup=0;
+		unsigned int Nminmin=10;
+		for(map<int,unsigned int>::iterator it1 = count.begin(); it1 != count.end(); it1++){
+			unsigned int Nmin=10;
+			for(map<int,unsigned int>::iterator it2 = count.begin(); it2 != count.end(); it2++){
+				unsigned int Ntot = CodonSiteTools::numberOfDifferences(it1->first,it2->first,ca);
+				unsigned int Ns = (unsigned int)CodonSiteTools::numberOfSynonymousDifferences(it1->first,it2->first,ca,gc);
+				if(Nmin>Ntot-Ns && it1->first!=it2->first) Nmin=Ntot-Ns;
+			}
+			NaSup+=Nmin;
+			if (Nmin<Nminmin) Nminmin=Nmin;
+		}
+		delete newsite;
+		return NaSup-Nminmin;
 	}
   else throw AlphabetMismatchException("CodonSiteTools::getNumberOfNonSynonymousSubsitutions: alphabet is not CodonAlphabet", &ca, site.getAlphabet());
 }
