@@ -189,9 +189,9 @@ Site * CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site & site, co
         else {
 		//Computation
 		map<int,double> freqcodon = SiteTools::getFrequencies(site);
-		int newcodon;
+		int newcodon = -1;
 		for(map<int,double>::iterator it = freqcodon.begin(); it != freqcodon.end(); it++) {
-			if(it->second > freqmin && !ca.isStop(it->second)) {
+			if(it->second > freqmin && !ca.isStop(it->first)) {
 				newcodon = it->first;
 				break;
 			}
@@ -209,7 +209,7 @@ Site * CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site & site, co
 		vector<int> codon;
 		for(unsigned int i = 0; i < site.size(); i++) {
 			if(freq1[s1.getValue(i)] > freqmin && freq2[s2.getValue(i)] > freqmin && freq3[s3.getValue(i)] > freqmin){
-				codon.push_back(ca.getCodon(s1[i],s2[i],s3[i]));
+				codon.push_back(site.getValue(i));
 			}
 			else codon.push_back(newcodon);
 		}
@@ -535,9 +535,11 @@ unsigned int CodonSiteTools::numberOfSubsitutions(const Site & site, const Nucle
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
 		if(SiteTools::isConstant(site)) return 0;
 		Site * newsite;
-		if(freqmin > 1/site.size()) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
+		if(freqmin > (double)1/site.size()) 
+			newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
 		else newsite = new Site(site);
 		//Computation
+		if (SiteTools::hasGap(*newsite)) return 0;
 		vector<int> pos1,pos2,pos3;
 
 		for(unsigned int i = 0; i < newsite->size(); i++) {
@@ -563,8 +565,10 @@ unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site
 	if(site.getAlphabet()->getAlphabetType()==ca.getAlphabetType()){
 		if(SiteTools::isConstant(site)) return 0;
 		Site * newsite;
-		if(freqmin > 1/site.size()) newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
+		if(freqmin > (double) 1/site.size()) 
+			newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site,na,ca,freqmin);
 		else newsite = new Site(site);
+		if (SiteTools::hasGap(*newsite)) return 0;
 		//computation
 		map<int,unsigned int> count = SiteTools::getCounts(*newsite);
 		unsigned int NaSup=0;
