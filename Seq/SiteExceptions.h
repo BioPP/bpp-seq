@@ -1,27 +1,44 @@
-/***************************************************************************
-                          SiteExceptions.h  -  description
-                             -------------------
-    begin                : dim mar 7 2004
-    copyright            : (C) 2004 by Julien Dutheil
-    email                : Julien.Dutheil@univ-montp2.fr
- ***************************************************************************/
+//
+// File: SiteExceptions.h
+// Author : Julien Dutheil
+// Created on: dim mar 7 2004
+// 
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
+/*
+Copyright or © or Copr. CNRS, (November 17, 2004)
 
-#ifndef SITEEXCEPTIONS_H
-#define SITEEXCEPTIONS_H
+This software is a computer program whose purpose is to provide classes
+for sequences analysis.
 
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
 
-/**
- *@author Julien Dutheil
- */
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
+*/
+
+#ifndef _SITEEXCEPTIONS_H_
+#define _SITEEXCEPTIONS_H_
 
 class Site;
 
@@ -61,7 +78,7 @@ class SiteException : public Exception {
 		SiteException(const string & text, const Site * s = NULL);
 
 		// Class destructor
-		~SiteException() throw();
+		virtual ~SiteException() throw();
 
 	public:
 
@@ -73,6 +90,9 @@ class SiteException : public Exception {
 		virtual const Site * getSite() const;
 };
 
+/**
+ * @brief Exception sent when a empty site is found.
+ */
 class EmptySiteException : public SiteException {
 
 	public:
@@ -81,9 +101,12 @@ class EmptySiteException : public SiteException {
 		EmptySiteException(const string & text, const Site * s = NULL);
 
 		// Class destructor
-		~EmptySiteException() throw();
+		virtual ~EmptySiteException() throw();
 };
 
+/**
+ * @brief Exception sent when a site containing gap is found.
+ */
 class SiteWithGapException : public SiteException {
 
 	public:
@@ -92,7 +115,8 @@ class SiteWithGapException : public SiteException {
 		SiteWithGapException(const string & text, const Site * s = NULL);
 
 		// Class destructor
-		~SiteWithGapException() throw();
+		virtual ~SiteWithGapException() throw();
 };
 
-#endif
+#endif // _SITEEXCEPTIONS_H_
+

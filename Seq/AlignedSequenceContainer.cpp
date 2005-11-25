@@ -6,45 +6,7 @@
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -88,19 +50,19 @@ using namespace std;
 /** Class constructors: *******************************************************/
 
 AlignedSequenceContainer::AlignedSequenceContainer(const Alphabet * alpha) :
-	VectorSequenceContainer(alpha),
-	AbstractSequenceContainer(alpha)
+	AbstractSequenceContainer(alpha),
+	VectorSequenceContainer(alpha)
 {
 	length = 0;
 	reindexSites();
 	//Site * s = NULL; sites = vector<Site *>(length, s);
 }
 
-/*                                        ***                                 */
+/***************************************************************************/
 
 AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) : 
-	VectorSequenceContainer(sc),
-	AbstractSequenceContainer(sc.getAlphabet())
+	AbstractSequenceContainer(sc.getAlphabet()),
+	VectorSequenceContainer(sc)
 {
 	length = sc.getNumberOfSites();
 	positions = sc.getSitePositions();
@@ -111,11 +73,11 @@ AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) :
 	setGeneralComments(sc.getGeneralComments());
 }
 
-/*                                        ***                                 */
+/***************************************************************************/
 
 AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContainer & asc) : 
-	VectorSequenceContainer(asc),
-	AbstractSequenceContainer(asc.getAlphabet())
+	AbstractSequenceContainer(asc.getAlphabet()),
+	VectorSequenceContainer(asc)
 {
 	length = asc.getNumberOfSites();
 	positions = asc.getSitePositions();
@@ -126,11 +88,11 @@ AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContaine
 	setGeneralComments(asc.getGeneralComments());
 }
 
-/*                                        ***                                 */
+/***************************************************************************/
 
-AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer & osc):
-	VectorSequenceContainer(osc.getAlphabet()),
-	AbstractSequenceContainer(osc.getAlphabet())
+AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException) :
+	AbstractSequenceContainer(osc.getAlphabet()),
+	VectorSequenceContainer(osc.getAlphabet())
 {
 	// Initializing
 	length = 0;
@@ -139,13 +101,12 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
 	// Sequences insertion after size checking
 	for (int i = 0 ; i < max ; i++) addSequence(* osc.getSequence(i), false);
 	reindexSites();
-	//Site * s = NULL; sites = vector<Site *>(length, s);
 
 	// General comments:
 	setGeneralComments(osc.getGeneralComments());
 }
 
-/*                                        ***                                 */
+/***************************************************************************/
 
 AlignedSequenceContainer & AlignedSequenceContainer::operator = (const AlignedSequenceContainer & asc) 
 {
@@ -167,7 +128,7 @@ AlignedSequenceContainer & AlignedSequenceContainer::operator = (const AlignedSe
 	return * this;
 }
 
-/*                                        ***                                 */
+/***************************************************************************/
 
 AlignedSequenceContainer & AlignedSequenceContainer::operator = (const SiteContainer & sc) 
 {
@@ -189,7 +150,7 @@ AlignedSequenceContainer & AlignedSequenceContainer::operator = (const SiteConta
 	return * this;
 }
 
-/*                                        ***                                 */
+/***************************************************************************/
 
 AlignedSequenceContainer & AlignedSequenceContainer::operator = (const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException)
 {
@@ -213,20 +174,21 @@ AlignedSequenceContainer & AlignedSequenceContainer::operator = (const OrderedSe
 
 /** Class destructor: *********************************************************/
 
-AlignedSequenceContainer::~AlignedSequenceContainer() {
+AlignedSequenceContainer::~AlignedSequenceContainer()
+{
 	//delete all sites:
 	for(unsigned int i = 0; i < sites.size(); i++) if(sites[i] != NULL) delete sites[i];	
 }
 
 /***************************************************************************/
 
-Clonable * AlignedSequenceContainer::clone() const {
+Clonable * AlignedSequenceContainer::clone() const
+{
 	return dynamic_cast<VectorSequenceContainer *>(new AlignedSequenceContainer(*this));
 }
 
 /***************************************************************************/
 
-// Method to get an site object from site container
 const Site * AlignedSequenceContainer::getSite(unsigned int i) const throw (IndexOutOfBoundsException)
 {
 	if (i >= length) throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites() - 1);
@@ -243,7 +205,8 @@ const Site * AlignedSequenceContainer::getSite(unsigned int i) const throw (Inde
 	return sites[i];
 }
 
-// Method to replace a site in site container
+/******************************************************************************/
+
 void AlignedSequenceContainer::setSite(unsigned int pos, const Site & site, bool checkPositions) throw (Exception)
 {
 	// New site's alphabet and site container's alphabet matching verification
@@ -273,7 +236,8 @@ void AlignedSequenceContainer::setSite(unsigned int pos, const Site & site, bool
 	positions[pos] = site.getPosition();
 }
 
-// Method to extract (and remove) a site from site container
+/******************************************************************************/
+
 Site * AlignedSequenceContainer::removeSite(unsigned int pos) throw (IndexOutOfBoundsException)
 {
 	if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::removeSite", pos, 0, getNumberOfSites() - 1);
@@ -298,8 +262,10 @@ Site * AlignedSequenceContainer::removeSite(unsigned int pos) throw (IndexOutOfB
 	return old;
 }
 
-// Method to delete a site from site container
-void AlignedSequenceContainer::deleteSite(unsigned int pos) throw (IndexOutOfBoundsException) {
+/******************************************************************************/
+
+void AlignedSequenceContainer::deleteSite(unsigned int pos) throw (IndexOutOfBoundsException)
+{
 	if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites() - 1);
 
 	// Initializing
@@ -318,8 +284,9 @@ void AlignedSequenceContainer::deleteSite(unsigned int pos) throw (IndexOutOfBou
 	delete sites[pos];
 	sites.erase(sites.begin() + pos);
 }
-		
-// Method to add site in site container
+	
+/******************************************************************************/
+
 void AlignedSequenceContainer::addSite(const Site & site, bool checkPositions) throw (Exception)
 {
 	// New site's alphabet and site container's alphabet matching verification
@@ -354,6 +321,8 @@ void AlignedSequenceContainer::addSite(const Site & site, bool checkPositions) t
 	//Actualizes the 'sites' vector:
 	sites.push_back(NULL);
 }
+
+/******************************************************************************/
 
 void AlignedSequenceContainer::addSite(const Site & site, unsigned int pos, bool checkPositions) throw (Exception)
 {
@@ -390,13 +359,16 @@ void AlignedSequenceContainer::addSite(const Site & site, unsigned int pos, bool
 	sites.insert(sites.begin() + pos, NULL);	
 }
 
-// Method to get number of sites contained in site container
+/******************************************************************************/
+
 unsigned int AlignedSequenceContainer::getNumberOfSites() const { return length; }
 
-// Method to get sites's positions
+/******************************************************************************/
+
 Vint AlignedSequenceContainer::getSitePositions() const { return positions; }
 
-// Method to reindex sites's positions
+/******************************************************************************/
+
 void AlignedSequenceContainer::reindexSites() 
 {	
 	positions.resize(length);
@@ -404,8 +376,8 @@ void AlignedSequenceContainer::reindexSites()
 
 }
 
-// Overloaded methods to replace a sequence in sequence container
-// CheckName : boolean for enable or disable sequence's name existence checking
+/******************************************************************************/
+
 void AlignedSequenceContainer::setSequence(unsigned int i, const Sequence & sequence, bool checkNames) throw (Exception)
 {
 	if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("AlignedSequenceContainer::setaddSequence", i, 0, getNumberOfSequences() - 1);
@@ -415,6 +387,8 @@ void AlignedSequenceContainer::setSequence(unsigned int i, const Sequence & sequ
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
 }
 
+/******************************************************************************/
+
 void AlignedSequenceContainer::setSequence(const string & name, const Sequence & sequence, bool checkNames) throw (Exception)
 {
 	// if container has only one sequence
@@ -423,8 +397,8 @@ void AlignedSequenceContainer::setSequence(const string & name, const Sequence &
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
 }
 
-// Overloaded methods to add sequence in sequences container
-// CheckName : boolean for enable or disable sequence's name existence checking
+/******************************************************************************/
+
 void AlignedSequenceContainer::addSequence(const Sequence & sequence, bool checkNames) throw (Exception)
 {
 	// if container has only one sequence
@@ -437,6 +411,8 @@ void AlignedSequenceContainer::addSequence(const Sequence & sequence, bool check
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
 }
 
+/******************************************************************************/
+
 void AlignedSequenceContainer::addSequence(const Sequence & sequence, unsigned int i, bool checkNames) throw (Exception)
 {
 	if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences() - 1);
@@ -446,10 +422,12 @@ void AlignedSequenceContainer::addSequence(const Sequence & sequence, unsigned i
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
 }
 
-// Private method to verify sequence's size before insertion in sequence container
+/******************************************************************************/
+
 bool AlignedSequenceContainer::checkSize(const Sequence & sequence) { return (sequence.size() == length); }
 
-// Overloaded method to purge the sequences container
+/******************************************************************************/
+
 void AlignedSequenceContainer::clear()
 {
 	length = 0;
@@ -458,7 +436,7 @@ void AlignedSequenceContainer::clear()
 
 /******************************************************************************/
 
-SequenceContainer * AlignedSequenceContainer::getEmptyContainer() const
+SequenceContainer * AlignedSequenceContainer::createEmptyContainer() const
 { 
 	AlignedSequenceContainer * asc = new AlignedSequenceContainer(_alphabet);
 	asc -> setGeneralComments(_comments);

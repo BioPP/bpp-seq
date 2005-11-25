@@ -1,8 +1,41 @@
+//
+// File SiteTools.cpp
+// Author : Julien Dutheil
+//          Guillaume Deuchst
+// Created on: Friday August 8 2003
+//
+
 /*
- * File SiteTools.cpp
- * Author : Julien Dutheil <julien.dutheil@ens-lyon.fr>
- * Author : Guillaume Deuchst <GDeuchst@ifrance.com>
- * Last modification : Friday August 8 2003
+Copyright or © or Copr. CNRS, (November 17, 2004)
+
+This software is a computer program whose purpose is to provide classes
+for sequences analysis.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "SiteTools.h"
@@ -20,8 +53,10 @@ using namespace VectorFunctions;
 // From the STL:
 #include <cmath>
 
-// Method for know if a site contains gap(s) or not
-bool SiteTools::hasGap(const Site & site) {
+/******************************************************************************/
+
+bool SiteTools::hasGap(const Site & site)
+{
 	// Main loop : for all characters in site
 	for (unsigned int i = 0 ; i < site.size() ; i++) {
 		if (site[i] == -1) return true;
@@ -29,8 +64,10 @@ bool SiteTools::hasGap(const Site & site) {
 	return false;
 }
 
-// Method for know if a site contains undefined character or not
-bool SiteTools::hasUnknown(const Site & site) {
+/******************************************************************************/
+
+bool SiteTools::hasUnknown(const Site & site)
+{
 	// Main loop : for all characters in site
 	for(unsigned int i = 0; i < site.size(); i++) {
 		if(site[i] >= (int)site.getAlphabet() -> getNumberOfTypes()) return true;
@@ -38,8 +75,10 @@ bool SiteTools::hasUnknown(const Site & site) {
 	return false;
 }
 
-// Method fot know if a site is complete or not (doesn't contains gap or undefined character)
-bool SiteTools::isComplete(const Site & site) {
+/******************************************************************************/
+
+bool SiteTools::isComplete(const Site & site)
+{
 	// Main loop : for all characters in site
 	for(unsigned int i = 0; i < site.size(); i++) {
 		if(site[i] < 0 || site[i] >= (int)site.getAlphabet() -> getSize()) return false;
@@ -47,11 +86,10 @@ bool SiteTools::isComplete(const Site & site) {
 	return true;
 }
 
-/* This method is quite the same as operator ==,
- * excepted that it just look at the content of the site
- * whatever the position.
-*/
-bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2) {
+/******************************************************************************/
+
+bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2)
+{
 	// Site's size and content checking
 
 	if(site1.size() != site2.size()) return false;
@@ -63,8 +101,10 @@ bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2) {
 	}
 }
 
-// Method for know if a site is constant or not (contain one character type only)
-bool SiteTools::isConstant(const Site & site) throw (EmptySiteException) {
+/******************************************************************************/
+
+bool SiteTools::isConstant(const Site & site) throw (EmptySiteException)
+{
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isConstant: Incorrect specified site", &site);
 
@@ -107,7 +147,6 @@ double SiteTools::heterozygosity(const Site & site) throw (EmptySiteException)
 	map<int, double> p = getFrequencies(site);
 	vector<double> c = MapTools::getValues(p);
 	return 1 - norm(MapTools::getValues(p))*norm(MapTools::getValues(p));
-
 }
 
 /******************************************************************************/
@@ -160,12 +199,14 @@ bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteEx
 
 /******************************************************************************/
 
-// Method to know if a site is a triplet or more (contain at least 3 character types, usefull for DNA or RNA sequences)
-bool SiteTools::isTriplet(const Site & site) throw (EmptySiteException) {
+bool SiteTools::isTriplet(const Site & site) throw (EmptySiteException)
+{
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isTriplet: Incorrect specified site", &site);
 	// For all site's characters
         if(SiteTools::getNumberOfDistinctCharacters(site)>=3) return true;
         else return false;
 }
+
 /******************************************************************************/
+

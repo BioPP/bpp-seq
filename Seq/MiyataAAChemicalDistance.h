@@ -91,34 +91,43 @@ using namespace std;
 // From NumCalc:
 #include <NumCalc/Matrix.h>
 
-// From the MTL:
-//#include <mtl/matrix.h>
-//using namespace mtl;
-//typedef matrix<double>::type Matrix;
-typedef RowMatrix<double> Mat;
-
-
 /**
- * @brief One dimensionnal alphabet index interface.
+ * @brief Miyata et al. (1979) Amino-Acid chemical distance.
  *
- * Derivatives of this interface implement properties for a single state.
+ * Two kinds of matrix can be built:
+ * - a symmetric one, with \f$I_{i,j} = I_{i,j}\f$,
+ * - or a non-symmetric one, with \f$I_{i,j} = -I_{i,j}\f$.
+ *
+ * Reference:
+ * Miyata, T., Miyazawa, S. and Yasunaga, T.
+ * Two types of amino acid substitutions in protein evolution
+ * J. Mol. Evol. 12, 219-236 (1979)
+ *
+ * Data from AAIndex2 database, Accession Number MIYT790101.
  */
 class MiyataAAChemicalDistance: public AlphabetIndex2<double> {
 
 	private:
-		Mat _distanceMatrix;
+		RowMatrix<double> _distanceMatrix;
 		const ProteicAlphabet * _alpha;
 		bool _sym;
 
 	public:
 		MiyataAAChemicalDistance();
-		~MiyataAAChemicalDistance();
+		virtual ~MiyataAAChemicalDistance();
 
 	public:
+		/**
+		 * @name Methods from the AlphabetIndex2 interface.
+		 *
+		 * @{
+		 */
 		double getIndex(int state1, int state2) const throw (BadIntException);
 		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
 		const Alphabet * getAlphabet() const { return _alpha; };
 		Clonable * clone() const { return new MiyataAAChemicalDistance(); }
+		Matrix<double> * getIndexMatrix() const;
+		/** @} */
 
 	public:
 		void setSymmetric(bool yn) { _sym = yn; }

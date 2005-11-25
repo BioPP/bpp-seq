@@ -5,45 +5,7 @@
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -117,7 +79,7 @@ class SequenceException : public Exception {
 		 */
 		SequenceException(const string & text, const Sequence * seq = NULL);
 	
-		~SequenceException() throw();
+		virtual ~SequenceException() throw();
 	
 	public:
     
@@ -128,8 +90,6 @@ class SequenceException : public Exception {
 		 */
 		virtual const Sequence * getSequence() const;
 };
-
-/******************************************************************************/
 
 /**
  * @brief Exception thrown when a sequence is found to be empty and it should not.
@@ -154,10 +114,8 @@ class EmptySequenceException : public SequenceException {
 		 */
 		EmptySequenceException(const string & text, const Sequence * seq = NULL);
 	
-		~EmptySequenceException() throw();
+		virtual ~EmptySequenceException() throw();
 };
-
-/******************************************************************************/
 
 /**
  * @brief Exception thrown when a sequence is found to have gap and it should not.
@@ -168,7 +126,7 @@ class SequenceWithGapException : public SequenceException {
     
 		/**
 		 * @brief Build a new SequenceWithGapException object.
-         *
+     *
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param seq A const pointer toward the sequence that threw the exception.
 		 */
@@ -176,16 +134,14 @@ class SequenceWithGapException : public SequenceException {
         
 		/**
 		 * @brief Build a new SequenceWithGapException object.
-         *
+     *
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param seq A const pointer toward the sequence that threw the exception.
 		 */
 		SequenceWithGapException(const string & text, const Sequence * seq = NULL);
 	
-		~SequenceWithGapException() throw();
+		virtual ~SequenceWithGapException() throw();
 };
-
-/******************************************************************************/
 
 /**
  * @brief Exception thrown when a sequence is not align with others.
@@ -197,24 +153,23 @@ class SequenceNotAlignedException : public SequenceException {
 	public:
     
 		/**
-         * @brief Build a new SequenceNotAlignedException object.
-         *
+     * @brief Build a new SequenceNotAlignedException object.
+     *
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param seq  A const pointer toward the sequence that threw the exception.
-         */
-		SequenceNotAlignedException(const char *   text, const Sequence * seq);
+     */
+		SequenceNotAlignedException(const char * text, const Sequence * seq);
 
 		/**
-         * @brief Build a new SequenceNotAlignedException object.
-         *
+     * @brief Build a new SequenceNotAlignedException object.
+     *
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param seq  A const pointer toward the sequence that threw the exception.
-         */
-        SequenceNotAlignedException(const string & text, const Sequence * seq);
+     */
+    SequenceNotAlignedException(const string & text, const Sequence * seq);
 	
-		~SequenceNotAlignedException() throw();
+		virtual ~SequenceNotAlignedException() throw();
 };
 
-/******************************************************************************/
-
 #endif	//_SEQUENCEEXCEPTIONS_H_
+

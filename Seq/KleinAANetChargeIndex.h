@@ -62,14 +62,16 @@ knowledge of the CeCILL license and that you accept its terms.
  *       0.      1.      0.      0.      0.      0.      0.      0.      0.      0.
  * //
  */
-class KleinAANetChargeIndex: public AlphabetIndex1<double> {
+class KleinAANetChargeIndex: public AlphabetIndex1<double>
+{
 
 	private:
 		vector<double> _charge;
 		const ProteicAlphabet * _alpha;
 
 	public:
-		KleinAANetChargeIndex() {
+		KleinAANetChargeIndex()
+		{
 			_alpha = new ProteicAlphabet();
 			_charge.resize(20);
 			_charge[ 0] =  0.; //A
@@ -94,17 +96,17 @@ class KleinAANetChargeIndex: public AlphabetIndex1<double> {
 			_charge[19] =  0.; //V
 		}
 
-		~KleinAANetChargeIndex() {
-			delete _alpha;
-		}
+		virtual ~KleinAANetChargeIndex() { delete _alpha;	}
 
 	public:
-		double getIndex(int state) const throw (BadIntException) {
+		double getIndex(int state) const throw (BadIntException)
+		{
 			if(state < 0 || state > 19) throw BadIntException(state, "KleinAANetChargeIndex::getIndex(). Invalid state.", _alpha);
 			return _charge[state];
 		}
 		
-		double getIndex(const string & state) const throw (BadCharException) {
+		double getIndex(const string & state) const throw (BadCharException)
+		{
 			return _charge[_alpha -> charToInt(state)];
 		}
 

@@ -1,49 +1,11 @@
 //
 // File: Phylip.h
-// Created by: Julirn Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Mon Oct 27 12:22:56 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -93,7 +55,10 @@ using namespace std;
 /**
  * @brief The Phylip & co format.
  *
- * A AlignedSequenceContainer is used instead of a VectorSequenceContainer.
+ * An AlignedSequenceContainer is used instead of a VectorSequenceContainer.
+ *
+ * This format is described on the Phylip package documentation website:
+ * http://evolution.genetics.washington.edu/phylip/doc/sequence.html
  */
 class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequence
 {
@@ -114,12 +79,16 @@ class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequenc
 		bool _sequential;
 	
 	public:
-		// Class constructor
-		// Constructor is currently useless to make easier an eventual later addition of parameters, etc.
+		/**
+		 * @brief Build a new Phylip file reader.
+		 *
+		 * @param extended If true, sequences with names longer than 10 characters are allowed.
+		 * @param sequential If false, sequences are supposed to be interlaved.
+		 * @param charsByLine The number of base to display in a row.
+		 */
 		Phylip(bool extended = true, bool sequential = true, unsigned int charsByLine = 100);
 
-		// Class destructor
-		virtual ~Phylip();
+		virtual ~Phylip() {}
 
 	public:
 
@@ -128,11 +97,16 @@ class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequenc
 		 *
 		 * @{
 		 */
-		void appendFromStream(istream & input, AlignedSequenceContainer & vsc) const throw (Exception);
+		void appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception);
 		/** @} */
 
-		// Method to get number of sequences contained in specified file
-		int getNumberOfSequences(const string & path) const throw (Exception);
+		/**
+		 * @return The number of sequences contained in the specified file.
+		 *
+		 * This methods parses the firt line of the phylip file.
+		 * @param path The path of the file to parse.
+		 */
+		unsigned int getNumberOfSequences(const string & path) const throw (IOException);
 
 		/**
 		 * @name The OSequence interface.
@@ -158,7 +132,6 @@ class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequenc
 		
 	protected:
 		//Reading tools:
-		static string getNextNonEmptyLine(istream & in); 
 		const vector<string> splitNameAndSequence(const string & s) const; 
 		void readSequential (istream & in, AlignedSequenceContainer & asc) const throw (Exception);
 		void readInterleaved(istream & in, AlignedSequenceContainer & asc) const throw (Exception);
@@ -168,5 +141,5 @@ class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequenc
 		void writeInterleaved(ostream & out, const SequenceContainer & sc, int charsByLine) const;
 };
 
-
 #endif	//_PHYLIP_H_
+

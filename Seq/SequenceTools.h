@@ -1,49 +1,12 @@
 //
 // File: SequenceTools.h
 // Created by: Guillaume Deuchst
+//             Julien Dutheil
 // Created on: Tue Aug 21 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -119,42 +82,101 @@ class SequenceTools: public SymbolListTools
 	public:
 		
     SequenceTools() {}
-		
-		~SequenceTools() {}
+		virtual ~SequenceTools() {}
 	
 	public:
 
-		// Methods for truncate a sequence into a specified interval
-		// Note : all two terminal characters are returned
-		static Sequence * subseq(const Sequence & sequence, int begin, int end) throw (Exception) ;
+		/**
+		 * @brief Get a sub-sequence.
+		 * 
+		 * @param sequence The sequence to trunc.
+		 * @param begin The first position of the subsequence.
+		 * @param end   The last position of the subsequence.
+		 * @return A new sequence object with the given subsequence.
+		 * @throw IndexOutOfBoundsException, Exception In case of bad indices.
+		 */
+		static Sequence * subseq(const Sequence & sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception) ;
 
-		// Methods to determinate if a sequence is a palindrome
-		//WARNING!!! Must check about this!
-		static bool isPalindrome(const Sequence & sequence);
+		/**
+		 * @brief Concatenate two sequences.
+		 *
+		 * Sequences must have the same name and alphabets.
+		 * Only first sequence's commentaries are kept.
+		 *
+		 * @param seq1 The first sequence.
+		 * @param seq2 The second sequence.
+		 * @return A new sequence object with the concatenation of the two sequences.
+		 * @throw AlphabetMismatchException If the two alphabets do not match.
+		 * @throw Exception If the sequence names do not match.
+		 */
+		static Sequence * concatenate(const Sequence & seq1, const Sequence & seq2)
+		     throw (AlphabetMismatchException, Exception) ;
 
-		// Method for concatenate two sequences
-		// Note : names and alphabets will be checked, only first sequence's commentaries are keeped
-		static Sequence * concatenate(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, Exception) ;
+		/**
+		 * @brief change the sense of a sequence.
+		 *
+		 * ABCDEF becomes FEDCBA, and the sense attribute is changed.
+		 *
+		 * @return A new sequence object containing the reversed sequence.
+		 * @param sequence The sequence to reverse.
+		 */
+		static Sequence * reverse(const Sequence & sequence);
 
-		// Method to reverse a nucleic sequence
-		static Sequence * reverse(const Sequence & sequence) throw (AlphabetException);
-
-		// Method to complement a DNA sequence
+		/**
+		 * @brief Get the complementary sequence of a nucleotide sequence.
+		 *
+		 * @see DNAReplication
+		 * @return sequence A new sequence object with the complementary sequence.
+		 * @param sequence The sequence to complement.
+		 * @throw AlphabetException If the sequence is not a nucleotide sequence.
+		 */
 		static Sequence * complement(const Sequence & sequence) throw (AlphabetException);
 		
-		// Method to transcript a DNA sequence
+		/**
+		 * @brief Get the transcription sequence of a DNA sequence.
+		 *
+		 * @see DNAReplication
+		 * @return sequence A new sequence object with the transcription sequence.
+		 * @param sequence The sequence to transcript.
+		 * @throw AlphabetException If the sequence is not a DNA sequence.
+		 */
 		static Sequence * transcript(const Sequence & sequence) throw (AlphabetException);
 		
-		// Method to reverse transcript a RNA sequence
+		/**
+		 * @brief Get the reverse-transcription sequence of a RNA sequence.
+		 *
+		 * @see DNAReplication
+		 * @return sequence A new sequence object with the reverse-transcription sequence.
+		 * @param sequence The sequence to reverse-transcript.
+		 * @throw AlphabetException If the sequence is not a RNA sequence.
+		 */
 		static Sequence * reverseTranscript(const Sequence & sequence) throw (AlphabetException);
 		
-		// Method to compute the percent id between 2 seqs:
+		/**
+		 * @return The identity percent of 2 sequence.
+		 * One match is counted if the two sequences have identical states.
+		 * @param seq1 The first sequence.
+		 * @param seq2 The second sequence.
+		 * @throw AlphabetMismatchException If the two sequences do not have the same alphabet.
+		 * @throw SequenceNotAlignedException If the two sequences do not have the same length.
+		 */
 		static double getPercentIdentity(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, SequenceNotAlignedException);
 
+		/**
+		 * @return The number of sites in the sequences, <i>i.e.</i> all positions without gaps.
+		 *
+		 * @param seq The sequence to analyse.
+		 */
 		static unsigned int getNumberOfSites(const Sequence & seq);
 
+		/**
+		 * @return The number of complete sites in the sequences, <i>i.e.</i> all positions without gaps and unresolved states (generic characters).
+		 *
+		 * @param seq The sequence to analyse.
+		 */
 		static unsigned int getNumberOfCompleteSites(const Sequence & seq);
 };
 
-
 #endif // _SEQUENCETOOLS_H_
+
+

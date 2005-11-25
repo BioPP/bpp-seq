@@ -1,50 +1,13 @@
 //
 // File MapSequenceContainer.h
-// Authors : Guillaume Deuchst <GDeuchst@ifrance.com>
-//           Sylvain Gaillard <yragael2001@yahoo.fr>
+// Authors : Guillaume Deuchst
+//           Julien Dutheil
+//           Sylvain Gaillard
 // Last modification : Friday June 25 2004
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -90,15 +53,10 @@ using namespace std;
 
 /**
  * @brief MapSequenceContainer class
+ *
+ * Sequences are stored using a key string, in a map object.
+ * Sequences are ordered according to the key order (defined by the < operator).
  * 
- * Host sequence container's alphabet
- * Define specific methods to map sequences containers manipulation
- *
- * Note : although a sequence can be deleted directly from sequence container,
- * using specific methods (removeSequence and deleteSequence) to do it is IMPERATIVE (because they do
- * verifications, and they properly delete pointer toward sequence)
- *
- * This class can be instanciated (i.e. SequenceContainer sc * = new MapSequenceContainer(seqMap, alphabet);)
  */
 
 class MapSequenceContainer: public virtual AbstractSequenceContainer
@@ -107,60 +65,82 @@ class MapSequenceContainer: public virtual AbstractSequenceContainer
 		map<string, Sequence *> _sequences;
         
 	public:
-		// Class constructors
 		MapSequenceContainer(const map<string, Sequence *> & ms, const Alphabet * alpha);
 		MapSequenceContainer(const Alphabet * alpha);
 
-		// Copy constructors
 		MapSequenceContainer(const MapSequenceContainer & msc);
 		MapSequenceContainer & operator = (const MapSequenceContainer & msc);
 
-		// Class destructor
-		~MapSequenceContainer();
+		virtual ~MapSequenceContainer();
 
 	public:
 		/**
 		 * @brief Get a sequence.
+		 *
+		 * @param key The key of the sequence to retrieve.
+		 * @return The sequence associated to the given key.
+		 * @throw SequenceNotFoundException If no sequence is associated to the given key.
 		 */
 		const Sequence * getSequenceByKey(const string & key)  const throw (SequenceNotFoundException);
 
 		/**
 		 * @brief Set a sequence.
+		 *
+		 * @param key The key of the sequence.
+		 * @param sequence The new sequence that will be associated to the key.
+		 * @param checkNames Tell is the sequence name must be checked.
+		 * @throw SequenceNotFoundException If no sequence is associated to the given key.
 		 */
 		void setSequenceByKey(const string & key , const Sequence & sequence, bool checkNames = true) throw (SequenceNotFoundException);
 
 		/**
 		 * @brief Remove a sequence.
+		 * 
+		 * @param key The key of the sequence.
+		 * @return The sequence previously associated to the given key.
+		 * @throw SequenceNotFoundException If no sequence is associated to the given key.
 		 */
-		Sequence * removeSequenceByKey(const string & key);
+		Sequence * removeSequenceByKey(const string & key) throw (SequenceNotFoundException);
 
 		/**
 		 * @brief Delete a sequence.
+		 * 
+		 * @param key The key of the sequence.
+		 * @throw SequenceNotFoundException If no sequence is associated to the given key.
 		 */
-		void deleteSequenceByKey(const string & key);
+		void deleteSequenceByKey(const string & key) throw (SequenceNotFoundException);
 
 		/**
-		 * @brief Add a sequence.
+		 * @brief Add a sequence and key.
+		 * 
+		 * @param key The key of the new sequence.
+		 * @param sequence The new sequence that will be associated to the key.
+		 * @param checkNames Tell is the sequence name must be checked.
 		 */
 		void addSequence(const string & key, const Sequence & sequence, bool checkNames = true) throw (Exception);
 
 		/**
-		 * @brief Get the sequences keys.
+		 * @return All sequences keys.
 		 */
 		vector<string> getKeys() const;
 
 		/**
-		 * @brief Get a key at a position.
+		 * @return The key of a given sequence specified by its position in the container.
+		 * @param pos The index of the sequence.
+		 * @throw IndexOutOfBoundsException If pos is not a valid index.
 		 */
 		string getKey(unsigned int pos) const throw (IndexOutOfBoundsException);
 
 		/**
-		 * @brief Get a sequence key.
+		 * @return The key of a given sequence specified by its name.
+		 * @param name The name of the sequence.
+		 * @throw SequenceNotFoundException If no sequence was found with the given name.
 		 */
 		string getKey(const string & name) const throw (SequenceNotFoundException);
 
 		/**
 		 * @name The clonable interface
+		 * 
 		 * @{
 		 */
 		Clonable * clone() const;
@@ -179,7 +159,7 @@ class MapSequenceContainer: public virtual AbstractSequenceContainer
 		void deleteSequence(const string & name) throw (SequenceNotFoundException);
 		unsigned int getNumberOfSequences() const;
 		void clear();
-		SequenceContainer * getEmptyContainer() const;
+		SequenceContainer * createEmptyContainer() const;
 		/** @} */
 
 		/**
@@ -208,3 +188,4 @@ class MapSequenceContainer: public virtual AbstractSequenceContainer
 };
 
 #endif // _MAPSEQUENCECONTAINER_H_
+

@@ -1,6 +1,6 @@
 //
-// File: GeneticCode.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// File: GeneticCode.cpp
+// Created by: Julien Dutheil
 // Created on: Mon Oct 13 15:37:25 2003
 //
 
@@ -13,8 +13,6 @@ StopCodonException::~StopCodonException() throw() {};
 string StopCodonException::getCodon() const { return codon; }
 
 
-
-
 GeneticCode::GeneticCode() : AbstractTranslator() {}
 
 GeneticCode::~GeneticCode() {}
@@ -23,15 +21,18 @@ const Alphabet * GeneticCode::getSourceAlphabet() const { return codonAlphabet; 
 
 const Alphabet * GeneticCode::getTargetAlphabet() const { return proteicAlphabet; }
 	
-bool GeneticCode::areSynonymous(      int i     ,       int j     ) const throw (BadIntException) {
+bool GeneticCode::areSynonymous(int i, int j) const throw (BadIntException)
+{
 	return (translate(i) == translate(j));
 }
 
-bool GeneticCode::areSynonymous(const string & i, const string & j) const throw (BadCharException) {
+bool GeneticCode::areSynonymous(const string & i, const string & j) const throw (BadCharException)
+{
 	return (translate(i) == translate(j));
 }
 
-vector<int>    GeneticCode::getSynonymous(      int      aminoacid) const throw (BadIntException) {
+vector<int> GeneticCode::getSynonymous(int aminoacid) const throw (BadIntException)
+{
 	//test:
 	proteicAlphabet -> intToChar(aminoacid);
 	
@@ -42,7 +43,8 @@ vector<int>    GeneticCode::getSynonymous(      int      aminoacid) const throw 
 	return synonymes;	
 }
 
-vector<string> GeneticCode::getSynonymous(const string & aminoacid) const throw (BadCharException) {
+vector<string> GeneticCode::getSynonymous(const string & aminoacid) const throw (BadCharException)
+{
 	//test:
 	int aa = proteicAlphabet -> charToInt(aminoacid);
 	
@@ -52,3 +54,4 @@ vector<string> GeneticCode::getSynonymous(const string & aminoacid) const throw 
 	}
 	return synonymes;	
 }
+

@@ -1,49 +1,11 @@
 //
-// File: StringSequenceTools.h
+// File: StringSequenceTools.cpp
 // Created by: Julien Dutheil
 // Created on: Sun Nov 30 11:29:07 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -151,23 +113,6 @@ string StringSequenceTools::deleteChar(const string & sequence, string chars)
 	}
 
 	return result;
-}
-
-/****************************************************************************************/
-
-bool StringSequenceTools::isPalindrome(const string & sequence)
-{
-	if (sequence == "") return false;
-
-	// Initializing
-	int size = sequence.size();
-
-	// For all sequence characters or until two characters is unequals at opposite positions
-	for (int i = 0 ; i < size ; i++) {
-		if (sequence[i] != sequence[size-i-1]) return false;
-	}
-
-	return true;
 }
 
 /****************************************************************************************/
@@ -305,46 +250,6 @@ double StringSequenceTools::getGCcontent(const string & sequence, unsigned int p
 
 /****************************************************************************************/
 
-string StringSequenceTools::randomShuffle(const string & sequence, unsigned int window, bool throwIn)
-{
-	// Initializing
-	unsigned int size = sequence.size();
-
-	// Window size checking
-	if (size < window) window = size;
-
-	// Calculate number of Windows
-	unsigned int nb = size / window;
-	if (nb == 0) nb++;
-
-	// Initializing
-	vector<unsigned int> pos;
-	unsigned int i;
-	for (i = 0 ; i < nb ; i++) { pos.push_back(i); }
-	if (size - (nb * window) > 0) pos.push_back(i);
-
-	// Windows numbers random shuffle
-	if (throwIn) {
-		vector<unsigned int> swap;
-		for (i = 0 ; i < pos.size() ; i++) 
-			swap.push_back(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(pos[pos.size()-1]));
-		pos = swap;
-	} else random_shuffle(pos.begin(), pos.end());
-
-	// Windows content shuffle
-	string temp, result = "";
-	for (i = 0 ; i < pos.size() ; i++) {
-		if ((window * pos[i]) + window > size) temp = string(sequence.begin() + (window * pos[i]), sequence.end());
-		else temp = string(sequence.begin() + (window * pos[i]), sequence.begin() + (window * pos[i]) + window);
-		result += temp;
-	}
-
-	// Send result
-	return result;
-}
-
-/****************************************************************************************/
-
 vector<int> StringSequenceTools::codeSequence(const string & sequence, const Alphabet * alphabet)
     throw (BadCharException)
 {
@@ -454,3 +359,4 @@ throw (EmptySequenceException, SequenceException, AlphabetException)
 }
 
 /****************************************************************************************/
+

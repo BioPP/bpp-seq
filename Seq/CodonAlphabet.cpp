@@ -1,49 +1,11 @@
 //
 // File: CodonAlphabet.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Sun Oct 12 17:41:56 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -89,12 +51,12 @@ const string CodonAlphabet::INIT = "Init";
 
 /****************************************************************************************/
 
-bool CodonAlphabet::containsUnresolved(const string & letter) const throw (BadCharException)
+bool CodonAlphabet::containsUnresolved(const string & state) const throw (BadCharException)
 {
-	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
-	char s1 = letter[0];
-	char s2 = letter[1];
-	char s3 = letter[2];
+	if(state.size() != 3) throw BadCharException(state, "CodonAlphabet::getName", this);
+	char s1 = state[0];
+	char s2 = state[1];
+	char s3 = state[2];
 	return
 		(nucAlpha -> charToInt(TextTools::toString(s1)) >= 4
 	|| nucAlpha -> charToInt(TextTools::toString(s2)) >= 4
@@ -103,12 +65,12 @@ bool CodonAlphabet::containsUnresolved(const string & letter) const throw (BadCh
 
 /****************************************************************************************/
 
-bool CodonAlphabet::containsGap(const string & letter) const throw (BadCharException)
+bool CodonAlphabet::containsGap(const string & state) const throw (BadCharException)
 {
-	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
-	char s1 = letter[0];
-	char s2 = letter[1];
-	char s3 = letter[2];
+	if(state.size() != 3) throw BadCharException(state, "CodonAlphabet::getName", this);
+	char s1 = state[0];
+	char s2 = state[1];
+	char s3 = state[2];
 	return
 		(nucAlpha -> charToInt(TextTools::toString(s1)) == -1
 	|| nucAlpha -> charToInt(TextTools::toString(s2)) == -1
@@ -117,27 +79,28 @@ bool CodonAlphabet::containsGap(const string & letter) const throw (BadCharExcep
 
 /****************************************************************************************/
 
-string CodonAlphabet::getName(const string & letter) const throw (BadCharException)
+string CodonAlphabet::getName(const string & state) const throw (BadCharException)
 {
-	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::getName", this);
-	if(containsUnresolved(letter)) return alphabet[65].name;
-	if(containsGap(letter)) return alphabet[0].name;
-	else return AbstractAlphabet::getName(letter);
+	if(state.size() != 3) throw BadCharException(state, "CodonAlphabet::getName", this);
+	if(containsUnresolved(state)) return alphabet[65].name;
+	if(containsGap(state)) return alphabet[0].name;
+	else return AbstractAlphabet::getName(state);
 }
 		
 /****************************************************************************************/
 
-int CodonAlphabet::charToInt(const string & letter) const throw (BadCharException)
+int CodonAlphabet::charToInt(const string & state) const throw (BadCharException)
 {
-	if(letter.size() != 3) throw BadCharException(letter, "CodonAlphabet::charToInt", this);
-	if(containsUnresolved(letter)) return getSize(); // Generic characters are coded by n° >= alphabet size.
-	if(containsGap(letter)) return -1;
-	else return AbstractAlphabet::charToInt(letter);	
+	if(state.size() != 3) throw BadCharException(state, "CodonAlphabet::charToInt", this);
+	if(containsUnresolved(state)) return getSize(); // Generic characters are coded by n° >= alphabet size.
+	if(containsGap(state)) return -1;
+	else return AbstractAlphabet::charToInt(state);	
 }
 
 /****************************************************************************************/
 
-int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const throw (BadIntException) {
+int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const throw (BadIntException)
+{
 	return charToInt(getCodon(
 		nucAlpha -> intToChar(pos1),
 		nucAlpha -> intToChar(pos2),
@@ -147,7 +110,8 @@ int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const throw (BadIntExc
 
 /****************************************************************************************/
 
-string CodonAlphabet::getCodon(const string & pos1, const string & pos2, const string & pos3) const throw (BadCharException) {
+string CodonAlphabet::getCodon(const string & pos1, const string & pos2, const string & pos3) const throw (BadCharException)
+{
 	string codon = pos1 + pos2 + pos3;
 	//test codon:
 	charToInt(codon);
@@ -156,28 +120,32 @@ string CodonAlphabet::getCodon(const string & pos1, const string & pos2, const s
 
 /****************************************************************************************/
 
-int CodonAlphabet::getFirstPosition (int codon) const throw (BadIntException) {
+int CodonAlphabet::getFirstPosition (int codon) const throw (BadIntException)
+{
 	string s = intToChar(codon);
 	return nucAlpha -> charToInt(TextTools::toString(s[0]));
 }
 
 /****************************************************************************************/
 
-int CodonAlphabet::getSecondPosition(int codon) const throw (BadIntException) {
+int CodonAlphabet::getSecondPosition(int codon) const throw (BadIntException)
+{
 	string s = intToChar(codon);
 	return nucAlpha -> charToInt(TextTools::toString(s[1]));	
 }
 
 /****************************************************************************************/
 
-int CodonAlphabet::getThirdPosition (int codon) const throw (BadIntException) {
+int CodonAlphabet::getThirdPosition (int codon) const throw (BadIntException)
+{
 	string s = intToChar(codon);
 	return nucAlpha -> charToInt(TextTools::toString(s[2]));
 }
 
 /****************************************************************************************/
 
-vector<int> CodonAlphabet::getPositions(int codon) const throw (BadIntException) {
+vector<int> CodonAlphabet::getPositions(int codon) const throw (BadIntException)
+{
 	string s = intToChar(codon);
 	vector<int> positions(3);
 	positions[0] = nucAlpha -> charToInt(TextTools::toString(s[0]));
@@ -188,7 +156,8 @@ vector<int> CodonAlphabet::getPositions(int codon) const throw (BadIntException)
 
 /****************************************************************************************/
 
-string CodonAlphabet::getFirstPosition (const string & codon) const throw (BadCharException) {
+string CodonAlphabet::getFirstPosition (const string & codon) const throw (BadCharException)
+{
 	//Test:
 	charToInt(codon);
 	return "" + codon[0]; 
@@ -196,7 +165,8 @@ string CodonAlphabet::getFirstPosition (const string & codon) const throw (BadCh
 
 /****************************************************************************************/
 
-string CodonAlphabet::getSecondPosition(const string & codon) const throw (BadCharException) {
+string CodonAlphabet::getSecondPosition(const string & codon) const throw (BadCharException)
+{
 	//Test:
 	charToInt(codon);
 	return "" + codon[1]; 	
@@ -204,7 +174,8 @@ string CodonAlphabet::getSecondPosition(const string & codon) const throw (BadCh
 
 /****************************************************************************************/
 
-string CodonAlphabet::getThirdPosition (const string & codon) const throw (BadCharException) {
+string CodonAlphabet::getThirdPosition (const string & codon) const throw (BadCharException)
+{
 	//Test:
 	charToInt(codon);
 	return "" + codon[2]; 
@@ -212,7 +183,8 @@ string CodonAlphabet::getThirdPosition (const string & codon) const throw (BadCh
 
 /****************************************************************************************/
 
-vector<string> CodonAlphabet::getPositions(const string & codon) const throw (BadCharException) {
+vector<string> CodonAlphabet::getPositions(const string & codon) const throw (BadCharException)
+{
 	//Test:
 	charToInt(codon);
 	vector<string> positions(3);

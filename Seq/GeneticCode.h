@@ -5,42 +5,6 @@
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
 
 Julien.Dutheil@univ-montp2.fr
@@ -85,8 +49,8 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
-class StopCodonException : public Exception {
-
+class StopCodonException : public Exception
+{
 	protected:
 		string codon;
 			
@@ -95,7 +59,8 @@ class StopCodonException : public Exception {
 		StopCodonException(const string & text, const string & codon);
 	
 		// Class destructor
-		~StopCodonException() throw ();
+		virtual ~StopCodonException() throw ();
+		
 	public:
 		virtual string getCodon() const;
 };
@@ -110,22 +75,34 @@ class GeneticCode : public AbstractTranslator
 		GeneticCode();
 		virtual ~GeneticCode();
 	
-	//We implement these functions here:
 	public:
+		/**
+		 * @name Methods form the Translator interface.
+		 *
+		 * @{
+		 */
 		const Alphabet * getSourceAlphabet() const;
 		const Alphabet * getTargetAlphabet() const;
-		virtual int    translate(           int state) const throw (BadIntException, Exception)  = 0;		
+		virtual int translate(int state) const throw (BadIntException, Exception)  = 0;		
 		virtual string translate(const string & state) const throw (BadCharException, Exception) = 0;
 		virtual Sequence * translate(const Sequence & sequence) const throw (Exception) {
 			return AbstractTranslator::translate(sequence);	
 		}
+		/** @} */
 		
 	public:
-		bool areSynonymous(      int i     ,       int j     ) const throw (BadIntException);
+		/**
+		 * @name Specific methods.
+		 *
+		 * @{
+		 */
+		bool areSynonymous(int i, int j) const throw (BadIntException);
 		bool areSynonymous(const string & i, const string & j) const throw (BadCharException);
-		vector<int>    getSynonymous(      int      aminoacid) const throw (BadIntException);
+		vector<int> getSynonymous(int aminoacid) const throw (BadIntException);
 		vector<string> getSynonymous(const string & aminoacid) const throw (BadCharException);
+		/** @} */
 };
 
 
 #endif	//_GENETICCODE_H_
+

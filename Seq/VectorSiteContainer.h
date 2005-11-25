@@ -1,49 +1,11 @@
 //
 // File: VectorSiteContainer.h
-// Created by: jdutheil <jdutheil@Deedlit>
+// Created by: Julien Dutheil
 // Created on: Mon Oct  6 11:50:40 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -93,15 +55,16 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iostream>
 
 /**
- * This class does the same as AlignedSequenceContainer in the SeqLib package.
- * However, sequences are stored as a vector of sites.
- * This means that sequences are obviously aligned.
- * Methods dealing with sites are in o(N), whereas methods dealing with sequences
- * are in o(N²). This is the contrary of the AlignedSequenceContainer class.
- * Since phylogenetic methods deal wit sites, consider using this class instead
- * of the former one.
+ * @brief The VectorSiteContainer class.
+ *
+ * Sites are stored in a vector of pointers.
+ * Site access is hence in \f$O(1)\f$, and sequence access in \f$O(l)\f$, where
+ * \f$l\f$ is the number of sites in the container.
+ *
+ * See AlignedSequenceContainer for an alternative implementation.
+ * 
+ * @see Sequence, Site, AlignedSequenceContainer
  */
-
 class VectorSiteContainer : 
 	public virtual AbstractSequenceContainer,   //This container implements the SequenceContainer interface
 				                  					        	//and use the AbstractSequenceContainer adapter.
@@ -127,7 +90,7 @@ class VectorSiteContainer :
 		VectorSiteContainer& operator = (const            SiteContainer &  sc);
 		VectorSiteContainer& operator = (const OrderedSequenceContainer & osc);
 
-		~VectorSiteContainer();
+		virtual ~VectorSiteContainer();
 
 	public:
 
@@ -158,6 +121,11 @@ class VectorSiteContainer :
 
 		//Theses methods are implemented for this class:
 		
+		/**
+		 * @name The SequenceContainer interface.
+		 *
+		 * @{
+		 */
 		void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException);
 
 		// Method to get a sequence object from sequence container
@@ -168,33 +136,34 @@ class VectorSiteContainer :
 		// This method is used by delete and remove methods
 		unsigned int getSequencePosition(const string & name) const throw (SequenceNotFoundException);
 
-		void setSequence(const string & name,        const Sequence & sequence, bool checkName) throw (Exception);
-		void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName) throw (Exception);
-
 		Sequence * removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
 		Sequence * removeSequence(const string & name       ) throw (SequenceNotFoundException);
 
 		void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
 		void deleteSequence(const string & name       ) throw (SequenceNotFoundException);
-
-		void addSequence(const Sequence & sequence,                             bool checkName = true) throw (Exception);
-		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
-
+		
 		unsigned int getNumberOfSequences() const;
 
 		vector<string> getSequencesNames() const;
 
 		void setSequencesNames(const vector<string> & names, bool checkNames = true) throw (Exception);
 
-		void clear();
-
-		SequenceContainer * getEmptyContainer() const;
-	
+		void clear();	
 		
+		SequenceContainer * createEmptyContainer() const;
+		/** @} */
+
+		void addSequence(const Sequence & sequence,                             bool checkName = true) throw (Exception);
+		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
+		
+		void setSequence(const string & name,        const Sequence & sequence, bool checkName) throw (Exception);
+		void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName) throw (Exception);
+
+
 	protected:
 		// Create n void sites:
 		void realloc(unsigned int n);
 };
 
-
 #endif	//_VECTORSITECONTAINER_H_
+

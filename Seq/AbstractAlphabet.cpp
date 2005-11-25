@@ -1,49 +1,12 @@
 //
-// File: SymbolList.cpp
+// File: AbstractAlphabet.cpp
 // Created by: Guillaume Deuchst
+//             Julien Dutheil
 // Created on: Tue Jul 22 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -85,56 +48,56 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /****************************************************************************************/
 
-string AbstractAlphabet::getName(const string & letter) const throw (BadCharException)
+string AbstractAlphabet::getName(const string & state) const throw (BadCharException)
 {
-	string LETTER = TextTools::toUpper(letter);
+	string LETTER = TextTools::toUpper(state);
 	for (vector<sletter>::const_iterator i = alphabet.begin() ; i < alphabet.end() ; i++)
     if (i -> letter == LETTER) return i -> name;
-  throw BadCharException(letter, "AbstractAlphabet::getName : Specified base unknown", this);
+  throw BadCharException(state, "AbstractAlphabet::getName : Specified base unknown", this);
 }
 
 /****************************************************************************************/
 
-string AbstractAlphabet::getName(int letter) const throw (BadIntException)
+string AbstractAlphabet::getName(int state) const throw (BadIntException)
 {
   for (unsigned int i = 0 ; i < alphabet.size() ; i++)
-    if (alphabet[i].num == letter) return alphabet[i].name;
-  throw BadIntException(letter, "AbstractAlphabet::getName : Specified base unknown", this);
+    if (alphabet[i].num == state) return alphabet[i].name;
+  throw BadIntException(state, "AbstractAlphabet::getName : Specified base unknown", this);
 }
 
 /****************************************************************************************/
 
-int AbstractAlphabet::charToInt(const string & letter) const throw (BadCharException)
+int AbstractAlphabet::charToInt(const string & state) const throw (BadCharException)
 {
-  string LETTER = TextTools::toUpper(letter);
+  string LETTER = TextTools::toUpper(state);
   for (unsigned int i = 0; i < alphabet.size(); i++)
     if (alphabet[i].letter == LETTER) return alphabet[i].num;
-  throw BadCharException(letter, "AbstractAlphabet::charToInt : Specified base unknown", this);
+  throw BadCharException(state, "AbstractAlphabet::charToInt: Specified base unknown", this);
 }
 
 /****************************************************************************************/
 
-string AbstractAlphabet::intToChar(int letter) const throw (BadIntException)
+string AbstractAlphabet::intToChar(int state) const throw (BadIntException)
 {
   for (unsigned int i = 0; i < alphabet.size(); i++)
-    if (alphabet[i].num == letter) return alphabet[i].letter;
-  throw BadIntException(letter, "AbstractAlphabet::intToChar : Specified base unknown", this);
+    if (alphabet[i].num == state) return alphabet[i].letter;
+  throw BadIntException(state, "AbstractAlphabet::intToChar: Specified base unknown", this);
 }
 
 /****************************************************************************************/
 
-bool  AbstractAlphabet::isIntInAlphabet(int letter) const
+bool AbstractAlphabet::isIntInAlphabet(int state) const
 {
   for (unsigned int i = 0; i < alphabet.size(); i++)
-    if (alphabet[i].num == letter) return true;
+    if (alphabet[i].num == state) return true;
 	return false;
 }
 
 /****************************************************************************************/
 
-bool AbstractAlphabet::isCharInAlphabet(const string & letter) const
+bool AbstractAlphabet::isCharInAlphabet(const string & state) const
 {
-  string C = TextTools::toUpper(letter);
+  string C = TextTools::toUpper(state);
   for (unsigned int i = 0; i < alphabet.size(); i++)
     if (alphabet[i].letter == C) return true;
 	return false;

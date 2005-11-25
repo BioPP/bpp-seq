@@ -46,28 +46,30 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief Volume index used in Grantham (1974).
  *
- *Database: AAindex1
- *Entry: GRAR740103
+ * Database: AAindex1
+ * Entry: GRAR740103
  *
- *H GRAR740103
- *D Volume (Grantham, 1974)
- *R LIT:2004143b PMID:4843792
- *A Grantham, R.
- *T Amino acid difference formula to help explain protein evolution
- *J Science 185, 862-864 (1974)
- *I    A/L     R/K     N/M     D/F     C/P     Q/S     E/T     G/W     H/Y     I/V
- *     31.    124.     56.     54.     55.     85.     83.      3.     96.    111.
- *    111.    119.    105.    132.    32.5     32.     61.    170.    136.     84.
+ * H GRAR740103
+ * D Volume (Grantham, 1974)
+ * R LIT:2004143b PMID:4843792
+ * A Grantham, R.
+ * T Amino acid difference formula to help explain protein evolution
+ * J Science 185, 862-864 (1974)
+ * I    A/L     R/K     N/M     D/F     C/P     Q/S     E/T     G/W     H/Y     I/V
+ *      31.    124.     56.     54.     55.     85.     83.      3.     96.    111.
+ *     111.    119.    105.    132.    32.5     32.     61.    170.    136.     84.
  * //
  */
-class GranthamAAVolumeIndex: public AlphabetIndex1<double> {
+class GranthamAAVolumeIndex: public AlphabetIndex1<double>
+{
 
 	private:
 		vector<double> _polarity;
 		const ProteicAlphabet * _alpha;
 
 	public:
-		GranthamAAVolumeIndex() {
+		GranthamAAVolumeIndex()
+		{
 			_alpha = new ProteicAlphabet();
 			_polarity.resize(20);
 			_polarity[ 0] =  31.; //A
@@ -84,7 +86,7 @@ class GranthamAAVolumeIndex: public AlphabetIndex1<double> {
 			_polarity[11] = 119.; //K
 			_polarity[12] = 105.; //M
 			_polarity[13] = 132.; //F
-			_polarity[14] =  32.5; //P
+			_polarity[14] =  32.5;//P
 			_polarity[15] =  32.; //S
 			_polarity[16] =  61.; //T
 			_polarity[17] = 170.; //W
@@ -92,17 +94,17 @@ class GranthamAAVolumeIndex: public AlphabetIndex1<double> {
 			_polarity[19] =  84.; //V
 		}
 
-		~GranthamAAVolumeIndex() {
-			delete _alpha;
-		}
+		virtual ~GranthamAAVolumeIndex() { delete _alpha;	}
 
 	public:
-		double getIndex(int state) const throw (BadIntException) {
+		double getIndex(int state) const throw (BadIntException)
+		{
 			if(state < 0 || state > 19) throw BadIntException(state, "GranthamAAVolumeIndex::getIndex(). Invalid state.", _alpha);
 			return _polarity[state];
 		}
 		
-		double getIndex(const string & state) const throw (BadCharException) {
+		double getIndex(const string & state) const throw (BadCharException)
+		{
 			return _polarity[_alpha -> charToInt(state)];
 		}
 

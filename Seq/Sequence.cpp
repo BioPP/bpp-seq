@@ -124,10 +124,6 @@ Sequence & Sequence::operator = (const Sequence & s) {
 	return * this;
 }
 
-/** Destructor: *************************************************************************/
-
-Sequence::~Sequence() {}
-
 /****************************************************************************************/
 
 Clonable * Sequence::clone() const { return new Sequence(*  this); }
@@ -223,3 +219,4 @@ void Sequence::append(const string & content) throw (BadCharException)
 }
 
 /****************************************************************************************/
+

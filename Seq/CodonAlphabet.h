@@ -1,49 +1,11 @@
 //
 // File: CodonAlphabet.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Sun Oct 12 17:41:56 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -87,11 +49,11 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 /**
- * @brief The abstract bae class for codon alphabets.
+ * @brief The abstract base class for codon alphabets.
  * 
  * Since codons are made of 3 nucleic bases (RNA or DNA), this class has a
- * NucleicAlphabet field used to check char description. This nucleic alphabet
- * is passed to the constructor.
+ * NucleicAlphabet field used to check char description.
+ * This nucleic alphabet is passed to the constructor.
  * This class also adds some util specific to codon manipulation.
  */
 class CodonAlphabet : public AbstractAlphabet
@@ -108,7 +70,7 @@ class CodonAlphabet : public AbstractAlphabet
 	public: // Constructor and destructor.
 		
 		/**
-		 * @brief <Builds a new codon alphabet from a nucleic alphabet.
+		 * @brief Builds a new codon alphabet from a nucleic alphabet.
 		 * 
 		 * @param alpha The nucleic alphabet to be used.
 		 */
@@ -116,17 +78,37 @@ class CodonAlphabet : public AbstractAlphabet
 	
 		virtual ~CodonAlphabet() {}
 	
-	public:	// These methods are redefined from AbstractAlphabet:
+	public:
 	
-		string getName(const string & letter) const throw (BadCharException);
-		int charToInt(const string & letter) const throw (BadCharException);
+		/**
+		 * @name Methods redefined from AbstractAlphabet
+		 *
+		 * @{
+		 */
+		string getName(const string & state) const throw (BadCharException);
+		int charToInt(const string & state) const throw (BadCharException);
+		/** @} */
+		
 		string getAlphabetType() const { return "Codon alphabet"; }
 	
-	private: //Private tools
-		bool containsUnresolved(const string & letter) const throw (BadCharException);
-		bool containsGap(const string & letter) const throw (BadCharException);
+	private:
 		
-	public: //Codon specific methods:
+		/**
+		 * @name Inner utilitary functions
+		 *
+		 * @{
+		 */
+		bool containsUnresolved(const string & state) const throw (BadCharException);
+		bool containsGap(const string & state) const throw (BadCharException);
+		/** @} */
+		
+	public:
+		
+		/**
+		 * @name Codon specific methods
+		 *
+		 * @{
+		 */
 		
 		/**
 		 * @brief Get the int code for a codon given the int code of the three underlying positions.
@@ -230,6 +212,14 @@ class CodonAlphabet : public AbstractAlphabet
 		 * @return True if the codon is a stop codon.
 		 */
 		virtual bool isStop(const string & codon) const = 0;
+
+		/**
+		 * @return The nucleic alphabet associated to this codon alphabet.
+		 */
+		virtual const NucleicAlphabet * getNucleicAlphabet() const { return nucAlpha; }
+
+		/** @} */
 };
 
 #endif	//_CODONALPHABET_H_
+

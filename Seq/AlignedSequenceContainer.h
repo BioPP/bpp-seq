@@ -6,45 +6,7 @@
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -87,12 +49,18 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
-/* AlignedSequenceContainer class
- * Define specific methods to sites containers manipulation
+/**
+ * @brief Aligned sequences container.
+ *
+ * This class inherits from the VectorSequenceContainer and add site access.
+ * Sequence addition methods are re-defined to check for sequence lengths.
+ * Sequence access is in \f$O(1)\f$, and site access in \f$O(n)\f$, where
+ * \f$n\f$ is the number of sequences in the container.
+ *
+ * See VectorSiteContainer for an alternative implementation.
  * 
- * This class can be instanciated (i.e. AlignedSequenceContainer asc * = new AlignedSequenceContainer(vsc);)
-*/
-
+ * @see VectorSequenceContainer, Sequence, Site, VectorSiteContainer
+ */
 class AlignedSequenceContainer : public virtual VectorSequenceContainer, public virtual SiteContainer
 {
 	protected:
@@ -101,29 +69,51 @@ class AlignedSequenceContainer : public virtual VectorSequenceContainer, public 
 		
 		unsigned int length; // Number of sites for verifications before sequence's insertion in sequence container
 	
-		/* This is used in order to implement the SiteContainer interface.
+		/**
+		 * This is used in order to implement the SiteContainer interface.
 		 * A SiteContainer is expected to work on Site objects, but this class
 		 * -- since it is a VectorSequenceContainer -- has its data sored as
 		 * Sequence object. When the SiteContainer method getSite() is invoked
-		 * it creates a new Site object and send the adress of it.
+		 * it creates a new Site object and send the address of it.
 		 * To avoid memory leaks, this object is put into a vector so that it can be
 		 * destroyed when the container is destroyed.
 		 */
 		mutable vector<Site *> sites;
 		
 	public:
-		// Class constructors
+		/**
+		 * @brief Build a new empty container with the specified alphabet.
+		 *
+		 * @param alpha The alphabet to use.
+		 */
 		AlignedSequenceContainer(const Alphabet * alpha);
+		/**
+		 * @brief Copy constructor.
+		 *
+		 * @param asc The container to copy.
+		 */
 		AlignedSequenceContainer(const AlignedSequenceContainer & asc);
-		AlignedSequenceContainer(const            SiteContainer &  sc);
-		AlignedSequenceContainer(const OrderedSequenceContainer & osc);
+		/**
+		 * @brief Convert any SiteContainer object into a AlignedSequenceContainer object.
+		 *
+		 * @param sc The container to copy.
+		 */
+		AlignedSequenceContainer(const SiteContainer &  sc);
+		/**
+		 * @brief Try to coerce an OrderedSequenceContainer object into an AlignedSequenceContainer object.
+		 *
+		 * Sequences in osc will be considered alligned, and have the same number of sites.
+		 * 
+		 * @param osc The ordered container to coerce.
+		 * @throw SequenceNotAlignedException If sequences in osc do not have the same length.
+		 */
+		AlignedSequenceContainer(const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
 
 		AlignedSequenceContainer & operator = (const AlignedSequenceContainer & asc);
 		AlignedSequenceContainer & operator = (const            SiteContainer &  sc);
 		AlignedSequenceContainer & operator = (const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
 
-		// Class destructor
-		~AlignedSequenceContainer();
+		virtual ~AlignedSequenceContainer();
 
 	public:
 
@@ -149,25 +139,32 @@ class AlignedSequenceContainer : public virtual VectorSequenceContainer, public 
 		unsigned int getNumberOfSites() const;
 		Vint getSitePositions() const;
 		void reindexSites();
+		void clear();
+		SequenceContainer * createEmptyContainer() const;
 		/** @} */
 
-		// Method to replace a sequence in sequence container
+		/**
+		 * @name Redefinition of VectorSequenceContainer methods, to check for sequence lengths.
+		 *
+		 * @{
+		 */
 		void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception);
 		void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (Exception);
 
-		// Methods to add sequence in sequence container
-		// CheckName : boolean for enable or disable sequence's name existence checking
 		void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
 		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
-
-		// Method to delete all sequences in sequence container
-		void clear();
+		/** @} */
 		
-		SequenceContainer * getEmptyContainer() const;
 	
 	protected:
-		// Protected method to verify sequence's size before insertion in sequence container
+		/**
+		 * @brief Check sequence's size before insertion in sequence container.
+		 * 
+		 * @param sequence The sequence to check.
+		 * @return True if sequence length = number of sites in container.
+		 */
 		bool checkSize(const Sequence & sequence);
 };
 
 #endif // _ALIGNEDSEQUENCECONTAINER_H_
+

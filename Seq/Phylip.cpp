@@ -1,49 +1,11 @@
 //
 // File: Phylip.cpp
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Mon Oct 27 12:22:56 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -95,16 +57,6 @@ Phylip::Phylip(bool extended, bool sequential, unsigned int charsByLine): _chars
 	//cout << (this -> extended ? "extended" : "classical") << endl;
 	//cout << (this -> sequential ? "sequential" : "interleaved") << endl;	
 }
-
-
-Phylip::~Phylip() {}
-
-//Replaced by the corresponding FileTools method.
-//string Phylip::getNextNonEmptyLine(istream & in) {
-//	string temp = "";
-//	while(!in.eof() && TextTools::isEmpty(temp)) getline(in, temp, '\n');
-//	return temp;
-//} 
 
 /******************************************************************************/
 
@@ -199,7 +151,8 @@ void Phylip::appendFromStream(istream & input, AlignedSequenceContainer & vsc) c
 
 /******************************************************************************/
 
-int Phylip::getNumberOfSequences(const string & path) const throw (Exception) {
+unsigned int Phylip::getNumberOfSequences(const string & path) const throw (IOException)
+{
 	// Checking the existence of specified file
 	ifstream file (path.c_str(), ios::in);
 	if (! file) { throw IOException ("Phylip::getNumberOfSequences: failed to open file"); }
@@ -208,12 +161,14 @@ int Phylip::getNumberOfSequences(const string & path) const throw (Exception) {
 	istringstream iss(st.nextToken());
 	int nb;
 	iss >> nb;
+	file.close();
 	return nb;
 }
  
 /******************************************************************************/
 
-vector<string> Phylip::getSizedNames(const vector<string> & names) const {
+vector<string> Phylip::getSizedNames(const vector<string> & names) const
+{
 	vector<string> sizedNames(names.size());
 	if(_extended) {
 		//Add 6 white spaces to the larger name and align other names.
@@ -234,10 +189,11 @@ vector<string> Phylip::getSizedNames(const vector<string> & names) const {
 
 /******************************************************************************/
 
-void Phylip::writeSequential(ostream & out, const SequenceContainer & sc, int charsByLine) const {
+void Phylip::writeSequential(ostream & out, const SequenceContainer & sc, int charsByLine) const
+{
 	//cout << "Write sequential" << endl;
 	int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]) -> size();
-	out << sc.getNumberOfSequences() << " " << numberOfSites << " S" << endl;
+	out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
 	
 	vector<string> seqNames = sc.getSequencesNames();
 	vector<string> names = getSizedNames(seqNames);
@@ -251,10 +207,11 @@ void Phylip::writeSequential(ostream & out, const SequenceContainer & sc, int ch
 	}
 }
 
-void Phylip::writeInterleaved(ostream & out, const SequenceContainer & sc, int charsByLine) const {
+void Phylip::writeInterleaved(ostream & out, const SequenceContainer & sc, int charsByLine) const
+{
 	//cout << "Write interleaved;" << endl;
 	int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]) -> size();
-	out << sc.getNumberOfSequences() << " " << numberOfSites << " I" << endl;
+	out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
 	
 	vector<string> seqNames = sc.getSequencesNames();
 	vector<string> names = getSizedNames(seqNames);
@@ -301,7 +258,8 @@ const string Phylip::getFormatName() const { return "Phylip file, " + string(_ex
 
 /******************************************************************************/
 
-const string Phylip::getFormatDescription() const {
+const string Phylip::getFormatDescription() const
+{
 	return "Phylip file format, sequential and interleaved. PAML extension also supported.";
 }
 

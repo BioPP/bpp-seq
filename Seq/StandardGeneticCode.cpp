@@ -1,5 +1,5 @@
 //
-// File: StandardGeneticCode.h
+// File: StandardGeneticCode.cpp
 // Created by: Julien Dutheil
 // Created on: Mon Oct 13 15:39:17 2003
 //
@@ -149,3 +149,4 @@ string StandardGeneticCode::translate(const string & state) const throw (BadChar
 {
 	return proteicAlphabet -> intToChar(translate(codonAlphabet -> charToInt(state)));
 }
+

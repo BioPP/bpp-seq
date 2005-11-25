@@ -46,27 +46,29 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief Polarity index used in Grantham (1974).
  *
- *Database: AAindex1
- *Entry: GRAR740102
- *H GRAR740102
- *D Polarity (Grantham, 1974)
- *R LIT:2004143b PMID:4843792
- *A Grantham, R.
- *T Amino acid difference formula to help explain protein evolution
- *J Science 185, 862-864 (1974)
- *I    A/L     R/K     N/M     D/F     C/P     Q/S     E/T     G/W     H/Y     I/V
- *     8.1    10.5    11.6    13.0     5.5    10.5    12.3     9.0    10.4     5.2
- *     4.9    11.3     5.7     5.2     8.0     9.2     8.6     5.4     6.2     5.9
+ * Database: AAindex1
+ * Entry: GRAR740102
+ * H GRAR740102
+ * D Polarity (Grantham, 1974)
+ * R LIT:2004143b PMID:4843792
+ * A Grantham, R.
+ * T Amino acid difference formula to help explain protein evolution
+ * J Science 185, 862-864 (1974)
+ * I    A/L     R/K     N/M     D/F     C/P     Q/S     E/T     G/W     H/Y     I/V
+ *      8.1    10.5    11.6    13.0     5.5    10.5    12.3     9.0    10.4     5.2
+ *      4.9    11.3     5.7     5.2     8.0     9.2     8.6     5.4     6.2     5.9
  * //
  */
-class GranthamAAPolarityIndex: public AlphabetIndex1<double> {
+class GranthamAAPolarityIndex: public AlphabetIndex1<double>
+{
 
 	private:
 		vector<double> _polarity;
 		const ProteicAlphabet * _alpha;
 
 	public:
-		GranthamAAPolarityIndex() {
+		GranthamAAPolarityIndex()
+		{
 			_alpha = new ProteicAlphabet();
 			_polarity.resize(20);
 			_polarity[ 0] =  8.1; //A
@@ -91,17 +93,17 @@ class GranthamAAPolarityIndex: public AlphabetIndex1<double> {
 			_polarity[19] =  5.9; //V
 		}
 
-		~GranthamAAPolarityIndex() {
-			delete _alpha;
-		}
+		virtual ~GranthamAAPolarityIndex() { delete _alpha;	}
 
 	public:
-		double getIndex(int state) const throw (BadIntException) {
+		double getIndex(int state) const throw (BadIntException)
+		{
 			if(state < 0 || state > 19) throw BadIntException(state, "GranthamAAPolarityIndex::getIndex(). Invalid state.", _alpha);
 			return _polarity[state];
 		}
 		
-		double getIndex(const string & state) const throw (BadCharException) {
+		double getIndex(const string & state) const throw (BadCharException)
+		{
 			return _polarity[_alpha -> charToInt(state)];
 		}
 

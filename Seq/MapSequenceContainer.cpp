@@ -1,8 +1,42 @@
+//
+// File MapSequenceContainer.cpp
+// Authors : Guillaume Deuchst
+//           Julien Dutheil
+//           Sylvain Gaillard
+// Last modification : Monday July 19 2004
+//
+
 /*
- * File MapSequenceContainer.cpp
- * Authors : Guillaume Deuchst <GDeuchst@ifrance.com>
- *           Sylvain Gaillard <yragael2001@yahoo.fr>
- * Last modification : Monday July 19 2004
+Copyright or © or Copr. CNRS, (November 17, 2004)
+
+This software is a computer program whose purpose is to provide classes
+for sequences analysis.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "MapSequenceContainer.h"
@@ -10,17 +44,22 @@
 // From Utils:
 #include <Utils/TextTools.h>
 
-// Class constructors
-MapSequenceContainer::MapSequenceContainer(const map<string, Sequence *> & ms, const Alphabet * alpha) : AbstractSequenceContainer(alpha) 
+/******************************************************************************/
+
+MapSequenceContainer::MapSequenceContainer(const map<string, Sequence *> & ms, const Alphabet * alpha) :
+    AbstractSequenceContainer(alpha) 
 {
 	for (map<string, Sequence *>::const_iterator i = ms.begin() ; i != ms.end() ; i++) {		
 		addSequence((*i).first, *((*i).second));
 	}
 }
 
+/******************************************************************************/
+
 MapSequenceContainer::MapSequenceContainer(const Alphabet * alpha) : AbstractSequenceContainer(alpha) {}
 
-// Copy constructors
+/******************************************************************************/
+
 MapSequenceContainer::MapSequenceContainer(const MapSequenceContainer & msc) :
 	AbstractSequenceContainer(msc.getAlphabet()) 
 { 
@@ -28,6 +67,8 @@ MapSequenceContainer::MapSequenceContainer(const MapSequenceContainer & msc) :
 	for (unsigned int i = 0 ; i < max ; i++) addSequence(msc.getKey(i), * msc.getSequence(i), false);
 	_comments = msc.getGeneralComments(); 
 }
+
+/******************************************************************************/
 
 MapSequenceContainer & MapSequenceContainer::operator = (const MapSequenceContainer & msc) 
 {
@@ -43,19 +84,24 @@ MapSequenceContainer & MapSequenceContainer::operator = (const MapSequenceContai
 	return * this;
 }
 
-// Class destructor
+/******************************************************************************/
+
 MapSequenceContainer::~MapSequenceContainer() 
 {
 	clear();
 }
 
-// The Clonble interface
-Clonable * MapSequenceContainer::clone() const {
+/******************************************************************************/
+
+Clonable * MapSequenceContainer::clone() const
+{
 	return new MapSequenceContainer(* this);
 }
 
-// Methods to get an sequence object from sequence container
-const Sequence * MapSequenceContainer::getSequence(unsigned int i) const throw (IndexOutOfBoundsException) {
+/******************************************************************************/
+
+const Sequence * MapSequenceContainer::getSequence(unsigned int i) const throw (IndexOutOfBoundsException)
+{
 	// Specified sequence existence verification
 	if (i < _sequences.size()) {
 		map<string, Sequence *>::const_iterator it = _sequences.begin();
@@ -66,7 +112,10 @@ const Sequence * MapSequenceContainer::getSequence(unsigned int i) const throw (
 	return NULL;
 }
 
-const Sequence * MapSequenceContainer::getSequence(const string & name) const throw (SequenceNotFoundException) {
+/******************************************************************************/
+
+const Sequence * MapSequenceContainer::getSequence(const string & name) const throw (SequenceNotFoundException)
+{
 	// Specified sequence name research into all sequences
 	for (map<string, Sequence *>::const_iterator i = _sequences.begin() ; i != _sequences.end() ; i++) {
 		if (i -> second -> getName() == name) return i -> second;
@@ -75,7 +124,10 @@ const Sequence * MapSequenceContainer::getSequence(const string & name) const th
 	return NULL;
 }
 
-Sequence * MapSequenceContainer::getSequence(unsigned int i) throw (IndexOutOfBoundsException) {
+/******************************************************************************/
+
+Sequence * MapSequenceContainer::getSequence(unsigned int i) throw (IndexOutOfBoundsException)
+{
 	// Specified sequence existence verification
 	if (i < _sequences.size()) {
 		map<string, Sequence *>::const_iterator it = _sequences.begin();
@@ -86,7 +138,10 @@ Sequence * MapSequenceContainer::getSequence(unsigned int i) throw (IndexOutOfBo
 	return NULL;
 }
 
-Sequence * MapSequenceContainer::getSequence(const string & name) throw (SequenceNotFoundException) {
+/******************************************************************************/
+
+Sequence * MapSequenceContainer::getSequence(const string & name) throw (SequenceNotFoundException)
+{
 	// Specified sequence name research into all sequences
 	for (map<string, Sequence *>::const_iterator i = _sequences.begin() ; i != _sequences.end() ; i++) {
 		if (i -> second -> getName() == name) return i -> second;
@@ -94,6 +149,8 @@ Sequence * MapSequenceContainer::getSequence(const string & name) throw (Sequenc
 	throw SequenceNotFoundException("MapSequenceContainer::getSequence", name);
 	return NULL;
 }
+
+/******************************************************************************/
 
 const Sequence * MapSequenceContainer::getSequenceByKey(const string & key) const
     throw (SequenceNotFoundException)
@@ -103,6 +160,8 @@ const Sequence * MapSequenceContainer::getSequenceByKey(const string & key) cons
 
 	throw SequenceNotFoundException("MapSequenceContainer::getSequenceByKey", key);
 }
+
+/******************************************************************************/
 
 unsigned int MapSequenceContainer::getSequencePosition(const string & name)
     const throw (SequenceNotFoundException)
@@ -116,6 +175,8 @@ unsigned int MapSequenceContainer::getSequencePosition(const string & name)
 
 	throw SequenceNotFoundException("MapSequenceContainer::getSequencePosition", name);
 }
+
+/******************************************************************************/
 
 void MapSequenceContainer::setSequence(unsigned int i, const Sequence & sequence, bool checkNames)
     throw (IndexOutOfBoundsException)
@@ -140,6 +201,8 @@ void MapSequenceContainer::setSequence(unsigned int i, const Sequence & sequence
 	} else throw AlphabetMismatchException("MapSequenceContainer::setSequence", _alphabet, sequence.getAlphabet());
 }
 
+/******************************************************************************/
+
 void MapSequenceContainer::setSequence(const string & name, const Sequence & sequence, bool checkNames) throw (SequenceNotFoundException)
 {
 	// Sequence's name existence checking
@@ -161,6 +224,8 @@ void MapSequenceContainer::setSequence(const string & name, const Sequence & seq
 	} else throw AlphabetMismatchException("MapSequenceContainer::setSequence", _alphabet, sequence.getAlphabet());
 }
 
+/******************************************************************************/
+
 void MapSequenceContainer::setSequenceByKey(const string & key, const Sequence & sequence, bool checkNames) throw (SequenceNotFoundException)
 {
 	// Sequence's name existence checking
@@ -181,8 +246,9 @@ void MapSequenceContainer::setSequenceByKey(const string & key, const Sequence &
 		_sequences[key] = dynamic_cast<Sequence *>(sequence.clone());
 	} else throw AlphabetMismatchException("MapSequenceContainer::setSequenceByKey", _alphabet, sequence.getAlphabet());
 }
-	
-// Methods to extract (and remove) a sequence from sequence container
+
+/******************************************************************************/
+
 Sequence * MapSequenceContainer::removeSequence(unsigned int i) throw (IndexOutOfBoundsException)
 {
 	//Copy sequence:
@@ -194,6 +260,8 @@ Sequence * MapSequenceContainer::removeSequence(unsigned int i) throw (IndexOutO
 	//Send copy:
 	return deleted;
 }
+
+/******************************************************************************/
 
 Sequence * MapSequenceContainer::removeSequence(const string & name) throw (SequenceNotFoundException)
 {
@@ -207,7 +275,10 @@ Sequence * MapSequenceContainer::removeSequence(const string & name) throw (Sequ
 	return deleted;
 }
 
-Sequence * MapSequenceContainer::removeSequenceByKey(const string & key) {
+/******************************************************************************/
+
+Sequence * MapSequenceContainer::removeSequenceByKey(const string & key)throw (SequenceNotFoundException)
+{
 	// Copy sequence
 	Sequence * deleted = const_cast <Sequence *> (getSequenceByKey(key));
 	// Remove pointer toward old sequence
@@ -216,8 +287,10 @@ Sequence * MapSequenceContainer::removeSequenceByKey(const string & key) {
 	return deleted;
 }
 
-// Methods to delete a sequence from sequence container
-void MapSequenceContainer::deleteSequence(unsigned int i) throw (IndexOutOfBoundsException) {
+/******************************************************************************/
+
+void MapSequenceContainer::deleteSequence(unsigned int i) throw (IndexOutOfBoundsException)
+{
 	// Delete sequence
 	const Sequence * deleted = getSequence(i);	
 	delete deleted;
@@ -227,7 +300,10 @@ void MapSequenceContainer::deleteSequence(unsigned int i) throw (IndexOutOfBound
 	_sequences.erase(it);
 }
 
-void MapSequenceContainer::deleteSequence(const string & name) throw (SequenceNotFoundException) {
+/******************************************************************************/
+
+void MapSequenceContainer::deleteSequence(const string & name) throw (SequenceNotFoundException)
+{
 	// Delete sequence
 	const Sequence * deleted = getSequence(name);
 	delete deleted;
@@ -237,7 +313,10 @@ void MapSequenceContainer::deleteSequence(const string & name) throw (SequenceNo
 	_sequences.erase(it);
 }
 
-void MapSequenceContainer::deleteSequenceByKey(const string & key) {
+/******************************************************************************/
+
+void MapSequenceContainer::deleteSequenceByKey(const string & key) throw (SequenceNotFoundException)
+{
 	// Delete sequence
 	const Sequence * deleted = getSequenceByKey(key);
 	delete deleted;
@@ -245,7 +324,8 @@ void MapSequenceContainer::deleteSequenceByKey(const string & key) {
 	_sequences.erase(key);
 }
 
-// Method to add sequence in sequence container
+/******************************************************************************/
+
 void MapSequenceContainer::addSequence(const string & key, const Sequence & sequence, bool checkNames) throw (Exception)
 {
 	// Sequence's name existence checking
@@ -268,17 +348,22 @@ void MapSequenceContainer::addSequence(const string & key, const Sequence & sequ
 	else throw AlphabetMismatchException("MapSequenceContainer::addSequence", _alphabet, sequence.getAlphabet());
 }
 
-// Method to get number of sequences contained in sequence container
+/******************************************************************************/
+
 unsigned int MapSequenceContainer::getNumberOfSequences() const { return _sequences.size(); }
 
-// Method to get all sequence keys in sequence container
-vector<string> MapSequenceContainer::getKeys() const {
+/******************************************************************************/
+
+vector<string> MapSequenceContainer::getKeys() const
+{
 	vector<string> keys;
 	for (map<string, Sequence *>::const_iterator i = _sequences.begin() ; i != _sequences.end() ; i++) {
 		keys.push_back(i -> first);
 	}
 	return keys;
 }
+
+/******************************************************************************/
 
 string MapSequenceContainer::getKey(unsigned int pos) const throw (IndexOutOfBoundsException)
 {
@@ -289,7 +374,10 @@ string MapSequenceContainer::getKey(unsigned int pos) const throw (IndexOutOfBou
 	return it->first;
 }
 
-string MapSequenceContainer::getKey(const string & name) const throw (SequenceNotFoundException) {
+/******************************************************************************/
+
+string MapSequenceContainer::getKey(const string & name) const throw (SequenceNotFoundException)
+{
 	try {
 		return getKey(getSequencePosition(name));
 	}
@@ -298,8 +386,10 @@ string MapSequenceContainer::getKey(const string & name) const throw (SequenceNo
 	}
 }
 	
-// Method to set the comments (OrderedSequenceContainer interface)
-void MapSequenceContainer::setComments(unsigned int pos, const Comments & comments) throw (IndexOutOfBoundsException) {
+/******************************************************************************/
+
+void MapSequenceContainer::setComments(unsigned int pos, const Comments & comments) throw (IndexOutOfBoundsException)
+{
 	if (pos >= getNumberOfSequences())
 		throw IndexOutOfBoundsException("MapSequenceContainer::setComments", pos, 0, _sequences.size() - 1);
 	map<string, Sequence *>::iterator it = _sequences.begin();
@@ -307,15 +397,20 @@ void MapSequenceContainer::setComments(unsigned int pos, const Comments & commen
 	it->second->setComments(comments);
 }
 
-// Methods to deal with all sequences' names (OrderedSequenceContainer interface)
-vector<string> MapSequenceContainer::getSequencesNames() const {
+/******************************************************************************/
+
+vector<string> MapSequenceContainer::getSequencesNames() const
+{
 	vector<string> names;
 	for (map<string, Sequence *>::const_iterator it = _sequences.begin() ; it != _sequences.end() ; it++)
 		names.push_back(it->second->getName());
 	return names;
 }
 
-void MapSequenceContainer::setSequencesNames(const vector<string> & names, bool checkNames) throw (Exception) {
+/******************************************************************************/
+
+void MapSequenceContainer::setSequencesNames(const vector<string> & names, bool checkNames) throw (Exception)
+{
 	if(names.size() != getNumberOfSequences())
 		throw BadIntegerException("MapSequenceContainer::setSequenceNames : bad number of names", names.size());
 	if(checkNames) {
@@ -331,7 +426,9 @@ void MapSequenceContainer::setSequencesNames(const vector<string> & names, bool 
 		it++;
 	}
 }
-	
+
+/******************************************************************************/
+
 void MapSequenceContainer::clear()
 {
 	// Delete sequences
@@ -342,7 +439,7 @@ void MapSequenceContainer::clear()
 
 /******************************************************************************/
 
-SequenceContainer * MapSequenceContainer::getEmptyContainer() const
+SequenceContainer * MapSequenceContainer::createEmptyContainer() const
 { 
 	MapSequenceContainer * msc = new MapSequenceContainer(_alphabet);
 	msc -> setGeneralComments(_comments);
@@ -350,3 +447,4 @@ SequenceContainer * MapSequenceContainer::getEmptyContainer() const
 }
 
 /******************************************************************************/
+

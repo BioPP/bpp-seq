@@ -12,13 +12,13 @@
 typedef vector<unsigned int> SiteSelection;
 
 /**
- * @brief Some util to deal with site containers.
+ * @brief Some utililitary methods to deal with site containers.
  */
 class SiteContainerTools
 {
 	public:
 		SiteContainerTools() {}
-		 ~SiteContainerTools() {}
+		virtual ~SiteContainerTools() {}
 
 	public:
 
@@ -78,3 +78,4 @@ class SiteContainerTools
 
 
 #endif	//_SITECONTAINERTOOLS_H_
+

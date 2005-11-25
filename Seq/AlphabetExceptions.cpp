@@ -1,49 +1,11 @@
 //
-// File: AlphabetExceptions.h
+// File: AlphabetExceptions.cpp
 // Created by: Julien Dutheil
 // Created on: Mon Nov  3 16:41:53 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de séquences.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -85,52 +47,47 @@ knowledge of the CeCILL license and that you accept its terms.
  *                         Alphabet exceptions:                               *
  ******************************************************************************/
 
-//AlphabetException::AlphabetException(const char *   text, const Alphabet * alpha) :
-//	Exception("AlphabetException: " + text + (alpha != NULL ? "(" + (alpha -> getAlphabetType()) + ")" : "")),
-//	alphabet(alpha) {};
 AlphabetException::AlphabetException(const string & text, const Alphabet * alpha) :
 	Exception("AlphabetException: " + text + (alpha != NULL ? "(" + (alpha -> getAlphabetType()) + ")" : string(""))),
-	alphabet(alpha) {};
+	_alphabet(alpha) {};
 		
-const Alphabet * AlphabetException::getAlphabet() const { return alphabet; }
+const Alphabet * AlphabetException::getAlphabet() const { return _alphabet; }
 
 /******************************************************************************/
 
-//BadCharException::BadCharException(const string badChar, const char *   text, const Alphabet * alpha) :
-//	AlphabetException("BadCharException: " + badChar + ". " + additionalText, alpha) {};
 BadCharException::BadCharException(const string badChar, const string & text, const Alphabet * alpha) :
 	AlphabetException("BadCharException: " + badChar + ". " + text, alpha),
-	c(badChar) {};
+	_c(badChar) {};
 		
-string BadCharException::getBadChar() const { return c; }
+string BadCharException::getBadChar() const { return _c; }
 
 /******************************************************************************/
 
-//BadIntException::BadIntException(int badInt, const char *   additionalText, const Alphabet * alpha) :
-//	AlphabetException("BadIntException: " + textTools::toString(badInt) + ". " + string(text), alpha) {};
 BadIntException::BadIntException(int badInt, const string & text, const Alphabet * alpha) :
 	AlphabetException("BadIntException: " + TextTools::toString(badInt) + ". " + text, alpha),
-	i(badInt) {};
+	_i(badInt) {};
 		
-int BadIntException::getBadInt() const { return i; }
+int BadIntException::getBadInt() const { return _i; }
 
 /******************************************************************************/
 	
 AlphabetMismatchException::AlphabetMismatchException(const char *   text, const Alphabet * alpha1, const Alphabet * alpha2) :
 	Exception("AlphabetMismatchException: " + string(text) + (alpha1 != NULL && alpha2 != NULL ? "(" + alpha1 -> getAlphabetType() + ", " + alpha2 -> getAlphabetType() + ")" : string(""))),
-	alphabet1(alpha1),
-	alphabet2(alpha2) {};
+	_alphabet1(alpha1),
+	_alphabet2(alpha2) {};
 		
 AlphabetMismatchException::AlphabetMismatchException(const string & text, const Alphabet * alpha1, const Alphabet * alpha2) :
 	Exception("AlphabetMismatchException: " + text + (alpha1 != NULL && alpha2 != NULL ? "(" + alpha1 -> getAlphabetType() + ", " + alpha2 -> getAlphabetType() + ")" : string(""))),
-	alphabet1(alpha1),
-	alphabet2(alpha2) {};
+	_alphabet1(alpha1),
+	_alphabet2(alpha2) {};
 		
 AlphabetMismatchException::~AlphabetMismatchException() throw () {};
-vector<const Alphabet *> AlphabetMismatchException::getAlphabets() const {
+
+vector<const Alphabet *> AlphabetMismatchException::getAlphabets() const
+{
 	vector<const Alphabet *> v(2);
-	v[0] = alphabet1;
-	v[1] = alphabet2;
+	v[0] = _alphabet1;
+	v[1] = _alphabet2;
 	return v;
 }
 

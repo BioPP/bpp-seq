@@ -180,7 +180,7 @@ class Sequence: public virtual SymbolList
 		 */
 		Sequence & operator = (const Sequence & s);
 
-		~Sequence();
+		virtual ~Sequence() {}
 
 	public:
 	
@@ -321,3 +321,4 @@ class Sequence: public virtual SymbolList
 };
 
 #endif // _SEQUENCE_H_
+

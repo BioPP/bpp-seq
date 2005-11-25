@@ -41,7 +41,11 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Mase.h"
 #include "StringSequenceTools.h"
 
+/****************************************************************************************/
+
 Mase::Mase(unsigned int charsByLine): _charsByLine(charsByLine) {}
+
+/****************************************************************************************/
 
 void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
 {
@@ -63,7 +67,7 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 		if (temp[0] == ';') {
 			// If second character is also ;
 			if (temp[1] == ';') {
-				// File commentaries isolation
+				// File comments isolation
 				temp.erase(0,2);  // Characters ;; deletion
 				if (temp != "") fileComments.push_back(temp);
 			} else {
@@ -102,6 +106,8 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 	vsc.setGeneralComments(fileComments);
 }
 
+/****************************************************************************************/
+
 void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
 {
 	// Checking the existence of specified file, and possibility to open it in write mode
@@ -121,7 +127,7 @@ void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Ex
 	for (unsigned int i = 0 ; i < names.size() ; i ++) {
 		comments = sc.getComments(names[i]);
 
-		// Writing all sequence commentaries in file
+		// Writing all sequence comments in file
 		// If no comments are associated with current sequence, an empy commentary line will be writed
 		if (comments.size() == 0) {
 			output << ";" << endl;
@@ -151,11 +157,16 @@ void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Ex
 	}
 }
 
-// Method to get name of mase file format
+/****************************************************************************************/
+
 const string Mase::getFormatName() const { return "MASE file"; }
 
-// Method to get description of mase file format
-const string Mase::getFormatDescription() const {
+/****************************************************************************************/
+
+const string Mase::getFormatDescription() const
+{
 	return "Optional file comments (preceeded by ;;), sequence comments (preceeded by ;), sequence name, sequence";
 }
+
+/****************************************************************************************/
 
