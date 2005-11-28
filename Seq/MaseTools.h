@@ -135,7 +135,7 @@ class MaseTools
 		 *
 		 * @param maseFileHeader Comments in Mase+ format.
 		 * @param setName a cds site selection name.
-		 * @return 0,1 or 2.
+		 * @return 1,2 or 3.
 		 * @throw Exception If no corresponding tag found in file.
 		 */
 		static unsigned int getPhase(const Comments & maseFileHeader, const string &setName) throw (Exception);
