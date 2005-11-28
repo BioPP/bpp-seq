@@ -1,9 +1,9 @@
-/*
- * File SiteTools.h
- * Author : Julien Dutheil <julien.dutheil@ens-lyon.fr>
- * Author : Guillaume Deuchst <GDeuchst@ifrance.com>
- * Last modification : Friday August 8 2003
-*/
+//
+// File SiteTools.h
+// Author: Julien Dutheil
+//         Guillaume Deuchst
+// Last modification : Friday August 8 2003
+//
 
 #ifndef _SITETOOLS_H_
 #define _SITETOOLS_H_
@@ -19,40 +19,89 @@
 
 using namespace std;
 
-/* SiteTools static class
- * Implements methods to get informations about sites
- *
- * This class can't be instanciated
-*/
+/**
+ * @brief Utilitary methods dealing with sites.
+ */
 
 class SiteTools: public SymbolListTools
 {
 	public:
-		~SiteTools() {}
+		SiteTools() {}
+		virtual ~SiteTools() {}
 
 	public:
-		// Method for know if a site contains gap(s) or not
+		/**
+		 * @param site A site.
+		 * @return True if the site contains one or several gap(s).
+		 */
 		static bool hasGap(const Site & site);
 
-		// Method for know if a site contains undefined character or not
+		/**
+		 * @param site A site.
+		 * @return True if the site contains one or several unknwn characters.
+		 */
 		static bool hasUnknown(const Site & site);
 
-		// Method fot know if a site is complete or not (doesn't contains gap or undefined character)
+		/**
+		 * @param site A site.
+		 * @return True if the site contains no gap and no unknown characters.
+		 */
 		static bool isComplete(const Site & site);
+		
+		/**
+		 * @param site A site.
+		 * @return True if the site is made of only one state.
+		 * @throw EmptySiteException If the site has size 0.
+		 */
+		static bool isConstant(const Site & site) throw (EmptySiteException);
 
- 		/* This method is quite the same as operator ==,
- 		 * excepted that it just look at the content of the site
- 		 * whatever the position.
+ 		/**
+		 * @param site1 The first site.
+		 * @param site2 The second site.
+		 * @return True if the two states have the same content (and, of course, alphabet).
  		 */
 		static bool areSitesIdentical(const Site & site1, const Site & site2);
 
-		// Method for know if a site is constant or not (contain one character type only)
-		static bool isConstant(const Site & site) throw (EmptySiteException);
-
+		/**
+		 * @brief Compute the Shannon entropy index of a site.
+		 *
+		 * \f[
+		 * I = \sum_{i=1}{n} f_iln(f_i)
+		 * \f]
+		 * where \f$f_i\f$ is the frequency of state \f$i\f$.
+		 * 
+		 * @param site A site.
+		 * @return The Shannon entropy index of this site.
+		 * @throw EmptySiteException If the site has size 0.
+		 */
 		static double variabilityShannon(const Site & site) throw (EmptySiteException);
-
+		
+		/**
+		 * @brief Compute the factorial diversity index of a site.
+		 *
+		 * \f[
+		 * F = \frac{log\left(\left(\sum_{i=1}{n} p_i\right)!\right)}{\sum_{i=1}^n log(p_i)!}
+		 * \f]
+		 * where \f$p_i\f$ is the number of times state \f$i\f$ is observed in the site.
+		 * 
+		 * @param site A site.
+		 * @return The factorial diversity index of this site.
+		 * @throw EmptySiteException If the site has size 0.
+		 */
 		static double variabilityFactorial(const Site & site) throw (EmptySiteException);
 
+		/**
+		 * @brief Compute the heterozygosity index of a site.
+		 *
+		 * \f[
+		 * H = 1 - \sum_{i=1}{n} f_i^2
+		 * \f]
+		 * where \f$f_i\f$ is the frequency of state \f$i\f$.
+		 * 
+		 * @param site A site.
+		 * @return The heterozygosity index of this site.
+		 * @throw EmptySiteException If the site has size 0.
+		 */
 		static double heterozygosity(const Site & site) throw (EmptySiteException);
 
 		/**
@@ -94,3 +143,4 @@ class SiteTools: public SymbolListTools
 };
 
 #endif	//_SITETOOLS_H_
+

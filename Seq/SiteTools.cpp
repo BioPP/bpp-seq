@@ -91,7 +91,7 @@ bool SiteTools::isComplete(const Site & site)
 bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2)
 {
 	// Site's size and content checking
-
+  if(site1.getAlphabet()->getAlphabetType() != site2.getAlphabet()->getAlphabetType()) return false;
 	if(site1.size() != site2.size()) return false;
 	else {
 		for(unsigned int i = 0; i < site1.size(); i++) {
@@ -134,7 +134,7 @@ double SiteTools::variabilityFactorial(const Site & site) throw (EmptySiteExcept
 	map<int, unsigned int> p = getCounts(site);
 	vector<unsigned int> c = MapTools::getValues(p);
 	unsigned int s = sum(c);
-        return std::log((double)fact(s) / (double)sum(VectorFunctions::fact(c)));
+  return std::log((double)fact(s) / (double)sum(VectorFunctions::fact(c)));
 }
 
 
@@ -146,7 +146,8 @@ double SiteTools::heterozygosity(const Site & site) throw (EmptySiteException)
 	if(site.size() == 0) throw EmptySiteException("SiteTools::heterozygosity: Incorrect specified site", &site);
 	map<int, double> p = getFrequencies(site);
 	vector<double> c = MapTools::getValues(p);
-	return 1 - norm(MapTools::getValues(p))*norm(MapTools::getValues(p));
+	double n = norm(MapTools::getValues(p));
+	return 1. - n*n;
 }
 
 /******************************************************************************/

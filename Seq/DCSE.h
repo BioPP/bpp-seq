@@ -45,6 +45,15 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceContainer.h"
 #include "AlignedSequenceContainer.h"
 
+/**
+ * @brief Support for the Dedicated Comparative Sequence Editor format.
+ *
+ * Only the sequence information is retrieved.
+ * All structural information is dropped for now.
+ * 
+ * A description of this format may be found here:
+ * http://www.psb.ugent.be/rRNA/help/formats/aliformat.html
+ */
 class DCSE : public virtual AbstractISequence2
 {
     

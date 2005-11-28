@@ -48,9 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 /**
- * @brief The Clustal format.
+ * @brief The clustal sequence file format.
  *
- * A AlignedSequenceContainer is used instead of a VectorSequenceContainer.
+ * An AlignedSequenceContainer object is used instead of a VectorSequenceContainer.
  */
 class Clustal : public virtual AbstractISequence2
 {

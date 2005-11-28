@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "alphabets"
 #include <typeinfo>
 
+/**
+ * @brief Utilitary functions dealing with alphabets.
+ */
 class AlphabetTools
 {
 	public:

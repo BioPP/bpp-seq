@@ -49,6 +49,9 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+/**
+ * @brief Exception thrown when a stop codon is found.
+ */
 class StopCodonException : public Exception
 {
 	protected:
@@ -65,6 +68,14 @@ class StopCodonException : public Exception
 		virtual string getCodon() const;
 };
 
+/**
+ * @brief Partial implementation of the Translator interface for genetic code object.
+ *
+ * A genetic code object if a translator from a codon alphabet to a proteic alphabet.
+ * Depending on the codon alphabet used, several genetic code can be implemented.
+ *
+ * @see CodonAlphabet, ProteicAlphabet
+ */
 class GeneticCode : public AbstractTranslator
 {
 	protected:

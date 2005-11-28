@@ -48,7 +48,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "VectorSequenceContainer.h"
 
 /**
- * @brief The Fasta file format.
+ * @brief The fasta sequence file format.
  *
  * Read and write from/to Fasta files.
  */

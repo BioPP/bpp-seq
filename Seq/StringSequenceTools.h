@@ -53,6 +53,17 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+/**
+ * @brief Utilitary methods working on raw string objects.
+ *
+ * Sequences may be stored as strings, but this approach is not as
+ * powerful as using true sequence objects.
+ * Consider using the Sequence and SequenceTools classes for more methods.
+ *
+ * Some of the methods implemented here are internally used by the Sequence object.
+ *
+ * @see Sequence, Site, SequenceTools, SiteTools
+ */
 class StringSequenceTools
 {
 	public:

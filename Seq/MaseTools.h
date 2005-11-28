@@ -128,9 +128,17 @@ class MaseTools
      */
 		static map<string, unsigned int> getAvailableSequenceSelections(const Comments & maseHeader);
 
-		static SiteSelection getCodingPositions(const Comments & maseHeader);
-
-		static unsigned int getStartPosition(const Comments & maseHeader);
+		/**
+		 * @brief Get the phase of a given coding region from a mase+ header.
+		 *
+		 * Look for a /codon_start tag with a phase indice and a site selection with name setName.
+		 *
+		 * @param maseFileHeader Comments in Mase+ format.
+		 * @param setName a cds site selection name.
+		 * @return 0,1 or 2.
+		 * @throw Exception If no corresponding tag found in file.
+		 */
+		static unsigned int getPhase(const Comments & maseFileHeader, const string &setName) throw (Exception);
 
 };
 

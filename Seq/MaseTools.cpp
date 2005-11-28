@@ -223,48 +223,35 @@ map<string, unsigned int> MaseTools::getAvailableSequenceSelections(const Commen
 
 /******************************************************************************/
 
-SiteSelection MaseTools::getCodingPositions(const Comments & maseHeader)
+unsigned int MaseTools::getPhase(const Comments & maseFileHeader, const string &setName) throw (Exception)
 {
-  SiteSelection coding;
-  unsigned int i=0;
-  bool stop = false;
-  while(!stop){
-	string current = maseHeader[i];
-    unsigned int index = current.find("# of");
-    if(index < current.npos) {
-      i++;
-      stop = true;
-	  current = maseHeader[i];
-      StringTokenizer st2(current);
-      while(st2.hasMoreToken()) {
-        StringTokenizer st3(st2.nextToken(), ",");
-        unsigned int begin = TextTools::toInt(st3.nextToken());
-        unsigned int end   = TextTools::toInt(st3.nextToken());
-        for(unsigned int j=0; j<=end-begin;j++) coding.push_back(begin+j-1);
-      }
-    }
-    else i++;
-  }
-  return coding;
-}
+	unsigned int phase = 0;
+	unsigned int index = 0;
+	for(unsigned int i = 0; i < maseFileHeader.size(); i++) {
+		string current = maseFileHeader[i];
 
-/******************************************************************************/
+		index = current.find("# of");
+		if(index < current.npos) {
+			StringTokenizer st(string(current.begin() + index + 12 , current.end()), " \t\n\f\r=;");
+			//unsigned int numberOfSegments = TextTools::toInt(st.nextToken());
+			//cout << "Number of regions: " << st.nextToken() << endl;
+			string name;
+			while(st.hasMoreToken()) {
+				name = st.nextToken();
+				//cout << "Name of regions: " << name << endl;
+			}
+			if(name == setName) {
+				return phase;
+			}
+		}
 
-unsigned int MaseTools::getStartPosition(const Comments & maseHeader)
-{
-  unsigned int start = 1;// default value when information is not available
-  unsigned int i=0;
-  bool stop = false;
-  while(!stop && i < maseHeader.size()){
-	string current = maseHeader[i];
-    unsigned int index = current.find("/codon_start = ");
-    if(index < current.npos) {
-      stop = true;
-      start = (unsigned int)TextTools::toInt(current.substr(index + 15, 1));
-    }
-    i++;
-  }
-  return start;
+		index = current.find("/codon_start");
+		if(index < current.npos) {
+			StringTokenizer st(string(current.begin() + index + 12, current.end()), " \t\n\f\r=;");
+			phase = TextTools::toInt(st.nextToken());
+		}
+	}
+	throw Exception("PolymorphismSequenceContainer::getPhase: no /codon_start found, or site selection missing.");
 }
 
 /******************************************************************************/
