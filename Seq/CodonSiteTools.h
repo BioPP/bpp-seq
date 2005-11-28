@@ -1,7 +1,7 @@
 //
 // File CodonSiteTools.h
 // Author : Sylvain Glémin
-// Last modification : September 2004
+// Last modification : November 2005
 //
 
 /*
@@ -56,6 +56,7 @@ using namespace std;
 
 /**
  * @brief Utilitary functions for codon sites.
+ *
  */
 
 class CodonSiteTools: public SymbolListTools
@@ -94,18 +95,6 @@ class CodonSiteTools: public SymbolListTools
 		/**
 		 * @brief Method to know if polymorphism at a codon site is synonymous
 		 *
-		 * Uses a StandardGeneticCode object.
-		 *
-		 * @param site a Site
-		 * @throw AlphabetException  If the alphabet associated to the site is not a codon alphabet.
-		 * @throw EmptySiteException If the site has size 0.
-		 */
-		static bool isSynonymousPolymorphic(const Site & site)
-			  throw (AlphabetException, EmptySiteException);
-
-		/**
-		 * @brief Method to know if polymorphism at a codon site is synonymous
-		 *
 		 * @param site a Site
 		 * @param gc a GeneticCode
 		 * @throw AlphabetException          If the alphabet associated to the site is not a codon alphabet.
@@ -118,12 +107,16 @@ class CodonSiteTools: public SymbolListTools
 		/**
 		 * @brief generate a codon site without rare variants
 		 *
-		 * Rare variants are replaced by the most frequent allele
-		 * 
+		 * Rare variants are replaced by the most frequent allele.
+		 * This method is used to exclude rare variants in some analyses as in McDonald-Kreitman Test
+		 * (McDonald & Kreitman, 1991, Nature 351 pp652-654).
+		 * For an application, see for example (Fay et al. 2001, Genetics 158 pp 1227-1234).
+		 *
 		 * @param site a Site
 		 * @param freqmin a double, allele in frequency stricly lower than freqmin are replaced
 		 * @throw AlphabetException  If the alphabet associated to the site is not a codon alphabet.
 		 * @throw EmptySiteException If the site has size 0.
+		 *
 		 */
 	  static Site * generateCodonSiteWithoutRareVariant(const Site & site, double freqmin)
 			  throw(AlphabetException, EmptySiteException);
@@ -142,9 +135,9 @@ class CodonSiteTools: public SymbolListTools
 		 * @brief Compute the number of synonymous differences between two codons
 		 *
 		 * For complex codon:
-		 * If minchange = false (default option) the different paths are equally weighted
-		 * If minchange = true the path with the minimum number of non-synonymous change is chosen
-		 * paths included stop codons are excluded
+		 * If minchange = false (default option) the different paths are equally weighted.
+		 * If minchange = true the path with the minimum number of non-synonymous change is chosen.
+		 * Paths included stop codons are excluded.
 		 * @param i a int
 		 * @param j a int
 		 * @param gc a GeneticCode
@@ -160,9 +153,9 @@ class CodonSiteTools: public SymbolListTools
 		 * pi = frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}
 		 * @f]
 		 * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occuring at the site
-		 * \f$P_{i,j}\f$ the number of synonymous difference between these codons
-		 * Be careful: here, pi is not normalized by the number of synonymous sites
-		 * 
+		 * \f$P_{i,j}\f$ the number of synonymous difference between these codons.
+		 * Be careful: here, pi is not normalized by the number of synonymous sites.
+		 *
 		 * @param site a Site
 		 * @param gc a GeneticCode
 		 * @param minchange a boolean set by default to false
@@ -181,9 +174,9 @@ class CodonSiteTools: public SymbolListTools
 		 * pi = frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}
 		 * @f]
 		 * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occuring at the site
-		 * \f$P_{i,j}\f$ the number of nonsynonymous difference between these codons
-		 * Be careful: here, pi is not normalized by the number of non-synonymous sites
-		 * 
+		 * \f$P_{i,j}\f$ the number of nonsynonymous difference between these codons.
+		 * Be careful: here, pi is not normalized by the number of non-synonymous sites.
+		 *
 		 * @param site a Site
 		 * @param gc a GeneticCode
 		 * @param minchange a boolean set by default to false
@@ -200,7 +193,7 @@ class CodonSiteTools: public SymbolListTools
 		 *
 		 * A site is consider as x% synonymous if x% of the possible mutations are synonymous
 		 * Transition/transversion ratio can be taken into account (use the variable ratio)
-		 * 
+		 *
 		 * @param i a int
 		 * @param gc a GeneticCode
 		 * @param stopflag a boolean set by default to true if you want to take gap into account
@@ -213,10 +206,11 @@ class CodonSiteTools: public SymbolListTools
 		 *
 		 * A site is consider as x% synonymous if x% of the possible mutations are synonymous
 		 * Transition/transversion ratio can be taken into account (use the variable ratio)
-		 * 
+		 * The mean is computed over the VectorSite.
+		 *
 		 * @param site a Site
 		 * @param gc a GeneticCode
-		 * @param ratio a double set by default to 1
+		 * @param ratio a double 			Set by default to 1
 		 * @throw AlphabetException         If the alphabet associated to the site is not a codon alphabet.
 		 * @throw AlphabetMismatchException If the codon alphabet of the site do not match the codon alphabet of the genetic code.
 		 * @throw EmptySiteException        If the site has size 0.
@@ -227,10 +221,23 @@ class CodonSiteTools: public SymbolListTools
 		/**
 		 * @brief Return the number of subsitutions per codon site
 		 *
-		 * No recombination is assumed
-		 * 
+		 * No recombination is assumed, that is in complex codon homoplasy is assumed.
+		 * Example:
+		 * ATT
+		 * ATT
+		 * ATT
+		 * ATC
+		 * ATC
+		 * AGT
+		 * AGT
+		 * AGC
+		 * Here, 3 substitutions are counted. Assuming that the last codon (AGC) is a recombinant between ATC and AGT
+		 * would have lead to counting only 2 subsitutions.
+		 *
+		 * Rare variants (<= freqmin) can be excluded.
+		 *
 		 * @param site a Site
-		 * @param freqmin a double, to exclude snp in frequency strictly lower than freqmin
+		 * @param freqmin a double 	 To exclude snp in frequency strictly lower than freqmin (by default freqmin = 0)
 		 * @throw AlphabetException  If the alphabet associated to the site is not a codon alphabet.
 		 * @throw EmptySiteException If the site has size 0.
 		 */
@@ -238,13 +245,15 @@ class CodonSiteTools: public SymbolListTools
 			  throw(AlphabetException, EmptySiteException);
 
 		/**
-		 * @brief Return the number of Non Synonymous subsitutions per codon site
+		 * @brief Return the number of Non Synonymous subsitutions per codon site.
 		 *
-		 * It is assumed that the path linking amino acids only involved one substitution by step
-		 * 
+		 * It is assumed that the path linking amino acids only involved one substitution by step.
+		 *
+		 * Rare variants (<= freqmin) can be excluded.
+		 *
 		 * @param site a Site
 		 * @param gc a GeneticCode
-		 * @param freqmin a double, to exclude snp in frequency strictly lower than freqmin
+		 * @param freqmin a double 			To exclude snp in frequency strictly lower than freqmin (by default freqmin = 0).
 		 * @throw AlphabetException         If the alphabet associated to the site is not a codon alphabet.
 		 * @throw AlphabetMismatchException If the codon alphabet of the site do not match the codon alphabet of the genetic code.
 		 * @throw EmptySiteException        If the site has size 0.
@@ -255,6 +264,23 @@ class CodonSiteTools: public SymbolListTools
 
 		/**
 		 * @brief Return a vector with the number of fixed synonymous and non-synonymous differences per codon site
+		 *
+		 * Compute the number of synonymous and non-synonymous differences between
+		 * the concensus codon of SiteIn (i) and SiteOut (j), which are fixed within each alignement.
+		 * Example:
+		 * SiteIn
+		 *	ATT
+		 *	ATT
+		 *	ATC
+		 * SiteOut
+		 *	CTA
+		 *	CTA
+		 *	CTA
+		 *	Here, the first position is non-synonymous different and fixed,
+		 *  the third position is synonymous different but not fixed (polymorphic in SiteIn).
+		 *	The return vector is thus [0,1].
+		 *
+		 * Rare variants (<= freqmin) can be excluded.
 		 *
 		 * @param siteIn a Site
 		 * @param siteOut a Site
@@ -267,7 +293,7 @@ class CodonSiteTools: public SymbolListTools
 		 */
 		static vector<unsigned int> fixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const GeneticCode & gc)
 			  throw (AlphabetException, AlphabetMismatchException, EmptySiteException);
-			
+
 };
 
 #endif	//_CONDONSITETOOLS_H_
