@@ -156,6 +156,9 @@ class CodonSiteTools: public SymbolListTools
 		 * \f$P_{i,j}\f$ the number of synonymous difference between these codons.
 		 * Be careful: here, pi is not normalized by the number of synonymous sites.
 		 *
+		 * If minchange = false (default option) the different paths are equally weighted.
+		 * If minchange = true the path with the minimum number of non-synonymous change is chosen.
+		 *
 		 * @param site a Site
 		 * @param gc a GeneticCode
 		 * @param minchange a boolean set by default to false
@@ -176,6 +179,8 @@ class CodonSiteTools: public SymbolListTools
 		 * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occuring at the site
 		 * \f$P_{i,j}\f$ the number of nonsynonymous difference between these codons.
 		 * Be careful: here, pi is not normalized by the number of non-synonymous sites.
+		 * If minchange = false (default option) the different paths are equally weighted.
+		 * If minchange = true the path with the minimum number of non-synonymous change is chosen.
 		 *
 		 * @param site a Site
 		 * @param gc a GeneticCode
