@@ -255,6 +255,9 @@ class CodonSiteTools: public SymbolListTools
 		 * It is assumed that the path linking amino acids only involved one substitution by step.
 		 *
 		 * Rare variants (<= freqmin) can be excluded.
+		 * In case of complex codon, the path that gives the minimum number of non-synonymous changes
+		 * is chosen. The argument minchange=true is sent to numberOfSynonymousDifferences used in this method.
+		 * Otherwise, a non-integer number could be return.
 		 *
 		 * @param site a Site
 		 * @param gc a GeneticCode
@@ -284,6 +287,9 @@ class CodonSiteTools: public SymbolListTools
 		 *	Here, the first position is non-synonymous different and fixed,
 		 *  the third position is synonymous different but not fixed (polymorphic in SiteIn).
 		 *	The return vector is thus [0,1].
+		 * In case of complex codon, the path that gives the minimum number of non-synonymous changes
+		 * is chosen. The argument minchange=true is sent to numberOfSynonymousDifferences used in this method.
+		 * Otherwise, a non-integer number could be return.
 		 *
 		 * Rare variants (<= freqmin) can be excluded.
 		 *
