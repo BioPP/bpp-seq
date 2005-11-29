@@ -210,7 +210,7 @@ unsigned int CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphab
 
 double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const GeneticCode & gc, bool minchange)
 {
-	const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet *>(gc.getSourceAlphabet());
+  const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet *>(gc.getSourceAlphabet());
   vector<int> ci=ca->getPositions(i);
   vector<int> cj=ca->getPositions(j);
   switch(numberOfDifferences(i,j,*ca)) {
@@ -521,7 +521,7 @@ unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site
 		unsigned int Nmin=10;
 		for(map<int,unsigned int>::iterator it2 = count.begin(); it2 != count.end(); it2++){
 			unsigned int Ntot = numberOfDifferences(it1->first, it2->first, *ca);
-			unsigned int Ns = (unsigned int)numberOfSynonymousDifferences(it1->first, it2->first, gc);
+			unsigned int Ns = (unsigned int)numberOfSynonymousDifferences(it1->first, it2->first, gc, true);
 			if(Nmin > Ntot-Ns && it1->first != it2->first) Nmin = Ntot-Ns;
 		}
 		NaSup+=Nmin;
@@ -554,7 +554,7 @@ vector<unsigned int> CodonSiteTools::fixedDifferences(const Site & siteIn, const
 	const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet*>(gc.getSourceAlphabet());
 
 	unsigned int Ntot = numberOfDifferences(i, j, *ca);
-	unsigned int Ns = (unsigned int) numberOfSynonymousDifferences(i,j,gc);
+	unsigned int Ns = (unsigned int) numberOfSynonymousDifferences(i,j,gc,true);
 	unsigned int Na = Ntot-Ns;
 	unsigned int Nfix = Ntot;
 	vector<int> pos1in, pos2in, pos3in, pos1out, pos2out, pos3out;
