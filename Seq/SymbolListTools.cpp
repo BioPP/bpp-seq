@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "SymbolListTools.h"
+#include "AlphabetTools.h"
 
 map<int, unsigned int> SymbolListTools::getCounts(const SymbolList & list)
 {
@@ -55,6 +56,44 @@ map<int, double> SymbolListTools::getFrequencies(const SymbolList & list)
 	int n = seq.size();
 	for(map<int, double>::iterator i = f.begin(); i != f.end(); i++) i -> second = i -> second / n;
 	return f;
+}
+
+double getGCContent(const SymbolList & list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
+{
+  const Alphabet * alphabet = list.getAlphabet();
+  if(!AlphabetTools::isNucleicAlphabet(alphabet))
+    throw AlphabetException("SymbolListTools::getGCContent. Method only works on nucleotides.", alphabet);
+  double gc = 0;
+  double total = 0;
+  for(unsigned int i = 0; i < list.size(); i++) {
+    int state = list.getValue(i);
+    if(state > -1) { // not a gap
+      if(state == 1 || state == 2) { // G or C
+        gc++;
+        total++;
+      } else if(state == 0 || state == 3) { // A, T or U
+        total++;
+      } else { // Unresolved character
+        if(!ignoreUnresolved) {
+          total++;
+          switch(state) {
+            case(7): gc++; break;// G or C
+            case(4): gc+=0.5; break;// A or C
+            case(5): gc+=0.5; break;// A or G
+            case(6): gc+=0.5; break;// C or T
+            case(9): gc+=0.5; break;// G or T
+            case(10): gc+=2./3.; break;// A or C or G
+            case(11): gc+=1./3.; break;// A or C or T
+            case(12): gc+=1./3.; break;// A or G or T
+            case(13): gc+=2./3.; break;// C or G or T
+            case(14): gc+=0.5; break;// A or C or G or T
+          }
+        }
+      }
+    } else {
+      if(!ignoreGap) total++;
+    }
+  }
 }
 
 unsigned int SymbolListTools::getNumberOfDistinctPositions(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException)

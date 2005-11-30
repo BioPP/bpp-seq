@@ -1,0 +1,11 @@
+#ifndef _SEQUENCES_
+#define _SEQUENCES_
+
+#include "SymbolList.h"
+#include "Sequence.h"
+#include "SequenceTools.h"
+#include "StringSequenceTools.h"
+#include "Site.h"
+#include "SiteTools.h"
+
+#endif //_SEQUENCES_

@@ -67,7 +67,8 @@ Translator.h\
 VectorSequenceContainer.h\
 VectorSiteContainer.h\
 KleinAANetChargeIndex.h\
-SequenceApplicationTools.h
+SequenceApplicationTools.h\
+sequences
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
@@ -93,7 +94,6 @@ NucleicAcidsReplication.cpp\
 Phylip.cpp\
 ProteicAlphabet.cpp\
 RNA.cpp\
-SequenceContainerExceptions.cpp\
 SequenceContainerTools.cpp\
 Sequence.cpp\
 SequenceExceptions.cpp\
