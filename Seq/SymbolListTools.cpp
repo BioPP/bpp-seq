@@ -58,7 +58,7 @@ map<int, double> SymbolListTools::getFrequencies(const SymbolList & list)
 	return f;
 }
 
-double getGCContent(const SymbolList & list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
+double SymbolListTools::getGCContent(const SymbolList & list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
 {
   const Alphabet * alphabet = list.getAlphabet();
   if(!AlphabetTools::isNucleicAlphabet(alphabet))
@@ -94,6 +94,7 @@ double getGCContent(const SymbolList & list, bool ignoreUnresolved, bool ignoreG
       if(!ignoreGap) total++;
     }
   }
+  return total != 0 ? gc/total : 0;
 }
 
 unsigned int SymbolListTools::getNumberOfDistinctPositions(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException)
