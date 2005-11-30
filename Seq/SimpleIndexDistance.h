@@ -55,8 +55,6 @@ using namespace std;
 // From NumCalc:
 #include <NumCalc/Matrix.h>
 
-typedef RowMatrix<double> Mat;
-
 /**
  * @brief Simple dissimilarity distance.
  *
@@ -83,7 +81,8 @@ class SimpleIndexDistance: public AlphabetIndex2<T> {
 			return _sym ? NumTools::abs<double>(d) : d;
 		}
 		
-		T getIndex(const string & state1, const string & state2) const throw (BadCharException) {
+		T getIndex(const string & state1, const string & state2) const throw (BadCharException)
+    {
 			T d = _index -> getIndex(state2) - _index -> getIndex(state1);
 			return _sym ? NumTools::abs<double>(d) : d;
 		}
@@ -92,6 +91,17 @@ class SimpleIndexDistance: public AlphabetIndex2<T> {
 
 		Clonable * clone() const { return new SimpleIndexDistance<T>(* _index); }
 
+    Matrix<T> * getIndexMatrix() const
+    {
+	    RowMatrix<T> * m = new RowMatrix<T>(20, 20);
+		  for(unsigned int i = 0; i < 20; i++) {
+			  for(unsigned int j = 0; j < 20; j++) {
+			    (* m)(i,j) = getIndex(i,j);
+			  }
+		  }
+	    return m;
+    }
+    
 	public:
 		void setSymmetric(bool yn) { _sym = yn; }
 		bool isSymmetric() const { return _sym; }
