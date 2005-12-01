@@ -177,8 +177,7 @@ VectorSiteContainer * SequenceApplicationTools::getSitesToAnalyse(
 void SequenceApplicationTools::writeSequenceFile(
 	const SequenceContainer & sequences,
 	map<string, string> & params,
-	const string & suffix,
-	bool verbose)
+	const string & suffix)
 {
 	string file   = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
 	string format = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);

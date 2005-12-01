@@ -53,9 +53,9 @@ Site::Site(const Alphabet * alpha) : SymbolList(alpha), _position(0) {}
 
 Site::Site(const Alphabet * alpha, int position) : SymbolList(alpha), _position(position) {}
 
-Site::Site(const vector<string> & site, const Alphabet * alpha) throw (BadCharException) : SymbolList(alpha), _position(0) {}
+Site::Site(const vector<string> & site, const Alphabet * alpha) throw (BadCharException) : SymbolList(site, alpha), _position(0) {}
 
-Site::Site(const vector<string> & site, const Alphabet * alpha, int position) throw (BadCharException) : SymbolList(alpha), _position(position) {}
+Site::Site(const vector<string> & site, const Alphabet * alpha, int position) throw (BadCharException) : SymbolList(site, alpha), _position(position) {}
 
 Site::Site(const vector<int> & site, const Alphabet * alpha) throw (BadIntException) : SymbolList(site, alpha), _position(0) {}
 
