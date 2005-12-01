@@ -204,7 +204,7 @@ class CodonSiteTools: public SymbolListTools
 		 * @param stopflag a boolean set by default to true if you want to take gap into account
 		 * @param ratio a double set by default to 1
 		 */
-		static double numberOfSynonymousPositions(int i, const GeneticCode & gc, bool stopflag = true, double ratio=1.0) throw (Exception);
+		static double numberOfSynonymousPositions(int i, const GeneticCode & gc,  double ratio=1.0) throw (Exception);
 
 		/**
 		 * @brief Return the mean number of synonymous positions per codon site

@@ -396,7 +396,7 @@ double CodonSiteTools::piNonSynonymous(const Site & site, const GeneticCode & gc
 
 /******************************************************************************/
 
-double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode & gc , bool stopflag, double ratio) throw(Exception)
+double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode & gc , double ratio) throw(Exception)
 {
 	try {
 	  const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet *>(gc.getSourceAlphabet());
@@ -446,7 +446,7 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site & site, const 
 	double NbSyn=0;
 	map<int,double> freq = SiteTools::getFrequencies(site);
 	for(map<int,double>::iterator it = freq.begin(); it != freq.end(); it++) {
-	  NbSyn += (it->second)*numberOfSynonymousPositions(it->first,gc,false,ratio);
+	  NbSyn += (it->second)*numberOfSynonymousPositions(it->first,gc,ratio);
   }
   return NbSyn;
 }
