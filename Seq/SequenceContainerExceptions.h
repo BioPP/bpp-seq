@@ -112,7 +112,7 @@ class EmptyContainerException : public Exception
 		 * @brief Build a new EmptyContainerException object.
 		 *
 		 * @param text  A message to be passed to the exception hierarchy.
-		 * @param containet The empty container.
+		 * @param container The empty container.
 		 */
 		EmptyContainerException(const char * text, const SequenceContainer * container) :
     	Exception("EmptyContainerException: " + string(text)),
@@ -122,7 +122,7 @@ class EmptyContainerException : public Exception
 		 * @brief Build a new EmptyContainerException object.
 		 *
 		 * @param text  A message to be passed to the exception hierarchy.
-		 * @param containet The empty container.
+		 * @param container The empty container.
 		 */
 		EmptyContainerException(const string & text, const SequenceContainer * container) :
     	Exception("EmptyContainerException: " + text),

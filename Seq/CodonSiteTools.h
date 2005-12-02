@@ -201,7 +201,6 @@ class CodonSiteTools: public SymbolListTools
 		 *
 		 * @param i a int
 		 * @param gc a GeneticCode
-		 * @param stopflag a boolean set by default to true if you want to take gap into account
 		 * @param ratio a double set by default to 1
 		 */
 		static double numberOfSynonymousPositions(int i, const GeneticCode & gc,  double ratio=1.0) throw (Exception);
@@ -228,6 +227,7 @@ class CodonSiteTools: public SymbolListTools
 		 *
 		 * No recombination is assumed, that is in complex codon homoplasy is assumed.
 		 * Example:
+     * @code
 		 * ATT
 		 * ATT
 		 * ATT
@@ -236,6 +236,7 @@ class CodonSiteTools: public SymbolListTools
 		 * AGT
 		 * AGT
 		 * AGC
+     * @endcode
 		 * Here, 3 substitutions are counted. Assuming that the last codon (AGC) is a recombinant between ATC and AGT
 		 * would have lead to counting only 2 subsitutions.
 		 *
@@ -276,17 +277,21 @@ class CodonSiteTools: public SymbolListTools
 		 * Compute the number of synonymous and non-synonymous differences between
 		 * the concensus codon of SiteIn (i) and SiteOut (j), which are fixed within each alignement.
 		 * Example:
+     * @code
 		 * SiteIn
 		 *	ATT
 		 *	ATT
 		 *	ATC
+     * @endcode
+     * @code
 		 * SiteOut
 		 *	CTA
 		 *	CTA
 		 *	CTA
-		 *	Here, the first position is non-synonymous different and fixed,
-		 *  the third position is synonymous different but not fixed (polymorphic in SiteIn).
-		 *	The return vector is thus [0,1].
+     * @endcode
+		 * Here, the first position is non-synonymous different and fixed,
+		 * the third position is synonymous different but not fixed (polymorphic in SiteIn).
+		 * The return vector is thus [0,1].
 		 * In case of complex codon, the path that gives the minimum number of non-synonymous changes
 		 * is chosen. The argument minchange=true is sent to numberOfSynonymousDifferences used in this method.
 		 * Otherwise, a non-integer number could be return.

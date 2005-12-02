@@ -78,7 +78,7 @@ class SymbolListTools {
 		 * @param list The list.
 		 * @return The proportion of G and C states in the list.
      * @param ignoreUnresolved Do not count unresolved states. Otherwise, weight by each state probability in case of ambiguity (e.g. the R state counts for 0.5).
-     * @param ingnoreGap Do not count gaps in total.
+     * @param ignoreGap Do not count gaps in total.
      * @throw AlphabetException If the list is not made of nucleotide states.
 		 */
     static double getGCContent(const SymbolList & list, bool ignoreUnresolved = true, bool ignoreGap = true) throw (AlphabetException);
