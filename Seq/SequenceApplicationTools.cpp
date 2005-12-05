@@ -155,8 +155,9 @@ VectorSiteContainer * SequenceApplicationTools::getSitesToAnalyse(
 	
 	string option = ApplicationTools::getStringParameter("sequence.sites_to_use", params, "complete", suffix, suffixIsOptional);
 	if(verbose) ApplicationTools::displayResult("Sites to use", option);
-
-    if(option == "complete") {
+    sitesToAnalyse = new VectorSiteContainer(allSites);
+  if(option == "all") {
+  } else if(option == "complete") {
 		sitesToAnalyse = dynamic_cast<VectorSiteContainer *>(SiteContainerTools::getCompleteSites(allSites));
 		int nbSites = sitesToAnalyse -> getNumberOfSites();
 		if(verbose) ApplicationTools::displayResult("Complete sites", TextTools::toString(nbSites));
@@ -213,6 +214,32 @@ void SequenceApplicationTools::writeSequenceFile(
 	oSeq -> write(file, sequences, true);
 	
 	delete oSeq;
+}
+
+/******************************************************************************/
+
+void SequenceApplicationTools::printInputAlignmentHelp()
+{
+  ApplicationTools::message << "Input sequence file and format:" << endl;
+  ApplicationTools::message << "alphabet                      | the alphabet to use [DNA|RNA|Proteins]" << endl;
+  ApplicationTools::message << "sequence.format               | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
+  ApplicationTools::message << "sequence.format_phylip.order  | [interleaved|sequential]" << endl;
+  ApplicationTools::message << "sequence.format_phylip.ext    | [classic|extended]" << endl;
+  ApplicationTools::message << "sequence.sites_to_use         | [all|nogap|complete]" << endl;
+  ApplicationTools::message << "______________________________|___________________________________________" << endl;
+}
+
+/******************************************************************************/
+
+void SequenceApplicationTools::printOutputSequenceHelp()
+{
+	ApplicationTools::message << "Output sequence file and format:" << endl;
+  ApplicationTools::message << "output.sequence.format        | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
+  ApplicationTools::message << "output.sequence.              |" << endl;
+  ApplicationTools::message << "           format_phylip.order| [interleaved|sequential]" << endl;
+  ApplicationTools::message << "output.sequence.              |" << endl;
+  ApplicationTools::message << "             format_phylip.ext| [classic|extended]" << endl;
+  ApplicationTools::message << "______________________________|___________________________________________" << endl;
 }
 
 /******************************************************************************/

@@ -114,7 +114,7 @@ class SequenceApplicationTools
 		 * @brief Retrieves sites suitable for the analysis.
 		 *
 		 * Options used are:
-		 * - sequence.sites_to_use = [complete|nogap].
+		 * - sequence.sites_to_use = [all|complete|nogap].
 		 *
 		 * If the 'complete' option is used, only fully resolve site will be taken
 		 * into account.
@@ -155,6 +155,22 @@ class SequenceApplicationTools
 			const SequenceContainer & sequences,
 			map<string, string> & params,
 			const string & suffix = "");
+
+		/**
+		 * @brief This function prints the options available
+     * for reading an alignement from a file.
+     * 
+     * It covers the getAlphabet(), getSiteContainer() and getSitesToAnalyse() methods.
+		 */
+    static void printInputAlignmentHelp();
+
+		/**
+		 * @brief This function prints the options available
+     * for writing sequences to a file.
+     * 
+     * It covers the writeSequenceFile() method.
+		 */
+    static void printOutputSequenceHelp();
 };
 
 #endif //_SEQUENCEAPPLICATIONTOOLS_H_
