@@ -194,29 +194,6 @@ void VectorSequenceContainer::setSequence(unsigned int sequenceIndex, const Sequ
 
 /******************************************************************************/
 
-void VectorSequenceContainer::setSequence(const string & name, const Sequence & sequence, bool checkName) throw (Exception)
-{
-	// Sequence's name existence checking
-	unsigned int i = getSequencePosition(name);
-	if (checkName) {
-		// For all names in vector : throw exception if name already exists
-		for(unsigned int j = 0; j < _sequences.size(); j++) {
-			if (_sequences[j] -> getName() == sequence.getName())
-				if (j != i) throw Exception("VectorSequenceContainer::setSequence : Sequence's name already exists in container");
-		}
-	}
-
-	// New sequence's alphabet and sequence container's alphabet matching verification
-	if (sequence.getAlphabet() -> getAlphabetType() == _alphabet -> getAlphabetType()) {
-		// Delete old sequence
-		delete _sequences[i];
-		// New sequence insertion in sequence container
-		_sequences[i] = dynamic_cast<Sequence *>(sequence.clone());
-	} else throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", _alphabet, sequence.getAlphabet());
-}
-
-/******************************************************************************/
-
 Sequence * VectorSequenceContainer::removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException)
 {
 	// Copy sequence:
@@ -224,16 +201,6 @@ Sequence * VectorSequenceContainer::removeSequence(unsigned int sequenceIndex) t
 	// Remove pointer toward old sequence:
 	_sequences.erase(_sequences.begin() + sequenceIndex);
 	// Send copy:
-	return deleted;
-}
-
-Sequence * VectorSequenceContainer::removeSequence(const string & name) throw (SequenceNotFoundException)
-{
-	// Copy sequence
-	Sequence * deleted = const_cast <Sequence *> (getSequence(name));
-	// Remove pointer toward old sequence
-	_sequences.erase(_sequences.begin() + getSequencePosition(name));
-	// Send copy
 	return deleted;
 }
 
@@ -246,14 +213,6 @@ void VectorSequenceContainer::deleteSequence(unsigned int sequenceIndex) throw (
 	delete deleted;
 	// Remove pointer toward old sequence:
 	_sequences.erase(_sequences.begin() + sequenceIndex);
-}
-
-void VectorSequenceContainer::deleteSequence(const string & name) throw (SequenceNotFoundException) {
-	//Delete sequence
-	const Sequence * deleted = getSequence(name);
-	delete deleted;
-	//Remove pointer toward old sequence
-	_sequences.erase(_sequences.begin() + getSequencePosition(name));
 }
 
 /******************************************************************************/

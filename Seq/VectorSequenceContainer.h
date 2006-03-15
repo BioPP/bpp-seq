@@ -150,9 +150,18 @@ class VectorSequenceContainer : public virtual AbstractSequenceContainer
 		 * @{
 		 */
 		const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException);
-		void             setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception);
-		      Sequence * removeSequence(const string & name) throw (SequenceNotFoundException);
-		void             deleteSequence(const string & name) throw (SequenceNotFoundException);
+		void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception)
+    {
+      setSequence(getSequencePosition(name), sequence, checkName);
+    }
+		Sequence * removeSequence(const string & name) throw (SequenceNotFoundException)
+    {
+      return removeSequence(getSequencePosition(name));
+    }
+		void deleteSequence(const string & name) throw (SequenceNotFoundException)
+    {
+      deleteSequence(getSequencePosition(name));
+    }
 		unsigned int getNumberOfSequences() const;
 		vector<string> getSequencesNames() const;
 		void setSequencesNames(const vector<string> & names, bool checkNames = true) throw (Exception);
