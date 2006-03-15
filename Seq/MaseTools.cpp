@@ -56,7 +56,7 @@ SiteSelection MaseTools::getSiteSet(const Comments & maseFileHeader, const strin
 	for(unsigned int i = 0; i < maseFileHeader.size(); i++) {
 		string current = maseFileHeader[i];
 		
-		unsigned int index = current.find("# of");
+    string::size_type index = current.find("# of");
 		if(index < current.npos) {
 			StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
 			st.nextToken(); //skip next word: may be 'regions' or 'segments' or else ;-)
@@ -102,7 +102,7 @@ SequenceSelection MaseTools::getSequenceSet(const Comments & maseFileHeader, con
 	for(unsigned int i = 0; i < maseFileHeader.size(); i++) {
 		string current = maseFileHeader[i];
 
-		unsigned int index = current.find("@ of");
+    string::size_type index = current.find("@ of");
 		if(index < current.npos) {
 			StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
 			st.nextToken(); //skip next word: may be 'sequences' or else ;-)
@@ -165,7 +165,7 @@ map<string, unsigned int> MaseTools::getAvailableSiteSelections(const Comments &
   for(unsigned int i = 0; i < maseHeader.size(); i++) {
 		string current = maseHeader[i];
 
-		unsigned int index = current.find("# of");
+    string::size_type index = current.find("# of");
 		if(index < current.npos) {
 			StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
 			st.nextToken(); //skip next word: may be 'sequences' or else ;-)
@@ -206,7 +206,7 @@ map<string, unsigned int> MaseTools::getAvailableSequenceSelections(const Commen
 	for(unsigned int i = 0; i < maseHeader.size(); i++) {
 		string current = maseHeader[i];
 
-		unsigned int index = current.find("@ of");
+    string::size_type index = current.find("@ of");
 		if(index < current.npos) {
       StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
       st.nextToken(); //skip next word: may be 'sequences' or else ;-)
@@ -226,7 +226,7 @@ map<string, unsigned int> MaseTools::getAvailableSequenceSelections(const Commen
 unsigned int MaseTools::getPhase(const Comments & maseFileHeader, const string &setName) throw (Exception)
 {
 	unsigned int phase = 0;
-	unsigned int index = 0;
+  string::size_type index = 0;
 	for(unsigned int i = 0; i < maseFileHeader.size(); i++) {
 		string current = maseFileHeader[i];
 
