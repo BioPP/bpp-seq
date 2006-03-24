@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "GeneticCode.h"
 #include "SequenceTools.h"
+#include "AlphabetTools.h"
 
 /**********************************************************************************************/
 
@@ -80,32 +81,59 @@ vector<string> GeneticCode::getSynonymous(const string & aminoacid) const throw 
 
 Sequence * GeneticCode::getCodingSequence(const Sequence & sequence, bool lookForInitCodon, bool includeInitCodon) const throw (Exception)
 {
-  // Look for AUG(or ATG) codon:
   unsigned int initPos = 0;
-  if(lookForInitCodon) {
-    for(unsigned int i = 0; i < sequence.size() - 2; i++)
-    {
-      if(sequence[i] == 0 && sequence[i+1] == 3 && sequence[i+2] == 2)
+  unsigned int stopPos = sequence.size();
+  if(AlphabetTools::isCodonAlphabet(sequence.getAlphabet()))
+  {
+    // Look for AUG(or ATG) codon:
+    if(lookForInitCodon) {
+      for(unsigned int i = 0; i < sequence.size(); i++)
       {
-        initPos = includeInitCodon ? i : i+3;
+        vector<int> pos = _codonAlphabet->getPositions(sequence[i]);
+        if(pos[0] == 0 && pos[1] == 3 && pos[2] == 2)
+        {
+          initPos = includeInitCodon ? i : i+1;
+          break;
+        }
+      }
+    }
+    // Look for stop codon:
+    for(unsigned int i = initPos; i < sequence.size(); i++)
+    {
+      if(_codonAlphabet->isStop(sequence[i]))
+      {
+        stopPos = i;
         break;
       }
     }
-  }
-  // Look for stop codon:
-  unsigned int stopPos = sequence.size();
-  const NucleicAlphabet * nucAlpha = _codonAlphabet->getNucleicAlphabet();
-  for(unsigned int i = initPos; i < sequence.size() - 2; i+=3)
+  } else if(AlphabetTools::isNucleicAlphabet(sequence.getAlphabet()))
   {
-    string codon = nucAlpha -> intToChar(sequence[i])
-                 + nucAlpha -> intToChar(sequence[i+1])
-                 + nucAlpha -> intToChar(sequence[i+2]);
-    if(_codonAlphabet->isStop(codon))
-    {
-      stopPos = i;
-      break;
+    // Look for AUG(or ATG) codon:
+    if(lookForInitCodon) {
+      for(unsigned int i = 0; i < sequence.size() - 2; i++)
+      {
+        if(sequence[i] == 0 && sequence[i+1] == 3 && sequence[i+2] == 2)
+        {
+          initPos = includeInitCodon ? i : i+3;
+          break;
+        }
+      }
     }
-  }
+    // Look for stop codon:
+    const NucleicAlphabet * nucAlpha = _codonAlphabet->getNucleicAlphabet();
+    for(unsigned int i = initPos; i < sequence.size() - 2; i+=3)
+    {
+      string codon = nucAlpha -> intToChar(sequence[i])
+                   + nucAlpha -> intToChar(sequence[i+1])
+                   + nucAlpha -> intToChar(sequence[i+2]);
+      if(_codonAlphabet->isStop(codon))
+      {
+        stopPos = i;
+        break;
+      }
+    }
+  } else throw AlphabetMismatchException("Sequence must have alphabet of type nucleic or codon in GeneticCode::getCodingSequence.", NULL, sequence.getAlphabet());
+  
   return SequenceTools::subseq(sequence, initPos, stopPos - 1);
 }
 	

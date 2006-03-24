@@ -123,17 +123,21 @@ class GeneticCode : public AbstractTranslator
      *
      * If lookForInitCodon if set to 'true', the subsequence will start at the first AUG motif,
      * otherwise the subsequence will start at the begining of the sequence.
-     * The subsequence ends at the firt stop codon (excluded) found, or the end of the sequence.
+     * The subsequence ends at the first stop codon (excluded) found, or the end of the sequence.
      *
-     * @param sequence The sequence to parse, with a nucleotide alphabet.
+     * The sequence may have a nucleotide or codon alphabet.
+     * The subsequence has the same alphabet, name and comments of the input sequence.
+     * In case of nucleotide sequence and if the lookForInitCodon option is checked, the phase
+     * will be determined from the sequence.
+     *
+     * @param sequence The sequence to parse.
      * @apram lookForInitCodon Tell if the AUG codon must be found.
      * @param includeInitCodon (if lookForInitCodon is true) tell if the init codon must be included in the subsequence.
-     * @return A nucleotide subsequence.
+     * @return A nucleotide/codon subsequence.
      */
     Sequence * getCodingSequence(const Sequence & sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const throw (Exception);
 		/** @} */
 };
-
 
 #endif	//_GENETICCODE_H_
 
