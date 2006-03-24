@@ -79,12 +79,12 @@ class StopCodonException : public Exception
 class GeneticCode : public AbstractTranslator
 {
 	protected:
-		const CodonAlphabet * codonAlphabet;
-		const ProteicAlphabet * proteicAlphabet;
+		const CodonAlphabet * _codonAlphabet;
+		const ProteicAlphabet * _proteicAlphabet;
 	
 	public:
-		GeneticCode();
-		virtual ~GeneticCode();
+		GeneticCode(): AbstractTranslator() {}
+		virtual ~GeneticCode() {}
 	
 	public:
 		/**
@@ -92,11 +92,12 @@ class GeneticCode : public AbstractTranslator
 		 *
 		 * @{
 		 */
-		const Alphabet * getSourceAlphabet() const;
-		const Alphabet * getTargetAlphabet() const;
+		const Alphabet * getSourceAlphabet() const { return _codonAlphabet; }
+		const Alphabet * getTargetAlphabet() const { return _proteicAlphabet; }
 		virtual int translate(int state) const throw (BadIntException, Exception)  = 0;		
 		virtual string translate(const string & state) const throw (BadCharException, Exception) = 0;
-		virtual Sequence * translate(const Sequence & sequence) const throw (Exception) {
+		virtual Sequence * translate(const Sequence & sequence) const throw (Exception)
+    {
 			return AbstractTranslator::translate(sequence);	
 		}
 		/** @} */
@@ -107,10 +108,29 @@ class GeneticCode : public AbstractTranslator
 		 *
 		 * @{
 		 */
-		bool areSynonymous(int i, int j) const throw (BadIntException);
-		bool areSynonymous(const string & i, const string & j) const throw (BadCharException);
+		bool areSynonymous(int i, int j) const throw (BadIntException)
+    {
+    	return (translate(i) == translate(j));
+    }
+		bool areSynonymous(const string & i, const string & j) const throw (BadCharException)
+    {
+      return (translate(i) == translate(j));
+    }
 		vector<int> getSynonymous(int aminoacid) const throw (BadIntException);
 		vector<string> getSynonymous(const string & aminoacid) const throw (BadCharException);
+    /**
+     * @brief Get the subsequence corresponding to the coding part of a given sequence.
+     *
+     * If lookForInitCodon if set to 'true', the subsequence will start at the first AUG motif,
+     * otherwise the subsequence will start at the begining of the sequence.
+     * The subsequence ends at the firt stop codon (excluded) found, or the end of the sequence.
+     *
+     * @param sequence The sequence to parse, with a nucleotide alphabet.
+     * @apram lookForInitCodon Tell if the AUG codon must be found.
+     * @param includeInitCodon (if lookForInitCodon is true) tell if the init codon must be included in the subsequence.
+     * @return A nucleotide subsequence.
+     */
+    Sequence * getCodingSequence(const Sequence & sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const throw (Exception);
 		/** @} */
 };
 

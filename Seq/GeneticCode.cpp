@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "GeneticCode.h"
+#include "SequenceTools.h"
 
 /**********************************************************************************************/
 
@@ -49,43 +50,13 @@ string StopCodonException::getCodon() const { return codon; }
 
 /**********************************************************************************************/
 
-GeneticCode::GeneticCode() : AbstractTranslator() {}
-
-/**********************************************************************************************/
-
-GeneticCode::~GeneticCode() {}
-
-/**********************************************************************************************/
-
-const Alphabet * GeneticCode::getSourceAlphabet() const { return codonAlphabet; }
-
-/**********************************************************************************************/
-
-const Alphabet * GeneticCode::getTargetAlphabet() const { return proteicAlphabet; }
-	
-/**********************************************************************************************/
-
-bool GeneticCode::areSynonymous(int i, int j) const throw (BadIntException)
-{
-	return (translate(i) == translate(j));
-}
-
-/**********************************************************************************************/
-
-bool GeneticCode::areSynonymous(const string & i, const string & j) const throw (BadCharException)
-{
-	return (translate(i) == translate(j));
-}
-
-/**********************************************************************************************/
-
 vector<int> GeneticCode::getSynonymous(int aminoacid) const throw (BadIntException)
 {
 	//test:
-	proteicAlphabet -> intToChar(aminoacid);
+	_proteicAlphabet -> intToChar(aminoacid);
 	
 	vector<int> synonymes;
-	for(unsigned int i = 0; i < codonAlphabet -> getSize(); i++) {
+	for(unsigned int i = 0; i < _codonAlphabet -> getSize(); i++) {
 		if(translate(i) == aminoacid) synonymes.push_back(i);
 	}
 	return synonymes;	
@@ -96,14 +67,47 @@ vector<int> GeneticCode::getSynonymous(int aminoacid) const throw (BadIntExcepti
 vector<string> GeneticCode::getSynonymous(const string & aminoacid) const throw (BadCharException)
 {
 	//test:
-	int aa = proteicAlphabet -> charToInt(aminoacid);
+	int aa = _proteicAlphabet -> charToInt(aminoacid);
 	
 	vector<string> synonymes;
-	for(unsigned int i = 0; i < codonAlphabet -> getSize(); i++) {
-		if(translate(i) == aa) synonymes.push_back(codonAlphabet -> intToChar(i));
+	for(unsigned int i = 0; i < _codonAlphabet -> getSize(); i++) {
+		if(translate(i) == aa) synonymes.push_back(_codonAlphabet -> intToChar(i));
 	}
 	return synonymes;	
 }
 
+/**********************************************************************************************/
+
+Sequence * GeneticCode::getCodingSequence(const Sequence & sequence, bool lookForInitCodon, bool includeInitCodon) const throw (Exception)
+{
+  // Look for AUG(or ATG) codon:
+  unsigned int initPos = 0;
+  if(lookForInitCodon) {
+    for(unsigned int i = 0; i < sequence.size() - 2; i++)
+    {
+      if(sequence[i] == 0 && sequence[i+1] == 3 && sequence[i+2] == 2)
+      {
+        initPos = includeInitCodon ? i : i+3;
+        break;
+      }
+    }
+  }
+  // Look for stop codon:
+  unsigned int stopPos = sequence.size();
+  const NucleicAlphabet * nucAlpha = _codonAlphabet->getNucleicAlphabet();
+  for(unsigned int i = initPos; i < sequence.size() - 2; i+=3)
+  {
+    string codon = nucAlpha -> intToChar(sequence[i])
+                 + nucAlpha -> intToChar(sequence[i+1])
+                 + nucAlpha -> intToChar(sequence[i+2]);
+    if(_codonAlphabet->isStop(codon))
+    {
+      stopPos = i;
+      break;
+    }
+  }
+  return SequenceTools::subseq(sequence, initPos, stopPos - 1);
+}
+	
 /**********************************************************************************************/
 

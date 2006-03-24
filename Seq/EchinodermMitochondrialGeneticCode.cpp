@@ -1,5 +1,5 @@
 //
-// File: EchinodermMitochondrialGeneticCode.h
+// File: EchinodermMitochondrialGeneticCode.cpp
 // Created by: Eric Bazin
 // Created on: 14 11:31:27 CET 2005
 
@@ -43,18 +43,20 @@ knowledge of the CeCILL license and that you accept its terms.
 
 EchinodermMitochondrialGeneticCode::EchinodermMitochondrialGeneticCode(const NucleicAlphabet * alpha) : GeneticCode() 
 {
-	codonAlphabet   = new EchinodermMitochondrialCodonAlphabet(alpha);
-	proteicAlphabet = new ProteicAlphabet();
+	_codonAlphabet   = new EchinodermMitochondrialCodonAlphabet(alpha);
+	_proteicAlphabet = new ProteicAlphabet();
 }
 
 
-EchinodermMitochondrialGeneticCode::~EchinodermMitochondrialGeneticCode() {
-	delete codonAlphabet;
-	delete proteicAlphabet;	
+EchinodermMitochondrialGeneticCode::~EchinodermMitochondrialGeneticCode()
+{
+	delete _codonAlphabet;
+	delete _proteicAlphabet;	
 }
 
-int    EchinodermMitochondrialGeneticCode::translate(int state) const throw (BadIntException) {
-	vector<int> positions = codonAlphabet -> getPositions(state);
+int EchinodermMitochondrialGeneticCode::translate(int state) const throw (Exception)
+{
+	vector<int> positions = _codonAlphabet -> getPositions(state);
 	switch(positions[0]) {
 		//First position:
 		case 0 : //A
@@ -63,21 +65,21 @@ int    EchinodermMitochondrialGeneticCode::translate(int state) const throw (Bad
 			case 0 : //AA
 			switch(positions[2]) {
 				//Third position:
-				case 2 :          		return proteicAlphabet -> charToInt("K"); //Lysine
-				case 0 : case 1 : case 3 :      return proteicAlphabet -> charToInt("N"); //Asparagine
+				case 2 :          		              return _proteicAlphabet -> charToInt("K"); //Lysine
+				case 0 : case 1 : case 3 :          return _proteicAlphabet -> charToInt("N"); //Asparagine
 			}
 			case 1 : //AC
-			                               return proteicAlphabet -> charToInt("T"); //Threonine
+			                                      return _proteicAlphabet -> charToInt("T"); //Threonine
 			case 2 : //AG
 			switch(positions[2]) {
 				//Third position:
-				case 0 : case 1 : case 2 : case 3 :      return proteicAlphabet -> charToInt("S"); //Serine
+				case 0 : case 1 : case 2 : case 3 : return _proteicAlphabet -> charToInt("S"); //Serine
 			}
 			case 3 : //AT
 			switch(positions[2]) {
 				//Third position:
-				case 2:                    return proteicAlphabet -> charToInt("M"); //Methionine
-				case 0 : case 1 : case 3 : return proteicAlphabet -> charToInt("I"); //Isoleucine
+				case 2:                             return _proteicAlphabet -> charToInt("M"); //Methionine
+				case 0 : case 1 : case 3 :          return _proteicAlphabet -> charToInt("I"); //Isoleucine
 			}
 		}
 		case 1 : //C
@@ -86,15 +88,15 @@ int    EchinodermMitochondrialGeneticCode::translate(int state) const throw (Bad
 			case 0 : //CA
 			switch(positions[2]) {
 				//Third position:
-				case 0 : case 2 :          return proteicAlphabet -> charToInt("Q"); //Glutamine
-				case 1 : case 3 :          return proteicAlphabet -> charToInt("H"); //Histidine
+				case 0 : case 2 :                   return _proteicAlphabet -> charToInt("Q"); //Glutamine
+				case 1 : case 3 :                   return _proteicAlphabet -> charToInt("H"); //Histidine
 			}
 			case 1 : //CC
-			                               return proteicAlphabet -> charToInt("P"); //Proline
+			                                      return _proteicAlphabet -> charToInt("P"); //Proline
 			case 2 : //CG
-			                               return proteicAlphabet -> charToInt("R"); //Arginine
+			                                      return _proteicAlphabet -> charToInt("R"); //Arginine
 			case 3 : //CT
-			                               return proteicAlphabet -> charToInt("L"); //Leucine
+			                                      return _proteicAlphabet -> charToInt("L"); //Leucine
 		}
 		case 2 : //G
 		switch(positions[1]) {
@@ -102,15 +104,15 @@ int    EchinodermMitochondrialGeneticCode::translate(int state) const throw (Bad
 			case 0 : //GA
 			switch(positions[2]) {
 				//Third position:
-				case 0 : case 2 :          return proteicAlphabet -> charToInt("E"); //Glutamic acid
-				case 1 : case 3 :          return proteicAlphabet -> charToInt("D"); //Aspartic acid
+				case 0 : case 2 :                   return _proteicAlphabet -> charToInt("E"); //Glutamic acid
+				case 1 : case 3 :                   return _proteicAlphabet -> charToInt("D"); //Aspartic acid
 			}
 			case 1 : //GC
-			                               return proteicAlphabet -> charToInt("A"); //Alanine
+			                                      return _proteicAlphabet -> charToInt("A"); //Alanine
 			case 2 : //GG
-			                               return proteicAlphabet -> charToInt("G"); //Glycine
+			                                      return _proteicAlphabet -> charToInt("G"); //Glycine
 			case 3 : //GT
-			                               return proteicAlphabet -> charToInt("V"); //Valine
+			                                      return _proteicAlphabet -> charToInt("V"); //Valine
 		}
 		case 3 : //T(U)
 		switch(positions[1]) {
@@ -118,29 +120,30 @@ int    EchinodermMitochondrialGeneticCode::translate(int state) const throw (Bad
 			case 0 : //TA
 			switch(positions[2]) {
 				//Third position:
-				case 0 :                   throw StopCodonException("", "TAA"); //Stop codon
-				case 2 :                   throw StopCodonException("", "TAG"); //Stop codon
-				case 1 : case 3 :          return proteicAlphabet -> charToInt("Y"); //Tyrosine
+				case 0 :                           throw StopCodonException("", "TAA"); //Stop codon
+				case 2 :                           throw StopCodonException("", "TAG"); //Stop codon
+				case 1 : case 3 :                  return _proteicAlphabet -> charToInt("Y"); //Tyrosine
 			}
 			case 1 : //TC
-			                               return proteicAlphabet -> charToInt("S"); //Serine
+			                                     return _proteicAlphabet -> charToInt("S"); //Serine
 			case 2 : //TG
 			switch(positions[2]) {
 				//Third position:
-				case 0 : case 2 :          return proteicAlphabet -> charToInt("W"); //Tryptophane
-				case 1 : case 3 :          return proteicAlphabet -> charToInt("C"); //Cysteine
+				case 0 : case 2 :                  return _proteicAlphabet -> charToInt("W"); //Tryptophane
+				case 1 : case 3 :                  return _proteicAlphabet -> charToInt("C"); //Cysteine
 			}
 			case 3 : //TT
 			switch(positions[2]) {
 				//Third position:
-				case 0 : case 2 :          return proteicAlphabet -> charToInt("L"); //Leucine
-				case 1 : case 3 :          return proteicAlphabet -> charToInt("F"); //Phenylalanine
+				case 0 : case 2 :                  return _proteicAlphabet -> charToInt("L"); //Leucine
+				case 1 : case 3 :                  return _proteicAlphabet -> charToInt("F"); //Phenylalanine
 			}
 		}
 	}
-	throw BadIntException(state, "EchinodermMitochondrialGeneticCode::translate", codonAlphabet);
+	throw BadIntException(state, "EchinodermMitochondrialGeneticCode::translate", _codonAlphabet);
 }
 
-string EchinodermMitochondrialGeneticCode::translate(const string & state) const throw (BadCharException) {
-	return proteicAlphabet -> intToChar(translate(codonAlphabet -> charToInt(state)));
+string EchinodermMitochondrialGeneticCode::translate(const string & state) const throw (Exception) {
+	return _proteicAlphabet -> intToChar(translate(_codonAlphabet -> charToInt(state)));
 }
+

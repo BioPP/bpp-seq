@@ -56,9 +56,9 @@ class EchinodermMitochondrialGeneticCode : public GeneticCode
 		virtual ~EchinodermMitochondrialGeneticCode();
 	
 	public:
-		int    translate(           int state) const throw (BadIntException);
-		string translate(const string & state) const throw (BadCharException);
+		int    translate(           int state) const throw (Exception);
+		string translate(const string & state) const throw (Exception);
 };
 
-
 #endif	//_ECHINODERMMITOCHONDRIALGENETICCODE_H_
+
