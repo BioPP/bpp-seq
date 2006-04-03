@@ -207,6 +207,11 @@ class Alphabet
 		 * @throw BadCharException When state is not a valid char description.
 		 */
 		virtual vector<string> getAlias(const string & state) const throw (BadCharException) = 0;
+
+    /**
+     * @return The int code for unknown characters.
+     */
+    virtual int getUnknownCharacterCode() const = 0;
 		/** @} */
 
 		/**

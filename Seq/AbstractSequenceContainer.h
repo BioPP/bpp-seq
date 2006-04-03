@@ -95,7 +95,6 @@ class AbstractSequenceContainer : public virtual OrderedSequenceContainer
 		Comments getGeneralComments() const;
 		void setGeneralComments(const Comments & comments);
 		void deleteGeneralComments();
-
 		/** @} */
 
 		/**

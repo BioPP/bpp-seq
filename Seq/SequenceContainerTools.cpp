@@ -135,3 +135,20 @@ map<int, double> SequenceContainerTools::getFrequencies(const SequenceContainer 
 
 /******************************************************************************/
 
+void SequenceContainerTools::changeGapsToUnknownCharacters(SequenceContainer & sequences)
+{
+  //NB: use iterators for a better algorithm? 
+  int unknownCode = sequences.getAlphabet()->getUnknownCharacterCode();
+  vector<string> names = sequences.getSequencesNames();
+  for(unsigned int i = 0; i < sequences.getNumberOfSequences(); i++)
+  {
+    for(unsigned int j = 0; j < sequences.getSequence(names[i])->size(); j++)
+    {
+      int * element = & sequences(names[i], j);
+      if(*element == -1) *element = unknownCode;
+    }
+  }
+}
+
+/******************************************************************************/
+

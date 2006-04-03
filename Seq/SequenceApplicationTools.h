@@ -65,6 +65,7 @@ class SequenceApplicationTools
 		virtual ~SequenceApplicationTools() {}
 		
 	public:
+    
 		/**
 		 * @brief Build an Alphabet object according to options.
 		 *
@@ -120,11 +121,14 @@ class SequenceApplicationTools
 		 * into account.
 		 * If the 'nogap' option is used, only sites without gap will be taken into
 		 * account.
+     * If 'gapAsUnknown' is set to true and the all option is selected, gaps will
+     * be changed to 'unknown' character is sequences.
 		 *
 		 * @param allSites The site container from which sites must be retrieved.
 		 * @param params   The attribute map where options may be found.
 		 * @param suffix   A suffix to be applied to each attribute name.
 		 * @param suffixIsOptional Tell if the suffix is absolutely required.
+     * @param gapAsUnknown Convert gaps to unknown characters.
 		 * @param verbose Print some info to the 'message' output stream.
 		 * @return A new VectorSiteContainer object containing sites of interest.
 		 */
@@ -133,12 +137,13 @@ class SequenceApplicationTools
 			map<string, string> & params,
 			string suffix = "",
 			bool suffixIsOptional = true,
+      bool gapAsUnknown = true,
 			bool verbose = true);
 
 		/**
 		 * @brief Write a sequence file according to options.
 		 *
-		 * Optioins used are:
+		 * Options used are:
 		 * - output.sequence.format = [Fasta|Mase|Phylip], the format of the sequence file.
 		 * - output.sequence.file = file_path, the path of the file to parse.
 		 * - output.sequence.length = the max number of chars on a line.

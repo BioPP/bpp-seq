@@ -60,7 +60,10 @@ class ProteicAlphabet : public AbstractAlphabet
 	public:
 		unsigned int getSize() const { return 20; }
 		unsigned int getNumberOfTypes() const { return 23; }
-		string getAlphabetType() const { return "Proteic alphabet"; }
+    int getUnknownCharacterCode() const { return 22; }
+ 		vector<int   > getAlias(      int      state) const throw (BadIntException);
+		vector<string> getAlias(const string & state) const throw (BadCharException);
+	  string getAlphabetType() const { return "Proteic alphabet"; }
 	
 	public:
 

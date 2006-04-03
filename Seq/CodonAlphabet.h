@@ -90,7 +90,8 @@ class CodonAlphabet : public AbstractAlphabet
 		/** @} */
 		
 		string getAlphabetType() const { return "Codon alphabet"; }
-	
+    int getUnknownCharacterCode() const { return 61; }
+ 			
 	private:
 		
 		/**

@@ -204,7 +204,14 @@ class SequenceContainerTools
 			}	catch (Exception e) {
 				throw e;
 			}
-		}		
+		}
+
+    /**
+     * @brief Change all gaps to unknown state in a container, according to its alphabet.
+     *
+     * @param sequence The container to be modified.
+     */
+    static void changeGapsToUnknownCharacters(SequenceContainer & sequences);
 
 };
 

@@ -167,6 +167,40 @@ class VectorSequenceContainer : public virtual AbstractSequenceContainer
 		void setSequencesNames(const vector<string> & names, bool checkNames = true) throw (Exception);
 		void clear();
 		SequenceContainer * createEmptyContainer() const;
+    
+    int & valueAt(const string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    {
+      return (* getSequenceInner(sequenceName))[elementIndex];
+    }
+    const int & valueAt(const string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    {
+      return (* getSequence(sequenceName))[elementIndex]; 
+    }
+    int & operator()(const string & sequenceName, unsigned int elementIndex)
+    {
+      return (* getSequenceInner(sequenceName))[elementIndex];
+    }
+    const int & operator()(const string & sequenceName, unsigned int elementIndex) const
+    {
+      return (* getSequence(sequenceName))[elementIndex]; 
+    }
+    
+    int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException)
+    {
+      return (* getSequenceInner(sequenceIndex))[elementIndex];
+    }
+    const int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException)
+    {
+      return (* getSequence(sequenceIndex))[elementIndex];
+    } 
+    int & operator()(unsigned int sequenceIndex, unsigned int elementIndex)
+    {
+      return (* getSequenceInner(sequenceIndex))[elementIndex];
+    }
+    const int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) const
+    {
+      return (* getSequence(sequenceIndex))[elementIndex];
+    } 
 		/** @} */
 
 

@@ -77,14 +77,6 @@ Clonable * SymbolList::clone() const { return new SymbolList(*  this); }
 
 /****************************************************************************************/
 
-const Alphabet * SymbolList::getAlphabet() const { return _alphabet; }
-
-/****************************************************************************************/
-
-vector<int> SymbolList::getContent() const { return _content; }
-
-/****************************************************************************************/
-
 void SymbolList::setContent(const vector<string> & list) throw (BadCharException)
 {
 	// Check list for incorrect characters
@@ -113,22 +105,15 @@ void SymbolList::setContent(const vector<int> & list) throw (BadIntException)
 
 /****************************************************************************************/
 
-string SymbolList::toString() const {
+string SymbolList::toString() const
+{
 	return StringSequenceTools::decodeSequence(_content, _alphabet);
 };
 
 /****************************************************************************************/
 
-unsigned int SymbolList::size() const { return _content.size(); }
-
-/****************************************************************************************/
-
-
-int SymbolList::operator [] (unsigned int i) const { return _content[i]; }
-
-/****************************************************************************************/
-
-void SymbolList::addElement(string c) throw (BadCharException) {
+void SymbolList::addElement(string c) throw (BadCharException)
+{
 	_content.push_back(_alphabet -> charToInt(c));
 }
 
@@ -209,3 +194,4 @@ int SymbolList::getValue(unsigned int pos) const throw (IndexOutOfBoundsExceptio
 }
 
 /****************************************************************************************/
+

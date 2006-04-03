@@ -151,7 +151,47 @@ class VectorSiteContainer :
 		void clear();	
 		
 		SequenceContainer * createEmptyContainer() const;
-		/** @} */
+
+    int & valueAt(const string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    {
+      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      return (* _sites[elementIndex])[getSequencePosition(sequenceName)];
+    }
+    const int & valueAt(const string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    {
+      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      return (* _sites[elementIndex])[getSequencePosition(sequenceName)];
+    }
+    int & operator()(const string & sequenceName, unsigned int elementIndex)
+    {
+      return (* _sites[elementIndex])[getSequencePosition(sequenceName)];
+    }
+    const int & operator()(const string & sequenceName, unsigned int elementIndex) const
+    {
+      return (* _sites[elementIndex])[getSequencePosition(sequenceName)];
+    }
+
+    int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException)
+    {
+      if(sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);		      
+      if(elementIndex  >= getNumberOfSites())     throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      return (* _sites[elementIndex])[sequenceIndex];
+    }
+    const int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException)
+    {
+      if(sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);		      
+      if(elementIndex  >= getNumberOfSites())     throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      return (* _sites[elementIndex])[sequenceIndex];
+    }
+    int & operator()(unsigned int sequenceIndex, unsigned int elementIndex)
+    {
+      return (* _sites[elementIndex])[sequenceIndex];
+    }
+    const int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) const
+    {
+      return (* _sites[elementIndex])[sequenceIndex];
+    }
+ 		/** @} */
 
 		void addSequence(const Sequence & sequence,                             bool checkName = true) throw (Exception);
 		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);

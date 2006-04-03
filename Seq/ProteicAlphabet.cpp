@@ -1,6 +1,7 @@
 //
 // File: ProteicAlphabet.cpp
 // Created by: Guillaume Deuchst
+//             Julien Dutheil
 // Created on: Tue Jul 22 2003
 //
 
@@ -42,11 +43,12 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/TextTools.h>
 
-// class constructor
+/****************************************************************************************/
+
 ProteicAlphabet::ProteicAlphabet()
 {
 	// Alphabet size definition
-	alphabet.resize(24);
+	alphabet.resize(27);
 
 	// Alphabet content definition
 	alphabet[0].num = -1;
@@ -134,18 +136,32 @@ ProteicAlphabet::ProteicAlphabet()
 	alphabet[20].abbr = "VAL";
 	alphabet[20].name = "Valine";
 	alphabet[21].num = 20;
-	alphabet[21].letter = "X";
-	alphabet[21].abbr = "X";
-	alphabet[21].name = "Unresolved acid";
+	alphabet[21].letter = "B";
+	alphabet[21].abbr = "B";
+	alphabet[21].name = "N or D";
 	alphabet[22].num = 21;
-	alphabet[22].letter = "B";
-	alphabet[22].abbr = "B";
-	alphabet[22].name = "N or D";
+	alphabet[22].letter = "Z";
+	alphabet[22].abbr = "Z";
+	alphabet[22].name = "Q or E";
 	alphabet[23].num = 22;
-	alphabet[23].letter = "Z";
-	alphabet[23].abbr = "Z";
-	alphabet[23].name = "Q or E";
+	alphabet[23].letter = "X";
+	alphabet[23].abbr = "X";
+	alphabet[23].name = "Unresolved amino acid";
+	alphabet[24].num = 22;
+	alphabet[24].letter = "O";
+	alphabet[24].abbr = "O";
+	alphabet[24].name = "Unresolved amino acid";
+	alphabet[25].num = 22;
+	alphabet[25].letter = "0";
+	alphabet[25].abbr = "0";
+	alphabet[25].name = "Unresolved amino acid";
+	alphabet[26].num = 22;
+	alphabet[26].letter = "?";
+	alphabet[26].abbr = "?";
+	alphabet[26].name = "Unresolved amino acid";
 }
+
+/****************************************************************************************/
 
 string ProteicAlphabet::getAbbr(const string & aa) const throw (AlphabetException)
 {
@@ -155,9 +171,55 @@ string ProteicAlphabet::getAbbr(const string & aa) const throw (AlphabetExceptio
 	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid");
 }
 
+/****************************************************************************************/
+
 string ProteicAlphabet::getAbbr(int aa) const throw (AlphabetException)
 {
 	if ((aa >= 0) && (aa < (int)getNumberOfChars())) return alphabet[aa].abbr;
 	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid");
 }
+
+/****************************************************************************************/
+
+vector<int> ProteicAlphabet::getAlias(int state) const throw (BadIntException) 
+{
+	if(!isIntInAlphabet(state)) throw BadIntException(state, "ProteicAlphabet::getAlias(int): Specified base unknown.");
+	vector<int> v;
+	if(state == 20) {// N or D
+		v.resize(2); v[0] = 2; v[1] = 3;
+	} else if(state == 21) {// Q or E
+		v.resize(2); v[0] = 5; v[1] = 6;
+	} else if(state == 22) {// all!
+		v.resize(20);
+    for(unsigned int i = 0; i < 20; i++) v[i] = i;
+	} else {
+		v.resize(1); v[0] = state;
+	}		
+	return v;
+}
+
+
+/****************************************************************************************/
+
+vector<string> ProteicAlphabet::getAlias(const string & state) const throw (BadCharException) 
+{
+	if(!isCharInAlphabet(state)) throw BadCharException(state, "ProteicAlphabet::getAlias(int): Specified base unknown.");
+	vector<string> v;
+	if(state == "B") {// N or D
+		v.resize(2); v[0] = "N"; v[1] = "D";
+	} else if(state == "Z") {// Q or E
+		v.resize(2); v[0] = "Q"; v[1] = "E";
+	} else if(state == "X"
+	       || state == "O"
+	       || state == "0"
+	       || state == "?") {// all!
+		v.resize(20);
+    for(unsigned int i = 0; i < 20; i++) v[i] = alphabet[i+1].letter;
+	} else {
+		v.resize(1); v[0] = state;
+	}		
+	return v;
+}
+
+/****************************************************************************************/
 

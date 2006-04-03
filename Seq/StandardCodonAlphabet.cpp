@@ -87,8 +87,8 @@ StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) : Co
 		}
 	}
 
-	alphabet[65].num = 61;
-  	alphabet[65].letter = "NNN";
-  	alphabet[65].name = "Unresolved codon";
+  alphabet[65].num = 61;
+  alphabet[65].letter = "NNN";
+  alphabet[65].name = "Unresolved codon";
 }
 

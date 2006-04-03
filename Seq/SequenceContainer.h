@@ -231,6 +231,65 @@ class SequenceContainer: public virtual Clonable
 		 * @return A new empty container, with the same alphabet as this one.
 		 */
 		virtual SequenceContainer * createEmptyContainer() const = 0;
+
+    /**
+     * @name Provide direct access to sequences content.
+     *
+     * @warning These operators allow you to modifiy the content of the sequences.
+     * No checking is performed for your modifications, so use with care, or
+     * consider using the setContent() methods.
+     *
+     * @{
+     */
+    
+    /**
+     * @brief Element access function.
+     *
+     * Allows direct access to the data stored in the container.
+     * 
+     * @param sequenceName The sequence name.
+     * @param elementIndex The element position within the sequence.
+     * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
+     * @throw IndexOutOfBoundsException If the element position is not valid.
+     */
+    virtual int & valueAt(const string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+
+    /**
+     * @brief Element access function.
+     *
+     * Allows direct access to the data stored in the container.
+     * 
+     * @param sequenceName The sequence name.
+     * @param elementIndex The element position within the sequence.
+     * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
+     * @throw IndexOutOfBoundsException If the element position is not valid.
+     */
+    virtual const int & valueAt(const string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+
+    /**
+     * @brief Element access operator.
+     *
+     * Allows direct access to the data stored in the container.
+     * This method is faster then the valueAt function, but input
+     * parameters are not checked!
+     * 
+     * @param sequenceName The sequence name.
+     * @param elementIndex The element position within the sequence.
+     */
+    virtual int & operator()(const string & sequenceName, unsigned int elementIndex) = 0;
+
+    /**
+     * @brief Element access operator.
+     *
+     * Allows direct access to the data stored in the container.
+     * This method is faster then the valueAt function, but input
+     * parameters are not checked!
+     * 
+     * @param sequenceName The sequence name.
+     * @param elementIndex The element position within the sequence.
+     */
+    virtual const int & operator()(const string & sequenceName, unsigned int elementIndex) const = 0;
+    /** @} */
 };
 
 #endif	// _SEQUENCECONTAINER_H_

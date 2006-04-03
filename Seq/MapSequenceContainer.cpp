@@ -126,7 +126,7 @@ const Sequence * MapSequenceContainer::getSequence(const string & name) const th
 
 /******************************************************************************/
 
-Sequence * MapSequenceContainer::getSequence(unsigned int i) throw (IndexOutOfBoundsException)
+Sequence * MapSequenceContainer::getSequenceInner(unsigned int i) throw (IndexOutOfBoundsException)
 {
 	// Specified sequence existence verification
 	if (i < _sequences.size()) {
@@ -140,7 +140,7 @@ Sequence * MapSequenceContainer::getSequence(unsigned int i) throw (IndexOutOfBo
 
 /******************************************************************************/
 
-Sequence * MapSequenceContainer::getSequence(const string & name) throw (SequenceNotFoundException)
+Sequence * MapSequenceContainer::getSequenceInner(const string & name) throw (SequenceNotFoundException)
 {
 	// Specified sequence name research into all sequences
 	for (map<string, Sequence *>::const_iterator i = _sequences.begin() ; i != _sequences.end() ; i++) {

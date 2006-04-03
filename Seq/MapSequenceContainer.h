@@ -160,6 +160,40 @@ class MapSequenceContainer: public virtual AbstractSequenceContainer
 		unsigned int getNumberOfSequences() const;
 		void clear();
 		SequenceContainer * createEmptyContainer() const;
+
+    int & valueAt(const string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    {
+      return (* getSequenceInner(sequenceName))[elementIndex];
+    }
+    const int & valueAt(const string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    {
+      return (* getSequence(sequenceName))[elementIndex];
+    }
+    int & operator()(const string & sequenceName, unsigned int elementIndex)
+    {
+      return (* getSequenceInner(sequenceName))[elementIndex];
+    }
+    const int & operator()(const string & sequenceName, unsigned int elementIndex) const
+    {
+      return (* getSequence(sequenceName))[elementIndex];
+    }
+
+    int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException)
+    {
+      return (* getSequenceInner(sequenceIndex))[elementIndex];
+    }
+    const int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException)
+    {
+      return (* getSequence(sequenceIndex))[elementIndex];
+    }    
+    int & operator()(unsigned int sequenceIndex, unsigned int elementIndex)
+    {
+      return (* getSequenceInner(sequenceIndex))[elementIndex];
+    }
+    const int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) const
+    {
+      return (* getSequence(sequenceIndex))[elementIndex];
+    }    
 		/** @} */
 
 		/**
@@ -182,8 +216,8 @@ class MapSequenceContainer: public virtual AbstractSequenceContainer
 		 *
 		 * @{
 		 */
-		Sequence * getSequence(unsigned int i)      throw (IndexOutOfBoundsException);
-		Sequence * getSequence(const string & name) throw (SequenceNotFoundException);
+		Sequence * getSequenceInner(unsigned int i)      throw (IndexOutOfBoundsException);
+		Sequence * getSequenceInner(const string & name) throw (SequenceNotFoundException);
 		/** @} */
 };
 

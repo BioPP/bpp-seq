@@ -148,15 +148,20 @@ VectorSiteContainer * SequenceApplicationTools::getSitesToAnalyse(
 	map<string, string> & params,
 	string suffix,
 	bool suffixIsOptional,
+  bool gapAsUnknown,
 	bool verbose)
 {
-	// Fully resolved sites, i.e. without jokers and gaps:
+	// Fully resolveid sites, i.e. without jokers and gaps:
 	VectorSiteContainer * sitesToAnalyse;
 	
 	string option = ApplicationTools::getStringParameter("sequence.sites_to_use", params, "complete", suffix, suffixIsOptional);
 	if(verbose) ApplicationTools::displayResult("Sites to use", option);
     sitesToAnalyse = new VectorSiteContainer(allSites);
   if(option == "all") {
+    if(gapAsUnknown)
+    {
+      SequenceContainerTools::changeGapsToUnknownCharacters(*sitesToAnalyse);
+    }
   } else if(option == "complete") {
 		sitesToAnalyse = dynamic_cast<VectorSiteContainer *>(SiteContainerTools::getCompleteSites(allSites));
 		int nbSites = sitesToAnalyse -> getNumberOfSites();

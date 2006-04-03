@@ -45,6 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /**
  * @brief The abstract base class foc nucleic alphabets.
+ *
  * This class only implements a few methods, it is mainly designed for methods/classes
  * that will require to work with both RNA and DNA.
  */
@@ -60,6 +61,9 @@ class NucleicAlphabet : public AbstractAlphabet
 
 		// return 15 : gap isn't included, generic unresolved bases (N, X, ?, O, 0) count for one
 		unsigned int getNumberOfTypes() const { return 15; }
+    
+    int getUnknownCharacterCode() const { return 14; }
+    
 };
 
 #endif // _NUCLEICALPHABET_H_

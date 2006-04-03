@@ -135,14 +135,14 @@ class SymbolList: public virtual Clonable {
 		 * @return A const pointer to the alphabet.
 		 * @see Alphabet class.
 		 */
-		virtual const Alphabet* getAlphabet() const;
+		virtual const Alphabet* getAlphabet() const { return _alphabet; }
 
 		/**
 		 * @brief Get the number of elements in the list.
 		 *
 		 * @return The number of sites in the list.
 		 */
-		virtual unsigned int size() const;
+		virtual unsigned int size() const { return _content.size(); }
 
 		/**
 		 * @name Acting on the content of the list.
@@ -155,7 +155,7 @@ class SymbolList: public virtual Clonable {
 		 *
 		 * @return list content.
 		 */
-		virtual vector<int> getContent() const;
+		virtual vector<int> getContent() const { return _content; }
 
 		/**
 		 * @brief Set the whole content of the list.
@@ -259,13 +259,31 @@ class SymbolList: public virtual Clonable {
 
 		/** @} */
 
+    /**
+     * @name Provide direct access to the list content.
+     *
+     * @warning These operators allow you to modifiy the list content.
+     * No alphabet checking is performed for your modifications, so use with care, or
+     * consider using the setContent() method.
+     *
+     * @{
+     */
+
+    /**
+		 * @brief Operator [] overloaded for quick access to a character in list.
+		 *
+		 * @param i The position to retrieve.
+		 * @return The integer value of character at position i.
+		 */
+		virtual const int & operator[](unsigned int i) const { return _content[i]; }
 		/**
 		 * @brief Operator [] overloaded for quick access to a character in list.
 		 *
 		 * @param i The position to retrieve.
 		 * @return The integer value of character at position i.
 		 */
-		virtual int operator [] (unsigned int i) const;
+		virtual int & operator[](unsigned int i) { return _content[i]; }
+    /** @} */
 };
 
 #endif // _SYMBOLLIST_H_

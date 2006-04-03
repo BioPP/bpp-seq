@@ -154,7 +154,64 @@ class OrderedSequenceContainer : public virtual SequenceContainer
 		 */
 		virtual unsigned int getSequencePosition(const string & name) const throw (SequenceNotFoundException) = 0;
 
-	public:
+    /**
+     * @name Provide direct access to sequences content.
+     *
+     * @warning These operators allow you to modifiy the content of the sequences.
+     * No checking is performed for your modifications, so use with care, or
+     * consider using the setContent() methods.
+     *
+     * @{
+     */
+
+    /**
+     * @brief Element access operator.
+     *
+     * Allows direct access to the data stored in the container.
+     * 
+     * @param sequenceIndex The sequence position.
+     * @param elementIndex The element position within the sequence.
+     * @throw IndexOutOfBoundsException If a position is not valid.
+     */
+    virtual int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException) = 0;
+    
+    /**
+     * @brief Element access operator.
+     *
+     * Allows direct access to the data stored in the container.
+     * 
+     * @param sequenceIndex The sequence position.
+     * @param elementIndex The element position within the sequence.
+     * @throw IndexOutOfBoundsException If a position is not valid.
+     */
+    virtual const int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException) = 0;
+
+    /**
+     * @brief Element access operator.
+     *
+     * Allows direct access to the data stored in the container.
+     * This method is faster then the valueAt function, but input
+     * parameters are not checked!
+     * 
+     * @param sequenceIndex The sequence position.
+     * @param elementIndex The element position within the sequence.
+     */
+    virtual int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) = 0;
+    
+    /**
+     * @brief Element access operator.
+     *
+     * Allows direct access to the data stored in the container.
+     * This method is faster then the valueAt function, but input
+     * parameters are not checked!
+     * 
+     * @param sequenceIndex The sequence position.
+     * @param elementIndex The element position within the sequence.
+     */
+    virtual const int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) const = 0;
+    /** @} */
+	
+  public:
 		
 		/**
 		 * @name SequenceContainer methods.
