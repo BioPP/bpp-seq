@@ -14,8 +14,9 @@ Group: System Environment/Libraries
 BuildRoot: %{_builddir}/%{name}-root
 Packager: Julien Dutheil
 AutoreqProv: no
-Requires: Bpp-Utils = %{version}
-Requires: Bpp-NumCalc = %{version}
+Requires: libstdc++6
+Requires: Bpp-Utils >= 1.0.0
+Requires: Bpp-NumCalc >= 1.0.0
 
 %description
 This library contains utilitary and classes for bio-sequence analysis.
