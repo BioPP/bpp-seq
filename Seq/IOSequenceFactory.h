@@ -55,16 +55,38 @@ public:
   static const string PAML_FORMAT_INTERLEAVED;  
   static const string PAML_FORMAT_SEQUENTIAL;  
 
-protected:
-  const Alphabet * _alphabet;
-
 public:
 
-  IOSequenceFactory(const Alphabet * alphabet): _alphabet(alphabet) {}
+  /**
+   * @brief Creates a new factory object.
+   *
+   * Example:
+   * @code
+   * Alphabet * alphabet = new DNA();
+   * ISequence * seqReader = IOSequenceFactory().createReader(IOSequenceFactory::FASTA);
+   * SequenceContainer * sequences = seqReader->read("file.fasta", alphabet);
+   * delete seqReader;
+   * @endcode
+   */
+  IOSequenceFactory() {}
   virtual ~IOSequenceFactory() {}
   
+  /**
+   * @brief Get a new dynamically created ISequence object.
+   *
+   * @param format The input file format.
+   * @return A pointer toward a new ISequence object.
+   * @throw Exception If the format name do not match any available format.
+   */
   virtual ISequence * createReader(const string & format) throw (Exception);
   
+  /**
+   * @brief Get a new dynamically created OSequence object.
+   *
+   * @param format The output file format.
+   * @return A pointer toward a new OSequence object.
+   * @throw Exception If the format name do not match any available format.
+   */
   virtual OSequence * createWriter(const string & format) throw (Exception);
 };
 
