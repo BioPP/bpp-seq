@@ -39,9 +39,10 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "DNA.h" // class's header file
+#include "DNA.h"
 
-// class constructor
+/****************************************************************************************/
+
 DNA::DNA()
 {
 	// Alphabet size definition
