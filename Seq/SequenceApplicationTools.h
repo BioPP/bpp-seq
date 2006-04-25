@@ -50,13 +50,13 @@ knowledge of the CeCILL license and that you accept its terms.
  * The functions parse some option file, create corresponding objects and send
  * a pointer toward it.
  * 
- * The option files are supposed to follow this simple format:<br />
- * <code>parameterName = parameterContent</code><br />
+ * The option files are supposed to follow this simple format:
+ * @code
+ * parameterName = parameterContent
+ * @endcode
  * with one parameter per line.
  *
- * In files, shell comments: <code> # my comment line here </code>,
- * C comments: <code> / * my comment block here * / </code>
- * and C++ comments: <code> // my comment line here </code> are allowed, and ignored while parsing.
+ * @see ApplicationTools
  */
 class SequenceApplicationTools
 {

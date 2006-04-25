@@ -131,7 +131,7 @@ class GeneticCode : public AbstractTranslator
      * will be determined from the sequence.
      *
      * @param sequence The sequence to parse.
-     * @apram lookForInitCodon Tell if the AUG codon must be found.
+     * @param lookForInitCodon Tell if the AUG codon must be found.
      * @param includeInitCodon (if lookForInitCodon is true) tell if the init codon must be included in the subsequence.
      * @return A nucleotide/codon subsequence.
      */

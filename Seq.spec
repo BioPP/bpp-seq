@@ -26,8 +26,8 @@ It is part of the Bio++ project.
 Summary: Libraries, includes to develop applications with %{name}.
 Group: Development/Libraries
 Requires: %{name} = %{version}
-Requires: Bpp-Utils-devel = %{version}
-Requires: Bpp-NumCalc-devel = %{version}
+Requires: Bpp-Utils-devel >= 1.0.0
+Requires: Bpp-NumCalc-devel >= 1.0.0
 
 %description devel
 The %{name}-devel package contains the header files and static libraries for
