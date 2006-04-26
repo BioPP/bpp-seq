@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ioseq"
 #include "Alphabet.h"
 
+/**
+ * @brief Utilitary class for creating sequence readers and writers.
+ */
 class IOSequenceFactory
 {
 public:
