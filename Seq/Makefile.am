@@ -67,6 +67,7 @@ Translator.h\
 VectorSequenceContainer.h\
 VectorSiteContainer.h\
 KleinAANetChargeIndex.h\
+AAChargeIndex.h\
 SequenceApplicationTools.h\
 sequences\
 IOSequenceFactory.h

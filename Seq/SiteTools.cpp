@@ -58,7 +58,8 @@ using namespace VectorFunctions;
 bool SiteTools::hasGap(const Site & site)
 {
 	// Main loop : for all characters in site
-	for (unsigned int i = 0 ; i < site.size() ; i++) {
+	for (unsigned int i = 0 ; i < site.size(); i++)
+  {
 		if (site[i] == -1) return true;
 	}
 	return false;
@@ -69,8 +70,9 @@ bool SiteTools::hasGap(const Site & site)
 bool SiteTools::hasUnknown(const Site & site)
 {
 	// Main loop : for all characters in site
-	for(unsigned int i = 0; i < site.size(); i++) {
-		if(site[i] >= (int)site.getAlphabet() -> getNumberOfTypes()) return true;
+	for(unsigned int i = 0; i < site.size(); i++)
+  {
+		if(site[i] == site.getAlphabet()->getUnknownCharacterCode()) return true;
 	}
 	return false;
 }
@@ -80,8 +82,9 @@ bool SiteTools::hasUnknown(const Site & site)
 bool SiteTools::isComplete(const Site & site)
 {
 	// Main loop : for all characters in site
-	for(unsigned int i = 0; i < site.size(); i++) {
-		if(site[i] < 0 || site[i] >= (int)site.getAlphabet() -> getSize()) return false;
+	for(unsigned int i = 0; i < site.size(); i++)
+  {
+		if(site[i] < 0 || site[i] >= (int)site.getAlphabet()->getSize()) return false;
 	}
 	return true;
 }
@@ -93,8 +96,10 @@ bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2)
 	// Site's size and content checking
   if(site1.getAlphabet()->getAlphabetType() != site2.getAlphabet()->getAlphabetType()) return false;
 	if(site1.size() != site2.size()) return false;
-	else {
-		for(unsigned int i = 0; i < site1.size(); i++) {
+	else
+  {
+		for(unsigned int i = 0; i < site1.size(); i++)
+    {
 			if(site1[i] != site2[i]) return false;
 		}
 		return true;
@@ -154,48 +159,51 @@ double SiteTools::heterozygosity(const Site & site) throw (EmptySiteException)
 
 unsigned int SiteTools::getNumberOfDistinctCharacters(const Site & site) throw (EmptySiteException)
 {
-    // Empty site checking
+  // Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::getNumberOfDistinctCharacters(): Incorrect specified site", &site);
 	// For all site's characters
-        if (SiteTools::isConstant(site)) return 1;
-        map<int,unsigned int> count = SymbolListTools::getCounts(site);
-        int S = 0;
-        for(map<int, unsigned int>::iterator it=count.begin(); it!=count.end(); it++){
-            if(it->second!=0) S++;
-        }
-        return S;
+  if (SiteTools::isConstant(site)) return 1;
+  map<int,unsigned int> count = SymbolListTools::getCounts(site);
+  int S = 0;
+  for(map<int, unsigned int>::iterator it=count.begin(); it!=count.end(); it++)
+  {
+    if(it->second!=0) S++;
+  }
+  return S;
 }
 
 /******************************************************************************/
 
 bool SiteTools::hasSingleton(const Site & site) throw (EmptySiteException)
 {
-    // Empty site checking
+  // Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isSingleton: Incorrect specified site", &site);
 	// For all site's characters
-    if(SiteTools::isConstant(site)) return false;
-    map<int,unsigned int> count = SymbolListTools::getCounts(site);
-	for(map<int, unsigned int>::iterator it = count.begin(); it != count.end(); it++){
-        if(it -> second == 1) return true;
-    }
-    return false;
+  if(SiteTools::isConstant(site)) return false;
+  map<int,unsigned int> count = SymbolListTools::getCounts(site);
+	for(map<int, unsigned int>::iterator it = count.begin(); it != count.end(); it++)
+  {
+    if(it -> second == 1) return true;
+  }
+  return false;
 }
 
 /******************************************************************************/
 
 bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteException)
 {
-    // Empty site checking
+  // Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isParsimonyInformativeSite: Incorrect specified site", &site);
 	// For all site's characters
-    if(SiteTools::isConstant(site)) return false;
-    map<int,unsigned int> count = SymbolListTools::getCounts(site);
-    unsigned int npars = 0;
-	for(map<int, unsigned int>::iterator it = count.begin(); it != count.end(); it++){
-        if(it -> second > 1) npars++;
-    }
-    if(npars > 1) return true;
-    return false;
+  if(SiteTools::isConstant(site)) return false;
+  map<int,unsigned int> count = SymbolListTools::getCounts(site);
+  unsigned int npars = 0;
+	for(map<int, unsigned int>::iterator it = count.begin(); it != count.end(); it++)
+  {
+    if(it -> second > 1) npars++;
+  }
+  if(npars > 1) return true;
+  return false;
 }
 
 /******************************************************************************/
@@ -205,8 +213,8 @@ bool SiteTools::isTriplet(const Site & site) throw (EmptySiteException)
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isTriplet: Incorrect specified site", &site);
 	// For all site's characters
-        if(SiteTools::getNumberOfDistinctCharacters(site)>=3) return true;
-        else return false;
+  if(SiteTools::getNumberOfDistinctCharacters(site)>=3) return true;
+  else return false;
 }
 
 /******************************************************************************/
