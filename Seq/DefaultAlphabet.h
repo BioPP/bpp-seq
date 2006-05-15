@@ -63,7 +63,8 @@ class DefaultAlphabet : public AbstractAlphabet
 		unsigned int getSize() const { return 26; }
 		unsigned int getNumberOfTypes() const { return 27; }
 		string getAlphabetType() const { return "Default alphabet"; }
-};
+    int getUnknownCharacterCode() const { return 37; }
+ };
 
 #endif // _DEFAULTALPHABET_H_
 

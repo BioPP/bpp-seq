@@ -1,3 +1,6 @@
+15/05/06 Julien Dutheil
+* Bug fixed: Added getUnknownCharacterCode() method in DefaultAlphabet.
+
 09/05/06 Julien Dutheil
 * New AAChargeIndex class.
 * Bug fixed in SiteTools::hasUnknown(Site).
