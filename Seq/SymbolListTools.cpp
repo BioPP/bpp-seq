@@ -42,20 +42,45 @@ knowledge of the CeCILL license and that you accept its terms.
 
 map<int, unsigned int> SymbolListTools::getCounts(const SymbolList & list)
 {
-	map<int, unsigned int> c;
-	vector<int> seq = list.getContent();
-	for(unsigned int i = 0; i < seq.size(); i++) c[seq[i]]++;
-	return c;
+  map<int, unsigned int> c;
+  vector<int> seq = list.getContent();
+  for(unsigned int i = 0; i < seq.size(); i++) c[seq[i]]++;
+  return c;
 }
 
-map<int, double> SymbolListTools::getFrequencies(const SymbolList & list)
+map<int, double> SymbolListTools::getCounts(const SymbolList & list, bool resolveUnknowns)
+{
+	map<int, double> c;
+	vector<int> seq = list.getContent();
+  if(!resolveUnknowns)
+  {
+    for(unsigned int i = 0; i < seq.size(); i++) c[seq[i]]++;
+  }
+  else
+  {
+	  for(unsigned int i = 0; i < seq.size(); i++) 
+    {
+      vector<int> alias = list.getAlphabet()->getAlias(seq[i]);
+      double n = (double)alias.size();
+      for(unsigned int j = 0; j < alias.size(); j++)
+      {
+        c[alias[j]] += 1./n ;
+      }
+    }
+	  return c;
+  }
+}
+
+map<int, double> SymbolListTools::getFrequencies(const SymbolList & list, bool resolveUnknowns)
 {
 	map<int, double> f;
-	vector<int> seq = list.getContent();
-	for(unsigned int i = 0; i < seq.size(); i++) f[seq[i]]++;
-	int n = seq.size();
-	for(map<int, double>::iterator i = f.begin(); i != f.end(); i++) i -> second = i -> second / n;
-	return f;
+	double n = (double)list.size();
+  map<int, double> counts = getCounts(list, resolveUnknowns);
+  for(map<int, double>::iterator i = counts.begin(); i != counts.end(); i++)
+  {
+    f[i->first] = i -> second / n;
+  }
+  return f;
 }
 
 double SymbolListTools::getGCContent(const SymbolList & list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)

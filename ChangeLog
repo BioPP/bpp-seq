@@ -1,3 +1,6 @@
+17/05/06 Benoït Nabholz, Sylvain Glémin & Julien Dutheil
+* Bug fixed in SiteContainerTools::getConsensus(), + SymbolListTools::getFrequencies() and getCounts() improved.
+
 15/05/06 Julien Dutheil
 * Bug fixed: Added getUnknownCharacterCode() method in DefaultAlphabet.
 

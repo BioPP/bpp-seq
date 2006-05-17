@@ -63,17 +63,19 @@ class SiteContainerTools
 
 
 		/**
-		 * @brief create the consensus sequence of the alignment
-		 *
-		 * gap can be taken into account or not (default option)
-		 *
-		 * @param sc a site container
-		 * @param gapflag
-		 * @param name the name of the sequence object that will be created. 
-		 * @return A new Sequence object with the consensus sequence.
-		 */
+     * @brief create the consensus sequence of the alignment.
+     *
+     * In case of ambiguity (for instance a AATT site), one state will be chosen arbitrarily.
+     *
+     * @param sc a site container
+     * @param name the name of the sequence object that will be created. 
+     * @param ignoreGap Tell if gap must be counted or not. If not (true option), only fully gapped sites will result in a gap in the consensus sequence. 
+     * @param resolveUnknown Tell is unknnown characters must resolved. In a DNA sequence for instance, N will be counted as A=1/4, T=1/4, G=1/4 and C=1/4. Otherwise it will be counted as N=1.
+     * If this option is set to true, a consensus sequence will never contain an unknown character.
+     * @return A new Sequence object with the consensus sequence.
+     */
 
-		static const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc,string name="consensus", bool gapflag = true);
+		static const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc,string name="consensus", bool ignoreGap = true, bool resolveUnknown = false);
 };
 
 

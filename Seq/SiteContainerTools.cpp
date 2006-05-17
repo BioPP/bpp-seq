@@ -98,27 +98,32 @@ SiteContainer * SiteContainerTools::getSelectedSites(
 
 /******************************************************************************/
 
-const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, string name, bool gapflag)
+const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, string name, bool ignoreGap, bool resolveUnknown)
 {
 	Vint consensus;
 	SimpleSiteIterator ssi(sc);
 	const Site * site;
-	while(ssi.hasMoreSites()){
-		site=ssi.nextSite();
-		map<int,double> freq = SiteTools::getFrequencies(*site);
+	while(ssi.hasMoreSites())
+  {
+		site = ssi.nextSite();
+		map<int, double> freq = SiteTools::getFrequencies(*site, resolveUnknown);
 		double max = 0;
-		int cons = 0;
-		if(gapflag){
-			for(map<int,double>::iterator it=freq.begin(); it!=freq.end();it++){
-				if(it->second>max && it->first!=-1){
+		int cons = -1; //default result
+		if(ignoreGap)
+    {
+			for(map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
+      {
+				if(it->second > max && it->first != -1){
 					max = it->second;
 					cons = it->first;
 				}
 			}
 		}
-		else {
-			for(map<int,double>::iterator it=freq.begin(); it!=freq.end();it++){
-				if(it->second>max){
+		else
+    {
+			for(map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
+      {
+				if(it->second > max){
 					max = it->second;
 					cons = it->first;
 				}
@@ -126,8 +131,8 @@ const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, stri
 		}
 		consensus.push_back(cons);
 	}
-	const Sequence * seqConsensus = new Sequence(name,consensus,sc.getSequence(0)->getAlphabet());
-        return seqConsensus;
+	const Sequence * seqConsensus = new Sequence(name, consensus, sc.getSequence(0)->getAlphabet());
+  return seqConsensus;
 }
 
 /******************************************************************************/
