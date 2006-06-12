@@ -1,3 +1,9 @@
+12/06/06 Julien Dutheil
+* SiteTools::isConstant() method now has a 'ignoreUnknown' option.
+
+01/01/06 Julien Dutheil
+* VectorSiteContainer and AlignedSequenceContainer now number sites from 1 (and not 0). 
+
 17/05/06 Benoït Nabholz, Sylvain Glémin & Julien Dutheil
 * Bug fixed in SiteContainerTools::getConsensus(), + SymbolListTools::getFrequencies() and getCounts() improved.
 
@@ -12,5 +18,7 @@
 
 18/04/06 Julien Dutheil
 * New IOSequenceFactory class.
+
 06/04/06 Julien Dutheil
 * New () function operators defined on SequenceContainers.
+

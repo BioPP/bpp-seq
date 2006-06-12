@@ -108,14 +108,22 @@ bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2)
 
 /******************************************************************************/
 
-bool SiteTools::isConstant(const Site & site) throw (EmptySiteException)
+bool SiteTools::isConstant(const Site & site, bool ignoreUnknown) throw (EmptySiteException)
 {
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isConstant: Incorrect specified site", &site);
 
 	// For all site's characters
 	int s = site[0];
-	for (unsigned int i = 1; i < site.size(); i++) if (site[i] != s) return false;
+  if(ignoreUnknown)
+  {
+    int unknown = site.getAlphabet()->getUnknownCharacterCode();
+	  for (unsigned int i = 1; i < site.size(); i++) if (site[i] != s && site[i] != unknown) return false;
+  } 
+  else
+  {
+	  for (unsigned int i = 1; i < site.size(); i++) if (site[i] != s) return false;
+  }
 
 	return true;
 }

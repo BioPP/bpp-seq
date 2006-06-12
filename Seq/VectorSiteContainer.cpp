@@ -353,8 +353,9 @@ const vector<int> VectorSiteContainer::getPositions() const
 
 /******************************************************************************/
 
-void VectorSiteContainer::reindexSites() {
-	int pos = 0; //first position is 0.
+void VectorSiteContainer::reindexSites()
+{
+	int pos = 1; //first position is 1.
 	for(vector<Site *>::iterator i = _sites.begin(); i < _sites.end(); i++) {
 		(*i) -> setPosition(pos++);
 	}	

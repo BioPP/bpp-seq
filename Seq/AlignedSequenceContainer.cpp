@@ -372,8 +372,7 @@ Vint AlignedSequenceContainer::getSitePositions() const { return positions; }
 void AlignedSequenceContainer::reindexSites() 
 {	
 	positions.resize(length);
-	for (unsigned int i = 0 ; i < length ; i++) { positions[i] = i; }
-
+	for (unsigned int i = 0 ; i < length ; i++) { positions[i] = i+1; } // start with 1.
 }
 
 /******************************************************************************/

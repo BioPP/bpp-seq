@@ -50,10 +50,12 @@ class SiteTools: public SymbolListTools
 		
 		/**
 		 * @param site A site.
+     * @param ignoreUnknown If true, positions with unknown positions will be ignored.
+     * Otherwise, a site with one single state + any uncertain state will not be considered as constant.
 		 * @return True if the site is made of only one state.
 		 * @throw EmptySiteException If the site has size 0.
 		 */
-		static bool isConstant(const Site & site) throw (EmptySiteException);
+		static bool isConstant(const Site & site, bool ignoreUnknown = false) throw (EmptySiteException);
 
  		/**
 		 * @param site1 The first site.
