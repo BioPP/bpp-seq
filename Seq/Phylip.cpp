@@ -60,14 +60,18 @@ Phylip::Phylip(bool extended, bool sequential, unsigned int charsByLine): _chars
 
 /******************************************************************************/
 
-const vector<string> Phylip::splitNameAndSequence(const string & s) const
+const vector<string> Phylip::splitNameAndSequence(const string & s) const throw (Exception)
 {
 	vector<string> v(2);
-	if(_extended) {
-		int index = s.find("  ");
+	if(_extended)
+  {
+    string::size_type index = s.find("  ");
+    if(index == string::npos) throw Exception("No sequence name found.");
 		v[0] = TextTools::removeSurroundingWhiteSpaces(s.substr(0, index));
-		v[1] = TextTools::removeFirstWhiteSpaces      (s.substr(index + 2)); //There may be more than 6 white spaces.
-	} else {
+		v[1] = TextTools::removeFirstWhiteSpaces      (s.substr(index + 2)); //There may be more than 2 white spaces.
+	}
+  else
+  {
 		v[0] = TextTools::removeSurroundingWhiteSpaces(s.substr(0, 10));
 		v[1] = s.substr(10);
 	}
@@ -83,21 +87,42 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
 	//Ignore first line:
 	getline(in, temp, '\n');  // Copy current line in temporary string
 	temp = FileTools::getNextLine(in);
+  string name = "";
+  string seq  = "";
 	
-	while(!in.eof()) {
+	while(!in.eof())
+  {
 		// Read each sequence:
-		vector<string> v = splitNameAndSequence(temp);
-		string name = v[0];
-		string seq  = v[1];
-		while(!TextTools::isEmpty(temp)) {
-			//Sequences are separated by at least one blank line:
-			getline(in, temp, '\n');  // read next line in file.
-			seq += TextTools::removeWhiteSpaces(temp);			
-		}
+		vector<string> v;
+    try
+    { 
+      v = splitNameAndSequence(temp);
+      // a new sequence is found:
+      if(!TextTools::isEmpty(name))
+      {
+        // Add the previous sequence to the container:
+        asc.addSequence(Sequence(name, seq, asc.getAlphabet()), true);
+      }
+		  name = v[0];
+		  seq  = v[1];
+    }
+    catch(Exception & ex)
+    {
+      //No sequence name found.
+      if(TextTools::isEmpty(name)) throw Exception("First sequence in file has no name!");
+      seq += TextTools::removeWhiteSpaces(temp);
+    }
+		//while(!TextTools::isEmpty(temp))
+    //{
+		//	//Sequences are separated by at least one blank line:
+		//	getline(in, temp, '\n');  // read next line in file.
+		//	seq += TextTools::removeWhiteSpaces(temp);			
+		//}
 		//end of this sequence:
-		asc.addSequence(Sequence(name, seq, asc.getAlphabet()), true);
 		temp = FileTools::getNextLine(in);
 	}
+  // Add last sequence:
+  asc.addSequence(Sequence(name, seq, asc.getAlphabet()), true);
 }
 
 /******************************************************************************/
@@ -115,7 +140,8 @@ void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const
 	
 	vector<string> names, seqs;
 	// Read first block:
-	for(int i = 0; i < nbSequences && !in.eof() && !TextTools::isEmpty(temp); i++) {
+	for(int i = 0; i < nbSequences && !in.eof() && !TextTools::isEmpty(temp); i++)
+  {
 		vector<string> v = splitNameAndSequence(temp);
 		names.push_back(v[0]);
 		seqs.push_back(v[1]);
@@ -124,8 +150,10 @@ void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const
 	
 	//Then read all other blocks:
 	temp = FileTools::getNextLine(in);
-	while(!in.eof()) {
-		for(unsigned int i = 0; i < names.size(); i++) {
+	while(!in.eof())
+  {
+		for(unsigned int i = 0; i < names.size(); i++)
+    {
 			if(TextTools::isEmpty(temp))
 				throw IOException("Phylip::readInterleaved. Bad file,there are not the same number of sequence in each block.");
 			seqs[i] += TextTools::removeWhiteSpaces(temp);			
@@ -133,7 +161,8 @@ void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const
 		}
 		temp = FileTools::getNextLine(in);
 	}
-	for(unsigned int i = 0; i < names.size(); i++) {
+	for(unsigned int i = 0; i < names.size(); i++)
+  {
 		asc.addSequence(Sequence(names[i], seqs[i], asc.getAlphabet()));
 	}
 }
@@ -170,16 +199,18 @@ unsigned int Phylip::getNumberOfSequences(const string & path) const throw (IOEx
 vector<string> Phylip::getSizedNames(const vector<string> & names) const
 {
 	vector<string> sizedNames(names.size());
-	if(_extended) {
+	if(_extended)
+  {
 		//Add 6 white spaces to the larger name and align other names.
 		//First, determine the size of the wider name:
 		unsigned int sizeMax = 0;
 		for(unsigned int i = 0; i < names.size(); i++)
 			if(names[i].size() > sizeMax) sizeMax = names[i].size();
 		//Quite easy ;-) Now update all lengths:
-		for(unsigned int i = 0; i < names.size(); i++) sizedNames[i] = TextTools::resizeRight(names[i], sizeMax + 2);
-			
-	} else {
+		for(unsigned int i = 0; i < names.size(); i++) sizedNames[i] = TextTools::resizeRight(names[i], sizeMax + 2);	
+	}
+  else
+  {
 		//We trunc all names to ten characters:
 		for(unsigned int i = 0; i < names.size(); i++) sizedNames[i] = TextTools::resizeRight(names[i], 10);
 		cout << "Warning: names have been truncated to 10 characters. They may be ambiguous sequence names then." << endl;
@@ -197,10 +228,12 @@ void Phylip::writeSequential(ostream & out, const SequenceContainer & sc, int ch
 	
 	vector<string> seqNames = sc.getSequencesNames();
 	vector<string> names = getSizedNames(seqNames);
-	for(unsigned int i = 0; i < seqNames.size(); i++) {
+	for(unsigned int i = 0; i < seqNames.size(); i++)
+  {
 		vector<string> seq = TextTools::split(sc.toString(seqNames[i]), charsByLine);
 		out << names[i] << seq[0] << endl;
-		for(unsigned int j = 1; j < seq.size(); j++) {
+		for(unsigned int j = 1; j < seq.size(); j++)
+    {
 			out << string(names[i].size(), ' ') << seq[j] << endl;
 		}
 		out << endl;
@@ -221,13 +254,16 @@ void Phylip::writeInterleaved(ostream & out, const SequenceContainer & sc, int c
 		seqs[i] = TextTools::split(sc.toString(seqNames[i]), charsByLine);
 	}
 	//Write first block:
-	for(unsigned int i = 0; i < names.size(); i++) {
+	for(unsigned int i = 0; i < names.size(); i++)
+  {
 		out << names[i] << seqs[i][0] << endl;
 	}
 	out << endl;
 	//Write other blocks:
-	for(unsigned int j = 1; j < seqs[0].size(); j++) {
-		for(unsigned int i = 0; i < sc.getNumberOfSequences(); i++) {
+	for(unsigned int j = 1; j < seqs[0].size(); j++)
+  {
+		for(unsigned int i = 0; i < sc.getNumberOfSequences(); i++)
+    {
 			out << seqs[i][j] << endl;
 		}
 		out << endl;

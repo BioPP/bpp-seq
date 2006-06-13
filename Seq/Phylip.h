@@ -132,7 +132,7 @@ class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequenc
 		
 	protected:
 		//Reading tools:
-		const vector<string> splitNameAndSequence(const string & s) const; 
+		const vector<string> splitNameAndSequence(const string & s) const throw (Exception); 
 		void readSequential (istream & in, AlignedSequenceContainer & asc) const throw (Exception);
 		void readInterleaved(istream & in, AlignedSequenceContainer & asc) const throw (Exception);
 		//Writing tools:

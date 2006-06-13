@@ -1,3 +1,7 @@
+13/06/06 Julien Dutheil
+* Phylip sequential format improved, no more empty line between sequences
+needed.
+
 12/06/06 Julien Dutheil
 * SiteTools::isConstant() method now has a 'ignoreUnknown' option.
 
