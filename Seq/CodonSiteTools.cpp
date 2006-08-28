@@ -53,7 +53,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <NumCalc/NumTools.h>
 using namespace NumTools;
 #include <NumCalc/VectorTools.h>
-using namespace VectorStatTools;
 using namespace VectorFunctions;
 
 // From the STL:

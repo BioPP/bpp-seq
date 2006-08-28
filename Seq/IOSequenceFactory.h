@@ -66,7 +66,7 @@ public:
    * Example:
    * @code
    * Alphabet * alphabet = new DNA();
-   * ISequence * seqReader = IOSequenceFactory().createReader(IOSequenceFactory::FASTA);
+   * ISequence * seqReader = IOSequenceFactory().createReader(IOSequenceFactory::FASTA_FORMAT);
    * SequenceContainer * sequences = seqReader->read("file.fasta", alphabet);
    * delete seqReader;
    * @endcode

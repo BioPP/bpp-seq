@@ -1,6 +1,6 @@
-AC_INIT(Bio++ SeqLib, 1.1.0, Julien.Dutheil@univ-montp2.fr, Bpp-Seq)
+AC_INIT(Bio++ SeqLib, 1.1.1, Julien.Dutheil@univ-montp2.fr, Bpp-Seq)
 AC_CONFIG_SRCDIR(Seq/Sequence.h)
-AM_INIT_AUTOMAKE(Bpp-Seq,1.1.0)
+AM_INIT_AUTOMAKE()
 AC_LANG_CPLUSPLUS
 AC_CHECK_LIB(bpp-utils,   main, , [AC_MSG_ERROR([Library bpp-utils not found.])])
 AC_CHECK_LIB(bpp-numcalc, main, , [AC_MSG_ERROR([Library bpp-numcalc not found.])])

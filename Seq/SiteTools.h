@@ -38,6 +38,12 @@ class SiteTools: public SymbolListTools
 
 		/**
 		 * @param site A site.
+		 * @return True if the site contains only gaps.
+		 */
+		static bool isGapOnly(const Site & site);
+
+		/**
+		 * @param site A site.
 		 * @return True if the site contains one or several unknwn characters.
 		 */
 		static bool hasUnknown(const Site & site);

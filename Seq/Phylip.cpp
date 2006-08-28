@@ -86,19 +86,19 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
 	
 	//Ignore first line:
 	getline(in, temp, '\n');  // Copy current line in temporary string
-	temp = FileTools::getNextLine(in);
+	temp = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(in));
   string name = "";
   string seq  = "";
 	
 	while(!in.eof())
   {
-		// Read each sequence:
+ 		// Read each sequence:
 		vector<string> v;
     try
     { 
       v = splitNameAndSequence(temp);
       // a new sequence is found:
-      if(!TextTools::isEmpty(name))
+      if(!TextTools::isEmpty(name)) //If this is not the first sequence!
       {
         // Add the previous sequence to the container:
         asc.addSequence(Sequence(name, seq, asc.getAlphabet()), true);
@@ -119,7 +119,7 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
 		//	seq += TextTools::removeWhiteSpaces(temp);			
 		//}
 		//end of this sequence:
-		temp = FileTools::getNextLine(in);
+		temp = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(in));
 	}
   // Add last sequence:
   asc.addSequence(Sequence(name, seq, asc.getAlphabet()), true);

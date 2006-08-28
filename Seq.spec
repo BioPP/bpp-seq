@@ -1,5 +1,5 @@
 %define name Bpp-Seq
-%define version 1.1.0
+%define version 1.1.1
 %define release 1
 %define _prefix /usr/local
 
@@ -65,6 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Mon Aug 28 2006 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+- Version 1.1.1
 * Tue Apr 18 2006 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
 - Version 1.1.0
 * Fri Nov 16 2005 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>

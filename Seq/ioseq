@@ -4,6 +4,7 @@
 #include "IOSequence.h"
 #include "ISequence.h"
 #include "OSequence.h"
+#include "IOSequenceFactory.h"
 #include "AbstractISequence.h"
 #include "AbstractISequence2.h"
 #include "AbstractOSequence.h"

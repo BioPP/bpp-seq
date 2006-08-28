@@ -41,9 +41,20 @@ class SiteContainerTools
 		 * The container passed as input is not modified, all sites are copied.
 		 *
 		 * @param sites The container to analyse.
-		 * @return A pointer toward a new SiteContainer with only sites with no gaps.
+		 * @return A pointer toward a new SiteContainer with only complete sites.
 		 */
 		static SiteContainer * getCompleteSites(const SiteContainer & sites);
+
+		/**
+		 * @brief Get a site set without gap-only sites.
+		 *
+		 * This function build a new SiteContainer instance without gap only sites.
+		 * The container passed as input is not modified, all sites are copied.
+		 *
+		 * @param sites The container to analyse.
+		 * @return A pointer toward a new SiteContainer.
+		 */
+		static SiteContainer * removeGapOnlySites(const SiteContainer & sites);
 
 		/**
 		 * @brief Create a new container with a specified set of sites.
@@ -76,6 +87,15 @@ class SiteContainerTools
      */
 
 		static const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc,string name="consensus", bool ignoreGap = true, bool resolveUnknown = false);
+    
+    /**
+     * @brief Change all gaps to unknown state in a container, according to its alphabet.
+     *
+     * @param sequences The container to be modified.
+     */
+    static void changeGapsToUnknownCharacters(SiteContainer & sites);
+
+
 };
 
 

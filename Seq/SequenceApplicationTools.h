@@ -123,6 +123,12 @@ class SequenceApplicationTools
 		 * account.
      * If 'gapAsUnknown' is set to true and the all option is selected, gaps will
      * be changed to 'unknown' character is sequences.
+     *
+     * - sequence.max_gap_allowed = [57%|30]
+     * If a % sign fallow the number, it is taken to be a frequence (in percent).
+     * This specify the maximum amount of gaps allowed for each site.
+     * Sites not satisfying this amount will be removed.
+     * A value of 100% will remove all gap-only sites, a value >100% will keep all sites.
 		 *
 		 * @param allSites The site container from which sites must be retrieved.
 		 * @param params   The attribute map where options may be found.

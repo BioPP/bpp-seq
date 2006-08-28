@@ -44,11 +44,11 @@ knowledge of the CeCILL license and that you accept its terms.
 /******************************************************************************/
 
 SequenceException::SequenceException(const char *   text, const Sequence * seq) :
-	Exception("SequenceException: " + string(text) + (seq != NULL ? "(" + seq -> getName() + ")" : string(""))),
+	Exception("SequenceException: " + string(text) + (seq != NULL ? "(" + seq->getName() + ")" : string(""))),
 	sequence(seq) {};
 		
 SequenceException::SequenceException(const string & text, const Sequence * seq) :
-	Exception("SequenceException: " + text + (seq != NULL ? "(" + seq -> getName() + ")" : string(""))),
+	Exception("SequenceException: " + text + (seq != NULL ? "(" + seq->getName() + ")" : string(""))),
 	sequence(seq) {};
 		
 SequenceException::~SequenceException() throw() {};
@@ -78,7 +78,7 @@ SequenceWithGapException::~SequenceWithGapException() throw () {};
 /******************************************************************************/
 
 SequenceNotAlignedException::SequenceNotAlignedException(const char *   text, const Sequence * seq) :
-	SequenceException("SequenceNotALignedException: " + string(text), seq) {};
+	SequenceException("SequenceNotAlignedException: " + string(text), seq) {};
 		
 SequenceNotAlignedException::SequenceNotAlignedException(const string & text, const Sequence * seq) :
 	SequenceException("SequenceNotAlignedException: " + text, seq) {};

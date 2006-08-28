@@ -47,7 +47,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <NumCalc/NumTools.h>
 using namespace NumTools;
 #include <NumCalc/VectorTools.h>
-using namespace VectorStatTools;
 using namespace VectorFunctions;
 
 // From the STL:
@@ -63,6 +62,18 @@ bool SiteTools::hasGap(const Site & site)
 		if (site[i] == -1) return true;
 	}
 	return false;
+}
+
+/******************************************************************************/
+
+bool SiteTools::isGapOnly(const Site & site)
+{
+	// Main loop : for all characters in site
+	for (unsigned int i = 0 ; i < site.size(); i++)
+  {
+		if (site[i] != -1) return false;
+	}
+	return true;
 }
 
 /******************************************************************************/
