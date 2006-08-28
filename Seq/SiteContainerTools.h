@@ -91,7 +91,7 @@ class SiteContainerTools
     /**
      * @brief Change all gaps to unknown state in a container, according to its alphabet.
      *
-     * @param sequences The container to be modified.
+     * @param sites The container to be modified.
      */
     static void changeGapsToUnknownCharacters(SiteContainer & sites);
 
