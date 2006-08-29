@@ -22,7 +22,7 @@ class SiteContainerTools
 
 	public:
 
-		/**
+		/**i
 		 * @brief Retrieves sites without gaps from SiteContainer.
 		 *
 		 * This function build a new SiteContainer instance with only sites without gaps.
@@ -86,7 +86,7 @@ class SiteContainerTools
      * @return A new Sequence object with the consensus sequence.
      */
 
-		static const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc,string name="consensus", bool ignoreGap = true, bool resolveUnknown = false);
+		static const Sequence * getConsensus(const SiteContainer & sc,string name="consensus", bool ignoreGap = true, bool resolveUnknown = false);
     
     /**
      * @brief Change all gaps to unknown state in a container, according to its alphabet.
