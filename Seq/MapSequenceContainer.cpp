@@ -329,11 +329,13 @@ void MapSequenceContainer::deleteSequenceByKey(const string & key) throw (Sequen
 void MapSequenceContainer::addSequence(const string & key, const Sequence & sequence, bool checkNames) throw (Exception)
 {
 	// Sequence's name existence checking
-	if (checkNames) {
+	if (checkNames)
+  {
 		// For all names in map : throw exception if name already exists
-		for (map<string, Sequence *>::const_iterator it = _sequences.begin() ; it != _sequences.end() ; it++) {
-			if (it -> second -> getName() == sequence.getName()) 
-				throw Exception("MapSequenceContainer::addSequence : Sequence's name already exists in container");
+		for (map<string, Sequence *>::const_iterator it = _sequences.begin() ; it != _sequences.end() ; it++)
+    {
+			if (it->second->getName() == sequence.getName()) 
+				throw Exception("MapSequenceContainer::addSequence: Sequence '" + sequence.getName() + ", already exists in container");
 		}
 	}
 	

@@ -52,8 +52,8 @@ class Sequence;
  *
  * @see Exception
  */
-class SequenceException : public Exception {
-
+class SequenceException : public Exception
+{
 	protected:
 
 		/**

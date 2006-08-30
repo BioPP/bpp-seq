@@ -552,17 +552,21 @@ void VectorSiteContainer::addSequence(
 	if(sequence.size() != _sites.size()) throw SequenceNotAlignedException("VectorSiteContainer::setSequence", &sequence);
 
 	// New sequence's alphabet and site container's alphabet matching verification
-	if (sequence.getAlphabet() -> getAlphabetType() != _alphabet -> getAlphabetType()) {
+	if (sequence.getAlphabet()->getAlphabetType() != _alphabet -> getAlphabetType())
+  {
 		throw AlphabetMismatchException("VectorSiteContainer::addSite", _alphabet, sequence.getAlphabet());
 	}
 
-	if(checkNames) {
-		for(unsigned int i = 0; i < _names.size(); i++) {
+	if(checkNames)
+  {
+		for(unsigned int i = 0; i < _names.size(); i++)
+    {
 			if(sequence.getName() == *_names[i]) throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
 		}
 	}
 
-  for(unsigned int i = 0; i < _sites.size(); i++) {
+  for(unsigned int i = 0; i < _sites.size(); i++)
+  {
 		//For each site:
 		_sites[i] -> addElement(pos, sequence.getValue(i));
 	}

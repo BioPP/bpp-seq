@@ -220,37 +220,45 @@ void VectorSequenceContainer::deleteSequence(unsigned int sequenceIndex) throw (
 void VectorSequenceContainer::addSequence(const Sequence & sequence, bool checkName) throw (Exception)
 {
 	// Sequence's name existence checking
-	if (checkName) {
+	if (checkName)
+  {
 		// For all names in vector : throw exception if name already exists
-		for(unsigned int i = 0; i < _sequences.size(); i++) {
+		for(unsigned int i = 0; i < _sequences.size(); i++)
+    {
 			if (_sequences[i] -> getName() == sequence.getName())
-				throw Exception("VectorSequenceContainer::addSequence : Sequence's name already exists in container");
+				throw Exception("VectorSequenceContainer::addSequence : Sequence '" + sequence.getName() + "' already exists in container");
 		}
 	}
 
 	// New sequence's alphabet and sequence container's alphabet matching verification
-	if (sequence.getAlphabet() -> getAlphabetType() == _alphabet -> getAlphabetType()) {
+	if (sequence.getAlphabet() -> getAlphabetType() == _alphabet -> getAlphabetType())
+  {
 		//push_back(new Sequence(sequence.getName(), sequence.getContent(), alphabet));
 		_sequences.push_back(dynamic_cast<Sequence *>(sequence.clone()));
-	} else throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", _alphabet, sequence.getAlphabet());
+	}
+  else throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", _alphabet, sequence.getAlphabet());
 }
 
 void VectorSequenceContainer::addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName) throw (Exception)
 {
 	// Sequence's name existence checking
-	if (checkName) {
+	if (checkName)
+  {
 		// For all names in vector : throw exception if name already exists
-		for(unsigned int i = 0; i < _sequences.size(); i++) {
+		for(unsigned int i = 0; i < _sequences.size(); i++)
+    {
 			if (_sequences[i] -> getName() == sequence.getName())
-				throw Exception("VectorSequenceContainer::addSequence : Sequence's name already exists in container");
+				throw Exception("VectorSequenceContainer::addSequence : Sequence '" + sequence.getName() + "' already exists in container");
 		}
 	}
 
 	// New sequence's alphabet and sequence container's alphabet matching verification
-	if (sequence.getAlphabet() -> getAlphabetType() == _alphabet -> getAlphabetType()) {
+	if (sequence.getAlphabet() -> getAlphabetType() == _alphabet -> getAlphabetType())
+  {
 		//insert(begin() + pos, new Sequence(sequence.getName(), sequence.getContent(), alphabet));
 		_sequences.insert(_sequences.begin() + sequenceIndex, dynamic_cast<Sequence *>(sequence.clone()));
-	} else throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", _alphabet, sequence.getAlphabet());
+	}
+  else throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", _alphabet, sequence.getAlphabet());
 }
 
 /******************************************************************************/

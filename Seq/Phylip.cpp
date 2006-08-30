@@ -94,9 +94,14 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
   {
  		// Read each sequence:
 		vector<string> v;
-    try
-    { 
+    bool hasName = true;
+    try { 
       v = splitNameAndSequence(temp);
+    } catch(Exception & e) {
+      hasName = false;
+    }
+    if(hasName)
+    {
       // a new sequence is found:
       if(!TextTools::isEmpty(name)) //If this is not the first sequence!
       {
@@ -106,7 +111,7 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
 		  name = v[0];
 		  seq  = v[1];
     }
-    catch(Exception & ex)
+    else
     {
       //No sequence name found.
       if(TextTools::isEmpty(name)) throw Exception("First sequence in file has no name!");

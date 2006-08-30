@@ -1,3 +1,8 @@
+30/08/06 Julien Dutheil
+
+* Bug fixed in phylip sequential reader, + duplicated sequence in container
+now throws sequence name. (included in 1.1.1 release).
+
 28/08/06 -*- Version 1.1.1 -*-
 
 08/08/06 Julien Dutheil
