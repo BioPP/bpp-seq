@@ -22,7 +22,7 @@ class SiteContainerTools
 
 	public:
 
-		/**i
+		/**
 		 * @brief Retrieves sites without gaps from SiteContainer.
 		 *
 		 * This function build a new SiteContainer instance with only sites without gaps.
@@ -95,9 +95,37 @@ class SiteContainerTools
      */
     static void changeGapsToUnknownCharacters(SiteContainer & sites);
 
+    /**
+     * @brief Resolve a container with "." notations.
+     *
+     * @code
+     * ATGCCGTTGG
+     * .C...A..C.
+     * ..A....C..
+     * @endcode
+     * will results in
+     * @code
+     * ATGCCGTTGG
+     * ACCCCATTCG
+     * ATACCGTCGG
+     * @endcode
+     * for instance.
+     * The first sequence is here called the "reference" sequence.
+     * It need not be the first in the container.
+     * The alphabet of the input alignment must be an instance of the DefaultAlphabet class, the only one which support dot characters.
+     * A new alignment is created and returned, with the specified alphabet.
+     *
+     * If several sequences that may be considered as reference are found, the first one is used.
+     * 
+     * @param dottedAln The input alignment.
+     * @param resolvedAlphabet The alphabet of the output alignment.
+     * @return A pointer toward a dynamically created SiteContainer with the specified alphabet (can be a DefaultAlphabet).
+     * @throw AlphabetException If the alphabet of the input alignment is not of class DefaultAlphabet, or if one character does not match with the output alphabet.
+     * @throw Exception If no reference sequence was found, or if the input alignment contains no sequence.
+     */
+    static SiteContainer * resolveDottedAlignment(const SiteContainer & dottedAln, const Alphabet * resolvedAlphabet) throw (AlphabetException, Exception);
 
 };
-
 
 #endif	//_SITECONTAINERTOOLS_H_
 

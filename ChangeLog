@@ -1,5 +1,9 @@
-30/08/06 Julien Dutheil
+06/12/06 Julien Dutheil
+* DefaultAlphabet now accepts "." characters.
+* New AlphabetTools::isDefaultAlphabet(const Alphabet *) method.
+* New SiteContainerTools::resolveDottedAlignment(const Sitecontainer &, const Alphabet *) method.
 
+30/08/06 Julien Dutheil
 * Bug fixed in phylip sequential reader, + duplicated sequence in container
 now throws sequence name. (included in 1.1.1 release).
 

@@ -127,6 +127,11 @@ class AlphabetTools
 		 * @param alphabet The alphabet to check.
 		 */
 		static bool isCodonAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<CodonAlphabet>(alphabet); }
+		/**
+		 * @return True if the alphabet is an instanciation of the DefaultAlphabet class.
+		 * @param alphabet The alphabet to check.
+		 */
+		static bool isDefaultAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
 
 
 

@@ -78,8 +78,26 @@ class VectorSiteContainer :
 		mutable vector<Sequence *> _sequences; //To store pointer toward sequences retrieves (cf. AlignedSequenceContainer).
 	
 	public:
+    /**
+     * @brief Build a new container from a set of sites.
+     *
+     * @param vs A vector of sites.
+     * @param alpha The common alphabet for all sites.
+     * @throw Exception If sites differ in size or in alphabet.
+     */
 		VectorSiteContainer(const vector<const Site *> & vs, const Alphabet * alpha) throw (Exception);
+    /**
+     * @brief Build a new empty container with specified size.
+     *
+     * @param size Number of sequences in the container.
+     * @param alpha The alphabet for this container.
+     */
 		VectorSiteContainer(unsigned int size, const Alphabet * alpha);
+    /**
+     * @brief Build a new empty container.
+     *
+     * @param alpha The alphabet for this container.
+     */
 		VectorSiteContainer(const Alphabet * alpha);
 
 		VectorSiteContainer(const      VectorSiteContainer & vsc);

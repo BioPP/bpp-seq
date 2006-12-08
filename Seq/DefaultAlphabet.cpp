@@ -43,7 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/TextTools.h>
 
-const string DefaultAlphabet::chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890?";
+const string DefaultAlphabet::chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?";
 
 // class constructor
 DefaultAlphabet::DefaultAlphabet()
