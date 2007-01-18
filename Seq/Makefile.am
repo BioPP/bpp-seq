@@ -25,6 +25,7 @@ GranthamAAChemicalDistance.h\
 GranthamAAPolarityIndex.h\
 GranthamAAVolumeIndex.h\
 MiyataAAChemicalDistance.h\
+BLOSUM50.h\
 SimpleIndexDistance.h\
 IOSequence.h\
 ISequence.h\
@@ -89,6 +90,7 @@ Fasta.cpp\
 GeneticCode.cpp\
 GranthamAAChemicalDistance.cpp\
 MiyataAAChemicalDistance.cpp\
+BLOSUM50.cpp\
 MapSequenceContainer.cpp\
 Mase.cpp\
 MaseTools.cpp\
@@ -125,7 +127,8 @@ IOSequenceFactory.cpp
 
 CPP_EXTRA = \
 __GranthamMatrixCode\
-__MiyataMatrixCode
+__MiyataMatrixCode\
+__BLOSUM50MatrixCode
 
 lib_LTLIBRARIES = libbpp-seq.la
 libbpp_seq_la_SOURCES = $(H_FILES) $(CPP_FILES)

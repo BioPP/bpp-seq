@@ -1,3 +1,11 @@
+18/12/06 Julien Dutheil
+* New alignment tools in SiteContainerTools, including the Needleman and
+Wunsch alogrithm.
+* BLOSUM50 matrix available.
+* Bug fixed in Sequence.h: method setContent is now properly redefined.
+* Bug fixed in ProteicAlphabet->getAbbr(int). The returned result is now
+correct!!!
+
 06/12/06 Julien Dutheil
 * DefaultAlphabet now accepts "." characters.
 * New AlphabetTools::isDefaultAlphabet(const Alphabet *) method.

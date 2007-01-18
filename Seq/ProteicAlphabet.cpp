@@ -201,7 +201,8 @@ string ProteicAlphabet::getAbbr(const string & aa) const throw (AlphabetExceptio
 
 string ProteicAlphabet::getAbbr(int aa) const throw (AlphabetException)
 {
-	if ((aa >= 0) && (aa < (int)getNumberOfChars())) return alphabet[aa].abbr;
+	for (unsigned int i = 0 ; i < getNumberOfChars() ; i++)
+		if (alphabet[i].num == aa) return alphabet[i].abbr;
 	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid");
 }
 

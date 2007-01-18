@@ -114,7 +114,8 @@ Sequence::Sequence(const Sequence & s) :
 
 /** Assignation operator: ***************************************************************/
 
-Sequence & Sequence::operator = (const Sequence & s) {
+Sequence & Sequence::operator = (const Sequence & s)
+{
 	_alphabet = s.getAlphabet();
 	_content  = s.getContent();
 	_comments = s.getComments();
@@ -123,10 +124,6 @@ Sequence & Sequence::operator = (const Sequence & s) {
 
 	return * this;
 }
-
-/****************************************************************************************/
-
-Clonable * Sequence::clone() const { return new Sequence(*  this); }
 
 /****************************************************************************************/
 
@@ -148,7 +145,8 @@ void Sequence::setSense(bool sense) { _sense = sense; }
 
 /****************************************************************************************/
 
-void Sequence::setContent(const string & sequence) throw (BadCharException) {
+void Sequence::setContent(const string & sequence) throw (BadCharException)
+{
 	// Remove blanks in sequence
 	_content = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), _alphabet);//Warning, an exception may be casted here!
 }

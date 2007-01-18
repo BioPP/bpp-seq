@@ -43,9 +43,11 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SiteIterator.h"
 #include "SiteTools.h"
 #include "AlphabetTools.h"
+#include "SequenceTools.h"
 
 // From the STL:
 #include <vector>
+#include <deque>
 #include <string>
 #include <ctype.h>
 
@@ -231,6 +233,211 @@ SiteContainer * SiteContainerTools::resolveDottedAlignment(
   
   //Return result:
   return sites;
+}
+
+/******************************************************************************/
+
+map<unsigned int, unsigned int> SiteContainerTools::getSequencePositions(const Sequence & seq)
+{
+  map<unsigned int, unsigned int> tln;
+  if(seq.size() == 0) return tln;
+  unsigned int count = 0;
+  for(unsigned int i = 0; i < seq.size(); i++)
+  {
+    if(seq[i] != -1)
+    {
+      count++;
+      tln[i+1] = count;
+    }
+  }
+  return tln;
+}
+
+/******************************************************************************/
+
+map<unsigned int, unsigned int> SiteContainerTools::getAlignmentPositions(const Sequence & seq)
+{
+  map<unsigned int, unsigned int> tln;
+  if(seq.size() == 0) return tln;
+  unsigned int count = 0;
+  for(unsigned int i = 0; i < seq.size(); i++)
+  {
+    if(seq[i] != -1)
+    {
+      count++;
+      tln[count] = i+1;
+    }
+  }
+  return tln;
+}
+
+/******************************************************************************/
+
+map<unsigned int, unsigned int> SiteContainerTools::translateAlignment(const Sequence & seq1, const Sequence & seq2)
+  throw (AlphabetMismatchException, Exception)
+{
+	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+		throw AlphabetMismatchException("SiteContainerTools::translateAlignment", seq1.getAlphabet(), seq2.getAlphabet());
+  map<unsigned int, unsigned int> tln;
+  if(seq1.size() == 0) return tln;
+  unsigned int count1 = 0;
+  unsigned int count2 = 0;
+  if(seq2.size() == 0) throw Exception("SiteContainerTools::translateAlignment. Sequences do not match at position " + TextTools::toString(count1+1) + " and " + TextTools::toString(count2+1) + ".");
+  int state1 = seq1[count1];
+  int state2 = seq2[count2];
+  bool end = false;
+  while(!end)
+  {
+    while(state1 == -1) 
+    {
+      count1++;
+      if(count1 < seq1.size()) state1 = seq1[count1];
+      else break;
+    }
+    while(state2 == -1)
+    {
+      count2++;
+      if(count2 < seq2.size()) state2 = seq2[count2];
+      else break;
+    }
+    if(state1 != state2) throw Exception("SiteContainerTools::translateAlignment. Sequences do not match at position " + TextTools::toString(count1+1) + " and " + TextTools::toString(count2+1) + ".");
+    tln[count1+1] = count2+1;//Count start at 1
+    if(count1 == seq1.size() - 1) end = true;
+    else
+    {
+      if(count2 == seq2.size() - 1)
+      {
+        state1 = seq1[++count1];
+        while(state1 == -1)
+        {
+          count1++;
+          if(count1 < seq1.size()) state1 = seq1[count1];
+          else break;
+        }
+        if(state1 == -1) end = true;
+        else throw Exception("SiteContainerTools::translateAlignment. Sequences do not match at position " + TextTools::toString(count1+1) + " and " + TextTools::toString(count2+1) + ".");
+      }
+      else
+      {
+        state1 = seq1[++count1];
+        state2 = seq2[++count2];
+      }
+    }
+  }
+  return tln;
+}
+
+/******************************************************************************/
+
+map<unsigned int, unsigned int> SiteContainerTools::translateSequence(const SiteContainer & sequences, unsigned int i1, unsigned int i2)
+{
+  const Sequence * seq1 = sequences.getSequence(i1);
+  const Sequence * seq2 = sequences.getSequence(i2);
+  map<unsigned int, unsigned int> tln;
+  unsigned int count1 = 0; //Sequence 1 counter
+  unsigned int count2 = 0; //Sequence 2 counter
+  int state1;
+  int state2;
+  for(unsigned int i = 0; i <  sequences.getNumberOfSites(); i++)
+  {
+    state1 = (*seq1)[i];
+    if(state1 != -1) count1++;
+    state2 = (*seq2)[i];
+    if(state2 != -1) count2++;
+    if(state1 != -1)
+    {
+      tln[count1] = (state2 == -1 ? 0 : count2);
+    }
+  }
+  return tln;
+}
+
+/******************************************************************************/
+    
+AlignedSequenceContainer * SiteContainerTools::alignNW(
+    const Sequence & seq1,
+    const Sequence & seq2,
+    const AlphabetIndex2<double> & s,
+    double gap)
+throw (AlphabetMismatchException)
+{
+	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+		throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), seq2.getAlphabet());
+	if(seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
+		throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
+  //Check that sequences have no gap!
+  Sequence * s1 = SequenceTools::removeGaps(seq1);
+  Sequence * s2 = SequenceTools::removeGaps(seq2);
+  
+  //1) Initialise matrix:
+  RowMatrix<double> m(s1->size() + 1, s2->size() + 1);
+  RowMatrix<char>   p(s1->size(), s2->size());
+  double choice1, choice2, choice3, mx;
+  char px;
+  for(unsigned int i = 0; i < s1->size(); i++) m(i,0) = i * gap;
+  for(unsigned int j = 0; j < s2->size(); j++) m(0,j) = j * gap;
+  for(unsigned int i = 1; i <= s1->size(); i++)
+  {
+    for(unsigned int j = 1; j <= s2->size(); j++)
+    {
+      choice1 = m(i-1,j-1) + s.getIndex((*s1)[i-1], (*s2)[j-1]);
+      choice2 = m(i-1, j) + gap;
+      choice3 = m(i, j-1) + gap;
+      mx = choice1; px = 'd'; //Default in case of equality of scores.
+      if(choice2 > mx) { mx = choice2; px = 'u'; }
+      if(choice3 > mx) { mx = choice3; px = 'l'; }
+      m(i,j) = mx;
+      p(i-1,j-1) = px;
+    }
+  }
+
+  //2) Get alignment:
+  deque<int> a1, a2;
+  unsigned int i = s1->size(), j = s2->size();
+  char c;
+  while(i > 0 && j > 0)
+  {
+    c = p(i-1, j-1);
+    if(c == 'd')
+    {
+      a1.push_front((*s1)[i-1]);
+      a2.push_front((*s2)[j-1]);
+      i--;
+      j--;
+    }
+    else if(c == 'l')
+    {
+      a1.push_front((*s1)[i-1]);
+      a2.push_front(-1);
+      i--;
+    }
+    else
+    {
+      a1.push_front(-1);
+      a2.push_front((*s2)[j-1]);
+      j--;
+    }
+  }
+  while (i > 0)
+  {
+    a1.push_front((*s1)[i-1]);
+    a2.push_front(-1);
+    i--;
+  }
+  while (j > 0)
+  {
+    a1.push_front(-1);
+    a2.push_front((*s2)[j-1]);
+    j--;
+  }
+  s1->setContent(vector<int>(a1.begin(), a1.end()));
+  s2->setContent(vector<int>(a2.begin(), a2.end()));
+  AlignedSequenceContainer * asc = new AlignedSequenceContainer(s1->getAlphabet());
+  asc->addSequence(*s1, false);
+  asc->addSequence(*s2, false);//Do not check for sequence names.
+  delete s1;//Sequence are recopied in the container, we can delete these...
+  delete s2;
+  return asc;
 }
 
 /******************************************************************************/

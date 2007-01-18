@@ -76,10 +76,6 @@ Site Site::operator = (const Site & s)
 
 /****************************************************************************************/
 
-Clonable * Site::clone() const { return new Site(*  this); }
-
-/****************************************************************************************/
-
 int Site::getPosition() const { return _position; };
 
 void Site::setPosition(int position) { _position = position; }

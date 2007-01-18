@@ -112,7 +112,7 @@ class KleinAANetChargeIndex: public AlphabetIndex1<double>
 
 		const Alphabet * getAlphabet() const { return _alpha; }
 
-		Clonable * clone() const { return new KleinAANetChargeIndex(); }
+		KleinAANetChargeIndex * clone() const { return new KleinAANetChargeIndex(); }
 };
 
 #endif //_KLEINAANETCHARGEINDEX_H_

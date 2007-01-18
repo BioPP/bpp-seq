@@ -79,11 +79,12 @@ Sequence * SequenceTools::subseq(const Sequence & sequence, unsigned int begin, 
 Sequence * SequenceTools::concatenate(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, Exception)
 {
 	// Sequence's alphabets matching verification
-	if ((seq1.getAlphabet() -> getAlphabetType()) != (seq2.getAlphabet() -> getAlphabetType())) 
+	if ((seq1.getAlphabet()->getAlphabetType()) != (seq2.getAlphabet()->getAlphabetType())) 
 		throw AlphabetMismatchException("SequenceTools::concatenate : Sequence's alphabets don't match ", seq1.getAlphabet(), seq2.getAlphabet());
 	
 	// Sequence's names matching verification
-	if (seq1.getName() != seq2.getName()) throw Exception ("SequenceTools::concatenate : Sequence's names don't match");
+	if (seq1.getName() != seq2.getName())
+    throw Exception ("SequenceTools::concatenate : Sequence's names don't match");
 
 	// Concatenate sequences and send result
 	vector<int> sequence  = seq1.getContent();
@@ -98,12 +99,13 @@ Sequence * SequenceTools::reverse(const Sequence & sequence)
 {
 	unsigned int n = sequence.size();
 	vector<int> content(n);
-	for(unsigned int i = 0; i < n; i++) {
+	for(unsigned int i = 0; i < n; i++)
+  {
 		content[i] = sequence[n - i - 1];
 	}
 	// New sequence creating, and sense reversing
 	Sequence * s = new Sequence(sequence.getName(), content, sequence.getComments(), sequence.getAlphabet());
-	s -> setSense(! sequence.getSense());
+	s->setSense(! sequence.getSense());
 
 	// Send result
 	return s;
@@ -115,15 +117,20 @@ Sequence * SequenceTools::complement(const Sequence & sequence) throw (AlphabetE
 {
 	// Alphabet type checking
 	NucleicAcidsReplication * NAR;
-	if (sequence.getAlphabet() -> getAlphabetType() == "DNA alphabet") {
+	if (sequence.getAlphabet()->getAlphabetType() == "DNA alphabet")
+  {
 		NAR = &_DNARep;
-	} else	if (sequence.getAlphabet() -> getAlphabetType() == "RNA alphabet") {
+	}
+  else if(sequence.getAlphabet()->getAlphabetType() == "RNA alphabet")
+  {
 		NAR = &_RNARep;
-	} else {
+	}
+  else
+  {
 		throw AlphabetException ("SequenceTools::complement : Sequence must be nucleic.", sequence.getAlphabet());
 	}
 	
-	return NAR -> translate(sequence);
+	return NAR->translate(sequence);
 }
 
 /****************************************************************************************/
@@ -131,7 +138,8 @@ Sequence * SequenceTools::complement(const Sequence & sequence) throw (AlphabetE
 Sequence * SequenceTools::transcript(const Sequence & sequence) throw (AlphabetException)
 {
 	// Alphabet type checking
-	if (sequence.getAlphabet() -> getAlphabetType() != "DNA alphabet") {
+	if (sequence.getAlphabet()->getAlphabetType() != "DNA alphabet")
+  {
 		throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
 	}
 
@@ -143,7 +151,8 @@ Sequence * SequenceTools::transcript(const Sequence & sequence) throw (AlphabetE
 Sequence * SequenceTools::reverseTranscript(const Sequence & sequence) throw (AlphabetException)
 {
 	// Alphabet type checking
-	if (sequence.getAlphabet() -> getAlphabetType() != "RNA alphabet") {
+	if (sequence.getAlphabet()->getAlphabetType() != "RNA alphabet")
+  {
 		throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
 	}
 
@@ -154,10 +163,10 @@ Sequence * SequenceTools::reverseTranscript(const Sequence & sequence) throw (Al
 		
 double SequenceTools::getPercentIdentity(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, SequenceNotAlignedException)
 {
-	if(seq1.getAlphabet() -> getAlphabetType() != seq2.getAlphabet() -> getAlphabetType())
-		throw AlphabetMismatchException("Sequence::getPercentIdentity", seq1.getAlphabet(), seq2.getAlphabet());
+	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+		throw AlphabetMismatchException("SequenceTools::getPercentIdentity", seq1.getAlphabet(), seq2.getAlphabet());
 	if(seq1.size() != seq2.size())
-		throw SequenceNotAlignedException("Sequence::getPercentIdentity", &seq2);
+		throw SequenceNotAlignedException("SequenceTools::getPercentIdentity", &seq2);
 	int id = 0;
 	for(unsigned int i = 0; i < seq1.size(); i++)
 		if(seq1.getValue(i) == seq2.getValue(i)) id++;
@@ -169,7 +178,8 @@ double SequenceTools::getPercentIdentity(const Sequence & seq1, const Sequence &
 unsigned int SequenceTools::getNumberOfSites(const Sequence & seq)
 {
 	unsigned int count = 0;
-	for(unsigned int i = 0; i < seq.size(); i++) {
+	for(unsigned int i = 0; i < seq.size(); i++)
+  {
 		if(seq[i] > -1) count++;
 	}
 	return count;
@@ -180,10 +190,25 @@ unsigned int SequenceTools::getNumberOfSites(const Sequence & seq)
 unsigned int SequenceTools::getNumberOfCompleteSites(const Sequence & seq)
 {
 	unsigned int count = 0;
-	for(unsigned int i = 0; i < seq.size(); i++) {
-		if(seq[i] > -1 && seq[i] < (int)seq.getAlphabet() -> getSize()) count++;
+	for(unsigned int i = 0; i < seq.size(); i++)
+  {
+		if(seq[i] > -1 && seq[i] < (int)seq.getAlphabet()->getSize()) count++;
 	}
 	return count;
+}
+
+/****************************************************************************************/
+
+Sequence * SequenceTools::removeGaps(const Sequence & seq)
+{
+	vector<int> content;
+  for(unsigned int i = 0; i < seq.size(); i++)
+  {
+		if(seq[i] > -1) content.push_back(seq[i]);
+	}
+  Sequence * newSeq = seq.clone();
+  newSeq->setContent(content);
+	return newSeq;
 }
 
 /****************************************************************************************/

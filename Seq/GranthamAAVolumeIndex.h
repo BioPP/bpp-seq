@@ -110,7 +110,7 @@ class GranthamAAVolumeIndex: public AlphabetIndex1<double>
 
 		const Alphabet * getAlphabet() const { return _alpha; }
 
-		Clonable * clone() const { return new GranthamAAVolumeIndex(); }
+		GranthamAAVolumeIndex * clone() const { return new GranthamAAVolumeIndex(); }
 };
 
 #endif //_GRANTHAMAAVOLUMEINDEX_H_

@@ -71,7 +71,7 @@ typedef vector<string> Comments;
  *
  * @see Alphabet
  */
-class Sequence: public virtual SymbolList
+class Sequence: public SymbolList
 {
 	protected:
 
@@ -189,7 +189,7 @@ class Sequence: public virtual SymbolList
 		 *
 		 * @{
 		 */
-		Clonable * clone() const;
+		Sequence * clone() const { return new Sequence(*this); }
 		/** @} */
         
 		
@@ -272,6 +272,15 @@ class Sequence: public virtual SymbolList
 		 * @see The Sequence constructor for information about the way sequences are internaly stored.
 		 */
 		void setContent(const string & sequence) throw (BadCharException);
+		void setContent(const vector<int>    & list) throw (BadIntException)
+    {
+      SymbolList::setContent(list);
+    }
+		void setContent(const vector<string> & list) throw (BadCharException)
+    {
+      SymbolList::setContent(list);
+    }
+
 
 		/**
 		 * @brief Set up the size of a sequence from the right side.

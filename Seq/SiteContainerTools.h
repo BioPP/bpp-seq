@@ -8,6 +8,15 @@
 #define _SITECONTAINERTOOLS_H_
 
 #include "SiteContainer.h"
+#include "AlignedSequenceContainer.h"
+#include "AlphabetIndex2.h"
+
+//From the STL:
+#include <vector>
+#include <map>
+
+//From NumCalc
+#include <NumCalc/Matrix.h>
 
 typedef vector<unsigned int> SiteSelection;
 
@@ -17,7 +26,7 @@ typedef vector<unsigned int> SiteSelection;
 class SiteContainerTools
 {
 	public:
-		SiteContainerTools() {}
+ 		SiteContainerTools() { cout << "coucou" << endl; }
 		virtual ~SiteContainerTools() {}
 
 	public:
@@ -125,6 +134,68 @@ class SiteContainerTools
      */
     static SiteContainer * resolveDottedAlignment(const SiteContainer & dottedAln, const Alphabet * resolvedAlphabet) throw (AlphabetException, Exception);
 
+    /**
+     * @brief Get the index of each sequence position in an aligned sequence.
+     *
+     * If the sequence contains no gap, the translated and the original positions are the same.
+     * Position numbers start at 1.
+     *
+     * @param seq The sequence to translate.
+     * @return A map with original alignement positions as keys, and translated positions as values.
+     */
+    static map<unsigned int, unsigned int> getSequencePositions(const Sequence & seq);
+
+    /**
+     * @brief Get the index of each alignment position in an aligned sequence.
+     *
+     * If the sequence contains no gap, the translated and the original positions are the same.
+     * Position numbers start at 1.
+     *
+     * @param seq The sequence to translate.
+     * @return A map with original alignement positions as keys, and translated positions as values.
+     */
+    static map<unsigned int, unsigned int> getAlignmentPositions(const Sequence & seq);
+
+    /**
+     * @brief Translate alignement positions from an aligned sequence to the same sequence in a different alignment.
+     *
+     * Takes each position (starting at 1) in sequence 1, and look for the corresponding position in sequence 2.
+     * The two sequences must be the same, excepted for the gaps.
+     * If no sequence contains gaps, or if the gaps are at the same place in both sequences, the translated postion will be the same as the original positions.
+     * 
+     * @param seq1 The sequence to translate.
+     * @param seq2 The reference sequence.
+     * @return A map with original alignement positions as keys, and translated positions as values.
+     * @throw AlphabetMismatchException If the sequences do not share the same alphabet.
+     * @throw Exception If the sequence do not match.
+     */
+    static map<unsigned int, unsigned int> translateAlignment(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, Exception);
+
+    /**
+     * @brief Translate sequence positions from a sequence to another in the same alignment.
+     *
+     * Takes each position (starting at 1) in sequence 1, and look for the corresponding position in sequence 2 at the same site.
+     * If no corresponding position is available (i.e. if there is a gap in sequence 2 at the corresponding position), 0 is returned.
+     *
+     * @param i1 The index of the sequence to translate.
+     * @param i2 The index of the reference sequence.
+     * @return A map with original sequence positions as keys, and translated positions as values.
+     */
+    static map<unsigned int, unsigned int> translateSequence(const SiteContainer & sequences, unsigned int i1, unsigned int i2);
+
+    /**
+     * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
+     *
+     * If the input sequences contain gaps, they will be ignored.
+     *
+     * @param seq1 The first sequence.
+     * @param seq2 The second sequence.
+     * @param s The score matrix to use.
+     * @param gap Gap penalty.
+     * @return A new SiteContainer instance.
+     * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
+     */
+    static AlignedSequenceContainer * alignNW(const Sequence & seq1, const Sequence & seq2, const AlphabetIndex2<double> & s, double gap) throw (AlphabetMismatchException);
 };
 
 #endif	//_SITECONTAINERTOOLS_H_

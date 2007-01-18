@@ -82,7 +82,6 @@ knowledge of the CeCILL license and that you accept its terms.
  */
 class AAChargeIndex: public AlphabetIndex1<double>
 {
-
 	private:
 		vector<double> _charge;
 		const ProteicAlphabet * _alpha;
@@ -130,7 +129,7 @@ class AAChargeIndex: public AlphabetIndex1<double>
 
 		const Alphabet * getAlphabet() const { return _alpha; }
 
-		Clonable * clone() const { return new AAChargeIndex(); }
+		AAChargeIndex * clone() const { return new AAChargeIndex(); }
 };
 
 #endif //_AACHARGEINDEX_H_

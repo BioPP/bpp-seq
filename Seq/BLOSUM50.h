@@ -1,7 +1,7 @@
 //
-// File: GranthamAAChemicalDistance.h
+// File: BLOSUM50.h
 // Created by: Julien Dutheil
-// Created on: Mon Feb 21 17:42 2005
+// Created on: Tue Jan 18 10:28 2007
 //
 
 /*
@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _GRANTHAMAACHEMICALDISTANCE_H_
-#define _GRANTHAMAACHEMICALDISTANCE_H_
+#ifndef _BLOSUM50_H_
+#define _BLOSUM50_H_
 
 // from the STL:
 #include <string>
@@ -55,29 +55,24 @@ using namespace std;
 #include <NumCalc/Matrix.h>
 
 /**
- * @brief Grantham (1974) Amino-Acid chemical distance.
- *
- * Two kinds of matrix can be built:
- * - a symmetric one, with \f$I_{i,j} = I_{i,j}\f$,
- * - or a non-symmetric one, with \f$I_{i,j} = -I_{i,j}\f$.
+ * @brief BLOSUM 50 Substitution Matrix.
  *   
  * Reference:
- * Grantham, R.
- * Amino acid difference formula to help explain protein evolution
- * Science 185, 862-864 (1974)
+ * Henikoff, S. and Henikoff, J.G.
+ * Amino acid substitution matrices from protein blocks
+ * Proc. Natl. Acad. Sci. USA 89, 10915-10919 (1992)
  *
- * Data from AAIndex2 database, Accession Number GRAR740104.
+ * Data from AAIndex2 database, Accession Number HENS920104.
  */
-class GranthamAAChemicalDistance: public AlphabetIndex2<double> {
+class BLOSUM50: public AlphabetIndex2<double> {
 
 	private:
 		RowMatrix<double> _distanceMatrix;
 		const ProteicAlphabet * _alpha;
-		bool _sym;
 
 	public:
-		GranthamAAChemicalDistance();
-		virtual ~GranthamAAChemicalDistance();
+		BLOSUM50();
+		virtual ~BLOSUM50();
 
 	public:
 		/**
@@ -88,15 +83,11 @@ class GranthamAAChemicalDistance: public AlphabetIndex2<double> {
 		double getIndex(int state1, int state2) const throw (BadIntException);
 		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
 		const Alphabet * getAlphabet() const { return _alpha; };
-		GranthamAAChemicalDistance * clone() const { return new GranthamAAChemicalDistance(); }
+		BLOSUM50 * clone() const { return new BLOSUM50(); }
 		Matrix<double> * getIndexMatrix() const;
 		/** @} */
 
-	public:
-		void setSymmetric(bool yn) { _sym = yn; }
-		bool isSymmetric() const { return _sym; }
-
 };
 
-#endif //_GRANTHAMAACHEMICALDISTANCE_H_
+#endif //_BLOSUM50_H_
 

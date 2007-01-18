@@ -109,7 +109,7 @@ class GranthamAAPolarityIndex: public AlphabetIndex1<double>
 
 		const Alphabet * getAlphabet() const { return _alpha; }
 
-		Clonable * clone() const { return new GranthamAAPolarityIndex(); }
+		GranthamAAPolarityIndex * clone() const { return new GranthamAAPolarityIndex(); }
 };
 
 #endif //_GRANTHAMAAPOLARITYINDEX_H_

@@ -55,7 +55,7 @@ knowledge of the CeCILL license and that you accept its terms.
  * But for now, we do not allow to construct a Site directly from a string.
  * This should not be a constraint, since you never read sites directly from a file.
  */
-class Site: public virtual SymbolList 
+class Site: public SymbolList 
 {	
 	protected:
 		/**
@@ -141,7 +141,7 @@ class Site: public virtual SymbolList
 		 *
 		 * @{
 		 */
-		Clonable * clone() const;
+		Site * clone() const { return new Site(*this); }
 		/** @} */
 
 		/**

@@ -175,8 +175,15 @@ class SequenceTools: public SymbolListTools
 		 * @param seq The sequence to analyse.
 		 */
 		static unsigned int getNumberOfCompleteSites(const Sequence & seq);
+
+    /**
+     * @brief Remove gaps from a sequence.
+     *
+		 * @param seq The sequence to analyse.
+     * @return A new sequence object without gaps.
+     */
+    static Sequence * removeGaps(const Sequence & seq);
 };
 
 #endif // _SEQUENCETOOLS_H_
-
 

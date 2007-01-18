@@ -1,7 +1,7 @@
 //
-// File: GranthamAAChemicalDistance.h
+// File: BLOSUM50.cpp
 // Created by: Julien Dutheil
-// Created on: Mon Feb 21 17:42 2005
+// Created on: Tue Jan 18 10:28 2007
 //
 
 /*
@@ -37,66 +37,38 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _GRANTHAMAACHEMICALDISTANCE_H_
-#define _GRANTHAMAACHEMICALDISTANCE_H_
-
 // from the STL:
 #include <string>
-using namespace std;
 
-#include "AlphabetIndex2.h"
-#include "ProteicAlphabet.h"
-#include "AlphabetExceptions.h"
+#include "BLOSUM50.h"
 
-// From Utils:
-#include <Utils/Exceptions.h>
+BLOSUM50::BLOSUM50()
+{
+	// Build the alphabet:
+	_alpha = new ProteicAlphabet();
+	
+	// Load the matrix:
+	_distanceMatrix.resize(20, 20);
+	#include "__BLOSUM50MatrixCode"
+}
+BLOSUM50::~BLOSUM50() { delete _alpha; }
 
-// From NumCalc:
-#include <NumCalc/Matrix.h>
+double BLOSUM50::getIndex(int state1, int state2) const 
+throw (BadIntException)
+{
+	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "BLOSUM50::getIndex(). Invalid state1.", _alpha);
+	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "BLOSUM50::getIndex(). Invalid state2.", _alpha);
+  return _distanceMatrix(state1, state2);
+}
 
-/**
- * @brief Grantham (1974) Amino-Acid chemical distance.
- *
- * Two kinds of matrix can be built:
- * - a symmetric one, with \f$I_{i,j} = I_{i,j}\f$,
- * - or a non-symmetric one, with \f$I_{i,j} = -I_{i,j}\f$.
- *   
- * Reference:
- * Grantham, R.
- * Amino acid difference formula to help explain protein evolution
- * Science 185, 862-864 (1974)
- *
- * Data from AAIndex2 database, Accession Number GRAR740104.
- */
-class GranthamAAChemicalDistance: public AlphabetIndex2<double> {
+double BLOSUM50::getIndex(const string & state1, const string & state2) const
+throw (BadCharException)
+{
+	return _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
+}
 
-	private:
-		RowMatrix<double> _distanceMatrix;
-		const ProteicAlphabet * _alpha;
-		bool _sym;
-
-	public:
-		GranthamAAChemicalDistance();
-		virtual ~GranthamAAChemicalDistance();
-
-	public:
-		/**
-		 * @name Methods from the AlphabetIndex2 interface.
-		 *
-		 * @{
-		 */
-		double getIndex(int state1, int state2) const throw (BadIntException);
-		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
-		const Alphabet * getAlphabet() const { return _alpha; };
-		GranthamAAChemicalDistance * clone() const { return new GranthamAAChemicalDistance(); }
-		Matrix<double> * getIndexMatrix() const;
-		/** @} */
-
-	public:
-		void setSymmetric(bool yn) { _sym = yn; }
-		bool isSymmetric() const { return _sym; }
-
-};
-
-#endif //_GRANTHAMAACHEMICALDISTANCE_H_
+Matrix<double> * BLOSUM50::getIndexMatrix() const
+{
+	return new RowMatrix<double>(_distanceMatrix);
+}
 

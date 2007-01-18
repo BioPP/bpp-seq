@@ -125,7 +125,7 @@ class MiyataAAChemicalDistance: public AlphabetIndex2<double> {
 		double getIndex(int state1, int state2) const throw (BadIntException);
 		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
 		const Alphabet * getAlphabet() const { return _alpha; };
-		Clonable * clone() const { return new MiyataAAChemicalDistance(); }
+		MiyataAAChemicalDistance * clone() const { return new MiyataAAChemicalDistance(); }
 		Matrix<double> * getIndexMatrix() const;
 		/** @} */
 
