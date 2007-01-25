@@ -177,6 +177,7 @@ class SiteContainerTools
      * Takes each position (starting at 1) in sequence 1, and look for the corresponding position in sequence 2 at the same site.
      * If no corresponding position is available (i.e. if there is a gap in sequence 2 at the corresponding position), 0 is returned.
      *
+     * @param sequences The alignment to use.
      * @param i1 The index of the sequence to translate.
      * @param i2 The index of the reference sequence.
      * @return A map with original sequence positions as keys, and translated positions as values.
@@ -187,6 +188,8 @@ class SiteContainerTools
      * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
      *
      * If the input sequences contain gaps, they will be ignored.
+     *
+     * @see BLOSM50, DefaultNucleotideScore for score matrices.
      *
      * @param seq1 The first sequence.
      * @param seq2 The second sequence.

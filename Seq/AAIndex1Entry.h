@@ -1,7 +1,7 @@
 //
-// File: MiyataAAChemicalDistance.cpp
+// File: AAIndex1Entry.h
 // Created by: Julien Dutheil
-// Created on: Mon Feb 21 17:42 2005
+// Created on: Fri Jan 19 17:07 2007
 //
 
 /*
@@ -37,51 +37,64 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-// from the STL:
-#include <string>
+#ifndef _AAINDEX1ENTRY_H_
+#define _AAINDEX1ENTRY_H_
 
-#include "MiyataAAChemicalDistance.h"
-#include <NumCalc/NumTools.h>
-using namespace NumTools;
+#include "AlphabetIndex1.h"
+#include "ProteicAlphabet.h"
 
-MiyataAAChemicalDistance::MiyataAAChemicalDistance()
+/**
+ * @brief Create a AlphabetIndex1 object from an AAIndex2 entry.
+ */
+class AAIndex1Entry: public AlphabetIndex1<double>
 {
-	// Build the alphabet:
-	_alpha = new ProteicAlphabet();
-	
-	// Load the matrix:
-	_distanceMatrix.resize(20, 20);
-	#include "__MiyataMatrixCode"
-}
-MiyataAAChemicalDistance::~MiyataAAChemicalDistance() { delete _alpha; }
+	private:
+		vector<double> _property;
+		const ProteicAlphabet * _alpha;
 
-double MiyataAAChemicalDistance::getIndex(int state1, int state2) const 
-throw (BadIntException) {
-	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", _alpha);
-	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", _alpha);
-	double d = _distanceMatrix(state1, state2);
-	return _sym ? NumTools::abs<double>(d) : d;
-}
+	public:
+    /**
+     * @brief Create a new AAIndex1Entry from an input stream.
+     *
+     * @param input The input stream to use.
+     * @throw IOException if the stream content does not follow the AAIndex1 database entry format.
+     */
+		AAIndex1Entry(istream & input) throw (IOException);
 
-double MiyataAAChemicalDistance::getIndex(const string & state1, const string & state2) const
-throw (BadCharException) {
-	double d = _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
-	return _sym ? NumTools::abs(d) : d;
-}
-
-Matrix<double> * MiyataAAChemicalDistance::getIndexMatrix() const
-{
-	RowMatrix<double> * m = new RowMatrix<double>(_distanceMatrix);
-	if(_sym)
-  {
-		for(unsigned int i = 0; i < 20; i++)
+    AAIndex1Entry(const AAIndex1Entry & index)
     {
-			for(unsigned int j = 0; j < 20; j++)
-      {
-				(* m)(i,j) = NumTools::abs<double>((*m)(i,j));
-			}
+      _property = index._property;
+      _alpha = new ProteicAlphabet();
+    }
+
+    AAIndex1Entry & operator=(const AAIndex1Entry & index)
+    {
+      _property = index._property;
+      _alpha = new ProteicAlphabet();
+      return *this;
+    }
+
+		virtual ~AAIndex1Entry() { delete _alpha;	}
+		
+    AAIndex1Entry * clone() const { return new AAIndex1Entry(*this); }
+
+	public:
+		double getIndex(int state) const throw (BadIntException)
+		{
+			if(state < 0 || state > 19) throw BadIntException(state, "KleinAANetChargeIndex::getIndex(). Invalid state.", _alpha);
+			return _property[state];
 		}
-	}
-	return m;
-}
+		
+		double getIndex(const string & state) const throw (BadCharException)
+		{
+			return _property[_alpha->charToInt(state)];
+		}
+
+    vector<double> * getIndexVector() const { return new vector<double>(_property); }
+
+		const Alphabet * getAlphabet() const { return _alpha; }
+
+};
+
+#endif //_AAINDEX1ENTRY_H_
 

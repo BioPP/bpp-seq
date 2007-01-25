@@ -68,8 +68,8 @@ using namespace std;
  *
  * Data from AAIndex2 database, Accession Number GRAR740104.
  */
-class GranthamAAChemicalDistance: public AlphabetIndex2<double> {
-
+class GranthamAAChemicalDistance: public AlphabetIndex2<double>
+{
 	private:
 		RowMatrix<double> _distanceMatrix;
 		const ProteicAlphabet * _alpha;

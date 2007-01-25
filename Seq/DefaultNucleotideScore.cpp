@@ -1,7 +1,7 @@
 //
-// File: MiyataAAChemicalDistance.cpp
+// File: DefaultNucleotideScore.cpp
 // Created by: Julien Dutheil
-// Created on: Mon Feb 21 17:42 2005
+// Created on: Fri Jan 19 10:30 2007
 //
 
 /*
@@ -40,48 +40,50 @@ knowledge of the CeCILL license and that you accept its terms.
 // from the STL:
 #include <string>
 
-#include "MiyataAAChemicalDistance.h"
-#include <NumCalc/NumTools.h>
-using namespace NumTools;
+#include "DefaultNucleotideScore.h"
 
-MiyataAAChemicalDistance::MiyataAAChemicalDistance()
+DefaultNucleotideScore::DefaultNucleotideScore(const NucleicAlphabet * alphabet):
+  _alpha(alphabet)
 {
-	// Build the alphabet:
-	_alpha = new ProteicAlphabet();
-	
 	// Load the matrix:
-	_distanceMatrix.resize(20, 20);
-	#include "__MiyataMatrixCode"
+	_distanceMatrix.resize(4, 4);
+  _distanceMatrix(0, 0) = 10;
+  _distanceMatrix(0, 1) = -3;
+  _distanceMatrix(0, 2) = -1;
+  _distanceMatrix(0, 3) = -4;
+  
+  _distanceMatrix(1, 0) = -3;
+  _distanceMatrix(1, 1) = 9;
+  _distanceMatrix(1, 2) = -5;
+  _distanceMatrix(1, 3) = 0;
+  
+  _distanceMatrix(2, 0) = -1;
+  _distanceMatrix(2, 1) = -5;
+  _distanceMatrix(2, 2) = 7;
+  _distanceMatrix(2, 3) = -3;
+  
+  _distanceMatrix(3, 0) = -4;
+  _distanceMatrix(3, 1) = 0;
+  _distanceMatrix(3, 2) = -3;
+  _distanceMatrix(3, 3) = 8;
 }
-MiyataAAChemicalDistance::~MiyataAAChemicalDistance() { delete _alpha; }
 
-double MiyataAAChemicalDistance::getIndex(int state1, int state2) const 
-throw (BadIntException) {
-	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", _alpha);
-	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", _alpha);
-	double d = _distanceMatrix(state1, state2);
-	return _sym ? NumTools::abs<double>(d) : d;
-}
-
-double MiyataAAChemicalDistance::getIndex(const string & state1, const string & state2) const
-throw (BadCharException) {
-	double d = _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
-	return _sym ? NumTools::abs(d) : d;
-}
-
-Matrix<double> * MiyataAAChemicalDistance::getIndexMatrix() const
+double DefaultNucleotideScore::getIndex(int state1, int state2) const 
+throw (BadIntException)
 {
-	RowMatrix<double> * m = new RowMatrix<double>(_distanceMatrix);
-	if(_sym)
-  {
-		for(unsigned int i = 0; i < 20; i++)
-    {
-			for(unsigned int j = 0; j < 20; j++)
-      {
-				(* m)(i,j) = NumTools::abs<double>((*m)(i,j));
-			}
-		}
-	}
-	return m;
+	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "DefaultNucleotideScore::getIndex(). Invalid state1.", _alpha);
+	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state2.", _alpha);
+  return _distanceMatrix(state1, state2);
+}
+
+double DefaultNucleotideScore::getIndex(const string & state1, const string & state2) const
+throw (BadCharException)
+{
+	return _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
+}
+
+Matrix<double> * DefaultNucleotideScore::getIndexMatrix() const
+{
+	return new RowMatrix<double>(_distanceMatrix);
 }
 

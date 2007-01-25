@@ -64,8 +64,8 @@ using namespace std;
  *
  * Data from AAIndex2 database, Accession Number HENS920104.
  */
-class BLOSUM50: public AlphabetIndex2<double> {
-
+class BLOSUM50: public AlphabetIndex2<double>
+{
 	private:
 		RowMatrix<double> _distanceMatrix;
 		const ProteicAlphabet * _alpha;

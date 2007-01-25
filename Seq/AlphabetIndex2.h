@@ -60,7 +60,6 @@ using namespace std;
 template <class T>
 class AlphabetIndex2: public Clonable
 {
-
 	public:
 		AlphabetIndex2() {}
 		virtual ~AlphabetIndex2() {}

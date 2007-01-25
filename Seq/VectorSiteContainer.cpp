@@ -652,9 +652,9 @@ void VectorSiteContainer::setSequencesNames(
 
 /******************************************************************************/
 
-void VectorSiteContainer::setComments(unsigned int i, const Comments & comments) throw (IndexOutOfBoundsException)
+void VectorSiteContainer::setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException)
 {
-	_comments[i] = new Comments(comments);
+	_comments[sequenceIndex] = new Comments(comments);
 }
 
 /******************************************************************************/

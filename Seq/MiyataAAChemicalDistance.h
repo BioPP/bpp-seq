@@ -105,8 +105,8 @@ using namespace std;
  *
  * Data from AAIndex2 database, Accession Number MIYT790101.
  */
-class MiyataAAChemicalDistance: public AlphabetIndex2<double> {
-
+class MiyataAAChemicalDistance: public AlphabetIndex2<double>
+{
 	private:
 		RowMatrix<double> _distanceMatrix;
 		const ProteicAlphabet * _alpha;

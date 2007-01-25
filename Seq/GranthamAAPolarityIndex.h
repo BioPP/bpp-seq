@@ -61,7 +61,6 @@ knowledge of the CeCILL license and that you accept its terms.
  */
 class GranthamAAPolarityIndex: public AlphabetIndex1<double>
 {
-
 	private:
 		vector<double> _polarity;
 		const ProteicAlphabet * _alpha;
@@ -94,6 +93,8 @@ class GranthamAAPolarityIndex: public AlphabetIndex1<double>
 		}
 
 		virtual ~GranthamAAPolarityIndex() { delete _alpha;	}
+		
+    GranthamAAPolarityIndex * clone() const { return new GranthamAAPolarityIndex(); }
 
 	public:
 		double getIndex(int state) const throw (BadIntException)
@@ -104,12 +105,13 @@ class GranthamAAPolarityIndex: public AlphabetIndex1<double>
 		
 		double getIndex(const string & state) const throw (BadCharException)
 		{
-			return _polarity[_alpha -> charToInt(state)];
+			return _polarity[_alpha->charToInt(state)];
 		}
+
+    vector<double> * getIndexVector() const { return new vector<double>(_polarity); }
 
 		const Alphabet * getAlphabet() const { return _alpha; }
 
-		GranthamAAPolarityIndex * clone() const { return new GranthamAAPolarityIndex(); }
 };
 
 #endif //_GRANTHAMAAPOLARITYINDEX_H_

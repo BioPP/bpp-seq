@@ -48,6 +48,11 @@ knowledge of the CeCILL license and that you accept its terms.
  */
 class AlphabetTools
 {
+  public:
+    static const DNA DNA_ALPHABET;
+    static const RNA RNA_ALPHABET;
+    static const ProteicAlphabet PROTEIN_ALPHABET;
+
 	public:
 		AlphabetTools() {}
 		virtual ~AlphabetTools() {}
@@ -56,19 +61,21 @@ class AlphabetTools
 		/**
      * @brief Character identification method for sequence's alphabet identification
      *
-     * (used in method getAlphabetFromSequence() implemented in class Sequence)
 		 * Return :
-		 * -1 if character can't be nucleic or proteic
-		 *  0 ------------------ identify alphabet type (letters A, C, D, G, H, K, M, N, R, S, V, W, X, Y, -)
-		 *  1 ------------ identify nucleic alphabet    (letters B, O, ?, 0)
-		 *  2 ------------ may identify DNA alphabet    (letter T)
-		 *  3 ------------ identify RNA alphabet        (letter U)
-		 *  4 --------------------- proteic alphabet    (letters E, F, I, L, P, Q)
+		 * - -1 gap
+     * - 1 DNA specific (no character!)
+     * - 2 RNA specific (U)
+		 * - 3 Protein specific (characters E, F, I, L, P, Q)
+     * - 4 Nucleotide specific (no character)
+     * - 5 DNA or Protein specific (T)
+     * - 6 RNA or Protein specific (no character)
+		 * - 7 Any alphabet (A, B, C, D, G, H, J, K, M, N, O, R, S, V, W, X, Y, Z, 0)
+     * - 0 Unknown character
      *
-     * @param acid The character to test.
+     * @param state The character to test.
      * @return The type code.
 		 */
-		static int getType(char acid);
+		static int getType(char state);
 
 		/**
 		 * @brief This checks that all characters in the alphabet are coded by a string of same length.
@@ -133,16 +140,17 @@ class AlphabetTools
 		 */
 		static bool isDefaultAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
 
-
-
 	private:
 	  template<class Y>
 	  static bool alphabetInheritsFrom(const Alphabet * alphabet)
 		{
-			try {
+			try
+      {
 			  dynamic_cast<const Y *>(alphabet);
 				return true;
-			} catch(exception & e) {
+			}
+      catch(exception & e)
+      {
 			  return false;
 			}
 		}

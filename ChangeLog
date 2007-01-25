@@ -1,3 +1,11 @@
+19/01/07 -*- Version 1.2.0 -*-
+
+19/01/07 Julien Dutheil
+* Functions AlphabetTools::getType() and StringSequenceTools::getAlphabetFromSequence() rewritten.
+* New DefaultNucleotideScore matrix.
+* New AAIndex1Entry and AAIndex2Entry classes which create AlphabetIndex1 and
+AlphabetIndex2 objects from AAIndex1 and AAIndex2 entries, respectively.
+
 18/12/06 Julien Dutheil
 * New alignment tools in SiteContainerTools, including the Needleman and
 Wunsch alogrithm.

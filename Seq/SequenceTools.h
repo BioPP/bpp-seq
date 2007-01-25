@@ -70,9 +70,7 @@ using namespace std;
 
 class SequenceTools: public SymbolListTools
 {
-	
 	private:
-
 		static DNA _DNA;
 		static RNA _RNA;
 		static NucleicAcidsReplication _DNARep;

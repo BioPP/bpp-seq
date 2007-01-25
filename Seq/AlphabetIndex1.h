@@ -58,7 +58,6 @@ knowledge of the CeCILL license and that you accept its terms.
 template <class T>
 class AlphabetIndex1: public Clonable
 {
-
 	public:
 		AlphabetIndex1() {}
 		virtual ~AlphabetIndex1() {}
@@ -86,6 +85,11 @@ class AlphabetIndex1: public Clonable
 		 * @return Alphabet The alphabet associated to this index.
 		 */
 		virtual const Alphabet * getAlphabet() const = 0;
+
+		/**
+		 * @return A vector object with all indices.
+		 */
+		virtual vector<T> * getIndexVector() const = 0;
 
 };
 

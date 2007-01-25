@@ -1,7 +1,7 @@
 //
-// File: MiyataAAChemicalDistance.cpp
+// File: DefaultNucleotideScore.h
 // Created by: Julien Dutheil
-// Created on: Mon Feb 21 17:42 2005
+// Created on: Fri Jan 19 10:30 2007
 //
 
 /*
@@ -37,51 +37,56 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
+#ifndef _DEFAULTNUCLEOTIDESCORE_H_
+#define _DEFAULTNUCLEOTIDESCORE_H_
+
 // from the STL:
 #include <string>
+using namespace std;
 
-#include "MiyataAAChemicalDistance.h"
-#include <NumCalc/NumTools.h>
-using namespace NumTools;
+#include "AlphabetIndex2.h"
+#include "NucleicAlphabet.h"
+#include "AlphabetExceptions.h"
 
-MiyataAAChemicalDistance::MiyataAAChemicalDistance()
+// From Utils:
+#include <Utils/Exceptions.h>
+
+// From NumCalc:
+#include <NumCalc/Matrix.h>
+
+/**
+ * @brief Default Substitution Matrix for nucleotide alignments.
+ */
+class DefaultNucleotideScore: public AlphabetIndex2<double>
 {
-	// Build the alphabet:
-	_alpha = new ProteicAlphabet();
-	
-	// Load the matrix:
-	_distanceMatrix.resize(20, 20);
-	#include "__MiyataMatrixCode"
-}
-MiyataAAChemicalDistance::~MiyataAAChemicalDistance() { delete _alpha; }
+	private:
+		RowMatrix<double> _distanceMatrix;
+		const NucleicAlphabet * _alpha;
 
-double MiyataAAChemicalDistance::getIndex(int state1, int state2) const 
-throw (BadIntException) {
-	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", _alpha);
-	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", _alpha);
-	double d = _distanceMatrix(state1, state2);
-	return _sym ? NumTools::abs<double>(d) : d;
-}
+	public:
+    /**
+     * @brief Build a new DefaultNucleotideScore object.
+     *
+     * @param alphabet The alphabet to use.
+     */
+		DefaultNucleotideScore(const NucleicAlphabet * alphabet);
+		
+    virtual ~DefaultNucleotideScore() {}
 
-double MiyataAAChemicalDistance::getIndex(const string & state1, const string & state2) const
-throw (BadCharException) {
-	double d = _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
-	return _sym ? NumTools::abs(d) : d;
-}
+	public:
+		/**
+		 * @name Methods from the AlphabetIndex2 interface.
+		 *
+		 * @{
+		 */
+		double getIndex(int state1, int state2) const throw (BadIntException);
+		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
+		const Alphabet * getAlphabet() const { return _alpha; };
+		DefaultNucleotideScore * clone() const { return new DefaultNucleotideScore(*this); }
+		Matrix<double> * getIndexMatrix() const;
+		/** @} */
 
-Matrix<double> * MiyataAAChemicalDistance::getIndexMatrix() const
-{
-	RowMatrix<double> * m = new RowMatrix<double>(_distanceMatrix);
-	if(_sym)
-  {
-		for(unsigned int i = 0; i < 20; i++)
-    {
-			for(unsigned int j = 0; j < 20; j++)
-      {
-				(* m)(i,j) = NumTools::abs<double>((*m)(i,j));
-			}
-		}
-	}
-	return m;
-}
+};
+
+#endif //_DEFAULTNUCLEOTIDESCORE_H_
 

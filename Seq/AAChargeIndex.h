@@ -1,5 +1,5 @@
 //
-// File: AANChargeIndex.h
+// File: AAChargeIndex.h
 // Created by: Julien Dutheil
 // Created on: Tue May 02 13:34 2006
 //
@@ -114,22 +114,25 @@ class AAChargeIndex: public AlphabetIndex1<double>
 		}
 
 		virtual ~AAChargeIndex() { delete _alpha;	}
+		
+    AAChargeIndex * clone() const { return new AAChargeIndex(); }
 
 	public:
 		double getIndex(int state) const throw (BadIntException)
 		{
-			if(state < 0 || state > 19) throw BadIntException(state, "KleinAANetChargeIndex::getIndex(). Invalid state.", _alpha);
+			if(state < 0 || state > 19) throw BadIntException(state, "AAChargeIndex::getIndex(). Invalid state.", _alpha);
 			return _charge[state];
 		}
 		
 		double getIndex(const string & state) const throw (BadCharException)
 		{
-			return _charge[_alpha -> charToInt(state)];
+			return _charge[_alpha->charToInt(state)];
 		}
+
+    vector<double> * getIndexVector() const { return new vector<double>(_charge); }
 
 		const Alphabet * getAlphabet() const { return _alpha; }
 
-		AAChargeIndex * clone() const { return new AAChargeIndex(); }
 };
 
 #endif //_AACHARGEINDEX_H_

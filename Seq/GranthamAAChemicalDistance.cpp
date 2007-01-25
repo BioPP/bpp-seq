@@ -67,16 +67,19 @@ throw (BadIntException)
 double GranthamAAChemicalDistance::getIndex(const string & state1, const string & state2) const
 throw (BadCharException)
 {
-	double d = _distanceMatrix(_alpha -> charToInt(state1), _alpha -> charToInt(state2));
+	double d = _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
 	return _sym ? NumTools::abs(d) : d;
 }
 
 Matrix<double> * GranthamAAChemicalDistance::getIndexMatrix() const
 {
 	RowMatrix<double> * m = new RowMatrix<double>(_distanceMatrix);
-	if(_sym) {
-		for(unsigned int i = 0; i < 20; i++) {
-			for(unsigned int j = 0; j < 20; j++) {
+	if(_sym)
+  {
+		for(unsigned int i = 0; i < 20; i++)
+    {
+			for(unsigned int j = 0; j < 20; j++)
+      {
 				(* m)(i,j) = NumTools::abs<double>((*m)(i,j));
 			}
 		}

@@ -64,7 +64,6 @@ knowledge of the CeCILL license and that you accept its terms.
  */
 class KleinAANetChargeIndex: public AlphabetIndex1<double>
 {
-
 	private:
 		vector<double> _charge;
 		const ProteicAlphabet * _alpha;
@@ -97,6 +96,8 @@ class KleinAANetChargeIndex: public AlphabetIndex1<double>
 		}
 
 		virtual ~KleinAANetChargeIndex() { delete _alpha;	}
+		
+    KleinAANetChargeIndex * clone() const { return new KleinAANetChargeIndex(); }
 
 	public:
 		double getIndex(int state) const throw (BadIntException)
@@ -107,12 +108,13 @@ class KleinAANetChargeIndex: public AlphabetIndex1<double>
 		
 		double getIndex(const string & state) const throw (BadCharException)
 		{
-			return _charge[_alpha -> charToInt(state)];
+			return _charge[_alpha->charToInt(state)];
 		}
+
+    vector<double> * getIndexVector() const { return new vector<double>(_charge); }
 
 		const Alphabet * getAlphabet() const { return _alpha; }
 
-		KleinAANetChargeIndex * clone() const { return new KleinAANetChargeIndex(); }
 };
 
 #endif //_KLEINAANETCHARGEINDEX_H_

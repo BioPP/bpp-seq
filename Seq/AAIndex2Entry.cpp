@@ -1,7 +1,7 @@
 //
-// File: MiyataAAChemicalDistance.cpp
+// File: AAIndex2Entry.cpp
 // Created by: Julien Dutheil
-// Created on: Mon Feb 21 17:42 2005
+// Created on: Fri Jan 19 17:07 2007
 //
 
 /*
@@ -37,51 +37,56 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-// from the STL:
-#include <string>
+#include "AAIndex2Entry.h"
 
-#include "MiyataAAChemicalDistance.h"
-#include <NumCalc/NumTools.h>
-using namespace NumTools;
+//From Utils:
+#include <Utils/FileTools.h>
+#include <Utils/TextTools.h>
+#include <Utils/StringTokenizer.h>
 
-MiyataAAChemicalDistance::MiyataAAChemicalDistance()
+AAIndex2Entry::AAIndex2Entry(istream & input, bool sym) throw (IOException)
 {
-	// Build the alphabet:
-	_alpha = new ProteicAlphabet();
-	
-	// Load the matrix:
-	_distanceMatrix.resize(20, 20);
-	#include "__MiyataMatrixCode"
-}
-MiyataAAChemicalDistance::~MiyataAAChemicalDistance() { delete _alpha; }
+  _alpha = new ProteicAlphabet();
+  _property.resize(20, 20);
 
-double MiyataAAChemicalDistance::getIndex(int state1, int state2) const 
-throw (BadIntException) {
-	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", _alpha);
-	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", _alpha);
-	double d = _distanceMatrix(state1, state2);
-	return _sym ? NumTools::abs<double>(d) : d;
-}
-
-double MiyataAAChemicalDistance::getIndex(const string & state1, const string & state2) const
-throw (BadCharException) {
-	double d = _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
-	return _sym ? NumTools::abs(d) : d;
-}
-
-Matrix<double> * MiyataAAChemicalDistance::getIndexMatrix() const
-{
-	RowMatrix<double> * m = new RowMatrix<double>(_distanceMatrix);
-	if(_sym)
+  //Parse entry:
+  string line;
+  bool ok = false;
+  bool diag = false;
+  do
   {
-		for(unsigned int i = 0; i < 20; i++)
+    line = FileTools::getNextLine(input);
+    if(line[0] == 'M')
     {
-			for(unsigned int j = 0; j < 20; j++)
+      for(unsigned int i = 0; i < 20; i++)
       {
-				(* m)(i,j) = NumTools::abs<double>((*m)(i,j));
-			}
-		}
-	}
-	return m;
+        line = FileTools::getNextLine(input);
+        StringTokenizer st1(line, " ");
+        if(i == 0 && st1.numberOfRemainingTokens() == 1)
+        {
+          //Lower triangle only:
+          diag = true;
+        }
+        //Amino acids are in the same order in the AAIndex1 database than in the ProteicAlphabet class:
+        if(diag)
+        {
+          if(st1.numberOfRemainingTokens() != (int)(i+1)) break;
+          for(unsigned int j = 0; j <= i; j++)
+            _property(i,j) = TextTools::toDouble(st1.nextToken());
+        }
+        else
+        {
+          if(st1.numberOfRemainingTokens() != 20) break;
+          for(unsigned int j = 0; j < 20; j++)
+            _property(i,j) = TextTools::toDouble(st1.nextToken());
+        }
+      }
+      //Jump to next entry...
+      FileTools::getNextLine(input);
+      ok = true;
+    }
+  }
+  while(!ok);
+  if(!ok) throw IOException("AAIndex2Entry: invalid AAIndex2 entry.");
 }
 
