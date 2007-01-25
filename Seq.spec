@@ -1,5 +1,5 @@
 %define name Bpp-Seq
-%define version 1.1.1
+%define version 1.2.0
 %define release 1
 %define _prefix /usr/local
 
@@ -15,8 +15,8 @@ BuildRoot: %{_builddir}/%{name}-root
 Packager: Julien Dutheil
 AutoreqProv: no
 Requires: libstdc++6
-Requires: Bpp-Utils >= 1.0.0
-Requires: Bpp-NumCalc >= 1.0.0
+Requires: Bpp-Utils >= 1.0.3
+Requires: Bpp-NumCalc >= 1.2.0
 
 %description
 This library contains utilitary and classes for bio-sequence analysis.
@@ -26,8 +26,8 @@ It is part of the Bio++ project.
 Summary: Libraries, includes to develop applications with %{name}.
 Group: Development/Libraries
 Requires: %{name} = %{version}
-Requires: Bpp-Utils-devel >= 1.0.0
-Requires: Bpp-NumCalc-devel >= 1.0.0
+Requires: Bpp-Utils-devel >= 1.0.3
+Requires: Bpp-NumCalc-devel >= 1.2.0
 
 %description devel
 The %{name}-devel package contains the header files and static libraries for
@@ -65,6 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Fri Jan 19 2007 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+- Version 1.2.0
 * Mon Aug 28 2006 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
 - Version 1.1.1
 * Tue Apr 18 2006 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
