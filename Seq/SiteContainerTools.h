@@ -141,7 +141,7 @@ class SiteContainerTools
      * Position numbers start at 1.
      *
      * @param seq The sequence to translate.
-     * @return A map with original alignement positions as keys, and translated positions as values.
+     * @return A map with original sequence positions as keys, and translated positions as values.
      */
     static map<unsigned int, unsigned int> getSequencePositions(const Sequence & seq);
 
