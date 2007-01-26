@@ -374,8 +374,8 @@ throw (AlphabetMismatchException)
   RowMatrix<char>   p(s1->size(), s2->size());
   double choice1, choice2, choice3, mx;
   char px;
-  for(unsigned int i = 0; i < s1->size(); i++) m(i,0) = i * gap;
-  for(unsigned int j = 0; j < s2->size(); j++) m(0,j) = j * gap;
+  for(unsigned int i = 0; i <= s1->size(); i++) m(i,0) = i * gap;
+  for(unsigned int j = 0; j <= s2->size(); j++) m(0,j) = j * gap;
   for(unsigned int i = 1; i <= s1->size(); i++)
   {
     for(unsigned int j = 1; j <= s2->size(); j++)
@@ -405,7 +405,7 @@ throw (AlphabetMismatchException)
       i--;
       j--;
     }
-    else if(c == 'l')
+    else if(c == 'u')
     {
       a1.push_front((*s1)[i-1]);
       a2.push_front(-1);
