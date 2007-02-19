@@ -52,7 +52,9 @@ using namespace std;
 /**
  * @brief Partial implementation of the OSequence interface.
  */
-class AbstractOSequence: public virtual OSequence {
+class AbstractOSequence:
+  public virtual OSequence
+{
 
 	public: 
 		AbstractOSequence() {}
@@ -65,8 +67,8 @@ class AbstractOSequence: public virtual OSequence {
 		 *
 		 * @{
 		 */ 
-		void write(     ostream & output, const SequenceContainer & sc                     ) const throw (Exception) = 0;
-		void write(const string & path  , const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
+		void write(ostream & output, const SequenceContainer & sc) const throw (Exception) = 0;
+		void write(const string & path, const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
 		{
 			// Open file in specified mode
 			ofstream output(path.c_str(), overwrite ? (ios::out) : (ios::out|ios::app));

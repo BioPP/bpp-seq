@@ -52,7 +52,8 @@ using namespace std;
  *
  * An AlignedSequenceContainer object is used instead of a VectorSequenceContainer.
  */
-class Clustal : public virtual AbstractISequence2
+class Clustal:
+  public virtual AbstractISequence2
 {
 
 	public:

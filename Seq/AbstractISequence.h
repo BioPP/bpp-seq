@@ -53,7 +53,9 @@ using namespace std;
 /**
  * @brief Partial implementation of the ISequence interface.
  */
-class AbstractISequence: public virtual ISequence {
+class AbstractISequence:
+  public virtual ISequence
+{
 
 	public: 
 		AbstractISequence() {}

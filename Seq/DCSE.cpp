@@ -59,8 +59,8 @@ void DCSE::appendFromStream(istream & input, AlignedSequenceContainer & sc) cons
 	string line, name, sequence = "";
 
 	line = FileTools::getNextLine(input); // Copy current line in temporary string
-	StringTokenizer st(line);
-	st.nextToken();
+	//StringTokenizer st(line);
+	//st.nextToken();
 	//First line ignored for now!
 	//int n1 = TextTools::toInt(st.nextToken());
 	//int n2 = TextTools::toInt(st.nextToken());
@@ -68,10 +68,11 @@ void DCSE::appendFromStream(istream & input, AlignedSequenceContainer & sc) cons
 	//cout << nbSpecies << " species and " << nbSites << " sites." << endl;
 
 	// Main loop : for all file lines
-	while(!input.eof()) {
+	while(!input.eof())
+  {
 		line = FileTools::getNextLine(input); // Copy current line in temporary string
 		if(line == "") break;
-		unsigned int endOfSeq = line.find("     ");
+    string::size_type endOfSeq = line.find("     ");
 		if(endOfSeq == line.npos) break;
 		sequence = string(line.begin(), line.begin() + endOfSeq);
 		sequence = TextTools::removeWhiteSpaces(sequence);

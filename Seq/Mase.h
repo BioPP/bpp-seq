@@ -50,7 +50,9 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief The mase sequence file format.
  */
-class Mase : public virtual AbstractISequence, public virtual AbstractOSequence
+class Mase:
+  public virtual AbstractISequence,
+  public virtual AbstractOSequence
 {
 
 	protected:
@@ -61,12 +63,15 @@ class Mase : public virtual AbstractISequence, public virtual AbstractOSequence
 		unsigned int _charsByLine;
 
 	public :
-		// Class constructor
-		// Constructor is currently useless to make easier an eventual later addition of parameters, etc.
+		/**
+		 * @brief Build a new Mase object.
+		 *
+		 * @param charsByLine Number of character per line when writing files.
+		 */
 		Mase(unsigned int charsByLine = 100);
 
 		// Class destructor
-		~Mase() { }
+		virtual ~Mase() {}
 
 	public:
 
@@ -84,7 +89,8 @@ class Mase : public virtual AbstractISequence, public virtual AbstractOSequence
 		 * @{
 		 */
 		void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
-		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) {
+		void write(const string & path, const SequenceContainer & sc, bool overwrite = true) const throw (Exception)
+    {
 			AbstractOSequence::write(path, sc, overwrite);
 		}
 		/** @} */
@@ -94,8 +100,12 @@ class Mase : public virtual AbstractISequence, public virtual AbstractOSequence
 		 *
 		 * @{
 		 */
-		const string getFormatName() const;
-		const string getFormatDescription() const;
+		const string getFormatName() const { return "MASE file"; }
+
+		const string getFormatDescription() const
+    {
+      return "Optional file comments (preceeded by ;;), sequence comments (preceeded by ;), sequence name, sequence";
+    }
 		/** @} */
 };
 

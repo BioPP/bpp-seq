@@ -51,7 +51,8 @@ knowledge of the CeCILL license and that you accept its terms.
  * 
  * This interface defines the basic methods for writing sequences to a file.
  */
-class OSequence : public virtual IOSequence
+class OSequence:
+  public virtual IOSequence
 {
 	public:
 		OSequence() {}

@@ -46,20 +46,27 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /****************************************************************************************/
 
+Fasta::Fasta(unsigned int charsByLine): _charsByLine(charsByLine) {}
+
+/****************************************************************************************/
+
 void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
 {
-	if (!input) { throw IOException ("Fasta::read : fail to open file"); }
+	if (!input) { throw IOException ("Fasta::read: fail to open file"); }
 
 	string temp, name, sequence = "";  // Initialization
 
 	// Main loop : for all file lines
-	while (!input.eof()) {
+	while (!input.eof())
+  {
 		getline(input, temp, '\n');  // Copy current line in temporary string
 
 		// If first character is >
-		if (temp[0] == '>') {
+		if (temp[0] == '>')
+    {
 			// If a name and a sequence were founded
-			if ((name != "") && (sequence != "")) {
+			if ((name != "") && (sequence != ""))
+      {
 				// New sequence creation, and addition in existing VectorSequenceContainer
 				Sequence * seq = new Sequence(name, sequence, vsc.getAlphabet());
 				vsc.addSequence(* seq);
@@ -69,11 +76,13 @@ void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) con
 			// Sequence name isolation
 			name = temp;
 			name.erase(name.begin());  // Character > deletion
-		} else sequence += temp;  // Sequence isolation
+		}
+    else sequence += temp;  // Sequence isolation
 	}
 	
 	// Addition of the last sequence in file
-	if ((name != "") && (sequence != "")) {
+	if ((name != "") && (sequence != ""))
+  {
 		Sequence * seq = new Sequence(name, sequence, vsc.getAlphabet());
 		vsc.addSequence(* seq);
 	}
@@ -84,25 +93,30 @@ void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) con
 void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
 {
 	// Checking the existence of specified file, and possibility to open it in write mode
-	if (! output) { throw IOException ("Fasta::write : failed to open file"); }
+	if (! output) { throw IOException ("Fasta::write: failed to open file"); }
 
 	string seq, temp = "";  // Initialization
 
 	// Main loop : for all sequences in vector container
 	vector<string> names = sc.getSequencesNames();
-	for (unsigned int i = 0 ; i < names.size() ; i ++) {
-		// Sequence's commentaries writing
+	for (unsigned int i = 0; i < names.size(); i ++)
+  {
+    // Sequence's commentaries writing
 		output << ">" << names[i] << endl;
 		
 		// Sequence cutting to specified characters number per line
 		seq = sc.toString(names[i]);
-		while (seq != "") {
-			if (seq.size() > _charsByLine) {
+		while (seq != "")
+    {
+			if (seq.size() > _charsByLine)
+      {
 				temp = seq;
 				temp.erase(temp.begin() + _charsByLine , temp.end());
 				output << temp  << endl;
 				seq.erase(seq.begin(), seq.begin() + _charsByLine);
-			} else {
+			}
+      else
+      {
 				output << seq << endl;
 				seq = "";
 			}

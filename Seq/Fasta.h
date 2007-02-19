@@ -52,7 +52,9 @@ knowledge of the CeCILL license and that you accept its terms.
  *
  * Read and write from/to Fasta files.
  */
-class Fasta : public virtual AbstractISequence, public virtual AbstractOSequence
+class Fasta:
+  public virtual AbstractISequence,
+  public virtual AbstractOSequence
 {
 	protected:
 
@@ -68,10 +70,10 @@ class Fasta : public virtual AbstractISequence, public virtual AbstractOSequence
 		 *
 		 * @param charsByLine Number of character per line when writing files.
 		 */
-		Fasta(unsigned int charsByLine = 100) : _charsByLine(charsByLine) {}
+		Fasta(unsigned int charsByLine = 100);
 
 		// Class destructor
-		~Fasta() {}
+		virtual ~Fasta() {}
 
 	public:
 
@@ -89,9 +91,9 @@ class Fasta : public virtual AbstractISequence, public virtual AbstractOSequence
 		 * @{
 		 */
 		void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
-		void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception)
+		void write(const string & path, const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
 		{
-			AbstractOSequence::write(path, sc, overwrite);
+      AbstractOSequence::write(path, sc, overwrite);
 		}
 		/** @} */
 	

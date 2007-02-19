@@ -53,7 +53,9 @@ using namespace std;
 /**
  * @brief Partial implementation of the ISequence interface, dedicated to alignement readers.
  */
-class AbstractISequence2: public virtual ISequence {
+class AbstractISequence2:
+  public virtual ISequence
+{
 
 	public:
 		AbstractISequence2() {}

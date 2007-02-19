@@ -159,14 +159,3 @@ void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Ex
 
 /****************************************************************************************/
 
-const string Mase::getFormatName() const { return "MASE file"; }
-
-/****************************************************************************************/
-
-const string Mase::getFormatDescription() const
-{
-	return "Optional file comments (preceeded by ;;), sequence comments (preceeded by ;), sequence name, sequence";
-}
-
-/****************************************************************************************/
-
