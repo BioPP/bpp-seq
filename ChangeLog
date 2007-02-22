@@ -1,3 +1,7 @@
+22/02/07 Julien Dutheil
+* GeneticCode derivated classes now properly redefine the translate(Sequence&)
+	method.
+
 19/01/07 -*- Version 1.2.0 -*-
 
 19/01/07 Julien Dutheil

@@ -49,7 +49,8 @@ knowledge of the CeCILL license and that you accept its terms.
  * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG9
  */
 
-class EchinodermMitochondrialGeneticCode : public GeneticCode
+class EchinodermMitochondrialGeneticCode:
+  public GeneticCode
 {
 	public:
 		EchinodermMitochondrialGeneticCode(const NucleicAlphabet * alpha);
@@ -58,6 +59,10 @@ class EchinodermMitochondrialGeneticCode : public GeneticCode
 	public:
 		int    translate(           int state) const throw (Exception);
 		string translate(const string & state) const throw (Exception);
+		Sequence * translate(const Sequence & sequence) const throw (Exception)
+    {
+			return GeneticCode::translate(sequence);	
+		}
 };
 
 #endif	//_ECHINODERMMITOCHONDRIALGENETICCODE_H_

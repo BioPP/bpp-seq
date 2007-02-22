@@ -76,7 +76,8 @@ class StopCodonException : public Exception
  *
  * @see CodonAlphabet, ProteicAlphabet
  */
-class GeneticCode : public AbstractTranslator
+class GeneticCode:
+  public AbstractTranslator
 {
 	protected:
 		const CodonAlphabet * _codonAlphabet;

@@ -48,7 +48,8 @@ knowledge of the CeCILL license and that you accept its terms.
  *        web site: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG1
  */
 
-class StandardGeneticCode : public GeneticCode
+class StandardGeneticCode:
+  public GeneticCode
 {
 	public:
 		StandardGeneticCode(const NucleicAlphabet * alpha);
@@ -57,6 +58,10 @@ class StandardGeneticCode : public GeneticCode
 	public:
 		int    translate(           int state) const throw (Exception);
 		string translate(const string & state) const throw (Exception);
+		Sequence * translate(const Sequence & sequence) const throw (Exception)
+    {
+			return GeneticCode::translate(sequence);	
+		}
 };
 
 #endif	//_STANDARDGENETICCODE_H_
