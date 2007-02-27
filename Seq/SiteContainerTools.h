@@ -26,7 +26,7 @@ typedef vector<unsigned int> SiteSelection;
 class SiteContainerTools
 {
 	public:
- 		SiteContainerTools() { cout << "coucou" << endl; }
+ 		SiteContainerTools() {}
 		virtual ~SiteContainerTools() {}
 
 	public:
@@ -199,6 +199,24 @@ class SiteContainerTools
      * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
      */
     static AlignedSequenceContainer * alignNW(const Sequence & seq1, const Sequence & seq2, const AlphabetIndex2<double> & s, double gap) throw (AlphabetMismatchException);
+
+    /**
+     * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
+     *
+     * If the input sequences contain gaps, they will be ignored.
+     *
+     * @see BLOSM50, DefaultNucleotideScore for score matrices.
+     *
+     * @param seq1 The first sequence.
+     * @param seq2 The second sequence.
+     * @param s The score matrix to use.
+     * @param opening Gap opening penalty.
+     * @param extending Gap extending penalty.
+     * @return A new SiteContainer instance.
+     * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
+     */
+    static AlignedSequenceContainer * alignNW(const Sequence & seq1, const Sequence & seq2, const AlphabetIndex2<double> & s, double opening, double extending) throw (AlphabetMismatchException);
+
 };
 
 #endif	//_SITECONTAINERTOOLS_H_

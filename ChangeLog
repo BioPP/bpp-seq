@@ -1,3 +1,6 @@
+24/02/07 Julien Dutheil
+* New pairwise alignment algorithm: gap opening and extending penalties.
+	
 22/02/07 Julien Dutheil
 * GeneticCode derivated classes now properly redefine the translate(Sequence&)
 	method.

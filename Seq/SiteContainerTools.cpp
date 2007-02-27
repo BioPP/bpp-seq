@@ -369,7 +369,7 @@ throw (AlphabetMismatchException)
   Sequence * s1 = SequenceTools::removeGaps(seq1);
   Sequence * s2 = SequenceTools::removeGaps(seq2);
   
-  //1) Initialise matrix:
+  //1) Initialize matrix:
   RowMatrix<double> m(s1->size() + 1, s2->size() + 1);
   RowMatrix<char>   p(s1->size(), s2->size());
   double choice1, choice2, choice3, mx;
@@ -381,12 +381,124 @@ throw (AlphabetMismatchException)
     for(unsigned int j = 1; j <= s2->size(); j++)
     {
       choice1 = m(i-1,j-1) + s.getIndex((*s1)[i-1], (*s2)[j-1]);
-      choice2 = m(i-1, j) + gap;
-      choice3 = m(i, j-1) + gap;
+      choice2 = m(i-1,j) + gap;
+      choice3 = m(i,j-1) + gap;
       mx = choice1; px = 'd'; //Default in case of equality of scores.
       if(choice2 > mx) { mx = choice2; px = 'u'; }
       if(choice3 > mx) { mx = choice3; px = 'l'; }
       m(i,j) = mx;
+      p(i-1,j-1) = px;
+    }
+  }
+
+  //2) Get alignment:
+  deque<int> a1, a2;
+  unsigned int i = s1->size(), j = s2->size();
+  char c;
+  while(i > 0 && j > 0)
+  {
+    c = p(i-1, j-1);
+    if(c == 'd')
+    {
+      a1.push_front((*s1)[i-1]);
+      a2.push_front((*s2)[j-1]);
+      i--;
+      j--;
+    }
+    else if(c == 'u')
+    {
+      a1.push_front((*s1)[i-1]);
+      a2.push_front(-1);
+      i--;
+    }
+    else
+    {
+      a1.push_front(-1);
+      a2.push_front((*s2)[j-1]);
+      j--;
+    }
+  }
+  while (i > 0)
+  {
+    a1.push_front((*s1)[i-1]);
+    a2.push_front(-1);
+    i--;
+  }
+  while (j > 0)
+  {
+    a1.push_front(-1);
+    a2.push_front((*s2)[j-1]);
+    j--;
+  }
+  s1->setContent(vector<int>(a1.begin(), a1.end()));
+  s2->setContent(vector<int>(a2.begin(), a2.end()));
+  AlignedSequenceContainer * asc = new AlignedSequenceContainer(s1->getAlphabet());
+  asc->addSequence(*s1, false);
+  asc->addSequence(*s2, false);//Do not check for sequence names.
+  delete s1;//Sequence are recopied in the container, we can delete these...
+  delete s2;
+  return asc;
+}
+
+/******************************************************************************/
+    
+AlignedSequenceContainer * SiteContainerTools::alignNW(
+    const Sequence & seq1,
+    const Sequence & seq2,
+    const AlphabetIndex2<double> & s,
+    double opening,
+    double extending)
+throw (AlphabetMismatchException)
+{
+	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+		throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), seq2.getAlphabet());
+	if(seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
+		throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
+  //Check that sequences have no gap!
+  Sequence * s1 = SequenceTools::removeGaps(seq1);
+  Sequence * s2 = SequenceTools::removeGaps(seq2);
+  
+  //1) Initialize matrix:
+  RowMatrix<double> m(s1->size() + 1, s2->size() + 1);
+  RowMatrix<double> v(s1->size() + 1, s2->size() + 1);
+  RowMatrix<double> h(s1->size() + 1, s2->size() + 1);
+  RowMatrix<char>   p(s1->size(), s2->size());
+  
+  double choice1, choice2, choice3, mx;
+  char px;
+  m(0,0) = 0;
+  for(unsigned int i = 1; i <= s1->size(); i++) m(i,0) = v(i,0) = log(0.);
+  for(unsigned int j = 1; j <= s2->size(); j++) m(0,j) = h(0,j) = log(0.);
+  for(unsigned int i = 1; i <= s1->size(); i++) h(i,0) = opening + i*extending;
+  for(unsigned int j = 1; j <= s2->size(); j++) v(0,j) = opening + j*extending;
+  
+  for(unsigned int i = 1; i <= s1->size(); i++)
+  {
+    for(unsigned int j = 1; j <= s2->size(); j++)
+    {
+      choice1 = m(i-1,j-1) + s.getIndex((*s1)[i-1], (*s2)[j-1]);
+      choice2 = h(i-1,j-1) + opening + extending;
+      choice3 = v(i-1,j-1) + opening + extending;
+      mx = choice1; //Default in case of equality of scores.
+      if(choice2 > mx) { mx = choice2; }
+      if(choice3 > mx) { mx = choice3; }
+      m(i,j) = mx;
+
+      choice1 = m(i,j-1) + opening + extending;
+      choice2 = h(i,j-1) + extending;
+      mx = choice1; //Default in case of equality of scores.
+      if(choice2 > mx) { mx = choice2; }
+      h(i,j) = mx;
+
+      choice1 = m(i-1,j) + opening + extending;
+      choice2 = v(i-1,j) + extending;
+      mx = choice1; //Default in case of equality of scores.
+      if(choice2 > mx) { mx = choice2; }
+      v(i,j) = mx;
+
+      px = 'd';
+      if(v(i,j) > m(i,j)) px='u';
+      if(h(i,j) > m(i,j)) px='l';
       p(i-1,j-1) = px;
     }
   }
