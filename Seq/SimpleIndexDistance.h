@@ -62,7 +62,9 @@ using namespace std;
  * indexes of two states.
  */
 template<class T>
-class SimpleIndexDistance: public AlphabetIndex2<T> {
+class SimpleIndexDistance:
+  public AlphabetIndex2<T>
+{
 
 	private:
 		AlphabetIndex1<T> * _index;
@@ -105,6 +107,14 @@ class SimpleIndexDistance: public AlphabetIndex2<T> {
 	public:
 		void setSymmetric(bool yn) { _sym = yn; }
 		bool isSymmetric() const { return _sym; }
+    /**
+     * @return The AlphabetIndex1 object associated to this object.
+     */
+    const AlphabetIndex1<T> * getAlphabetIndex1() const { return _index; }
+    /**
+     * @return The AlphabetIndex1 object associated to this object.
+     */
+    AlphabetIndex1<T> * getAlphabetIndex1() { return _index; }
 
 };
 

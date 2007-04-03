@@ -69,14 +69,6 @@ SymbolList & SymbolList::operator = (const SymbolList & list)
 
 /****************************************************************************************/
 
-SymbolList::~SymbolList() {}
-
-/****************************************************************************************/
-
-Clonable * SymbolList::clone() const { return new SymbolList(*  this); }
-
-/****************************************************************************************/
-
 void SymbolList::setContent(const vector<string> & list) throw (BadCharException)
 {
 	// Check list for incorrect characters

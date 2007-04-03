@@ -67,8 +67,8 @@ map<int, double> SymbolListTools::getCounts(const SymbolList & list, bool resolv
         c[alias[j]] += 1./n ;
       }
     }
-	  return c;
   }
+	return c;
 }
 
 map<int, double> SymbolListTools::getFrequencies(const SymbolList & list, bool resolveUnknowns)

@@ -124,10 +124,10 @@ class AbstractISequence:
 
 	public:
 		virtual
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
+#if defined(NO_VIRTUAL_COV)
 		SequenceContainer *
+#else
+		VectorSequenceContainer *
 #endif
 		read(istream & input, const Alphabet * alpha) const throw (Exception)
 		{
@@ -144,10 +144,10 @@ class AbstractISequence:
 		 * @throw Exception If the file is not in the specified format.
 		 */
 		virtual
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
+#if defined(NO_VIRTUAL_COV)
 		SequenceContainer *
+#else
+		VectorSequenceContainer *
 #endif
 		readFromStream(istream & input, const Alphabet * alpha) const throw (Exception)
 		{
@@ -158,10 +158,10 @@ class AbstractISequence:
 
 	public:
 		virtual
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
+#if defined(NO_VIRTUAL_COV)
 		SequenceContainer *
+#else
+		VectorSequenceContainer *
 #endif
 		read(const string & path , const Alphabet * alpha) const throw (Exception)
 		{
@@ -179,10 +179,10 @@ class AbstractISequence:
 		 * @throw Exception If the file is not in the specified format.
 		 */
 		virtual
-#if defined(VIRTUAL_COV)
-		VectorSequenceContainer *
-#else
+#if defined(NO_VIRTUAL_COV)
 		SequenceContainer *
+#else
+		VectorSequenceContainer *
 #endif
 		readFromFile(const string & path , const Alphabet * alpha) const throw (Exception)
 		{

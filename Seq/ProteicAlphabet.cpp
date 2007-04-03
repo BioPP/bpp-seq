@@ -194,7 +194,7 @@ string ProteicAlphabet::getAbbr(const string & aa) const throw (AlphabetExceptio
 	string AA = TextTools::toUpper(aa);
 	for (unsigned int i = 0 ; i < getNumberOfChars() ; i++)
 		if (alphabet[i].letter == AA) return alphabet[i].abbr;
-	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid");
+	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid '" + aa + ".");
 }
 
 /****************************************************************************************/
@@ -203,7 +203,7 @@ string ProteicAlphabet::getAbbr(int aa) const throw (AlphabetException)
 {
 	for (unsigned int i = 0 ; i < getNumberOfChars() ; i++)
 		if (alphabet[i].num == aa) return alphabet[i].abbr;
-	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid");
+	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid '" + TextTools::toString(aa) + "'.");
 }
 
 /****************************************************************************************/

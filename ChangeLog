@@ -1,3 +1,15 @@
+02/04/07 Julien Dutheil
+* VIRTUAL_COV variable changed to NO_VIRTUAL_COV. configure.ac file updated.
+  => Default behaviour is now /really/ to use covariant return type with
+	virtual inheritence, even when importing the files in an IDE. To use the old
+	compilers behaviour, one must set the NO_VIRTUAL_COV preproc variable.
+* this modification also solves a problem with the old configure.ac which
+  was not correctly update din version 1.2.0 :(
+* Bug fixed in SymbolListTools::getCounts.
+
+02/04/07 Julien Dutheil
+* New method getAlphabetIndex1() in class SimpleIndexDistance.
+
 24/02/07 Julien Dutheil
 * New pairwise alignment algorithm: gap opening and extending penalties.
 	

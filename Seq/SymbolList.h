@@ -63,7 +63,9 @@ using namespace std;
  *
  * @see Alphabet
  */
-class SymbolList: public virtual Clonable {
+class SymbolList: 
+  public virtual Clonable
+{
 
   protected:
  		/**
@@ -116,18 +118,22 @@ class SymbolList: public virtual Clonable {
 		 */
 		SymbolList & operator = (const SymbolList & list);
 
-		// Class destructor
-		virtual ~SymbolList();
-
-	public:
-
 		/**
 		 * @name The Clonable interface
 		 *
 		 * @{
 		 */
-		Clonable * clone() const;
+#if defined(NO_VIRTUAL_COV)
+		Clonable * clone() const { return new SymbolList(* this); }
+#else
+		SymbolList * clone() const { return new SymbolList(* this); }
+#endif
 		/** @} */
+
+    // Class destructor
+		virtual ~SymbolList() {}
+
+	public:
 
     /**
 		 * @brief Get the alphabet associated to the list.
