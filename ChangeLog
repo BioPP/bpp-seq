@@ -1,3 +1,6 @@
+24/04/07 Benoît Nabholz & Julien Dutheil
+* GeneticCode classes can now translate unknow codons to inknow amino acids.
+
 02/04/07 Julien Dutheil
 * VIRTUAL_COV variable changed to NO_VIRTUAL_COV. configure.ac file updated.
   => Default behaviour is now /really/ to use covariant return type with
