@@ -466,11 +466,11 @@ throw (AlphabetMismatchException)
   
   double choice1, choice2, choice3, mx;
   char px;
-  m(0,0) = 0;
-  for(unsigned int i = 1; i <= s1->size(); i++) m(i,0) = v(i,0) = log(0.);
-  for(unsigned int j = 1; j <= s2->size(); j++) m(0,j) = h(0,j) = log(0.);
-  for(unsigned int i = 1; i <= s1->size(); i++) h(i,0) = opening + i*extending;
-  for(unsigned int j = 1; j <= s2->size(); j++) v(0,j) = opening + j*extending;
+  m(0,0) = 0.;
+  for(unsigned int i = 0; i <= s1->size(); i++) v(i,0) = log(0.);
+  for(unsigned int j = 0; j <= s2->size(); j++) h(0,j) = log(0.);
+  for(unsigned int i = 1; i <= s1->size(); i++) m(i,0) = h(i,0) = opening + i*extending;
+  for(unsigned int j = 1; j <= s2->size(); j++) m(0,j) = v(0,j) = opening + j*extending;
   
   for(unsigned int i = 1; i <= s1->size(); i++)
   {

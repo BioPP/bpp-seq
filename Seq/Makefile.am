@@ -74,7 +74,8 @@ KleinAANetChargeIndex.h\
 AAChargeIndex.h\
 SequenceApplicationTools.h\
 sequences\
-IOSequenceFactory.h
+IOSequenceFactory.h\
+SimpleScore.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
@@ -129,7 +130,8 @@ Translator.cpp\
 VectorSequenceContainer.cpp\
 VectorSiteContainer.cpp\
 SequenceApplicationTools.cpp\
-IOSequenceFactory.cpp
+IOSequenceFactory.cpp\
+SimpleScore.cpp
 
 CPP_EXTRA = \
 __GranthamMatrixCode\
