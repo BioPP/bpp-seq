@@ -47,7 +47,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <NumCalc/NumTools.h>
 using namespace NumTools;
 #include <NumCalc/VectorTools.h>
-using namespace VectorFunctions;
 
 // From the STL:
 #include <cmath>
@@ -146,7 +145,7 @@ double SiteTools::variabilityShannon(const Site & site) throw (EmptySiteExceptio
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::variabilityShannon: Incorrect specified site", &site);
 	map<int, double> p = getFrequencies(site);
-	return shannon(MapTools::getValues(p));
+	return VectorTools::shannon(MapTools::getValues(p));
 }
 
 /******************************************************************************/
@@ -157,10 +156,9 @@ double SiteTools::variabilityFactorial(const Site & site) throw (EmptySiteExcept
 	if(site.size() == 0) throw EmptySiteException("SiteTools::variabilityFactorial: Incorrect specified site", &site);
 	map<int, unsigned int> p = getCounts(site);
 	vector<unsigned int> c = MapTools::getValues(p);
-	unsigned int s = sum(c);
-  return std::log((double)fact(s) / (double)sum(VectorFunctions::fact(c)));
+	unsigned int s = VectorTools::sum(c);
+  return std::log((double)fact(s) / (double)VectorTools::sum(VectorTools::fact(c)));
 }
-
 
 /******************************************************************************/
 
@@ -170,7 +168,7 @@ double SiteTools::heterozygosity(const Site & site) throw (EmptySiteException)
 	if(site.size() == 0) throw EmptySiteException("SiteTools::heterozygosity: Incorrect specified site", &site);
 	map<int, double> p = getFrequencies(site);
 	vector<double> c = MapTools::getValues(p);
-	double n = norm(MapTools::getValues(p));
+	double n = VectorTools::norm(MapTools::getValues(p));
 	return 1. - n*n;
 }
 
