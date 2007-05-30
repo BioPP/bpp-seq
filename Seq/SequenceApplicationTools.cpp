@@ -70,11 +70,68 @@ Alphabet * SequenceApplicationTools::getAlphabet(
   }
   else
   {
-    ApplicationTools::error << "Alphabet not known: " << alphabet << endl;
+    ApplicationTools::displayError("Alphabet not known: " + alphabet);
     exit(-1);
   }
   if(verbose) ApplicationTools::displayResult("Alphabet type", alphabet);
   return chars;
+}
+
+/******************************************************************************/
+
+SequenceContainer * SequenceApplicationTools::getSequenceContainer(
+  const Alphabet * alpha,
+  map<string, string> & params,
+  const string & suffix,
+  bool suffixIsOptional,
+  bool verbose)
+{
+  string sequenceFilePath = ApplicationTools::getAFilePath("sequence.file",params, true, true, suffix, suffixIsOptional);
+  string sequenceFormat = ApplicationTools::getStringParameter("sequence.format", params, "Fasta", suffix, suffixIsOptional);
+  if(verbose) ApplicationTools::displayResult("Sequence format", sequenceFormat);
+  ISequence * iSeq = NULL;
+  if(sequenceFormat == "Mase")
+  {
+    iSeq = new Mase();
+  }
+  else if(sequenceFormat == "Phylip")
+  {
+    bool sequential = true, extended = true;
+    if(params.find("sequence.format_phylip.order") != params.end())
+    {
+           if(params["sequence.format_phylip.order"] == "sequential" ) sequential = true;
+      else if(params["sequence.format_phylip.order"] == "interleaved") sequential = false;
+      else ApplicationTools::displayWarning("Argument '" +
+             params["sequence.format_phylip.order"] +
+             "' for parameter 'sequence.format_phylip.order' is unknown. " +
+             "Default used instead: sequential.");
+    }
+    else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.order' not found. Default used instead: sequential.");
+    if(params.find("sequence.format_phylip.ext") != params.end())
+    {
+           if(params["sequence.format_phylip.ext"] == "extended") extended = true;
+      else if(params["sequence.format_phylip.ext"] == "classic" ) extended = false;
+      else ApplicationTools::displayWarning("Argument '" +
+             params["sequence.format_phylip.ext"] +
+             "' for parameter 'sequence.format_phylip.ext' is unknown. " +
+             "Default used instead: extended.");
+    }
+    else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.ext' not found. Default used instead: extended.");
+    iSeq = new Phylip(extended, sequential);
+  }
+  else if(sequenceFormat == "Fasta") iSeq = new Fasta();
+  else if(sequenceFormat == "Clustal") iSeq = new Clustal();
+  else
+  {
+    ApplicationTools::displayError("Unknown sequence format.");
+    exit(-1);
+  }
+  SequenceContainer * sequences = iSeq->read(sequenceFilePath, alpha);
+  delete iSeq;
+  
+  if(verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
+
+  return sequences;
 }
 
 /******************************************************************************/
@@ -280,26 +337,28 @@ void SequenceApplicationTools::writeSequenceFile(
 
 void SequenceApplicationTools::printInputAlignmentHelp()
 {
-  ApplicationTools::message << "Input sequence file and format:" << endl;
-  ApplicationTools::message << "alphabet                      | the alphabet to use [DNA|RNA|Proteins]" << endl;
-  ApplicationTools::message << "sequence.format               | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
-  ApplicationTools::message << "sequence.format_phylip.order  | [interleaved|sequential]" << endl;
-  ApplicationTools::message << "sequence.format_phylip.ext    | [classic|extended]" << endl;
-  ApplicationTools::message << "sequence.sites_to_use         | [all|nogap|complete]" << endl;
-  ApplicationTools::message << "______________________________|___________________________________________" << endl;
+  if(!ApplicationTools::message) return;
+  *ApplicationTools::message << "Input sequence file and format:" << endl;
+  *ApplicationTools::message << "alphabet                      | the alphabet to use [DNA|RNA|Proteins]" << endl;
+  *ApplicationTools::message << "sequence.format               | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
+  *ApplicationTools::message << "sequence.format_phylip.order  | [interleaved|sequential]" << endl;
+  *ApplicationTools::message << "sequence.format_phylip.ext    | [classic|extended]" << endl;
+  *ApplicationTools::message << "sequence.sites_to_use         | [all|nogap|complete]" << endl;
+  *ApplicationTools::message << "______________________________|___________________________________________" << endl;
 }
 
 /******************************************************************************/
 
 void SequenceApplicationTools::printOutputSequenceHelp()
 {
-  ApplicationTools::message << "Output sequence file and format:" << endl;
-  ApplicationTools::message << "output.sequence.format        | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
-  ApplicationTools::message << "output.sequence.              |" << endl;
-  ApplicationTools::message << "           format_phylip.order| [interleaved|sequential]" << endl;
-  ApplicationTools::message << "output.sequence.              |" << endl;
-  ApplicationTools::message << "             format_phylip.ext| [classic|extended]" << endl;
-  ApplicationTools::message << "______________________________|___________________________________________" << endl;
+  if(!ApplicationTools::message) return;
+  *ApplicationTools::message << "Output sequence file and format:" << endl;
+  *ApplicationTools::message << "output.sequence.format        | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
+  *ApplicationTools::message << "output.sequence.              |" << endl;
+  *ApplicationTools::message << "           format_phylip.order| [interleaved|sequential]" << endl;
+  *ApplicationTools::message << "output.sequence.              |" << endl;
+  *ApplicationTools::message << "             format_phylip.ext| [classic|extended]" << endl;
+  *ApplicationTools::message << "______________________________|___________________________________________" << endl;
 }
 
 /******************************************************************************/

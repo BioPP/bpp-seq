@@ -1,3 +1,7 @@
+21/05/07 Julien Dutheil
+* New method SequenceContainerTools::getSequenceContainer to read non-aligned
+  sequences.
+
 04/05/07 Julien Dutheil
 * Bug fixed in global alignment with gap opening and extending penalties.
 * New generic score schemme.

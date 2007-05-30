@@ -87,6 +87,36 @@ class SequenceApplicationTools
 		/**
 		 * @brief Build a SequenceContainer object according to options.
 		 *
+     * Sequences in file need not be aligned.
+     *
+		 * Options used are:
+		 * - sequence.format = [Fasta|Mase|Phylip|Clustal|DCSE], the format of the sequence file.
+		 * - sequence.file = file_path, the path of the file to parse.
+		 * Options depending on other options:
+		 * - If Phylip format is to be used:
+		 *   - sequence.format_phylip.order = [interleaved|sequential].
+		 *   - sequence.format_phylip.ext   = [classic|extended].
+		 *
+		 * @param alpha   The alphabet to use in the container.
+		 * @param params  The attribute map where options may be found.
+		 * @param suffix  A suffix to be applied to each attribute name.
+		 * @param suffixIsOptional Tell if the suffix is absolutely required.
+		 * @param verbose Print some info to the 'message' output stream.
+		 * @return A new VectorSequenceContainer object according to options specified.
+     * @see getSiteContainer to read an alignment.
+		 */
+		static SequenceContainer * getSequenceContainer(
+			const Alphabet * alpha,
+			map<string, string> & params,
+			const string & suffix = "",
+			bool suffixIsOptional = true,
+			bool verbose = true);
+
+    /**
+		 * @brief Build a SiteContainer object according to options.
+		 *
+     * Sequences in file mus be aligned.
+     *
 		 * Options used are:
 		 * - sequence.format = [Fasta|Mase|Phylip|Clustal|DCSE], the format of the sequence file.
 		 * - sequence.file = file_path, the path of the file to parse.
