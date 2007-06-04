@@ -94,6 +94,14 @@ class VectorSiteContainer :
      */
 		VectorSiteContainer(unsigned int size, const Alphabet * alpha);
     /**
+     * @brief Build a new empty container with specified sequence names.
+     *
+     * @param names Sequence names. This will set the number of sequences in the container.
+     * @param alpha The alphabet for this container.
+     */
+		VectorSiteContainer(const vector<string> & names, const Alphabet * alpha);
+
+    /**
      * @brief Build a new empty container.
      *
      * @param alpha The alphabet for this container.

@@ -1,3 +1,9 @@
+04/06/07 Julien Dutheil
+* New constructor from sequence names in VectorSiteContainer.
+
+01/06/07 Julien Dutheil
+* New method SiteContainerTools::boostrapSites to bootstrap an alignment.
+
 21/05/07 Julien Dutheil
 * New method SequenceContainerTools::getSequenceContainer to read non-aligned
   sequences.

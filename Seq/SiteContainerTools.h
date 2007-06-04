@@ -8,6 +8,7 @@
 #define _SITECONTAINERTOOLS_H_
 
 #include "SiteContainer.h"
+#include "VectorSiteContainer.h"
 #include "AlignedSequenceContainer.h"
 #include "AlphabetIndex2.h"
 
@@ -216,6 +217,19 @@ class SiteContainerTools
      * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
      */
     static AlignedSequenceContainer * alignNW(const Sequence & seq1, const Sequence & seq2, const AlphabetIndex2<double> & s, double opening, double extending) throw (AlphabetMismatchException);
+
+    /**
+     * @brief Bootstrap sites in an alignment.
+     *
+     * Original site positions will be kept. The resulting container will hence probably have duplicated
+     * positions. You may wish to call the reindexSites() method on the returned container.
+     *
+     * Note: This method will be optimal with a container with vertical storage like VectorSiteContainer.
+     *
+     * @param sites An input alignement to sample.
+     * @return A sampled alignment with the same number of sites than the input one.
+     */
+    static VectorSiteContainer * bootstrapSites(const SiteContainer & sites);
 
 };
 
