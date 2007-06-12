@@ -49,7 +49,8 @@ knowledge of the CeCILL license and that you accept its terms.
  * This class only implements a few methods, it is mainly designed for methods/classes
  * that will require to work with both RNA and DNA.
  */
-class NucleicAlphabet : public AbstractAlphabet
+class NucleicAlphabet :
+  public AbstractAlphabet
 {
 	public:
 	  NucleicAlphabet() {}
@@ -63,6 +64,9 @@ class NucleicAlphabet : public AbstractAlphabet
 		unsigned int getNumberOfTypes() const { return 15; }
     
     int getUnknownCharacterCode() const { return 14; }
+
+    bool isUnresolved(int state) const { return state > 3; }
+    bool isUnresolved(const string & state) const { return charToInt(state) > 3; }
     
 };
 

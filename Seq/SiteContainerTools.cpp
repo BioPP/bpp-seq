@@ -568,3 +568,98 @@ VectorSiteContainer * SiteContainerTools::bootstrapSites(const SiteContainer & s
 
 /******************************************************************************/
 
+const string SiteContainerTools::SIMILARITY_ALL         = "all sites";
+const string SiteContainerTools::SIMILARITY_NOFULLGAP   = "no full gap";
+const string SiteContainerTools::SIMILARITY_NODOUBLEGAP = "no double gap";
+const string SiteContainerTools::SIMILARITY_NOGAP       = "no gap";
+
+/******************************************************************************/
+
+double SiteContainerTools::computeSimilarity(const Sequence & seq1, const Sequence & seq2, const string & gapOption, bool unresolvedAsGap) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception)
+{
+  if(seq1.size() != seq2.size()) throw SequenceNotAlignedException("SiteContainerTools::computeSimilarity.", &seq2);
+  if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SiteContainerTools::computeSimilarity.", seq1.getAlphabet(), seq2.getAlphabet());
+
+  const Alphabet * alpha = seq1.getAlphabet();
+  unsigned int s;
+  unsigned int t;
+  for(unsigned int i = 0; i < seq1.size(); i++)
+  {
+    int x = seq1[i];
+    int y = seq2[i];
+    if(unresolvedAsGap)
+    {
+      if(alpha->isUnresolved(x)) x = alpha->getGapCharacterCode();
+      if(alpha->isUnresolved(y)) y = alpha->getGapCharacterCode();
+    }
+    if(gapOption == SIMILARITY_ALL)
+    {
+      t++;
+      if(x == y && !alpha->isGap(x) && !alpha->isGap(y)) s++;
+    }
+    else if(gapOption == SIMILARITY_NODOUBLEGAP)
+    {
+      if(!alpha->isGap(x) || !alpha->isGap(y))
+      {
+        t++;
+        if(x == y) s++;
+      }
+    }
+    else if(gapOption == SIMILARITY_NOGAP)
+    {
+      if(!alpha->isGap(x) && !alpha->isGap(y))
+      {
+        t++;
+        if(x == y) s++;
+      }
+    }
+    else throw Exception("SiteContainerTools::computeSimilarity. Invalid gap option: " + gapOption);
+  }
+  return t == 0 ? 0. : (double)s / (double)t;
+}
+
+/******************************************************************************/
+
+DistanceMatrix * SiteContainerTools::computeSimilarityMatrix(const SiteContainer & sites, const string & gapOption, bool unresolvedAsGap)
+{
+  unsigned int n = sites.getNumberOfSequences();
+  DistanceMatrix *mat = new DistanceMatrix(sites.getSequencesNames());
+  string pairwiseGapOption = gapOption;
+  SiteContainer * sites2;
+  if(gapOption == SIMILARITY_NOFULLGAP)
+  {
+    if(unresolvedAsGap)
+    {
+      SiteContainer * tmp = getCompleteSites(sites);
+      sites2 = new AlignedSequenceContainer(*tmp);
+      delete tmp;
+    }
+    else
+    {
+      SiteContainer * tmp = removeGapOnlySites(sites);
+      sites2 = new AlignedSequenceContainer(*tmp);
+      delete tmp;
+    }
+    pairwiseGapOption = SIMILARITY_ALL;
+  }
+  else
+  {
+    sites2 = new AlignedSequenceContainer(sites);
+  }
+
+  for(unsigned int i = 0; i < n; i++)
+  {
+    (*mat)(i, i) = 1.;
+    const Sequence *seq1 = sites2->getSequence(i);
+    for(unsigned int j = i + 1; j < n; j++)
+    {
+      const Sequence *seq2 = sites2->getSequence(j);
+      (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(*seq1, *seq2, pairwiseGapOption, unresolvedAsGap);
+    }
+  }
+  delete sites2;
+  return mat;
+}
+
+/******************************************************************************/
+

@@ -1,13 +1,13 @@
 //
-// File: DefaultAlphabet.h
-// Created by: Julien Dutheil
+// File: DistanceMatrix.cpp
+// Created on: Sat Feb 17 15:25 2007
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+for phylogenetic data analysis.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -36,38 +36,14 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _DEFAULTALPHABET_H_
-#define _DEFAULTALPHABET_H_
+#include "DistanceMatrix.h"
 
-#include "AbstractAlphabet.h"
-
-/**
- * @brief The DefaultAlphabet class.
- *
- * This alphabet should match virtually any type of sequences.
- * This should be used by who does not care of the sequence type.
- */
-class DefaultAlphabet:
-  public AbstractAlphabet
+unsigned int DistanceMatrix::getNameIndex(const string & name) const throw (Exception)
 {
-	protected:
-		static const string chars;
-		
-	public:
-		// class constructor
-		DefaultAlphabet();
-
-		// class destructor
-		virtual ~DefaultAlphabet() {}
-
-	public:
-		unsigned int getSize() const { return 26; }
-		unsigned int getNumberOfTypes() const { return 27; }
-		string getAlphabetType() const { return "Default alphabet"; }
-    int getUnknownCharacterCode() const { return 38; }
-    bool isUnresolved(int state) const { return false; }
-    bool isUnresolved(const string & state) const { return false; }
- };
-
-#endif // _DEFAULTALPHABET_H_
+  for(unsigned int i = 0; i < _names.size(); i++)
+  {
+    if(_names[i] == name) return i;
+  }
+  throw Exception("DistanceMatrix::getNameIndex. Name not found: '" + name + "'.");
+}
 

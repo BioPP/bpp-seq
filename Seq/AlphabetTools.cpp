@@ -19,6 +19,7 @@ using namespace std;
 const DNA AlphabetTools::DNA_ALPHABET;
 const RNA AlphabetTools::RNA_ALPHABET;
 const ProteicAlphabet AlphabetTools::PROTEIN_ALPHABET;
+const DefaultAlphabet AlphabetTools::DEFAULT_ALPHABET;
 
 /**********************************************************************************************/
 

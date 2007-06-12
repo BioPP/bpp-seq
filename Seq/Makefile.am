@@ -75,7 +75,8 @@ AAChargeIndex.h\
 SequenceApplicationTools.h\
 sequences\
 IOSequenceFactory.h\
-SimpleScore.h
+SimpleScore.h \
+DistanceMatrix.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
@@ -131,7 +132,8 @@ VectorSequenceContainer.cpp\
 VectorSiteContainer.cpp\
 SequenceApplicationTools.cpp\
 IOSequenceFactory.cpp\
-SimpleScore.cpp
+SimpleScore.cpp\
+DistanceMatrix.cpp
 
 CPP_EXTRA = \
 __GranthamMatrixCode\

@@ -56,7 +56,8 @@ using namespace std;
  * This nucleic alphabet is passed to the constructor.
  * This class also adds some util specific to codon manipulation.
  */
-class CodonAlphabet : public AbstractAlphabet
+class CodonAlphabet:
+  public AbstractAlphabet
 {
 	public:
 		//Constant used for stop codons:
@@ -90,7 +91,9 @@ class CodonAlphabet : public AbstractAlphabet
 		/** @} */
 		
 		string getAlphabetType() const { return "Codon alphabet"; }
-    int getUnknownCharacterCode() const { return 61; }
+    int getUnknownCharacterCode() const { return 61; } //May be redefined?
+    bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
+    bool isUnresolved(const string & state) const { return charToInt(state) == getUnknownCharacterCode(); }
  			
 	private:
 		

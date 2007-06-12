@@ -11,6 +11,7 @@
 #include "VectorSiteContainer.h"
 #include "AlignedSequenceContainer.h"
 #include "AlphabetIndex2.h"
+#include "DistanceMatrix.h"
 
 //From the STL:
 #include <vector>
@@ -226,10 +227,57 @@ class SiteContainerTools
      *
      * Note: This method will be optimal with a container with vertical storage like VectorSiteContainer.
      *
-     * @param sites An input alignement to sample.
+     * @param sites An input alignment to sample.
      * @return A sampled alignment with the same number of sites than the input one.
      */
     static VectorSiteContainer * bootstrapSites(const SiteContainer & sites);
+
+    /**
+     * @brief Compute the similarity score between two aligned sequences.
+     *
+     * The similarity measures are computed as the proportion of identical match.
+     * This function can be used with any type of alphabet.
+     *
+     * @param seq1 The first sequence.
+     * @param seq2 The second sequence.
+     * @param gapOption How to deal with gaps:
+     * - SIMILARITY_ALL: all positions are used.
+     * - SIMILARITY_NODOUBLEGAP: ignore all positions with a gap in the two sequences.
+     * - SIMILARITY_NOGAP: ignore all positions with a gap in at least one of the two sequences.
+     * @param unresolvedAsGap Tell if unresolved characters must be considered as gaps when counting.
+     * If set to yes, the gap option will also apply to unresolved characters.
+     * @return The proportion of matches between the two sequences.
+     * @throw SequenceNotAlignedException If the two sequences do not have the same length.
+     * @throw AlphabetMismatchException If the two sequences do not share the same alphabet type.
+     * @throw Exception If an invalid gapOption is passed.
+     */
+    static double computeSimilarity(const Sequence & seq1, const Sequence & seq2, const string & gapOption = SIMILARITY_NODOUBLEGAP, bool unresolvedAsGap = true) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception);
+
+    /**
+     * @brief Compute the similarity matrix of an alignment.
+     *
+     * The similarity measures are computed as the proportion of identical match.
+     * The type of alphabet is ignored. Several options concerning gaps and unresolved characters are proposed:
+     * - SIMILARITY_ALL: all positions are used.
+     * - SIMILARITY_NOFULLGAP: ignore positions with a gap in all the sequences in the alignment.
+     * - SIMILARITY_NODOUBLEGAP: ignore all positions with a gap in the two sequences for each pair.
+     * - SIMILARITY_NOGAP: ignore all positions with a gap in at least one of the two sequences for each pair.
+     *
+     * @param unresolvedAsGap Tell if unresolved characters must be considered as gaps when counting.
+     * If set to yes, the gap option will also apply to unresolved characters.
+     *
+     * @see computeSimilarityMatrix
+     *
+     * @param gapOption How to deal with gaps.
+     * @param sites The input alignment.
+     * @return All pairwise similarity measures.
+     */
+    static DistanceMatrix * computeSimilarityMatrix(const SiteContainer & sites, const string & gapOption, bool unresolvedAsGap);
+
+    static const string SIMILARITY_ALL;
+    static const string SIMILARITY_NOFULLGAP;
+    static const string SIMILARITY_NODOUBLEGAP;
+    static const string SIMILARITY_NOGAP;
 
 };
 

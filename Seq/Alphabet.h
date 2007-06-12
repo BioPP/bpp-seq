@@ -212,6 +212,36 @@ class Alphabet
      * @return The int code for unknown characters.
      */
     virtual int getUnknownCharacterCode() const = 0;
+
+    /**
+     * @return The int code for gap characters.
+     */
+    virtual int getGapCharacterCode() const = 0;
+
+    /**
+     * @param state The state to test.
+     * @return 'True' if the state is a gap.
+     */
+    virtual bool isGap(int state) const = 0;
+
+    /**
+     * @param state The state to test.
+     * @return 'True' if the state is a gap.
+     */
+    virtual bool isGap(const string & state) const = 0;
+
+    /**
+     * @param state The state to test.
+     * @return 'True' if the state is unresolved.
+     */
+    virtual bool isUnresolved(int state) const = 0;
+
+    /**
+     * @param state The state to test.
+     * @return 'True' if the state is unresolved.
+     */
+    virtual bool isUnresolved(const string & state) const = 0;
+
 		/** @} */
 
 		/**

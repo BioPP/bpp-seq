@@ -1,3 +1,8 @@
+12/06/07 Julien Dutheil
+* More tools in class alphabet (isGap, isUnresolved, etc.)
+* New class DistanceMatrix, previously in phyllib.
+* New similarity measures in SiteContainerTools.
+
 04/06/07 Julien Dutheil
 * New constructor from sequence names in VectorSiteContainer.
 

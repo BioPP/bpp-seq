@@ -369,7 +369,8 @@ unsigned int VectorSiteContainer::getNumberOfSites() const
 const vector<int> VectorSiteContainer::getPositions() const
 {
   vector<int> positions(getNumberOfSites());
-  for(unsigned int i = 0; i < positions.size(); i++) {
+  for(unsigned int i = 0; i < positions.size(); i++)
+  {
     positions[i] = getSite(i)->getPosition();
   }
   return positions;
@@ -380,7 +381,8 @@ const vector<int> VectorSiteContainer::getPositions() const
 void VectorSiteContainer::reindexSites()
 {
   int pos = 1; //first position is 1.
-  for(vector<Site *>::iterator i = _sites.begin(); i < _sites.end(); i++) {
+  for(vector<Site *>::iterator i = _sites.begin(); i < _sites.end(); i++)
+  {
     (*i)->setPosition(pos++);
   }  
 }
@@ -401,7 +403,8 @@ const Sequence * VectorSiteContainer::getSequence(unsigned int i) const throw (I
   if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::getSequence.", i, 0, getNumberOfSequences() - 1);
 
   string sequence = "";
-  for(unsigned int j = 0; j < getNumberOfSites(); j++) {
+  for(unsigned int j = 0; j < getNumberOfSites(); j++)
+  {
     sequence += getSite(j)->getChar(i);
   }
   if(_sequences[i] != NULL) delete _sequences[i];
@@ -602,7 +605,8 @@ void VectorSiteContainer::addSequence(
 
 /******************************************************************************/
 
-unsigned int VectorSiteContainer::getNumberOfSequences() const {
+unsigned int VectorSiteContainer::getNumberOfSequences() const
+{
   return _names.size();
 }
 
