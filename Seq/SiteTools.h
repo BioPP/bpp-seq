@@ -23,7 +23,8 @@ using namespace std;
  * @brief Utilitary methods dealing with sites.
  */
 
-class SiteTools: public SymbolListTools
+class SiteTools:
+  public SymbolListTools
 {
 	public:
 		SiteTools() {}
@@ -41,6 +42,12 @@ class SiteTools: public SymbolListTools
 		 * @return True if the site contains only gaps.
 		 */
 		static bool isGapOnly(const Site & site);
+
+    /**
+		 * @param site A site.
+		 * @return True if the site contains only gaps.
+		 */
+		static bool isGapOrUnresolvedOnly(const Site & site);
 
 		/**
 		 * @param site A site.

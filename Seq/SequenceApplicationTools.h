@@ -76,13 +76,15 @@ class SequenceApplicationTools
 		 * @param suffix  A suffix to be applied to each attribute name.
 		 * @param suffixIsOptional Tell if the suffix is absolutely required.
 		 * @param verbose Print some info to the 'message' output stream.
+		 * @param allowGeneric Tell if generic alphabets can be used.
 		 * @return A new Alphabet object according to options specified.
 		 */
 		static Alphabet * getAlphabet(
 			map<string, string> & params,
 			const string & suffix = "",
 			bool suffixIsOptional = true,
-			bool verbose = true);
+			bool verbose = true,
+      bool allowGeneric = false);
 		
 		/**
 		 * @brief Build a SequenceContainer object according to options.

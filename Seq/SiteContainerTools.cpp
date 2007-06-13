@@ -152,7 +152,23 @@ void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainer & sites)
     for(unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
     {
       int * element = & sites(j,i);
-      if(*element == -1) *element = unknownCode;
+      if(sites.getAlphabet()->isGap(*element)) *element = unknownCode;
+    }
+  }
+}
+
+/******************************************************************************/
+
+void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainer & sites)
+{
+  //NB: use iterators for a better algorithm? 
+  int gapCode = sites.getAlphabet()->getUnknownCharacterCode();
+  for(unsigned int i = 0; i < sites.getNumberOfSites(); i++)
+  {
+    for(unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
+    {
+      int * element = & sites(j,i);
+      if(sites.getAlphabet()->isUnresolved(*element)) *element = gapCode;
     }
   }
 }
@@ -168,6 +184,21 @@ SiteContainer * SiteContainerTools::removeGapOnlySites(const SiteContainer & sit
   {
 		const Site * site = sites.getSite(i);
     if(!SiteTools::isGapOnly(*site)) noGapCont->addSite(* site);
+	}
+	return noGapCont;
+}
+
+/******************************************************************************/
+
+SiteContainer * SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteContainer & sites)
+{
+	vector<string> seqNames = sites.getSequencesNames();
+	VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+	noGapCont->setSequencesNames(seqNames, false);
+  for(unsigned int i = 0; i < sites.getNumberOfSites(); i++)
+  {
+		const Site * site = sites.getSite(i);
+    if(!SiteTools::isGapOrUnresolvedOnly(*site)) noGapCont->addSite(* site);
 	}
 	return noGapCont;
 }
@@ -575,14 +606,14 @@ const string SiteContainerTools::SIMILARITY_NOGAP       = "no gap";
 
 /******************************************************************************/
 
-double SiteContainerTools::computeSimilarity(const Sequence & seq1, const Sequence & seq2, const string & gapOption, bool unresolvedAsGap) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception)
+double SiteContainerTools::computeSimilarity(const Sequence & seq1, const Sequence & seq2, bool dist, const string & gapOption, bool unresolvedAsGap) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception)
 {
   if(seq1.size() != seq2.size()) throw SequenceNotAlignedException("SiteContainerTools::computeSimilarity.", &seq2);
   if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SiteContainerTools::computeSimilarity.", seq1.getAlphabet(), seq2.getAlphabet());
 
   const Alphabet * alpha = seq1.getAlphabet();
-  unsigned int s;
-  unsigned int t;
+  unsigned int s = 0;
+  unsigned int t = 0;
   for(unsigned int i = 0; i < seq1.size(); i++)
   {
     int x = seq1[i];
@@ -615,12 +646,13 @@ double SiteContainerTools::computeSimilarity(const Sequence & seq1, const Sequen
     }
     else throw Exception("SiteContainerTools::computeSimilarity. Invalid gap option: " + gapOption);
   }
-  return t == 0 ? 0. : (double)s / (double)t;
+  double r = (t == 0 ? 0. : (double)s / (double)t);
+  return dist ? 1 - r : r;
 }
 
 /******************************************************************************/
 
-DistanceMatrix * SiteContainerTools::computeSimilarityMatrix(const SiteContainer & sites, const string & gapOption, bool unresolvedAsGap)
+DistanceMatrix * SiteContainerTools::computeSimilarityMatrix(const SiteContainer & sites, bool dist, const string & gapOption, bool unresolvedAsGap)
 {
   unsigned int n = sites.getNumberOfSequences();
   DistanceMatrix *mat = new DistanceMatrix(sites.getSequencesNames());
@@ -630,7 +662,7 @@ DistanceMatrix * SiteContainerTools::computeSimilarityMatrix(const SiteContainer
   {
     if(unresolvedAsGap)
     {
-      SiteContainer * tmp = getCompleteSites(sites);
+      SiteContainer * tmp = removeGapOrUnresolvedOnlySites(sites);
       sites2 = new AlignedSequenceContainer(*tmp);
       delete tmp;
     }
@@ -654,7 +686,7 @@ DistanceMatrix * SiteContainerTools::computeSimilarityMatrix(const SiteContainer
     for(unsigned int j = i + 1; j < n; j++)
     {
       const Sequence *seq2 = sites2->getSequence(j);
-      (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(*seq1, *seq2, pairwiseGapOption, unresolvedAsGap);
+      (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(*seq1, *seq2, dist, pairwiseGapOption, unresolvedAsGap);
     }
   }
   delete sites2;

@@ -59,13 +59,24 @@ class SiteContainerTools
 		/**
 		 * @brief Get a site set without gap-only sites.
 		 *
-		 * This function build a new SiteContainer instance without gap only sites.
+		 * This function build a new SiteContainer instance without sites with only gaps.
 		 * The container passed as input is not modified, all sites are copied.
 		 *
 		 * @param sites The container to analyse.
 		 * @return A pointer toward a new SiteContainer.
 		 */
 		static SiteContainer * removeGapOnlySites(const SiteContainer & sites);
+
+		/**
+		 * @brief Get a site set without gap/unresolved-only sites.
+		 *
+		 * This function build a new SiteContainer instance without sites with only gaps or unresolved characters.
+		 * The container passed as input is not modified, all sites are copied.
+		 *
+		 * @param sites The container to analyse.
+		 * @return A pointer toward a new SiteContainer.
+		 */
+		static SiteContainer * removeGapOrUnresolvedOnlySites(const SiteContainer & sites);
 
 		/**
 		 * @brief Create a new container with a specified set of sites.
@@ -83,7 +94,6 @@ class SiteContainerTools
 		 */
 		static SiteContainer * getSelectedSites(const SiteContainer & sequences, const SiteSelection & selection);
 
-
 		/**
      * @brief create the consensus sequence of the alignment.
      *
@@ -96,15 +106,25 @@ class SiteContainerTools
      * If this option is set to true, a consensus sequence will never contain an unknown character.
      * @return A new Sequence object with the consensus sequence.
      */
-
 		static const Sequence * getConsensus(const SiteContainer & sc,string name="consensus", bool ignoreGap = true, bool resolveUnknown = false);
     
     /**
      * @brief Change all gaps to unknown state in a container, according to its alphabet.
      *
+     * For DNA alphabets, this change all '-' to 'N'.
+     *
      * @param sites The container to be modified.
      */
     static void changeGapsToUnknownCharacters(SiteContainer & sites);
+
+    /**
+     * @brief Change all unresolved characters to gaps in a container, according to its alphabet.
+     *
+     * For DNA alphabets, this change all 'N', 'M', 'R', etc.  to '-'.
+     *
+     * @param sites The container to be modified.
+     */
+    static void changeUnresolvedCharactersToGaps(SiteContainer & sites);
 
     /**
      * @brief Resolve a container with "." notations.
@@ -233,13 +253,15 @@ class SiteContainerTools
     static VectorSiteContainer * bootstrapSites(const SiteContainer & sites);
 
     /**
-     * @brief Compute the similarity score between two aligned sequences.
+     * @brief Compute the similarity/distance score between two aligned sequences.
      *
      * The similarity measures are computed as the proportion of identical match.
+     * The distance between the two sequences is defined as 1 - similarity.
      * This function can be used with any type of alphabet.
      *
      * @param seq1 The first sequence.
      * @param seq2 The second sequence.
+     * @param dist Shall we return a distance instead of similarity?
      * @param gapOption How to deal with gaps:
      * - SIMILARITY_ALL: all positions are used.
      * - SIMILARITY_NODOUBLEGAP: ignore all positions with a gap in the two sequences.
@@ -251,28 +273,31 @@ class SiteContainerTools
      * @throw AlphabetMismatchException If the two sequences do not share the same alphabet type.
      * @throw Exception If an invalid gapOption is passed.
      */
-    static double computeSimilarity(const Sequence & seq1, const Sequence & seq2, const string & gapOption = SIMILARITY_NODOUBLEGAP, bool unresolvedAsGap = true) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception);
+    static double computeSimilarity(const Sequence & seq1, const Sequence & seq2, bool dist = false, const string & gapOption = SIMILARITY_NODOUBLEGAP, bool unresolvedAsGap = true) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception);
 
     /**
      * @brief Compute the similarity matrix of an alignment.
      *
      * The similarity measures are computed as the proportion of identical match.
-     * The type of alphabet is ignored. Several options concerning gaps and unresolved characters are proposed:
+     * The distance between the two sequences is defined as 1 - similarity.
+     * This function can be used with any type of alphabet.
+     * Several options concerning gaps and unresolved characters are proposed:
      * - SIMILARITY_ALL: all positions are used.
      * - SIMILARITY_NOFULLGAP: ignore positions with a gap in all the sequences in the alignment.
      * - SIMILARITY_NODOUBLEGAP: ignore all positions with a gap in the two sequences for each pair.
      * - SIMILARITY_NOGAP: ignore all positions with a gap in at least one of the two sequences for each pair.
      *
-     * @param unresolvedAsGap Tell if unresolved characters must be considered as gaps when counting.
-     * If set to yes, the gap option will also apply to unresolved characters.
      *
      * @see computeSimilarityMatrix
      *
-     * @param gapOption How to deal with gaps.
      * @param sites The input alignment.
+     * @param dist Shall we return a distance instead of similarity?
+     * @param gapOption How to deal with gaps.
+     * @param unresolvedAsGap Tell if unresolved characters must be considered as gaps when counting.
+     * If set to yes, the gap option will also apply to unresolved characters.
      * @return All pairwise similarity measures.
      */
-    static DistanceMatrix * computeSimilarityMatrix(const SiteContainer & sites, const string & gapOption, bool unresolvedAsGap);
+    static DistanceMatrix * computeSimilarityMatrix(const SiteContainer & sites, bool dist = false, const string & gapOption = SIMILARITY_NOFULLGAP, bool unresolvedAsGap = true);
 
     static const string SIMILARITY_ALL;
     static const string SIMILARITY_NOFULLGAP;

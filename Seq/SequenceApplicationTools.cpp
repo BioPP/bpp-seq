@@ -52,7 +52,8 @@ Alphabet * SequenceApplicationTools::getAlphabet(
   map<string, string> & params,
   const string & suffix,
   bool suffixIsOptional,
-  bool verbose)
+  bool verbose,
+  bool allowGeneric)
 {
   Alphabet * chars;
   string alphabet = ApplicationTools::getStringParameter("alphabet", params, "DNA", suffix, suffixIsOptional);
@@ -67,6 +68,10 @@ Alphabet * SequenceApplicationTools::getAlphabet(
   else if (alphabet == "Protein")
   {
     chars = new ProteicAlphabet();
+  }
+  else if (allowGeneric && alphabet == "Generic")
+  {
+    chars = new DefaultAlphabet();
   }
   else
   {
