@@ -51,7 +51,7 @@ class DefaultAlphabet:
   public AbstractAlphabet
 {
 	protected:
-		static const string chars;
+		const string _chars;
 		
 	public:
 		// class constructor

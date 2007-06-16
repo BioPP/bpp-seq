@@ -43,13 +43,11 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/TextTools.h>
 
-const string DefaultAlphabet::chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?";
-
-// class constructor
-DefaultAlphabet::DefaultAlphabet()
+DefaultAlphabet::DefaultAlphabet():
+  _chars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
 {
 	// Alphabet size definition
-	alphabet.resize(chars.size() + 1);
+	alphabet.resize(_chars.size() + 1);
 
 	// Alphabet content definition
 	alphabet[0].num = -1;
@@ -57,9 +55,10 @@ DefaultAlphabet::DefaultAlphabet()
 	alphabet[0].abbr = "GAP";
 	alphabet[0].name = "Gap";
 
-	for(unsigned int i = 0; i < chars.size(); i++) {
+	for(unsigned int i = 0; i < _chars.size(); i++)
+  {
 		alphabet[i+1].num = i;
-		alphabet[i+1].letter = TextTools::toString(chars[i]);
+		alphabet[i+1].letter = TextTools::toString(_chars[i]);
 		alphabet[i+1].abbr = "";
 		alphabet[i+1].name = "";
 	}
