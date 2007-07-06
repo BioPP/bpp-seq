@@ -54,7 +54,8 @@ class Alphabet;
  * 
  * @see Alphabet, Exception
  */
-class AlphabetException : public Exception
+class AlphabetException:
+  public Exception
 {
 	protected:
 		const Alphabet * _alphabet;
@@ -82,7 +83,8 @@ class AlphabetException : public Exception
 /**
  * @brief An alphabet exception thrown when trying to specify a bad char to the alphabet.
  */
-class BadCharException : public AlphabetException
+class BadCharException:
+  public AlphabetException
 {
 	protected:
 		string _c;
@@ -95,7 +97,7 @@ class BadCharException : public AlphabetException
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param alpha A const pointer toward the alphabet that threw the exception.
 		 */
-		BadCharException(const string badChar, const string & text = "", const Alphabet * alpha = NULL);
+		BadCharException(const string & badChar, const string & text = "", const Alphabet * alpha = NULL);
 	
 		virtual ~BadCharException() throw() {};
 	
@@ -111,7 +113,8 @@ class BadCharException : public AlphabetException
 /**
  * @brief An alphabet exception thrown when trying to specify a bad int to the alphabet.
  */
-class BadIntException : public AlphabetException
+class BadIntException:
+  public AlphabetException
 {
 	protected:
 		int _i;

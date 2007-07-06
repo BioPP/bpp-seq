@@ -1,4 +1,4 @@
-AC_INIT(Bio++ SeqLib, 1.2.0, Julien.Dutheil@univ-montp2.fr, Bpp-Seq)
+AC_INIT(Bio++ SeqLib, 1.3.0, Julien.Dutheil@univ-montp2.fr, Bpp-Seq)
 AC_CONFIG_SRCDIR(Seq/Sequence.h)
 AM_INIT_AUTOMAKE()
 AC_LANG_CPLUSPLUS

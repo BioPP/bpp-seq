@@ -48,16 +48,16 @@ knowledge of the CeCILL license and that you accept its terms.
  ******************************************************************************/
 
 AlphabetException::AlphabetException(const string & text, const Alphabet * alpha) :
-	Exception("AlphabetException: " + text + (alpha != NULL ? "(" + (alpha -> getAlphabetType()) + ")" : string(""))),
-	_alphabet(alpha) {};
+	Exception("AlphabetException: " + text + (alpha != NULL ? "(" + (alpha->getAlphabetType()) + ")" : string(""))),
+	_alphabet(alpha) {}
 		
 const Alphabet * AlphabetException::getAlphabet() const { return _alphabet; }
 
 /******************************************************************************/
 
-BadCharException::BadCharException(const string badChar, const string & text, const Alphabet * alpha) :
+BadCharException::BadCharException(const string & badChar, const string & text, const Alphabet * alpha) :
 	AlphabetException("BadCharException: " + badChar + ". " + text, alpha),
-	_c(badChar) {};
+	_c(badChar) {}
 		
 string BadCharException::getBadChar() const { return _c; }
 
@@ -65,7 +65,7 @@ string BadCharException::getBadChar() const { return _c; }
 
 BadIntException::BadIntException(int badInt, const string & text, const Alphabet * alpha) :
 	AlphabetException("BadIntException: " + TextTools::toString(badInt) + ". " + text, alpha),
-	_i(badInt) {};
+	_i(badInt) {}
 		
 int BadIntException::getBadInt() const { return _i; }
 
@@ -74,12 +74,12 @@ int BadIntException::getBadInt() const { return _i; }
 AlphabetMismatchException::AlphabetMismatchException(const char *   text, const Alphabet * alpha1, const Alphabet * alpha2) :
 	Exception("AlphabetMismatchException: " + string(text) + (alpha1 != NULL && alpha2 != NULL ? "(" + alpha1 -> getAlphabetType() + ", " + alpha2 -> getAlphabetType() + ")" : string(""))),
 	_alphabet1(alpha1),
-	_alphabet2(alpha2) {};
+	_alphabet2(alpha2) {}
 		
 AlphabetMismatchException::AlphabetMismatchException(const string & text, const Alphabet * alpha1, const Alphabet * alpha2) :
 	Exception("AlphabetMismatchException: " + text + (alpha1 != NULL && alpha2 != NULL ? "(" + alpha1 -> getAlphabetType() + ", " + alpha2 -> getAlphabetType() + ")" : string(""))),
 	_alphabet1(alpha1),
-	_alphabet2(alpha2) {};
+	_alphabet2(alpha2) {}
 		
 AlphabetMismatchException::~AlphabetMismatchException() throw () {};
 

@@ -377,28 +377,28 @@ void AlignedSequenceContainer::reindexSites()
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::setSequence(unsigned int i, const Sequence & sequence, bool checkNames) throw (Exception)
+void AlignedSequenceContainer::setSequence(unsigned int i, const Sequence & sequence, bool checkName) throw (Exception)
 {
 	if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("AlignedSequenceContainer::setaddSequence", i, 0, getNumberOfSequences() - 1);
 	// if container has only one sequence
 	if (getNumberOfSequences() == 1) length = sequence.size();
-	if (checkSize(sequence)) VectorSequenceContainer::setSequence(i, sequence, checkNames);
+	if (checkSize(sequence)) VectorSequenceContainer::setSequence(i, sequence, checkName);
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
 }
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::setSequence(const string & name, const Sequence & sequence, bool checkNames) throw (Exception)
+void AlignedSequenceContainer::setSequence(const string & name, const Sequence & sequence, bool checkName) throw (Exception)
 {
 	// if container has only one sequence
 	if (getNumberOfSequences() == 1) length = sequence.size();  
-	if (checkSize(sequence)) VectorSequenceContainer::setSequence(name, sequence, checkNames);
+	if (checkSize(sequence)) VectorSequenceContainer::setSequence(name, sequence, checkName);
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
 }
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::addSequence(const Sequence & sequence, bool checkNames) throw (Exception)
+void AlignedSequenceContainer::addSequence(const Sequence & sequence, bool checkName) throw (Exception)
 {
 	// if container has only one sequence
 	if (length == 0) {
@@ -406,18 +406,18 @@ void AlignedSequenceContainer::addSequence(const Sequence & sequence, bool check
 		sites.resize(length);
 		reindexSites();
 	}
-	if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, checkNames);
+	if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, checkName);
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
 }
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::addSequence(const Sequence & sequence, unsigned int i, bool checkNames) throw (Exception)
+void AlignedSequenceContainer::addSequence(const Sequence & sequence, unsigned int i, bool checkName) throw (Exception)
 {
 	if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences() - 1);
 	// if container has only one sequence
 	if (length == 0) length = sequence.size();
-	if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, i, checkNames);
+	if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, i, checkName);
 	else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
 }
 

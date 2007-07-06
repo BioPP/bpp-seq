@@ -1,3 +1,5 @@
+06/07/07 -*- Version 1.3.0 -*-
+
 12/06/07 Julien Dutheil
 * More tools in class alphabet (isGap, isUnresolved, etc.)
 * New class DistanceMatrix, previously in phyllib.
@@ -15,11 +17,11 @@
 
 04/05/07 Julien Dutheil
 * Bug fixed in global alignment with gap opening and extending penalties.
-* New generic score schemme.
+* New generic score scheme.
 * Compatibility update (NumCalc)
 
 24/04/07 Benoît Nabholz & Julien Dutheil
-* GeneticCode classes can now translate unknow codons to inknow amino acids.
+* GeneticCode classes can now translate unknow codons to unknown amino acids.
 
 02/04/07 Julien Dutheil
 * VIRTUAL_COV variable changed to NO_VIRTUAL_COV. configure.ac file updated.
@@ -27,7 +29,7 @@
 	virtual inheritence, even when importing the files in an IDE. To use the old
 	compilers behaviour, one must set the NO_VIRTUAL_COV preproc variable.
 * this modification also solves a problem with the old configure.ac which
-  was not correctly update din version 1.2.0 :(
+  was not correctly updated in version 1.2.0 :(
 * Bug fixed in SymbolListTools::getCounts.
 
 02/04/07 Julien Dutheil

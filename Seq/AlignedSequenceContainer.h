@@ -49,6 +49,10 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+// From the STL:
+#include <string>
+using namespace std;
+
 /**
  * @brief Aligned sequences container.
  *
@@ -61,7 +65,9 @@ knowledge of the CeCILL license and that you accept its terms.
  * 
  * @see VectorSequenceContainer, Sequence, Site, VectorSiteContainer
  */
-class AlignedSequenceContainer : public virtual VectorSequenceContainer, public virtual SiteContainer
+class AlignedSequenceContainer:
+  public virtual VectorSequenceContainer,
+  public virtual SiteContainer
 {
 	protected:
 		// Integer vector that contains sites's positions
