@@ -42,7 +42,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "GranthamAAChemicalDistance.h"
 #include <NumCalc/NumTools.h>
-using namespace NumTools;
 
 GranthamAAChemicalDistance::GranthamAAChemicalDistance()
 {

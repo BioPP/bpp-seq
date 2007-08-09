@@ -53,7 +53,9 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief A Matrix class to store phylogenetic distances.
  */
-class DistanceMatrix: public virtual RowMatrix<double> {
+class DistanceMatrix:
+  public virtual RowMatrix<double>
+{
 
 	private:
 		vector<string> _names;
@@ -111,8 +113,10 @@ class DistanceMatrix: public virtual RowMatrix<double> {
 		void reset()
 		{
 			unsigned int n = size();
-			for(unsigned int i = 0; i < n; i++) {
-				for(unsigned int j = 0; j < n; j++) {
+			for(unsigned int i = 0; i < n; i++)
+      {
+				for(unsigned int j = 0; j < n; j++)
+        {
 					operator()(i, j) = 0;
 				}
 			}

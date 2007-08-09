@@ -42,7 +42,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "MiyataAAChemicalDistance.h"
 #include <NumCalc/NumTools.h>
-using namespace NumTools;
 
 MiyataAAChemicalDistance::MiyataAAChemicalDistance()
 {
