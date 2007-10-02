@@ -76,7 +76,8 @@ SequenceApplicationTools.h\
 sequences\
 IOSequenceFactory.h\
 SimpleScore.h \
-DistanceMatrix.h
+DistanceMatrix.h \
+GenBank.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
@@ -133,7 +134,8 @@ VectorSiteContainer.cpp\
 SequenceApplicationTools.cpp\
 IOSequenceFactory.cpp\
 SimpleScore.cpp\
-DistanceMatrix.cpp
+DistanceMatrix.cpp\
+GenBank.cpp
 
 CPP_EXTRA = \
 __GranthamMatrixCode\

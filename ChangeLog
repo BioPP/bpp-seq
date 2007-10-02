@@ -1,3 +1,6 @@
+02/10/07 Julien Dutheil
+* New class GenBank, enabling GenBank sequence format support fro input.
+
 06/07/07 -*- Version 1.3.0 -*-
 
 12/06/07 Julien Dutheil

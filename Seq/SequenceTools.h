@@ -181,6 +181,7 @@ class SequenceTools: public SymbolListTools
      * @return A new sequence object without gaps.
      */
     static Sequence * removeGaps(const Sequence & seq);
+    
 };
 
 #endif // _SEQUENCETOOLS_H_

@@ -78,7 +78,7 @@ Alphabet * SequenceApplicationTools::getAlphabet(
     ApplicationTools::displayError("Alphabet not known: " + alphabet);
     exit(-1);
   }
-  if(verbose) ApplicationTools::displayResult("Alphabet type", alphabet);
+  if(verbose) ApplicationTools::displayResult("Alphabet type " + suffix, alphabet);
   return chars;
 }
 
@@ -93,7 +93,7 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("sequence.file",params, true, true, suffix, suffixIsOptional);
   string sequenceFormat = ApplicationTools::getStringParameter("sequence.format", params, "Fasta", suffix, suffixIsOptional);
-  if(verbose) ApplicationTools::displayResult("Sequence format", sequenceFormat);
+  if(verbose) ApplicationTools::displayResult("Sequence format " + suffix, sequenceFormat);
   ISequence * iSeq = NULL;
   if(sequenceFormat == "Mase")
   {
@@ -150,7 +150,7 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("sequence.file",params, true, true, suffix, suffixIsOptional);
   string sequenceFormat = ApplicationTools::getStringParameter("sequence.format", params, "Fasta", suffix, suffixIsOptional);
-  if(verbose) ApplicationTools::displayResult("Sequence format", sequenceFormat);
+  if(verbose) ApplicationTools::displayResult("Sequence format " + suffix, sequenceFormat);
   ISequence * iSeq = NULL;
   if(sequenceFormat == "Mase")
   {

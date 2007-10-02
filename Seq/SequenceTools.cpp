@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "SequenceTools.h"
 
+#include "AlphabetTools.h"
 #include "StringSequenceTools.h"
 
 // From the STL:

@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "alphabets"
 #include <typeinfo>
 
+//From NumCalc:
+#include <NumCalc/VectorTools.h>
+
 /**
  * @brief Utilitary functions dealing with alphabets.
  */
@@ -140,6 +143,30 @@ class AlphabetTools
 		 * @param alphabet The alphabet to check.
 		 */
 		static bool isDefaultAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
+
+    /**
+     * @brief Tell if two characters match according to a given alphabet.
+     *
+     * Exemple (DNA):
+     * A,T: false
+     * A,A: true
+     * A,N: true
+     * A,Y: false
+     * N,Y: true
+     * N,N: true
+     * 
+     * @return True if the two characters are identical, or are compatible if at least one of them is a generic character.
+     * @param alphabet The alphabet to use.
+     * @param i First character to check.
+     * @param j Secondt character to check.
+     */
+    static bool match(const Alphabet * alphabet, int i, int j)
+    {
+      vector<int> a = alphabet->getAlias(i);
+      vector<int> b = alphabet->getAlias(j);
+      vector<int> u = VectorTools::vectorIntersection(a, b);
+      return u.size() > 0;
+    }
 
 	private:
 	  template<class Y>
