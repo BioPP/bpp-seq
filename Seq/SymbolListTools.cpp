@@ -144,3 +144,22 @@ unsigned int SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList & 
 	return count;
 }
 
+void SymbolListTools::changeGapsToUnknownCharacters(SymbolList & l)
+{
+  int unknownCode = l.getAlphabet()->getUnknownCharacterCode();
+  for(unsigned int i = 0; i < l.size(); i++)
+  {
+    if(l.getAlphabet()->isGap(l[i])) l[i] = unknownCode;
+  }
+}
+
+void SymbolListTools::changeUnresolvedCharactersToGaps(SymbolList & l)
+{
+  int gapCode = l.getAlphabet()->getGapCharacterCode();
+  for(unsigned int i = 0; i < l.size(); i++)
+  {
+    if(l.getAlphabet()->isUnresolved(l[i])) l[i] = gapCode;
+  }
+}
+
+

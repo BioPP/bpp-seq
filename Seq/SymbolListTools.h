@@ -49,8 +49,8 @@ using namespace std;
 /**
  * @brief Utilitary functions dealing with both sites and sequences.
  */
-class SymbolListTools {
-
+class SymbolListTools
+{
 	public: 
 		SymbolListTools() {}
 		virtual ~SymbolListTools() {}
@@ -120,6 +120,20 @@ class SymbolListTools {
 		 * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
 		 */
 		static unsigned int getNumberOfPositionsWithoutGap(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException);
+
+    /**
+     * @brief Change all gap elements to unknown characters.
+     *
+     * @param l The input list of characters.
+     */
+    static void changeGapsToUnknownCharacters(SymbolList & l);
+
+    /**
+     * @brief Change all unknown characters to gap elements.
+     *
+     * @param l The input list of characters.
+     */
+    static void changeUnresolvedCharactersToGaps(SymbolList & l);
 
 };
 

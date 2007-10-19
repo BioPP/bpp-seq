@@ -70,7 +70,6 @@ class VectorSiteContainer :
 				                  					        	//and use the AbstractSequenceContainer adapter.
 	public virtual SiteContainer			        	//This container is a SiteContainer.
 {
-	
 	protected:
 		vector<Site     *> _sites;
 		vector<string   *> _names;
@@ -111,10 +110,12 @@ class VectorSiteContainer :
 		VectorSiteContainer(const      VectorSiteContainer & vsc);
 		VectorSiteContainer(const            SiteContainer &  sc);
 		VectorSiteContainer(const OrderedSequenceContainer & osc);
+		VectorSiteContainer(const        SequenceContainer &  sc);
 
 		VectorSiteContainer& operator = (const      VectorSiteContainer & vsc);
 		VectorSiteContainer& operator = (const            SiteContainer &  sc);
 		VectorSiteContainer& operator = (const OrderedSequenceContainer & osc);
+		VectorSiteContainer& operator = (const        SequenceContainer &  sc);
 
 		virtual ~VectorSiteContainer();
 

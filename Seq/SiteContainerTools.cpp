@@ -162,7 +162,7 @@ void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainer & sites)
 void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainer & sites)
 {
   //NB: use iterators for a better algorithm? 
-  int gapCode = sites.getAlphabet()->getUnknownCharacterCode();
+  int gapCode = sites.getAlphabet()->getGapCharacterCode();
   for(unsigned int i = 0; i < sites.getNumberOfSites(); i++)
   {
     for(unsigned int j = 0; j < sites.getNumberOfSequences(); j++)

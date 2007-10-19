@@ -1,5 +1,9 @@
 02/10/07 Julien Dutheil
 * New class GenBank, enabling GenBank sequence format support fro input.
+* Added new copy constructors from SequenceContainer in
+  Vector[Site/Sequence]Container.
+* New methods changeUnresolvedCharacterToGaps and changeGapsToUnknownCharacters in SymbolListTools.
+* Bug fixed in changeUnresolvedCharacterToGaps in SiteContainerTools.
 
 06/07/07 -*- Version 1.3.0 -*-
 

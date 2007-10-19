@@ -1,6 +1,6 @@
 //
-// File: AlphabetTools.h
-// Created by: jdutheil <jdutheil@Deedlit>
+// File: AlphabetTools.cpp
+// Created by: Julien Dutheil
 // Created on: Fri Oct 10 17:27:39 2003
 //
 
@@ -47,7 +47,8 @@ bool AlphabetTools::checkAlphabetCodingSize(const Alphabet & alphabet) throw (Al
 {
 	if(alphabet.getNumberOfChars() == 0) return true; //Will this really happen?
 	unsigned int size = alphabet.intToChar(0).size();
-	for(unsigned int i = 1; i < alphabet.getNumberOfTypes(); i++) {
+	for(unsigned int i = 1; i < alphabet.getNumberOfTypes(); i++)
+  {
 		if(alphabet.intToChar(i).size() != size) return false;
 	}
 	return true;
@@ -55,21 +56,25 @@ bool AlphabetTools::checkAlphabetCodingSize(const Alphabet & alphabet) throw (Al
 
 /**********************************************************************************************/
 
-bool AlphabetTools::checkAlphabetCodingSize(const Alphabet * alphabet) throw (AlphabetException) {
+bool AlphabetTools::checkAlphabetCodingSize(const Alphabet * alphabet) throw (AlphabetException)
+{
 	return checkAlphabetCodingSize(* alphabet);
 }
 
 /**********************************************************************************************/
 
-int AlphabetTools::getAlphabetCodingSize(const Alphabet & alphabet) throw (AlphabetException) {
+int AlphabetTools::getAlphabetCodingSize(const Alphabet & alphabet) throw (AlphabetException)
+{
 	if(!checkAlphabetCodingSize(alphabet)) throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().");
 	return alphabet.intToChar(0).size();
 }
 
 /**********************************************************************************************/
 
-int AlphabetTools::getAlphabetCodingSize(const Alphabet * alphabet) throw (AlphabetException) {
+int AlphabetTools::getAlphabetCodingSize(const Alphabet * alphabet) throw (AlphabetException)
+{
 	return getAlphabetCodingSize(* alphabet);
 }
 
 /**********************************************************************************************/
+

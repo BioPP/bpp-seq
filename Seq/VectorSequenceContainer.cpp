@@ -81,6 +81,20 @@ VectorSequenceContainer::VectorSequenceContainer(
 	_comments = osc.getGeneralComments();
 }
 
+VectorSequenceContainer::VectorSequenceContainer(
+	const SequenceContainer & sc):
+	AbstractSequenceContainer(sc.getAlphabet())
+{
+	// Sequences insertion
+  vector<string> names = sc.getSequencesNames();  
+  for(unsigned int i = 0; i < names.size(); i++)
+  {
+    addSequence(* sc.getSequence(names[i]), false);
+  }
+
+	_comments = sc.getGeneralComments();
+}
+
 /** Assignation operator: *****************************************************/
 
 VectorSequenceContainer & VectorSequenceContainer::operator = (
@@ -107,6 +121,28 @@ VectorSequenceContainer & VectorSequenceContainer::operator = (
 	for (int i = 0 ; i < max ; i++)	addSequence(*osc.getSequence(i), false);
     
 	return * this;
+}
+
+/******************************************************************************/
+
+VectorSequenceContainer& VectorSequenceContainer::operator = (
+  const SequenceContainer & sc)
+{
+  //Setting up alphabet:
+  _alphabet = sc.getAlphabet();
+  
+  //Seq names:
+  vector<string> names = sc.getSequencesNames();
+  
+  for(unsigned int i = 0; i < names.size(); i++)
+  {
+    addSequence(*sc.getSequence(names[i]), false);
+  }
+
+  // General comments:
+  _comments = sc.getGeneralComments();
+
+  return * this;
 }
 
 /** Class destructor: *********************************************************/

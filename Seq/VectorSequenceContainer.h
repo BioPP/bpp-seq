@@ -61,7 +61,8 @@ using namespace std;
  * The container is responsible for the creation and destruction of the sequence
  * objects it contains.
  */
-class VectorSequenceContainer : public virtual AbstractSequenceContainer
+class VectorSequenceContainer:
+  public virtual AbstractSequenceContainer
 {
 	protected:
 
@@ -113,6 +114,13 @@ class VectorSequenceContainer : public virtual AbstractSequenceContainer
 		 */
 		VectorSequenceContainer(const OrderedSequenceContainer & osc);
 
+		/**
+		 * @brief Copy from a SequenceContainer.
+		 *
+		 * @param osc The SequenceContainer to copy into this container.
+		 */
+		VectorSequenceContainer(const SequenceContainer & osc);
+
 		/** @} */
 
 		/**
@@ -130,6 +138,13 @@ class VectorSequenceContainer : public virtual AbstractSequenceContainer
 		VectorSequenceContainer & operator = (const OrderedSequenceContainer & osc);
 	
 		/**
+		 * @brief Copy from a SequenceContainer.
+		 *
+		 * @param osc The SequenceContainer to copy into this container.
+		 */
+		VectorSequenceContainer & operator = (const SequenceContainer & osc);
+
+    /**
 		 * @brief Container destructor: delete all sequences in the container.
 		 */
 		virtual ~VectorSequenceContainer();
