@@ -1,3 +1,6 @@
+06/11/07 Julien Dutheil
+* New function SequenceContainerTools::merge.
+
 02/10/07 Julien Dutheil
 * New class GenBank, enabling GenBank sequence format support fro input.
 * Added new copy constructors from SequenceContainer in

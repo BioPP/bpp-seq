@@ -174,8 +174,8 @@ class AlphabetTools
 		{
 			try
       {
-			  dynamic_cast<const Y *>(alphabet);
-				return true;
+        const Y* t = dynamic_cast<const Y*>(alphabet);
+				return t!= NULL; //Solves strange behavior in new gcc?
 			}
       catch(exception & e)
       {

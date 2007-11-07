@@ -193,11 +193,13 @@ class SequenceApplicationTools
 		 * @param sequences The sequences to write.
 		 * @param params  The attribute map where options may be found.
 		 * @param suffix  A suffix to be applied to each attribute name.
+		 * @param verbose Print some info to the 'message' output stream.
 		 */
 		static void writeSequenceFile(
 			const SequenceContainer & sequences,
 			map<string, string> & params,
-			const string & suffix = "");
+			const string & suffix = "",
+      bool verbose = true);
 
 		/**
 		 * @brief This function prints the options available

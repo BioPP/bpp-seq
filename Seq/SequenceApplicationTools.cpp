@@ -293,7 +293,8 @@ VectorSiteContainer * SequenceApplicationTools::getSitesToAnalyse(
 void SequenceApplicationTools::writeSequenceFile(
   const SequenceContainer & sequences,
   map<string, string> & params,
-  const string & suffix)
+  const string & suffix,
+  bool verbose)
 {
   string file   = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
   string format = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);
@@ -332,6 +333,12 @@ void SequenceApplicationTools::writeSequenceFile(
     exit(-1);
   }
   
+  if(verbose)
+  {
+    ApplicationTools::displayResult("Output file format", format);
+    ApplicationTools::displayResult("Output file ", file);
+  }
+
   // Write sequences:
   oSeq->write(file, sequences, true);
   
