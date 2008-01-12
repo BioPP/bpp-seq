@@ -43,8 +43,12 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 // From the STL:
 #include <ctype.h>
+
+using namespace std;
 
 /****************************************************************************************/
 
@@ -121,13 +125,6 @@ vector<string> AbstractAlphabet::getAlias(const string & state) const throw (Bad
 	vector<string> v(1);
 	v[0] = state;
 	return v;
-}
-
-/****************************************************************************************/
-
-bool operator == (AbstractAlphabet::sletter & l1, AbstractAlphabet::sletter & l2)
-{
-  return (l1.name == l2.name);
 }
 
 /****************************************************************************************/

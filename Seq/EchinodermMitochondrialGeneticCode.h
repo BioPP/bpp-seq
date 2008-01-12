@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "GeneticCode.h"
 #include "NucleicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief This class implements the Echinoderm and Faltworms
  * Mitochondrial genetic code as describe on the NCBI website:
@@ -64,6 +67,8 @@ class EchinodermMitochondrialGeneticCode:
 			return GeneticCode::translate(sequence);	
 		}
 };
+
+} //end of namespace bpp.
 
 #endif	//_ECHINODERMMITOCHONDRIALGENETICCODE_H_
 

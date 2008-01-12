@@ -50,6 +50,9 @@ using namespace std;
 #include "SequenceContainer.h"
 #include "OrderedSequenceContainer.h"
 
+namespace bpp
+{
+
 typedef vector<unsigned int> SequenceSelection;
 
 /**
@@ -253,6 +256,8 @@ class SequenceContainerTools
     }
 
 };
+
+} //end of namespace bpp.
 
 #endif  //_SEQUENCECONTAINERTOOLS_H_
 

@@ -43,55 +43,60 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ioseq"
 #include "Alphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief Utilitary class for creating sequence readers and writers.
  */
 class IOSequenceFactory
 {
-public:
-  static const string FASTA_FORMAT;  
-  static const string MASE_FORMAT;  
-  static const string CLUSTAL_FORMAT;  
-  static const string DCSE_FORMAT;  
-  static const string PHYLIP_FORMAT_INTERLEAVED;  
-  static const string PHYLIP_FORMAT_SEQUENTIAL;  
-  static const string PAML_FORMAT_INTERLEAVED;  
-  static const string PAML_FORMAT_SEQUENTIAL;  
+  public:
+    static const string FASTA_FORMAT;  
+    static const string MASE_FORMAT;  
+    static const string CLUSTAL_FORMAT;  
+    static const string DCSE_FORMAT;  
+    static const string PHYLIP_FORMAT_INTERLEAVED;  
+    static const string PHYLIP_FORMAT_SEQUENTIAL;  
+    static const string PAML_FORMAT_INTERLEAVED;  
+    static const string PAML_FORMAT_SEQUENTIAL;  
 
-public:
+  public:
 
-  /**
-   * @brief Creates a new factory object.
-   *
-   * Example:
-   * @code
-   * Alphabet * alphabet = new DNA();
-   * ISequence * seqReader = IOSequenceFactory().createReader(IOSequenceFactory::FASTA_FORMAT);
-   * SequenceContainer * sequences = seqReader->read("file.fasta", alphabet);
-   * delete seqReader;
-   * @endcode
-   */
-  IOSequenceFactory() {}
-  virtual ~IOSequenceFactory() {}
+    /**
+     * @brief Creates a new factory object.
+     *
+     * Example:
+     * @code
+     * Alphabet * alphabet = new DNA();
+     * ISequence * seqReader = IOSequenceFactory().createReader(IOSequenceFactory::FASTA_FORMAT);
+     * SequenceContainer * sequences = seqReader->read("file.fasta", alphabet);
+     * delete seqReader;
+     * @endcode
+     */
+    IOSequenceFactory() {}
+    virtual ~IOSequenceFactory() {}
   
-  /**
-   * @brief Get a new dynamically created ISequence object.
-   *
-   * @param format The input file format.
-   * @return A pointer toward a new ISequence object.
-   * @throw Exception If the format name do not match any available format.
-   */
-  virtual ISequence * createReader(const string & format) throw (Exception);
+    /**
+     * @brief Get a new dynamically created ISequence object.
+     *
+     * @param format The input file format.
+     * @return A pointer toward a new ISequence object.
+     * @throw Exception If the format name do not match any available format.
+     */
+    virtual ISequence * createReader(const string & format) throw (Exception);
   
-  /**
-   * @brief Get a new dynamically created OSequence object.
-   *
-   * @param format The output file format.
-   * @return A pointer toward a new OSequence object.
-   * @throw Exception If the format name do not match any available format.
-   */
-  virtual OSequence * createWriter(const string & format) throw (Exception);
+    /**
+     * @brief Get a new dynamically created OSequence object.
+     *
+     * @param format The output file format.
+     * @return A pointer toward a new OSequence object.
+     * @throw Exception If the format name do not match any available format.
+     */
+    virtual OSequence * createWriter(const string & format) throw (Exception);
 };
+
+} //end of namespace bpp.
 
 #endif //_IOSEQUENCEFACTORY_H_
 

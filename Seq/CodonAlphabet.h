@@ -48,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The abstract base class for codon alphabets.
  * 
@@ -224,6 +227,8 @@ class CodonAlphabet:
 
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif	//_CODONALPHABET_H_
 

@@ -40,14 +40,18 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "InvertebrateMitochondrialGeneticCode.h"
 #include "InvertebrateMitochondrialCodonAlphabet.h"
 #include "ProteicAlphabet.h"
+
+using namespace bpp;
+
 #include <iostream>
+
+using namespace std;
 
 InvertebrateMitochondrialGeneticCode::InvertebrateMitochondrialGeneticCode(const NucleicAlphabet * alpha) : GeneticCode() 
 {
 	_codonAlphabet   = new InvertebrateMitochondrialCodonAlphabet(alpha);
 	_proteicAlphabet = new ProteicAlphabet();
 }
-
 
 InvertebrateMitochondrialGeneticCode::~InvertebrateMitochondrialGeneticCode()
 {

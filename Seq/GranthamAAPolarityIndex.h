@@ -43,11 +43,16 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetIndex1.h"
 #include "ProteicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief Polarity index used in Grantham (1974).
  *
+ * @code
  * Database: AAindex1
  * Entry: GRAR740102
+ *
  * H GRAR740102
  * D Polarity (Grantham, 1974)
  * R LIT:2004143b PMID:4843792
@@ -58,8 +63,10 @@ knowledge of the CeCILL license and that you accept its terms.
  *      8.1    10.5    11.6    13.0     5.5    10.5    12.3     9.0    10.4     5.2
  *      4.9    11.3     5.7     5.2     8.0     9.2     8.6     5.4     6.2     5.9
  * //
+ * @endcode
  */
-class GranthamAAPolarityIndex: public AlphabetIndex1<double>
+class GranthamAAPolarityIndex:
+  public AlphabetIndex1<double>
 {
 	private:
 		vector<double> _polarity;
@@ -113,6 +120,8 @@ class GranthamAAPolarityIndex: public AlphabetIndex1<double>
 		const Alphabet * getAlphabet() const { return _alpha; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_GRANTHAMAAPOLARITYINDEX_H_
 

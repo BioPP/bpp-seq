@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief The abstract base class foc nucleic alphabets.
  *
@@ -69,6 +72,8 @@ class NucleicAlphabet :
     bool isUnresolved(const string & state) const { return charToInt(state) > 3; }
     
 };
+
+} //end of namespace bpp.
 
 #endif // _NUCLEICALPHABET_H_
 

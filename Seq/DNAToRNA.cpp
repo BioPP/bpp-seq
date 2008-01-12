@@ -39,6 +39,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "DNAToRNA.h"
 
+using namespace bpp;
+
 /******************************************************************************/
 
 DNAToRNA::DNAToRNA() : AbstractReverseTranslator()

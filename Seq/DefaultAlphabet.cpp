@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 DefaultAlphabet::DefaultAlphabet():
   _chars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
 {

@@ -46,6 +46,9 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+namespace bpp
+{
+
 /**
  * @brief The OSequence interface.
  * 
@@ -81,6 +84,8 @@ class OSequence:
 		virtual void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) = 0;
 
 };
+
+} //end of namespace bpp.
 
 #endif	// _OSEQUENCE_H_
 

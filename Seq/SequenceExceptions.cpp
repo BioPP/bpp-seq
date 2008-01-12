@@ -40,7 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceExceptions.h"
 #include "Sequence.h"
 
-	
+using namespace bpp;
+
 /******************************************************************************/
 
 SequenceException::SequenceException(const char *   text, const Sequence * seq) :

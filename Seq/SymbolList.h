@@ -51,6 +51,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The SymbolList object.
  *
@@ -291,6 +294,8 @@ class SymbolList:
 		virtual int & operator[](unsigned int i) { return _content[i]; }
     /** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _SYMBOLLIST_H_
 

@@ -43,9 +43,13 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetIndex1.h"
 #include "ProteicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief Volume index used in Grantham (1974).
  *
+ * @code
  * Database: AAindex1
  * Entry: GRAR740103
  *
@@ -59,8 +63,10 @@ knowledge of the CeCILL license and that you accept its terms.
  *      31.    124.     56.     54.     55.     85.     83.      3.     96.    111.
  *     111.    119.    105.    132.    32.5     32.     61.    170.    136.     84.
  * //
+ * @endcode
  */
-class GranthamAAVolumeIndex: public AlphabetIndex1<double>
+class GranthamAAVolumeIndex:
+  public AlphabetIndex1<double>
 {
 	private:
 		vector<double> _volume;
@@ -114,6 +120,8 @@ class GranthamAAVolumeIndex: public AlphabetIndex1<double>
 		const Alphabet * getAlphabet() const { return _alpha; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_GRANTHAMAAVOLUMEINDEX_H_
 

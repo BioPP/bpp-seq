@@ -46,6 +46,8 @@ using namespace std;
 //From Utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 /** Class constructors: *******************************************************/
 
 VectorSiteContainer::VectorSiteContainer(

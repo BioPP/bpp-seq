@@ -38,10 +38,12 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "ProteicAlphabet.h" // class's header file
+#include "ProteicAlphabet.h"
 
 // From Utils:
 #include <Utils/TextTools.h>
+
+using namespace bpp;
 
 /****************************************************************************************/
 
@@ -224,7 +226,6 @@ vector<int> ProteicAlphabet::getAlias(int state) const throw (BadIntException)
 	}		
 	return v;
 }
-
 
 /****************************************************************************************/
 

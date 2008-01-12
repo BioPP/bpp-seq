@@ -20,6 +20,9 @@
 //From NumCalc
 #include <NumCalc/Matrix.h>
 
+namespace bpp
+{
+
 typedef vector<unsigned int> SiteSelection;
 
 /**
@@ -305,6 +308,8 @@ class SiteContainerTools
     static const string SIMILARITY_NOGAP;
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_SITECONTAINERTOOLS_H_
 

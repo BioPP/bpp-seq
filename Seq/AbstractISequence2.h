@@ -50,6 +50,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <fstream>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Partial implementation of the ISequence interface, dedicated to alignement readers.
  */
@@ -192,6 +195,8 @@ class AbstractISequence2:
 		}
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _ABSTRACTISEQUENCE2_H_
 

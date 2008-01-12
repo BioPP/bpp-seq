@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceTools.h"
 #include "AlphabetTools.h"
 
+using namespace bpp;
+
 /**********************************************************************************************/
 
 StopCodonException::StopCodonException(const string & text, const string & codon) :

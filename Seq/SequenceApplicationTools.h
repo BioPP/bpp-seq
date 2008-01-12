@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "alphabets"
 #include "containers"
 
+namespace bpp
+{
+
 /**
  * @brief This class provides some common tools for applications.
  *
@@ -217,6 +220,8 @@ class SequenceApplicationTools
 		 */
     static void printOutputSequenceHelp();
 };
+
+} //end of namespace bpp.
 
 #endif //_SEQUENCEAPPLICATIONTOOLS_H_
 

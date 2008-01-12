@@ -45,6 +45,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceContainer.h"
 #include "VectorSequenceContainer.h"
 
+namespace bpp
+{
+
 /**
  * @brief The GenBank sequence file format.
  *
@@ -86,6 +89,8 @@ class GenBank:
 		}
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _GENBANK_H_
 

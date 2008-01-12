@@ -62,13 +62,16 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief SequenceTools static class
  *
- * Implements methods to manipulate sequences
+ * Implement methods to manipulate sequences
  */
-
-class SequenceTools: public SymbolListTools
+class SequenceTools:
+  public SymbolListTools
 {
 	private:
 		static DNA _DNA;
@@ -183,6 +186,8 @@ class SequenceTools: public SymbolListTools
     static Sequence * removeGaps(const Sequence & seq);
     
 };
+
+} //end of namespace bpp.
 
 #endif // _SEQUENCETOOLS_H_
 

@@ -50,6 +50,9 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <string>
 
+namespace bpp
+{
+
 /**
  * @brief One dimensionnal alphabet index interface.
  *
@@ -92,6 +95,8 @@ class AlphabetIndex1: public Clonable
 		virtual vector<T> * getIndexVector() const = 0;
 
 };
+
+} //end of namespace bpp.
 
 #endif //_ALPHABETINDEX1_H_
 

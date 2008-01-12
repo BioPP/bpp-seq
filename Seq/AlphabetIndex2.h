@@ -52,6 +52,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Two dimensionnal alphabet index interface.
  *
@@ -96,6 +99,8 @@ class AlphabetIndex2: public Clonable
 		virtual Matrix<T> * getIndexMatrix() const = 0;
 
 };
+
+} //end of namespace bpp.
 
 #endif //_ALPHABETINDEX2_H_
 

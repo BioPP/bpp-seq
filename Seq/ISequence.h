@@ -51,14 +51,19 @@ knowledge of the CeCILL license and that you accept its terms.
 //From the STL:
 #include <iostream>
 #include <string>
+
 using namespace std;
+
+namespace bpp
+{
 
 /**
  * @brief The ISequence interface.
  *
  * This interface defines the basic methods for reading sequences from a file.
  */
-class ISequence : public virtual IOSequence
+class ISequence:
+  public virtual IOSequence
 {
 	public:
 		ISequence() {}
@@ -84,6 +89,8 @@ class ISequence : public virtual IOSequence
 		virtual SequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) = 0;
 
 };
+
+} //end of namespace bpp.
 
 #endif	// ISEQUENCE_H
 

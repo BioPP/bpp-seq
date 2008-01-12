@@ -46,8 +46,11 @@ knowledge of the CeCILL license and that you accept its terms.
 // From utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 // From the STL:
 #include <iostream>
+
 using namespace std;
 
 const bool Sequence::SENSE = true;

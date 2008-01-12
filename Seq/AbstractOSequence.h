@@ -49,6 +49,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <fstream>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Partial implementation of the OSequence interface.
  */
@@ -77,6 +80,8 @@ class AbstractOSequence:
 		}
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif //_ABSTRACTOSEQUENCE_H_
 

@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "GeneticCode.h"
 #include "NucleicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief This class implements the Invertebrate
  * Mitochondrial genetic code as describe on the NCBI website:
@@ -65,6 +68,8 @@ class InvertebrateMitochondrialGeneticCode:
 			return GeneticCode::translate(sequence);	
 		}
 };
+
+} //end of namespace bpp.
 
 #endif	//_INVERTEBRATEMITOCHONDRIALGENETICCODE_H_
 

@@ -43,10 +43,14 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetIndex1.h"
 #include "ProteicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief Create a AlphabetIndex1 object from an AAIndex2 entry.
  */
-class AAIndex1Entry: public AlphabetIndex1<double>
+class AAIndex1Entry:
+  public AlphabetIndex1<double>
 {
 	private:
 		vector<double> _property;
@@ -95,6 +99,8 @@ class AAIndex1Entry: public AlphabetIndex1<double>
 		const Alphabet * getAlphabet() const { return _alpha; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_AAINDEX1ENTRY_H_
 

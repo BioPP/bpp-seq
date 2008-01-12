@@ -40,6 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SymbolList.h"
 #include "StringSequenceTools.h"
 
+using namespace bpp;
+
 /****************************************************************************************/
 
 SymbolList::SymbolList(const Alphabet * alpha) : _alphabet(alpha) {}

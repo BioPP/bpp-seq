@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "DNA.h"
 #include "RNA.h"
 
+namespace bpp
+{
+
 /**
  * @brief Reverse iterator to convert RNA to DNA.
  *
@@ -51,7 +54,8 @@ knowledge of the CeCILL license and that you accept its terms.
  *
  * @see NucleicAcidsReplication
  */
-class DNAToRNA : public AbstractReverseTranslator
+class DNAToRNA:
+  public AbstractReverseTranslator
 {
 	protected:
 		const Alphabet * dna, * rna;
@@ -68,6 +72,8 @@ class DNAToRNA : public AbstractReverseTranslator
 		int reverse(int state) const throw (BadIntException);		
 		string reverse(const string & state) const throw (BadCharException);			
 };
+
+} //end of namespace bpp.
 
 #endif	//_DNATORNA_H_
 

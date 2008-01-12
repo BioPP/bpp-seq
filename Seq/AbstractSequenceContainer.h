@@ -48,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+namespace bpp
+{
+
 /**
  * @brief Partial implementation of the OrderedSequenceContainer interface.
  *
@@ -110,6 +113,8 @@ class AbstractSequenceContainer : public virtual OrderedSequenceContainer
 		/** @} */
 
 };
+
+} //end of namespace bpp.
 
 #endif // _ABSTRACTSEQUENCECONTAINER_H_
 

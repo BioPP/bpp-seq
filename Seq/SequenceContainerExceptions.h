@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+namespace bpp
+{
+
 class SequenceContainer;
 
 /**
@@ -139,6 +142,8 @@ class EmptyContainerException : public Exception
 		 */
 		virtual const SequenceContainer * getContainer() const { return _container; }
 };
+
+} //end of namespace bpp.
 
 #endif	//_SEQUENCECONTAINEREXCEPTIONS_H_
 

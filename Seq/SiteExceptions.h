@@ -40,18 +40,22 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _SITEEXCEPTIONS_H_
 #define _SITEEXCEPTIONS_H_
 
-class Site;
-
 // From Utils:
 #include <Utils/Exceptions.h>
+
+namespace bpp
+{
+
+class Site;
 
 /**
  * @brief The site exception base class.
  *
  * @see Exception
  */
-class SiteException : public Exception {
-
+class SiteException:
+  public Exception
+{
 	protected:
 
 		/**
@@ -93,8 +97,9 @@ class SiteException : public Exception {
 /**
  * @brief Exception sent when a empty site is found.
  */
-class EmptySiteException : public SiteException {
-
+class EmptySiteException:
+  public SiteException
+{
 	public:
 		// Class constructor
 		EmptySiteException(const char *   text, const Site * s = NULL);
@@ -107,8 +112,9 @@ class EmptySiteException : public SiteException {
 /**
  * @brief Exception sent when a site containing gap is found.
  */
-class SiteWithGapException : public SiteException {
-
+class SiteWithGapException:
+  public SiteException
+{
 	public:
 		// Class constructor
 		SiteWithGapException(const char *   text, const Site * s = NULL);
@@ -117,6 +123,8 @@ class SiteWithGapException : public SiteException {
 		// Class destructor
 		virtual ~SiteWithGapException() throw();
 };
+
+} //end of namespace bpp.
 
 #endif // _SITEEXCEPTIONS_H_
 

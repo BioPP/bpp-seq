@@ -43,12 +43,17 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <string>
 
+using namespace std;
+
 // From Utils
 #include <Utils/Exceptions.h>
 #include <NumCalc/VectorExceptions.h> //DimensionException
 
 // From NumCalc
 #include <NumCalc/Matrix.h>
+
+namespace bpp
+{
 
 /**
  * @brief A Matrix class to store phylogenetic distances.
@@ -224,6 +229,8 @@ class DistanceMatrix:
       return RowMatrix<double>::operator()(i, j);
     }
 };
+
+} //end of namespace bpp.
 
 #endif //_DISTANCEMATRIX_H_
 

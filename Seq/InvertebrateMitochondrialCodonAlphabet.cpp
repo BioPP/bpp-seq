@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "InvertebrateMitochondrialCodonAlphabet.h"
 
+using namespace bpp;
 
 InvertebrateMitochondrialCodonAlphabet::InvertebrateMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) : CodonAlphabet(alpha)
 {
@@ -99,3 +100,4 @@ string InvertebrateMitochondrialCodonAlphabet::getAlphabetType() const { return 
 bool InvertebrateMitochondrialCodonAlphabet::isStop(int codon) const { return codon < -1; }
 
 bool InvertebrateMitochondrialCodonAlphabet::isStop(const string & codon) const { return charToInt(codon) < -1; }
+

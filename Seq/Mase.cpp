@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Mase.h"
 #include "StringSequenceTools.h"
 
+using namespace bpp;
+
 /****************************************************************************************/
 
 Mase::Mase(unsigned int charsByLine): _charsByLine(charsByLine) {}

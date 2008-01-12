@@ -40,7 +40,11 @@ knowledge of the CeCILL license and that you accept its terms.
 // from the STL:
 #include <string>
 
+using namespace std;
+
 #include "SimpleScore.h"
+
+using namespace bpp;
 
 SimpleScore::SimpleScore(const Alphabet * alphabet, double match, double mismatch):
   _alphabet(alphabet)

@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "GeneticCode.h"
 #include "NucleicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief This class implements the standard genetic code as describe on the NCBI 
  *        web site: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG1
@@ -63,6 +66,8 @@ class StandardGeneticCode:
 			return GeneticCode::translate(sequence);	
 		}
 };
+
+} //end of namespace bpp.
 
 #endif	//_STANDARDGENETICCODE_H_
 

@@ -54,6 +54,11 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <iostream>
 
+using namespace std;
+
+namespace bpp
+{
+
 /**
  * @brief The VectorSiteContainer class.
  *
@@ -65,10 +70,10 @@ knowledge of the CeCILL license and that you accept its terms.
  * 
  * @see Sequence, Site, AlignedSequenceContainer
  */
-class VectorSiteContainer : 
-	public virtual AbstractSequenceContainer,   //This container implements the SequenceContainer interface
-				                  					        	//and use the AbstractSequenceContainer adapter.
-	public virtual SiteContainer			        	//This container is a SiteContainer.
+class VectorSiteContainer: 
+	public AbstractSequenceContainer,   //This container implements the SequenceContainer interface
+				           					        	//and use the AbstractSequenceContainer adapter.
+	public virtual SiteContainer		   	//This container is a SiteContainer.
 {
 	protected:
 		vector<Site     *> _sites;
@@ -231,6 +236,8 @@ class VectorSiteContainer :
 		// Create n void sites:
 		void realloc(unsigned int n);
 };
+
+} //end of namespace bpp.
 
 #endif	//_VECTORSITECONTAINER_H_
 

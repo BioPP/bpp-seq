@@ -46,6 +46,9 @@ knowledge of the CeCILL license and that you accept its terms.
 //From NumCalc:
 #include <NumCalc/VectorTools.h>
 
+namespace bpp
+{
+
 /**
  * @brief Utilitary functions dealing with alphabets.
  */
@@ -184,6 +187,8 @@ class AlphabetTools
 		}
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_ALPHABETTOOLS_H_
 

@@ -40,6 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SymbolListTools.h"
 #include "AlphabetTools.h"
 
+using namespace bpp;
+
 map<int, unsigned int> SymbolListTools::getCounts(const SymbolList & list)
 {
   map<int, unsigned int> c;
@@ -161,5 +163,4 @@ void SymbolListTools::changeUnresolvedCharactersToGaps(SymbolList & l)
     if(l.getAlphabet()->isUnresolved(l[i])) l[i] = gapCode;
   }
 }
-
 

@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 /******************************************************************************/
 
 MapSequenceContainer::MapSequenceContainer(const map<string, Sequence *> & ms, const Alphabet * alpha) :

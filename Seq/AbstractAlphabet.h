@@ -46,6 +46,9 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+namespace bpp
+{
+
 /**
  * @brief A partial implementation of the Alphabet interface.
  *
@@ -56,13 +59,15 @@ knowledge of the CeCILL license and that you accept its terms.
  *
  * @see Alphabet
  */
-class AbstractAlphabet : public Alphabet
+class AbstractAlphabet:
+  public Alphabet
 {
 	protected:
 		/**
 		 * @brief sletter structure: an alphabet is a vector of sletter
 		 */
-		struct sletter {
+		struct sletter
+    {
            
 			/**
 			 * @brief State number id (i.e. -1 for gap (-))
@@ -83,10 +88,14 @@ class AbstractAlphabet : public Alphabet
 			 * @brief Full name of the state (i.e. Adenine)
 			 */
     	string name;
+      
+      bool operator == (AbstractAlphabet::sletter & l2)
+      {
+        return name == l2.name;
+      }
+
 		};
 		
-		friend bool operator == (AbstractAlphabet::sletter &, AbstractAlphabet::sletter &);
-
 	protected:
 		
 		/**
@@ -121,7 +130,7 @@ class AbstractAlphabet : public Alphabet
 		/** @} */
 };
 
-bool operator == (AbstractAlphabet::sletter &, AbstractAlphabet::sletter &);
+} //end of namespace bpp.
 
 #endif // _ABSTRACTALPHABET_H_
 

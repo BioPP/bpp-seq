@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "EchinodermMitochondrialCodonAlphabet.h"
 
+using namespace bpp;
 
 EchinodermMitochondrialCodonAlphabet::EchinodermMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) : CodonAlphabet(alpha)
 {
@@ -100,3 +101,4 @@ string EchinodermMitochondrialCodonAlphabet::getAlphabetType() const { return "E
 bool EchinodermMitochondrialCodonAlphabet::isStop(int codon) const { return codon < -1; }
 
 bool EchinodermMitochondrialCodonAlphabet::isStop(const string & codon) const { return charToInt(codon) < -1; }
+

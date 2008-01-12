@@ -52,6 +52,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The Phylip & co format.
  *
@@ -60,7 +63,9 @@ using namespace std;
  * This format is described on the Phylip package documentation website:
  * http://evolution.genetics.washington.edu/phylip/doc/sequence.html
  */
-class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequence
+class Phylip:
+  public virtual AbstractISequence2,
+  public virtual AbstractOSequence
 {
 	protected:
 
@@ -140,6 +145,8 @@ class Phylip: public virtual AbstractISequence2, public virtual AbstractOSequenc
 		void writeSequential (ostream & out, const SequenceContainer & sc, int charsByLine) const;
 		void writeInterleaved(ostream & out, const SequenceContainer & sc, int charsByLine) const;
 };
+
+} //end of namespace bpp.
 
 #endif	//_PHYLIP_H_
 

@@ -45,6 +45,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/StringTokenizer.h>
 #include <Utils/FileTools.h>
 
+using namespace bpp;
+
 // From the STL:
 #include <sstream>
 

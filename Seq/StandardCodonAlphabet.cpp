@@ -39,6 +39,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "StandardCodonAlphabet.h"
 
+using namespace bpp;
+
 StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) : CodonAlphabet(alpha)
 {
 	// Alphabet size definition

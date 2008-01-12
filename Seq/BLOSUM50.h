@@ -54,6 +54,9 @@ using namespace std;
 // From NumCalc:
 #include <NumCalc/Matrix.h>
 
+namespace bpp
+{
+
 /**
  * @brief BLOSUM 50 Substitution Matrix.
  *   
@@ -88,6 +91,8 @@ class BLOSUM50: public AlphabetIndex2<double>
 		/** @} */
 
 };
+
+} //end of namespace bpp.
 
 #endif //_BLOSUM50_H_
 

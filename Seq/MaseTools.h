@@ -52,6 +52,9 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <cstdlib>
 
+namespace bpp
+{
+
 /**
  * @brief Utilitary methods that deal with the Mase format.
  *
@@ -141,6 +144,8 @@ class MaseTools
 		static unsigned int getPhase(const Comments & maseFileHeader, const string &setName) throw (Exception);
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_MASETOOLS_H_
 

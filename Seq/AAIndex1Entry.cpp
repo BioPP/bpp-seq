@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/TextTools.h>
 #include <Utils/StringTokenizer.h>
 
+using namespace bpp;
+
 AAIndex1Entry::AAIndex1Entry(istream & input) throw (IOException)
 {
   _alpha = new ProteicAlphabet();

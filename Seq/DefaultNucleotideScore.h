@@ -54,6 +54,9 @@ using namespace std;
 // From NumCalc:
 #include <NumCalc/Matrix.h>
 
+namespace bpp
+{
+
 /**
  * @brief Default Substitution Matrix for nucleotide alignments.
  */
@@ -87,6 +90,8 @@ class DefaultNucleotideScore: public AlphabetIndex2<double>
 		/** @} */
 
 };
+
+} //end of namespace bpp.
 
 #endif //_DEFAULTNUCLEOTIDESCORE_H_
 

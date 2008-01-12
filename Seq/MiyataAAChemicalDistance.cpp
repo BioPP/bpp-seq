@@ -40,8 +40,12 @@ knowledge of the CeCILL license and that you accept its terms.
 // from the STL:
 #include <string>
 
+using namespace std;
+
 #include "MiyataAAChemicalDistance.h"
 #include <NumCalc/NumTools.h>
+
+using namespace bpp;
 
 MiyataAAChemicalDistance::MiyataAAChemicalDistance()
 {

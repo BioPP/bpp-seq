@@ -40,7 +40,12 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "VertebrateMitochondrialGeneticCode.h"
 #include "VertebrateMitochondrialCodonAlphabet.h"
 #include "ProteicAlphabet.h"
+
+using namespace bpp;
+
 #include <iostream>
+
+using namespace std;
 
 VertebrateMitochondrialGeneticCode::VertebrateMitochondrialGeneticCode(const NucleicAlphabet * alpha) : GeneticCode() 
 {

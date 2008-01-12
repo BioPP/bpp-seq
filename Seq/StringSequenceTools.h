@@ -53,6 +53,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Utilitary methods working on raw string objects.
  *
@@ -198,6 +201,8 @@ class StringSequenceTools
 		static Alphabet * getAlphabetFromSequence(const string sequence) throw (EmptySequenceException, SequenceException, AlphabetException);
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_STRINGSEQUENCETOOLS_H
 

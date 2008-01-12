@@ -1,6 +1,6 @@
 //
 // File: VertebrateMitochondrialCodonAlphabet.h
-// Created by: bazin <bazin@univ-montp2.fr>
+// Created by: Eric Bazin
 // Created on: thu mar  1 14:25:09 CET 2005
 //
 
@@ -38,6 +38,8 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "VertebrateMitochondrialCodonAlphabet.h"
+
+using namespace bpp;
 
 VertebrateMitochondrialCodonAlphabet::VertebrateMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) : CodonAlphabet(alpha)
 {
@@ -108,3 +110,4 @@ string VertebrateMitochondrialCodonAlphabet::getAlphabetType() const { return "V
 bool VertebrateMitochondrialCodonAlphabet::isStop(int codon) const { return codon < -1; }
 
 bool VertebrateMitochondrialCodonAlphabet::isStop(const string & codon) const { return charToInt(codon) < -1; }
+

@@ -51,6 +51,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief MapSequenceContainer class
  *
@@ -59,7 +62,8 @@ using namespace std;
  * 
  */
 
-class MapSequenceContainer: public virtual AbstractSequenceContainer
+class MapSequenceContainer:
+  public AbstractSequenceContainer
 {
 	protected:
 		map<string, Sequence *> _sequences;
@@ -220,6 +224,8 @@ class MapSequenceContainer: public virtual AbstractSequenceContainer
 		Sequence * getSequenceInner(const string & name) throw (SequenceNotFoundException);
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _MAPSEQUENCECONTAINER_H_
 

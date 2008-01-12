@@ -49,6 +49,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Declaration of Comments type.
  *
@@ -71,7 +74,8 @@ typedef vector<string> Comments;
  *
  * @see Alphabet
  */
-class Sequence: public SymbolList
+class Sequence:
+  public SymbolList
 {
 	protected:
 
@@ -328,6 +332,8 @@ class Sequence: public SymbolList
 
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _SEQUENCE_H_
 

@@ -50,11 +50,15 @@ knowledge of the CeCILL license and that you accept its terms.
 // From NumCalc:
 #include <NumCalc/RandomTools.h>
 
+using namespace bpp;
+
 // From the STL:
 #include <map>
 #include <ctype.h>
 #include <algorithm>
 #include <iostream>
+
+using namespace std;
 
 /****************************************************************************************/
 

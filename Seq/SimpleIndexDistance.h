@@ -55,6 +55,9 @@ using namespace std;
 // From NumCalc:
 #include <NumCalc/Matrix.h>
 
+namespace bpp
+{
+
 /**
  * @brief Simple dissimilarity distance.
  *
@@ -117,6 +120,8 @@ class SimpleIndexDistance:
     AlphabetIndex1<T> * getAlphabetIndex1() { return _index; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_SIMPLEINDEXDISTANCE_H_
 

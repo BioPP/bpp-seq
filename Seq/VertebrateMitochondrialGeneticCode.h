@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "GeneticCode.h"
 #include "NucleicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief This class implements the vertebrate mitochondrial genetic code as describe on the NCBI 
  *        web site: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG2
@@ -63,6 +66,8 @@ class VertebrateMitochondrialGeneticCode:
 			return GeneticCode::translate(sequence);	
 		}
 };
+
+} //end of namespace bpp.
 
 #endif	//_VERTEBRATEMITOCHONDRIALGENETICCODE_H_
 

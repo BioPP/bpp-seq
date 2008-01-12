@@ -43,12 +43,17 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+namespace bpp
+{
+
 /**
  * @brief The site not found exception base class.
  *
  * @see Exception
  */
-class SiteNotFoundException : public Exception {
+class SiteNotFoundException:
+  public Exception
+{
 
 	protected:
 
@@ -87,6 +92,8 @@ class SiteNotFoundException : public Exception {
 		 */
 		virtual const string getSiteId() const;
 };
+
+} //end of namespace bpp.
 
 #endif // _SITECONTAINEREXCEPTIONS_H_
 

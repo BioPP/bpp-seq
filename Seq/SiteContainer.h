@@ -55,6 +55,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The SiteContainer interface.
  *
@@ -64,8 +67,8 @@ using namespace std;
  * All site objects are cloned befored being added and retrieved.
  * All sites stored are deleted in the destructor of the container or after having called the deleteSite() method.
  */
-
-class SiteContainer: public virtual OrderedSequenceContainer
+class SiteContainer:
+  public virtual OrderedSequenceContainer
 {
 	public:
 		SiteContainer() {}
@@ -130,6 +133,8 @@ class SiteContainer: public virtual OrderedSequenceContainer
 		 */
 		virtual Vint getSitePositions() const = 0;
 };
+
+} //end of namespace bpp.
 
 #endif	//_SITECONTAINER_H_
 

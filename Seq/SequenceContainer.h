@@ -53,6 +53,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
 
 /**
  * @brief The SequenceContainer interface.
@@ -291,6 +293,8 @@ class SequenceContainer: public virtual Clonable
     virtual const int & operator()(const string & sequenceName, unsigned int elementIndex) const = 0;
     /** @} */
 };
+
+} //end of namespace bpp.
 
 #endif	// _SEQUENCECONTAINER_H_
 

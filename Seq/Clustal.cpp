@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/FileTools.h>
 #include <Utils/StringTokenizer.h>
 
+using namespace bpp;
+
 // From the STL:
 #include <iostream>
 #include <iomanip>
@@ -66,26 +68,31 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
 
   lineRead = FileTools::getNextLine(input); // This is the first sequence of the first block.
 		
-	unsigned int beginSeq = lineRead.find_last_of("      ") + 1;
+  string::size_type beginSeq = lineRead.find_last_of("      ") + 1;
 	if(beginSeq == string::npos) throw IOException("Clustal::read. Bad intput file.");
 
 	unsigned int countSequences = 0;
 
   //Read first sequences block:
 	bool test = true;
-	do {
+	do
+  {
 		sequences.push_back(Sequence(TextTools::removeSurroundingWhiteSpaces(lineRead.substr(0, beginSeq - 6)), lineRead.substr(beginSeq), alpha));
 		getline(input, lineRead, '\n');
 		countSequences++;
 		test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - 6));
-	} while(input && test);
+	}
+  while(input && test);
 
 	// Read other blocks
 	lineRead = FileTools::getNextLine(input); // Read first sequence of next block.
-	while(!TextTools::isEmpty(lineRead)) {
+	while(!TextTools::isEmpty(lineRead))
+  {
 		// Read next block:
-		for(unsigned int i = 0; i < countSequences; i++) {// Complete sequences
-			if(TextTools::isEmpty(lineRead)) throw IOException("Clustal::read. Bad intput file.");
+		for(unsigned int i = 0; i < countSequences; i++)
+    {// Complete sequences
+			if(TextTools::isEmpty(lineRead))
+        throw IOException("Clustal::read. Bad intput file.");
 		 	sequences[i].append(lineRead.substr(beginSeq));
 			getline(input, lineRead, '\n');
   	}
@@ -93,7 +100,8 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
 		lineRead = FileTools::getNextLine(input);
 	}
 
-	for(unsigned int i = 0; i < countSequences; i++) sc.addSequence(sequences[i]);
+	for(unsigned int i = 0; i < countSequences; i++)
+    sc.addSequence(sequences[i]);
 	sc.setGeneralComments(comments);
 }
 

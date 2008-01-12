@@ -43,10 +43,14 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetIndex1.h"
 #include "ProteicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief Charge of each amino acid.
  *
- * Database: AAindex
+ * @code
+ * Database: AAindex1
  * Entry: FAUJ880111
  *
  * H FAUJ880111
@@ -61,7 +65,12 @@ knowledge of the CeCILL license and that you accept its terms.
  *      0.      1.      0.      0.      0.      0.      0.      0.      1.      0.
  *      0.      1.      0.      0.      0.      0.      0.      0.      0.      0.
  * //
+ * @endcode
  * 
+ * @code
+ * Database: AAindex1
+ * Entry: FAUJ880111
+ *
  * H FAUJ880112
  * D Negative charge (Fauchere et al., 1988)
  * R LIT:1414114 PMID:3209351
@@ -74,13 +83,17 @@ knowledge of the CeCILL license and that you accept its terms.
  *       0.      0.      0.      1.      0.      0.      1.      0.      0.      0.
  *       0.      0.      0.      0.      0.      0.      0.      0.      0.      0. * Soit:
  * //
+ * @endcode
  *
  * Hence, combining the two:
+ * @code
  * I    A/L     R/K     N/M     D/F     C/P     Q/S     E/T     G/W     H/Y     I/V
  *       0.      1.      0.     -1.      0.      0.     -1.      0.      1.      0.
  *       0.      1.      0.      0.      0.      0.      0.      0.      0.      0.
+ * @endcode
  */
-class AAChargeIndex: public AlphabetIndex1<double>
+class AAChargeIndex:
+  public AlphabetIndex1<double>
 {
 	private:
 		vector<double> _charge;
@@ -134,6 +147,8 @@ class AAChargeIndex: public AlphabetIndex1<double>
 		const Alphabet * getAlphabet() const { return _alpha; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_AACHARGEINDEX_H_
 

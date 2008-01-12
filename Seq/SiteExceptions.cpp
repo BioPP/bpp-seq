@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 // From utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 /***************************************************************************/
 
 SiteException::SiteException(const char *   text, const Site * s) :

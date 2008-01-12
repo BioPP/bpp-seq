@@ -43,14 +43,16 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 // From the STL:
 #include <iostream>
+
 using namespace std;
 
 /** Class constructors: *******************************************************/
 
-AlignedSequenceContainer::AlignedSequenceContainer(const Alphabet * alpha) :
-	AbstractSequenceContainer(alpha),
+AlignedSequenceContainer::AlignedSequenceContainer(const Alphabet * alpha):
 	VectorSequenceContainer(alpha)
 {
 	length = 0;
@@ -60,8 +62,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const Alphabet * alpha) :
 
 /***************************************************************************/
 
-AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) : 
-	AbstractSequenceContainer(sc.getAlphabet()),
+AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc): 
 	VectorSequenceContainer(sc)
 {
 	length = sc.getNumberOfSites();
@@ -75,8 +76,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc) :
 
 /***************************************************************************/
 
-AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContainer & asc) : 
-	AbstractSequenceContainer(asc.getAlphabet()),
+AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContainer & asc):
 	VectorSequenceContainer(asc)
 {
 	length = asc.getNumberOfSites();
@@ -90,8 +90,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContaine
 
 /***************************************************************************/
 
-AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException) :
-	AbstractSequenceContainer(osc.getAlphabet()),
+AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException):
 	VectorSequenceContainer(osc.getAlphabet())
 {
 	// Initializing

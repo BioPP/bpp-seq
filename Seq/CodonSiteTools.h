@@ -54,12 +54,15 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Utilitary functions for codon sites.
- *
  */
 
-class CodonSiteTools: public SymbolListTools
+class CodonSiteTools:
+  public SymbolListTools
 {
 	public:
 		CodonSiteTools() {}
@@ -311,6 +314,8 @@ class CodonSiteTools: public SymbolListTools
 			  throw (AlphabetException, AlphabetMismatchException, EmptySiteException);
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_CONDONSITETOOLS_H_
 

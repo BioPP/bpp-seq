@@ -53,6 +53,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Aligned sequences container.
  *
@@ -171,6 +174,8 @@ class AlignedSequenceContainer:
 		 */
 		bool checkSize(const Sequence & sequence);
 };
+
+} //end of namespace bpp.
 
 #endif // _ALIGNEDSEQUENCECONTAINER_H_
 

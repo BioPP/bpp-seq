@@ -46,6 +46,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/ApplicationTools.h>
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 /******************************************************************************/
 
 Alphabet * SequenceApplicationTools::getAlphabet(

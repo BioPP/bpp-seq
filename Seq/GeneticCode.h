@@ -49,10 +49,14 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+namespace bpp
+{
+
 /**
  * @brief Exception thrown when a stop codon is found.
  */
-class StopCodonException : public Exception
+class StopCodonException:
+  public Exception
 {
 	protected:
 		string codon;
@@ -139,6 +143,8 @@ class GeneticCode:
     Sequence * getCodingSequence(const Sequence & sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const throw (Exception);
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif	//_GENETICCODE_H_
 

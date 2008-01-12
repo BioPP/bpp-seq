@@ -43,13 +43,17 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "CodonAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief This class implements the Invertebrate
+ *
  * Mitochondrial codon alphabet as describe on the NCBI website:
  * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG5
  */
-
-class InvertebrateMitochondrialCodonAlphabet : public CodonAlphabet
+class InvertebrateMitochondrialCodonAlphabet:
+  public CodonAlphabet
 {
 	public:
 		InvertebrateMitochondrialCodonAlphabet(const NucleicAlphabet * alpha);
@@ -66,5 +70,7 @@ class InvertebrateMitochondrialCodonAlphabet : public CodonAlphabet
 		bool isStop(const string & codon) const;
 };
 
+} //end of namespace bpp.
 
 #endif	//_INVERTEBRATEMITOCHONDRIALCODONALPHABET_H_
+

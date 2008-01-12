@@ -48,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The Alphabet interface.
  * 
@@ -255,6 +258,8 @@ class Alphabet
 		 */
 		virtual string getAlphabetType() const = 0;
 };
+
+} //end of namespace bpp.
 
 #endif // _ALPHABET_H_
 

@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SymbolList.h"
 #include "SiteExceptions.h"
 
+namespace bpp
+{
+
 /**
  * @brief The Site class.
  *
@@ -169,6 +172,8 @@ class Site:
 // Sites comparison operators overload
 bool operator == (const Site & site1, const Site & site2);
 bool operator < (const Site & site1, const Site & site2);
+
+} //end of namespace bpp.
 
 #endif	//_SITE_H_
 

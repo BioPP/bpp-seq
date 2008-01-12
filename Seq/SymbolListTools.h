@@ -42,9 +42,14 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "SymbolList.h"
 #include "AlphabetExceptions.h"
+
 // From the STL:
 #include <map>
+
 using namespace std;
+
+namespace bpp
+{
 
 /**
  * @brief Utilitary functions dealing with both sites and sequences.
@@ -136,6 +141,8 @@ class SymbolListTools
     static void changeUnresolvedCharactersToGaps(SymbolList & l);
 
 };
+
+} //end of namespace bpp.
 
 #endif // _SYMBOLLISTTOOLS_H_
 

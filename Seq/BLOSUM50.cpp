@@ -42,6 +42,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "BLOSUM50.h"
 
+using namespace bpp;
+
 BLOSUM50::BLOSUM50()
 {
 	// Build the alphabet:

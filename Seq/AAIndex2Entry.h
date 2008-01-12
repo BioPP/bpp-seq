@@ -46,6 +46,9 @@ knowledge of the CeCILL license and that you accept its terms.
 //From NumCalc:
 #include<NumCalc/Matrix.h>
 
+namespace bpp
+{
+
 /**
  * @brief Create a AlphabetIndex2 object from an AAIndex2 entry.
  */
@@ -104,6 +107,8 @@ class AAIndex2Entry: public AlphabetIndex2<double>
     Matrix<double> * getIndexMatrix() const { return new RowMatrix<double>(_property); }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_AAINDEX2ENTRY_H_
 

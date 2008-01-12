@@ -40,8 +40,10 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _STANDARDCODONALPHABET_H_
 #define _STANDARDCODONALPHABET_H_
 
-
 #include "CodonAlphabet.h"
+
+namespace bpp
+{
 
 /**
  * @brief This class implements the standard codon alphabet as describe on the NCBI 
@@ -66,5 +68,7 @@ class StandardCodonAlphabet : public CodonAlphabet
 		bool isStop(const string & codon) const { return charToInt(codon) < -1; }
 };
 
+} //end of namespace bpp.
 
 #endif	//_STANDARDCODONALPHABET_H_
+

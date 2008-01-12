@@ -1,3 +1,6 @@
+09/01/08 Julien Dutheil
+* All classes included in the new 'bpp' namespace.
+
 06/11/07 Julien Dutheil
 * New function SequenceContainerTools::merge.
 

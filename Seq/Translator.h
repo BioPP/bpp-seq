@@ -43,10 +43,11 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Alphabet.h"
 #include "Sequence.h"
 
+namespace bpp
+{
+
 /**
- * @brief This interface is used when translating a sequence from an alphabet to another:
- * it gives the translation rules,
- * eg: RNA -> DNA.
+ * @brief This interface is used when translating a sequence from an alphabet to another: it gives the translation rules, eg: RNA -> DNA.
  */
 class Translator
 {
@@ -102,10 +103,10 @@ class Translator
 };
 
 /**
- * @brief The same as previous, but can perform the reverse translation,
- * eg: RNA -> DNA and DNA -> RNA;
+ * @brief The same as previous, but can perform the reverse translation, eg: RNA -> DNA and DNA -> RNA;
  */
-class ReverseTranslator : public Translator
+class ReverseTranslator:
+  public Translator
 {
 	public:
 		ReverseTranslator() {}
@@ -147,7 +148,8 @@ class ReverseTranslator : public Translator
 /**
  * @brief Partial implementation of the Translator interface.
  */
-class AbstractTranslator: public Translator
+class AbstractTranslator:
+  public Translator
 {
 	public:
 		AbstractTranslator() {}
@@ -162,7 +164,9 @@ class AbstractTranslator: public Translator
 /**
  * @brief Partial implementation of the ReverseTranslator interface.
  */
-class AbstractReverseTranslator: public ReverseTranslator, public AbstractTranslator
+class AbstractReverseTranslator:
+  public ReverseTranslator,
+  public AbstractTranslator
 {
 	public:
 		AbstractReverseTranslator() {}
@@ -176,6 +180,8 @@ class AbstractReverseTranslator: public ReverseTranslator, public AbstractTransl
 		virtual string reverse(const string & state) const throw (BadCharException, Exception) = 0;			
 		virtual Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception);
 };
+
+} //end of namespace bpp.
 
 #endif	//_TRANSLATOR_H_
 

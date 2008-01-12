@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "CodonAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief This class implements the Echinoderm and Faltworms
  * Mitochondrial codon alphabet as describe on the NCBI website:
@@ -65,5 +68,6 @@ class EchinodermMitochondrialCodonAlphabet : public CodonAlphabet
 		bool isStop(const string & codon) const;
 };
 
+} //end of namespace bpp.
 
 #endif	//_ECHINODERMMITOCHONDRIALCODONALPHABET_H_

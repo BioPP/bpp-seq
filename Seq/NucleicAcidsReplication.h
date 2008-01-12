@@ -46,6 +46,11 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <map>
 
+using namespace std;
+
+namespace bpp
+{
+
 /**
  * @brief Replication between to nucleic acids.
  *
@@ -103,6 +108,8 @@ class NucleicAcidsReplication : public ReverseTranslator
 		Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception);
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_NUCLEICACIDSREPLICATION_H_
 

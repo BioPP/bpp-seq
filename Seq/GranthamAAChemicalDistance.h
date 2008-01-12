@@ -54,6 +54,9 @@ using namespace std;
 // From NumCalc:
 #include <NumCalc/Matrix.h>
 
+namespace bpp
+{
+
 /**
  * @brief Grantham (1974) Amino-Acid chemical distance.
  *
@@ -97,6 +100,8 @@ class GranthamAAChemicalDistance: public AlphabetIndex2<double>
 		bool isSymmetric() const { return _sym; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_GRANTHAMAACHEMICALDISTANCE_H_
 

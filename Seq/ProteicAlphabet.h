@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief This alphabet is used to deal with proteins.
  *
@@ -51,7 +54,8 @@ knowledge of the CeCILL license and that you accept its terms.
  * Gaps are coded by '-', unresolved characters are coded by 'X'.
  */
 
-class ProteicAlphabet : public AbstractAlphabet
+class ProteicAlphabet:
+  public AbstractAlphabet
 {
 	public:
 		ProteicAlphabet();
@@ -91,6 +95,8 @@ class ProteicAlphabet : public AbstractAlphabet
 		/** @} */
 		
 };
+
+} //end of namespace bpp.
 
 #endif // _PROTEICALPHABET_H_
 

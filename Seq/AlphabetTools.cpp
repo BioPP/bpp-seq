@@ -9,9 +9,12 @@
 // From Utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 // From the STL:
 #include <ctype.h>
 #include <iostream>
+
 using namespace std;
 
 /**********************************************************************************************/

@@ -47,6 +47,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iostream>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The clustal sequence file format.
  *
@@ -79,6 +82,8 @@ class Clustal:
 		const string getFormatDescription() const;
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _CLUSTAL_H_
 

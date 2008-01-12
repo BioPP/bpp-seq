@@ -40,6 +40,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "RNA.h"
 
+using namespace bpp;
+
+/****************************************************************************************/
 // class constructor
 RNA::RNA()
 {

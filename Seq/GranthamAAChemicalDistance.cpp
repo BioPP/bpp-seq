@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "GranthamAAChemicalDistance.h"
 #include <NumCalc/NumTools.h>
 
+using namespace bpp;
+
 GranthamAAChemicalDistance::GranthamAAChemicalDistance()
 {
 	// Build the alphabet:

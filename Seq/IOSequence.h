@@ -49,6 +49,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The IOSequence interface.
  *
@@ -65,6 +68,8 @@ class IOSequence: public virtual IOFormat
 		const string getDataType() const { return "Sequence container"; }
 
 };
+
+} //end of namespace bpp.
 
 #endif	// _IOSEQUENCE_H_
 

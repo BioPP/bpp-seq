@@ -47,6 +47,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 using namespace std;
 
+namespace bpp
+{
+
 class Alphabet;
 
 /**
@@ -180,6 +183,8 @@ class AlphabetMismatchException : public Exception
 		 */
 		vector<const Alphabet *> getAlphabets() const;
 };
+
+} //end of namespace bpp.
 
 #endif	//_ALPHABETEXCEPTIONS_H_
 

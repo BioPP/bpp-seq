@@ -39,14 +39,18 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "EchinodermMitochondrialGeneticCode.h"
 #include "EchinodermMitochondrialCodonAlphabet.h"
 #include "ProteicAlphabet.h"
+
+using namespace bpp;
+
 #include <iostream>
+
+using namespace std;
 
 EchinodermMitochondrialGeneticCode::EchinodermMitochondrialGeneticCode(const NucleicAlphabet * alpha) : GeneticCode() 
 {
 	_codonAlphabet   = new EchinodermMitochondrialCodonAlphabet(alpha);
 	_proteicAlphabet = new ProteicAlphabet();
 }
-
 
 EchinodermMitochondrialGeneticCode::~EchinodermMitochondrialGeneticCode()
 {

@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "NucleicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief This alphabet is used to deal with DNA sequences.
  *
@@ -50,7 +53,8 @@ knowledge of the CeCILL license and that you accept its terms.
  * Gaps are coded by '-', unresolved characters are coded by 'X, N, O, 0 or ?'.
  * Extensive support for generic characters (e.g. 'P', 'Y', etc.) is provided.
  */
-class DNA : public NucleicAlphabet
+class DNA:
+  public NucleicAlphabet
 {
 	public:
 		DNA();
@@ -61,6 +65,8 @@ class DNA : public NucleicAlphabet
 		vector<string> getAlias(const string & state) const throw (BadCharException);
 		string getAlphabetType() const { return "DNA alphabet"; }
 };
+
+} //end of namespace bpp.
 
 #endif // _DNA_H_
 

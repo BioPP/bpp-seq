@@ -44,13 +44,17 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Sequence.h"
 #include "SequenceContainer.h"
 
+namespace bpp
+{
+
 /**
  * @brief The OrderedSequenceContainer interface.
  *
  * Interface to manage indexed containers.
  * Sequences may be accessed via their indice, <i>i.e.</i> their position in the container.
  */
-class OrderedSequenceContainer : public virtual SequenceContainer
+class OrderedSequenceContainer:
+  public virtual SequenceContainer
 {
 	public:
 		OrderedSequenceContainer() {}
@@ -231,6 +235,8 @@ class OrderedSequenceContainer : public virtual SequenceContainer
 		virtual void setComments(const string & name, const Comments & comments) throw (SequenceNotFoundException) = 0;
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif	//_ORDEREDSEQUENCECONTAINER_H_
 

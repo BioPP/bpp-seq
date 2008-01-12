@@ -40,8 +40,10 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _VERTEBRATEMITOCHONDRIALCODONALPHABET_H_
 #define _VERTEBRATEMITOCHONDRIALCODONALPHABET_H_
 
-
 #include "CodonAlphabet.h"
+
+namespace bpp
+{
 
 /**
  * @brief This class implements the vertebrate mitochondrial codon alphabet as describe on the NCBI 
@@ -66,5 +68,7 @@ class VertebrateMitochondrialCodonAlphabet : public CodonAlphabet
 		bool isStop(const string & codon) const;
 };
 
+} //end of namespace bpp.
 
 #endif	//_VERTEBRATEMITOCHONDRIALCODONALPHABET_H_
+

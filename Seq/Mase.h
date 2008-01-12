@@ -47,6 +47,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceContainer.h"
 #include "VectorSequenceContainer.h"
 
+namespace bpp
+{
+
 /**
  * @brief The mase sequence file format.
  */
@@ -108,6 +111,8 @@ class Mase:
     }
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _MASE_H_
 

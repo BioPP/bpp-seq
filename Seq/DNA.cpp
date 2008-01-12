@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "DNA.h"
 
+using namespace bpp;
+
 /****************************************************************************************/
 
 DNA::DNA()

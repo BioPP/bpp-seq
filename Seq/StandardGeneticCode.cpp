@@ -40,7 +40,12 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "StandardGeneticCode.h"
 #include "StandardCodonAlphabet.h"
 #include "ProteicAlphabet.h"
+
+using namespace bpp;
+
 #include <iostream>
+
+using namespace std;
 
 StandardGeneticCode::StandardGeneticCode(const NucleicAlphabet * alpha) : GeneticCode() 
 {

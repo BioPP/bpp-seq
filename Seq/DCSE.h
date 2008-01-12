@@ -45,6 +45,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceContainer.h"
 #include "AlignedSequenceContainer.h"
 
+namespace bpp
+{
+
 /**
  * @brief Support for the Dedicated Comparative Sequence Editor format.
  *
@@ -81,6 +84,8 @@ class DCSE : public virtual AbstractISequence2
 		const string getFormatDescription() const;
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _DCSE_H_
 

@@ -39,6 +39,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AAIndex2Entry.h"
 
+using namespace bpp;
+
 //From Utils:
 #include <Utils/FileTools.h>
 #include <Utils/TextTools.h>

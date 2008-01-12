@@ -40,8 +40,11 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceContainerTools.h"
 #include "VectorSequenceContainer.h"
 
+using namespace bpp;
+
 // From the STL:
 #include <iostream>
+
 using namespace std;
 
 /******************************************************************************/	

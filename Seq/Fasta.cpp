@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "StringSequenceTools.h"
 
+using namespace bpp;
+
 /****************************************************************************************/
 
 Fasta::Fasta(unsigned int charsByLine): _charsByLine(charsByLine) {}

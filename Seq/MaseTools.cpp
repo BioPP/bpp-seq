@@ -50,6 +50,8 @@ using namespace std;
 #include <Utils/StringTokenizer.h>
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 SiteSelection MaseTools::getSiteSet(const Comments & maseFileHeader, const string & setName) throw (IOException)
 {
 	SiteSelection selection;

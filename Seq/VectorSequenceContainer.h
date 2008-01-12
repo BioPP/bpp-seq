@@ -53,6 +53,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The VectorSequenceContainer class.
  *
@@ -62,7 +65,7 @@ using namespace std;
  * objects it contains.
  */
 class VectorSequenceContainer:
-  public virtual AbstractSequenceContainer
+  public AbstractSequenceContainer
 {
 	protected:
 
@@ -286,6 +289,8 @@ class VectorSequenceContainer:
 		Sequence * getSequenceInner(const string & name) throw (SequenceNotFoundException);
 		/** @} */
 };
+
+} //end of namespace bpp.
 
 #endif // _VECTORSEQUENCECONTAINER_H_
 

@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetTools.h"
 #include "StringSequenceTools.h"
 
+using namespace bpp;
+
 // From the STL:
 #include <ctype.h>
 #include <cmath>

@@ -41,6 +41,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief The DefaultAlphabet class.
  *
@@ -68,6 +71,8 @@ class DefaultAlphabet:
     bool isUnresolved(int state) const { return false; }
     bool isUnresolved(const string & state) const { return false; }
  };
+
+} //end of namespace bpp.
 
 #endif // _DEFAULTALPHABET_H_
 

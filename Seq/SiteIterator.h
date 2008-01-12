@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Site.h"
 #include "SiteContainer.h"
 
+namespace bpp
+{
+
 /**
  * @brief Loop over a SiteContainer.
  */
@@ -121,6 +124,8 @@ class CompleteSiteIterator: public AbstractSiteIterator
 		int nextCompleteSitePosition(int current) const;
 		int previousCompleteSitePosition(int current) const;
 };
+
+} //end of namespace bpp.
 
 #endif	//_SITEITERATOR_H_
 

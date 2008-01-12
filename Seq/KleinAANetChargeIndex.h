@@ -43,9 +43,13 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetIndex1.h"
 #include "ProteicAlphabet.h"
 
+namespace bpp
+{
+
 /**
  * @brief Charge of each amino acid.
  *
+ * @code
  * Database: AAindex
  * Entry: KLEP840101
  *
@@ -61,8 +65,10 @@ knowledge of the CeCILL license and that you accept its terms.
  *       0.      1.      0.     -1.      0.      0.     -1.      0.      0.      0.
  *       0.      1.      0.      0.      0.      0.      0.      0.      0.      0.
  * //
+ * @endcode
  */
-class KleinAANetChargeIndex: public AlphabetIndex1<double>
+class KleinAANetChargeIndex:
+  public AlphabetIndex1<double>
 {
 	private:
 		vector<double> _charge;
@@ -116,6 +122,8 @@ class KleinAANetChargeIndex: public AlphabetIndex1<double>
 		const Alphabet * getAlphabet() const { return _alpha; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_KLEINAANETCHARGEINDEX_H_
 

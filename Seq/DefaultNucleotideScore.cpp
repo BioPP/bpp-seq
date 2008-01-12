@@ -42,6 +42,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "DefaultNucleotideScore.h"
 
+using namespace bpp;
+
 DefaultNucleotideScore::DefaultNucleotideScore(const NucleicAlphabet * alphabet):
   _alpha(alphabet)
 {

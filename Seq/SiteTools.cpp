@@ -47,8 +47,12 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <NumCalc/NumTools.h>
 #include <NumCalc/VectorTools.h>
 
+using namespace bpp;
+
 // From the STL:
 #include <cmath>
+
+using namespace std;
 
 /******************************************************************************/
 

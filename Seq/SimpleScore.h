@@ -54,6 +54,9 @@ using namespace std;
 // From NumCalc:
 #include <NumCalc/Matrix.h>
 
+namespace bpp
+{
+
 /**
  * @brief Simple Substitution Matrix, with match and mismatch penalties.
  */
@@ -91,6 +94,8 @@ class SimpleScore:
 		/** @} */
 
 };
+
+} //end of namespace bpp.
 
 #endif //_SIMPLESCORE_H_
 

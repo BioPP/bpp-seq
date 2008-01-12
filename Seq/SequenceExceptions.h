@@ -45,6 +45,9 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+namespace bpp
+{
+
 class Sequence;
 
 /**
@@ -52,7 +55,8 @@ class Sequence;
  *
  * @see Exception
  */
-class SequenceException : public Exception
+class SequenceException:
+  public Exception
 {
 	protected:
 
@@ -170,6 +174,8 @@ class SequenceNotAlignedException : public SequenceException {
 	
 		virtual ~SequenceNotAlignedException() throw();
 };
+
+} //end of namespace bpp.
 
 #endif	//_SEQUENCEEXCEPTIONS_H_
 
