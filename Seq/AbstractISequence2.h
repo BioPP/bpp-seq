@@ -48,6 +48,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <iostream>
 #include <fstream>
+
 using namespace std;
 
 namespace bpp
@@ -185,7 +186,7 @@ class AbstractISequence2:
 #if defined(NO_VIRTUAL_COV)
 		SequenceContainer *
 #else
-		VectorSequenceContainer *
+		AlignedSequenceContainer *
 #endif
 		readFromFile(const string & path , const Alphabet * alpha) const throw (Exception)
 		{

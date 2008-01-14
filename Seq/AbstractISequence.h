@@ -48,6 +48,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <iostream>
 #include <fstream>
+
 using namespace std;
 
 namespace bpp
