@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SymbolList.h"
 #include "SiteExceptions.h"
 
+using namespace std;
+
 namespace bpp
 {
 

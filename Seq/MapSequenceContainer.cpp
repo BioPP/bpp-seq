@@ -46,6 +46,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
+using namespace std;
+
 /******************************************************************************/
 
 MapSequenceContainer::MapSequenceContainer(const map<string, Sequence *> & ms, const Alphabet * alpha) :

@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
+using namespace std;
+
 NucleicAcidsReplication::NucleicAcidsReplication(const NucleicAlphabet * nuc1, const NucleicAlphabet * nuc2) : _nuc1(nuc1), _nuc2(nuc2)
 {
 	_trans[-1] = -1;

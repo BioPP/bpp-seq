@@ -17,6 +17,8 @@
 #include <vector>
 #include <map>
 
+using namespace std;
+
 //From NumCalc
 #include <NumCalc/Matrix.h>
 

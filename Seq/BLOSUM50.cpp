@@ -40,6 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 // from the STL:
 #include <string>
 
+using namespace std;
+
 #include "BLOSUM50.h"
 
 using namespace bpp;

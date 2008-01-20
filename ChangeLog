@@ -1,3 +1,5 @@
+06/07/07 -*- Version 1.4.0 -*-
+
 09/01/08 Julien Dutheil
 * All classes included in the new 'bpp' namespace.
 
@@ -5,7 +7,7 @@
 * New function SequenceContainerTools::merge.
 
 02/10/07 Julien Dutheil
-* New class GenBank, enabling GenBank sequence format support fro input.
+* New class GenBank, enabling GenBank sequence format support for input.
 * Added new copy constructors from SequenceContainer in
   Vector[Site/Sequence]Container.
 * New methods changeUnresolvedCharacterToGaps and changeGapsToUnknownCharacters in SymbolListTools.

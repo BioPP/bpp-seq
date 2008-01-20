@@ -38,6 +38,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "DistanceMatrix.h"
 
+using namespace std;
+
 using namespace bpp;
 
 unsigned int DistanceMatrix::getNameIndex(const string & name) const throw (Exception)

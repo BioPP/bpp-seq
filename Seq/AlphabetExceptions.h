@@ -45,6 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <vector>
+
 using namespace std;
 
 namespace bpp

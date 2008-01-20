@@ -42,6 +42,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
+using namespace std;
+
 /****************************************************************************************/
 
 SymbolList::SymbolList(const Alphabet * alpha) : _alphabet(alpha) {}

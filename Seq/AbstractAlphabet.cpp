@@ -55,18 +55,18 @@ using namespace std;
 string AbstractAlphabet::getName(const string & state) const throw (BadCharException)
 {
 	string LETTER = TextTools::toUpper(state);
-	for (vector<sletter>::const_iterator i = alphabet.begin() ; i < alphabet.end() ; i++)
-    if (i -> letter == LETTER) return i -> name;
-  throw BadCharException(state, "AbstractAlphabet::getName : Specified base unknown", this);
+	for(vector<sletter>::const_iterator i = alphabet.begin(); i < alphabet.end(); i++)
+    if(i->letter == LETTER) return i->name;
+  throw BadCharException(state, "AbstractAlphabet::getName(string): Specified base unknown", this);
 }
 
 /****************************************************************************************/
 
 string AbstractAlphabet::getName(int state) const throw (BadIntException)
 {
-  for (unsigned int i = 0 ; i < alphabet.size() ; i++)
-    if (alphabet[i].num == state) return alphabet[i].name;
-  throw BadIntException(state, "AbstractAlphabet::getName : Specified base unknown", this);
+  for(unsigned int i = 0; i < alphabet.size(); i++)
+    if(alphabet[i].num == state) return alphabet[i].name;
+  throw BadIntException(state, "AbstractAlphabet::getName(int): Specified base unknown", this);
 }
 
 /****************************************************************************************/

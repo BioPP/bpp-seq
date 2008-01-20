@@ -46,6 +46,8 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
+using namespace std;
+
 namespace bpp
 {
 

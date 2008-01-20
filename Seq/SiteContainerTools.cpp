@@ -51,7 +51,6 @@ using namespace bpp;
 #include <vector>
 #include <deque>
 #include <string>
-#include <ctype.h>
 
 using namespace std;
 

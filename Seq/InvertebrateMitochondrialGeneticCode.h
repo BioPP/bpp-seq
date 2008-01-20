@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "GeneticCode.h"
 #include "NucleicAlphabet.h"
 
+using namespace std;
+
 namespace bpp
 {
 
