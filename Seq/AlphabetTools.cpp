@@ -30,9 +30,9 @@ int AlphabetTools::getType(char state)
 {
   if(state == '-') return -1;
   state = toupper(state);
-  bool d = DNA_ALPHABET.isCharInAlphabet("" + state);
-  bool r = RNA_ALPHABET.isCharInAlphabet("" + state);
-  bool p = PROTEIN_ALPHABET.isCharInAlphabet("" + state);
+  bool d = DNA_ALPHABET.isCharInAlphabet(TextTools::toString(state));
+  bool r = RNA_ALPHABET.isCharInAlphabet(TextTools::toString(state));
+  bool p = PROTEIN_ALPHABET.isCharInAlphabet(TextTools::toString(state));
 
   if(!d && !r && !p) return 0; //Unknown character
   else if(d && !r && !p) return 1; //DNA specific

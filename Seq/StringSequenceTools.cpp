@@ -286,10 +286,9 @@ Alphabet * StringSequenceTools::getAlphabetFromSequence(const string sequence)
 throw (EmptySequenceException, SequenceException, AlphabetException)
 {
   // empty sequence test
-  if (sequence.size() == 0)
+  if(sequence.size() == 0)
   {
-    throw EmptySequenceException ("Sequence::getAlphabetFromSequence : Empty sequence string");
-    return NULL;
+    throw EmptySequenceException("Sequence::getAlphabetFromSequence : Empty sequence string");
   }
 
   // initialisation
@@ -299,13 +298,13 @@ throw (EmptySequenceException, SequenceException, AlphabetException)
   bool pd = false; //Protein or DNA (T) 
   
   // Main loop : for all character in sequence
-  for (unsigned int i = 0 ; i < sequence.size() ; i++)
+  for(unsigned int i = 0; i < sequence.size(); i++)
   {
     // Character analyse
     switch (AlphabetTools::getType(sequence[i]))
     {
       case 0 : u = true; break;
-      case 1 : p = true; break;
+      case 3 : p = true; break;
       case 2 : r = true; break;
       case 5 : pd = true; break;
     }

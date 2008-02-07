@@ -132,6 +132,16 @@ class AlphabetTools
 		 */
 		static bool isNucleicAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<NucleicAlphabet>(alphabet); }
 		/**
+		 * @return True if the alphabet is an instanciation of the DNA class.
+		 * @param alphabet The alphabet to check.
+		 */
+		static bool isDNAAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DNA>(alphabet); }
+		/**
+		 * @return True if the alphabet is an instanciation of the RNA class.
+		 * @param alphabet The alphabet to check.
+		 */
+		static bool isRNAAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<RNA>(alphabet); }
+		/**
 		 * @return True if the alphabet is an instanciation of the ProteicAlphabet class.
 		 * @param alphabet The alphabet to check.
 		 */
