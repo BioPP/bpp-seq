@@ -258,7 +258,7 @@ class VectorSequenceContainer:
 		 * before adding it.
 		 * @throw Exception If the sequence couldn't be added to the container.
 		 */
-		void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
+		virtual void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
 
 		/**
 		 * @brief Add a sequence to the container at a particular position.
@@ -276,7 +276,7 @@ class VectorSequenceContainer:
 		 * before adding it.
 		 * @throw Exception If the sequence couldn't be added to the container.
 		 */
-		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
+		virtual void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
 
 	protected:
 

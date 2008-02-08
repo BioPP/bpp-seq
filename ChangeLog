@@ -1,6 +1,11 @@
+08/02/08 Julien Dutheil
+* Bug fixed in VectorSequenceContainer: method addSequence is now virtual!
+  (thanks to Laurent Gueguen for pointing out this bug)!.
+
 07/02/08 Julien Dutheil
 * Added function isDNAAlphabet and isRNAAlphabet in AlphabetTools.
 * Bug fixed in getalphabetFromSequence method.
+* Method getContent in Sequence and Site now outputs a reference.
 
 06/07/07 -*- Version 1.4.0 -*-
 
