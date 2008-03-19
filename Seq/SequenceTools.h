@@ -50,6 +50,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From NumCalc:
 #include <NumCalc/RandomTools.h>
+#include <NumCalc/StatTest.h>
 
 // From utils: 
 #include <Utils/Exceptions.h>
@@ -64,6 +65,31 @@ using namespace std;
 
 namespace bpp
 {
+
+/**
+ * @Brief Bowker's homogeneity test results class.
+ */
+class BowkerTest:
+  public StatTest
+{
+  protected:
+    double _pvalue;
+    double _stat;
+
+  public:
+    BowkerTest() {}
+    virtual ~BowkerTest() {}
+
+    BowkerTest * clone() const { return new BowkerTest(*this); }
+
+  public:
+    string getName() const { return "Bowker's test for homogeneity."; }
+    double getStatistic() const { return _stat; }
+    double getPValue() const { return _pvalue; }
+
+    void setStatistic(double stat) { _stat = stat; }
+    void setPValue(double pvalue) { _pvalue = pvalue; }
+};
 
 /**
  * @brief SequenceTools static class
@@ -184,6 +210,21 @@ class SequenceTools:
      * @return A new sequence object without gaps.
      */
     static Sequence * removeGaps(const Sequence & seq);
+
+    /**
+     * @brief Bowker's test for homogeneity.
+     *
+     * Computes the contingency table of occurrence of all pairs of states and test its symmetry using Bowker's (1948) test.
+     *
+     * Reference:<br />
+     * Ababneh F. Bioinformatics 2006 22(10) 1225-1231
+     *
+     * @param seq1 The first sequence.
+     * @param seq2 The second sequence.
+     * @return A BowkerTest object with the computed statistic and p-value (computed from a chi square distribution).
+     * @throw SequenceNotAlignedException If the two sequences do not have the same length.
+     */
+    static BowkerTest* bowkerTest(const Sequence & seq1, const Sequence & seq2) throw (SequenceNotAlignedException);
     
 };
 

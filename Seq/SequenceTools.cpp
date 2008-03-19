@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetTools.h"
 #include "StringSequenceTools.h"
 
+// From NumCalc:
+#include <NumCalc/Matrix.h>
+
 using namespace bpp;
 
 // From the STL:
@@ -212,6 +215,53 @@ Sequence * SequenceTools::removeGaps(const Sequence & seq)
   Sequence * newSeq = seq.clone();
   newSeq->setContent(content);
 	return newSeq;
+}
+
+/****************************************************************************************/
+
+BowkerTest* SequenceTools::bowkerTest(const Sequence & seq1, const Sequence & seq2)
+  throw (SequenceNotAlignedException)
+{
+  if(seq1.size() != seq2.size())
+    throw SequenceNotAlignedException("SequenceTools::bowkerTest.", &seq2);
+  unsigned int n = seq1.size();
+  const Alphabet * alpha = seq1.getAlphabet();
+  unsigned int r = alpha->getSize();
+
+  //Compute contingency table:
+  RowMatrix<double> array(r, r);
+  int x, y;
+  for(unsigned int i = 0; i < n; i++)
+  {
+    x = seq1[i];
+    y = seq2[i];
+    if(!alpha->isGap(x) && !alpha->isUnresolved(x)
+    && !alpha->isGap(y) && !alpha->isUnresolved(y))
+    {
+      array((unsigned int)x, (unsigned int)y)++;
+    }
+  }
+  
+  //Compute Bowker's statistic:
+  double sb2 = 0, nij, nji;
+  for(unsigned int i = 0; i < r; i++)
+  {
+    for(unsigned int j = 0; j < i; j++)
+    {
+      nij = array(i,j);
+      nji = array(j,i);
+      sb2 += pow(nij - nji, 2) / (nij + nji);
+    }
+  }
+  
+  //Compute p-value:
+  double pvalue = 1. - RandomTools::pChisq(sb2, r - 1);
+
+  //Return results:
+  BowkerTest * test = new BowkerTest();
+  test->setStatistic(sb2);
+  test->setPValue(pvalue);
+  return test;
 }
 
 /****************************************************************************************/
