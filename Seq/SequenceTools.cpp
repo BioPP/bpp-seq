@@ -250,7 +250,11 @@ BowkerTest* SequenceTools::bowkerTest(const Sequence & seq1, const Sequence & se
     {
       nij = array(i,j);
       nji = array(j,i);
-      sb2 += pow(nij - nji, 2) / (nij + nji);
+      if(nij != 0 || nji != 0)
+      {
+        sb2 += pow(nij - nji, 2) / (nij + nji);
+      }
+      // Else: we should display a warning there.
     }
   }
   
