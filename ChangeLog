@@ -1,6 +1,7 @@
 18/03/08 Julien Dutheil
 * Bowker's test for homogeneity implemented in SequenceTools.
 
+
 08/02/08 Julien Dutheil
 * Bug fixed in VectorSequenceContainer: method addSequence is now virtual!
   (thanks to Laurent Gueguen for pointing out this bug)!.
