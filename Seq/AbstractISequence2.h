@@ -58,7 +58,7 @@ namespace bpp
  * @brief Partial implementation of the ISequence interface, dedicated to alignement readers.
  */
 class AbstractISequence2:
-  public virtual ISequence
+  public virtual ISequence2
 {
 
 	public:
@@ -128,9 +128,9 @@ class AbstractISequence2:
 	public:
 		virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+		SiteContainer *
 #else
-		VectorSequenceContainer *
+		AlignedSequenceContainer *
 #endif
 		read(istream & input, const Alphabet * alpha) const throw (Exception)
 		{
@@ -148,9 +148,9 @@ class AbstractISequence2:
 		 */
 		virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+		SiteContainer *
 #else
-		VectorSequenceContainer *
+		AlignedSequenceContainer *
 #endif
 		readFromStream(istream & input, const Alphabet * alpha) const throw (Exception)
 		{
@@ -162,9 +162,9 @@ class AbstractISequence2:
 	public:
 		virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+		SiteContainer *
 #else
-		VectorSequenceContainer *
+		AlignedSequenceContainer *
 #endif
 		read(const string & path , const Alphabet * alpha) const throw (Exception)
 		{
@@ -184,7 +184,7 @@ class AbstractISequence2:
 		 */
 		virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+		SiteContainer *
 #else
 		AlignedSequenceContainer *
 #endif

@@ -1,6 +1,8 @@
-18/03/08 Julien Dutheil
-* Bowker's test for homogeneity implemented in SequenceTools.
+20/04/08 Julien Dutheil
+* New interface ISequence2 for reading alignments.
 
+18/03/08 Julien Dutheil and Bastien Boussau
+* Bowker's test for homogeneity implemented in SequenceTools.
 
 08/02/08 Julien Dutheil
 * Bug fixed in VectorSequenceContainer: method addSequence is now virtual!
@@ -8,7 +10,7 @@
 
 07/02/08 Julien Dutheil
 * Added function isDNAAlphabet and isRNAAlphabet in AlphabetTools.
-* Bug fixed in getalphabetFromSequence method.
+* Bug fixed in getAlphabetFromSequence method.
 * Method getContent in Sequence and Site now outputs a reference.
 
 18/01/08 -*- Version 1.4.0 -*-

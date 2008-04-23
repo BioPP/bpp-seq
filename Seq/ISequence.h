@@ -45,6 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "IOSequence.h"
 #include "Sequence.h"
 #include "SequenceContainer.h"
+#include "SiteContainer.h"
 
 // From Utils:
 #include <Utils/Exceptions.h>
@@ -62,6 +63,7 @@ namespace bpp
  * @brief The ISequence interface.
  *
  * This interface defines the basic methods for reading sequences from a file.
+ * NB: This interfqce is effective only if the VIRTUAL_COV option is enabled (default behavior).
  */
 class ISequence:
   public virtual IOSequence
@@ -77,6 +79,7 @@ class ISequence:
 		 *
 		 * @param input  The input stream to read.
 		 * @param alpha The alphabet to be associated to the container.
+     * @return A new SequenceContainer object.
 		 * @throw Exception If the file is not in the specified format.
 		 */
 		virtual SequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception) = 0;
@@ -85,9 +88,57 @@ class ISequence:
 		 *
 		 * @param path  The path to the file to read.
 		 * @param alpha The alphabet to be associated to the container.
+     * @return A new SequenceContainer object.
 		 * @throw Exception If the file is not in the specified format.
 		 */
 		virtual SequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) = 0;
+
+};
+
+/**
+ * @brief The ISequence2 interface.
+ *
+ * This interface defines the basic methods for reading aligned sequences from a file.
+ */
+class ISequence2:
+  public virtual ISequence
+{
+	public:
+		ISequence2() {}
+		virtual ~ISequence2() {}
+
+	public:
+	
+		/**
+		 * @brief Create a new container from a stream.
+		 *
+		 * @param input  The input stream to read.
+		 * @param alpha The alphabet to be associated to the container.
+     * @return A new SiteContainer object.
+		 * @throw Exception If the file is not in the specified format.
+		 */
+    virtual
+#if defined(NO_VIRTUAL_COV)
+		SequenceContainer *
+#else
+		SiteContainer *
+#endif
+		read(istream & input, const Alphabet * alpha) const throw (Exception) = 0;
+		/**
+		 * @brief Create a new container from a file.
+		 *
+		 * @param path  The path to the file to read.
+		 * @param alpha The alphabet to be associated to the container.
+     * @return A new SiteContainer object.
+		 * @throw Exception If the file is not in the specified format.
+		 */
+    virtual
+#if defined(NO_VIRTUAL_COV)
+		SequenceContainer *
+#else
+		SiteContainer *
+#endif
+    read(const string & path, const Alphabet * alpha) const throw (Exception) = 0;
 
 };
 
