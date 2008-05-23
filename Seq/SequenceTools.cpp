@@ -212,7 +212,7 @@ Sequence * SequenceTools::removeGaps(const Sequence & seq)
   {
 		if(seq[i] > -1) content.push_back(seq[i]);
 	}
-  Sequence * newSeq = seq.clone();
+  Sequence * newSeq = dynamic_cast<Sequence *>(seq.clone());
   newSeq->setContent(content);
 	return newSeq;
 }
