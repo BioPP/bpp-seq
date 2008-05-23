@@ -162,7 +162,7 @@ class AbstractISequence2:
 	public:
 		virtual
 #if defined(NO_VIRTUAL_COV)
-		SiteContainer *
+		SequenceContainer *
 #else
 		AlignedSequenceContainer *
 #endif
@@ -184,7 +184,7 @@ class AbstractISequence2:
 		 */
 		virtual
 #if defined(NO_VIRTUAL_COV)
-		SiteContainer *
+		SequenceContainer *
 #else
 		AlignedSequenceContainer *
 #endif
