@@ -126,11 +126,12 @@ class SymbolList:
 		 *
 		 * @{
 		 */
-#if defined(NO_VIRTUAL_COV)
-		Clonable * clone() const { return new SymbolList(* this); }
+#ifndef NO_VIRTUAL_COV
+		SymbolList*
 #else
-		SymbolList * clone() const { return new SymbolList(* this); }
+		Clonable*
 #endif
+		clone() const { return new SymbolList(* this); }
 		/** @} */
 
     // Class destructor

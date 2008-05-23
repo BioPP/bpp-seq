@@ -226,14 +226,14 @@ class SequenceContainerTools
      * of SequenceContainer for more details).
      * The type of the template must be the type of the SequenceContainer which
      * receives the sequences. This SequenceContainer <b>must have</b> an
-     * addSequence() method like:
+     * addSequence() method like:<br />
      * <code>
      * void addSequence(const Sequence &sequence, bool checkNames=true);
      * </code>
      * It can be used with a VectorSequenceContainer or a VectorSiteContainer
      * but not with a MapSequenceContainer.
      * @param seqCont The container to convert.
-     * @param alphabet The alphabet into the container will be convert.
+     * @param alphabet The alphabet into the container will be converted.
      * @return A new container.
      */
     template<class T> static T* convertAlphabet(const T & seqCont, const Alphabet *alphabet)

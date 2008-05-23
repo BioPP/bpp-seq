@@ -147,7 +147,12 @@ class Site:
 		 *
 		 * @{
 		 */
-		Site * clone() const { return new Site(*this); }
+#ifndef NO_VIRTUAL_COV
+		Site*
+#else
+    Clonable*
+#endif
+    clone() const { return new Site(*this); }
 		/** @} */
 
 		/**

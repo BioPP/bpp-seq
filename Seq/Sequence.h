@@ -193,7 +193,12 @@ class Sequence:
 		 *
 		 * @{
 		 */
-		Sequence * clone() const { return new Sequence(*this); }
+#ifndef NO_VIRTUAL_COV
+    Sequence*
+#else
+    Clonable*
+#endif
+    clone() const { return new Sequence(*this); }
 		/** @} */
         
 		
