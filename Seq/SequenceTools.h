@@ -80,7 +80,12 @@ class BowkerTest:
     BowkerTest() {}
     virtual ~BowkerTest() {}
 
-    BowkerTest * clone() const { return new BowkerTest(*this); }
+#ifndef NO_VIRTUAL_COV
+    BowkerTest*
+#else
+    Clonable*
+#endif
+    clone() const { return new BowkerTest(*this); }
 
   public:
     string getName() const { return "Bowker's test for homogeneity."; }
