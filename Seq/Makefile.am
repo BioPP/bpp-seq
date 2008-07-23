@@ -1,4 +1,4 @@
-#Copyright or © or Copr. CNRS, (November 16, 2004)
+#Copyright or © or Copr. CNRS, (November 16, 2004-2008)
 #
 #This software is a computer program whose purpose is to provide classes
 #for sequences analysis.
@@ -177,7 +177,7 @@ lib_LTLIBRARIES = libbpp-seq.la
 libbpp_seq_la_SOURCES = $(H_FILES) $(CPP_FILES)
 EXTRA_libbpp_seq_la_SOURCES = $(CPP_EXTRA)
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R
-libbpp_seq_la_LDFLAGS = -version-info 5:0:0
+libbpp_seq_la_LDFLAGS = -version-info 6:0:0
 
 library_includedir=$(includedir)/Seq
 library_include_HEADERS = $(H_FILES)

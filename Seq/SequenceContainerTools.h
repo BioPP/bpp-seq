@@ -226,7 +226,7 @@ class SequenceContainerTools
      * of SequenceContainer for more details).
      * The type of the template must be the type of the SequenceContainer which
      * receives the sequences. This SequenceContainer <b>must have</b> an
-     * addSequence() method like:<br />
+     * addSequence() method like:<br>
      * <code>
      * void addSequence(const Sequence &sequence, bool checkNames=true);
      * </code>

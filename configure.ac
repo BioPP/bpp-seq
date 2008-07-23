@@ -1,4 +1,4 @@
-#Copyright or © or Copr. CNRS, (November 16, 2004)
+#Copyright or © or Copr. CNRS, (November 16, 2004-2008)
 #
 #This software is a computer program whose purpose is to provide classes
 #for sequences analysis.
@@ -29,7 +29,7 @@
 #The fact that you are presently reading this means that you have had
 #knowledge of the CeCILL license and that you accept its terms.
 
-AC_INIT(Bio++ SeqLib, 1.4.0, Julien.Dutheil@univ-montp2.fr, Bpp-Seq)
+AC_INIT(Bio++ SeqLib, 1.4.1, Julien.Dutheil@univ-montp2.fr, Bpp-Seq)
 AC_CONFIG_SRCDIR(Seq/Alphabet.h)
 AM_INIT_AUTOMAKE()
 AC_LANG_CPLUSPLUS

@@ -67,7 +67,7 @@ namespace bpp
 {
 
 /**
- * @Brief Bowker's homogeneity test results class.
+ * @brief Bowker's homogeneity test results class.
  */
 class BowkerTest:
   public StatTest
@@ -221,8 +221,10 @@ class SequenceTools:
      *
      * Computes the contingency table of occurrence of all pairs of states and test its symmetry using Bowker's (1948) test.
      *
-     * Reference:<br />
+     * Reference:<br>
+     * @code
      * Ababneh F. Bioinformatics 2006 22(10) 1225-1231
+     * @endcode
      *
      * @param seq1 The first sequence.
      * @param seq2 The second sequence.
