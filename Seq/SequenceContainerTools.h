@@ -179,10 +179,10 @@ class SequenceContainerTools
     }
     
     /**
-     * @brief Concatenante the sequences from two containers.
+     * @brief Concatenate the sequences from two containers.
      *
-     * This function is a template because of the non existance of the
-     * addSequence() methode in the SequenceContainer interface (see the doc
+     * This function is a template because of the non existence of the
+     * addSequence() method in the SequenceContainer interface (see the doc
      * of SequenceContainer for more details).
      * The type of the template must be the type of the SequenceContainer which
      * receives the sequences. This SequenceContainer <b>must have</b> an

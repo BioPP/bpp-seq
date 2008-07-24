@@ -30,4 +30,4 @@
 #knowledge of the CeCILL license and that you accept its terms.
 
 SUBDIRS = Seq
-EXTRA_DIST = Seq.spec
+EXTRA_DIST = Seq.spec debian

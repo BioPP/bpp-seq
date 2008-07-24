@@ -68,8 +68,23 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
 
   lineRead = FileTools::getNextLine(input); // This is the first sequence of the first block.
 		
-  string::size_type beginSeq = lineRead.find_last_of("      ") + 1;
-	if(beginSeq == string::npos) throw IOException("Clustal::read. Bad intput file.");
+  string::size_type beginSeq = 0;
+  unsigned int count = 0;
+  for(unsigned int i = lineRead.size(); i > 0; i--)
+  {
+    char c = lineRead[i-1];
+    if(c == ' ')
+    {
+      count++;
+      if(count == 6)
+      {
+        beginSeq = i + 6;
+        break;
+      }
+    }
+    else count = 0;
+  }
+	if(beginSeq == 0) throw IOException("Clustal::read. Bad intput file.");
 
 	unsigned int countSequences = 0;
 
