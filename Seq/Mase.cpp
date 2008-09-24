@@ -62,22 +62,27 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 	fileComments = vsc.getGeneralComments();
 
 	// Main loop : for all file lines
-	while (!input.eof()) {
+	while (!input.eof())
+  {
 		getline(input, temp, '\n');  // Copy current line in temporary string
 		
 		// If first character is ;
-		if (temp[0] == ';') {
+		if (temp[0] == ';')
+    {
 			// If second character is also ;
-			if (temp[1] == ';') {
+			if (temp[1] == ';')
+      {
 				// File comments isolation
 				temp.erase(0,2);  // Characters ;; deletion
 				if (temp != "") fileComments.push_back(temp);
-			} else {
+			}
+      else
+      {
 				// If a name and a sequence were founded
-				if ((name != "") && (sequence != "")) {
+				if ((name != "") && (sequence != ""))
+        {
 					// New sequence creation, and addition in existing VectorSequenceContainer
-					Sequence * seq = new Sequence(name, sequence, seqComments, vsc.getAlphabet());
-					vsc.addSequence(* seq);
+					vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()));
 					name = "";
 					sequence = "";
 					seqComments.clear();
@@ -88,20 +93,24 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 				if (temp != "") seqComments.push_back(temp);
 				comments = true;
 			}
-		} else {
+		}
+    else
+    {
 			// If sequence commentaries were just isolated
-			if (comments) {
+			if(comments)
+      {
 				// Sequence name isolation
 				name = temp;
 				comments = false;
-			} else sequence += temp;  // Sequence isolation
+			}
+      else sequence += temp;  // Sequence isolation
 		}
 	}
 	
 	// Addition of the last sequence in file
-	if ((name != "") && (sequence != "")) {
-		Sequence * seq = new Sequence(name, sequence, seqComments, vsc.getAlphabet());
-		vsc.addSequence(* seq);
+	if((name != "") && (sequence != ""))
+  {
+		vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()));
 	}
 
 	// Set new general comments in VectorSequenceContainer (old + new comments)

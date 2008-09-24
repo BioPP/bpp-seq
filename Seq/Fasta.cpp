@@ -70,8 +70,7 @@ void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) con
 			if ((name != "") && (sequence != ""))
       {
 				// New sequence creation, and addition in existing VectorSequenceContainer
-				Sequence * seq = new Sequence(name, sequence, vsc.getAlphabet());
-				vsc.addSequence(* seq);
+				vsc.addSequence(Sequence(name, sequence, vsc.getAlphabet()));
 				//name = ""; no need for that, no?
 				sequence = "";
 			}
@@ -85,8 +84,7 @@ void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) con
 	// Addition of the last sequence in file
 	if ((name != "") && (sequence != ""))
   {
-		Sequence * seq = new Sequence(name, sequence, vsc.getAlphabet());
-		vsc.addSequence(* seq);
+		vsc.addSequence(Sequence(name, sequence, vsc.getAlphabet()));
 	}
 }
 
