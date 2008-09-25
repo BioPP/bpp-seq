@@ -31,3 +31,7 @@
 
 SUBDIRS = Seq
 EXTRA_DIST = Seq.spec debian
+
+dist-hook:
+	rm -rf `find $(distdir)/debian -name CVS`
+
