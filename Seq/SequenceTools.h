@@ -185,6 +185,15 @@ class SequenceTools:
 		static Sequence * reverseTranscript(const Sequence & sequence) throw (AlphabetException);
 		
 		/**
+		 * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
+		 *
+		 * @return sequence A new inverted sequence.
+		 * @param sequence The sequence to inverse.
+     * @param chgSense Tell if the sense tag should be shifted.
+		 */
+		static Sequence * invert(const Sequence & sequence, bool chgSense = true);
+		
+    /**
 		 * @return The identity percent of 2 sequence.
 		 * One match is counted if the two sequences have identical states.
 		 * @param seq1 The first sequence.

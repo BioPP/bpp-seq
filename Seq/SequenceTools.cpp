@@ -166,6 +166,17 @@ Sequence * SequenceTools::reverseTranscript(const Sequence & sequence) throw (Al
 }
 
 /****************************************************************************************/
+
+Sequence * SequenceTools::invert(const Sequence & sequence, bool chgSense)
+{
+  vector<int> iContent(sequence.getContent().rbegin(),sequence.getContent().rend());
+  Sequence * iSeq = sequence.clone();
+  iSeq->setContent(iContent);
+  if(chgSense) iSeq->setSense(!iSeq->getSense());
+  return iSeq;
+}
+
+/****************************************************************************************/
 		
 double SequenceTools::getPercentIdentity(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, SequenceNotAlignedException)
 {

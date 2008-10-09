@@ -1,3 +1,6 @@
+09/10/08 Julien Dutheil
+* New method SequenceTools::invert(Sequence).
+
 24/09/08 Bastien Boussau & Julien Dutheil
 * Memory leak fixed in Fasta and Mase readers.
 
