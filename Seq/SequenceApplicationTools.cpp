@@ -353,7 +353,7 @@ void SequenceApplicationTools::printInputAlignmentHelp()
 {
   if(!ApplicationTools::message) return;
   *ApplicationTools::message << "Input sequence file and format:" << endl;
-  *ApplicationTools::message << "alphabet                      | the alphabet to use [DNA|RNA|Proteins]" << endl;
+  *ApplicationTools::message << "alphabet                      | the alphabet to use [DNA|RNA|Protein]" << endl;
   *ApplicationTools::message << "sequence.format               | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
   *ApplicationTools::message << "sequence.format_phylip.order  | [interleaved|sequential]" << endl;
   *ApplicationTools::message << "sequence.format_phylip.ext    | [classic|extended]" << endl;
