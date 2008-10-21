@@ -124,7 +124,7 @@ VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer & vsc):
   //Now try to add each site:
   for(unsigned int i = 0; i < vsc.getNumberOfSites(); i++)
   {
-    addSite(* vsc.getSite(i), true); //This may throw an exception if position argument already exists or is size is not valid.
+    addSite(* vsc.getSite(i), false); //We assume that positions are correct.
   }
   // Seq comments:
   _comments.resize(nbSeq);
@@ -204,7 +204,7 @@ VectorSiteContainer& VectorSiteContainer::operator = (const VectorSiteContainer 
   //Now try to add each site:
   for(unsigned int i = 0; i < vsc.getNumberOfSites(); i++)
   {
-    addSite(* vsc.getSite(i), true); //This may throw an exception if position argument already exists or is size is not valid.
+    addSite(* vsc.getSite(i), false); //We assume that positions are correct.
   }
   //Seq comments:
   unsigned int nbSeq = vsc.getNumberOfSequences();
@@ -233,7 +233,7 @@ VectorSiteContainer& VectorSiteContainer::operator = (const SiteContainer & sc)
   //Now try to add each site:
   for(unsigned int i = 0; i < sc.getNumberOfSites(); i++)
   {
-    addSite(* sc.getSite(i), true); //This may throw an exception if position argument already exists or is size is not valid.
+    addSite(* sc.getSite(i), false); //We assume that positions are correct.
   }
   //Seq comments:
   unsigned int nbSeq = sc.getNumberOfSequences();
