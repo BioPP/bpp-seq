@@ -61,12 +61,14 @@ VectorSiteContainer::VectorSiteContainer(
   unsigned int nbSeq = vs[0]->size();
   _names.resize(nbSeq);
   _comments.resize(nbSeq);
-  for(unsigned int i = 0; i < nbSeq; i++) {
+  for(unsigned int i = 0; i < nbSeq; i++)
+  {
     _names[i]    = new string("Seq_" + TextTools::toString(i));
     _comments[i] = new Comments(); 
   }
   //Now try to add each site:
-  for(unsigned int i = 0; i < vs.size(); i++) {
+  for(unsigned int i = 0; i < vs.size(); i++)
+  {
     addSite(*vs[i], true); //This may throw an exception if position argument already exists or is size is not valid.
   }
   
@@ -148,7 +150,7 @@ VectorSiteContainer::VectorSiteContainer(const SiteContainer & sc):
   //Now try to add each site:
   for(unsigned int i = 0; i < sc.getNumberOfSites(); i++)
   {
-    addSite(* sc.getSite(i), true); //This may throw an exception if position argument already exists or is size is not valid.
+    addSite(* sc.getSite(i), false); //We assume that positions are correct.
   }
   // Seq comments:
   _comments.resize(nbSeq);

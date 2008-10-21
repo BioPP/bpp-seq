@@ -186,14 +186,14 @@ class SequenceContainerTools
      * of SequenceContainer for more details).
      * The type of the template must be the type of the SequenceContainer which
      * receives the sequences. This SequenceContainer <b>must have</b> an
-     * addSequence() method like:
-     * <code>
+     * addSequence() method like:<br/>
+     * @code
      * void addSequence(const Sequence &sequence, bool checkNames=true);
-     * </code>
+     * @endcode
      * @param seqCont1 First container.
-     * @param seqCont2 Second container. This container must contain sequences with the same names as in seacont1.
+     * @param seqCont2 Second container. This container must contain sequences with the same names as in seqcont1.
      * Additional sequences will be ignored.
-     * @param seqCont Output sequences container to which concqtenqted sequences will be added.
+     * @param seqCont Output sequence container to which concatenated sequences will be added.
      * @throw AlphabetMismatchException If the alphabet in the 3 containers do not match.
      */
     template<class T>static void merge(const SequenceContainer& seqCont1, const SequenceContainer& seqCont2, T& seqCont)
