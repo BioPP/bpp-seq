@@ -50,17 +50,20 @@ namespace bpp {
   /**
    * @brief The poly sequence file format from phred software.
    *
+   * This class read DNA sequence from poly files produced by the phred program
+   * from the University of Washington.
    * For now, only read raw sequences and do a basic filter on heterozygous site.
    */
   class PhredPoly: public AbstractISequence {
     protected:
+      double _ratio;
 
     public:
 
       /**
        * @brief Build a new PhredPoly object.
        */
-      PhredPoly() {}
+      PhredPoly(double ratio = 0.8);
 
       virtual ~PhredPoly() {}
 
@@ -83,6 +86,14 @@ namespace bpp {
         return "Sequences following the poly format as describe in the phred documentation.";
       }
       /** @} */
+
+    public:
+      /**
+       * @brief Set the ration threshold to select heterozygous sites
+       *
+       * @param ratio A double used as threshold
+       */
+      void setRatioThreshold(double ratio);
   };
 } //end of namespace bpp
 

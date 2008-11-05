@@ -4,6 +4,7 @@
 * New alphabet exception CharStateNotSupportedException.
 * New class PhredPoly to read sequence from poly files produced by the phred
   program.
+* Fixed heterozygous site read in PhredPoly.
 
 09/10/08 Julien Dutheil
 * New method SequenceTools::invert(Sequence).

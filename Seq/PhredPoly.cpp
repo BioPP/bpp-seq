@@ -47,6 +47,10 @@ using namespace bpp;
 
 /******************************************************************************/
 
+PhredPoly::PhredPoly(double ratio) : _ratio(ratio) {}
+
+/******************************************************************************/
+
 void PhredPoly::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception) {
   if (!input) { throw IOException ("PhredPoly::read: fail to open file"); }
 
@@ -55,23 +59,33 @@ void PhredPoly::appendFromStream(istream & input, VectorSequenceContainer & vsc)
   // Read first line
   if (!input.eof()) {
     getline(input, temp, '\n');  // Copy current line in temporary string
-    //temp = TextTools::removeSurroundingWhiteSpaces(temp);
     StringTokenizer st(temp, " ");
-    name = st.nextToken();
-    //cout << name << endl;
+    name = st.getToken(0);
   }
 
+  const Alphabet * alpha = vsc.getAlphabet();
   // Main loop : for all other lines
   while (!input.eof()) {
     getline(input, temp, '\n');  // Copy current line in temporary string
     StringTokenizer st(temp, " ");
     if (st.numberOfRemainingTokens() == 12) {
-      sequence += st.nextToken();
+      double a = TextTools::toDouble(st.getToken(3));
+      double b = TextTools::toDouble(st.getToken(7));
+      if (a < b) {
+        double t = a;
+        a = b;
+        b = t;
+      }
+      vector<string> v;
+      v.push_back(st.getToken(0)); // Get the called base
+      if (b / a > this->_ratio) {
+        v.push_back(st.getToken(4)); // Get the uncalled base if relative picks areas are similar
+      }
+      sequence += alpha->getGeneric(v);
     }
   }
-  //cout << sequence << endl;
   if(name == "") throw Exception("PhredPoly::read: sequence without name!");
-  Sequence * seq = new Sequence(name, sequence, vsc.getAlphabet());
+  Sequence * seq = new Sequence(name, sequence, alpha);
   vsc.addSequence(* seq);
 }
 
