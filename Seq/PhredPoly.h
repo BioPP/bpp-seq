@@ -1,10 +1,11 @@
 //
-// File: DefaultAlphabet.h
-// Created by: Julien Dutheil
+// File: PhredPoly.h
+// Created by: Sylvain Gaillard
+// Created on: Fri Oct 31 2008
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (October 31, 2008)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -36,43 +37,53 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _DEFAULTALPHABET_H_
-#define _DEFAULTALPHABET_H_
+#ifndef _PHREDPOLY_H_
+#define _PHREDPOLY_H_
 
-#include "AbstractAlphabet.h"
+#include "AbstractISequence.h"
+#include "Sequence.h"
+#include "SequenceContainer.h"
+#include "VectorSequenceContainer.h"
 
-namespace bpp
-{
+namespace bpp {
 
-/**
- * @brief The DefaultAlphabet class.
- *
- * This alphabet should match virtually any type of sequences.
- * This should be used by who does not care of the sequence type.
- */
-class DefaultAlphabet:
-  public AbstractAlphabet
-{
-	protected:
-		const string _chars;
-		
-	public:
-		// class constructor
-		DefaultAlphabet();
+  /**
+   * @brief The poly sequence file format from phred software.
+   *
+   * For now, only read raw sequences and do a basic filter on heterozygous site.
+   */
+  class PhredPoly: public AbstractISequence {
+    protected:
 
-		// class destructor
-		virtual ~DefaultAlphabet() {}
+    public:
 
-	public:
-		unsigned int getSize() const { return 26; }
-		unsigned int getNumberOfTypes() const { return 27; }
-		string getAlphabetType() const { return "Default alphabet"; }
-    int getUnknownCharacterCode() const { return 38; }
-    bool isUnresolved(int state) const { return state == 38; }
-    bool isUnresolved(const string & state) const { return false; }
- };
+      /**
+       * @brief Build a new PhredPoly object.
+       */
+      PhredPoly() {}
 
-} //end of namespace bpp.
+      virtual ~PhredPoly() {}
 
-#endif // _DEFAULTALPHABET_H_
+    public:
+      /**
+       * @name The AbstractISequence interface.
+       *
+       * @{
+       */
+      void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+      /** @} */
 
+      /**
+       * @name The IOSequence interface.
+       *
+       * @{
+       */
+      const string getFormatName() const { return "poly file"; };
+      const string getFormatDescription() const {
+        return "Sequences following the poly format as describe in the phred documentation.";
+      }
+      /** @} */
+  };
+} //end of namespace bpp
+
+#endif // _PHREDPOLY_H_

@@ -42,8 +42,12 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From Utils:
 #include <Utils/TextTools.h>
+#include <Utils/MapTools.h>
 
 using namespace bpp;
+
+// From STL:
+#include <map>
 
 /****************************************************************************************/
 
@@ -251,3 +255,66 @@ vector<string> ProteicAlphabet::getAlias(const string & state) const throw (BadC
 
 /****************************************************************************************/
 
+int ProteicAlphabet::getGeneric(const vector<int> & states) const throw (BadIntException) {
+  map<int, int> m;
+  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+    vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
+    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
+      m[tmp_s[j]] ++; // add each state to the list
+    }
+  }
+  vector<int> ve = MapTools::getKeys(m);
+
+  string key;
+  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
+    if (!isIntInAlphabet(ve[i])) throw BadIntException(ve[i], "ProteicAlphabet::getGeneric(const vector<int>): Specified base unknown.");
+    key += "_" + TextTools::toString(ve[i]);
+  }
+  map<string, int> g;
+  g["_2_3"] = 20;
+  g["_5_6"] = 21;
+  int v;
+  map<string, int>::iterator it = g.find(key);
+  if (ve.size() == 1) {
+    v = ve[0];
+  } else if (it != g.end()) {
+    v = it->second;
+  } else {
+    v = 22;
+  }
+  return v;
+}
+
+/****************************************************************************************/
+
+string ProteicAlphabet::getGeneric(const vector<string> & states) const throw (BadCharException) {
+  map <string, int> m;
+  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+    vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
+    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
+       m[tmp_s[j]] ++; // add each state to the list
+    }
+  }
+  vector<string> ve = MapTools::getKeys(m);
+
+  string key;
+  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
+    if (!isCharInAlphabet(ve[i])) throw BadCharException(ve[i], "ProteicAlphabet::getAlias(const vector<string>): Specified base unknown.");
+    key += TextTools::toString(ve[i]);
+  }
+  map<string, string> g;
+  g["DN"] = "B";
+  g["EQ"] = "Z";
+  string v;
+  map<string, string>::iterator it = g.find(key);
+  if (ve.size() == 1) {
+    v = ve[0];
+  } else if (it != g.end()) {
+    v = it->second;
+  } else {
+    v = "?";
+  }
+  return v;
+}
+
+/****************************************************************************************/

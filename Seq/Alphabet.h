@@ -261,6 +261,31 @@ class Alphabet
 		virtual vector<string> getAlias(const string & state) const throw (BadCharException) = 0;
 
     /**
+     * @brief Get the generic state that match a set of states.
+     *
+     * If the given states contain generic code, each generic code is first resolved and then the new generic state is returned.
+     * If only a single resolved state is given the function return this state.
+     *
+     * @param states A vector of states to resolve.
+     * @return A int code for the computed state.
+     * @throw BadIntException When a state is not a valid integer.
+     */
+    virtual int getGeneric(const vector<int> & states) const throw (BadIntException) = 0;
+
+    /**
+     * @brief Get the generic state that match a set of states.
+     *
+     * If the given states contain generic code, each generic code is first resolved and then the new generic state is returned.
+     * If only a single resolved state is given the function return this state.
+     *
+     * @param states A vector of states to resolve.
+     * @return A int code for the computed state.
+     * @throw BadCharException when a state is not a valid char description.
+     * @throw CharStateNotSupportedException when the alphabet does not support Char state for unresolved state.
+     */
+    virtual string getGeneric(const vector<string> & states) const throw (AlphabetException) = 0;
+
+    /**
      * @return The int code for unknown characters.
      */
     virtual int getUnknownCharacterCode() const = 0;

@@ -1,10 +1,11 @@
 //
-// File: DefaultAlphabet.h
-// Created by: Julien Dutheil
+// File: PhredPoly.cpp
+// Created by: Sylvain Gaillard
+// Created on: Fri Oct 31 2008
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (October 31, 2008)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -36,43 +37,42 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _DEFAULTALPHABET_H_
-#define _DEFAULTALPHABET_H_
+#include "PhredPoly.h"
 
-#include "AbstractAlphabet.h"
+// From Utils:
+#include <Utils/TextTools.h>
+#include <Utils/StringTokenizer.h>
 
-namespace bpp
-{
+using namespace bpp;
 
-/**
- * @brief The DefaultAlphabet class.
- *
- * This alphabet should match virtually any type of sequences.
- * This should be used by who does not care of the sequence type.
- */
-class DefaultAlphabet:
-  public AbstractAlphabet
-{
-	protected:
-		const string _chars;
-		
-	public:
-		// class constructor
-		DefaultAlphabet();
+/******************************************************************************/
 
-		// class destructor
-		virtual ~DefaultAlphabet() {}
+void PhredPoly::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception) {
+  if (!input) { throw IOException ("PhredPoly::read: fail to open file"); }
 
-	public:
-		unsigned int getSize() const { return 26; }
-		unsigned int getNumberOfTypes() const { return 27; }
-		string getAlphabetType() const { return "Default alphabet"; }
-    int getUnknownCharacterCode() const { return 38; }
-    bool isUnresolved(int state) const { return state == 38; }
-    bool isUnresolved(const string & state) const { return false; }
- };
+  string temp, name, sequence = "";  // Initialization
 
-} //end of namespace bpp.
+  // Read first line
+  if (!input.eof()) {
+    getline(input, temp, '\n');  // Copy current line in temporary string
+    //temp = TextTools::removeSurroundingWhiteSpaces(temp);
+    StringTokenizer st(temp, " ");
+    name = st.nextToken();
+    //cout << name << endl;
+  }
 
-#endif // _DEFAULTALPHABET_H_
+  // Main loop : for all other lines
+  while (!input.eof()) {
+    getline(input, temp, '\n');  // Copy current line in temporary string
+    StringTokenizer st(temp, " ");
+    if (st.numberOfRemainingTokens() == 12) {
+      sequence += st.nextToken();
+    }
+  }
+  //cout << sequence << endl;
+  if(name == "") throw Exception("PhredPoly::read: sequence without name!");
+  Sequence * seq = new Sequence(name, sequence, vsc.getAlphabet());
+  vsc.addSequence(* seq);
+}
 
+/******************************************************************************/

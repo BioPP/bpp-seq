@@ -108,7 +108,8 @@ sequences\
 IOSequenceFactory.h\
 SimpleScore.h \
 DistanceMatrix.h \
-GenBank.h
+GenBank.h \
+PhredPoly.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
@@ -166,7 +167,8 @@ SequenceApplicationTools.cpp\
 IOSequenceFactory.cpp\
 SimpleScore.cpp\
 DistanceMatrix.cpp\
-GenBank.cpp
+GenBank.cpp\
+PhredPoly.cpp
 
 CPP_EXTRA = \
 __GranthamMatrixCode\

@@ -185,6 +185,19 @@ class AlphabetMismatchException : public Exception
 		vector<const Alphabet *> getAlphabets() const;
 };
 
+class CharStateNotSupportedException : public AlphabetException {
+  public:
+    /**
+     * @brief Build a new CharStateNotSupportedException.
+     *
+     * @param text A message to be passed to the exception hierarchy.
+     * param alpha A const pointer toward the alphabet that threw the exception.
+     */
+    CharStateNotSupportedException(const string & text = "", const Alphabet * alpha = NULL);
+
+    virtual ~CharStateNotSupportedException() throw() {};
+};
+
 } //end of namespace bpp.
 
 #endif	//_ALPHABETEXCEPTIONS_H_

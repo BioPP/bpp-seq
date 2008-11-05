@@ -41,7 +41,16 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "DNA.h"
 
+// From Utils:
+#include <Utils/TextTools.h>
+#include <Utils/MapTools.h>
+
 using namespace bpp;
+
+// From STL:
+#include <map>
+
+using namespace std;
 
 /****************************************************************************************/
 
@@ -204,3 +213,83 @@ vector<string> DNA::getAlias(const string & state) const throw (BadCharException
 
 /****************************************************************************************/
 
+int DNA::getGeneric(const vector<int> & states) const throw (BadIntException) {
+  map<int, int> m;
+  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+    vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
+    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
+      m[tmp_s[j]] ++; // add each state to the list
+    }
+  }
+  vector<int> ve = MapTools::getKeys(m);
+
+  string key;
+  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
+    if (!isIntInAlphabet(ve[i])) throw BadIntException(ve[i], "DNA::getGeneric(const vector<int>): Specified base unknown.");
+    key += "_" + TextTools::toString(ve[i]);
+  }
+  map<string, int> g;
+  g["_0_1"] = 4;
+  g["_0_2"] = 5;
+  g["_0_3"] = 6;
+  g["_1_2"] = 7;
+  g["_1_3"] = 8;
+  g["_2_3"] = 9;
+  g["_0_1_2"] = 10;
+  g["_0_1_3"] = 11;
+  g["_0_2_3"] = 12;
+  g["_1_2_3"] = 13;
+  int v;
+  map<string, int>::iterator it = g.find(key);
+  if (ve.size() == 1) {
+    v = ve[0];
+  } else if (it != g.end()) {
+    v = it->second;
+  } else {
+    v = 14;
+  }
+  return v;
+}
+
+/****************************************************************************************/
+
+string DNA::getGeneric(const vector<string> & states) const throw (BadCharException) {
+  map <string, int> m;
+  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+    vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
+    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
+       m[tmp_s[j]] ++; // add each state to the list
+       //cout << tmp_s[j] << endl;
+    }
+  }
+  vector<string> ve = MapTools::getKeys(m);
+
+  string key;
+  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
+    if (!isCharInAlphabet(ve[i])) throw BadCharException(ve[i], "DNA::getAlias(const vector<string>): Specified base unknown.");
+    key += TextTools::toString(ve[i]);
+  }
+  map<string, string> g;
+  g["AC"] = "M";
+  g["AG"] = "R";
+  g["AT"] = "W";
+  g["CG"] = "S";
+  g["CT"] = "Y";
+  g["GT"] = "K";
+  g["ACG"] = "V";
+  g["ACT"] = "H";
+  g["AGT"] = "D";
+  g["CGT"] = "B";
+  string v;
+  map<string, string>::iterator it = g.find(key);
+  if (ve.size() == 1) {
+    v = ve[0];
+  } else if (it != g.end()) {
+    v = it->second;
+  } else {
+    v = "N";
+  }
+  return v;
+}
+
+/****************************************************************************************/

@@ -126,6 +126,8 @@ class AbstractAlphabet:
 		bool isCharInAlphabet(const string & state) const;
 		vector<int> getAlias(int state) const throw (BadIntException);
 		vector<string> getAlias(const string & state) const throw (BadCharException);
+    int    getGeneric(const vector<int   > & states) const throw (BadIntException);
+    string getGeneric(const vector<string> & states) const throw (AlphabetException);
     int getGapCharacterCode() const { return -1; }
     bool isGap(int state) const { return state == -1; }
     bool isGap(const string & state) const { return charToInt(state) == -1; }

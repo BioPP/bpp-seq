@@ -42,11 +42,13 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From Utils:
 #include <Utils/TextTools.h>
+#include <Utils/MapTools.h>
 
 using namespace bpp;
 
 // From the STL:
 #include <ctype.h>
+#include <map>
 
 using namespace std;
 
@@ -129,3 +131,54 @@ vector<string> AbstractAlphabet::getAlias(const string & state) const throw (Bad
 
 /****************************************************************************************/
 
+int AbstractAlphabet::getGeneric(const vector<int> & states) const throw (BadIntException) {
+  map<int, int> m;
+  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+    vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
+    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
+      m[tmp_s[j]] ++; // add each state to the list
+    }
+  }
+  vector<int> ve = MapTools::getKeys(m);
+
+  string key;
+  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
+    if (!isIntInAlphabet(ve[i])) throw BadIntException(ve[i], "AbstractAlphabet::getGeneric(const vector<int>): Specified base unknown.");
+    key += "_" + TextTools::toString(ve[i]);
+  }
+  int v;
+  if (ve.size() == 1) {
+    v = ve[0];
+  } else {
+    v = this->getUnknownCharacterCode();
+  }
+  return v;
+}
+
+/****************************************************************************************/
+
+string AbstractAlphabet::getGeneric(const vector<string> & states) const throw (AlphabetException) {
+  map <string, int> m;
+  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+    vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
+    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
+       m[tmp_s[j]] ++; // add each state to the list
+    }
+  }
+  vector<string> ve = MapTools::getKeys(m);
+
+  string key;
+  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
+    if (!isCharInAlphabet(ve[i])) throw BadCharException(ve[i], "AbstractAlphabet::getAlias(const vector<string>): Specified base unknown.");
+    key += TextTools::toString(ve[i]);
+  }
+  string v;
+  if (ve.size() == 1) {
+    v = ve[0];
+  } else {
+    throw CharStateNotSupportedException("AbstractAlphabet::getAlias(const vector<string>): No generic char state.");
+  }
+  return v;
+}
+
+/****************************************************************************************/

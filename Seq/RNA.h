@@ -66,6 +66,8 @@ class RNA:
 	public:
 		vector<int   > getAlias(      int      state) const throw (BadIntException);
 		vector<string> getAlias(const string & state) const throw (BadCharException);
+    int    getGeneric(const vector<int   > & states) const throw (BadIntException);
+    string getGeneric(const vector<string> & states) const throw (BadCharException);
 		string getAlphabetType() const { return "RNA alphabet"; }
 };
 

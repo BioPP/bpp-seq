@@ -97,3 +97,7 @@ vector<const Alphabet *> AlphabetMismatchException::getAlphabets() const
 
 /******************************************************************************/
 
+CharStateNotSupportedException::CharStateNotSupportedException(const string & text, const Alphabet * alpha) :
+  AlphabetException("CharStateNotSupportedException: " + text, alpha) {};
+
+/******************************************************************************/
