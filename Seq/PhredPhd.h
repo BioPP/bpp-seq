@@ -1,11 +1,11 @@
 //
-// File: PhredPoly.h
+// File: PhredPhd.h
 // Created by: Sylvain Gaillard
-// Created on: Fri Oct 31 2008
+// Created on: Wed Nov 5 2008
 //
 
 /*
-Copyright or © or Copr. CNRS, (October 31, 2008)
+Copyright or © or Copr. CNRS, (November 5, 2008)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _PHREDPOLY_H_
-#define _PHREDPOLY_H_
+#ifndef _PHREDPHD_H_
+#define _PHREDPHD_H_
 
 #include "AbstractISequence.h"
 #include "Sequence.h"
@@ -48,24 +48,37 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp {
 
   /**
-   * @brief The poly sequence file format from phred software.
+   * @brief The phd sequence file format from phred software.
    *
-   * This class read DNA sequence from poly files produced by the phred program
+   * This class read DNA sequence from phd files produced by the phred program
    * from the University of Washington.
-   * For now, only read raw sequences and do a basic filter on heterozygous site.
+   *
+   * When the sequence is readed from the file, a sliding window is used to
+   * estimate the quality of the sequence at each site. If the mean quality
+   * is to bad, the site is set to 'undefined'.
+   *
+   * The sliding window is defined both at the left and the right of each site.
+   *
    */
-  class PhredPoly: public AbstractISequence {
+  class PhredPhd: public AbstractISequence {
     protected:
-      double _ratio;
+      double _quality;
+      unsigned int _lframe;
+      unsigned int _rframe;
 
     public:
 
       /**
-       * @brief Build a new PhredPoly object.
+       * @brief Build a new PhredPhd object.
+       *
+       * @param quality The mean quality threshold. The state is set to 'undefined' if
+       * mean quality is smaller or equal to this value.
+       * @param lframe The size of the sliding window at the left of the site.
+       * @param rframe The size of the sliding winfow at the right of the site.
        */
-      PhredPoly(double ratio = 0.8);
+      PhredPhd(double quality = 15, unsigned int lframe = 5, unsigned int rframe = 5);
 
-      virtual ~PhredPoly() {}
+      virtual ~PhredPhd() {}
 
     public:
       /**
@@ -81,12 +94,12 @@ namespace bpp {
        *
        * @{
        */
-      const string getFormatName() const { return "poly file"; };
+      const string getFormatName() const { return "phd file"; };
       const string getFormatDescription() const {
-        return "Sequences following the poly format as describe in the phred documentation.";
+        return "Sequences following the phd format as describe in the phred documentation.";
       }
       /** @} */
   };
 } //end of namespace bpp
 
-#endif // _PHREDPOLY_H_
+#endif // _PHREDPHD_H_

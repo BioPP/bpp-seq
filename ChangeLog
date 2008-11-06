@@ -1,3 +1,8 @@
+06/11/08 Sylvain Gaillard
+* New class PhredPhd to read sequence from phd files produced by the phred
+  program
+* Removed an unused method in PhredPoly
+
 05/11/08 Sylvain Gaillard
 * New methods Alphabet::getGeneric(states) implemented in AbstractAlphabet,
   DefaultAlphabet, DNA, RNA and ProteicAlphabet.

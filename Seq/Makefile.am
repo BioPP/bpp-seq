@@ -109,6 +109,7 @@ IOSequenceFactory.h\
 SimpleScore.h \
 DistanceMatrix.h \
 GenBank.h \
+PhredPhd.h\
 PhredPoly.h
 
 CPP_FILES = \
@@ -168,6 +169,7 @@ IOSequenceFactory.cpp\
 SimpleScore.cpp\
 DistanceMatrix.cpp\
 GenBank.cpp\
+PhredPhd.cpp\
 PhredPoly.cpp
 
 CPP_EXTRA = \
