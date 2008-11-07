@@ -52,7 +52,8 @@ using namespace bpp;
 
 VectorSiteContainer::VectorSiteContainer(
   const vector<const Site *> & vs,
-  const Alphabet * alpha)
+  const Alphabet * alpha,
+  bool checkPositions)
   throw (Exception):
   AbstractSequenceContainer(alpha)
 {
@@ -69,7 +70,7 @@ VectorSiteContainer::VectorSiteContainer(
   //Now try to add each site:
   for(unsigned int i = 0; i < vs.size(); i++)
   {
-    addSite(*vs[i], true); //This may throw an exception if position argument already exists or is size is not valid.
+    addSite(*vs[i], checkPositions); //This may throw an exception if position argument already exists or is size is not valid.
   }
   
   Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);

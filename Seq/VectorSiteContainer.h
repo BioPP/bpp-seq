@@ -87,9 +87,10 @@ class VectorSiteContainer:
      *
      * @param vs A vector of sites.
      * @param alpha The common alphabet for all sites.
+     * @param checkPositions Check for the redundancy of site position tag. This may turn to be very time consuming!
      * @throw Exception If sites differ in size or in alphabet.
      */
-		VectorSiteContainer(const vector<const Site *> & vs, const Alphabet * alpha) throw (Exception);
+		VectorSiteContainer(const vector<const Site *> & vs, const Alphabet * alpha, bool checkPositions = true) throw (Exception);
     /**
      * @brief Build a new empty container with specified size.
      *

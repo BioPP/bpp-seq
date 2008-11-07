@@ -1,3 +1,7 @@
+07/11/08 Julien Dutheil
+* New contructor in VectorSiteContainer now as a tag to disable position
+  checking, which can turn to be quite slow.
+
 06/11/08 Sylvain Gaillard
 * New class PhredPhd to read sequence from phd files produced by the phred
   program
