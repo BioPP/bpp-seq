@@ -241,6 +241,31 @@ class SequenceTools:
      * @throw SequenceNotAlignedException If the two sequences do not have the same length.
      */
     static BowkerTest* bowkerTest(const Sequence & seq1, const Sequence & seq2) throw (SequenceNotAlignedException);
+
+    /**
+     * @brief Subtract haplotype from an heterozygous sequence.
+     *
+     * Subtract an haplotype (i.e. a fully resolved sequence) from an heterozygous
+     * sequence to get the other haplotype. The new haplotype could be an unresolved
+     * sequence if unresolved characters in the sequence code for more than 2 states.
+     *
+     * For example:<br>
+     * @code
+     * >heterozygous sequence
+     * ATTCGGGKWTATRYRM
+     * >haplotype
+     * ATTCGGGTATATGCAA
+     * >subtracted haplotype
+     * ATTCGGGGTTATATGC
+     * @endcode
+     *
+     * @param s The heterozygous sequence.
+     * @param h The haplotype to subtract.
+     * @param name The name of the new computed haplotype.
+     * @param level The number of states from which the site is set to fully unresolved.
+     * @throw SequenceNotAlignedException if s and h don't have the same size.
+     */
+    static Sequence * subtractHaplotype(const Sequence & s, const Sequence & h, string name = "", unsigned int level = 1) throw (SequenceNotAlignedException);
     
 };
 

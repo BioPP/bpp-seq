@@ -1,3 +1,7 @@
+14/11/08 Sylvain Gaillard
+* New method SequenceTools::subtractHaplotype(Sequence, Sequence, string,
+  unsigned int).
+
 07/11/08 Julien Dutheil
 * New contructor in VectorSiteContainer now as a tag to disable position
   checking, which can turn to be quite slow.

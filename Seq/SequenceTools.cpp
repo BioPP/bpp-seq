@@ -281,3 +281,29 @@ BowkerTest* SequenceTools::bowkerTest(const Sequence & seq1, const Sequence & se
 
 /****************************************************************************************/
 
+Sequence * SequenceTools::subtractHaplotype(const Sequence & s, const Sequence & h, string name, unsigned int level) throw (SequenceNotAlignedException) {
+  const Alphabet * alpha = s.getAlphabet();
+  if (name.size() == 0) 
+    name = s.getName() + "_haplotype";
+  string seq;
+  if (s.size() != h.size()) throw SequenceNotAlignedException("SequenceTools::subtractHaplotype: haplotype must be aligned with the sequence.", &h);
+  for (unsigned int i = 0 ; i < s.size() ; ++i) {
+    string c; 
+    vector<int> nucs = alpha->getAlias(s.getValue(i));
+    if (nucs.size() > 1) {
+      remove(nucs.begin(), nucs.end(), h.getValue(i));
+      nucs = vector<int>(nucs.begin(), nucs.end() - 1);
+    } else {
+      nucs = vector<int>(nucs.begin(), nucs.end());
+    }  
+    c = alpha->intToChar(alpha->getGeneric(nucs));
+    if (level <= nucs.size() && (alpha->isUnresolved(s.getValue(i)) || alpha->isUnresolved(h.getValue(i)))) {
+      c = alpha->intToChar(alpha->getUnknownCharacterCode());
+    }  
+    seq += c; 
+  }  
+  Sequence * hap = new Sequence(name, seq, alpha);
+  return hap;
+}
+
+/****************************************************************************************/
