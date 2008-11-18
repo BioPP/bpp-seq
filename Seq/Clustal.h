@@ -58,9 +58,16 @@ namespace bpp
 class Clustal:
   public virtual AbstractISequence2
 {
+  public:
+    bool _checkNames;
 
 	public:
-		Clustal() {};
+    /**
+     * @brief Build a new Clustal object.
+     *
+     * @param checkNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     */
+		Clustal(bool checkNames = true): _checkNames(checkNames) {};
 		virtual ~Clustal() {};
 
 	public:
@@ -81,6 +88,18 @@ class Clustal:
 		const string getFormatName() const;
 		const string getFormatDescription() const;
 		/** @} */
+
+    /**
+     * @return true if the names are to be checked when reading sequences from files.
+     */
+    bool checkNames() const { return _checkNames; }
+
+    /**
+     * @brief Tell whether the sequence names should be checked when reading from files.
+     *
+     * @param yn whether the sequence names should be checked when reading from files.
+     */
+    void checkNames(bool yn) { _checkNames = yn; }
 };
 
 } //end of namespace bpp.

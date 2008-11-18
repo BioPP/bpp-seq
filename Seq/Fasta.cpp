@@ -48,10 +48,6 @@ using namespace bpp;
 
 /****************************************************************************************/
 
-Fasta::Fasta(unsigned int charsByLine): _charsByLine(charsByLine) {}
-
-/****************************************************************************************/
-
 void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
 {
 	if (!input) { throw IOException ("Fasta::read: fail to open file"); }
@@ -59,19 +55,18 @@ void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) con
 	string temp, name, sequence = "";  // Initialization
 
 	// Main loop : for all file lines
-	while (!input.eof())
+	while(!input.eof())
   {
 		getline(input, temp, '\n');  // Copy current line in temporary string
 
 		// If first character is >
-		if (temp[0] == '>')
+		if(temp[0] == '>')
     {
-			// If a name and a sequence were founded
-			if ((name != "") && (sequence != ""))
+			// If a name and a sequence were foundez
+			if((name != "") && (sequence != ""))
       {
 				// New sequence creation, and addition in existing VectorSequenceContainer
-				vsc.addSequence(Sequence(name, sequence, vsc.getAlphabet()));
-				//name = ""; no need for that, no?
+				vsc.addSequence(Sequence(name, sequence, vsc.getAlphabet()), _checkNames);
 				sequence = "";
 			}
 			// Sequence name isolation
@@ -82,9 +77,9 @@ void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) con
 	}
 	
 	// Addition of the last sequence in file
-	if ((name != "") && (sequence != ""))
+	if((name != "") && (sequence != ""))
   {
-		vsc.addSequence(Sequence(name, sequence, vsc.getAlphabet()));
+		vsc.addSequence(Sequence(name, sequence, vsc.getAlphabet()), _checkNames);
 	}
 }
 

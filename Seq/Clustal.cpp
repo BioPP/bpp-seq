@@ -116,7 +116,7 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
 	}
 
 	for(unsigned int i = 0; i < countSequences; i++)
-    sc.addSequence(sequences[i]);
+    sc.addSequence(sequences[i], _checkNames);
 	sc.setGeneralComments(comments);
 }
 

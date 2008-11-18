@@ -54,23 +54,15 @@ using namespace std;
 
 /******************************************************************************/
 
-Phylip::Phylip(bool extended, bool sequential, unsigned int charsByLine): _charsByLine(charsByLine), _extended(extended), _sequential(sequential)
-{
-	//cout << (this -> extended ? "extended" : "classical") << endl;
-	//cout << (this -> sequential ? "sequential" : "interleaved") << endl;	
-}
-
-/******************************************************************************/
-
 const vector<string> Phylip::splitNameAndSequence(const string & s) const throw (Exception)
 {
 	vector<string> v(2);
 	if(_extended)
   {
-    string::size_type index = s.find("  ");
+    string::size_type index = s.find(_namesSplit);
     if(index == string::npos) throw Exception("No sequence name found.");
 		v[0] = TextTools::removeSurroundingWhiteSpaces(s.substr(0, index));
-		v[1] = TextTools::removeFirstWhiteSpaces      (s.substr(index + 2)); //There may be more than 2 white spaces.
+		v[1] = TextTools::removeFirstWhiteSpaces      (s.substr(index + _namesSplit.size())); //There may be more than 2 white spaces.
 	}
   else
   {
@@ -97,9 +89,12 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
  		// Read each sequence:
 		vector<string> v;
     bool hasName = true;
-    try { 
+    try
+    { 
       v = splitNameAndSequence(temp);
-    } catch(Exception & e) {
+    }
+    catch(Exception & e)
+    {
       hasName = false;
     }
     if(hasName)
@@ -108,7 +103,7 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
       if(!TextTools::isEmpty(name)) //If this is not the first sequence!
       {
         // Add the previous sequence to the container:
-        asc.addSequence(Sequence(name, seq, asc.getAlphabet()), true);
+        asc.addSequence(Sequence(name, seq, asc.getAlphabet()), _checkNames);
       }
 		  name = v[0];
 		  seq  = v[1];
@@ -129,7 +124,7 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
 		temp = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(in));
 	}
   // Add last sequence:
-  asc.addSequence(Sequence(name, seq, asc.getAlphabet()), true);
+  asc.addSequence(Sequence(name, seq, asc.getAlphabet()), _checkNames);
 }
 
 /******************************************************************************/
@@ -170,7 +165,7 @@ void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const
 	}
 	for(unsigned int i = 0; i < names.size(); i++)
   {
-		asc.addSequence(Sequence(names[i], seqs[i], asc.getAlphabet()));
+		asc.addSequence(Sequence(names[i], seqs[i], asc.getAlphabet()), _checkNames);
 	}
 }
 	
@@ -214,7 +209,7 @@ vector<string> Phylip::getSizedNames(const vector<string> & names) const
 		for(unsigned int i = 0; i < names.size(); i++)
 			if(names[i].size() > sizeMax) sizeMax = names[i].size();
 		//Quite easy ;-) Now update all lengths:
-		for(unsigned int i = 0; i < names.size(); i++) sizedNames[i] = TextTools::resizeRight(names[i], sizeMax + 2);	
+		for(unsigned int i = 0; i < names.size(); i++) sizedNames[i] = TextTools::resizeRight(names[i], sizeMax) + _namesSplit;	
 	}
   else
   {
@@ -257,7 +252,8 @@ void Phylip::writeInterleaved(ostream & out, const SequenceContainer & sc, int c
 	vector<string> names = getSizedNames(seqNames);
 	//Split sequences:
 	vector< vector<string> > seqs(sc.getNumberOfSequences());
-	for(unsigned int i = 0; i < seqNames.size(); i++) {
+	for(unsigned int i = 0; i < seqNames.size(); i++)
+  {
 		seqs[i] = TextTools::split(sc.toString(seqNames[i]), charsByLine);
 	}
 	//Write first block:

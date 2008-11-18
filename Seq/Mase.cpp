@@ -45,10 +45,6 @@ using namespace bpp;
 
 /****************************************************************************************/
 
-Mase::Mase(unsigned int charsByLine): _charsByLine(charsByLine) {}
-
-/****************************************************************************************/
-
 void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
 {
 	if (!input) { throw IOException ("Mase::read : fail to open file"); }
@@ -62,27 +58,27 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 	fileComments = vsc.getGeneralComments();
 
 	// Main loop : for all file lines
-	while (!input.eof())
+	while(!input.eof())
   {
 		getline(input, temp, '\n');  // Copy current line in temporary string
 		
 		// If first character is ;
-		if (temp[0] == ';')
+		if(temp[0] == ';')
     {
 			// If second character is also ;
-			if (temp[1] == ';')
+			if(temp[1] == ';')
       {
 				// File comments isolation
 				temp.erase(0,2);  // Characters ;; deletion
-				if (temp != "") fileComments.push_back(temp);
+				if(temp != "") fileComments.push_back(temp);
 			}
       else
       {
 				// If a name and a sequence were founded
-				if ((name != "") && (sequence != ""))
+				if((name != "") && (sequence != ""))
         {
 					// New sequence creation, and addition in existing VectorSequenceContainer
-					vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()));
+					vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), _checkNames);
 					name = "";
 					sequence = "";
 					seqComments.clear();
@@ -90,7 +86,7 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 				
 				// Sequence commentaries isolation
 				temp.erase(temp.begin());  // Character ; deletion
-				if (temp != "") seqComments.push_back(temp);
+				if(temp != "") seqComments.push_back(temp);
 				comments = true;
 			}
 		}
@@ -110,7 +106,7 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 	// Addition of the last sequence in file
 	if((name != "") && (sequence != ""))
   {
-		vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()));
+		vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), _checkNames);
 	}
 
 	// Set new general comments in VectorSequenceContainer (old + new comments)

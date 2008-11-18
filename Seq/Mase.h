@@ -58,58 +58,72 @@ class Mase:
   public virtual AbstractOSequence
 {
 
-	protected:
+  protected:
 
-		/**
-		 * @brief The maximum number of chars to be written on a line.
-		 */
-		unsigned int _charsByLine;
+    /**
+     * @brief The maximum number of chars to be written on a line.
+     */
+    unsigned int _charsByLine;
+    bool _checkNames;
 
-	public :
-		/**
-		 * @brief Build a new Mase object.
-		 *
-		 * @param charsByLine Number of character per line when writing files.
-		 */
-		Mase(unsigned int charsByLine = 100);
+  public :
+    /**
+     * @brief Build a new Mase object.
+     *
+     * @param charsByLine Number of character per line when writing files.
+     * @param checkNames  Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     */
+    Mase(unsigned int charsByLine = 100, bool checkNames = true): _charsByLine(charsByLine), _checkNames(checkNames) {}
 
-		// Class destructor
-		virtual ~Mase() {}
+    // Class destructor
+    virtual ~Mase() {}
 
-	public:
+  public:
 
-		/**
-		 * @name The AbstractISequence interface.
-		 *
-		 * @{
-		 */
-		void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
-		/** @} */
+    /**
+     * @name The AbstractISequence interface.
+     *
+     * @{
+     */
+    void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+    /** @} */
 
-		/**
-		 * @name The OSequence interface.
-		 *
-		 * @{
-		 */
-		void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
-		void write(const string & path, const SequenceContainer & sc, bool overwrite = true) const throw (Exception)
+    /**
+     * @name The OSequence interface.
+     *
+     * @{
+     */
+    void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
+    void write(const string & path, const SequenceContainer & sc, bool overwrite = true) const throw (Exception)
     {
-			AbstractOSequence::write(path, sc, overwrite);
-		}
-		/** @} */
+      AbstractOSequence::write(path, sc, overwrite);
+    }
+    /** @} */
 
-		/**
-		 * @name The IOSequence interface.
-		 *
-		 * @{
-		 */
-		const string getFormatName() const { return "MASE file"; }
+    /**
+     * @name The IOSequence interface.
+     *
+     * @{
+     */
+    const string getFormatName() const { return "MASE file"; }
 
-		const string getFormatDescription() const
+    const string getFormatDescription() const
     {
       return "Optional file comments (preceeded by ;;), sequence comments (preceeded by ;), sequence name, sequence";
     }
-		/** @} */
+    /** @} */
+
+    /**
+     * @return true if the names are to be checked when reading sequences from files.
+     */
+    bool checkNames() const { return _checkNames; }
+
+    /**
+     * @brief Tell whether the sequence names should be checked when reading from files.
+     *
+     * @param yn whether the sequence names should be checked when reading from files.
+     */
+    void checkNames(bool yn) { _checkNames = yn; }
 };
 
 } //end of namespace bpp.

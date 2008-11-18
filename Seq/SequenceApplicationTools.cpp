@@ -104,6 +104,7 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
   else if(sequenceFormat == "Phylip")
   {
     bool sequential = true, extended = true;
+    string split = "  ";
     if(params.find("sequence.format_phylip.order") != params.end())
     {
            if(params["sequence.format_phylip.order"] == "sequential" ) sequential = true;
@@ -116,7 +117,14 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
     else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.order' not found. Default used instead: sequential.");
     if(params.find("sequence.format_phylip.ext") != params.end())
     {
-           if(params["sequence.format_phylip.ext"] == "extended") extended = true;
+           if(params["sequence.format_phylip.ext"] == "extended")
+      {
+        extended = true;
+        split = ApplicationTools::getStringParameter("sequence.format_phylip.extended.split", params, "  ", suffix, suffixIsOptional);
+        if(split == "spaces") split = "  ";
+        else if(split == "tab") split = "\t";
+        else throw Exception("Unknown option for sequence.format_phylip.extended.split: " + split);
+      }
       else if(params["sequence.format_phylip.ext"] == "classic" ) extended = false;
       else ApplicationTools::displayWarning("Argument '" +
              params["sequence.format_phylip.ext"] +
@@ -124,7 +132,7 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
              "Default used instead: extended.");
     }
     else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.ext' not found. Default used instead: extended.");
-    iSeq = new Phylip(extended, sequential);
+    iSeq = new Phylip(extended, sequential, 100, true, split);
   }
   else if(sequenceFormat == "Fasta") iSeq = new Fasta();
   else if(sequenceFormat == "Clustal") iSeq = new Clustal();
@@ -161,6 +169,7 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
   else if(sequenceFormat == "Phylip")
   {
     bool sequential = true, extended = true;
+    string split = "  ";
     if(params.find("sequence.format_phylip.order") != params.end())
     {
            if(params["sequence.format_phylip.order"] == "sequential" ) sequential = true;
@@ -173,7 +182,14 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
     else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.order' not found. Default used instead: sequential.");
     if(params.find("sequence.format_phylip.ext") != params.end())
     {
-           if(params["sequence.format_phylip.ext"] == "extended") extended = true;
+      if(params["sequence.format_phylip.ext"] == "extended")
+      {
+        extended = true;
+        split = ApplicationTools::getStringParameter("sequence.format_phylip.extended.split", params, "  ", suffix, suffixIsOptional);
+        if(split == "spaces") split = "  ";
+        else if(split == "tab") split = "\t";
+        else throw Exception("Unknown option for sequence.format_phylip.extended.split: " + split);
+      }
       else if(params["sequence.format_phylip.ext"] == "classic" ) extended = false;
       else ApplicationTools::displayWarning("Argument '" +
              params["sequence.format_phylip.ext"] +
@@ -181,7 +197,7 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
              "Default used instead: extended.");
     }
     else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.ext' not found. Default used instead: extended.");
-    iSeq = new Phylip(extended, sequential);
+    iSeq = new Phylip(extended, sequential, 100, true, split);
   }
   else if(sequenceFormat == "Fasta") iSeq = new Fasta();
   else if(sequenceFormat == "Clustal") iSeq = new Clustal();
@@ -372,6 +388,7 @@ void SequenceApplicationTools::printOutputSequenceHelp()
   *ApplicationTools::message << "           format_phylip.order| [interleaved|sequential]" << endl;
   *ApplicationTools::message << "output.sequence.              |" << endl;
   *ApplicationTools::message << "             format_phylip.ext| [classic|extended]" << endl;
+  *ApplicationTools::message << "  format_phylip.extended.split| [spaces|tab] the split sequence" << endl;
   *ApplicationTools::message << "______________________________|___________________________________________" << endl;
 }
 

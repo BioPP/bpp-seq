@@ -1,3 +1,9 @@
+18/11/08 Julien Dutheil
+* biopp-help-forum 91 (by Stephen Smith): Fasta, Mase, Clustal and Phylip now
+  have an option to turn off the name checking and decrease loading time.
+* biopp-help-forum 93 (by Stephen Smith): Phylip format now supports any
+ delimiter when reading/writing files in extended format.
+
 14/11/08 Sylvain Gaillard
 * New method SequenceTools::subtractHaplotype(Sequence, Sequence, string,
   unsigned int).
