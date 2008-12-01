@@ -182,3 +182,38 @@ string AbstractAlphabet::getGeneric(const vector<string> & states) const throw (
 }
 
 /****************************************************************************************/
+
+const vector<int> & AbstractAlphabet::getSupportedInts() const
+{
+  if(_intList.size() == 0)
+  {
+    _intList.resize(alphabet.size());
+    _charList.resize(alphabet.size());
+    for(unsigned int i = 0; i < alphabet.size(); i++)
+    {
+      _intList[i]  = alphabet[i].num;
+      _charList[i] = alphabet[i].letter;
+    }
+  }
+  return _intList;
+}
+    
+/****************************************************************************************/
+    
+const vector<string> & AbstractAlphabet::getSupportedChars() const
+{
+  if(_charList.size() == 0)
+  {
+    _intList.resize(alphabet.size());
+    _charList.resize(alphabet.size());
+    for(unsigned int i = 0; i < alphabet.size(); i++)
+    {
+      _intList[i]  = alphabet[i].num;
+      _charList[i] = alphabet[i].letter;
+    }
+  }
+  return _charList;
+}
+ 
+/****************************************************************************************/
+

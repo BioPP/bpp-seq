@@ -1,3 +1,6 @@
+01/12/08 Julien Dutheil
+* New methods getSupportedInts and getSupportedChars in Alphabet classes.
+
 18/11/08 Julien Dutheil
 * biopp-help-forum 91 (by Stephen Smith): Fasta, Mase, Clustal and Phylip now
   have an option to turn off the name checking and decrease loading time.

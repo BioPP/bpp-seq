@@ -105,6 +105,17 @@ class AbstractAlphabet:
 		 */
 		vector<sletter> alphabet;
 
+    /**
+     * @name Available codes
+     *
+     * These vectors will be computed the first time you call the getAvailableInts or getAvailableChars method.
+     *
+     * @{
+     */
+    mutable vector<string> _charList;
+    mutable vector<int> _intList;
+    /** @} */
+
 	public:
 		
 		AbstractAlphabet() {}
@@ -128,6 +139,8 @@ class AbstractAlphabet:
 		vector<string> getAlias(const string & state) const throw (BadCharException);
     int    getGeneric(const vector<int   > & states) const throw (BadIntException);
     string getGeneric(const vector<string> & states) const throw (AlphabetException);
+    const vector<int> & getSupportedInts() const;
+    const vector<string> & getSupportedChars() const;
     int getGapCharacterCode() const { return -1; }
     bool isGap(int state) const { return state == -1; }
     bool isGap(const string & state) const { return charToInt(state) == -1; }

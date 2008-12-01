@@ -286,6 +286,24 @@ class Alphabet
     virtual string getGeneric(const vector<string> & states) const throw (AlphabetException) = 0;
 
     /**
+     * @return A list of all supported int codes.
+     *
+     * Note for developers of new alphabets:
+     * we return a const reference here since the list is supposed to be
+     * stored within the class and should not be modified outside the class.
+     */
+    virtual const vector<int> & getSupportedInts() const = 0;
+    
+    /**
+     * @return A list of all supported character codes.
+     *
+     * Note for developers of new alphabets:
+     * we return a const reference here since the list is supposed to be
+     * stored within the class and should not be modified outside the class.
+     */
+    virtual const vector<string> & getSupportedChars() const = 0;
+    
+    /**
      * @return The int code for unknown characters.
      */
     virtual int getUnknownCharacterCode() const = 0;
