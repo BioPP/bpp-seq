@@ -45,73 +45,75 @@ using namespace std;
 
 NucleicAcidsReplication::NucleicAcidsReplication(const NucleicAlphabet * nuc1, const NucleicAlphabet * nuc2) : _nuc1(nuc1), _nuc2(nuc2)
 {
-	_trans[-1] = -1;
-	_trans[0] = 3;
-	_trans[1] = 2;
-	_trans[2] = 1;
-	_trans[3] = 0;
+  _trans[-1] = -1;
+  _trans[0] = 3;
+  _trans[1] = 2;
+  _trans[2] = 1;
+  _trans[3] = 0;
 
-	_trans[4] = 9;
-	_trans[5] = 8;
-	_trans[6] = 6;
-	_trans[7] = 7;
-	_trans[8] = 5;
-	_trans[9] = 4;
+  _trans[4] = 9;
+  _trans[5] = 8;
+  _trans[6] = 6;
+  _trans[7] = 7;
+  _trans[8] = 5;
+  _trans[9] = 4;
 
-	_trans[10] = 13;
-	_trans[11] = 12;
-	_trans[12] = 11;
-	_trans[13] = 10;
+  _trans[10] = 13;
+  _trans[11] = 12;
+  _trans[12] = 11;
+  _trans[13] = 10;
 
-	_trans[14] = 14;
+  _trans[14] = 14;
 }
 
 int NucleicAcidsReplication::translate(int state) const throw (BadIntException)
 {
-	_nuc1 -> intToChar(state);
-	return _trans[state];
+  _nuc1->intToChar(state);
+  return _trans[state];
 }
 
 string NucleicAcidsReplication::translate(const string & state) const throw (BadCharException)
 {
-	int i = _nuc1 -> charToInt(state);
-	return _nuc2 -> intToChar(_trans[i]);
+  int i = _nuc1->charToInt(state);
+  return _nuc2->intToChar(_trans[i]);
 }
 
 Sequence * NucleicAcidsReplication::translate(const Sequence & sequence) const throw (AlphabetMismatchException)
 {
-	if(sequence.getAlphabet() -> getAlphabetType() != getSourceAlphabet() -> getAlphabetType())
-		throw AlphabetMismatchException("AbstractTranslator::translate", getSourceAlphabet(), getTargetAlphabet());
-	Sequence * tSeq = new Sequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
-	for(unsigned int i = 0; i < sequence.size(); i++) {
-		tSeq -> addElement(translate(sequence.getValue(i)));
-	}
-	tSeq -> setSense(! tSeq -> getSense());
-	return tSeq;
+  if(sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("NucleicAcidsReplication::translate", getSourceAlphabet(), getTargetAlphabet());
+  Sequence * tSeq = new Sequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
+  for(unsigned int i = 0; i < sequence.size(); i++)
+  {
+    tSeq->addElement(translate(sequence.getValue(i)));
+  }
+  tSeq->setSense(! tSeq->getSense());
+  return tSeq;
 }
 
 
 int NucleicAcidsReplication::reverse(int state) const throw (BadIntException) 
 {
-	_nuc2 -> intToChar(state);
-	return _trans[state];
+  _nuc2->intToChar(state);
+  return _trans[state];
 }
 
 string NucleicAcidsReplication::reverse(const string & state) const throw (BadCharException)
 {
-	int i = _nuc2 -> charToInt(state);
-	return _nuc1 -> intToChar(_trans[i]);
+  int i = _nuc2->charToInt(state);
+  return _nuc1->intToChar(_trans[i]);
 }
 
 Sequence * NucleicAcidsReplication::reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception)
 {
-	if(sequence.getAlphabet() -> getAlphabetType() != getTargetAlphabet() -> getAlphabetType())
-		throw AlphabetMismatchException("AbstractReverseTranslator::reverse", getSourceAlphabet(), getTargetAlphabet());
-	Sequence * rSeq = new Sequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
-	for(unsigned int i = 0; i < sequence.size(); i++) {
-		rSeq -> addElement(reverse(sequence.getValue(i)));
-	}
-	rSeq -> setSense(! rSeq -> getSense());
-	return rSeq;
+  if(sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("NucleicAcidsReplication::reverse", getSourceAlphabet(), getTargetAlphabet());
+  Sequence * rSeq = new Sequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
+  for(unsigned int i = 0; i < sequence.size(); i++)
+  {
+    rSeq->addElement(reverse(sequence.getValue(i)));
+  }
+  rSeq->setSense(! rSeq->getSense());
+  return rSeq;
 }
 

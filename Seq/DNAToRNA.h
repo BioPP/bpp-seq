@@ -69,8 +69,17 @@ class DNAToRNA:
 		virtual const Alphabet * getTargetAlphabet() const { return rna; }
 		int translate(int state) const throw (BadIntException);		
 		string translate(const string & state) const throw (BadCharException);		
-		int reverse(int state) const throw (BadIntException);		
-		string reverse(const string & state) const throw (BadCharException);			
+		Sequence * translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+    {
+      return AbstractReverseTranslator::translate(sequence);
+    }
+		int reverse(int state) const throw (BadIntException);
+		string reverse(const string & state) const throw (BadCharException);
+		Sequence * reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+    {
+      return AbstractReverseTranslator::reverse(sequence);
+    }
+
 };
 
 } //end of namespace bpp.

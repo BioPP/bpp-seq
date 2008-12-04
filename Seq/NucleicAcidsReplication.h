@@ -66,50 +66,27 @@ namespace bpp
  */
 class NucleicAcidsReplication : public ReverseTranslator
 {
-	protected:
-		const NucleicAlphabet * _nuc1, *_nuc2;
-		mutable map<int, int> _trans;
-	
-	public:
-		NucleicAcidsReplication(const NucleicAlphabet * nuc1, const NucleicAlphabet * nuc2);
-		virtual ~NucleicAcidsReplication() {}
-	
-	public:
-		const Alphabet * getSourceAlphabet() const { return _nuc1; }
-		const Alphabet * getTargetAlphabet() const { return _nuc2; }
-			int translate(int state) const throw (BadIntException);
-		string translate(const string & state) const throw (BadCharException);		
-
-		/**
-		 * @brief Translate a whole sequence from source alphabet to target alphabet.
-		 *
-		 * The sense attribute of the sequence is also switched (SENS -> ANTISENS in new sequence, and vice-versa).
-		 *
-		 * @param sequence A sequence in source alphabet.
-		 * @return The corresponding sequence in target alphabet.
-		 * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
-		 * @throw Exception                 Other kind of error, depending on the implementation.
-		 */	
-		Sequence * translate(const Sequence & sequence) const throw (AlphabetMismatchException);
-		
-		int reverse(int state) const throw (BadIntException);		
-		string reverse(const string & state) const throw (BadCharException);			
-
-		/**
-		 * @brief Translate a whole sequence from target alphabet to source alphabet.
-		 *
-		 * The sense attribute of the sequence is also switched (SENS -> ANTISENS in new sequence, and vice-versa).
-		 *
-		 * @param sequence A sequence in target alphabet.
-		 * @return The corresponding sequence in source alphabet.
-		 * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
-		 * @throw Exception                 Other kind of error, depending on the implementation.
-		 */	
-		Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception);
+  protected:
+    const NucleicAlphabet * _nuc1, *_nuc2;
+    mutable map<int, int> _trans;
+  
+  public:
+    NucleicAcidsReplication(const NucleicAlphabet * nuc1, const NucleicAlphabet * nuc2);
+    virtual ~NucleicAcidsReplication() {}
+  
+  public:
+    const Alphabet * getSourceAlphabet() const { return _nuc1; }
+    const Alphabet * getTargetAlphabet() const { return _nuc2; }
+           int translate(int state) const throw (BadIntException);
+        string translate(const string & state) const throw (BadCharException);    
+    Sequence * translate(const Sequence & sequence) const throw (AlphabetMismatchException);
+           int reverse(int state) const throw (BadIntException);    
+        string reverse(const string & state) const throw (BadCharException);      
+    Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception);
 
 };
 
 } //end of namespace bpp.
 
-#endif	//_NUCLEICACIDSREPLICATION_H_
+#endif  //_NUCLEICACIDSREPLICATION_H_
 

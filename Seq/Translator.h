@@ -106,7 +106,7 @@ class Translator
  * @brief The same as previous, but can perform the reverse translation, eg: RNA -> DNA and DNA -> RNA;
  */
 class ReverseTranslator:
-  public Translator
+  public virtual Translator
 {
 	public:
 		ReverseTranslator() {}
@@ -149,7 +149,7 @@ class ReverseTranslator:
  * @brief Partial implementation of the Translator interface.
  */
 class AbstractTranslator:
-  public Translator
+  public virtual Translator
 {
 	public:
 		AbstractTranslator() {}
@@ -158,7 +158,7 @@ class AbstractTranslator:
 	public:
 		virtual int translate(int state) const throw (BadIntException, Exception) = 0;		
 		virtual string translate(const string & state) const throw (BadCharException, Exception) = 0;
-		virtual Sequence * translate(const Sequence & sequence) const throw (AlphabetMismatchException, Exception) = 0; 
+		virtual Sequence * translate(const Sequence & sequence) const throw (AlphabetMismatchException, Exception); 
 };
 
 /**

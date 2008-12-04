@@ -1,3 +1,7 @@
+04/12/08 Julien Dutheil
+* Fixed missing redefinition of translate and reverse methods in class DNAToRNA.
+* Made inheritance virtual.
+
 01/12/08 Julien Dutheil
 * New methods getSupportedInts and getSupportedChars in Alphabet classes.
 

@@ -43,22 +43,24 @@ using namespace bpp;
 
 Sequence * AbstractTranslator::translate(const Sequence & sequence) const throw (AlphabetMismatchException, Exception)
 {
-	if(sequence.getAlphabet() -> getAlphabetType() != getSourceAlphabet() -> getAlphabetType())
+	if(sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
 		throw AlphabetMismatchException("AbstractTranslator::translate", getSourceAlphabet(), getTargetAlphabet());
 	Sequence * tSeq = new Sequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
-	for(unsigned int i = 0; i < sequence.size(); i++) {
-		tSeq -> addElement(translate(sequence.getValue(i)));
+	for(unsigned int i = 0; i < sequence.size(); i++)
+  {
+		tSeq->addElement(translate(sequence.getValue(i)));
 	}
 	return tSeq;
 }
 
 Sequence * AbstractReverseTranslator::reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception)
 {
-	if(sequence.getAlphabet() -> getAlphabetType() != getTargetAlphabet() -> getAlphabetType())
+	if(sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
 		throw AlphabetMismatchException("AbstractReverseTranslator::reverse", getSourceAlphabet(), getTargetAlphabet());
 	Sequence * rSeq = new Sequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
-	for(unsigned int i = 0; i < sequence.size(); i++) {
-		rSeq -> addElement(reverse(sequence.getValue(i)));
+	for(unsigned int i = 0; i < sequence.size(); i++)
+  {
+		rSeq->addElement(reverse(sequence.getValue(i)));
 	}
 	return rSeq;
 }
