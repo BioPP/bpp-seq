@@ -195,11 +195,12 @@ const Site * AlignedSequenceContainer::getSite(unsigned int i) const throw (Inde
 	// Main loop : for all sequences
 	unsigned int n = _sequences.size();
 	vector<int> site(n);
-	for (unsigned int j = 0 ; j < n ; j++) {
-    site[j] = (_sequences[j] -> getContent())[i];
+	for(unsigned int j = 0 ; j < n ; j++)
+  {
+    site[j] = _sequences[j]->getContent()[i];
   }
 
-	if(sites[i] != NULL) { delete sites[i]; }
+	if(sites[i] != NULL) delete sites[i];
 	sites[i] = new Site(site, _alphabet, positions[i]);
 	return sites[i];
 }

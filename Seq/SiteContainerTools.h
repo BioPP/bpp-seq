@@ -216,7 +216,7 @@ class SiteContainerTools
      *
      * If the input sequences contain gaps, they will be ignored.
      *
-     * @see BLOSM50, DefaultNucleotideScore for score matrices.
+     * @see BLOSUM50, DefaultNucleotideScore for score matrices.
      *
      * @param seq1 The first sequence.
      * @param seq2 The second sequence.
@@ -232,7 +232,7 @@ class SiteContainerTools
      *
      * If the input sequences contain gaps, they will be ignored.
      *
-     * @see BLOSM50, DefaultNucleotideScore for score matrices.
+     * @see BLOSUM50, DefaultNucleotideScore for score matrices.
      *
      * @param seq1 The first sequence.
      * @param seq2 The second sequence.

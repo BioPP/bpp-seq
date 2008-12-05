@@ -450,10 +450,12 @@ const Sequence * VectorSiteContainer::getSequence(unsigned int i) const throw (I
 {
   if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::getSequence.", i, 0, getNumberOfSequences() - 1);
 
-  string sequence = "";
+	// Main loop : for all sites
+	unsigned int n = _sites.size();
+	vector<int> sequence(n);
   for(unsigned int j = 0; j < getNumberOfSites(); j++)
   {
-    sequence += getSite(j)->getChar(i);
+    sequence[j] = _sites[j]->getContent()[i];
   }
   if(_sequences[i] != NULL) delete _sequences[i];
   _sequences[i] = new Sequence(*_names[i], sequence, *_comments[i], _alphabet);

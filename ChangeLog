@@ -1,3 +1,7 @@
+05/12/08 Julien Dutheil
+* VectorSiteContainer::getSite() faster (more than 10 times faster on a ~500
+	sequences data set!)
+
 04/12/08 Julien Dutheil
 * Fixed missing redefinition of translate and reverse methods in class DNAToRNA.
 * Made inheritance virtual.
