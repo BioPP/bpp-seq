@@ -213,7 +213,8 @@ vector<string> DNA::getAlias(const string & state) const throw (BadCharException
 
 /****************************************************************************************/
 
-int DNA::getGeneric(const vector<int> & states) const throw (BadIntException) {
+int DNA::getGeneric(const vector<int> & states) const throw (BadIntException)
+{
   map<int, int> m;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
     vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
@@ -253,7 +254,8 @@ int DNA::getGeneric(const vector<int> & states) const throw (BadIntException) {
 
 /****************************************************************************************/
 
-string DNA::getGeneric(const vector<string> & states) const throw (BadCharException) {
+string DNA::getGeneric(const vector<string> & states) const throw (BadCharException)
+{
   map <string, int> m;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
     vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters

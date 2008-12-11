@@ -29,7 +29,7 @@
 #The fact that you are presently reading this means that you have had
 #knowledge of the CeCILL license and that you accept its terms.
 
-AC_INIT(Bio++ SeqLib, 1.4.1, Julien.Dutheil@univ-montp2.fr, bpp-seq)
+AC_INIT(Bio++ SeqLib, 1.5.0, Julien.Dutheil@univ-montp2.fr, bpp-seq)
 AC_CONFIG_SRCDIR(Seq/Alphabet.h)
 AM_INIT_AUTOMAKE()
 AC_LANG_CPLUSPLUS

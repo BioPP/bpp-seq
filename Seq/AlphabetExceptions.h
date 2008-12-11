@@ -185,13 +185,17 @@ class AlphabetMismatchException : public Exception
 		vector<const Alphabet *> getAlphabets() const;
 };
 
-class CharStateNotSupportedException : public AlphabetException {
+/**
+ * @brief Exception thrown in case no character is available for a certain state in an alphabet.
+ */
+class CharStateNotSupportedException : public AlphabetException
+{
   public:
     /**
      * @brief Build a new CharStateNotSupportedException.
      *
      * @param text A message to be passed to the exception hierarchy.
-     * param alpha A const pointer toward the alphabet that threw the exception.
+     * @param alpha A const pointer toward the alphabet that threw the exception.
      */
     CharStateNotSupportedException(const string & text = "", const Alphabet * alpha = NULL);
 

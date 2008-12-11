@@ -97,8 +97,8 @@ class Phylip:
      * @param checkNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      * @param split The string to use to split sequence name from content (only for 'extended' format). This will typically be "  " (two spaces) or "\t" (a tabulation).
      */
-    Phylip(bool extended = true, bool sequential = true, unsigned int charsByLine = 100, bool checknames = true, const string & split = "  "):
-      _extended(extended), _sequential(sequential), _charsByLine(charsByLine), _namesSplit(split) {}
+    Phylip(bool extended = true, bool sequential = true, unsigned int charsByLine = 100, bool checkNames = true, const string & split = "  "):
+      _extended(extended), _sequential(sequential), _charsByLine(charsByLine), _checkNames(checkNames), _namesSplit(split) {}
 
     virtual ~Phylip() {}
 

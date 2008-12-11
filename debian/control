@@ -8,14 +8,14 @@ Standards-Version: 3.7.2
 Package: libbpp-seq-dev
 Section: libdevel
 Architecture: any
-Depends: libbpp-seq (= ${source:Version}), libbpp-utils-dev (= 1.3.0), libbpp-numcalc-dev (= 1.5.0)
+Depends: libbpp-seq (= ${source:Version}), libbpp-utils-dev (>= 1.3.0), libbpp-numcalc-dev (= 1.6.0)
 Description: The Bio++ Sequence library development files.
  Contains the Bio++ classes for sequence analysis.
 
 Package: libbpp-seq
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libbpp-utils (= 1.3.0), libbpp-numcalc (= 1.5.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, libbpp-utils (>= 1.3.0), libbpp-numcalc (= 1.6.0)
 Description: The Bio++ Sequence library.
  Contains the Bio++ classes for sequence analysis.
 

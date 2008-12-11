@@ -1,3 +1,5 @@
+21/07/08 -*- Version 1.5.0 -*-
+
 05/12/08 Julien Dutheil
 * VectorSiteContainer::getSite() faster (more than 10 times faster on a ~500
 	sequences data set!)

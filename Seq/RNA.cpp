@@ -212,7 +212,8 @@ vector<string> RNA::getAlias(const string & state) const throw (BadCharException
 
 /****************************************************************************************/
 
-int RNA::getGeneric(const vector<int> & states) const throw (BadIntException) {
+int RNA::getGeneric(const vector<int> & states) const throw (BadIntException)
+{
   map<int, int> m;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
     vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
@@ -252,7 +253,8 @@ int RNA::getGeneric(const vector<int> & states) const throw (BadIntException) {
 
 /****************************************************************************************/
 
-string RNA::getGeneric(const vector<string> & states) const throw (BadCharException) {
+string RNA::getGeneric(const vector<string> & states) const throw (BadCharException)
+{
   map <string, int> m;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
     vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
