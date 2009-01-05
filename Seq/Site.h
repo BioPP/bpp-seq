@@ -62,118 +62,113 @@ namespace bpp
  */
 class Site:
   public SymbolList 
-{	
-	protected:
-		/**
-		 * @brief The position associated to this site.
-		 */
-		int _position;
+{  
+  protected:
+    /**
+     * @brief The position associated to this site.
+     */
+    int _position;
 
-	public:
+  public:
     
-		/**
-		 * @brief Build a new void Site object with the specified alphabet.
-		 *
-		 * @param alpha The alphabet to use.
-		 */
-		Site(const Alphabet * alpha);
+    /**
+     * @brief Build a new void Site object with the specified alphabet.
+     *
+     * @param alpha The alphabet to use.
+     */
+    Site(const Alphabet * alpha);
 
-		/**
-		 * @brief Build a new void Site object with the specified alphabet and position.
-		 *
-		 * @param alpha    The alphabet to use.
-		 * @param position The position attribute for this site.
-		 */
-		Site(const Alphabet * alpha, int position);
+    /**
+     * @brief Build a new void Site object with the specified alphabet and position.
+     *
+     * @param alpha    The alphabet to use.
+     * @param position The position attribute for this site.
+     */
+    Site(const Alphabet * alpha, int position);
 
-		/**
-		 * @brief Build a new Site object with the specified alphabet.
-		 * The content of the site is initialized from a vector of characters.
-		 *
-		 * @param site     The content of the site.
-		 * @param alpha    The alphabet to use.
-		 * @throw BadCharException If the content does not match the specified alphabet.
-		 */
-		Site(const vector<string> & site, const Alphabet * alpha) throw (BadCharException);
+    /**
+     * @brief Build a new Site object with the specified alphabet.
+     * The content of the site is initialized from a vector of characters.
+     *
+     * @param site     The content of the site.
+     * @param alpha    The alphabet to use.
+     * @throw BadCharException If the content does not match the specified alphabet.
+     */
+    Site(const vector<string> & site, const Alphabet * alpha) throw (BadCharException);
 
-		/**
-		 * @brief Build a new Site object with the specified alphabet and position.
-		 * The content of the site is initialized from a vector of characters.
-		 *
-		 * @param site     The content of the site.
-		 * @param alpha    The alphabet to use.
-		 * @param position The position attribute for this site.
-		 * @throw BadCharException If the content does not match the specified alphabet.
-		 */
-		Site(const vector<string> & site, const Alphabet * alpha, int position) throw (BadCharException);
+    /**
+     * @brief Build a new Site object with the specified alphabet and position.
+     * The content of the site is initialized from a vector of characters.
+     *
+     * @param site     The content of the site.
+     * @param alpha    The alphabet to use.
+     * @param position The position attribute for this site.
+     * @throw BadCharException If the content does not match the specified alphabet.
+     */
+    Site(const vector<string> & site, const Alphabet * alpha, int position) throw (BadCharException);
 
-		/**
-		 * @brief Build a new Site object with the specified alphabet.
-		 * The content of the site is initialized from a vector of integers.
-		 *
-		 * @param site     The content of the site.
-		 * @param alpha    The alphabet to use.
-		 * @throw BadIntException If the content does not match the specified alphabet.
-		 */
-		Site(const vector<int> & site, const Alphabet * alpha) throw (BadIntException);
+    /**
+     * @brief Build a new Site object with the specified alphabet.
+     * The content of the site is initialized from a vector of integers.
+     *
+     * @param site     The content of the site.
+     * @param alpha    The alphabet to use.
+     * @throw BadIntException If the content does not match the specified alphabet.
+     */
+    Site(const vector<int> & site, const Alphabet * alpha) throw (BadIntException);
 
-		/**
-		 * @brief Build a new Site object with the specified alphabet and position.
-		 * The content of the site is initialized from a vector of integers.
-		 *
-		 * @param site     The content of the site.
-		 * @param alpha    The alphabet to use.
-		 * @param position The position attribute for this site.
-		 * @throw BadIntException If the content does not match the specified alphabet.
-		 */
-		Site(const vector<int> & site, const Alphabet * alpha, int position) throw (BadIntException);
+    /**
+     * @brief Build a new Site object with the specified alphabet and position.
+     * The content of the site is initialized from a vector of integers.
+     *
+     * @param site     The content of the site.
+     * @param alpha    The alphabet to use.
+     * @param position The position attribute for this site.
+     * @throw BadIntException If the content does not match the specified alphabet.
+     */
+    Site(const vector<int> & site, const Alphabet * alpha, int position) throw (BadIntException);
 
-		/**
-		 * @brief The copy constructor.
-		 */
-		Site(const Site & site);
+    /**
+     * @brief The copy constructor.
+     */
+    Site(const Site & site);
 
-		/**
-		 * @brief The assignment operator.
-		 */
-		Site operator = (const Site & s);
+    /**
+     * @brief The assignment operator.
+     */
+    Site operator = (const Site & s);
 
-		virtual ~Site() {}
-	
-	public:
+    virtual ~Site() {}
+  
+  public:
 
-		/**
-		 * @name The Clonable interface
-		 *
-		 * @{
-		 */
-#ifndef NO_VIRTUAL_COV
-		Site*
-#else
-    Clonable*
-#endif
-    clone() const { return new Site(*this); }
-		/** @} */
+    /**
+     * @name The Clonable interface
+     *
+     * @{
+     */
+    Site* clone() const { return new Site(*this); }
+    /** @} */
 
-		/**
-		 * @name Setting/getting the position of the site.
-		 *
-		 * @{
-		 */
+    /**
+     * @name Setting/getting the position of the site.
+     *
+     * @{
+     */
 
-		/**
-		 * @brief Get the position of this site.
-		 *
-		 * @return This site position.
-		 */
-		virtual int getPosition() const;
+    /**
+     * @brief Get the position of this site.
+     *
+     * @return This site position.
+     */
+    virtual int getPosition() const;
 
-		/**
-		 * @brief Set the position of this site.
-		 *
-		 * @param position The new position of the site.
-		 */
-		virtual void setPosition(int position);
+    /**
+     * @brief Set the position of this site.
+     *
+     * @param position The new position of the site.
+     */
+    virtual void setPosition(int position);
 };
 
 // Sites comparison operators overload
@@ -182,5 +177,5 @@ bool operator < (const Site & site1, const Site & site2);
 
 } //end of namespace bpp.
 
-#endif	//_SITE_H_
+#endif  //_SITE_H_
 

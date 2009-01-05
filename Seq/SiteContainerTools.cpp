@@ -58,30 +58,30 @@ using namespace std;
 
 SiteContainer * SiteContainerTools::getSitesWithoutGaps(const SiteContainer & sites)
 {
-	vector<string> seqNames = sites.getSequencesNames();
-	VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
-	noGapCont->setSequencesNames(seqNames, false);
-	NoGapSiteIterator ngsi(sites);
-	while(ngsi.hasMoreSites())
+  vector<string> seqNames = sites.getSequencesNames();
+  VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+  noGapCont->setSequencesNames(seqNames, false);
+  NoGapSiteIterator ngsi(sites);
+  while(ngsi.hasMoreSites())
   {
-		noGapCont->addSite(* ngsi.nextSite());
-	}
-	return noGapCont;
+    noGapCont->addSite(* ngsi.nextSite());
+  }
+  return noGapCont;
 }
 
 /******************************************************************************/
 
 SiteContainer * SiteContainerTools::getCompleteSites(const SiteContainer & sites)
 {
-	vector<string> seqNames = sites.getSequencesNames();
-	VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
-	noGapCont->setSequencesNames(seqNames, false);
-	CompleteSiteIterator csi(sites);
-	while(csi.hasMoreSites())
+  vector<string> seqNames = sites.getSequencesNames();
+  VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+  noGapCont->setSequencesNames(seqNames, false);
+  CompleteSiteIterator csi(sites);
+  while(csi.hasMoreSites())
   {
-		noGapCont->addSite(* csi.nextSite());
-	}
-	return noGapCont;
+    noGapCont->addSite(* csi.nextSite());
+  }
+  return noGapCont;
 }
 
 /******************************************************************************/
@@ -90,12 +90,12 @@ SiteContainer * SiteContainerTools::getSelectedSites(
     const SiteContainer & sequences,
     const SiteSelection & selection)
 {
-	vector<string> seqNames = sequences.getSequencesNames();
+  vector<string> seqNames = sequences.getSequencesNames();
   VectorSiteContainer * sc = new VectorSiteContainer(seqNames.size(), sequences.getAlphabet());
-	sc->setSequencesNames(seqNames, false);
+  sc->setSequencesNames(seqNames, false);
   for(unsigned int i = 0; i < selection.size(); i++)
   {
-    sc -> addSite(* sequences.getSite(selection[i]), false);
+    sc->addSite(* sequences.getSite(selection[i]), false);
    //We do not check names, we suppose that the container passed as an argument is correct.
    //WARNING: what if selection contains many times the same indice? ...
   }
@@ -107,38 +107,39 @@ SiteContainer * SiteContainerTools::getSelectedSites(
 
 const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, string name, bool ignoreGap, bool resolveUnknown)
 {
-	Vint consensus;
-	SimpleSiteIterator ssi(sc);
-	const Site * site;
-	while(ssi.hasMoreSites())
+  Vint consensus;
+  SimpleSiteIterator ssi(sc);
+  const Site * site;
+  while(ssi.hasMoreSites())
   {
-		site = ssi.nextSite();
-		map<int, double> freq = SiteTools::getFrequencies(*site, resolveUnknown);
-		double max = 0;
-		int cons = -1; //default result
-		if(ignoreGap)
+    site = ssi.nextSite();
+    map<int, double> freq = SiteTools::getFrequencies(*site, resolveUnknown);
+    double max = 0;
+    int cons = -1; //default result
+    if(ignoreGap)
     {
-			for(map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
+      for(map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
       {
-				if(it->second > max && it->first != -1){
-					max = it->second;
-					cons = it->first;
-				}
-			}
-		}
-		else
+        if(it->second > max && it->first != -1)
+        {
+          max = it->second;
+          cons = it->first;
+        }
+      }
+    }
+    else
     {
-			for(map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
+      for(map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
       {
-				if(it->second > max){
-					max = it->second;
-					cons = it->first;
-				}
-			}
-		}
-		consensus.push_back(cons);
-	}
-	const Sequence * seqConsensus = new Sequence(name, consensus, sc.getSequence(0)->getAlphabet());
+        if(it->second > max){
+          max = it->second;
+          cons = it->first;
+        }
+      }
+    }
+    consensus.push_back(cons);
+  }
+  const Sequence * seqConsensus = new Sequence(name, consensus, sc.getSequence(0)->getAlphabet());
   return seqConsensus;
 }
 
@@ -178,30 +179,30 @@ void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainer & sites)
 
 SiteContainer * SiteContainerTools::removeGapOnlySites(const SiteContainer & sites)
 {
-	vector<string> seqNames = sites.getSequencesNames();
-	VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
-	noGapCont->setSequencesNames(seqNames, false);
+  vector<string> seqNames = sites.getSequencesNames();
+  VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+  noGapCont->setSequencesNames(seqNames, false);
   for(unsigned int i = 0; i < sites.getNumberOfSites(); i++)
   {
-		const Site * site = sites.getSite(i);
+    const Site * site = sites.getSite(i);
     if(!SiteTools::isGapOnly(*site)) noGapCont->addSite(* site);
-	}
-	return noGapCont;
+  }
+  return noGapCont;
 }
 
 /******************************************************************************/
 
 SiteContainer * SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteContainer & sites)
 {
-	vector<string> seqNames = sites.getSequencesNames();
-	VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
-	noGapCont->setSequencesNames(seqNames, false);
+  vector<string> seqNames = sites.getSequencesNames();
+  VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+  noGapCont->setSequencesNames(seqNames, false);
   for(unsigned int i = 0; i < sites.getNumberOfSites(); i++)
   {
-		const Site * site = sites.getSite(i);
+    const Site * site = sites.getSite(i);
     if(!SiteTools::isGapOrUnresolvedOnly(*site)) noGapCont->addSite(* site);
-	}
-	return noGapCont;
+  }
+  return noGapCont;
 }
 
 /******************************************************************************/
@@ -308,8 +309,8 @@ map<unsigned int, unsigned int> SiteContainerTools::getAlignmentPositions(const 
 map<unsigned int, unsigned int> SiteContainerTools::translateAlignment(const Sequence & seq1, const Sequence & seq2)
   throw (AlphabetMismatchException, Exception)
 {
-	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("SiteContainerTools::translateAlignment", seq1.getAlphabet(), seq2.getAlphabet());
+  if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("SiteContainerTools::translateAlignment", seq1.getAlphabet(), seq2.getAlphabet());
   map<unsigned int, unsigned int> tln;
   if(seq1.size() == 0) return tln;
   unsigned int count1 = 0;
@@ -393,10 +394,10 @@ AlignedSequenceContainer * SiteContainerTools::alignNW(
     double gap)
 throw (AlphabetMismatchException)
 {
-	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), seq2.getAlphabet());
-	if(seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
+  if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), seq2.getAlphabet());
+  if(seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
   //Check that sequences have no gap!
   Sequence * s1 = SequenceTools::removeGaps(seq1);
   Sequence * s2 = SequenceTools::removeGaps(seq2);
@@ -482,10 +483,10 @@ AlignedSequenceContainer * SiteContainerTools::alignNW(
     double extending)
 throw (AlphabetMismatchException)
 {
-	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), seq2.getAlphabet());
-	if(seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
+  if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), seq2.getAlphabet());
+  if(seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
   //Check that sequences have no gap!
   Sequence * s1 = SequenceTools::removeGaps(seq1);
   Sequence * s2 = SequenceTools::removeGaps(seq2);

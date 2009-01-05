@@ -1,3 +1,7 @@
+21/12/08 Julien Dutheil
+* Return type for clone() methods corrected (Sequence, Site, SiteContainer and derivated classes).
+* Bug fixed in SequenceApplicationTools::get[Sequence/Site]Container, phylip format.
+
 21/07/08 -*- Version 1.5.0 -*-
 
 05/12/08 Julien Dutheil

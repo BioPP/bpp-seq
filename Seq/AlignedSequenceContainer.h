@@ -72,107 +72,107 @@ class AlignedSequenceContainer:
   public virtual VectorSequenceContainer,
   public virtual SiteContainer
 {
-	protected:
-		// Integer vector that contains sites's positions
-		vector<int> positions;
-		
-		unsigned int length; // Number of sites for verifications before sequence's insertion in sequence container
-	
-		/**
-		 * This is used in order to implement the SiteContainer interface.
-		 * A SiteContainer is expected to work on Site objects, but this class
-		 * -- since it is a VectorSequenceContainer -- has its data sored as
-		 * Sequence object. When the SiteContainer method getSite() is invoked
-		 * it creates a new Site object and send the address of it.
-		 * To avoid memory leaks, this object is put into a vector so that it can be
-		 * destroyed when the container is destroyed.
-		 */
-		mutable vector<Site *> sites;
-		
-	public:
-		/**
-		 * @brief Build a new empty container with the specified alphabet.
-		 *
-		 * @param alpha The alphabet to use.
-		 */
-		AlignedSequenceContainer(const Alphabet * alpha);
-		/**
-		 * @brief Copy constructor.
-		 *
-		 * @param asc The container to copy.
-		 */
-		AlignedSequenceContainer(const AlignedSequenceContainer & asc);
-		/**
-		 * @brief Convert any SiteContainer object into a AlignedSequenceContainer object.
-		 *
-		 * @param sc The container to copy.
-		 */
-		AlignedSequenceContainer(const SiteContainer &  sc);
-		/**
-		 * @brief Try to coerce an OrderedSequenceContainer object into an AlignedSequenceContainer object.
-		 *
-		 * Sequences in osc will be considered alligned, and have the same number of sites.
-		 * 
-		 * @param osc The ordered container to coerce.
-		 * @throw SequenceNotAlignedException If sequences in osc do not have the same length.
-		 */
-		AlignedSequenceContainer(const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
+  protected:
+    // Integer vector that contains sites's positions
+    vector<int> positions;
+    
+    unsigned int length; // Number of sites for verifications before sequence's insertion in sequence container
+  
+    /**
+     * This is used in order to implement the SiteContainer interface.
+     * A SiteContainer is expected to work on Site objects, but this class
+     * -- since it is a VectorSequenceContainer -- has its data sored as
+     * Sequence object. When the SiteContainer method getSite() is invoked
+     * it creates a new Site object and send the address of it.
+     * To avoid memory leaks, this object is put into a vector so that it can be
+     * destroyed when the container is destroyed.
+     */
+    mutable vector<Site *> sites;
+    
+  public:
+    /**
+     * @brief Build a new empty container with the specified alphabet.
+     *
+     * @param alpha The alphabet to use.
+     */
+    AlignedSequenceContainer(const Alphabet * alpha);
+    /**
+     * @brief Copy constructor.
+     *
+     * @param asc The container to copy.
+     */
+    AlignedSequenceContainer(const AlignedSequenceContainer & asc);
+    /**
+     * @brief Convert any SiteContainer object into a AlignedSequenceContainer object.
+     *
+     * @param sc The container to copy.
+     */
+    AlignedSequenceContainer(const SiteContainer &  sc);
+    /**
+     * @brief Try to coerce an OrderedSequenceContainer object into an AlignedSequenceContainer object.
+     *
+     * Sequences in osc will be considered alligned, and have the same number of sites.
+     * 
+     * @param osc The ordered container to coerce.
+     * @throw SequenceNotAlignedException If sequences in osc do not have the same length.
+     */
+    AlignedSequenceContainer(const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
 
-		AlignedSequenceContainer & operator = (const AlignedSequenceContainer & asc);
-		AlignedSequenceContainer & operator = (const            SiteContainer &  sc);
-		AlignedSequenceContainer & operator = (const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
+    AlignedSequenceContainer & operator = (const AlignedSequenceContainer & asc);
+    AlignedSequenceContainer & operator = (const            SiteContainer &  sc);
+    AlignedSequenceContainer & operator = (const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
 
-		virtual ~AlignedSequenceContainer();
+    virtual ~AlignedSequenceContainer();
 
-	public:
+  public:
 
-		/**
-		 * @name The Clonable interface.
-		 *
-		 * @{
-		 */
-		Clonable * clone() const;
-		/** @} */
-
-		/**
-		 * @name The SiteContainer interface implementation:
+    /**
+     * @name The Clonable interface.
      *
      * @{
      */
-  	const Site * getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) ;
-		void         setSite(unsigned int siteIndex, const Site & site, bool checkPosition = true) throw (Exception) ;
-		Site *    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
-		void      deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
-		void addSite(const Site & site, bool checkPosition = true) throw (Exception);
-		void addSite(const Site & site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);
-		unsigned int getNumberOfSites() const;
-		Vint getSitePositions() const;
-		void reindexSites();
-		void clear();
-		SequenceContainer * createEmptyContainer() const;
-		/** @} */
+    AlignedSequenceContainer * clone() const { return new AlignedSequenceContainer(*this); }
+    /** @} */
 
-		/**
-		 * @name Redefinition of VectorSequenceContainer methods, to check for sequence lengths.
-		 *
-		 * @{
-		 */
-		void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception);
-		void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (Exception);
+    /**
+     * @name The SiteContainer interface implementation:
+     *
+     * @{
+     */
+    const Site * getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) ;
+    void         setSite(unsigned int siteIndex, const Site & site, bool checkPosition = true) throw (Exception) ;
+    Site *    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
+    void      deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
+    void addSite(const Site & site, bool checkPosition = true) throw (Exception);
+    void addSite(const Site & site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);
+    unsigned int getNumberOfSites() const;
+    Vint getSitePositions() const;
+    void reindexSites();
+    void clear();
+    SequenceContainer * createEmptyContainer() const;
+    /** @} */
 
-		void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
-		void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
-		/** @} */
-		
-	
-	protected:
-		/**
-		 * @brief Check sequence's size before insertion in sequence container.
-		 * 
-		 * @param sequence The sequence to check.
-		 * @return True if sequence length = number of sites in container.
-		 */
-		bool checkSize(const Sequence & sequence);
+    /**
+     * @name Redefinition of VectorSequenceContainer methods, to check for sequence lengths.
+     *
+     * @{
+     */
+    void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception);
+    void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (Exception);
+
+    void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
+    void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
+    /** @} */
+    
+  
+  protected:
+    /**
+     * @brief Check sequence's size before insertion in sequence container.
+     * 
+     * @param sequence The sequence to check.
+     * @return True if sequence length = number of sites in container.
+     */
+    bool checkSize(const Sequence & sequence);
 };
 
 } //end of namespace bpp.

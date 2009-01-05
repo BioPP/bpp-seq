@@ -120,7 +120,7 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
            if(params["sequence.format_phylip.ext"] == "extended")
       {
         extended = true;
-        split = ApplicationTools::getStringParameter("sequence.format_phylip.extended.split", params, "  ", suffix, suffixIsOptional);
+        split = ApplicationTools::getStringParameter("sequence.format_phylip.extended.split", params, "spaces", suffix, suffixIsOptional);
         if(split == "spaces") split = "  ";
         else if(split == "tab") split = "\t";
         else throw Exception("Unknown option for sequence.format_phylip.extended.split: " + split);
@@ -185,7 +185,7 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
       if(params["sequence.format_phylip.ext"] == "extended")
       {
         extended = true;
-        split = ApplicationTools::getStringParameter("sequence.format_phylip.extended.split", params, "  ", suffix, suffixIsOptional);
+        split = ApplicationTools::getStringParameter("sequence.format_phylip.extended.split", params, "spaces", suffix, suffixIsOptional);
         if(split == "spaces") split = "  ";
         else if(split == "tab") split = "\t";
         else throw Exception("Unknown option for sequence.format_phylip.extended.split: " + split);

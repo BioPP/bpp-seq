@@ -122,143 +122,144 @@ namespace bpp
 class Alphabet
 {
   public:
-		Alphabet() {}
-		virtual ~Alphabet() {}
-	
-	public:
+    Alphabet() {}
+    virtual ~Alphabet() {}
+  
+  public:
     
-		/**
-		 * @brief Get the complete name of a state given its int description.
-		 *
-		 * In case of several states with identical number (i.e. N and X for nucleic alphabets),
-		 * this method returns the name of the first found in the vector.
-		 *
-		 * @param state The int description of the given state.
-		 * @return The name of the state.
-		 * @throw BadIntException When state is not a valid integer.
-		 */
-		virtual string getName(int state) const throw (BadIntException)  = 0;
+    /**
+     * @brief Get the complete name of a state given its int description.
+     *
+     * In case of several states with identical number (i.e. N and X for nucleic alphabets),
+     * this method returns the name of the first found in the vector.
+     *
+     * @param state The int description of the given state.
+     * @return The name of the state.
+     * @throw BadIntException When state is not a valid integer.
+     */
+    virtual string getName(int state) const throw (BadIntException)  = 0;
         
-		/**
-		 * @brief Get the complete name of a state given its string description.
-		 *
-		 * In case of several states with identical number (i.e. N and X for nucleic alphabets),
-		 * this method will return the name of the first found in the vector.
-		 *
-		 * @param state The string description of the given state.
-		 * @return The name of the state.
-		 * @throw BadCharException When state is not a valid char description.
-		 */
-		virtual string getName(const string & state) const throw (BadCharException) = 0;
+    /**
+     * @brief Get the complete name of a state given its string description.
+     *
+     * In case of several states with identical number (i.e. N and X for nucleic alphabets),
+     * this method will return the name of the first found in the vector.
+     *
+     * @param state The string description of the given state.
+     * @return The name of the state.
+     * @throw BadCharException When state is not a valid char description.
+     */
+    virtual string getName(const string & state) const throw (BadCharException) = 0;
 
-		/**
+    /**
      * @name = Tests
      *
      * @{
      */
 
-		/**
-		 * @brief Tell if a state (specified by its int description) is allowed by the
-		 * the alphabet.
-		 *
-		 * @param state The int description.
-		 * @return 'true' if the state in known.
-		 */
-		virtual bool isIntInAlphabet(int state) const = 0;
-		
-		/**
-		 * @brief Tell if a state (specified by its string description) is allowed by the
-		 * the alphabet.
-		 *
-		 * @param state The string description.
-		 * @return 'true' if the state in known.
-		 */
-		virtual bool isCharInAlphabet(const string & state) const = 0;
-	  /** @} */
+    /**
+     * @brief Tell if a state (specified by its int description) is allowed by the
+     * the alphabet.
+     *
+     * @param state The int description.
+     * @return 'true' if the state in known.
+     */
+    virtual bool isIntInAlphabet(int state) const = 0;
+    
+    /**
+     * @brief Tell if a state (specified by its string description) is allowed by the
+     * the alphabet.
+     *
+     * @param state The string description.
+     * @return 'true' if the state in known.
+     */
+    virtual bool isCharInAlphabet(const string & state) const = 0;
+    /** @} */
         
-		/**
+    /**
      * @name Conversion methods
      *
      * @{
      */
-		
-		/**
-		 * @brief Give the string description of a state given its int description.
-		 *
-		 * @param state The int description.
-		 * @return The string description.
-		 * @throw BadIntException When state is not a valid integer.
-		 */
-		virtual string intToChar(int state) const throw (BadIntException) = 0;
+
+    /**
+     * @brief Give the string description of a state given its int description.
+     *
+     * @param state The int description.
+     * @return The string description.
+     * @throw BadIntException When state is not a valid integer.
+     */
+    virtual string intToChar(int state) const throw (BadIntException) = 0;
         
-		/**
-		 * @brief Give the int description of a state given its string description.
-		 *
-		 * @param state The string description.
-		 * @return The int description.
-		 * @throw BadCharException When state is not a valid char description.
-		 */
-		virtual int charToInt(const string & state) const throw (BadCharException) = 0;
-		/** @} */
+    /**
+     * @brief Give the int description of a state given its string description.
+     *
+     * @param state The string description.
+     * @return The int description.
+     * @throw BadCharException When state is not a valid char description.
+     */
+    virtual int charToInt(const string & state) const throw (BadCharException) = 0;
+    /** @} */
         
-		/**
-		 * @name Sizes.
-		 *
-		 * @{
-		 */
-		
-		/**
-		 * @brief Get the number of supported character descritpion in this alphabet,
-		 * including generic characters (e.g. return 20 for DNA alphabet).
-		 *
-		 * @return The total number of supported character descriptions.
-		 */
-		virtual unsigned int getNumberOfChars() const = 0;
+    /**
+     * @name Sizes.
+     *
+     * @{
+     */
+    
+    /**
+     * @brief Give the string description of a state given its int description.
+     *Genericion in this alphabet,
+     * including generic characters (e.g. return 20 for DNA alphabet).
+     *
+     * @return The total number of supported character descriptions.
+     */
+    virtual unsigned int getNumberOfChars() const = 0;
         
-		/**
-		 * @brief Get the number of <strong>distinct</strong> states in alphabet (e.g. return 15 for DNA alphabet).
-		 * This is the number of integers used for state description.
-		 *
-		 * @return The number of distinct states.
-		 */
-		virtual unsigned int getNumberOfTypes() const = 0;
+    /**
+     * @brief Get the number of <strong>distinct</strong> states in alphabet (e.g. return 15 for DNA alphabet).
+     * This is the number of integers used for state description.
+     *
+     * @return The number of distinct states.
+     */
+    virtual unsigned int getNumberOfTypes() const = 0;
         
-		/**
-		 * @brief Get the number of <strong>resolved</strong> states in the alphabet (e.g. return 4 for DNA alphabet).
-		 * This is the method you'll need in most cases.
-		 *
-		 * @return The number of resolved states.
-		 */
-		virtual unsigned int getSize() const = 0;
-		/** @} */
+    /**
+     * @brief Get the number of <strong>resolved</strong> states in the alphabet (e.g. return 4 for DNA alphabet).
+     * This is the method you'll need in most cases.
+     *
+     * @return The number of resolved states.
+     */
+    virtual unsigned int getSize() const = 0;
+    /** @} */
         
-		/**
-		 * @name Utilitary methods
-		 *
-		 * @{
-		 */
-		
-		/**
-		 * @brief Get all resolved states that match a generic state.
-		 *
-		 * If the given state is not a generic code then the output vector will contain this unique code.
-		 *
-		 * @param state The alias to resolve.
-		 * @return A vector of resolved states.
-		 * @throw BadIntException When state is not a valid integer.
-		 */
-		virtual vector<int> getAlias(int state) const throw (BadIntException) = 0;
-		
-		/**
-		 * @brief Get all resolved states that match a generic state.
-		 *
-		 * If the given state is not a generic code then the output vector will contain this unique code.
-		 *
-		 * @param state The alias to resolve.
-		 * @return A vector of resolved states.
-		 * @throw BadCharException When state is not a valid char description.
-		 */
-		virtual vector<string> getAlias(const string & state) const throw (BadCharException) = 0;
+    /**
+     * @name Utilitary methods
+     *
+     * @{
+     */
+    
+    /**
+     * @brief Get all resolved states that match a generic state.
+     *
+     * If the given state is not a generic code then the output vector will contain this unique code.
+     *
+     * @param state The alias to resolve.
+     * @return A vector of resolved states.
+     * @throw BadIntException When state is not a valid integer.
+     */
+    virtual vector<int> getAlias(int state) const throw (BadIntException) = 0;
+    
+    /**
+     * @brief Get all resolved states that match a generic state.
+     *
+     * If the given state is not a generic code then the output vector will contain this unique code.
+     *
+     * @param state The alias to resolve.
+     * @return A vector of resolved states.
+     * @throw BadCharException When state is not a valid char description.
+     */
+    virtual vector<string> getAlias(const string & state) const throw (BadCharException) = 0;
 
     /**
      * @brief Get the generic state that match a set of states.
@@ -279,7 +280,7 @@ class Alphabet
      * If only a single resolved state is given the function return this state.
      *
      * @param states A vector of states to resolve.
-     * @return A int code for the computed state.
+     * @return A string code for the computed state.
      * @throw BadCharException when a state is not a valid char description.
      * @throw CharStateNotSupportedException when the alphabet does not support Char state for unresolved state.
      */
@@ -337,18 +338,18 @@ class Alphabet
      */
     virtual bool isUnresolved(const string & state) const = 0;
 
-		/** @} */
+    /** @} */
 
-		/**
-		 * @brief Identification method.
-		 *
-		 * Used to tell if two alphabets describe the same type of sequences.
-		 * For instance, this method is used by sequence containers to compare two alphabets and
-		 * allow or deny addition of sequences.
-		 *
-		 * @return A text describing the alphabet.
-		 */
-		virtual string getAlphabetType() const = 0;
+    /**
+     * @brief Identification method.
+     *
+     * Used to tell if two alphabets describe the same type of sequences.
+     * For instance, this method is used by sequence containers to compare two alphabets and
+     * allow or deny addition of sequences.
+     *
+     * @return A text describing the alphabet.
+     */
+    virtual string getAlphabetType() const = 0;
 };
 
 } //end of namespace bpp.

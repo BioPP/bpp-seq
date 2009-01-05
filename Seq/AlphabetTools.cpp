@@ -48,35 +48,35 @@ int AlphabetTools::getType(char state)
 
 bool AlphabetTools::checkAlphabetCodingSize(const Alphabet & alphabet) throw (AlphabetException)
 {
-	if(alphabet.getNumberOfChars() == 0) return true; //Will this really happen?
-	unsigned int size = alphabet.intToChar(0).size();
-	for(unsigned int i = 1; i < alphabet.getNumberOfTypes(); i++)
+  if(alphabet.getNumberOfChars() == 0) return true; //Will this really happen?
+  unsigned int size = alphabet.intToChar(0).size();
+  for(unsigned int i = 1; i < alphabet.getNumberOfTypes(); i++)
   {
-		if(alphabet.intToChar(i).size() != size) return false;
-	}
-	return true;
+    if(alphabet.intToChar(i).size() != size) return false;
+  }
+  return true;
 }
 
 /**********************************************************************************************/
 
 bool AlphabetTools::checkAlphabetCodingSize(const Alphabet * alphabet) throw (AlphabetException)
 {
-	return checkAlphabetCodingSize(* alphabet);
+  return checkAlphabetCodingSize(* alphabet);
 }
 
 /**********************************************************************************************/
 
 int AlphabetTools::getAlphabetCodingSize(const Alphabet & alphabet) throw (AlphabetException)
 {
-	if(!checkAlphabetCodingSize(alphabet)) throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().");
-	return alphabet.intToChar(0).size();
+  if(!checkAlphabetCodingSize(alphabet)) throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().");
+  return alphabet.intToChar(0).size();
 }
 
 /**********************************************************************************************/
 
 int AlphabetTools::getAlphabetCodingSize(const Alphabet * alphabet) throw (AlphabetException)
 {
-	return getAlphabetCodingSize(* alphabet);
+  return getAlphabetCodingSize(* alphabet);
 }
 
 /**********************************************************************************************/

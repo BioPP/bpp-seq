@@ -53,310 +53,303 @@ using namespace std;
 /** Class constructors: *******************************************************/
 
 AlignedSequenceContainer::AlignedSequenceContainer(const Alphabet * alpha):
-	VectorSequenceContainer(alpha)
+  VectorSequenceContainer(alpha)
 {
-	length = 0;
-	reindexSites();
-	//Site * s = NULL; sites = vector<Site *>(length, s);
+  length = 0;
+  reindexSites();
+  //Site * s = NULL; sites = vector<Site *>(length, s);
 }
 
 /***************************************************************************/
 
 AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc): 
-	VectorSequenceContainer(sc)
+  VectorSequenceContainer(sc)
 {
-	length = sc.getNumberOfSites();
-	positions = sc.getSitePositions();
-	//Site * s = NULL; sites = vector<Site *>(length, s);
-	sites.resize(length);
+  length = sc.getNumberOfSites();
+  positions = sc.getSitePositions();
+  //Site * s = NULL; sites = vector<Site *>(length, s);
+  sites.resize(length);
 
-	// General comments:
-	setGeneralComments(sc.getGeneralComments());
+  // General comments:
+  setGeneralComments(sc.getGeneralComments());
 }
 
 /***************************************************************************/
 
 AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContainer & asc):
-	VectorSequenceContainer(asc)
+  VectorSequenceContainer(asc)
 {
-	length = asc.getNumberOfSites();
-	positions = asc.getSitePositions();
-	//Site * s = NULL; sites = vector<Site *>(length, s);
-	sites.resize(length);
+  length = asc.getNumberOfSites();
+  positions = asc.getSitePositions();
+  //Site * s = NULL; sites = vector<Site *>(length, s);
+  sites.resize(length);
 
-	// General comments:
-	setGeneralComments(asc.getGeneralComments());
+  // General comments:
+  setGeneralComments(asc.getGeneralComments());
 }
 
 /***************************************************************************/
 
 AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException):
-	VectorSequenceContainer(osc.getAlphabet())
+  VectorSequenceContainer(osc.getAlphabet())
 {
-	// Initializing
-	length = 0;
-	int max = osc.getNumberOfSequences();
+  // Initializing
+  length = 0;
+  int max = osc.getNumberOfSequences();
 
-	// Sequences insertion after size checking
-	for (int i = 0 ; i < max ; i++) addSequence(* osc.getSequence(i), false);
-	reindexSites();
+  // Sequences insertion after size checking
+  for (int i = 0 ; i < max ; i++) addSequence(* osc.getSequence(i), false);
+  reindexSites();
 
-	// General comments:
-	setGeneralComments(osc.getGeneralComments());
+  // General comments:
+  setGeneralComments(osc.getGeneralComments());
 }
 
 /***************************************************************************/
 
 AlignedSequenceContainer & AlignedSequenceContainer::operator = (const AlignedSequenceContainer & asc) 
 {
-	// Initializing
-	length = asc.getNumberOfSites();
-	int max = asc.getNumberOfSequences();
+  // Initializing
+  length = asc.getNumberOfSites();
+  int max = asc.getNumberOfSequences();
 
-	_alphabet = asc.getAlphabet();
+  _alphabet = asc.getAlphabet();
 
-	// Sequences insertion after size checking
-	for (int i = 0 ; i < max ; i++)	addSequence(*asc.getSequence(i), false);
+  // Sequences insertion after size checking
+  for (int i = 0 ; i < max ; i++)  addSequence(*asc.getSequence(i), false);
 
-	positions = asc.getSitePositions();
-	Site * s = NULL; sites = vector<Site *>(length, s);
+  positions = asc.getSitePositions();
+  Site * s = NULL; sites = vector<Site *>(length, s);
 
-	// General comments:
-	setGeneralComments(asc.getGeneralComments());
+  // General comments:
+  setGeneralComments(asc.getGeneralComments());
 
-	return * this;
+  return * this;
 }
 
 /***************************************************************************/
 
 AlignedSequenceContainer & AlignedSequenceContainer::operator = (const SiteContainer & sc) 
 {
-	// Initializing
-	length = sc.getNumberOfSites();
-	int max = sc.getNumberOfSequences();
+  // Initializing
+  length = sc.getNumberOfSites();
+  int max = sc.getNumberOfSequences();
 
-	_alphabet = sc.getAlphabet();
+  _alphabet = sc.getAlphabet();
 
-	// Sequences insertion after size checking
-	for (int i = 0 ; i < max ; i++)	addSequence(*sc.getSequence(i), false);
+  // Sequences insertion after size checking
+  for (int i = 0 ; i < max ; i++)  addSequence(*sc.getSequence(i), false);
 
-	positions = sc.getSitePositions();
-	Site * s = NULL; sites = vector<Site *>(length, s);
+  positions = sc.getSitePositions();
+  Site * s = NULL; sites = vector<Site *>(length, s);
 
-	// General comments:
-	setGeneralComments(sc.getGeneralComments());
+  // General comments:
+  setGeneralComments(sc.getGeneralComments());
 
-	return * this;
+  return * this;
 }
 
 /***************************************************************************/
 
 AlignedSequenceContainer & AlignedSequenceContainer::operator = (const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException)
 {
-	// Initializing
-	length = 0;
-	int max = osc.getNumberOfSequences();
+  // Initializing
+  length = 0;
+  int max = osc.getNumberOfSequences();
 
-	_alphabet = osc.getAlphabet();
+  _alphabet = osc.getAlphabet();
 
-	// Sequences insertion after size checking
-	for (int i = 0 ; i < max ; i++) addSequence(*osc.getSequence(i), false); //may throw a SequenceNotAlignedException.
-	
-	reindexSites();
-	Site * s = NULL; sites = vector<Site *>(length, s);
+  // Sequences insertion after size checking
+  for (int i = 0 ; i < max ; i++) addSequence(*osc.getSequence(i), false); //may throw a SequenceNotAlignedException.
+  
+  reindexSites();
+  Site * s = NULL; sites = vector<Site *>(length, s);
 
-	// General comments:
-	setGeneralComments(osc.getGeneralComments());
+  // General comments:
+  setGeneralComments(osc.getGeneralComments());
 
-	return * this;
+  return * this;
 }
 
 /** Class destructor: *********************************************************/
 
 AlignedSequenceContainer::~AlignedSequenceContainer()
 {
-	//delete all sites:
-	for(unsigned int i = 0; i < sites.size(); i++) if(sites[i] != NULL) delete sites[i];	
-}
-
-/***************************************************************************/
-
-Clonable * AlignedSequenceContainer::clone() const
-{
-	return dynamic_cast<VectorSequenceContainer *>(new AlignedSequenceContainer(*this));
+  //delete all sites:
+  for(unsigned int i = 0; i < sites.size(); i++) if(sites[i] != NULL) delete sites[i];  
 }
 
 /***************************************************************************/
 
 const Site * AlignedSequenceContainer::getSite(unsigned int i) const throw (IndexOutOfBoundsException)
 {
-	if (i >= length) throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites() - 1);
+  if (i >= length) throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites() - 1);
 
-	// Main loop : for all sequences
-	unsigned int n = _sequences.size();
-	vector<int> site(n);
-	for(unsigned int j = 0 ; j < n ; j++)
+  // Main loop : for all sequences
+  unsigned int n = _sequences.size();
+  vector<int> site(n);
+  for(unsigned int j = 0 ; j < n ; j++)
   {
     site[j] = _sequences[j]->getContent()[i];
   }
 
-	if(sites[i] != NULL) delete sites[i];
-	sites[i] = new Site(site, _alphabet, positions[i]);
-	return sites[i];
+  if(sites[i] != NULL) delete sites[i];
+  sites[i] = new Site(site, _alphabet, positions[i]);
+  return sites[i];
 }
 
 /******************************************************************************/
 
 void AlignedSequenceContainer::setSite(unsigned int pos, const Site & site, bool checkPositions) throw (Exception)
 {
-	// New site's alphabet and site container's alphabet matching verification
-	if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::setSite", pos, 0, getNumberOfSites() - 1);
-	if (site.getAlphabet() -> getAlphabetType() != _alphabet -> getAlphabetType())
-		throw AlphabetMismatchException("AlignedSequenceContainer::setSite", _alphabet, site.getAlphabet());
+  // New site's alphabet and site container's alphabet matching verification
+  if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::setSite", pos, 0, getNumberOfSites() - 1);
+  if (site.getAlphabet() -> getAlphabetType() != _alphabet -> getAlphabetType())
+    throw AlphabetMismatchException("AlignedSequenceContainer::setSite", _alphabet, site.getAlphabet());
 
-		
-	vector<int> s = site.getContent();
+    
+  vector<int> s = site.getContent();
 
-	// Check size:
-	if(s.size() != getNumberOfSequences()) throw SiteException("AlignedSequenceContainer::setSite, site does not have the appropriate length", &site);
+  // Check size:
+  if(s.size() != getNumberOfSequences()) throw SiteException("AlignedSequenceContainer::setSite, site does not have the appropriate length", &site);
 
-	// Check position:
-	int position = site.getPosition();
-	if(checkPositions) {
-		// For all positions in vector : throw exception if position already exists
-		for(unsigned int i = 0; i < positions.size(); i++) {
-			if (positions[i] == position) throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
-		}
-	}
-	
-	// For all sequences
-	for (unsigned int j = 0 ; j < _sequences.size(); j++) {
-		VectorSequenceContainer::getSequenceInner(j) -> setElement(pos, s[j]);
-	}
-	positions[pos] = site.getPosition();
+  // Check position:
+  int position = site.getPosition();
+  if(checkPositions) {
+    // For all positions in vector : throw exception if position already exists
+    for(unsigned int i = 0; i < positions.size(); i++) {
+      if (positions[i] == position) throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
+    }
+  }
+  
+  // For all sequences
+  for (unsigned int j = 0 ; j < _sequences.size(); j++) {
+    VectorSequenceContainer::getSequenceInner(j) -> setElement(pos, s[j]);
+  }
+  positions[pos] = site.getPosition();
 }
 
 /******************************************************************************/
 
 Site * AlignedSequenceContainer::removeSite(unsigned int pos) throw (IndexOutOfBoundsException)
 {
-	if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::removeSite", pos, 0, getNumberOfSites() - 1);
+  if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::removeSite", pos, 0, getNumberOfSites() - 1);
 
-	// Get old site
-	Site * old = const_cast<Site *>(getSite(pos));
+  // Get old site
+  Site * old = const_cast<Site *>(getSite(pos));
 
-	// For all sequences
-	for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
-		VectorSequenceContainer::getSequenceInner(j) -> deleteElement(pos);
-	}
+  // For all sequences
+  for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
+    VectorSequenceContainer::getSequenceInner(j) -> deleteElement(pos);
+  }
 
-	// Delete site's position
-	positions.erase(positions.begin() + pos);
-	length--;
-	
-	//Actualizes the 'sites' vector:
-	delete sites[pos];
-	sites.erase(sites.begin() + pos);
-	
-	// Send result
-	return old;
+  // Delete site's position
+  positions.erase(positions.begin() + pos);
+  length--;
+  
+  //Actualizes the 'sites' vector:
+  delete sites[pos];
+  sites.erase(sites.begin() + pos);
+  
+  // Send result
+  return old;
 }
 
 /******************************************************************************/
 
 void AlignedSequenceContainer::deleteSite(unsigned int pos) throw (IndexOutOfBoundsException)
 {
-	if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites() - 1);
+  if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites() - 1);
 
-	// Initializing
-	string s;
+  // Initializing
+  string s;
 
-	// For all sequences
-	for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
-		VectorSequenceContainer::getSequenceInner(j) -> deleteElement(pos);
-	}
+  // For all sequences
+  for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
+    VectorSequenceContainer::getSequenceInner(j) -> deleteElement(pos);
+  }
 
-	// Delete site's position
-	positions.erase(positions.begin() + pos);
-	length--;
+  // Delete site's position
+  positions.erase(positions.begin() + pos);
+  length--;
 
-	//Actualizes the 'sites' vector:
-	delete sites[pos];
-	sites.erase(sites.begin() + pos);
+  //Actualizes the 'sites' vector:
+  delete sites[pos];
+  sites.erase(sites.begin() + pos);
 }
-	
+  
 /******************************************************************************/
 
 void AlignedSequenceContainer::addSite(const Site & site, bool checkPositions) throw (Exception)
 {
-	// New site's alphabet and site container's alphabet matching verification
-	if (site.getAlphabet() -> getAlphabetType() != _alphabet -> getAlphabetType()) {
-		throw AlphabetMismatchException("AlignedSequenceContainer::addSite");
-	}
+  // New site's alphabet and site container's alphabet matching verification
+  if (site.getAlphabet() -> getAlphabetType() != _alphabet -> getAlphabetType()) {
+    throw AlphabetMismatchException("AlignedSequenceContainer::addSite");
+  }
 
-	// Initializing
-	vector<int> s = site.getContent();
-	
-	// Check size:
-	if(s.size() != getNumberOfSequences()) throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
+  // Initializing
+  vector<int> s = site.getContent();
+  
+  // Check size:
+  if(s.size() != getNumberOfSequences()) throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
 
-	// Check position:
+  // Check position:
 
-	int position = site.getPosition();
-	if(checkPositions) {
-		// For all positions in vector : throw exception if position already exists
-		for(unsigned int i = 0; i < positions.size(); i++) {
-			if (positions[i] == position) throw SiteException("AlignedSequenceContainer::addSite: Site position already exists in container", &site);
-		}
-	}
-	
-	// For all sequences
-	for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
-		VectorSequenceContainer::getSequenceInner(j) -> addElement(s[j]);
-	}
+  int position = site.getPosition();
+  if(checkPositions) {
+    // For all positions in vector : throw exception if position already exists
+    for(unsigned int i = 0; i < positions.size(); i++) {
+      if (positions[i] == position) throw SiteException("AlignedSequenceContainer::addSite: Site position already exists in container", &site);
+    }
+  }
+  
+  // For all sequences
+  for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
+    VectorSequenceContainer::getSequenceInner(j) -> addElement(s[j]);
+  }
 
-	length++;
-	positions.push_back(position);
+  length++;
+  positions.push_back(position);
 
-	//Actualizes the 'sites' vector:
-	sites.push_back(NULL);
+  //Actualizes the 'sites' vector:
+  sites.push_back(NULL);
 }
 
 /******************************************************************************/
 
 void AlignedSequenceContainer::addSite(const Site & site, unsigned int pos, bool checkPositions) throw (Exception)
 {
-	if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::addSite", pos, 0, getNumberOfSites() - 1);
+  if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::addSite", pos, 0, getNumberOfSites() - 1);
 
-	// New site's alphabet and site container's alphabet matching verification
-	if (site.getAlphabet() -> getAlphabetType() != _alphabet -> getAlphabetType()) {
-		throw AlphabetMismatchException("AlignedSequenceContainer::addSite", _alphabet, site.getAlphabet());
-	}
+  // New site's alphabet and site container's alphabet matching verification
+  if (site.getAlphabet() -> getAlphabetType() != _alphabet -> getAlphabetType()) {
+    throw AlphabetMismatchException("AlignedSequenceContainer::addSite", _alphabet, site.getAlphabet());
+  }
 
-	vector<int> s = site.getContent();
-	
-	// Check size:
-	if(s.size() != getNumberOfSequences()) throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
+  vector<int> s = site.getContent();
+  
+  // Check size:
+  if(s.size() != getNumberOfSequences()) throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
 
-	// Check position:
-	int position = site.getPosition();
-	if(checkPositions) {
-		// For all positions in vector : throw exception if position already exists
-		for(unsigned int i = 0; i < positions.size(); i++) {
-			if (positions[i] == position) throw SiteException("AlignedSequenceContainer::addSite: Site position already exists in container", &site);
-		}
-	}
-	
-	// For all sequences
-	for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
-		VectorSequenceContainer::getSequenceInner(j) -> addElement(pos, site[j]);
-	}
+  // Check position:
+  int position = site.getPosition();
+  if(checkPositions) {
+    // For all positions in vector : throw exception if position already exists
+    for(unsigned int i = 0; i < positions.size(); i++) {
+      if (positions[i] == position) throw SiteException("AlignedSequenceContainer::addSite: Site position already exists in container", &site);
+    }
+  }
+  
+  // For all sequences
+  for (unsigned int j = 0 ; j < _sequences.size() ; j++) {
+    VectorSequenceContainer::getSequenceInner(j) -> addElement(pos, site[j]);
+  }
 
-	length++;
-	positions.insert(positions.begin() + pos, position);
+  length++;
+  positions.insert(positions.begin() + pos, position);
 
-	//Actualizes the 'sites' vector:
-	sites.insert(sites.begin() + pos, NULL);	
+  //Actualizes the 'sites' vector:
+  sites.insert(sites.begin() + pos, NULL);  
 }
 
 /******************************************************************************/
@@ -370,55 +363,55 @@ Vint AlignedSequenceContainer::getSitePositions() const { return positions; }
 /******************************************************************************/
 
 void AlignedSequenceContainer::reindexSites() 
-{	
-	positions.resize(length);
-	for (unsigned int i = 0 ; i < length ; i++) { positions[i] = i+1; } // start with 1.
+{  
+  positions.resize(length);
+  for (unsigned int i = 0 ; i < length ; i++) { positions[i] = i+1; } // start with 1.
 }
 
 /******************************************************************************/
 
 void AlignedSequenceContainer::setSequence(unsigned int i, const Sequence & sequence, bool checkName) throw (Exception)
 {
-	if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("AlignedSequenceContainer::setaddSequence", i, 0, getNumberOfSequences() - 1);
-	// if container has only one sequence
-	if (getNumberOfSequences() == 1) length = sequence.size();
-	if (checkSize(sequence)) VectorSequenceContainer::setSequence(i, sequence, checkName);
-	else throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
+  if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("AlignedSequenceContainer::setaddSequence", i, 0, getNumberOfSequences() - 1);
+  // if container has only one sequence
+  if (getNumberOfSequences() == 1) length = sequence.size();
+  if (checkSize(sequence)) VectorSequenceContainer::setSequence(i, sequence, checkName);
+  else throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
 }
 
 /******************************************************************************/
 
 void AlignedSequenceContainer::setSequence(const string & name, const Sequence & sequence, bool checkName) throw (Exception)
 {
-	// if container has only one sequence
-	if (getNumberOfSequences() == 1) length = sequence.size();  
-	if (checkSize(sequence)) VectorSequenceContainer::setSequence(name, sequence, checkName);
-	else throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
+  // if container has only one sequence
+  if (getNumberOfSequences() == 1) length = sequence.size();  
+  if (checkSize(sequence)) VectorSequenceContainer::setSequence(name, sequence, checkName);
+  else throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
 }
 
 /******************************************************************************/
 
 void AlignedSequenceContainer::addSequence(const Sequence & sequence, bool checkName) throw (Exception)
 {
-	// if container has only one sequence
-	if (length == 0) {
-		length = sequence.size();
-		sites.resize(length);
-		reindexSites();
-	}
-	if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, checkName);
-	else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
+  // if container has only one sequence
+  if (length == 0) {
+    length = sequence.size();
+    sites.resize(length);
+    reindexSites();
+  }
+  if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, checkName);
+  else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
 }
 
 /******************************************************************************/
 
 void AlignedSequenceContainer::addSequence(const Sequence & sequence, unsigned int i, bool checkName) throw (Exception)
 {
-	if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences() - 1);
-	// if container has only one sequence
-	if (length == 0) length = sequence.size();
-	if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, i, checkName);
-	else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
+  if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences() - 1);
+  // if container has only one sequence
+  if (length == 0) length = sequence.size();
+  if (checkSize(sequence)) VectorSequenceContainer::addSequence(sequence, i, checkName);
+  else throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", &sequence);
 }
 
 /******************************************************************************/
@@ -429,17 +422,17 @@ bool AlignedSequenceContainer::checkSize(const Sequence & sequence) { return (se
 
 void AlignedSequenceContainer::clear()
 {
-	length = 0;
-	VectorSequenceContainer::clear();
+  length = 0;
+  VectorSequenceContainer::clear();
 }
 
 /******************************************************************************/
 
 SequenceContainer * AlignedSequenceContainer::createEmptyContainer() const
 { 
-	AlignedSequenceContainer * asc = new AlignedSequenceContainer(_alphabet);
-	asc -> setGeneralComments(_comments);
-	return(dynamic_cast<AbstractSequenceContainer *>(asc));
+  AlignedSequenceContainer * asc = new AlignedSequenceContainer(_alphabet);
+  asc -> setGeneralComments(_comments);
+  return(dynamic_cast<AbstractSequenceContainer *>(asc));
 }
 
 /******************************************************************************/

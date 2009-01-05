@@ -44,6 +44,10 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "NucleicAlphabet.h"
 
+//From the STL:
+#include <string>
+using namespace std;
+
 namespace bpp
 {
 
