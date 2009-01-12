@@ -68,6 +68,8 @@ class Fasta:
 
     bool _checkNames;
 
+    bool _extended;
+
   public:
   
     /**
@@ -75,8 +77,9 @@ class Fasta:
      *
      * @param charsByLine Number of character per line when writing files.
      * @param checkNames  Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     * @param extended Tell if we should read general comments and sequence comments in HUPO-PSI format.
      */
-    Fasta(unsigned int charsByLine = 100, bool checkNames = true): _charsByLine(charsByLine), _checkNames(checkNames) {}
+    Fasta(unsigned int charsByLine = 100, bool checkNames = true, bool extended = false): _charsByLine(charsByLine), _checkNames(checkNames), _extended(extended) {}
 
     // Class destructor
     virtual ~Fasta() {}

@@ -1,3 +1,6 @@
+12/01/09 Sylvain Gaillard
+* Added support for comments (HUPO-PSI like) in Fasta.
+
 21/12/08 Julien Dutheil
 * Return type for clone() methods corrected (Sequence, Site, SiteContainer and derivated classes).
 * Bug fixed in SequenceApplicationTools::get[Sequence/Site]Container, phylip format.
