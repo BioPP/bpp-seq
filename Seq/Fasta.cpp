@@ -169,8 +169,7 @@ void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (E
     {
 			if (seq.size() > _charsByLine)
       {
-				temp = seq;
-				temp.erase(temp.begin() + _charsByLine , temp.end());
+				temp = string(seq.begin(), seq.begin() + _charsByLine);
 				output << temp  << endl;
 				seq.erase(seq.begin(), seq.begin() + _charsByLine);
 			}
