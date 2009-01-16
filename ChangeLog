@@ -1,5 +1,10 @@
+16/01/09 Julien Dutheil
+* max_gap_allowed option in SequenceApplicationTools is now a included bound:
+  0 or 0% will keep all complete sites, and 'n=number of sequences' or 100%
+	will keep all sites.
+
 13/01/09 Sylvain Gaillard
-* Little optimisation in Fasta::write() methode.
+* Little optimization in Fasta::write() method.
 
 12/01/09 Sylvain Gaillard
 * Added support for comments (HUPO-PSI like) in Fasta.
