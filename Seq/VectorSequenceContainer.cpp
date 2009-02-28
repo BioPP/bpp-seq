@@ -67,11 +67,10 @@ AbstractSequenceContainer(alpha) {}
 	
 VectorSequenceContainer::VectorSequenceContainer(
 	const VectorSequenceContainer & vsc):
-	AbstractSequenceContainer(vsc.getAlphabet())
+	AbstractSequenceContainer(vsc)
 {
 	unsigned int max = vsc.getNumberOfSequences();
 	for (unsigned int i = 0 ; i < max ; i++) addSequence(* vsc.getSequence(i), false);
-	_comments = vsc.getGeneralComments();
 }
 
 VectorSequenceContainer::VectorSequenceContainer(
@@ -108,8 +107,8 @@ VectorSequenceContainer & VectorSequenceContainer::operator = (
 	_comments = vsc.getGeneralComments();
 
 	// Sequences insertion
-	int max = vsc.getNumberOfSequences();
-	for (int i = 0 ; i < max ; i++)	addSequence(* vsc.getSequence(i), false);
+	unsigned int max = vsc.getNumberOfSequences();
+	for (unsigned int i = 0 ; i < max ; i++)	addSequence(* vsc.getSequence(i), false);
 
 	return * this;
 }
@@ -121,8 +120,8 @@ VectorSequenceContainer & VectorSequenceContainer::operator = (
 	_comments = osc.getGeneralComments();
 
 	// Sequences insertion
-	int max = osc.getNumberOfSequences();
-	for (int i = 0 ; i < max ; i++)	addSequence(*osc.getSequence(i), false);
+	unsigned int max = osc.getNumberOfSequences();
+	for (unsigned int i = 0 ; i < max ; i++)	addSequence(*osc.getSequence(i), false);
     
 	return * this;
 }
@@ -147,16 +146,6 @@ VectorSequenceContainer& VectorSequenceContainer::operator = (
   _comments = sc.getGeneralComments();
 
   return * this;
-}
-
-/** Class destructor: *********************************************************/
-
-VectorSequenceContainer::~VectorSequenceContainer() { clear(); }
-
-/******************************************************************************/
-
-Clonable * VectorSequenceContainer::clone() const {
-	return new VectorSequenceContainer(*this);
 }
 
 /******************************************************************************/

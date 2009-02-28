@@ -101,24 +101,6 @@ Sequence * SequenceTools::concatenate(const Sequence & seq1, const Sequence & se
 		
 /****************************************************************************************/
 
-Sequence * SequenceTools::reverse(const Sequence & sequence)
-{
-	unsigned int n = sequence.size();
-	vector<int> content(n);
-	for(unsigned int i = 0; i < n; i++)
-  {
-		content[i] = sequence[n - i - 1];
-	}
-	// New sequence creating, and sense reversing
-	Sequence * s = new Sequence(sequence.getName(), content, sequence.getComments(), sequence.getAlphabet());
-	s->setSense(! sequence.getSense());
-
-	// Send result
-	return s;
-}
-
-/****************************************************************************************/
-
 Sequence * SequenceTools::complement(const Sequence & sequence) throw (AlphabetException)
 {
 	// Alphabet type checking

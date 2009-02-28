@@ -150,7 +150,7 @@ class VectorSequenceContainer:
     /**
 		 * @brief Container destructor: delete all sequences in the container.
 		 */
-		virtual ~VectorSequenceContainer();
+		virtual ~VectorSequenceContainer() { clear(); }
 
 	public:
 		
@@ -159,7 +159,7 @@ class VectorSequenceContainer:
 		 *
 		 * @{
 		 */
-		Clonable * clone() const;
+		Clonable * clone() const { return new VectorSequenceContainer(*this); }
 		/** @} */
 
 		/**

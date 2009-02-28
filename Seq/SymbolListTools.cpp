@@ -42,47 +42,72 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-map<int, unsigned int> SymbolListTools::getCounts(const SymbolList & list)
+void SymbolListTools::getCounts(const SymbolList & list, map<int, double> & counts, bool resolveUnknowns)
 {
-  map<int, unsigned int> c;
-  vector<int> seq = list.getContent();
-  for(unsigned int i = 0; i < seq.size(); i++) c[seq[i]]++;
-  return c;
-}
-
-map<int, double> SymbolListTools::getCounts(const SymbolList & list, bool resolveUnknowns)
-{
-	map<int, double> c;
-	vector<int> seq = list.getContent();
   if(!resolveUnknowns)
   {
-    for(unsigned int i = 0; i < seq.size(); i++) c[seq[i]]++;
+    for(vector<int>::const_iterator seqit = list.getContent().begin();
+        seqit != list.getContent().end();
+        seqit++)
+      counts[*seqit]++;
   }
   else
   {
-	  for(unsigned int i = 0; i < seq.size(); i++) 
+    for(vector<int>::const_iterator seqit = list.getContent().begin();
+        seqit != list.getContent().end();
+        seqit++)
     {
-      vector<int> alias = list.getAlphabet()->getAlias(seq[i]);
+      vector<int> alias = list.getAlphabet()->getAlias(*seqit);
       double n = (double)alias.size();
-      for(unsigned int j = 0; j < alias.size(); j++)
-      {
-        c[alias[j]] += 1./n ;
-      }
+      for(unsigned int j = 0; j < alias.size(); j++) counts[alias[j]] += 1./n ;
     }
   }
-	return c;
 }
 
-map<int, double> SymbolListTools::getFrequencies(const SymbolList & list, bool resolveUnknowns)
+void SymbolListTools::getCounts(const SymbolList & list1, const SymbolList & list2,  map< int, map<int, double> > & counts, bool resolveUnknowns) throw (DimensionException)
 {
-	map<int, double> f;
+  if(list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
+  if(!resolveUnknowns)
+  {
+    for(unsigned int i = 0; i < list1.size(); i++)
+      counts[list1[i]][list2[i]]++;
+  }
+  else
+  {
+    for(unsigned int i = 0; i < list1.size(); i++)
+    {
+      vector<int> alias1 = list1.getAlphabet()->getAlias(list1[i]);
+      vector<int> alias2 = list2.getAlphabet()->getAlias(list2[i]);
+      double n1 = (double)alias1.size();
+      double n2 = (double)alias2.size();
+      for(unsigned int j = 0; j < alias1.size(); j++)
+        for(unsigned int k = 0; k < alias2.size(); k++)
+          counts[alias1[j]][alias2[k]] += 1./(n1*n2) ;
+    }
+  }
+}
+
+void SymbolListTools::getFrequencies(const SymbolList & list, map<int, double> & frequencies, bool resolveUnknowns)
+{
 	double n = (double)list.size();
-  map<int, double> counts = getCounts(list, resolveUnknowns);
+  map<int, double> counts;
+  getCounts(list, counts, resolveUnknowns);
   for(map<int, double>::iterator i = counts.begin(); i != counts.end(); i++)
   {
-    f[i->first] = i -> second / n;
+    frequencies[i->first] = i->second / n;
   }
-  return f;
+}
+
+void SymbolListTools::getFrequencies(const SymbolList & list1, const SymbolList & list2, map<int, map<int, double> > & frequencies, bool resolveUnknowns) throw (DimensionException)
+{
+	double n2 = (double)list1.size() * (double)list1.size();
+  map<int, map<int, double> > counts;
+  getCounts(list1, list2, counts, resolveUnknowns);
+  for(map<int, map<int, double> >::iterator i = counts.begin(); i != counts.end(); i++)
+    for(map<int, double>::iterator j = i->second.begin(); j != i->second.end(); j++)
+  {
+    frequencies[i->first][j->first] = j->second / n2;
+  }
 }
 
 double SymbolListTools::getGCContent(const SymbolList & list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)

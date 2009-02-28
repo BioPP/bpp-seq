@@ -113,7 +113,8 @@ const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, stri
   while(ssi.hasMoreSites())
   {
     site = ssi.nextSite();
-    map<int, double> freq = SiteTools::getFrequencies(*site, resolveUnknown);
+    map<int, double> freq;
+    SiteTools::getFrequencies(*site, freq, resolveUnknown);
     double max = 0;
     int cons = -1; //default result
     if(ignoreGap)
@@ -131,7 +132,8 @@ const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, stri
     {
       for(map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
       {
-        if(it->second > max){
+        if(it->second > max)
+        {
           max = it->second;
           cons = it->first;
         }

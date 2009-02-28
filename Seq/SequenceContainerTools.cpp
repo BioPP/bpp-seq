@@ -110,9 +110,10 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer 
 {
 	vector<string> seqNames = sequences.getSequencesNames();
 	if(seqNames.size() <= 1) return true;
-	unsigned int length = sequences.getSequence(seqNames[0]) -> size();
-	for(unsigned int i = 1; i < seqNames.size(); i++) {
-		if(sequences.getSequence(seqNames[i]) -> size() != length) return false;
+	unsigned int length = sequences.getSequence(seqNames[0])->size();
+	for(unsigned int i = 1; i < seqNames.size(); i++)
+  {
+		if(sequences.getSequence(seqNames[i])->size() != length) return false;
 	}
 	return true;
 }

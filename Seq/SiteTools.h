@@ -117,37 +117,59 @@ class SiteTools:
 		 * @brief Compute the Shannon entropy index of a site.
 		 *
 		 * \f[
-		 * I = \sum_{i=1}{n} f_iln(f_i)
+		 * I = \sum_x f_x\cdot \ln(f_x)
 		 * \f]
-		 * where \f$f_i\f$ is the frequency of state \f$i\f$.
+		 * where \f$f_x\f$ is the frequency of state \f$x\f$.
 		 * 
+     * @author J. Dutheil
 		 * @param site A site.
-		 * @return The Shannon entropy index of this site.
+     * @param resolveUnknowns Tell is unknown characters must be resolved.
+ 		 * @return The Shannon entropy index of this site.
 		 * @throw EmptySiteException If the site has size 0.
 		 */
-		static double variabilityShannon(const Site & site) throw (EmptySiteException);
+		static double variabilityShannon(const Site & site, bool resolveUnknowns) throw (EmptySiteException);
 		
 		/**
 		 * @brief Compute the factorial diversity index of a site.
 		 *
 		 * \f[
-		 * F = \frac{log\left(\left(\sum_{i=1}{n} p_i\right)!\right)}{\sum_{i=1}^n log(p_i)!}
+		 * F = \frac{log\left(\left(\sum_x p_x\right)!\right)}{\sum_x \log(p_x)!}
 		 * \f]
-		 * where \f$p_i\f$ is the number of times state \f$i\f$ is observed in the site.
+		 * where \f$p_x\f$ is the number of times state \f$x\f$ is observed in the site.
 		 * 
+     * @author J. Dutheil
 		 * @param site A site.
-		 * @return The factorial diversity index of this site.
+ 		 * @return The factorial diversity index of this site.
 		 * @throw EmptySiteException If the site has size 0.
 		 */
 		static double variabilityFactorial(const Site & site) throw (EmptySiteException);
+		
+    /**
+     * @brief Compute the mutual information between two sites.
+     *
+     * \f[
+     * MI = \sum_x \sum_y p_{x,y}\ln\left(\frac{p_{x,y}}{p_x \cdot p_y}\right)
+     * \f]
+     * where \f$p_x\f$ and \f$p_y\f$ are the frequencies of states \f$x\f$ and \f$y\f$, and
+     * \f$p_{x,y}\f$ is the frequency of the pair \f$(x,y)\f$.
+     *
+     * @author J. Dutheil
+     * @param site1 First site
+     * @param site2 Second site
+     * @param resolveUnknowns Tell is unknown characters must be resolved.
+     * @return The mutual information for the pair of sites.
+     * @throw DimensionException If the sites do not have the same length.
+		 * @throw EmptySiteException If the sites have size 0.
+     */
+    static double mutualInformation(const Site & site1, const Site & site2, bool resolveUnknowns) throw (DimensionException,EmptySiteException);
 
 		/**
 		 * @brief Compute the heterozygosity index of a site.
 		 *
 		 * \f[
-		 * H = 1 - \sum_{i=1}{n} f_i^2
+		 * H = 1 - \sum_x f_x^2
 		 * \f]
-		 * where \f$f_i\f$ is the frequency of state \f$i\f$.
+		 * where \f$f_x\f$ is the frequency of state \f$x\f$.
 		 * 
 		 * @param site A site.
 		 * @return The heterozygosity index of this site.

@@ -116,7 +116,7 @@ VectorSiteContainer::VectorSiteContainer(const Alphabet * alpha):
 /******************************************************************************/
 
 VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer & vsc):
-  AbstractSequenceContainer(vsc.getAlphabet())
+  AbstractSequenceContainer(vsc)
 {
   // Seq names:
   int nbSeq = vsc.getNumberOfSequences();
@@ -134,9 +134,6 @@ VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer & vsc):
     _comments[i] = new Comments(vsc.getComments(i));
   }
   Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
-
-  // General comments:
-  setGeneralComments(vsc.getGeneralComments());
 }
 
 /******************************************************************************/
@@ -285,10 +282,6 @@ VectorSiteContainer& VectorSiteContainer::operator = (const SequenceContainer & 
 
   return * this;
 }
-
-/**  Class destructor *********************************************************/
-
-VectorSiteContainer::~VectorSiteContainer() { clear(); }
 
 /******************************************************************************/
 

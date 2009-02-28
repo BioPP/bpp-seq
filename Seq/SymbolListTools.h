@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SymbolList.h"
 #include "AlphabetExceptions.h"
 
+// From NumCalc:
+#include <NumCalc/VectorExceptions.h>
+
 // From the STL:
 #include <map>
 
@@ -64,32 +67,92 @@ class SymbolListTools
 		/**
 		 * @brief Count all states in the list.
 		 *
+     * @author J. Dutheil
 		 * @param list The list.
-		 * @return A map with all states and corresponding counts.
+     * @param counts The output map to store the counts (existing counts will be incremented).
 		 */
-		static map<int, unsigned int> getCounts(const SymbolList & list);
+		static void getCounts(const SymbolList & list,  map<int, unsigned int> & counts)
+    {
+      for(vector<int>::const_iterator seqit = list.getContent().begin();
+          seqit != list.getContent().end();
+          seqit++)
+        counts[*seqit]++;
+    }
 		
 		/**
+		 * @brief Count all pair of states for two lists of the same size.
+		 *
+     * NB: The two lists do node need to share the same alphabet!
+     * The states of the first list will be used as the first index in the output,
+     * and the ones from the second list as the second index.
+     *
+     * @author J. Dutheil
+		 * @param list1 The first list.
+		 * @param list2 The second list.
+     * @param counts The output map to store the counts (existing counts will be incremented).
+		 */
+		static void getCounts(const SymbolList & list1, const SymbolList & list2, map<int, map<int, unsigned int> > & counts) throw (DimensionException)
+    {
+      if(list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
+      for(unsigned int i = 0; i < list1.size(); i++)
+        counts[list1[i]][list2[i]]++;
+    }
+
+    /**
 		 * @brief Count all states in the list, optionaly resolving unknown characters.
 		 *
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
 		 *
+     * @author J. Dutheil
      * @param list The list.
+     * @param counts The output map to store the counts (existing ocunts will be incremented).
      * @param resolveUnknowns Tell is unknown characters must be resolved.
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
 		 * @return A map with all states and corresponding counts.
 		 */
-		static map<int, double> getCounts(const SymbolList & list, bool resolveUnknowns);
+		static void getCounts(const SymbolList & list,  map<int, double> & counts, bool resolveUnknowns);
+		
+    /**
+		 * @brief Count all pair of states for two lists of the same size, optionaly resolving unknown characters.
+		 *
+     * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
+		 *
+     * NB: The two lists do node need to share the same alphabet!
+     * The states of the first list will be used as the first index in the output,
+     * and the ones from the second list as the second index.
+     *
+     * @author J. Dutheil
+		 * @param list1 The first list.
+		 * @param list2 The second list.
+     * @param counts The output map to store the counts (existing ocunts will be incremented).
+     * @param resolveUnknowns Tell is unknown characters must be resolved.
+     * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
+		 * @return A map with all states and corresponding counts.
+		 */
+		static void getCounts(const SymbolList & list1, const SymbolList & list2,  map< int, map<int, double> > & counts, bool resolveUnknowns) throw (DimensionException);
 		
     /**
 		 * @brief Get all states frequencies in the list.
 		 *
+     * @author J. Dutheil
 		 * @param list The list.
      * @param resolveUnknowns Tell is unknown characters must be resolved.
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
-		 * @return A map with all states and corresponding frequencies.
+		 * @param frequencies The output map with all states and corresponding frequencies. Existing frequencies will be erased if any.
 		 */
-		static map<int, double> getFrequencies(const SymbolList & list, bool resolveUnknowns = false);
+		static void getFrequencies(const SymbolList & list, map<int, double> & frequencies, bool resolveUnknowns = false);
+
+    /**
+		 * @brief Get all state pairs frequencies for two lists of the same size..
+		 *
+     * @author J. Dutheil
+		 * @param list1 The first list.
+		 * @param list2 The second list.
+     * @param resolveUnknowns Tell is unknown characters must be resolved.
+     * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
+		 * @param frequencies The output map with all state pairs and corresponding frequencies. Existing frequencies will be erased if any.
+		 */
+		static void getFrequencies(const SymbolList & list1, const SymbolList & list2, map<int, map<int, double> > & frequencies, bool resolveUnknowns = false) throw (DimensionException);
 
     /**
      * @brief Get the GC content of a symbol list.

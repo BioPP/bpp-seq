@@ -145,16 +145,6 @@ class SequenceTools:
 		     throw (AlphabetMismatchException, Exception) ;
 
 		/**
-		 * @brief change the sense of a sequence.
-		 *
-		 * ABCDEF becomes FEDCBA, and the sense attribute is changed.
-		 *
-		 * @return A new sequence object containing the reversed sequence.
-		 * @param sequence The sequence to reverse.
-		 */
-		static Sequence * reverse(const Sequence & sequence);
-
-		/**
 		 * @brief Get the complementary sequence of a nucleotide sequence.
 		 *
 		 * @see DNAReplication
@@ -187,12 +177,24 @@ class SequenceTools:
 		/**
 		 * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
 		 *
-		 * @return sequence A new inverted sequence.
+		 * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be inhibited).
+     *
+		 * @return A new sequence object containing the inverted sequence.
 		 * @param sequence The sequence to inverse.
      * @param chgSense Tell if the sense tag should be shifted.
 		 */
 		static Sequence * invert(const Sequence & sequence, bool chgSense = true);
 		
+		/**
+		 * @brief Alias for invert (DEPRECATED).
+		 *
+		 * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be inhibited).
+     *
+		 * @return A new sequence object containing the inverted sequence.
+		 * @param sequence The sequence to inverse.
+		 */
+		static Sequence * reverse(const Sequence & sequence) { return invert(sequence, true); }
+
     /**
 		 * @return The identity percent of 2 sequence.
 		 * One match is counted if the two sequences have identical states.

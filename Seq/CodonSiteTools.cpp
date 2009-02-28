@@ -158,36 +158,47 @@ Site * CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site & site, do
   if(site.size() == 0)
     throw EmptySiteException("CodonSiteTools::generateCodonSiteWithoutRareVariant: Incorrect specified site", &site);
 
-  if (SiteTools::isConstant(site)) {
+  if (SiteTools::isConstant(site))
+  {
     Site * noRareVariant = new Site(site);
     return noRareVariant;
   }
-  else {
+  else
+  {
     //Computation
-    map<int,double> freqcodon = SiteTools::getFrequencies(site);
+    map<int,double> freqcodon;
+    SiteTools::getFrequencies(site, freqcodon);
     const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet *>(site.getAlphabet());
     const NucleicAlphabet * na = ca->getNucleicAlphabet();
     int newcodon = -1;
-    for(map<int,double>::iterator it = freqcodon.begin(); it != freqcodon.end(); it++) {
-      if(it->second > freqmin && !ca->isStop(it->first)) {
+    for(map<int,double>::iterator it = freqcodon.begin(); it != freqcodon.end(); it++)
+    {
+      if(it->second > freqmin && !ca->isStop(it->first))
+      {
         newcodon = it->first;
         break;
       }
     }
     vector<int> pos1, pos2, pos3;
-    for(unsigned int i = 0; i < site.size(); i++) {
+    for(unsigned int i = 0; i < site.size(); i++)
+    {
       pos1.push_back(ca->getFirstPosition(site[i]));
       pos2.push_back(ca->getSecondPosition(site[i]));
       pos3.push_back(ca->getThirdPosition(site[i]));
     }
     Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
-    map<int,double> freq1 = SiteTools::getFrequencies(s1);
-    map<int,double> freq2 = SiteTools::getFrequencies(s2);
-    map<int,double> freq3 = SiteTools::getFrequencies(s3);
+    map<int,double> freq1;
+    SiteTools::getFrequencies(s1, freq1);
+    map<int,double> freq2;
+    SiteTools::getFrequencies(s2, freq2);
+    map<int,double> freq3;
+    SiteTools::getFrequencies(s3, freq3);
     vector<int> codon;
-    for(unsigned int i = 0; i < site.size(); i++) {
-     if(freq1[s1.getValue(i)] > freqmin && freq2[s2.getValue(i)] > freqmin && freq3[s3.getValue(i)] > freqmin) {
-      codon.push_back(site.getValue(i));
+    for(unsigned int i = 0; i < site.size(); i++)
+    {
+     if(freq1[s1.getValue(i)] > freqmin && freq2[s2.getValue(i)] > freqmin && freq3[s3.getValue(i)] > freqmin)
+     {
+       codon.push_back(site.getValue(i));
      }
      else codon.push_back(newcodon);
     }
@@ -364,9 +375,11 @@ double CodonSiteTools::piSynonymous(const Site & site, const GeneticCode & gc, b
   //General polymorphism checking
   if (SiteTools::isConstant(site)) return 0;
   //Computation
-  map<int,double> freq = SiteTools::getFrequencies(site);
+  map<int,double> freq;
+  SiteTools::getFrequencies(site, freq);
   double pi = 0;
-  for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++) {
+  for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++)
+  {
     for(map<int,double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++) {
      pi += (it1 -> second) * (it2 -> second) * (numberOfSynonymousDifferences(it1->first,it2->first,gc,minchange));
     }
@@ -393,7 +406,8 @@ double CodonSiteTools::piNonSynonymous(const Site & site, const GeneticCode & gc
   if(SiteTools::isConstant(site)) return 0;
   if(isSynonymousPolymorphic(site,gc)) return 0;
   //Computation
-  map<int,double> freq = SiteTools::getFrequencies(site);
+  map<int,double> freq;
+  SiteTools::getFrequencies(site, freq);
   const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet *>(site.getAlphabet());
   double pi = 0;
   for(map<int,double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++) {
@@ -457,9 +471,11 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site & site, const 
 
   //Computation
   double NbSyn=0;
-  map<int,double> freq = SiteTools::getFrequencies(site);
-  for(map<int,double>::iterator it = freq.begin(); it != freq.end(); it++) {
-    NbSyn += (it->second)*numberOfSynonymousPositions(it->first,gc,ratio);
+  map<int,double> freq;
+  SiteTools::getFrequencies(site, freq);
+  for(map<int,double>::iterator it = freq.begin(); it != freq.end(); it++)
+  {
+    NbSyn += (it->second)*numberOfSynonymousPositions(it->first, gc, ratio);
   }
   return NbSyn;
 }
@@ -524,7 +540,8 @@ unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site &site
   else newsite = new Site(site);
   if (SiteTools::hasGap(*newsite)) return 0;
   //computation
-  map<int,unsigned int> count = SiteTools::getCounts(*newsite);
+  map<int,unsigned int> count;
+  SiteTools::getCounts(*newsite, count);
   unsigned int NaSup=0;
   unsigned int Nminmin=10;
 

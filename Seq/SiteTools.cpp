@@ -155,12 +155,46 @@ bool SiteTools::isConstant(const Site & site, bool ignoreUnknown) throw (EmptySi
 
 /******************************************************************************/
 
-double SiteTools::variabilityShannon(const Site & site) throw (EmptySiteException)
+double SiteTools::variabilityShannon(const Site & site, bool resolveUnknown) throw (EmptySiteException)
 {
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::variabilityShannon: Incorrect specified site", &site);
-	map<int, double> p = getFrequencies(site);
+	map<int, double> p;
+  getFrequencies(site, p, resolveUnknown);
 	return VectorTools::shannon<double, double>(MapTools::getValues(p));
+}
+
+/******************************************************************************/
+
+double SiteTools::mutualInformation(const Site & site1, const Site & site2, bool resolveUnknown) throw (DimensionException,EmptySiteException)
+{
+	// Empty site checking
+	if(site1.size() == 0) throw EmptySiteException("SiteTools::mutualInformation: Incorrect specified site", &site1);
+	if(site2.size() == 0) throw EmptySiteException("SiteTools::mutualInformation: Incorrect specified site", &site2);
+  if(site1.size() != site2.size()) throw DimensionException("SiteTools::mutualInformation: sites must have the same size!", site1.size(), site2.size());
+	vector<double> p1(site1.getAlphabet()->getSize());
+  vector<double> p2(site2.getAlphabet()->getSize());
+  map<int, map<int, double> > p12;
+  getCounts(site1, site2, p12, resolveUnknown);
+  double mi = 0, tot = 0, pxy;
+  //We need to correct frequencies for gaps:
+  for(unsigned int i = 0; i < site1.getAlphabet()->getSize(); i++)
+    for(unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++)
+    {
+      pxy = p12[(int)i][(int)j];
+      tot += pxy;
+      p1[i] += pxy;
+      p2[j] += pxy;
+    }
+  for(unsigned int i = 0; i < site1.getAlphabet()->getSize(); i++) p1[i] /= tot;
+  for(unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++) p2[j] /= tot;
+  for(unsigned int i = 0; i < site1.getAlphabet()->getSize(); i++)
+    for(unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++)
+    {
+      pxy = p12[(int)i][(int)j] / tot;
+      if(pxy > 0) mi += pxy * log(pxy/(p1[i]*p2[j]));
+    }
+	return mi;
 }
 
 /******************************************************************************/
@@ -169,7 +203,8 @@ double SiteTools::variabilityFactorial(const Site & site) throw (EmptySiteExcept
 {
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::variabilityFactorial: Incorrect specified site", &site);
-	map<int, unsigned int> p = getCounts(site);
+	map<int, unsigned int> p;
+  getCounts(site, p);
 	vector<unsigned int> c = MapTools::getValues(p);
 	unsigned int s = VectorTools::sum(c);
   return std::log((double)NumTools::fact(s) / (double)VectorTools::sum(VectorTools::fact(c)));
@@ -181,7 +216,8 @@ double SiteTools::heterozygosity(const Site & site) throw (EmptySiteException)
 {
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::heterozygosity: Incorrect specified site", &site);
-	map<int, double> p = getFrequencies(site);
+	map<int, double> p;
+  getFrequencies(site, p);
 	vector<double> c = MapTools::getValues(p);
 	double n = VectorTools::norm<double, double>(MapTools::getValues(p));
 	return 1. - n*n;
@@ -194,14 +230,15 @@ unsigned int SiteTools::getNumberOfDistinctCharacters(const Site & site) throw (
   // Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::getNumberOfDistinctCharacters(): Incorrect specified site", &site);
 	// For all site's characters
-  if (SiteTools::isConstant(site)) return 1;
-  map<int,unsigned int> count = SymbolListTools::getCounts(site);
-  int S = 0;
-  for(map<int, unsigned int>::iterator it=count.begin(); it!=count.end(); it++)
+  if(SiteTools::isConstant(site)) return 1;
+  map<int,unsigned int> counts;
+  SymbolListTools::getCounts(site, counts);
+  int s = 0;
+  for(map<int, unsigned int>::iterator it = counts.begin(); it != counts.end(); it++)
   {
-    if(it->second!=0) S++;
+    if(it->second!=0) s++;
   }
-  return S;
+  return s;
 }
 
 /******************************************************************************/
@@ -209,13 +246,14 @@ unsigned int SiteTools::getNumberOfDistinctCharacters(const Site & site) throw (
 bool SiteTools::hasSingleton(const Site & site) throw (EmptySiteException)
 {
   // Empty site checking
-	if(site.size() == 0) throw EmptySiteException("SiteTools::isSingleton: Incorrect specified site", &site);
+	if(site.size() == 0) throw EmptySiteException("SiteTools::hasSingleton: Incorrect specified site", &site);
 	// For all site's characters
   if(SiteTools::isConstant(site)) return false;
-  map<int,unsigned int> count = SymbolListTools::getCounts(site);
-	for(map<int, unsigned int>::iterator it = count.begin(); it != count.end(); it++)
+  map<int,unsigned int> counts;
+  getCounts(site, counts);
+	for(map<int, unsigned int>::iterator it = counts.begin(); it != counts.end(); it++)
   {
-    if(it -> second == 1) return true;
+    if(it->second == 1) return true;
   }
   return false;
 }
@@ -228,11 +266,12 @@ bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteEx
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isParsimonyInformativeSite: Incorrect specified site", &site);
 	// For all site's characters
   if(SiteTools::isConstant(site)) return false;
-  map<int,unsigned int> count = SymbolListTools::getCounts(site);
+  map<int,unsigned int> counts;
+  SymbolListTools::getCounts(site, counts);
   unsigned int npars = 0;
-	for(map<int, unsigned int>::iterator it = count.begin(); it != count.end(); it++)
+	for(map<int, unsigned int>::iterator it = counts.begin(); it != counts.end(); it++)
   {
-    if(it -> second > 1) npars++;
+    if(it->second > 1) npars++;
   }
   if(npars > 1) return true;
   return false;

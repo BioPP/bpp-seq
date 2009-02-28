@@ -123,7 +123,7 @@ class VectorSiteContainer:
     VectorSiteContainer& operator = (const OrderedSequenceContainer & osc);
     VectorSiteContainer& operator = (const        SequenceContainer &  sc);
 
-    virtual ~VectorSiteContainer();
+    virtual ~VectorSiteContainer() { clear(); }
 
   public:
 

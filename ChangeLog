@@ -1,3 +1,8 @@
+28/02/09 Julien Dutheil
+* Added mutual information calculation.
+* Added pairwise counting methods.
+* Frequencies counting methods have been improved (avoid useless copy of maps).
+
 16/01/09 Julien Dutheil
 * max_gap_allowed option in SequenceApplicationTools is now a included bound:
   0 or 0% will keep all complete sites, and 'n=number of sequences' or 100%
@@ -8,6 +13,13 @@
 
 12/01/09 Sylvain Gaillard
 * Added support for comments (HUPO-PSI like) in Fasta.
+
+08/01/09 Julien Dutheil
+* SequenceTools::reverse method has been deprecated in favor of the
+  SequenceTools::inverse method, of witch it is now an alias.
+
+07/01/09 Julien Dutheil
+* Code improvement in Vector containers.
 
 21/12/08 Julien Dutheil
 * Return type for clone() methods corrected (Sequence, Site, SiteContainer and derivated classes).
