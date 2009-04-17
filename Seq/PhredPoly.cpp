@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/TextTools.h>
 #include <Utils/StringTokenizer.h>
 
+// From NumCalc:
+#include <NumCalc/NumTools.h>
+
 using namespace bpp;
 
 /******************************************************************************/
@@ -72,9 +75,7 @@ void PhredPoly::appendFromStream(istream & input, VectorSequenceContainer & vsc)
       double a = TextTools::toDouble(st.getToken(3));
       double b = TextTools::toDouble(st.getToken(7));
       if (a < b) {
-        double t = a;
-        a = b;
-        b = t;
+        NumTools::swap(a, b);
       }
       vector<string> v;
       v.push_back(st.getToken(0)); // Get the called base
