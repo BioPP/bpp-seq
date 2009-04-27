@@ -136,18 +136,42 @@ bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2)
 bool SiteTools::isConstant(const Site & site, bool ignoreUnknown) throw (EmptySiteException)
 {
 	// Empty site checking
-	if(site.size() == 0) throw EmptySiteException("SiteTools::isConstant: Incorrect specified site", &site);
+	if (site.size() == 0) throw EmptySiteException("SiteTools::isConstant: Incorrect specified site", &site);
 
 	// For all site's characters
-	int s = site[0];
-  if(ignoreUnknown)
+  int gap = site.getAlphabet()->getGapCharacterCode();
+  if (ignoreUnknown)
   {
+	  int s = site[0];
     int unknown = site.getAlphabet()->getUnknownCharacterCode();
-	  for (unsigned int i = 1; i < site.size(); i++) if (site[i] != s && site[i] != unknown) return false;
+    unsigned int i = 0;
+    while (i < site.size() && s == gap && s == unknown)
+    {
+      s = site[i];
+      i++;
+    }
+    if(s == unknown || s == gap) throw EmptySiteException("SiteTools::isConstant: Site is only made of gaps or generic characters.");
+	  while(i < site.size())
+    {
+      if (site[i] != s && site[i] != gap && site[i] != unknown) return false;
+      i++;
+    }
   } 
   else
   {
-	  for (unsigned int i = 1; i < site.size(); i++) if (site[i] != s) return false;
+    int s = site[0];
+    unsigned int i = 0;
+    while  (i < site.size() && s == gap)
+    {
+      s = site[i];
+      i++;
+    }
+    if (s == gap) throw EmptySiteException("SiteTools::isConstant: Site is only made of gaps.");
+	  while (i < site.size())
+    {
+      if (site[i] != s && site[i] != gap) return false;
+      i++;
+    }
   }
 
 	return true;
@@ -161,7 +185,14 @@ double SiteTools::variabilityShannon(const Site & site, bool resolveUnknown) thr
 	if(site.size() == 0) throw EmptySiteException("SiteTools::variabilityShannon: Incorrect specified site", &site);
 	map<int, double> p;
   getFrequencies(site, p, resolveUnknown);
-	return VectorTools::shannon<double, double>(MapTools::getValues(p));
+  //We need to correct frequencies for gaps:
+  double s;
+  for(unsigned int i = 0; i < site.getAlphabet()->getSize(); i++)
+  {
+    double f = p[i];
+	  if(f > 0) s += f * log(f);
+  }
+  return -s;
 }
 
 /******************************************************************************/
@@ -179,6 +210,7 @@ double SiteTools::mutualInformation(const Site & site1, const Site & site2, bool
   double mi = 0, tot = 0, pxy;
   //We need to correct frequencies for gaps:
   for(unsigned int i = 0; i < site1.getAlphabet()->getSize(); i++)
+  {
     for(unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++)
     {
       pxy = p12[(int)i][(int)j];
@@ -186,14 +218,17 @@ double SiteTools::mutualInformation(const Site & site1, const Site & site2, bool
       p1[i] += pxy;
       p2[j] += pxy;
     }
+  }
   for(unsigned int i = 0; i < site1.getAlphabet()->getSize(); i++) p1[i] /= tot;
   for(unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++) p2[j] /= tot;
   for(unsigned int i = 0; i < site1.getAlphabet()->getSize(); i++)
+  {
     for(unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++)
     {
       pxy = p12[(int)i][(int)j] / tot;
       if(pxy > 0) mi += pxy * log(pxy/(p1[i]*p2[j]));
     }
+  }
 	return mi;
 }
 

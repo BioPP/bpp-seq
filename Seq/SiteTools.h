@@ -98,6 +98,8 @@ class SiteTools:
     static bool isComplete(const Site & site);
     
     /**
+     * @brief Tell if a site is constant, that is displaying the same state in all sequences that do not present a gap.
+     *
      * @param site A site.
      * @param ignoreUnknown If true, positions with unknown positions will be ignored.
      * Otherwise, a site with one single state + any uncertain state will not be considered as constant.
