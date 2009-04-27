@@ -1,3 +1,6 @@
+27/04/09 Julien Dutheil
+* Added site randomization method.
+
 28/02/09 Julien Dutheil
 * Added mutual information calculation.
 * Added pairwise counting methods.

@@ -40,6 +40,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SymbolListTools.h"
 #include "AlphabetTools.h"
 
+// From NumCalc:
+#include <NumCalc/RandomTools.h>
+
 using namespace bpp;
 
 void SymbolListTools::getCounts(const SymbolList & list, map<int, double> & counts, bool resolveUnknowns)
@@ -187,5 +190,10 @@ void SymbolListTools::changeUnresolvedCharactersToGaps(SymbolList & l)
   {
     if(l.getAlphabet()->isUnresolved(l[i])) l[i] = gapCode;
   }
+}
+
+void SymbolListTools::randomizeContent(SymbolList & l)
+{
+  l.setContent(RandomTools::getSample(l.getContent(), l.size(), false));
 }
 
