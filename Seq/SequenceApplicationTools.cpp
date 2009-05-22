@@ -45,6 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 //From Utils:
 #include <Utils/ApplicationTools.h>
 #include <Utils/TextTools.h>
+#include <Utils/KeyvalTools.h>
 
 using namespace bpp;
 
@@ -93,49 +94,66 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
   bool suffixIsOptional,
   bool verbose)
 {
-  string sequenceFilePath = ApplicationTools::getAFilePath("sequence.file",params, true, true, suffix, suffixIsOptional);
-  string sequenceFormat = ApplicationTools::getStringParameter("sequence.format", params, "Fasta", suffix, suffixIsOptional);
-  if(verbose) ApplicationTools::displayResult("Sequence format " + suffix, sequenceFormat);
+  string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file",params, true, true, suffix, suffixIsOptional);
+  string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional);
+  string format = "";
+  map<string, string> args;
+  KeyvalTools::parseProcedure(sequenceFormat, format, args);
+  if(verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
   ISequence * iSeq = NULL;
-  if(sequenceFormat == "Mase")
+  if(format == "Mase")
   {
     iSeq = new Mase();
   }
-  else if(sequenceFormat == "Phylip")
+  else if(format == "Phylip")
   {
     bool sequential = true, extended = true;
     string split = "  ";
-    if(params.find("sequence.format_phylip.order") != params.end())
+    if(args.find("order") != args.end())
     {
-           if(params["sequence.format_phylip.order"] == "sequential" ) sequential = true;
-      else if(params["sequence.format_phylip.order"] == "interleaved") sequential = false;
+           if(args["order"] == "sequential" ) sequential = true;
+      else if(args["order"] == "interleaved") sequential = false;
       else ApplicationTools::displayWarning("Argument '" +
-             params["sequence.format_phylip.order"] +
-             "' for parameter 'sequence.format_phylip.order' is unknown. " +
+             args["order"] +
+             "' for argument 'Phylip#order' is unknown. " +
              "Default used instead: sequential.");
     }
-    else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.order' not found. Default used instead: sequential.");
-    if(params.find("sequence.format_phylip.ext") != params.end())
+    else ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
+    if(args.find("type") != args.end())
     {
-           if(params["sequence.format_phylip.ext"] == "extended")
+      if(args["type"] == "extended")
       {
         extended = true;
-        split = ApplicationTools::getStringParameter("sequence.format_phylip.extended.split", params, "spaces", suffix, suffixIsOptional);
+        split = ApplicationTools::getStringParameter("split", args, "spaces", "", true, false);
         if(split == "spaces") split = "  ";
         else if(split == "tab") split = "\t";
-        else throw Exception("Unknown option for sequence.format_phylip.extended.split: " + split);
+        else throw Exception("Unknown option for Phylip#split: " + split);
       }
-      else if(params["sequence.format_phylip.ext"] == "classic" ) extended = false;
+      else if(args["type"] == "classic" ) extended = false;
       else ApplicationTools::displayWarning("Argument '" +
-             params["sequence.format_phylip.ext"] +
-             "' for parameter 'sequence.format_phylip.ext' is unknown. " +
+             args["type"] + "' for parameter 'Phylip#type' is unknown. " +
              "Default used instead: extended.");
     }
-    else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.ext' not found. Default used instead: extended.");
+    else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
     iSeq = new Phylip(extended, sequential, 100, true, split);
   }
-  else if(sequenceFormat == "Fasta") iSeq = new Fasta();
-  else if(sequenceFormat == "Clustal") iSeq = new Clustal();
+  else if(format == "Fasta")
+  {
+    iSeq = new Fasta();
+  }
+  else if(format == "Clustal")
+  {
+    unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
+    iSeq = new Clustal(true, extraSpaces);
+  }
+  else if(format == "Dcse")
+  {
+    iSeq = new DCSE();
+  }
+  else if(format == "GenBank")
+  {
+    iSeq = new GenBank();
+  }
   else
   {
     ApplicationTools::displayError("Unknown sequence format.");
@@ -158,66 +176,81 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
   bool suffixIsOptional,
   bool verbose)
 {
-  string sequenceFilePath = ApplicationTools::getAFilePath("sequence.file",params, true, true, suffix, suffixIsOptional);
-  string sequenceFormat = ApplicationTools::getStringParameter("sequence.format", params, "Fasta", suffix, suffixIsOptional);
-  if(verbose) ApplicationTools::displayResult("Sequence format " + suffix, sequenceFormat);
+  string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional);
+  string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional);
+  string format = "";
+  map<string, string> args;
+  KeyvalTools::parseProcedure(sequenceFormat, format, args);
+
+  if(verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
   ISequence * iSeq = NULL;
-  if(sequenceFormat == "Mase")
+  if(format == "Mase")
   {
     iSeq = new Mase();
   }
-  else if(sequenceFormat == "Phylip")
+  else if(format == "Phylip")
   {
     bool sequential = true, extended = true;
     string split = "  ";
-    if(params.find("sequence.format_phylip.order") != params.end())
+    if(args.find("order") != args.end())
     {
-           if(params["sequence.format_phylip.order"] == "sequential" ) sequential = true;
-      else if(params["sequence.format_phylip.order"] == "interleaved") sequential = false;
+           if(args["order"] == "sequential" ) sequential = true;
+      else if(args["order"] == "interleaved") sequential = false;
       else ApplicationTools::displayWarning("Argument '" +
-             params["sequence.format_phylip.order"] +
-             "' for parameter 'sequence.format_phylip.order' is unknown. " +
+             args["order"] +
+             "' for argument 'Phylip#order' is unknown. " +
              "Default used instead: sequential.");
     }
-    else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.order' not found. Default used instead: sequential.");
-    if(params.find("sequence.format_phylip.ext") != params.end())
+    else ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
+    if(args.find("type") != args.end())
     {
-      if(params["sequence.format_phylip.ext"] == "extended")
+      if(args["type"] == "extended")
       {
         extended = true;
-        split = ApplicationTools::getStringParameter("sequence.format_phylip.extended.split", params, "spaces", suffix, suffixIsOptional);
+        split = ApplicationTools::getStringParameter("split", args, "spaces", "", true, false);
         if(split == "spaces") split = "  ";
         else if(split == "tab") split = "\t";
-        else throw Exception("Unknown option for sequence.format_phylip.extended.split: " + split);
+        else throw Exception("Unknown option for Phylip#split: " + split);
       }
-      else if(params["sequence.format_phylip.ext"] == "classic" ) extended = false;
+      else if(args["type"] == "classic" ) extended = false;
       else ApplicationTools::displayWarning("Argument '" +
-             params["sequence.format_phylip.ext"] +
-             "' for parameter 'sequence.format_phylip.ext' is unknown. " +
+             args["type"] + "' for parameter 'Phylip#type' is unknown. " +
              "Default used instead: extended.");
     }
-    else ApplicationTools::displayWarning("Argument 'sequence.format_phylip.ext' not found. Default used instead: extended.");
+    else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
     iSeq = new Phylip(extended, sequential, 100, true, split);
   }
-  else if(sequenceFormat == "Fasta") iSeq = new Fasta();
-  else if(sequenceFormat == "Clustal") iSeq = new Clustal();
+  else if(format == "Fasta")
+  {
+    iSeq = new Fasta();
+  }
+  else if(format == "Clustal")
+  {
+    unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
+    iSeq = new Clustal(true, extraSpaces);
+  }
+  else if(format == "Dcse")
+  {
+    iSeq = new DCSE();
+  }
+
   else
   {
-    ApplicationTools::displayError("Unknown sequence format.");
+    ApplicationTools::displayError("Unknown sequence format: " + format);
     exit(-1);
   }
-  const SequenceContainer * seqCont = iSeq->read(sequenceFilePath, alpha);
-  VectorSiteContainer * sites = new VectorSiteContainer(* dynamic_cast<const OrderedSequenceContainer *>(seqCont));
+  const SequenceContainer* seqCont = iSeq->read(sequenceFilePath, alpha);
+  VectorSiteContainer* sites = new VectorSiteContainer(* dynamic_cast<const OrderedSequenceContainer *>(seqCont));
   delete seqCont;
   delete iSeq;
   
   if(verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
 
   // Look for site selection:
-  if(sequenceFormat == "Mase")
+  if(format == "Mase")
   {
     //getting site set:
-    string siteSet = ApplicationTools::getStringParameter("sequence.format_mase.site_selection", params, "none", suffix, suffixIsOptional, false);
+    string siteSet = ApplicationTools::getStringParameter("siteSelection", args, "none", suffix, suffixIsOptional, false);
     if(siteSet != "none")
     {
       VectorSiteContainer * selectedSites;
@@ -256,12 +289,12 @@ VectorSiteContainer * SequenceApplicationTools::getSitesToAnalyse(
   // Fully resolved sites, i.e. without jokers and gaps:
   VectorSiteContainer * sitesToAnalyse;
   
-  string option = ApplicationTools::getStringParameter("sequence.sites_to_use", params, "complete", suffix, suffixIsOptional);
+  string option = ApplicationTools::getStringParameter("input.sequence.sites_to_use", params, "complete", suffix, suffixIsOptional);
   if(verbose) ApplicationTools::displayResult("Sites to use", option);
   sitesToAnalyse = new VectorSiteContainer(allSites);
   if(option == "all")
   {
-    string maxGapOption = ApplicationTools::getStringParameter("sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional);
+    string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional);
     if(maxGapOption[maxGapOption.size()-1] == '%')
     {
       double gapFreq = TextTools::toDouble(maxGapOption.substr(0,maxGapOption.size()-1)) / 100.;
@@ -316,36 +349,52 @@ void SequenceApplicationTools::writeSequenceFile(
   const string & suffix,
   bool verbose)
 {
-  string file   = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
-  string format = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);
-  int ncol      = ApplicationTools::getIntParameter("output.sequence.length", params, 100, suffix, false, false);
+  string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
+  string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);
+  string format = "";
+  map<string, string> args;
+  KeyvalTools::parseProcedure(sequenceFormat, format, args);
+  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", args, 100, "", true, false);
   OSequence * oSeq;
-  if(format == "Fasta") oSeq = new Fasta(ncol);
-  else if(format == "Mase") oSeq = new Mase(ncol);
+  if(format == "Fasta")
+  {
+    oSeq = new Fasta(ncol);
+  }
+  else if(format == "Mase")
+  {
+    oSeq = new Mase(ncol);
+  }
   else if(format == "Phylip")
   {
     bool sequential = true, extended = true;
-    if(params.find("output.sequence.format_phylip.order" + suffix) != params.end())
+    string split = "  ";
+    if(args.find("order") != args.end())
     {
-           if(params["output.sequence.format_phylip.order"] == "sequential" ) sequential = true;
-      else if(params["output.sequence.format_phylip.order"] == "interleaved") sequential = false;
+           if(args["order"] == "sequential" ) sequential = true;
+      else if(args["order"] == "interleaved") sequential = false;
       else ApplicationTools::displayWarning("Argument '" +
-             params["output.sequence.format_phylip.order"] +
-             "' for parameter 'output.sequence.format_phylip.order' is unknown. " +
+             args["order"] +
+             "' for argument 'Phylip#order' is unknown. " +
              "Default used instead: sequential.");
     }
-    else ApplicationTools::displayWarning("Argument 'output.sequence.format_phylip.order' not found. Default used instead: sequential.");
-    if(params.find("output.sequence.format_phylip.ext" + suffix) != params.end())
+    else ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
+    if(args.find("type") != args.end())
     {
-           if(params["output.sequence.format_phylip.ext"] == "extended") extended = true;
-      else if(params["output.sequence.format_phylip.ext"] == "classic" ) extended = false;
+      if(args["type"] == "extended")
+      {
+        extended = true;
+        split = ApplicationTools::getStringParameter("split", args, "spaces", "", true, false);
+        if(split == "spaces") split = "  ";
+        else if(split == "tab") split = "\t";
+        else throw Exception("Unknown option for Phylip#split: " + split);
+      }
+      else if(args["type"] == "classic" ) extended = false;
       else ApplicationTools::displayWarning("Argument '" +
-             params["output.sequence.format_phylip.ext"] +
-             "' for parameter 'output.sequence_phylip.ext' is unknown. " +
+             args["type"] + "' for parameter 'Phylip#type' is unknown. " +
              "Default used instead: extended.");
     }
-    else ApplicationTools::displayWarning("Argument 'output.sequence_phylip.ext' not found. Default used instead: extended.");
-    oSeq = new Phylip(extended, sequential, ncol);
+    else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
+    oSeq = new Phylip(extended, sequential, ncol, true, split);
   }
   else
   {
@@ -356,42 +405,13 @@ void SequenceApplicationTools::writeSequenceFile(
   if(verbose)
   {
     ApplicationTools::displayResult("Output file format", format);
-    ApplicationTools::displayResult("Output file ", file);
+    ApplicationTools::displayResult("Output file ", sequenceFilePath);
   }
 
   // Write sequences:
-  oSeq->write(file, sequences, true);
+  oSeq->write(sequenceFilePath, sequences, true);
   
   delete oSeq;
-}
-
-/******************************************************************************/
-
-void SequenceApplicationTools::printInputAlignmentHelp()
-{
-  if(!ApplicationTools::message) return;
-  *ApplicationTools::message << "Input sequence file and format:" << endl;
-  *ApplicationTools::message << "alphabet                      | the alphabet to use [DNA|RNA|Protein]" << endl;
-  *ApplicationTools::message << "sequence.format               | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
-  *ApplicationTools::message << "sequence.format_phylip.order  | [interleaved|sequential]" << endl;
-  *ApplicationTools::message << "sequence.format_phylip.ext    | [classic|extended]" << endl;
-  *ApplicationTools::message << "sequence.sites_to_use         | [all|nogap|complete]" << endl;
-  *ApplicationTools::message << "______________________________|___________________________________________" << endl;
-}
-
-/******************************************************************************/
-
-void SequenceApplicationTools::printOutputSequenceHelp()
-{
-  if(!ApplicationTools::message) return;
-  *ApplicationTools::message << "Output sequence file and format:" << endl;
-  *ApplicationTools::message << "output.sequence.format        | [Fasta|Mase|Phylip|Clustal|DCSE]" << endl;
-  *ApplicationTools::message << "output.sequence.              |" << endl;
-  *ApplicationTools::message << "           format_phylip.order| [interleaved|sequential]" << endl;
-  *ApplicationTools::message << "output.sequence.              |" << endl;
-  *ApplicationTools::message << "             format_phylip.ext| [classic|extended]" << endl;
-  *ApplicationTools::message << "  format_phylip.extended.split| [spaces|tab] the split sequence" << endl;
-  *ApplicationTools::message << "______________________________|___________________________________________" << endl;
 }
 
 /******************************************************************************/

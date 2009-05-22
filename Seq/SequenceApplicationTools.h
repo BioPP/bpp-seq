@@ -92,15 +92,10 @@ class SequenceApplicationTools
 		/**
 		 * @brief Build a SequenceContainer object according to options.
 		 *
-     * Sequences in file need not be aligned.
+     * The sequences do not have to be aligned.
+     * The supported sequence formats are Fasta, DCSE, Clustal, Mase, Phylip and GenBank.
      *
-		 * Options used are:
-		 * - sequence.format = [Fasta|Mase|Phylip|Clustal|DCSE], the format of the sequence file.
-		 * - sequence.file = file_path, the path of the file to parse.
-		 * Options depending on other options:
-		 * - If Phylip format is to be used:
-		 *   - sequence.format_phylip.order = [interleaved|sequential].
-		 *   - sequence.format_phylip.ext   = [classic|extended].
+     * See the Bio++ program suite manual for a full description of the syntax.
 		 *
 		 * @param alpha   The alphabet to use in the container.
 		 * @param params  The attribute map where options may be found.
@@ -120,17 +115,10 @@ class SequenceApplicationTools
     /**
 		 * @brief Build a SiteContainer object according to options.
 		 *
-     * Sequences in file mus be aligned.
+     * Sequences in file must be aligned.
+     * The supported sequence formats are Fasta, DCSE, Clustal, Mase and Phylip.
      *
-		 * Options used are:
-		 * - sequence.format = [Fasta|Mase|Phylip|Clustal|DCSE], the format of the sequence file.
-		 * - sequence.file = file_path, the path of the file to parse.
-		 * Options depending on other options:
-		 * - If Phylip format is to be used:
-		 *   - sequence.format_phylip.order = [interleaved|sequential].
-		 *   - sequence.format_phylip.ext   = [classic|extended].
-		 * - If Mase format is to be used:
-		 *   - sequence.format_mase.site_selection = name of the selection.
+     * See the Bio++ program suite manual for a full description of the syntax.
 		 *
 		 * @param alpha   The alphabet to use in the container.
 		 * @param params  The attribute map where options may be found.
@@ -184,14 +172,9 @@ class SequenceApplicationTools
 		/**
 		 * @brief Write a sequence file according to options.
 		 *
-		 * Options used are:
-		 * - output.sequence.format = [Fasta|Mase|Phylip], the format of the sequence file.
-		 * - output.sequence.file = file_path, the path of the file to parse.
-		 * - output.sequence.length = the max number of chars on a line.
-		 * Options depending on other options:
-		 * - If Phylip format is to be used:
-		 *   - output.sequence.format_phylip.order = [interleaved|sequential].
-		 *   - output.sequence.format_phylip.ext   = [classic|extended].
+     * The supported sequence formats are Fasta, Mase and Phylip.
+     *
+     * See the Bio++ program suite manual for a full description of the syntax.
 		 *
 		 * @param sequences The sequences to write.
 		 * @param params  The attribute map where options may be found.
@@ -204,21 +187,6 @@ class SequenceApplicationTools
 			const string & suffix = "",
       bool verbose = true);
 
-		/**
-		 * @brief This function prints the options available
-     * for reading an alignement from a file.
-     * 
-     * It covers the getAlphabet(), getSiteContainer() and getSitesToAnalyse() methods.
-		 */
-    static void printInputAlignmentHelp();
-
-		/**
-		 * @brief This function prints the options available
-     * for writing sequences to a file.
-     * 
-     * It covers the writeSequenceFile() method.
-		 */
-    static void printOutputSequenceHelp();
 };
 
 } //end of namespace bpp.

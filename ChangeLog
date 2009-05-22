@@ -1,3 +1,7 @@
+22/05/09 Julien Dutheil
+* Improved Clustal format (solves bug found by Emmanuel M.)
+* SequenceApplicationTools uses the keyval syntax for format description.
+
 27/04/09 Julien Dutheil
 * Added site randomization method.
 

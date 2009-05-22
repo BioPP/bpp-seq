@@ -59,15 +59,17 @@ class Clustal:
   public virtual AbstractISequence2
 {
   public:
-    bool _checkNames;
+    bool checkNames_;
+    unsigned int nbSpacesBeforeSeq_;
 
 	public:
     /**
      * @brief Build a new Clustal object.
      *
      * @param checkNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     * @param nbExtraSpacesBeforeSeq Specify the number of extra space characters separating the sequence name form content. The default is 5 (hence 6 spaces in total) for backward compatibility, using 0 will not allow for any space in the sequence names.
      */
-		Clustal(bool checkNames = true): _checkNames(checkNames) {};
+		Clustal(bool checkNames = true, unsigned int nbExtraSpacesBeforeSeq = 5) throw (Exception): checkNames_(checkNames), nbSpacesBeforeSeq_(nbExtraSpacesBeforeSeq + 1) {};
 		virtual ~Clustal() {};
 
 	public:
@@ -85,21 +87,23 @@ class Clustal:
 		 *
 		 * @{
 		 */
-		const string getFormatName() const;
-		const string getFormatDescription() const;
+		const string getFormatName() const { return "Clustal"; }
+
+		const string getFormatDescription() const { return "The Clustal alignment tool output format."; }
+
 		/** @} */
 
     /**
      * @return true if the names are to be checked when reading sequences from files.
      */
-    bool checkNames() const { return _checkNames; }
+    bool checkNames() const { return checkNames_; }
 
     /**
      * @brief Tell whether the sequence names should be checked when reading from files.
      *
      * @param yn whether the sequence names should be checked when reading from files.
      */
-    void checkNames(bool yn) { _checkNames = yn; }
+    void checkNames(bool yn) { checkNames_ = yn; }
 };
 
 } //end of namespace bpp.

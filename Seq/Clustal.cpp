@@ -53,8 +53,6 @@ using namespace std;
 
 void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception)
 {
-	//!!! ClustalX add 6 spaces at longest name.
-
 	// Checking the existence of specified file
 	if (!input) { throw IOException ("Clustal::read : fail to open file"); }
 
@@ -76,9 +74,9 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
     if(c == ' ')
     {
       count++;
-      if(count == 6)
+      if(count == nbSpacesBeforeSeq_)
       {
-        beginSeq = i + 6;
+        beginSeq = i + nbSpacesBeforeSeq_;
         break;
       }
     }
@@ -92,10 +90,10 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
 	bool test = true;
 	do
   {
-		sequences.push_back(Sequence(TextTools::removeSurroundingWhiteSpaces(lineRead.substr(0, beginSeq - 6)), lineRead.substr(beginSeq), alpha));
+		sequences.push_back(Sequence(TextTools::removeSurroundingWhiteSpaces(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_)), lineRead.substr(beginSeq), alpha));
 		getline(input, lineRead, '\n');
 		countSequences++;
-		test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - 6));
+		test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_));
 	}
   while(input && test);
 
@@ -105,7 +103,8 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
   {
 		// Read next block:
 		for(unsigned int i = 0; i < countSequences; i++)
-    {// Complete sequences
+    {
+      // Complete sequences
 			if(TextTools::isEmpty(lineRead))
         throw IOException("Clustal::read. Bad intput file.");
 		 	sequences[i].append(lineRead.substr(beginSeq));
@@ -116,11 +115,7 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
 	}
 
 	for(unsigned int i = 0; i < countSequences; i++)
-    sc.addSequence(sequences[i], _checkNames);
+    sc.addSequence(sequences[i], checkNames_);
 	sc.setGeneralComments(comments);
 }
-
-const string Clustal::getFormatName() const { return "Clustal"; }
-
-const string Clustal::getFormatDescription() const { return "The Clustal alignment tool output format."; }
 
