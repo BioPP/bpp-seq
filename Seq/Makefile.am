@@ -74,8 +74,6 @@ OSequence.h\
 Phylip.h\
 ProteicAlphabet.h\
 RNA.h\
-RNY.h\
-RNYTools.h\
 SequenceContainerExceptions.h\
 SequenceContainer.h\
 SequenceContainerTools.h\
@@ -143,8 +141,6 @@ NucleicAcidsReplication.cpp\
 Phylip.cpp\
 ProteicAlphabet.cpp\
 RNA.cpp\
-RNY.cpp\
-RNYTools.cpp\
 SequenceContainerTools.cpp\
 Sequence.cpp\
 SequenceExceptions.cpp\
