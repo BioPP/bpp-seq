@@ -55,19 +55,14 @@ namespace bpp
 class InvertebrateMitochondrialCodonAlphabet:
   public CodonAlphabet
 {
-	public:
-		InvertebrateMitochondrialCodonAlphabet(const NucleicAlphabet * alpha);
-		virtual ~InvertebrateMitochondrialCodonAlphabet();
+public:
+  InvertebrateMitochondrialCodonAlphabet(const NucleicAlphabet * alpha);
+  virtual ~InvertebrateMitochondrialCodonAlphabet() {};
 	
-	public:
+public:
 
-		unsigned int getSize() const;
-		unsigned int getNumberOfTypes() const;
-	
-		string getAlphabetType() const;
+  string getAlphabetType() const { return "Codon alphabet: InvertebrateMitochondrial("+ _VAbsAlph[0]->getAlphabetType()+")"; }
 
-		bool isStop(      int      codon) const;
-		bool isStop(const string & codon) const;
 };
 
 } //end of namespace bpp.

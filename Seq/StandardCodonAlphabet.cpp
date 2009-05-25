@@ -41,56 +41,32 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) : CodonAlphabet(alpha)
+StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) :
+  CodonAlphabet(alpha)
 {
-	// Alphabet size definition
-	alphabet.resize(66);
-
-	string A = nucAlpha -> intToChar(0);
-	string G = nucAlpha -> intToChar(2);
-	string T = nucAlpha -> intToChar(3);
-	string stop1 = T + A + A;
-	string stop2 = T + A + G;
-	string stop3 = T + G + A;
-	alphabet[0].num = -1;
-  	alphabet[0].letter = "---";
-  	alphabet[0].name = "Gap";
-	
-	//Automatic construction:
-	int count = 1;
-	int num   = 0;
-	for(unsigned int pos1 = 0; pos1 < nucAlpha -> getSize(); pos1++) {
-		for(unsigned int pos2 = 0; pos2 < nucAlpha -> getSize(); pos2++) {
-			for(unsigned int pos3 = 0; pos3 < nucAlpha -> getSize(); pos3++) {
-				string codon = nucAlpha -> intToChar(pos1)
-					           + nucAlpha -> intToChar(pos2)
-					           + nucAlpha -> intToChar(pos3);
-				if(codon == stop1) {
-					//This is a stop codon:
-					alphabet[count].num = -2;
-					alphabet[count].name = STOP;
-				} else if(codon == stop2) {
-					//This is a stop codon:
-					alphabet[count].num = -3;
-					alphabet[count].name = STOP;
-				} else if(codon == stop3) {
-					//This is a stop codon:
-					alphabet[count].num = -4;
-					alphabet[count].name = STOP;
-				} else {
-					//This is a "coding" codon:
-					alphabet[count].num = num;
-					alphabet[count].name = "";
-					num++;
-				}
-				alphabet[count].letter = codon;
-				count++;
-			}
-		}
-	}
-
-  alphabet[65].num = 61;
-  alphabet[65].letter = "NNN";
-  alphabet[65].name = "Unresolved codon";
+  string A= alpha->intToChar(0);
+  string G= alpha->intToChar(2);
+  string T= alpha->intToChar(3);
+                            
+  vector<string> vstop;
+  
+  vstop.push_back(T+A+A);
+  vstop.push_back(T+A+G);
+  vstop.push_back(T+G+A);
+  
+  int istop;
+  unsigned int j;
+  for (unsigned int i=0; i<vstop.size();i++){
+    istop=charToInt(vstop[i]);
+    
+    j=0;
+    while (j<alphabet.size()){
+      if (alphabet[j].num==istop){
+        alphabet[j].name=STOP;
+        break;
+      }
+      j++;
+    }
+  }
 }
 

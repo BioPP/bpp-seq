@@ -74,6 +74,8 @@ OSequence.h\
 Phylip.h\
 ProteicAlphabet.h\
 RNA.h\
+RNY.h\
+RNYTools.h\
 SequenceContainerExceptions.h\
 SequenceContainer.h\
 SequenceContainerTools.h\
@@ -110,7 +112,8 @@ SimpleScore.h \
 DistanceMatrix.h \
 GenBank.h \
 PhredPhd.h\
-PhredPoly.h
+PhredPoly.h\
+WordAlphabet.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
@@ -140,6 +143,8 @@ NucleicAcidsReplication.cpp\
 Phylip.cpp\
 ProteicAlphabet.cpp\
 RNA.cpp\
+RNY.cpp\
+RNYTools.cpp\
 SequenceContainerTools.cpp\
 Sequence.cpp\
 SequenceExceptions.cpp\
@@ -170,7 +175,8 @@ SimpleScore.cpp\
 DistanceMatrix.cpp\
 GenBank.cpp\
 PhredPhd.cpp\
-PhredPoly.cpp
+PhredPoly.cpp\
+WordAlphabet.cpp
 
 CPP_EXTRA = \
 __GranthamMatrixCode\

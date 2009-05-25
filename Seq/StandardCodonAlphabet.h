@@ -51,21 +51,15 @@ namespace bpp
  */
 class StandardCodonAlphabet : public CodonAlphabet
 {
-	public:
-		StandardCodonAlphabet(const NucleicAlphabet * alpha);
-		
-		virtual ~StandardCodonAlphabet() {}
+public:
+  StandardCodonAlphabet(const NucleicAlphabet * alpha);
+  
+  virtual ~StandardCodonAlphabet() {}
 	
-	public:
-		
-		unsigned int getSize() const { return 61; }
-		unsigned int getNumberOfTypes() const { return 62; }
-	
-		string getAlphabetType() const { return "Standard codon alphabet"; }
+public:
+  
+  string getAlphabetType() const { return "Codon alphabet: Standard("+ _VAbsAlph[0]->getAlphabetType()+")"; }
 
-		bool isStop(      int      codon) const { return codon < -1; }
-
-		bool isStop(const string & codon) const { return charToInt(codon) < -1; }
 };
 
 } //end of namespace bpp.

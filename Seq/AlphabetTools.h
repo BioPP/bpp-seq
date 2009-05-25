@@ -124,42 +124,52 @@ class AlphabetTools
 		 * @param alphabet a pointer toward the alphabet to analyse.
 		 * @return The common size of all text descriptionif there is one. Else throws an AlphabetException.
 		 */
-		static int getAlphabetCodingSize(const Alphabet * alphabet) throw (AlphabetException);
+  static int getAlphabetCodingSize(const Alphabet * alphabet) throw (AlphabetException);
 
-		/**
-		 * @return True if the alphabet is an instanciation of the NucleicAlphabet class.
-		 * @param alphabet The alphabet to check.
-		 */
-		static bool isNucleicAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<NucleicAlphabet>(alphabet); }
-		/**
-		 * @return True if the alphabet is an instanciation of the DNA class.
-		 * @param alphabet The alphabet to check.
-		 */
-		static bool isDNAAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DNA>(alphabet); }
-		/**
-		 * @return True if the alphabet is an instanciation of the RNA class.
-		 * @param alphabet The alphabet to check.
-		 */
-		static bool isRNAAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<RNA>(alphabet); }
-		/**
-		 * @return True if the alphabet is an instanciation of the ProteicAlphabet class.
-		 * @param alphabet The alphabet to check.
-		 */
-		static bool isProteicAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<ProteicAlphabet>(alphabet); }
-		/**
-		 * @return True if the alphabet is an instanciation of the CodonAlphabet class.
-		 * @param alphabet The alphabet to check.
-		 */
-		static bool isCodonAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<CodonAlphabet>(alphabet); }
-		/**
-		 * @return True if the alphabet is an instanciation of the DefaultAlphabet class.
-		 * @param alphabet The alphabet to check.
-		 */
-		static bool isDefaultAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
-
-    /**
-     * @brief Tell if two characters match according to a given alphabet.
-     *
+  /**
+   * @return True if the alphabet is an instanciation of the NucleicAlphabet class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isNucleicAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<NucleicAlphabet>(alphabet); }
+  /**
+   * @return True if the alphabet is an instanciation of the DNA class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isDNAAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DNA>(alphabet); }
+  /**
+   * @return True if the alphabet is an instanciation of the RNA class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isRNAAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<RNA>(alphabet); }
+  /**
+   * @return True if the alphabet is an instanciation of the ProteicAlphabet class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isProteicAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<ProteicAlphabet>(alphabet); }
+  /**
+   * @return True if the alphabet is an instanciation of the RNY class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isRNY(const Alphabet * alphabet) { return alphabetInheritsFrom<RNY>(alphabet); }
+  /**
+   * @return True if the alphabet is an instanciation of the CodonAlphabet class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isCodonAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<CodonAlphabet>(alphabet); }
+  /**
+   * @return True if the alphabet is an instanciation of the WordAlphabet class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isWordAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<WordAlphabet>(alphabet); }
+  /**
+   * @return True if the alphabet is an instanciation of the DefaultAlphabet class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isDefaultAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
+  
+  /**
+   * @brief Tell if two characters match according to a given alphabet.
+   *
      * Exemple (DNA):
      * A,T: false
      * A,A: true
@@ -175,10 +185,11 @@ class AlphabetTools
      */
     static bool match(const Alphabet * alphabet, int i, int j)
     {
-      vector<int> a = alphabet->getAlias(i);
-      vector<int> b = alphabet->getAlias(j);
-      vector<int> u = VectorTools::vectorIntersection(a, b);
-      return u.size() > 0;
+//       vector<int> a = alphabet->getAlias(i);
+//       vector<int> b = alphabet->getAlias(j);
+//       vector<int> u = VectorTools::vectorIntersection(a, b);
+//       return u.size() > 0;
+      return 1;
     }
 
 	private:

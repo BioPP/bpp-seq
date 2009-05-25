@@ -52,150 +52,70 @@ using namespace std;
 const string CodonAlphabet::STOP = "Stop";
 const string CodonAlphabet::INIT = "Init";
 
-/****************************************************************************************/
-
-bool CodonAlphabet::containsUnresolved(const string & state) const throw (BadCharException)
-{
-	if(state.size() != 3) throw BadCharException(state, "CodonAlphabet::getName", this);
-	char s1 = state[0];
-	char s2 = state[1];
-	char s3 = state[2];
-	return
-		(nucAlpha -> charToInt(TextTools::toString(s1)) >= 4
-	|| nucAlpha -> charToInt(TextTools::toString(s2)) >= 4
-	|| nucAlpha -> charToInt(TextTools::toString(s3)) >= 4);
-}
-
-/****************************************************************************************/
-
-bool CodonAlphabet::containsGap(const string & state) const throw (BadCharException)
-{
-	if(state.size() != 3) throw BadCharException(state, "CodonAlphabet::getName", this);
-	char s1 = state[0];
-	char s2 = state[1];
-	char s3 = state[2];
-	return
-		(nucAlpha -> charToInt(TextTools::toString(s1)) == -1
-	|| nucAlpha -> charToInt(TextTools::toString(s2)) == -1
-	|| nucAlpha -> charToInt(TextTools::toString(s3)) == -1);
-}
-
-/****************************************************************************************/
-
-string CodonAlphabet::getName(const string & state) const throw (BadCharException)
-{
-	if(state.size() != 3) throw BadCharException(state, "CodonAlphabet::getName", this);
-	if(containsUnresolved(state)) return alphabet[65].name;
-	if(containsGap(state)) return alphabet[0].name;
-	else return AbstractAlphabet::getName(state);
-}
-		
-/****************************************************************************************/
-
-int CodonAlphabet::charToInt(const string & state) const throw (BadCharException)
-{
-	if(state.size() != 3) throw BadCharException(state, "CodonAlphabet::charToInt", this);
-	if(containsUnresolved(state)) return getSize(); // Generic characters are coded by n° >= alphabet size.
-	if(containsGap(state)) return -1;
-	else return AbstractAlphabet::charToInt(state);	
-}
 
 /****************************************************************************************/
 
 int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const throw (BadIntException)
 {
-	return charToInt(getCodon(
-		nucAlpha -> intToChar(pos1),
-		nucAlpha -> intToChar(pos2),
-		nucAlpha -> intToChar(pos3)
-	));//This can't throw a BadCharException!
+  vector<int> vint;
+  vint.push_back(pos1);
+  vint.push_back(pos2);
+  vint.push_back(pos3);
+  
+  return getWord(vint);
 }
 
 /****************************************************************************************/
 
 string CodonAlphabet::getCodon(const string & pos1, const string & pos2, const string & pos3) const throw (BadCharException)
 {
-	string codon = pos1 + pos2 + pos3;
-	//test codon:
-	charToInt(codon);
-	return codon;
+  vector<string> vint;
+  vint.push_back(pos1);
+  vint.push_back(pos2);
+  vint.push_back(pos3);
+  
+  return getWord(vint);
 }
 
 /****************************************************************************************/
 
 int CodonAlphabet::getFirstPosition (int codon) const throw (BadIntException)
 {
-	string s = intToChar(codon);
-	return nucAlpha -> charToInt(TextTools::toString(s[0]));
+  return getNPosition(codon,0);
 }
 
 /****************************************************************************************/
 
 int CodonAlphabet::getSecondPosition(int codon) const throw (BadIntException)
 {
-	string s = intToChar(codon);
-	return nucAlpha -> charToInt(TextTools::toString(s[1]));	
+  return getNPosition(codon,1);
 }
 
 /****************************************************************************************/
 
 int CodonAlphabet::getThirdPosition (int codon) const throw (BadIntException)
 {
-	string s = intToChar(codon);
-	return nucAlpha -> charToInt(TextTools::toString(s[2]));
-}
-
-/****************************************************************************************/
-
-vector<int> CodonAlphabet::getPositions(int codon) const throw (BadIntException)
-{
-	string s = intToChar(codon);
-	vector<int> positions(3);
-	positions[0] = nucAlpha -> charToInt(TextTools::toString(s[0]));
-	positions[1] = nucAlpha -> charToInt(TextTools::toString(s[1]));
-	positions[2] = nucAlpha -> charToInt(TextTools::toString(s[2]));
-	return positions;
+  return getNPosition(codon,2);
 }
 
 /****************************************************************************************/
 
 string CodonAlphabet::getFirstPosition (const string & codon) const throw (BadCharException)
 {
-	//Test:
-	charToInt(codon);
-	return "" + codon[0]; 
+  return getNPosition(codon,0);
 }
 
 /****************************************************************************************/
 
 string CodonAlphabet::getSecondPosition(const string & codon) const throw (BadCharException)
 {
-	//Test:
-	charToInt(codon);
-	return "" + codon[1]; 	
+  return getNPosition(codon,1);
 }
 
 /****************************************************************************************/
 
 string CodonAlphabet::getThirdPosition (const string & codon) const throw (BadCharException)
 {
-	//Test:
-	charToInt(codon);
-	return "" + codon[2]; 
+  return getNPosition(codon,2);
 }
-
-/****************************************************************************************/
-
-vector<string> CodonAlphabet::getPositions(const string & codon) const throw (BadCharException)
-{
-	//Test:
-	charToInt(codon);
-	vector<string> positions(3);
-	positions[0] = "" + codon[0]; 
-	positions[1] = "" + codon[1]; 
-	positions[2] = "" + codon[2];
-	return positions;	
-}
-
-/****************************************************************************************/
 

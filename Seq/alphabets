@@ -6,6 +6,8 @@
 #include "NucleicAlphabet.h"
 #include "ProteicAlphabet.h"
 #include "CodonAlphabet.h"
+#include "RNY.h"
+#include "WordAlphabet.h"
 #include "StandardCodonAlphabet.h"
 #include "VertebrateMitochondrialCodonAlphabet.h"
 #include "InvertebrateMitochondrialCodonAlphabet.h"
@@ -15,5 +17,6 @@
 #include "DefaultAlphabet.h"
 #include "AlphabetExceptions.h"
 #include "AlphabetTools.h"
+
 
 #endif //_ALPHABETS_
