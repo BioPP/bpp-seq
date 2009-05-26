@@ -129,7 +129,7 @@ Alphabet * SequenceApplicationTools::getAlphabet(
   if (posx==string::npos)
     chars2=chars;
   else{
-    chars2 = new WordAlphabet(chars,atoi(alphtt.substr(posx+1).c_str()));
+    chars = new WordAlphabet(chars,atoi(alphtt.substr(posx+1).c_str()));
   }
   
   if(verbose) ApplicationTools::displayResult("Alphabet type " + suffix, alphabet);
