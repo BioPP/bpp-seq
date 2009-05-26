@@ -147,7 +147,7 @@ class AlphabetTools
    */
   static bool isProteicAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<ProteicAlphabet>(alphabet); }
   /**
-   * @return True if the alphabet is an instanciation of the RNY class.
+   * @return True if the alphabet is an instanciation of the Codon class.
    * @param alphabet The alphabet to check.
    */
   static bool isCodonAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<CodonAlphabet>(alphabet); }

@@ -52,7 +52,7 @@ using namespace std;
 WordAlphabet::WordAlphabet(const vector<const Alphabet* >& Valpha) :
   AbstractAlphabet(), _VAbsAlph(Valpha)
 {
-  Build();
+  build_();
 }
 
 WordAlphabet::WordAlphabet(const Alphabet* palpha, int num) :
@@ -63,10 +63,10 @@ WordAlphabet::WordAlphabet(const Alphabet* palpha, int num) :
   for (unsigned int i=0;i<num;i++)
     _VAbsAlph.push_back(palpha);
 
-  Build();
+  build_();
 }
 
-void WordAlphabet::Build()
+void WordAlphabet::build_()
 {
   int size=1;
   unsigned int i;

@@ -141,7 +141,7 @@ private:
    */
   bool containsUnresolved(const string & state) const throw (BadCharException);
   bool containsGap(const string & state) const throw (BadCharException);
-  void Build();
+  void build_();
   /** @} */
 
   
