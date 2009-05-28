@@ -111,7 +111,9 @@ DistanceMatrix.h \
 GenBank.h \
 PhredPhd.h\
 PhredPoly.h\
-WordAlphabet.h
+WordAlphabet.h\
+NexusIOSequence.h\
+NexusTools.h
 
 CPP_FILES = \
 AbstractAlphabet.cpp\
@@ -172,7 +174,9 @@ DistanceMatrix.cpp\
 GenBank.cpp\
 PhredPhd.cpp\
 PhredPoly.cpp\
-WordAlphabet.cpp
+WordAlphabet.cpp\
+NexusIOSequence.cpp\
+NexusTools.cpp
 
 CPP_EXTRA = \
 __GranthamMatrixCode\

@@ -1,3 +1,6 @@
+28/05/09 Julien Dutheil
+* Added basic support for the Nexus format.
+
 22/05/09 Julien Dutheil
 * Improved Clustal format (solves bug found by Emmanuel M.)
 * SequenceApplicationTools uses the keyval syntax for format description.

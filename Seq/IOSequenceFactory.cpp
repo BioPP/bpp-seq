@@ -49,6 +49,8 @@ const string IOSequenceFactory::PHYLIP_FORMAT_INTERLEAVED = "Phylip I";
 const string IOSequenceFactory::PHYLIP_FORMAT_SEQUENTIAL  = "Phylip S";  
 const string IOSequenceFactory::PAML_FORMAT_INTERLEAVED   = "PAML I";  
 const string IOSequenceFactory::PAML_FORMAT_SEQUENTIAL    = "PAML S";  
+const string IOSequenceFactory::GENBANK_FORMAT            = "GenBank";  
+const string IOSequenceFactory::NEXUS_FORMAT              = "Nexus";  
 
 ISequence * IOSequenceFactory::createReader(const string & format) throw (Exception)
 {
@@ -60,6 +62,8 @@ ISequence * IOSequenceFactory::createReader(const string & format) throw (Except
   else if(format == PHYLIP_FORMAT_SEQUENTIAL) return new Phylip(false, true);
   else if(format == PAML_FORMAT_INTERLEAVED) return new Phylip(true, false);
   else if(format == PAML_FORMAT_SEQUENTIAL) return new Phylip(true, true);
+  else if(format == GENBANK_FORMAT) return new GenBank();
+  else if(format == NEXUS_FORMAT) return new NexusIOSequence();
   else throw Exception("Format " + format + " is not supported for input.");
 }
   

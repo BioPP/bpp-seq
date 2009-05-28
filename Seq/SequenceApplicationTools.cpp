@@ -237,6 +237,10 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
   {
     iSeq = new GenBank();
   }
+  else if(format == "Nexus")
+  {
+    iSeq = new NexusIOSequence();
+  }
   else
   {
     ApplicationTools::displayError("Unknown sequence format.");
@@ -316,7 +320,10 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
   {
     iSeq = new DCSE();
   }
-
+  else if(format == "Nexus")
+  {
+    iSeq = new NexusIOSequence();
+  }
   else
   {
     ApplicationTools::displayError("Unknown sequence format: " + format);

@@ -60,6 +60,8 @@ class IOSequenceFactory
     static const string PHYLIP_FORMAT_SEQUENTIAL;  
     static const string PAML_FORMAT_INTERLEAVED;  
     static const string PAML_FORMAT_SEQUENTIAL;  
+    static const string GENBANK_FORMAT;  
+    static const string NEXUS_FORMAT;  
 
   public:
 

@@ -15,5 +15,6 @@
 #include "DCSE.h"
 #include "GenBank.h"
 #include "MaseTools.h"
+#include "NexusIOSequence.h"
 
 #endif //_IOSEQ_
