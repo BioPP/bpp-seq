@@ -55,12 +55,12 @@ WordAlphabet::WordAlphabet(const vector<const Alphabet* >& Valpha) :
   build_();
 }
 
-WordAlphabet::WordAlphabet(const Alphabet* palpha, int num) :
+WordAlphabet::WordAlphabet(const Alphabet* palpha, unsigned int num) :
   AbstractAlphabet()
 {
   _VAbsAlph.clear();
 
-  for (unsigned int i=0;i<num;i++)
+  for (unsigned int i = 0; i < num; i++)
     _VAbsAlph.push_back(palpha);
 
   build_();
@@ -68,52 +68,50 @@ WordAlphabet::WordAlphabet(const Alphabet* palpha, int num) :
 
 void WordAlphabet::build_()
 {
-  int size=1;
-  unsigned int i;
+  unsigned int size = 1;
   
-  for (i=0;i<_VAbsAlph.size();i++)
-    size*=_VAbsAlph[i]->getSize();
+  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+    size *= _VAbsAlph[i]->getSize();
   
-  alphabet.resize(size+2);
+  alphabet.resize(size + 2);
   
-  int count=1;
-  int num=0;
-  unsigned int j, k, na, lr;
-
-  string s="";
-  for (i=0;i<_VAbsAlph.size();i++)
-    s+="-";
+  string s = "";
+  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+    s += "-";
       
   alphabet[0].num = -1;
   alphabet[0].letter = s;
   alphabet[0].name = "Gap";
 
-  for (i=1;i<=size;i++){
-    alphabet[i].num = i-1;
+  for (unsigned int i = 0; i < size; i++)
+  {
+    alphabet[i].num = i;
     alphabet[i].letter = "";
     alphabet[i].name = "";    
   }
 
-  lr=size;
+  unsigned lr = size;
   char c;
-  for (na=0;na<_VAbsAlph.size();na++){
-    lr/=_VAbsAlph[na]->getSize();
-    j=1;
-    i=0;
-    while (j<=size){
-      c=_VAbsAlph[na]->intToChar(i)[0];
+  for (unsigned int na = 0; na < _VAbsAlph.size(); na++)
+  {
+    lr /= _VAbsAlph[na]->getSize();
+    unsigned int j = 1;
+    unsigned int i = 0;
+    while (j <= size)
+    {
+      c = _VAbsAlph[na]->intToChar(i)[0];
       
-      for (k=0;k<lr;k++)
-        alphabet[j++].letter+=c;
+      for (unsigned int k = 0; k < lr; k++)
+        alphabet[j++].letter += c;
       
-      if (++i==_VAbsAlph[na]->getSize())
-        i=0;
+      if (++i == _VAbsAlph[na]->getSize())
+        i = 0;
     }
   }
   
-  s="";
-  for (i=0;i<_VAbsAlph.size();i++)
-    s+="N";
+  s = "";
+  for (unsigned i = 0; i < _VAbsAlph.size(); i++)
+    s += "N";
       
   alphabet[size+1].num = size;
   alphabet[size+1].letter = s;
@@ -129,9 +127,9 @@ int WordAlphabet::getUnknownCharacterCode() const
 
 string WordAlphabet::getAlphabetType() const
 {
-  string s="Word alphabet:";
-  for (int i=0; i< _VAbsAlph.size(); i++)
-    s+=" "+ _VAbsAlph[i]->getAlphabetType();
+  string s = "Word alphabet:";
+  for (unsigned int i = 0; i< _VAbsAlph.size(); i++)
+    s += " " +  _VAbsAlph[i]->getAlphabetType();
   
   return s;
 }
@@ -139,24 +137,25 @@ string WordAlphabet::getAlphabetType() const
 bool WordAlphabet::hasUniqueAlphabet() const
 {
   string s=_VAbsAlph[0]->getAlphabetType();
-  for (unsigned int i=1; i<_VAbsAlph.size();i++)
-    if (_VAbsAlph[i]->getAlphabetType()!=s)
+  for (unsigned int i = 1; i < _VAbsAlph.size(); i++)
+    if (_VAbsAlph[i]->getAlphabetType() != s)
       return false;
   return true;
 }
 
 bool WordAlphabet::containsUnresolved(const string & state) const throw (BadCharException)
 {
-  int s=_VAbsAlph.size();
-  if (state.length()!=s)
+  unsigned int s = _VAbsAlph.size();
+  if (state.length() != s)
     throw BadCharException(state, "WordAlphabet::containsUnresolved", this);
   
-  for (unsigned int i=0;i<_VAbsAlph.size();i++){
-    if (_VAbsAlph[i]->isUnresolved(state.substr(i,1))){
+  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+  {
+    if (_VAbsAlph[i]->isUnresolved(state.substr(i, 1)))
+    {
       return true;
     }
   }
-  
   return false;
 }
 
@@ -164,12 +163,13 @@ bool WordAlphabet::containsUnresolved(const string & state) const throw (BadChar
 
 bool WordAlphabet::containsGap(const string & state) const throw (BadCharException)
 {
-  int s=_VAbsAlph.size();
-  if (state.length()!=s)
+  unsigned int s = _VAbsAlph.size();
+  if (state.length() != s)
     throw BadCharException(state, "WordAlphabet::containsGap", this);
   
-  for (unsigned int i=0;i<_VAbsAlph.size();i++){
-    if (_VAbsAlph[i]->isGap(state.substr(i,1)))
+  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+  {
+    if (_VAbsAlph[i]->isGap(state.substr(i, 1)))
       return true;
   }
 
@@ -314,19 +314,20 @@ Sequence * WordAlphabet::translate(const Sequence & sequence, int pos) const thr
     throw AlphabetMismatchException("No matching alphabets", sequence.getAlphabet(), _VAbsAlph[0]);
 
 
-  vector<int> v1=sequence.getContent();
+  vector<int> v1 = sequence.getContent();
   vector<int> v2;
 
-  int s=sequence.size();
-  int l=getLength();
+  unsigned int s = sequence.size();
+  unsigned int l = getLength();
   unsigned int i=pos;
   
-  while (i+l<s){
-    v2.push_back(getWord(v1,i));
-    i+=l;
+  while (i + l < s)
+  {
+    v2.push_back(getWord(v1, i));
+    i += l;
   }
 
-  return new Sequence(sequence.getName(),v2,this);
+  return new Sequence(sequence.getName(), v2, this);
 }
 
 /****************************************************************************************/
@@ -337,10 +338,10 @@ Sequence * WordAlphabet::reverse(const Sequence & sequence) const throw (Alphabe
       (sequence.getAlphabet()->getAlphabetType() != getAlphabetType()))
     throw AlphabetMismatchException("No matching alphabets");
 
-  Sequence* pseq=new Sequence(sequence.getName(),"",getNAlphabet(0));
+  Sequence* pseq = new Sequence(sequence.getName(), "", getNAlphabet(0));
 
-  int s=sequence.size();
-  for (unsigned int i=0;i<s;i++)
+  unsigned int s = sequence.size();
+  for (unsigned int i = 0; i < s; i++)
     pseq->append(getPositions(sequence[i]));
 
   return pseq;

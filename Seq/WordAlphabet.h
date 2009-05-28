@@ -89,8 +89,7 @@ public: // Constructor and destructor.
    * @param palpha The Pointer to the Alphabet to be used.
    * @param num the length of the words.
    */
-  
-  WordAlphabet(const Alphabet* palpha, int num);
+  WordAlphabet(const Alphabet* palpha, unsigned int num);
   virtual ~WordAlphabet() {}
   
 public:
