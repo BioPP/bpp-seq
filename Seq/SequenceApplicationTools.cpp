@@ -59,80 +59,112 @@ Alphabet * SequenceApplicationTools::getAlphabet(
   bool verbose,
   bool allowGeneric)
 {
-  Alphabet * chars, *chars2;
+  Alphabet * chars;
   string alphtt = ApplicationTools::getStringParameter("alphabet", params, "DNA", suffix, suffixIsOptional);
 
-  int posx=alphtt.find("*");
-  int i;
-  string alphabet=alphtt.substr(0,posx);
+  string alphabet = "";
+  map<string, string> args;
 
-  if(alphabet == "DNA")
-  {
-    chars = new DNA();
-  }
+  int i, lg;
+  KeyvalTools::parseProcedure(alphtt,alphabet,args);
+
+  if (alphabet == "DNA")
+    {
+      if (args.find("length") == args.end())
+        chars = new DNA();
+      else {
+        lg=TextTools::toInt(args["length"]);
+        chars = new WordAlphabet(new DNA(),lg);
+        alphabet="";
+        for (i=0;i<lg;i++)
+          alphabet+="DNA ";
+        alphabet="Word("+alphabet +")";
+      }
+    }
   else if (alphabet == "RNA")
-  {
-    chars = new RNA();
-  }
-  else if (alphabet == "Protein")
-  {
-    chars = new ProteicAlphabet();
-  }
+    {
+      if (args.find("length") == args.end())
+        chars = new RNA();
+      else {
+        lg=TextTools::toInt(args["length"]);
+        chars = new WordAlphabet(new RNA(),lg);
+        alphabet="";
+        for (i=0;i<lg;i++)
+          alphabet+="RNA ";
+        alphabet="Word("+alphabet+")";
+      }
+    }
+  else if (alphabet == "Proteic")
+    {
+      if (args.find("length") == args.end())
+        chars = new ProteicAlphabet();
+      else {
+        lg=TextTools::toInt(args["length"]);
+        chars = new WordAlphabet(new ProteicAlphabet(),lg);
+        alphabet="";
+        for (i=0;i<lg;i++)
+          alphabet+="Proteic ";
+        alphabet="Word("+alphabet + ")";
+      }
+    }
   else if (allowGeneric && alphabet == "Generic")
-  {
-    chars = new DefaultAlphabet();
-  }
-  else{
+    {
+      if (args.find("length") == args.end())
+        chars = new DefaultAlphabet();
+      else {
+        lg=TextTools::toInt(args["length"]);
+        chars = new WordAlphabet(new DefaultAlphabet(),lg);
+        alphabet="";
+        for (i=0;i<lg;i++)
+          alphabet+="Default ";
+        alphabet="Word("+alphabet+ ")";
+      }
+    }
+  else {
     string suff="";
     if (alphabet.find("CodonAlphabet")!=string::npos)
       suff="CodonAlphabet";
     else if (alphabet.find("GeneticCode")!=string::npos)
       suff="GeneticCode";
     
-    if (suff!=""){
-      int openpar=alphabet.find("(");
-      int closepar=alphabet.find(")");
-      string subalph=alphabet.substr(openpar+1,closepar-openpar-1);
-      NucleicAlphabet* pnalph;
-      if (subalph=="RNA")
-        pnalph=new RNA();
-      else if (subalph=="DNA")
-        pnalph=new DNA();
-      else {
-        ApplicationTools::displayError("Alphabet not known in Codon : " + subalph);
-        exit(-1);
-      }
-      subalph=alphabet.substr(0,openpar);
-      if (subalph=="EchinodermMitochondrial"+suff)
-        chars=new EchinodermMitochondrialCodonAlphabet(pnalph);
-      else
-        if (subalph=="InvertebrateMitochondrial"+suff)
-          chars=new InvertebrateMitochondrialCodonAlphabet(pnalph);
-        else
-          if (subalph=="Standard"+suff)
-            chars=new StandardCodonAlphabet(pnalph);
-          else
-            if (subalph=="VertebrateMitochondrial"+suff)
-              chars=new VertebrateMitochondrialCodonAlphabet(pnalph);
-            else {
-              ApplicationTools::displayError("Unknown "+ suff + " : " + subalph);
-              exit(-1);
-            }
-    }
-    else
+    if (suff=="")
       {
         ApplicationTools::displayError("Alphabet not known: " + alphabet);
         exit(-1);
       }
+
+    if (args.find("alphn")==args.end()){
+      ApplicationTools::displayError("Missing alphabet in Codon : " + alphabet);
+      exit(-1);
+    }
+
+    string alphn=args["alphn"];
+
+    NucleicAlphabet* pnalph;
+    if (alphn=="RNA")
+      pnalph=new RNA();
+    else if (alphn=="DNA")
+      pnalph=new DNA();
+    else {
+      ApplicationTools::displayError("Alphabet not known in Codon : " + alphn);
+      exit(-1);
+    }
+    
+    if (alphabet.find("EchinodermMitochondrial")!=string::npos)
+      chars=new EchinodermMitochondrialCodonAlphabet(pnalph);
+    else if (alphabet.find("InvertebrateMitochondrial")!=string::npos)
+      chars=new InvertebrateMitochondrialCodonAlphabet(pnalph);
+    else if (alphabet.find("Standard")!=string::npos)
+      chars=new StandardCodonAlphabet(pnalph);
+    else if (alphabet.find("VertebrateMitochondrial")!=string::npos)
+      chars=new VertebrateMitochondrialCodonAlphabet(pnalph);
+    else {
+      ApplicationTools::displayError("Unknown Alphabet : " + alphabet);
+      exit(-1);
+    }
+    alphabet=alphabet+"("+alphn+")";
   }
-  
-  if (posx==string::npos)
-    chars2=chars;
-  else{
-    chars = new WordAlphabet(chars,atoi(alphtt.substr(posx+1).c_str()));
-  }
-  
-  if(verbose) ApplicationTools::displayResult("Alphabet type " + suffix, alphabet);
+  if(verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
   return chars;
 }
 
