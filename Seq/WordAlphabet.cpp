@@ -136,7 +136,7 @@ string WordAlphabet::getAlphabetType() const
 
 bool WordAlphabet::hasUniqueAlphabet() const
 {
-  string s=_VAbsAlph[0]->getAlphabetType();
+  string s = _VAbsAlph[0]->getAlphabetType();
   for (unsigned int i = 1; i < _VAbsAlph.size(); i++)
     if (_VAbsAlph[i]->getAlphabetType() != s)
       return false;
@@ -180,12 +180,12 @@ bool WordAlphabet::containsGap(const string & state) const throw (BadCharExcepti
 
 unsigned int WordAlphabet::getNumberOfTypes() const
 {
-  return alphabet.size()-1;
+  return alphabet.size() - 1;
 }
 
 unsigned int WordAlphabet::getSize() const
 {
-  return alphabet.size()-2;
+  return alphabet.size() - 2;
 }
 
 unsigned int WordAlphabet::getLength() const
@@ -229,8 +229,8 @@ int WordAlphabet::getWord(vector<int>& vint, int pos) const throw (BadIntExcepti
     throw BadIntException(vint.size(), "WordAlphabet::getWord", this);
   
   vector<string> vs;
-  for (unsigned int i=0;i<_VAbsAlph.size();i++)
-    vs.push_back(_VAbsAlph[i]->intToChar(vint[i+pos]));
+  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+    vs.push_back(_VAbsAlph[i]->intToChar(vint[i + pos]));
 
   return charToInt(getWord(vs));//This can't throw a BadCharException!
 }
@@ -239,12 +239,12 @@ int WordAlphabet::getWord(vector<int>& vint, int pos) const throw (BadIntExcepti
 
 string WordAlphabet::getWord(const vector<string>& vpos, int pos) const throw (BadIntException, BadCharException)
 {
-  if (vpos.size() < pos+ _VAbsAlph.size())
+  if (vpos.size() < pos + _VAbsAlph.size())
     throw BadIntException(vpos.size(), "WordAlphabet::getWord", this);
   
   string s="";
-  for (unsigned int i=0;i<_VAbsAlph.size();i++)
-    s+=vpos[pos+i];
+  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+    s += vpos[pos + i];
   // test
   charToInt(s);
   return s;
@@ -275,8 +275,8 @@ vector<int> WordAlphabet::getPositions(int word) const throw (BadIntException)
 {
   string s = intToChar(word);
   vector<int> positions;
-  for (unsigned int i=0; i<s.size();i++)
-    positions.push_back(_VAbsAlph[i]->charToInt(s.substr(i,1)));
+  for (unsigned int i = 0; i < s.size(); i++)
+    positions.push_back(_VAbsAlph[i]->charToInt(s.substr(i, 1)));
 
   return positions;
 }
@@ -290,7 +290,7 @@ string WordAlphabet::getNPosition (const string& word, unsigned int n) const thr
   //Test:
   charToInt(word);
   
-  return ""+word.substr(n,1);
+  return ""+word.substr(n, 1);
 }
 
 /****************************************************************************************/
@@ -299,8 +299,8 @@ vector<string> WordAlphabet::getPositions(const string& word) const throw (BadCh
 {
   charToInt(word);
   vector<string> positions;
-  for (unsigned int i=0; i<word.size();i++)
-    positions.push_back(word.substr(i,1));
+  for (unsigned int i = 0; i < word.size(); i++)
+    positions.push_back(word.substr(i, 1));
 
   return positions;
 }
@@ -319,7 +319,7 @@ Sequence * WordAlphabet::translate(const Sequence & sequence, int pos) const thr
 
   unsigned int s = sequence.size();
   unsigned int l = getLength();
-  unsigned int i=pos;
+  unsigned int i = pos;
   
   while (i + l < s)
   {
@@ -346,3 +346,4 @@ Sequence * WordAlphabet::reverse(const Sequence & sequence) const throw (Alphabe
 
   return pseq;
 }
+
