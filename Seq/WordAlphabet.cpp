@@ -85,9 +85,9 @@ void WordAlphabet::build_()
 
   for (unsigned int i = 0; i < size; i++)
   {
-    alphabet[i].num = i;
-    alphabet[i].letter = "";
-    alphabet[i].name = "";    
+    alphabet[i+1].num = i;
+    alphabet[i+1].letter = "";
+    alphabet[i+1].name = "";    
   }
 
   unsigned lr = size;
