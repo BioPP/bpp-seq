@@ -70,7 +70,7 @@ string NexusTools::getNextNonCommentLine(istream& input)
 }
 
 
-void NexusTools::getNextCommand(istream& input, string& name, string& arguments, bool lineBrk)
+bool NexusTools::getNextCommand(istream& input, string& name, string& arguments, bool lineBrk)
   throw (IOException)
 {
 	// Checking if the stream is readable
@@ -79,7 +79,7 @@ void NexusTools::getNextCommand(istream& input, string& name, string& arguments,
   string line = TextTools::removeSurroundingWhiteSpaces(getNextNonCommentLine(input));
   if (TextTools::startsWith(line, "BEGIN"))
   {
-	  throw IOException ("NexusTools::getNextCommand(). Begin of block detected, before any command was found.");
+	  return false;
   }
 
   // Check if the command stands on one line:
@@ -95,7 +95,7 @@ void NexusTools::getNextCommand(istream& input, string& name, string& arguments,
     if (commandComplete)
     {
       //Command with no argument:
-      return;
+      return true;
     }
   }
   else
@@ -115,5 +115,6 @@ void NexusTools::getNextCommand(istream& input, string& name, string& arguments,
       arguments += "\n";
     arguments += line;
   }
+  return true;
 }
 

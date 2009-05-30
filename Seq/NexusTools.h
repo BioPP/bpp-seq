@@ -73,9 +73,10 @@ class NexusTools
      * @param name      [out] Will contain the name of the command. 
      * @param arguments [out] Will contain the arguments of the commans, as raw data. The arguments will not be parsed.
      * @param lineBrk   [in]  Tell is the line break should be preserved in the arguments.
-     * @throw IOException In cas of bad format.
+     * @return Whether a command was found in the current block.
+     * @throw IOException In case of bad format.
      */
-    static void getNextCommand(istream& input, string& name, string& arguments, bool lineBrk = true) throw (IOException);
+    static bool getNextCommand(istream& input, string& name, string& arguments, bool lineBrk = true) throw (IOException);
 
 };
 

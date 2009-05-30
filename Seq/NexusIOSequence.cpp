@@ -39,7 +39,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "NexusIOSequence.h"
 #include "NexusTools.h"
-#include "SequenceContainerTools.h"
+#include "SiteContainerTools.h"
+#include "AlphabetTools.h"
 
 // From Utils:
 #include <Utils/TextTools.h>
@@ -75,46 +76,51 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
 
   //Look for the DATA block:
   string line = "";
-  while(line != "BEGIN DATA;")
+  while (line != "BEGIN DATA;")
   {
-    if(input.eof())
+    if (input.eof())
       throw Exception("NexusIOSequence::appendFromStream(). No data block was found.");
     line = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(input));
   }
 
   //Look for the DIMENSIONS command:
   string cmdName = "", cmdArgs = "";
-  while(cmdName != "DIMENSIONS")
+  while (cmdName != "DIMENSIONS")
   {
-    if(input.eof())
+    if (input.eof())
       throw Exception("NexusIOSequence::appendFromStream(). No DIMENSIONS command was found.");
     NexusTools::getNextCommand(input, cmdName, cmdArgs);
   }
   map<string, string> args;
   KeyvalTools::multipleKeyvals(cmdArgs, args, " ");
-  if(args["NTAX"] == "")
+  if (args["NTAX"] == "")
     throw Exception("NexusIOSequence::appendFromStream(). DIMENSIONS command does not have a NTAX argument.");
   unsigned int ntax = TextTools::to<unsigned int>(args["NTAX"]);
 
   //Look for the FORMAT command:
-  while(cmdName != "FORMAT")
+  while (cmdName != "FORMAT")
   {
-    if(input.eof())
+    if (input.eof())
       throw Exception("NexusIOSequence::appendFromStream(). No FORMAT command was found.");
     NexusTools::getNextCommand(input, cmdName, cmdArgs);
   }
-  if(TextTools::hasSubstring(cmdArgs, "TRANSPOSE"))
+  if (TextTools::hasSubstring(cmdArgs, "TRANSPOSE"))
     throw Exception("NexusIOSequence::appendFromStream(). TRANSPOSE option is not supported.");
-  if(TextTools::hasSubstring(cmdArgs, "MATCHCHAR"))
-    throw Exception("NexusIOSequence::appendFromStream(). MATCHCHAR option is not supported.");
-    //NB: we can easily support this option though...
 
- 
+  //Check if the alignment is dotted or not:
+  bool matchChar = TextTools::hasSubstring(cmdArgs, "MATCHCHAR");
+
+  AlignedSequenceContainer* alignment = 0;
+  if (matchChar)
+    alignment = new AlignedSequenceContainer(&AlphabetTools::DEFAULT_ALPHABET);
+  else
+    alignment = &vsc;
+
   //Look for the MATRIX command:
   line = "";
-  while(!TextTools::startsWith(line, "MATRIX"))
+  while (!TextTools::startsWith(line, "MATRIX"))
   {
-    if(input.eof())
+    if (input.eof())
       throw Exception("NexusIOSequence::appendFromStream(). No MATRIX command was found.");
     line = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(input));
   }
@@ -123,11 +129,11 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
   vector<string> names, seqs;
   // Read first block:
   bool commandFinished = false;
-  for(unsigned int i = 0; i < ntax && !input.eof(); i++)
+  for (unsigned int i = 0; i < ntax && !input.eof(); i++)
   {
-    if(TextTools::endsWith(line, ";"))
+    if (TextTools::endsWith(line, ";"))
     {
-      if(i < ntax - 1)
+      if (i < ntax - 1)
         throw IOException("NexusIOSequence::appendFromStream. Early end of MATRIX command, some sequences are missing.");
       else 
       {
@@ -143,13 +149,13 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
   
   //Then read all other blocks:
   commandFinished = TextTools::removeSurroundingWhiteSpaces(line) == ";"; //In case the end of command is on a separate line.
-  while(!commandFinished)
+  while (!commandFinished)
   {
-    for(unsigned int i = 0; i < ntax && !input.eof(); i++)
+    for (unsigned int i = 0; i < ntax && !input.eof(); i++)
     {
-      if(TextTools::endsWith(line, ";"))
+      if (TextTools::endsWith(line, ";"))
       {
-        if(i < ntax - 1)
+        if (i < ntax - 1)
           throw IOException("NexusIOSequence::appendFromStream. Early end of MATRIX command, some sequences are missing.");
         else 
         {
@@ -159,16 +165,29 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
       }
 
       vector<string> v = splitNameAndSequence_(line);
-      if(v[0] != names[i])
+      if (v[0] != names[i])
         throw IOException("NexusIOSequence::appendFromStream. Bad file, the sequences are not in the same order in interleaved blocks, or one taxon is missing.");
       seqs[i] += v[1];      
       line = FileTools::getNextLine(input);
       commandFinished = TextTools::removeSurroundingWhiteSpaces(line) == ";"; //In case the end of command is on a separate line.
     }
   }
-  for(unsigned int i = 0; i < names.size(); i++)
+  for (unsigned int i = 0; i < names.size(); i++)
   {
-    vsc.addSequence(Sequence(names[i], seqs[i], vsc.getAlphabet()), checkNames_);
+    alignment->addSequence(Sequence(names[i], seqs[i], vsc.getAlphabet()), checkNames_);
+  }
+
+  if (matchChar)
+  {
+    //Now we resolve the alignment:
+    SiteContainer* resolvedAlignment =
+      SiteContainerTools::resolveDottedAlignment(*alignment, vsc.getAlphabet());
+    delete alignment;
+    for (unsigned int i = 0; i < resolvedAlignment->getNumberOfSequences(); i++)
+    {
+      vsc.addSequence(*resolvedAlignment->getSequence(i));
+    }
+    delete resolvedAlignment;
   }
 }
 
