@@ -81,13 +81,14 @@ class SequenceApplicationTools
 		 * @param verbose Print some info to the 'message' output stream.
 		 * @param allowGeneric Tell if generic alphabets can be used.
 		 * @return A new Alphabet object according to options specified.
+     * @throw Exception If some parameter is incorrect.
 		 */
 		static Alphabet * getAlphabet(
 			map<string, string> & params,
 			const string & suffix = "",
 			bool suffixIsOptional = true,
 			bool verbose = true,
-      bool allowGeneric = false);
+      bool allowGeneric = false) throw (Exception);
 		
 		/**
 		 * @brief Build a SequenceContainer object according to options.

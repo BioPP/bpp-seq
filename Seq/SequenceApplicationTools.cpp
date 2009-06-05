@@ -54,115 +54,110 @@ using namespace bpp;
 
 Alphabet * SequenceApplicationTools::getAlphabet(
   map<string, string> & params,
-  const string & suffix,
+  const string& suffix,
   bool suffixIsOptional,
   bool verbose,
-  bool allowGeneric)
+  bool allowGeneric) throw (Exception)
 {
-  Alphabet * chars;
+  Alphabet* chars;
   string alphtt = ApplicationTools::getStringParameter("alphabet", params, "DNA", suffix, suffixIsOptional);
 
   string alphabet = "";
   map<string, string> args;
 
-  int i, lg;
-  KeyvalTools::parseProcedure(alphtt,alphabet,args);
+  KeyvalTools::parseProcedure(alphtt, alphabet, args);
 
   if (alphabet == "DNA")
+  {
+    if (args.find("length") == args.end())
+      chars = new DNA();
+    else
     {
-      if (args.find("length") == args.end())
-        chars = new DNA();
-      else {
-        lg=TextTools::toInt(args["length"]);
-        chars = new WordAlphabet(new DNA(),lg);
-        alphabet="";
-        for (i=0;i<lg;i++)
-          alphabet+="DNA ";
-        alphabet="Word("+alphabet +")";
-      }
+      unsigned int lg = TextTools::to<unsigned int>(args["length"]);
+      chars = new WordAlphabet(new DNA(), lg);
+      alphabet = "";
+      for (unsigned int i = 0; i < lg; i++)
+        alphabet += "DNA ";
+      alphabet = "Word(" + alphabet + ")";
     }
+  }
   else if (alphabet == "RNA")
+  {
+    if (args.find("length") == args.end())
+      chars = new RNA();
+    else
     {
-      if (args.find("length") == args.end())
-        chars = new RNA();
-      else {
-        lg=TextTools::toInt(args["length"]);
-        chars = new WordAlphabet(new RNA(),lg);
-        alphabet="";
-        for (i=0;i<lg;i++)
-          alphabet+="RNA ";
-        alphabet="Word("+alphabet+")";
-      }
+      unsigned int lg = TextTools::to<unsigned int>(args["length"]);
+      chars = new WordAlphabet(new RNA(), lg);
+      alphabet = "";
+      for (unsigned int i = 0; i < lg; i++)
+        alphabet += "RNA ";
+      alphabet = "Word(" + alphabet + ")";
     }
-  else if (alphabet == "Proteic")
+  }
+  else if (alphabet == "Protein")
+  {
+    if (args.find("length") == args.end())
+      chars = new ProteicAlphabet();
+    else
     {
-      if (args.find("length") == args.end())
-        chars = new ProteicAlphabet();
-      else {
-        lg=TextTools::toInt(args["length"]);
-        chars = new WordAlphabet(new ProteicAlphabet(),lg);
-        alphabet="";
-        for (i=0;i<lg;i++)
-          alphabet+="Proteic ";
-        alphabet="Word("+alphabet + ")";
-      }
+      unsigned int lg = TextTools::to<unsigned int>(args["length"]);
+      chars = new WordAlphabet(new ProteicAlphabet(),lg);
+      alphabet="";
+      for (unsigned int i = 0; i < lg; i++)
+        alphabet += "Proteic ";
+      alphabet = "Word(" + alphabet + ")";
     }
+  }
   else if (allowGeneric && alphabet == "Generic")
+  {
+    if (args.find("length") == args.end())
+      chars = new DefaultAlphabet();
+    else
     {
-      if (args.find("length") == args.end())
-        chars = new DefaultAlphabet();
-      else {
-        lg=TextTools::toInt(args["length"]);
-        chars = new WordAlphabet(new DefaultAlphabet(),lg);
-        alphabet="";
-        for (i=0;i<lg;i++)
-          alphabet+="Default ";
-        alphabet="Word("+alphabet+ ")";
-      }
+      unsigned int lg = TextTools::to<unsigned int>(args["length"]);
+      chars = new WordAlphabet(new DefaultAlphabet(),lg);
+      alphabet = "";
+      for (unsigned i = 0; i < lg; i++)
+        alphabet += "Default ";
+      alphabet = "Word(" + alphabet + ")";
     }
-  else {
+  }
+  else
+  {
     string suff="";
-    if (alphabet.find("CodonAlphabet")!=string::npos)
-      suff="CodonAlphabet";
-    else if (alphabet.find("GeneticCode")!=string::npos)
-      suff="GeneticCode";
+    if (alphabet.find("CodonAlphabet") != string::npos)
+      suff = "CodonAlphabet";
+    else if (alphabet.find("GeneticCode") != string::npos)
+      suff = "GeneticCode";
     
-    if (suff=="")
-      {
-        ApplicationTools::displayError("Alphabet not known: " + alphabet);
-        exit(-1);
-      }
+    if (suff == "")
+      throw Exception("Alphabet not known: " + alphabet);
 
-    if (args.find("alphn")==args.end()){
-      ApplicationTools::displayError("Missing alphabet in Codon : " + alphabet);
-      exit(-1);
-    }
+    if (args.find("alphn") == args.end())
+      throw Exception("Missing alphabet in Codon : " + alphabet);
 
-    string alphn=args["alphn"];
+    string alphn = args["alphn"];
 
     NucleicAlphabet* pnalph;
-    if (alphn=="RNA")
-      pnalph=new RNA();
-    else if (alphn=="DNA")
-      pnalph=new DNA();
-    else {
-      ApplicationTools::displayError("Alphabet not known in Codon : " + alphn);
-      exit(-1);
-    }
+    if (alphn == "RNA")
+      pnalph = new RNA();
+    else if (alphn == "DNA")
+      pnalph = new DNA();
+    else
+      throw Exception("Alphabet not known in Codon : " + alphn);
     
-    if (alphabet.find("EchinodermMitochondrial")!=string::npos)
-      chars=new EchinodermMitochondrialCodonAlphabet(pnalph);
-    else if (alphabet.find("InvertebrateMitochondrial")!=string::npos)
-      chars=new InvertebrateMitochondrialCodonAlphabet(pnalph);
-    else if (alphabet.find("Standard")!=string::npos)
-      chars=new StandardCodonAlphabet(pnalph);
-    else if (alphabet.find("VertebrateMitochondrial")!=string::npos)
-      chars=new VertebrateMitochondrialCodonAlphabet(pnalph);
-    else {
-      ApplicationTools::displayError("Unknown Alphabet : " + alphabet);
-      exit(-1);
-    }
-    alphabet=alphabet+"("+alphn+")";
+    if (alphabet.find("EchinodermMitochondrial") != string::npos)
+      chars = new EchinodermMitochondrialCodonAlphabet(pnalph);
+    else if (alphabet.find("InvertebrateMitochondrial") != string::npos)
+      chars = new InvertebrateMitochondrialCodonAlphabet(pnalph);
+    else if (alphabet.find("Standard") != string::npos)
+      chars = new StandardCodonAlphabet(pnalph);
+    else if (alphabet.find("VertebrateMitochondrial") != string::npos)
+      chars = new VertebrateMitochondrialCodonAlphabet(pnalph);
+    else
+      throw Exception("Unknown Alphabet : " + alphabet);
+    alphabet = alphabet + "(" + alphn + ")";
   }
   if(verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
   return chars;
