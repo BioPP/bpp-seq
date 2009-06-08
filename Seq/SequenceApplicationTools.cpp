@@ -66,78 +66,38 @@ Alphabet * SequenceApplicationTools::getAlphabet(
   map<string, string> args;
 
   KeyvalTools::parseProcedure(alphtt, alphabet, args);
-
+  unsigned int lg=1;
+  
+  if (alphabet=="Word"){
+    if (args.find("length")== args.end())
+      throw Exception("Missing length parameter for Word alphabet");
+    lg = TextTools::to<unsigned int>(args["length"]);
+    if (args.find("letter")== args.end())
+      throw Exception("Missing letter alphabet for Word alphabet");
+    alphabet=args["letter"];
+  }
+  
   if (alphabet == "DNA")
-  {
-    if (args.find("length") == args.end())
-      chars = new DNA();
-    else
-    {
-      unsigned int lg = TextTools::to<unsigned int>(args["length"]);
-      chars = new WordAlphabet(new DNA(), lg);
-      alphabet = "";
-      for (unsigned int i = 0; i < lg; i++)
-        alphabet += "DNA ";
-      alphabet = "Word(" + alphabet + ")";
-    }
-  }
+    chars = new DNA();
   else if (alphabet == "RNA")
-  {
-    if (args.find("length") == args.end())
-      chars = new RNA();
-    else
-    {
-      unsigned int lg = TextTools::to<unsigned int>(args["length"]);
-      chars = new WordAlphabet(new RNA(), lg);
-      alphabet = "";
-      for (unsigned int i = 0; i < lg; i++)
-        alphabet += "RNA ";
-      alphabet = "Word(" + alphabet + ")";
-    }
-  }
-  else if (alphabet == "Protein")
-  {
-    if (args.find("length") == args.end())
-      chars = new ProteicAlphabet();
-    else
-    {
-      unsigned int lg = TextTools::to<unsigned int>(args["length"]);
-      chars = new WordAlphabet(new ProteicAlphabet(),lg);
-      alphabet="";
-      for (unsigned int i = 0; i < lg; i++)
-        alphabet += "Proteic ";
-      alphabet = "Word(" + alphabet + ")";
-    }
-  }
+    chars = new RNA();
+  else if (alphabet == "Proteic")
+    chars = new ProteicAlphabet();
   else if (allowGeneric && alphabet == "Generic")
-  {
-    if (args.find("length") == args.end())
-      chars = new DefaultAlphabet();
-    else
-    {
-      unsigned int lg = TextTools::to<unsigned int>(args["length"]);
-      chars = new WordAlphabet(new DefaultAlphabet(),lg);
-      alphabet = "";
-      for (unsigned i = 0; i < lg; i++)
-        alphabet += "Default ";
-      alphabet = "Word(" + alphabet + ")";
-    }
-  }
+    chars = new DefaultAlphabet();
   else
   {
     string suff="";
-    if (alphabet.find("CodonAlphabet") != string::npos)
-      suff = "CodonAlphabet";
-    else if (alphabet.find("GeneticCode") != string::npos)
-      suff = "GeneticCode";
+    if (alphabet.find("CodonAlphabet")!=string::npos)
+      suff="CodonAlphabet";
     
     if (suff == "")
       throw Exception("Alphabet not known: " + alphabet);
 
-    if (args.find("alphn") == args.end())
+    if (args.find("letter") == args.end())
       throw Exception("Missing alphabet in Codon : " + alphabet);
 
-    string alphn = args["alphn"];
+    string alphn = args["letter"];
 
     NucleicAlphabet* pnalph;
     if (alphn == "RNA")
@@ -159,12 +119,60 @@ Alphabet * SequenceApplicationTools::getAlphabet(
       throw Exception("Unknown Alphabet : " + alphabet);
     alphabet = alphabet + "(" + alphn + ")";
   }
+
+  if (lg!=1)
+    {
+      chars = new WordAlphabet(chars,lg);
+      string al="";
+      for (unsigned i = 0; i < lg; i++)
+        al += alphabet + " ";
+      alphabet = "Word(" + al + ")";
+    }
+
+
   if(verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
   return chars;
 }
 
 /******************************************************************************/
 
+GeneticCode* SequenceApplicationTools::getGeneticCode(const NucleicAlphabet* pnalph,
+                                                      const string& alphabet)
+{
+  GeneticCode * chars;
+  if (alphabet=="EchinodermMitochondrial")
+      chars=new EchinodermMitochondrialGeneticCode(pnalph);
+    else if (alphabet=="InvertebrateMitochondrial")
+      chars=new InvertebrateMitochondrialGeneticCode(pnalph);
+    else if (alphabet=="Standard")
+      chars=new StandardGeneticCode(pnalph);
+    else if (alphabet=="VertebrateMitochondrial")
+      chars=new VertebrateMitochondrialGeneticCode(pnalph);
+    else {
+      ApplicationTools::displayError("Unknown GeneticCode : " + alphabet);
+      exit(-1);
+    }
+ 
+    return chars;
+}
+
+/******************************************************************************/
+
+AlphabetIndex2<double>* SequenceApplicationTools::getAADistance(const string& dist)
+{
+  AlphabetIndex2<double>* chars;
+  if (dist=="BLOSUM50")
+    chars=new BLOSUM50();
+  else if (dist=="GranthamAAChemicalDistance")
+    chars=new GranthamAAChemicalDistance();
+  else if (dist=="MiyataAAChemicalDistance")
+    chars=new MiyataAAChemicalDistance();
+  else
+    chars=NULL;
+  return chars;
+}
+
+/******************************************************************************/
 SequenceContainer * SequenceApplicationTools::getSequenceContainer(
   const Alphabet * alpha,
   map<string, string> & params,

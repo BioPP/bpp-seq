@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "alphabets"
 #include "containers"
+#include "geneticcodes"
+#include "aadistances"
 
 namespace bpp
 {
@@ -69,34 +71,72 @@ class SequenceApplicationTools
 		
 	public:
     
-		/**
-		 * @brief Build an Alphabet object according to options.
-		 *
-		 * Options used are:
-		 * - alphabet = [DNA|RNA|Protein], the alphabet type to use.
-		 *
-		 * @param params  The attribute map where options may be found.
-		 * @param suffix  A suffix to be applied to each attribute name.
-		 * @param suffixIsOptional Tell if the suffix is absolutely required.
-		 * @param verbose Print some info to the 'message' output stream.
-		 * @param allowGeneric Tell if generic alphabets can be used.
-		 * @return A new Alphabet object according to options specified.
-     * @throw Exception If some parameter is incorrect.
-		 */
-		static Alphabet * getAlphabet(
-			map<string, string> & params,
-			const string & suffix = "",
-			bool suffixIsOptional = true,
-			bool verbose = true,
-      bool allowGeneric = false) throw (Exception);
+  /**
+   * @brief Build an Alphabet object according to options.
+   *
+   * Options used are:
+   * - alphabet = [DNA|RNA|Protein], the alphabet type to use.
+   *            = [DNA|RNA|Protein](length=n) a word-alphabet of
+   *                 words with length n
+   *            = [EchinodermMitochondrialCodonAlphabet
+   *                   | InvertebrateMitochondrialCodonAlphabet
+   *                   | InvertebrateMitochondrialCodonAlphabet
+   *                   | StandardCodonAlphabet
+   *                   | VertebrateMitochondrialCodonAlphabet]([alphn=NA|RNA])
+   *                  a codon-alphabet 
+   *
+   * @param params  The attribute map where options may be found.
+   * @param suffix  A suffix to be applied to each attribute name.
+   * @param suffixIsOptional Tell if the suffix is absolutely required.
+   * @param verbose Print some info to the 'message' output stream.
+   * @param allowGeneric Tell if generic alphabets can be used.
+   * @return A new Alphabet object according to options specified.
+   */
+  
+        static Alphabet * getAlphabet(
+                                      map<string, string> & params,
+                                      const string & suffix = "",
+                                      bool suffixIsOptional = true,
+                                      bool verbose = true,
+                                      bool allowGeneric = false) throw (Exception);
 		
-		/**
+  /**
+   * @brief Build a Geneticcode object according to options.
+   *
+   * @param pointer to the NucleicAlphabet
+   * @param string for the name of the GeneticCode:
+   *    [EchinodermMitochondrialGeneticCode
+   *    | InvertebrateMitochondrialGeneticCode
+   *    | InvertebrateMitochondrialGeneticCode
+   *    | StandardGeneticCode
+   *    | VertebrateMitochondrialGeneticCode]
+   * @return A new GeneticCode object
+   */
+  
+  static GeneticCode * getGeneticCode(const NucleicAlphabet*, const string&);
+
+
+  
+  /**
+   * @brief Build a AlphabetIndex2<double> object for amino acid
+   * distance according to options.
+   *
+   * @param name of the distance
+   *      [BLOSUM50,
+   *      | GranthamAAChemicalDistance
+   *      | MiyataAAChemicalDistance]
+   * @return A new AlphabetIndex2<double> object
+   */
+  
+  static AlphabetIndex2<double>* getAADistance(const string&);
+
+  /**
 		 * @brief Build a SequenceContainer object according to options.
 		 *
-     * The sequences do not have to be aligned.
-     * The supported sequence formats are Fasta, DCSE, Clustal, Mase, Phylip and GenBank.
-     *
-     * See the Bio++ program suite manual for a full description of the syntax.
+                 * The sequences do not have to be aligned.
+                 * The supported sequence formats are Fasta, DCSE, Clustal, Mase, Phylip and GenBank.
+                 *
+                 * See the Bio++ program suite manual for a full description of the syntax.
 		 *
 		 * @param alpha   The alphabet to use in the container.
 		 * @param params  The attribute map where options may be found.
@@ -104,9 +144,10 @@ class SequenceApplicationTools
 		 * @param suffixIsOptional Tell if the suffix is absolutely required.
 		 * @param verbose Print some info to the 'message' output stream.
 		 * @return A new VectorSequenceContainer object according to options specified.
-     * @see getSiteContainer to read an alignment.
+                 * @see getSiteContainer to read an alignment.
 		 */
-		static SequenceContainer * getSequenceContainer(
+  
+  static SequenceContainer * getSequenceContainer(
 			const Alphabet * alpha,
 			map<string, string> & params,
 			const string & suffix = "",
