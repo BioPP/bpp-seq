@@ -66,15 +66,16 @@ Alphabet * SequenceApplicationTools::getAlphabet(
   map<string, string> args;
 
   KeyvalTools::parseProcedure(alphtt, alphabet, args);
-  unsigned int lg=1;
+  unsigned int lg = 1;
   
-  if (alphabet=="Word"){
-    if (args.find("length")== args.end())
+  if (alphabet == "Word")
+  {
+    if (args.find("length") == args.end())
       throw Exception("Missing length parameter for Word alphabet");
     lg = TextTools::to<unsigned int>(args["length"]);
-    if (args.find("letter")== args.end())
+    if (args.find("letter") == args.end())
       throw Exception("Missing letter alphabet for Word alphabet");
-    alphabet=args["letter"];
+    alphabet = args["letter"];
   }
   
   if (alphabet == "DNA")
@@ -88,7 +89,7 @@ Alphabet * SequenceApplicationTools::getAlphabet(
   else
   {
     string suff="";
-    if (alphabet.find("CodonAlphabet")!=string::npos)
+    if (alphabet.find("CodonAlphabet") != string::npos)
       suff="CodonAlphabet";
     
     if (suff == "")
@@ -120,15 +121,14 @@ Alphabet * SequenceApplicationTools::getAlphabet(
     alphabet = alphabet + "(" + alphn + ")";
   }
 
-  if (lg!=1)
-    {
-      chars = new WordAlphabet(chars,lg);
-      string al="";
-      for (unsigned i = 0; i < lg; i++)
-        al += alphabet + " ";
-      alphabet = "Word(" + al + ")";
-    }
-
+  if (lg > 1)
+  {
+    chars = new WordAlphabet(chars, lg);
+    string al=" ";
+    for (unsigned i = 0; i < lg; i++)
+      al += alphabet + " ";
+    alphabet = "Word(" + al + ")";
+  }
 
   if(verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
   return chars;
