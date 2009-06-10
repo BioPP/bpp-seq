@@ -136,7 +136,7 @@ void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const
   //Read first line:
   getline(in, temp, '\n'); // Copy current line in temporary string
   StringTokenizer st(temp);
-  int nbSequences = TextTools::toInt(st.nextToken());
+  unsigned int nbSequences = TextTools::to<unsigned int>(st.nextToken());
   //int nbSites     = TextTools::toInt(st.nextToken());
   temp = FileTools::getNextLine(in);
   
