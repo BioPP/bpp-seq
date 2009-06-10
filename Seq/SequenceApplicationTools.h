@@ -103,17 +103,17 @@ class SequenceApplicationTools
   /**
    * @brief Build a Geneticcode object according to options.
    *
-   * @param pointer to the NucleicAlphabet
-   * @param string for the name of the GeneticCode:
+   * @param alphabet pointer to the NucleicAlphabet
+   * @param description for the name of the GeneticCode:
    *    [EchinodermMitochondrialGeneticCode
    *    | InvertebrateMitochondrialGeneticCode
    *    | InvertebrateMitochondrialGeneticCode
    *    | StandardGeneticCode
    *    | VertebrateMitochondrialGeneticCode]
    * @return A new GeneticCode object
+   * @throw Exception in case of bad description.
    */
-  
-  static GeneticCode * getGeneticCode(const NucleicAlphabet*, const string&);
+  static GeneticCode * getGeneticCode(const NucleicAlphabet* alphabet, const string& description) throw (Exception);
 
 
   
@@ -121,14 +121,14 @@ class SequenceApplicationTools
    * @brief Build a AlphabetIndex2<double> object for amino acid
    * distance according to options.
    *
-   * @param name of the distance
+   * @param description name of the distance
    *      [BLOSUM50,
    *      | GranthamAAChemicalDistance
    *      | MiyataAAChemicalDistance]
-   * @return A new AlphabetIndex2<double> object
-   */
-  
-  static AlphabetIndex2<double>* getAADistance(const string&);
+   * @return A new AlphabetIndex2<double> object.
+   * @throw Exception in case of bad description.
+   */  
+  static AlphabetIndex2<double>* getAADistance(const string& description) throw (Exception);
 
   /**
 		 * @brief Build a SequenceContainer object according to options.

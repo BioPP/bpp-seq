@@ -130,53 +130,52 @@ Alphabet * SequenceApplicationTools::getAlphabet(
     alphabet = "Word(" + al + ")";
   }
 
-  if(verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
+  if (verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
   return chars;
 }
 
 /******************************************************************************/
 
-GeneticCode* SequenceApplicationTools::getGeneticCode(const NucleicAlphabet* pnalph,
-                                                      const string& alphabet)
+GeneticCode* SequenceApplicationTools::getGeneticCode(
+    const NucleicAlphabet* alphabet,
+    const string& description) throw (Exception)
 {
-  GeneticCode * chars;
-  if (alphabet=="EchinodermMitochondrial")
-      chars=new EchinodermMitochondrialGeneticCode(pnalph);
-    else if (alphabet=="InvertebrateMitochondrial")
-      chars=new InvertebrateMitochondrialGeneticCode(pnalph);
-    else if (alphabet=="Standard")
-      chars=new StandardGeneticCode(pnalph);
-    else if (alphabet=="VertebrateMitochondrial")
-      chars=new VertebrateMitochondrialGeneticCode(pnalph);
-    else {
-      ApplicationTools::displayError("Unknown GeneticCode : " + alphabet);
-      exit(-1);
-    }
- 
-    return chars;
-}
-
-/******************************************************************************/
-
-AlphabetIndex2<double>* SequenceApplicationTools::getAADistance(const string& dist)
-{
-  AlphabetIndex2<double>* chars;
-  if (dist=="BLOSUM50")
-    chars=new BLOSUM50();
-  else if (dist=="GranthamAAChemicalDistance")
-    chars=new GranthamAAChemicalDistance();
-  else if (dist=="MiyataAAChemicalDistance")
-    chars=new MiyataAAChemicalDistance();
+  GeneticCode* geneCode;
+  if (description == "EchinodermMitochondrial")
+    geneCode = new EchinodermMitochondrialGeneticCode(alphabet);
+  else if (description == "InvertebrateMitochondrial")
+    geneCode = new InvertebrateMitochondrialGeneticCode(alphabet);
+  else if (description == "Standard")
+    geneCode = new StandardGeneticCode(alphabet);
+  else if (description == "VertebrateMitochondrial")
+    geneCode = new VertebrateMitochondrialGeneticCode(alphabet);
   else
-    chars=NULL;
-  return chars;
+    throw Exception("Unknown GeneticCode: " + description);
+  return geneCode;
 }
 
 /******************************************************************************/
-SequenceContainer * SequenceApplicationTools::getSequenceContainer(
-  const Alphabet * alpha,
-  map<string, string> & params,
-  const string & suffix,
+
+AlphabetIndex2<double>* SequenceApplicationTools::getAADistance(const string& description)
+  throw (Exception)
+{
+  AlphabetIndex2<double>* distance;
+  if (description == "BLOSUM50")
+    distance = new BLOSUM50();
+  else if (description == "GranthamAAChemicalDistance")
+    distance = new GranthamAAChemicalDistance();
+  else if (description == "MiyataAAChemicalDistance")
+    distance = new MiyataAAChemicalDistance();
+  else
+    throw Exception("Unknown AA distance: " + description);
+  return distance;
+}
+
+/******************************************************************************/
+SequenceContainer* SequenceApplicationTools::getSequenceContainer(
+  const Alphabet* alpha,
+  map<string, string>& params,
+  const string& suffix,
   bool suffixIsOptional,
   bool verbose)
 {
@@ -185,37 +184,37 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
   string format = "";
   map<string, string> args;
   KeyvalTools::parseProcedure(sequenceFormat, format, args);
-  if(verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
-  ISequence * iSeq = NULL;
-  if(format == "Mase")
+  if (verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
+  ISequence* iSeq = NULL;
+  if (format == "Mase")
   {
     iSeq = new Mase();
   }
-  else if(format == "Phylip")
+  else if (format == "Phylip")
   {
     bool sequential = true, extended = true;
     string split = "  ";
-    if(args.find("order") != args.end())
+    if (args.find("order") != args.end())
     {
-           if(args["order"] == "sequential" ) sequential = true;
-      else if(args["order"] == "interleaved") sequential = false;
+           if (args["order"] == "sequential" ) sequential = true;
+      else if (args["order"] == "interleaved") sequential = false;
       else ApplicationTools::displayWarning("Argument '" +
              args["order"] +
              "' for argument 'Phylip#order' is unknown. " +
              "Default used instead: sequential.");
     }
     else ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
-    if(args.find("type") != args.end())
+    if (args.find("type") != args.end())
     {
-      if(args["type"] == "extended")
+      if (args["type"] == "extended")
       {
         extended = true;
         split = ApplicationTools::getStringParameter("split", args, "spaces", "", true, false);
-        if(split == "spaces") split = "  ";
-        else if(split == "tab") split = "\t";
+        if (split == "spaces") split = "  ";
+        else if (split == "tab") split = "\t";
         else throw Exception("Unknown option for Phylip#split: " + split);
       }
-      else if(args["type"] == "classic" ) extended = false;
+      else if (args["type"] == "classic" ) extended = false;
       else ApplicationTools::displayWarning("Argument '" +
              args["type"] + "' for parameter 'Phylip#type' is unknown. " +
              "Default used instead: extended.");
@@ -223,24 +222,24 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
     else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
     iSeq = new Phylip(extended, sequential, 100, true, split);
   }
-  else if(format == "Fasta")
+  else if (format == "Fasta")
   {
     iSeq = new Fasta();
   }
-  else if(format == "Clustal")
+  else if (format == "Clustal")
   {
     unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
     iSeq = new Clustal(true, extraSpaces);
   }
-  else if(format == "Dcse")
+  else if (format == "Dcse")
   {
     iSeq = new DCSE();
   }
-  else if(format == "GenBank")
+  else if (format == "GenBank")
   {
     iSeq = new GenBank();
   }
-  else if(format == "Nexus")
+  else if (format == "Nexus")
   {
     iSeq = new NexusIOSequence();
   }
@@ -252,7 +251,7 @@ SequenceContainer * SequenceApplicationTools::getSequenceContainer(
   SequenceContainer * sequences = iSeq->read(sequenceFilePath, alpha);
   delete iSeq;
   
-  if(verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
+  if (verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
 
   return sequences;
 }
@@ -272,37 +271,37 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
   map<string, string> args;
   KeyvalTools::parseProcedure(sequenceFormat, format, args);
 
-  if(verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
+  if (verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
   ISequence * iSeq = NULL;
-  if(format == "Mase")
+  if (format == "Mase")
   {
     iSeq = new Mase();
   }
-  else if(format == "Phylip")
+  else if (format == "Phylip")
   {
     bool sequential = true, extended = true;
     string split = "  ";
-    if(args.find("order") != args.end())
+    if (args.find("order") != args.end())
     {
-           if(args["order"] == "sequential" ) sequential = true;
-      else if(args["order"] == "interleaved") sequential = false;
+           if (args["order"] == "sequential" ) sequential = true;
+      else if (args["order"] == "interleaved") sequential = false;
       else ApplicationTools::displayWarning("Argument '" +
              args["order"] +
              "' for argument 'Phylip#order' is unknown. " +
              "Default used instead: sequential.");
     }
     else ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
-    if(args.find("type") != args.end())
+    if (args.find("type") != args.end())
     {
-      if(args["type"] == "extended")
+      if (args["type"] == "extended")
       {
         extended = true;
         split = ApplicationTools::getStringParameter("split", args, "spaces", "", true, false);
-        if(split == "spaces") split = "  ";
-        else if(split == "tab") split = "\t";
+        if (split == "spaces") split = "  ";
+        else if (split == "tab") split = "\t";
         else throw Exception("Unknown option for Phylip#split: " + split);
       }
-      else if(args["type"] == "classic" ) extended = false;
+      else if (args["type"] == "classic" ) extended = false;
       else ApplicationTools::displayWarning("Argument '" +
              args["type"] + "' for parameter 'Phylip#type' is unknown. " +
              "Default used instead: extended.");
@@ -310,20 +309,20 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
     else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
     iSeq = new Phylip(extended, sequential, 100, true, split);
   }
-  else if(format == "Fasta")
+  else if (format == "Fasta")
   {
     iSeq = new Fasta();
   }
-  else if(format == "Clustal")
+  else if (format == "Clustal")
   {
     unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
     iSeq = new Clustal(true, extraSpaces);
   }
-  else if(format == "Dcse")
+  else if (format == "Dcse")
   {
     iSeq = new DCSE();
   }
-  else if(format == "Nexus")
+  else if (format == "Nexus")
   {
     iSeq = new NexusIOSequence();
   }
@@ -337,27 +336,27 @@ VectorSiteContainer * SequenceApplicationTools::getSiteContainer(
   delete seqCont;
   delete iSeq;
   
-  if(verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
+  if (verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
 
   // Look for site selection:
-  if(format == "Mase")
+  if (format == "Mase")
   {
     //getting site set:
     string siteSet = ApplicationTools::getStringParameter("siteSelection", args, "none", suffix, suffixIsOptional, false);
-    if(siteSet != "none")
+    if (siteSet != "none")
     {
       VectorSiteContainer * selectedSites;
       try
       {
         selectedSites = dynamic_cast<VectorSiteContainer *>(MaseTools::getSelectedSites(* sites, siteSet));
-        if(verbose) ApplicationTools::displayResult("Set found", TextTools::toString(siteSet) + " sites.");
+        if (verbose) ApplicationTools::displayResult("Set found", TextTools::toString(siteSet) + " sites.");
       }
       catch(IOException ioe)
       {
         ApplicationTools::displayError("Site Set '" + siteSet + "' not found.");
         exit(-1);
       }
-      if(selectedSites->getNumberOfSites() == 0)
+      if (selectedSites->getNumberOfSites() == 0)
       {
         ApplicationTools::displayError("Site Set '" + siteSet + "' is empty.");
         exit(-1);
@@ -383,47 +382,47 @@ VectorSiteContainer * SequenceApplicationTools::getSitesToAnalyse(
   VectorSiteContainer * sitesToAnalyse;
   
   string option = ApplicationTools::getStringParameter("input.sequence.sites_to_use", params, "complete", suffix, suffixIsOptional);
-  if(verbose) ApplicationTools::displayResult("Sites to use", option);
+  if (verbose) ApplicationTools::displayResult("Sites to use", option);
   sitesToAnalyse = new VectorSiteContainer(allSites);
-  if(option == "all")
+  if (option == "all")
   {
     string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional);
-    if(maxGapOption[maxGapOption.size()-1] == '%')
+    if (maxGapOption[maxGapOption.size()-1] == '%')
     {
       double gapFreq = TextTools::toDouble(maxGapOption.substr(0,maxGapOption.size()-1)) / 100.;
-      for(unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+      for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
       {
         map<int, double> freq;
         SiteTools::getFrequencies(*sitesToAnalyse->getSite(i-1), freq);
-        if(freq[-1] > gapFreq) sitesToAnalyse->deleteSite(i-1);
+        if (freq[-1] > gapFreq) sitesToAnalyse->deleteSite(i-1);
       }
     }
     else
     {
       unsigned int gapNum=TextTools::to<unsigned int>(maxGapOption);
-      for(unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+      for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
       {
         map<int, unsigned int> counts;
         SiteTools::getCounts(*sitesToAnalyse->getSite(i-1), counts);
-        if(counts[-1] > gapNum) sitesToAnalyse->deleteSite(i-1);
+        if (counts[-1] > gapNum) sitesToAnalyse->deleteSite(i-1);
       }
     }
-    if(gapAsUnknown)
+    if (gapAsUnknown)
     {
       SiteContainerTools::changeGapsToUnknownCharacters(*sitesToAnalyse);
     }
   }
-  else if(option == "complete")
+  else if (option == "complete")
   {
     sitesToAnalyse = dynamic_cast<VectorSiteContainer *>(SiteContainerTools::getCompleteSites(allSites));
     int nbSites = sitesToAnalyse->getNumberOfSites();
-    if(verbose) ApplicationTools::displayResult("Complete sites", TextTools::toString(nbSites));
+    if (verbose) ApplicationTools::displayResult("Complete sites", TextTools::toString(nbSites));
   }
-  else if(option == "nogap")
+  else if (option == "nogap")
   {
     sitesToAnalyse = dynamic_cast<VectorSiteContainer *>(SiteContainerTools::getSitesWithoutGaps(allSites));
     int nbSites = sitesToAnalyse->getNumberOfSites();
-    if(verbose) ApplicationTools::displayResult("Sites without gap", TextTools::toString(nbSites));
+    if (verbose) ApplicationTools::displayResult("Sites without gap", TextTools::toString(nbSites));
   }
   else
   {
@@ -449,39 +448,39 @@ void SequenceApplicationTools::writeSequenceFile(
   KeyvalTools::parseProcedure(sequenceFormat, format, args);
   unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", args, 100, "", true, false);
   OSequence * oSeq;
-  if(format == "Fasta")
+  if (format == "Fasta")
   {
     oSeq = new Fasta(ncol);
   }
-  else if(format == "Mase")
+  else if (format == "Mase")
   {
     oSeq = new Mase(ncol);
   }
-  else if(format == "Phylip")
+  else if (format == "Phylip")
   {
     bool sequential = true, extended = true;
     string split = "  ";
-    if(args.find("order") != args.end())
+    if (args.find("order") != args.end())
     {
-           if(args["order"] == "sequential" ) sequential = true;
-      else if(args["order"] == "interleaved") sequential = false;
+           if (args["order"] == "sequential" ) sequential = true;
+      else if (args["order"] == "interleaved") sequential = false;
       else ApplicationTools::displayWarning("Argument '" +
              args["order"] +
              "' for argument 'Phylip#order' is unknown. " +
              "Default used instead: sequential.");
     }
     else ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
-    if(args.find("type") != args.end())
+    if (args.find("type") != args.end())
     {
-      if(args["type"] == "extended")
+      if (args["type"] == "extended")
       {
         extended = true;
         split = ApplicationTools::getStringParameter("split", args, "spaces", "", true, false);
-        if(split == "spaces") split = "  ";
-        else if(split == "tab") split = "\t";
+        if (split == "spaces") split = "  ";
+        else if (split == "tab") split = "\t";
         else throw Exception("Unknown option for Phylip#split: " + split);
       }
-      else if(args["type"] == "classic" ) extended = false;
+      else if (args["type"] == "classic" ) extended = false;
       else ApplicationTools::displayWarning("Argument '" +
              args["type"] + "' for parameter 'Phylip#type' is unknown. " +
              "Default used instead: extended.");
@@ -495,7 +494,7 @@ void SequenceApplicationTools::writeSequenceFile(
     exit(-1);
   }
   
-  if(verbose)
+  if (verbose)
   {
     ApplicationTools::displayResult("Output file format", format);
     ApplicationTools::displayResult("Output file ", sequenceFilePath);

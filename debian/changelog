@@ -1,3 +1,9 @@
+libbpp-seq (1.6.0) unstable; urgency=low
+
+  * Update for version 1.8 of Bio++.
+
+ -- Julien Dutheil <jdutheil@birc.au.dk>  Wed, 10 Jun 2009 11:28:58 +0100
+
 libbpp-seq (1.5.0) unstable; urgency=low
 
   * Several bugs fixed, new Phred sequence format, speed improvements.

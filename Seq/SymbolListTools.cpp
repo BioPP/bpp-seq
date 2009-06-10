@@ -43,93 +43,96 @@ knowledge of the CeCILL license and that you accept its terms.
 // From NumCalc:
 #include <NumCalc/RandomTools.h>
 
+//From the STL:
+using namespace std;
+
 using namespace bpp;
 
-void SymbolListTools::getCounts(const SymbolList & list, map<int, double> & counts, bool resolveUnknowns)
+void SymbolListTools::getCounts(const SymbolList& list, map<int, double>& counts, bool resolveUnknowns)
 {
-  if(!resolveUnknowns)
+  if (!resolveUnknowns)
   {
-    for(vector<int>::const_iterator seqit = list.getContent().begin();
+    for (vector<int>::const_iterator seqit = list.getContent().begin();
         seqit != list.getContent().end();
         seqit++)
       counts[*seqit]++;
   }
   else
   {
-    for(vector<int>::const_iterator seqit = list.getContent().begin();
+    for (vector<int>::const_iterator seqit = list.getContent().begin();
         seqit != list.getContent().end();
         seqit++)
     {
       vector<int> alias = list.getAlphabet()->getAlias(*seqit);
       double n = (double)alias.size();
-      for(unsigned int j = 0; j < alias.size(); j++) counts[alias[j]] += 1./n ;
+      for (unsigned int j = 0; j < alias.size(); j++) counts[alias[j]] += 1./n ;
     }
   }
 }
 
-void SymbolListTools::getCounts(const SymbolList & list1, const SymbolList & list2,  map< int, map<int, double> > & counts, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getCounts(const SymbolList& list1, const SymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException)
 {
-  if(list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
-  if(!resolveUnknowns)
+  if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
+  if (!resolveUnknowns)
   {
-    for(unsigned int i = 0; i < list1.size(); i++)
+    for (unsigned int i = 0; i < list1.size(); i++)
       counts[list1[i]][list2[i]]++;
   }
   else
   {
-    for(unsigned int i = 0; i < list1.size(); i++)
+    for (unsigned int i = 0; i < list1.size(); i++)
     {
       vector<int> alias1 = list1.getAlphabet()->getAlias(list1[i]);
       vector<int> alias2 = list2.getAlphabet()->getAlias(list2[i]);
       double n1 = (double)alias1.size();
       double n2 = (double)alias2.size();
-      for(unsigned int j = 0; j < alias1.size(); j++)
-        for(unsigned int k = 0; k < alias2.size(); k++)
+      for (unsigned int j = 0; j < alias1.size(); j++)
+        for (unsigned int k = 0; k < alias2.size(); k++)
           counts[alias1[j]][alias2[k]] += 1./(n1*n2) ;
     }
   }
 }
 
-void SymbolListTools::getFrequencies(const SymbolList & list, map<int, double> & frequencies, bool resolveUnknowns)
+void SymbolListTools::getFrequencies(const SymbolList& list, map<int, double>& frequencies, bool resolveUnknowns)
 {
 	double n = (double)list.size();
   map<int, double> counts;
   getCounts(list, counts, resolveUnknowns);
-  for(map<int, double>::iterator i = counts.begin(); i != counts.end(); i++)
+  for (map<int, double>::iterator i = counts.begin(); i != counts.end(); i++)
   {
     frequencies[i->first] = i->second / n;
   }
 }
 
-void SymbolListTools::getFrequencies(const SymbolList & list1, const SymbolList & list2, map<int, map<int, double> > & frequencies, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getFrequencies(const SymbolList& list1, const SymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns) throw (DimensionException)
 {
 	double n2 = (double)list1.size() * (double)list1.size();
   map<int, map<int, double> > counts;
   getCounts(list1, list2, counts, resolveUnknowns);
-  for(map<int, map<int, double> >::iterator i = counts.begin(); i != counts.end(); i++)
-    for(map<int, double>::iterator j = i->second.begin(); j != i->second.end(); j++)
+  for (map<int, map<int, double> >::iterator i = counts.begin(); i != counts.end(); i++)
+    for (map<int, double>::iterator j = i->second.begin(); j != i->second.end(); j++)
   {
     frequencies[i->first][j->first] = j->second / n2;
   }
 }
 
-double SymbolListTools::getGCContent(const SymbolList & list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
+double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
 {
   const Alphabet * alphabet = list.getAlphabet();
-  if(!AlphabetTools::isNucleicAlphabet(alphabet))
+  if (!AlphabetTools::isNucleicAlphabet(alphabet))
     throw AlphabetException("SymbolListTools::getGCContent. Method only works on nucleotides.", alphabet);
   double gc = 0;
   double total = 0;
-  for(unsigned int i = 0; i < list.size(); i++) {
+  for (unsigned int i = 0; i < list.size(); i++) {
     int state = list.getValue(i);
-    if(state > -1) { // not a gap
-      if(state == 1 || state == 2) { // G or C
+    if (state > -1) { // not a gap
+      if (state == 1 || state == 2) { // G or C
         gc++;
         total++;
-      } else if(state == 0 || state == 3) { // A, T or U
+      } else if (state == 0 || state == 3) { // A, T or U
         total++;
       } else { // Unresolved character
-        if(!ignoreUnresolved) {
+        if (!ignoreUnresolved) {
           total++;
           switch(state) {
             case(7): gc++; break;// G or C
@@ -146,53 +149,53 @@ double SymbolListTools::getGCContent(const SymbolList & list, bool ignoreUnresol
         }
       }
     } else {
-      if(!ignoreGap) total++;
+      if (!ignoreGap) total++;
     }
   }
   return total != 0 ? gc/total : 0;
 }
 
-unsigned int SymbolListTools::getNumberOfDistinctPositions(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException)
+unsigned int SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
 {
-	if(l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
+	if (l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	unsigned int n = min(l1.size(), l2.size());
 	unsigned int count = 0;
-	for(unsigned int i = 0; i < n; i++) {
-		if(l1[i] != l2[i]) count++;
+	for (unsigned int i = 0; i < n; i++) {
+		if (l1[i] != l2[i]) count++;
 	}
 	return count;
 }
 
-unsigned int SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException)
+unsigned int SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
 {
-	if(l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
+	if (l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	unsigned int n = min(l1.size(), l2.size());
 	unsigned int count = 0;
-	for(unsigned int i = 0; i < n; i++) {
-		if(l1[i] != -1 && l2[i] != -1) count++;
+	for (unsigned int i = 0; i < n; i++) {
+		if (l1[i] != -1 && l2[i] != -1) count++;
 	}
 	return count;
 }
 
-void SymbolListTools::changeGapsToUnknownCharacters(SymbolList & l)
+void SymbolListTools::changeGapsToUnknownCharacters(SymbolList& l)
 {
   int unknownCode = l.getAlphabet()->getUnknownCharacterCode();
-  for(unsigned int i = 0; i < l.size(); i++)
+  for (unsigned int i = 0; i < l.size(); i++)
   {
-    if(l.getAlphabet()->isGap(l[i])) l[i] = unknownCode;
+    if (l.getAlphabet()->isGap(l[i])) l[i] = unknownCode;
   }
 }
 
-void SymbolListTools::changeUnresolvedCharactersToGaps(SymbolList & l)
+void SymbolListTools::changeUnresolvedCharactersToGaps(SymbolList& l)
 {
   int gapCode = l.getAlphabet()->getGapCharacterCode();
-  for(unsigned int i = 0; i < l.size(); i++)
+  for (unsigned int i = 0; i < l.size(); i++)
   {
-    if(l.getAlphabet()->isUnresolved(l[i])) l[i] = gapCode;
+    if (l.getAlphabet()->isUnresolved(l[i])) l[i] = gapCode;
   }
 }
 
-void SymbolListTools::randomizeContent(SymbolList & l)
+void SymbolListTools::randomizeContent(SymbolList& l)
 {
   l.setContent(RandomTools::getSample(l.getContent(), l.size(), false));
 }

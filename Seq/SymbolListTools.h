@@ -48,7 +48,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <map>
-
 using namespace std;
 
 namespace bpp
@@ -71,7 +70,7 @@ class SymbolListTools
      * @param list The list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-    static void getCounts(const SymbolList & list,  map<int, unsigned int> & counts)
+    static void getCounts(const SymbolList& list, map<int, unsigned int>& counts)
     {
       for(vector<int>::const_iterator seqit = list.getContent().begin();
           seqit != list.getContent().end();
@@ -91,7 +90,7 @@ class SymbolListTools
      * @param list2 The second list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-    static void getCounts(const SymbolList & list1, const SymbolList & list2, map<int, map<int, unsigned int> > & counts) throw (DimensionException)
+    static void getCounts(const SymbolList& list1, const SymbolList& list2, map<int, map<int, unsigned int> >& counts) throw (DimensionException)
     {
       if(list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
       for(unsigned int i = 0; i < list1.size(); i++)
@@ -110,7 +109,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @return A map with all states and corresponding counts.
      */
-    static void getCounts(const SymbolList & list,  map<int, double> & counts, bool resolveUnknowns);
+    static void getCounts(const SymbolList& list, map<int, double>& counts, bool resolveUnknowns);
     
     /**
      * @brief Count all pair of states for two lists of the same size, optionaly resolving unknown characters.
@@ -129,7 +128,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @return A map with all states and corresponding counts.
      */
-    static void getCounts(const SymbolList & list1, const SymbolList & list2,  map< int, map<int, double> > & counts, bool resolveUnknowns) throw (DimensionException);
+    static void getCounts(const SymbolList& list1, const SymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException);
     
     /**
      * @brief Get all states frequencies in the list.
@@ -140,7 +139,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @param frequencies The output map with all states and corresponding frequencies. Existing frequencies will be erased if any.
      */
-    static void getFrequencies(const SymbolList & list, map<int, double> & frequencies, bool resolveUnknowns = false);
+    static void getFrequencies(const SymbolList& list, map<int, double>& frequencies, bool resolveUnknowns = false);
 
     /**
      * @brief Get all state pairs frequencies for two lists of the same size..
@@ -152,7 +151,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @param frequencies The output map with all state pairs and corresponding frequencies. Existing frequencies will be erased if any.
      */
-    static void getFrequencies(const SymbolList & list1, const SymbolList & list2, map<int, map<int, double> > & frequencies, bool resolveUnknowns = false) throw (DimensionException);
+    static void getFrequencies(const SymbolList& list1, const SymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns = false) throw (DimensionException);
 
     /**
      * @brief Get the GC content of a symbol list.
@@ -163,7 +162,7 @@ class SymbolListTools
      * @param ignoreGap Do not count gaps in total.
      * @throw AlphabetException If the list is not made of nucleotide states.
      */
-    static double getGCContent(const SymbolList & list, bool ignoreUnresolved = true, bool ignoreGap = true) throw (AlphabetException);
+    static double getGCContent(const SymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true) throw (AlphabetException);
     
     /**
       * @brief Get the number of distinct positions.
@@ -175,7 +174,7 @@ class SymbolListTools
      * @return The number of distinct positions.
      * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
      */
-    static unsigned int getNumberOfDistinctPositions(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException);
+    static unsigned int getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException);
     
     /**
       * @brief Get the number of positions without gap.
@@ -187,28 +186,28 @@ class SymbolListTools
      * @return The number of positions without gap.
      * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
      */
-    static unsigned int getNumberOfPositionsWithoutGap(const SymbolList & l1, const SymbolList & l2) throw (AlphabetMismatchException);
+    static unsigned int getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException);
 
     /**
      * @brief Change all gap elements to unknown characters.
      *
      * @param l The input list of characters.
      */
-    static void changeGapsToUnknownCharacters(SymbolList & l);
+    static void changeGapsToUnknownCharacters(SymbolList& l);
 
     /**
      * @brief Change all unknown characters to gap elements.
      *
      * @param l The input list of characters.
      */
-    static void changeUnresolvedCharactersToGaps(SymbolList & l);
+    static void changeUnresolvedCharactersToGaps(SymbolList& l);
 
     /**
      * @brief Shuffle the list content.
      *
      * @param l The input list content.
      */
-    static void randomizeContent(SymbolList & l);
+    static void randomizeContent(SymbolList& l);
 
 };
 

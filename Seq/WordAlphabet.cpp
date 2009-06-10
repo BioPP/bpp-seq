@@ -195,7 +195,7 @@ unsigned int WordAlphabet::getLength() const
 
 /****************************************************************************************/
 
-string WordAlphabet::getName(const string & state) const throw (BadCharException)
+string WordAlphabet::getName(const string& state) const throw (BadCharException)
 {
 
   if(state.size() != _VAbsAlph.size())
@@ -210,7 +210,7 @@ string WordAlphabet::getName(const string & state) const throw (BadCharException
 		
 /****************************************************************************************/
 
-int WordAlphabet::charToInt(const string & state) const throw (BadCharException)
+int WordAlphabet::charToInt(const string& state) const throw (BadCharException)
 {
   if(state.size() != _VAbsAlph.size())
     throw BadCharException(state, "WordAlphabet::charToInt", this);
@@ -223,9 +223,9 @@ int WordAlphabet::charToInt(const string & state) const throw (BadCharException)
 
 /****************************************************************************************/
 
-int WordAlphabet::getWord(vector<int>& vint, int pos) const throw (BadIntException)
+int WordAlphabet::getWord(vector<int>& vint, unsigned int pos) const throw (BadIntException)
 {
-  if (vint.size() < pos+ _VAbsAlph.size())
+  if (vint.size() < pos + _VAbsAlph.size())
     throw BadIntException(vint.size(), "WordAlphabet::getWord", this);
   
   vector<string> vs;
@@ -237,12 +237,12 @@ int WordAlphabet::getWord(vector<int>& vint, int pos) const throw (BadIntExcepti
 
 /****************************************************************************************/
 
-string WordAlphabet::getWord(const vector<string>& vpos, int pos) const throw (BadIntException, BadCharException)
+string WordAlphabet::getWord(const vector<string>& vpos, unsigned int pos) const throw (BadIntException, BadCharException)
 {
   if (vpos.size() < pos + _VAbsAlph.size())
     throw BadIntException(vpos.size(), "WordAlphabet::getWord", this);
   
-  string s="";
+  string s = "";
   for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
     s += vpos[pos + i];
   // test

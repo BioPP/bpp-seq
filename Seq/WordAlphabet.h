@@ -164,22 +164,22 @@ public:
    * @brief Get the int code for a word given the int code of the underlying positions.
    *
    * The int code of each position must match the corresponding alphabet specified at this position.
-   * @param vint vector<int>  description for all the positions.
-   * @param pos=0 the start position to match in the vector.
+   * @param vint description for all the positions.
+   * @param pos the start position to match in the vector.
    * @return The int code of the word.
    */
-  virtual int getWord(vector<int>& vint, int pos=0) const throw (BadIntException);
+  virtual int getWord(vector<int>& vint, unsigned int pos = 0) const throw (BadIntException);
   
   /**
    * @brief Get the char code for a word given the char code of the
    * underlying positions.
    *
    * The char code of each position must match the corresponding alphabet specified at this position.
-   * @param vpos vector<string>  vector description for all the positions.
-   * @param pos=0 the start position to match in the vector.
+   * @param vpos vector description for all the positions.
+   * @param pos the start position to match in the vector.
    * @return The string of the word.
    */
-  virtual string getWord(const vector<string>& vpos, int pos=0) const throw (BadIntException, BadCharException);
+  virtual string getWord(const vector<string>& vpos, unsigned int pos = 0) const throw (BadIntException, BadCharException);
   
 
   /**
@@ -206,7 +206,7 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The char description of the n-position of the word.
    */
-  virtual string getNPosition (const string & word, unsigned int n) const throw (BadCharException);
+  virtual string getNPosition (const string& word, unsigned int n) const throw (BadCharException);
   
   /**
    * @brief Get the char codes of each position of a word given its char description.
@@ -214,7 +214,7 @@ public:
    * @param word The char description of the word.
    * @return The char description of the three positions of the word.
    */
-  virtual vector<string> getPositions(const string & word) const throw (BadCharException);
+  virtual vector<string> getPositions(const string& word) const throw (BadCharException);
 
   /**
    * @brief Translate a whole sequence from letters alphabet to words alphabet.
@@ -225,7 +225,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence * translate(const Sequence & sequence, int pos=0) const throw (AlphabetMismatchException, Exception);
+  Sequence * translate(const Sequence& sequence, int pos=0) const throw (AlphabetMismatchException, Exception);
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -235,7 +235,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception);
+  Sequence * reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception);
   
   /** @} */
 };
