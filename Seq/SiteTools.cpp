@@ -145,7 +145,7 @@ bool SiteTools::isConstant(const Site & site, bool ignoreUnknown) throw (EmptySi
 	  int s = site[0];
     int unknown = site.getAlphabet()->getUnknownCharacterCode();
     unsigned int i = 0;
-    while (i < site.size() && s == gap && s == unknown)
+    while (i < site.size() && (s == gap || s == unknown))
     {
       s = site[i];
       i++;

@@ -139,14 +139,16 @@ class SequenceContainerTools
      *
      * Example of usage: getting the GC content from a sequence container.
      * <code>
-     *   map<int, double> freqs = SequenceContainerTools::getFrequencies(myContainer); //My container is previously defined.
+     *   map<int, double> freqs;
+     *   SequenceContainerTools::getFrequencies(myContainer, freqs); //My container is previously defined.
      *   double GCcontent = (freqs[1] + freqs[2]) / (freqs[0] + freqs[1] + freqs[2] + freqs[3]);
      * </code>
      *
-     * @return A map with ecah state found as a key, and corresponding frequencies as values.
+     * @param sequences The container on which the frequencies will be computed
+     * @param f The output map with ecah state found as a key, and corresponding frequencies as values.
      * States are stored as their int code.
      */
-    static map<int, double> getFrequencies(const SequenceContainer & sequences);
+    static void getFrequencies(const SequenceContainer & sequences, map<int, double> & f);
 
     /**
      * @brief Append all the sequences of a SequenceContainer to the end of another.

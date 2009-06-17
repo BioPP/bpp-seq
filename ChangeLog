@@ -1,3 +1,8 @@
+17/06/09 Sylvain Gaillard (Glasgow Workshop)
+* Fix DNA/RNA/ProteicAlphabet::getAlias: works now with lower case states.
+* Fix SiteTools::isConstant test gap or unknown
+* Turning SequenceContainerTools::getFrequencies into void function.
+
 21/07/08 -*- Version 1.6.0 -*-
 
 28/05/09 Julien Dutheil

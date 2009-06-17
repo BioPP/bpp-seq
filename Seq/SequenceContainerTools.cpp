@@ -120,9 +120,8 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer 
 
 /******************************************************************************/
 
-map<int, double> SequenceContainerTools::getFrequencies(const SequenceContainer & sequences)
+void SequenceContainerTools::getFrequencies(const SequenceContainer & sequences, map<int, double> & f)
 {
-	map<int, double> f;
 	int n = 0;
 	vector<string> names = sequences.getSequencesNames();
 	for(unsigned int j = 0; j < names.size(); j++) {
@@ -134,7 +133,6 @@ map<int, double> SequenceContainerTools::getFrequencies(const SequenceContainer 
 		i -> second = i -> second / n;
 		//cout << i -> first << "\t" << i -> second << endl;
 	}
-	return f;
 }
 
 /******************************************************************************/

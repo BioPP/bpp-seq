@@ -235,20 +235,21 @@ vector<int> ProteicAlphabet::getAlias(int state) const throw (BadIntException)
 
 vector<string> ProteicAlphabet::getAlias(const string & state) const throw (BadCharException) 
 {
-	if(!isCharInAlphabet(state)) throw BadCharException(state, "ProteicAlphabet::getAlias(int): Specified base unknown.");
+  string locstate = TextTools::toUpper(state);
+	if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "ProteicAlphabet::getAlias(int): Specified base unknown.");
 	vector<string> v;
-	if(state == "B") {// N or D
+	if(locstate == "B") {// N or D
 		v.resize(2); v[0] = "N"; v[1] = "D";
-	} else if(state == "Z") {// Q or E
+	} else if(locstate == "Z") {// Q or E
 		v.resize(2); v[0] = "Q"; v[1] = "E";
-	} else if(state == "X"
-	       || state == "O"
-	       || state == "0"
-	       || state == "?") {// all!
+	} else if(locstate == "X"
+	       || locstate == "O"
+	       || locstate == "0"
+	       || locstate == "?") {// all!
 		v.resize(20);
     for(unsigned int i = 0; i < 20; i++) v[i] = alphabet[i+1].letter;
 	} else {
-		v.resize(1); v[0] = state;
+		v.resize(1); v[0] = locstate;
 	}		
 	return v;
 }

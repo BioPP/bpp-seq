@@ -176,36 +176,37 @@ vector<int> RNA::getAlias(int state) const throw (BadIntException)
 
 vector<string> RNA::getAlias(const string & state) const throw (BadCharException) 
 {
-	if(!isCharInAlphabet(state)) throw BadCharException(state, "RNA::getAlias(int): Specified base unknown.");
+  string locstate = TextTools::toUpper(state);
+	if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "RNA::getAlias(int): Specified base unknown.");
 	vector<string> v;
-	if(state == "M") {// A or C
+	if(locstate == "M") {// A or C
 		v.resize(2); v[0] = "A"; v[1] = "C";
-	} else if(state == "R") {// A or G
+	} else if(locstate == "R") {// A or G
 		v.resize(2); v[0] = "A"; v[1] = "G";
-	} else if(state == "W") {// A or U
+	} else if(locstate == "W") {// A or U
 		v.resize(2); v[0] = "A"; v[1] = "U";
-	} else if(state == "S") {// C or G
+	} else if(locstate == "S") {// C or G
 		v.resize(2); v[0] = "C"; v[1] = "G";
-	} else if(state == "Y") {// C or U
+	} else if(locstate == "Y") {// C or U
 		v.resize(2); v[0] = "C"; v[1] = "U";
-	} else if(state == "K") {// G or T
+	} else if(locstate == "K") {// G or T
 		v.resize(2); v[0] = "G"; v[1] = "U";
-	} else if(state == "V") {// A, C or G
+	} else if(locstate == "V") {// A, C or G
 		v.resize(3); v[0] = "A"; v[1] = "C"; v[2] = "G";
-	} else if(state == "H") {// A, C or U
+	} else if(locstate == "H") {// A, C or U
 		v.resize(3); v[0] = "A"; v[1] = "C"; v[2] = "U";
-	} else if(state == "D") {// A, G or U
+	} else if(locstate == "D") {// A, G or U
 		v.resize(3); v[0] = "A"; v[1] = "G"; v[2] = "U";
-	} else if(state == "B") {// C, G or U
+	} else if(locstate == "B") {// C, G or U
 		v.resize(3); v[0] = "C", v[1] = "G"; v[2] = "U";
-	} else if(state == "N"
-         || state == "X"
-	       || state == "O"
-	       || state == "0"
-	       || state == "?") {// A, C, G or U
+	} else if(locstate == "N"
+         || locstate == "X"
+	       || locstate == "O"
+	       || locstate == "0"
+	       || locstate == "?") {// A, C, G or U
 		v.resize(4); v[0] = "A"; v[1] = "C"; v[2] = "G"; v[3] = "U";
 	} else {
-		v.resize(1); v[0] = state;
+		v.resize(1); v[0] = locstate;
 	}		
 	return v;
 }
