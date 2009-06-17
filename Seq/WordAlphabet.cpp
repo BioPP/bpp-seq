@@ -122,7 +122,7 @@ void WordAlphabet::build_()
 
 int WordAlphabet::getUnknownCharacterCode() const
 {
-  return getSize()+1;
+  return getSize();
 }
 
 string WordAlphabet::getAlphabetType() const
