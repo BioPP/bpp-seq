@@ -51,7 +51,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <string>
-using namespace std;
 
 namespace bpp
 {
@@ -72,11 +71,11 @@ class AlignedSequenceContainer:
   public virtual VectorSequenceContainer,
   public virtual SiteContainer
 {
-  protected:
-    // Integer vector that contains sites's positions
-    vector<int> positions;
+  private:
+    // Integer std::vector that contains sites's positions
+    std::vector<int> positions_;
     
-    unsigned int length; // Number of sites for verifications before sequence's insertion in sequence container
+    unsigned int length_; // Number of sites for verifications before sequence's insertion in sequence container
   
     /**
      * This is used in order to implement the SiteContainer interface.
@@ -84,10 +83,10 @@ class AlignedSequenceContainer:
      * -- since it is a VectorSequenceContainer -- has its data sored as
      * Sequence object. When the SiteContainer method getSite() is invoked
      * it creates a new Site object and send the address of it.
-     * To avoid memory leaks, this object is put into a vector so that it can be
+     * To avoid memory leaks, this object is put into a std::vector so that it can be
      * destroyed when the container is destroyed.
      */
-    mutable vector<Site *> sites;
+    mutable std::vector<Site*> sites_;
     
   public:
     /**
@@ -95,19 +94,24 @@ class AlignedSequenceContainer:
      *
      * @param alpha The alphabet to use.
      */
-    AlignedSequenceContainer(const Alphabet * alpha);
+    AlignedSequenceContainer(const Alphabet* alpha):
+      VectorSequenceContainer(alpha),
+      length_(0)
+    {
+      reindexSites();
+    }
     /**
      * @brief Copy constructor.
      *
      * @param asc The container to copy.
      */
-    AlignedSequenceContainer(const AlignedSequenceContainer & asc);
+    AlignedSequenceContainer(const AlignedSequenceContainer& asc);
     /**
      * @brief Convert any SiteContainer object into a AlignedSequenceContainer object.
      *
      * @param sc The container to copy.
      */
-    AlignedSequenceContainer(const SiteContainer &  sc);
+    AlignedSequenceContainer(const SiteContainer& sc);
     /**
      * @brief Try to coerce an OrderedSequenceContainer object into an AlignedSequenceContainer object.
      *
@@ -116,11 +120,11 @@ class AlignedSequenceContainer:
      * @param osc The ordered container to coerce.
      * @throw SequenceNotAlignedException If sequences in osc do not have the same length.
      */
-    AlignedSequenceContainer(const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
+    AlignedSequenceContainer(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException);
 
-    AlignedSequenceContainer & operator = (const AlignedSequenceContainer & asc);
-    AlignedSequenceContainer & operator = (const            SiteContainer &  sc);
-    AlignedSequenceContainer & operator = (const OrderedSequenceContainer & osc) throw (SequenceNotAlignedException);
+    AlignedSequenceContainer& operator=(const AlignedSequenceContainer& asc);
+    AlignedSequenceContainer& operator=(const            SiteContainer&  sc);
+    AlignedSequenceContainer& operator=(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException);
 
     virtual ~AlignedSequenceContainer();
 
@@ -131,7 +135,7 @@ class AlignedSequenceContainer:
      *
      * @{
      */
-    AlignedSequenceContainer * clone() const { return new AlignedSequenceContainer(*this); }
+    AlignedSequenceContainer* clone() const { return new AlignedSequenceContainer(*this); }
     /** @} */
 
     /**
@@ -139,17 +143,17 @@ class AlignedSequenceContainer:
      *
      * @{
      */
-    const Site * getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) ;
-    void         setSite(unsigned int siteIndex, const Site & site, bool checkPosition = true) throw (Exception) ;
-    Site *    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
-    void      deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
-    void addSite(const Site & site, bool checkPosition = true) throw (Exception);
-    void addSite(const Site & site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);
-    unsigned int getNumberOfSites() const;
-    Vint getSitePositions() const;
+    const Site& getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) ;
+    void        setSite(unsigned int siteIndex, const Site& site, bool checkPosition = true) throw (Exception) ;
+    Site *   removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
+    void     deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
+    void addSite(const Site& site, bool checkPosition = true) throw (Exception);
+    void addSite(const Site& site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);
+    unsigned int getNumberOfSites() const { return length_; }
+    Vint getSitePositions() const { return positions_; }
     void reindexSites();
     void clear();
-    SequenceContainer * createEmptyContainer() const;
+    AlignedSequenceContainer* createEmptyContainer() const;
     /** @} */
 
     /**
@@ -157,11 +161,11 @@ class AlignedSequenceContainer:
      *
      * @{
      */
-    void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (Exception);
-    void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (Exception);
+    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception);
+    void setSequence(unsigned int sequenceIndex, const Sequence& sequence, bool checkName = true) throw (Exception);
 
-    void addSequence(const Sequence & sequence, bool checkName = true) throw (Exception);
-    void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
+    void addSequence(const Sequence& sequence, bool checkName = true) throw (Exception);
+    void addSequence(const Sequence& sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
     /** @} */
     
   
@@ -172,7 +176,8 @@ class AlignedSequenceContainer:
      * @param sequence The sequence to check.
      * @return True if sequence length = number of sites in container.
      */
-    bool checkSize(const Sequence & sequence);
+    bool checkSize_(const Sequence& sequence) { return (sequence.size() == length_); }
+
 };
 
 } //end of namespace bpp.

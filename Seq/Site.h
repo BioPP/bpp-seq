@@ -43,8 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SymbolList.h"
 #include "SiteExceptions.h"
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -63,11 +61,11 @@ namespace bpp
 class Site:
   public SymbolList 
 {  
-  protected:
+  private:
     /**
      * @brief The position associated to this site.
      */
-    int _position;
+    int position_;
 
   public:
     
@@ -76,7 +74,7 @@ class Site:
      *
      * @param alpha The alphabet to use.
      */
-    Site(const Alphabet * alpha);
+    Site(const Alphabet* alpha);
 
     /**
      * @brief Build a new void Site object with the specified alphabet and position.
@@ -84,7 +82,7 @@ class Site:
      * @param alpha    The alphabet to use.
      * @param position The position attribute for this site.
      */
-    Site(const Alphabet * alpha, int position);
+    Site(const Alphabet* alpha, int position);
 
     /**
      * @brief Build a new Site object with the specified alphabet.
@@ -94,7 +92,7 @@ class Site:
      * @param alpha    The alphabet to use.
      * @throw BadCharException If the content does not match the specified alphabet.
      */
-    Site(const vector<string> & site, const Alphabet * alpha) throw (BadCharException);
+    Site(const std::vector<std::string>& site, const Alphabet* alpha) throw (BadCharException);
 
     /**
      * @brief Build a new Site object with the specified alphabet and position.
@@ -105,7 +103,7 @@ class Site:
      * @param position The position attribute for this site.
      * @throw BadCharException If the content does not match the specified alphabet.
      */
-    Site(const vector<string> & site, const Alphabet * alpha, int position) throw (BadCharException);
+    Site(const std::vector<std::string>& site, const Alphabet* alpha, int position) throw (BadCharException);
 
     /**
      * @brief Build a new Site object with the specified alphabet.
@@ -115,7 +113,7 @@ class Site:
      * @param alpha    The alphabet to use.
      * @throw BadIntException If the content does not match the specified alphabet.
      */
-    Site(const vector<int> & site, const Alphabet * alpha) throw (BadIntException);
+    Site(const std::vector<int>& site, const Alphabet* alpha) throw (BadIntException);
 
     /**
      * @brief Build a new Site object with the specified alphabet and position.
@@ -126,17 +124,17 @@ class Site:
      * @param position The position attribute for this site.
      * @throw BadIntException If the content does not match the specified alphabet.
      */
-    Site(const vector<int> & site, const Alphabet * alpha, int position) throw (BadIntException);
+    Site(const std::vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException);
 
     /**
      * @brief The copy constructor.
      */
-    Site(const Site & site);
+    Site(const Site& site);
 
     /**
      * @brief The assignment operator.
      */
-    Site operator = (const Site & s);
+    Site& operator=(const Site& s);
 
     virtual ~Site() {}
   
@@ -161,19 +159,19 @@ class Site:
      *
      * @return This site position.
      */
-    virtual int getPosition() const;
+    virtual int getPosition() const { return position_; }
 
     /**
      * @brief Set the position of this site.
      *
      * @param position The new position of the site.
      */
-    virtual void setPosition(int position);
+    virtual void setPosition(int position) { position_ = position; }
 };
 
 // Sites comparison operators overload
-bool operator == (const Site & site1, const Site & site2);
-bool operator < (const Site & site1, const Site & site2);
+bool operator == (const Site& site1, const Site& site2);
+bool operator < (const Site& site1, const Site& site2);
 
 } //end of namespace bpp.
 

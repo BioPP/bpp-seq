@@ -51,9 +51,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <NumCalc/VectorTools.h>
 
 // From the STL:
-#include <cstdlib>
-
-using namespace std;
+#include <string>
 
 namespace bpp
 {
@@ -74,7 +72,7 @@ class SiteContainer:
     SiteContainer() {}
     virtual ~SiteContainer() {}
 
-    SiteContainer * clone() const = 0;
+    SiteContainer* clone() const = 0;
 
   public:
   
@@ -85,7 +83,7 @@ class SiteContainer:
      * @return A site objet corresponding to site i in the alignment.
      * @throw IndexOutOfBoundsException If the specified site does not exists.
      */
-    virtual const Site * getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const Site& getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Set a site in the container.
@@ -95,7 +93,7 @@ class SiteContainer:
      * @param checkPosition Look if the position of the new site match a position attribute in the container.
      * @throw Exception If the specified site does not exists or is not correct.
      */
-    virtual void setSite(unsigned int siteIndex, const Site & site, bool checkPosition) throw (Exception) = 0;
+    virtual void setSite(unsigned int siteIndex, const Site& site, bool checkPosition) throw (Exception) = 0;
 
     /**
      * @brief Remove a site from the container.
@@ -106,7 +104,7 @@ class SiteContainer:
      * @return A pointer toward site i in the alignment.
      * @throw IndexOutOfBoundsException If the specified site does not exists.
      */
-    virtual Site * removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) = 0;
+    virtual Site* removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Delete a site in the container.

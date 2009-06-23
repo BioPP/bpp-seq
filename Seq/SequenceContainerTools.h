@@ -172,7 +172,7 @@ class SequenceContainerTools
       {
         vector<string> seqNames = seqCont2.getSequencesNames();
         for(unsigned int i = 0; i < seqNames.size(); i++)
-          seqCont1.addSequence(* seqCont2.getSequence(seqNames[i]));
+          seqCont1.addSequence(seqCont2.getSequence(seqNames[i]));
       }
       catch (Exception e)
       {
@@ -209,8 +209,8 @@ class SequenceContainerTools
         vector<string> seqNames = seqCont1.getSequencesNames();
         for(unsigned int i = 0; i < seqNames.size(); i++)
         {
-          Sequence tmp = *seqCont1.getSequence(seqNames[i]);
-          tmp.append(seqCont2.getSequence(seqNames[i])->getContent());
+          Sequence tmp = seqCont1.getSequence(seqNames[i]);
+          tmp.append(seqCont2.getContent(seqNames[i]));
           seqCont.addSequence(tmp);
         }
       }

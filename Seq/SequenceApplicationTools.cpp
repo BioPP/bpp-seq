@@ -393,7 +393,7 @@ VectorSiteContainer * SequenceApplicationTools::getSitesToAnalyse(
       for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
       {
         map<int, double> freq;
-        SiteTools::getFrequencies(*sitesToAnalyse->getSite(i-1), freq);
+        SiteTools::getFrequencies(sitesToAnalyse->getSite(i-1), freq);
         if (freq[-1] > gapFreq) sitesToAnalyse->deleteSite(i-1);
       }
     }
@@ -403,7 +403,7 @@ VectorSiteContainer * SequenceApplicationTools::getSitesToAnalyse(
       for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
       {
         map<int, unsigned int> counts;
-        SiteTools::getCounts(*sitesToAnalyse->getSite(i-1), counts);
+        SiteTools::getCounts(sitesToAnalyse->getSite(i-1), counts);
         if (counts[-1] > gapNum) sitesToAnalyse->deleteSite(i-1);
       }
     }

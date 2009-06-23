@@ -185,7 +185,7 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
     delete alignment;
     for (unsigned int i = 0; i < resolvedAlignment->getNumberOfSequences(); i++)
     {
-      vsc.addSequence(*resolvedAlignment->getSequence(i));
+      vsc.addSequence(resolvedAlignment->getSequence(i));
     }
     delete resolvedAlignment;
   }

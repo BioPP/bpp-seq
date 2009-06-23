@@ -51,40 +51,33 @@ using namespace std;
 
 /****************************************************************************************/
 
-Site::Site(const Alphabet * alpha) : SymbolList(alpha), _position(0) {}
+Site::Site(const Alphabet* alpha) : SymbolList(alpha), position_(0) {}
 
-Site::Site(const Alphabet * alpha, int position) : SymbolList(alpha), _position(position) {}
+Site::Site(const Alphabet* alpha, int position) : SymbolList(alpha), position_(position) {}
 
-Site::Site(const vector<string> & site, const Alphabet * alpha) throw (BadCharException) : SymbolList(site, alpha), _position(0) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha) throw (BadCharException) : SymbolList(site, alpha), position_(0) {}
 
-Site::Site(const vector<string> & site, const Alphabet * alpha, int position) throw (BadCharException) : SymbolList(site, alpha), _position(position) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha, int position) throw (BadCharException) : SymbolList(site, alpha), position_(position) {}
 
-Site::Site(const vector<int> & site, const Alphabet * alpha) throw (BadIntException) : SymbolList(site, alpha), _position(0) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha) throw (BadIntException) : SymbolList(site, alpha), position_(0) {}
 
-Site::Site(const vector<int> & site, const Alphabet * alpha, int position) throw (BadIntException) : SymbolList(site, alpha), _position(position) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException) : SymbolList(site, alpha), position_(position) {}
 
 /****************************************************************************************/
 
-Site::Site(const Site & site): SymbolList(site), _position(site.getPosition()) {}
+Site::Site(const Site& site): SymbolList(site), position_(site.getPosition()) {}
 
-Site Site::operator = (const Site & s)
+Site& Site::operator=(const Site& s)
 {
-	_content  = s.getContent();
-	_position = s.getPosition();
-	_alphabet = s.getAlphabet();
-
-	return * this;
+  SymbolList::operator=(s);
+	content_  = s.getContent();
+	position_ = s.getPosition();
+	return *this;
 }
 
 /****************************************************************************************/
 
-int Site::getPosition() const { return _position; };
-
-void Site::setPosition(int position) { _position = position; }
-
-/****************************************************************************************/
-
-bool operator==(const Site & site1, const Site & site2)
+bool operator==(const Site& site1, const Site& site2)
 {
 	// Verify that site's size, position and content are equals
 	if(site1.size() != site2.size()) return false;
@@ -99,7 +92,7 @@ bool operator==(const Site & site1, const Site & site2)
 
 /****************************************************************************************/
 
-bool operator<(const Site & site1, const Site & site2)
+bool operator<(const Site& site1, const Site& site2)
 {
 	return site1.getPosition() < site2.getPosition();
 }

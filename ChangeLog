@@ -1,3 +1,7 @@
+23/06/09 Julien Dutheil
+* Actualization of the Container classes: now returns references and not
+pointer. Several code updates, including copy contructors.
+
 17/06/09 Sylvain Gaillard (Glasgow Workshop)
 * Fix DNA/RNA/ProteicAlphabet::getAlias: works now with lower case states.
 * Fix SiteTools::isConstant test gap or unknown

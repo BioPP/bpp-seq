@@ -49,15 +49,13 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <map>
 
-using namespace std;
-
 namespace bpp
 {
 
 /**
  * @brief MapSequenceContainer class
  *
- * Sequences are stored using a key string, in a map object.
+ * Sequences are stored using a key std::string, in a map object.
  * Sequences are ordered according to the key order (defined by the < operator).
  * 
  */
@@ -65,15 +63,16 @@ namespace bpp
 class MapSequenceContainer:
   public AbstractSequenceContainer
 {
-	protected:
-		map<string, Sequence *> _sequences;
+	private:
+    std::map<std::string, Sequence*> sequences_;
         
 	public:
-		MapSequenceContainer(const map<string, Sequence *> & ms, const Alphabet * alpha);
-		MapSequenceContainer(const Alphabet * alpha);
+		MapSequenceContainer(const std::map<std::string, Sequence*>& ms, const Alphabet* alpha);
+		MapSequenceContainer(const Alphabet* alpha):
+      AbstractSequenceContainer(alpha) {}
 
-		MapSequenceContainer(const MapSequenceContainer & msc);
-		MapSequenceContainer & operator = (const MapSequenceContainer & msc);
+		MapSequenceContainer(const MapSequenceContainer& msc);
+		MapSequenceContainer& operator=(const MapSequenceContainer& msc);
 
 		virtual ~MapSequenceContainer();
 
@@ -85,7 +84,7 @@ class MapSequenceContainer:
 		 * @return The sequence associated to the given key.
 		 * @throw SequenceNotFoundException If no sequence is associated to the given key.
 		 */
-		const Sequence * getSequenceByKey(const string & key)  const throw (SequenceNotFoundException);
+		const Sequence& getSequenceByKey(const std::string& key)  const throw (SequenceNotFoundException);
 
 		/**
 		 * @brief Set a sequence.
@@ -95,7 +94,7 @@ class MapSequenceContainer:
 		 * @param checkNames Tell is the sequence name must be checked.
 		 * @throw SequenceNotFoundException If no sequence is associated to the given key.
 		 */
-		void setSequenceByKey(const string & key , const Sequence & sequence, bool checkNames = true) throw (SequenceNotFoundException);
+		void setSequenceByKey(const std::string& key , const Sequence& sequence, bool checkNames = true) throw (SequenceNotFoundException);
 
 		/**
 		 * @brief Remove a sequence.
@@ -104,7 +103,7 @@ class MapSequenceContainer:
 		 * @return The sequence previously associated to the given key.
 		 * @throw SequenceNotFoundException If no sequence is associated to the given key.
 		 */
-		Sequence * removeSequenceByKey(const string & key) throw (SequenceNotFoundException);
+		Sequence* removeSequenceByKey(const std::string& key) throw (SequenceNotFoundException);
 
 		/**
 		 * @brief Delete a sequence.
@@ -112,7 +111,7 @@ class MapSequenceContainer:
 		 * @param key The key of the sequence.
 		 * @throw SequenceNotFoundException If no sequence is associated to the given key.
 		 */
-		void deleteSequenceByKey(const string & key) throw (SequenceNotFoundException);
+		void deleteSequenceByKey(const std::string& key) throw (SequenceNotFoundException);
 
 		/**
 		 * @brief Add a sequence and key.
@@ -121,33 +120,33 @@ class MapSequenceContainer:
 		 * @param sequence The new sequence that will be associated to the key.
 		 * @param checkNames Tell is the sequence name must be checked.
 		 */
-		void addSequence(const string & key, const Sequence & sequence, bool checkNames = true) throw (Exception);
+		void addSequence(const std::string& key, const Sequence& sequence, bool checkNames = true) throw (Exception);
 
 		/**
 		 * @return All sequences keys.
 		 */
-		vector<string> getKeys() const;
+		std::vector<std::string> getKeys() const;
 
 		/**
 		 * @return The key of a given sequence specified by its position in the container.
 		 * @param pos The index of the sequence.
 		 * @throw IndexOutOfBoundsException If pos is not a valid index.
 		 */
-		string getKey(unsigned int pos) const throw (IndexOutOfBoundsException);
+		std::string getKey(unsigned int pos) const throw (IndexOutOfBoundsException);
 
 		/**
 		 * @return The key of a given sequence specified by its name.
 		 * @param name The name of the sequence.
 		 * @throw SequenceNotFoundException If no sequence was found with the given name.
 		 */
-		string getKey(const string & name) const throw (SequenceNotFoundException);
+		std::string getKey(const std::string& name) const throw (SequenceNotFoundException);
 
 		/**
 		 * @name The clonable interface
 		 * 
 		 * @{
 		 */
-		Clonable * clone() const;
+		MapSequenceContainer* clone() const { return new MapSequenceContainer(*this); }
 		/**
 		 * @}
 		 */
@@ -157,46 +156,46 @@ class MapSequenceContainer:
 		 *
 		 * @{
 		 */
-		const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException);
-		void setSequence(const string & name, const Sequence & sequence, bool checkName = true) throw (SequenceNotFoundException);
-		Sequence * removeSequence(const string & name) throw (SequenceNotFoundException);
-		void deleteSequence(const string & name) throw (SequenceNotFoundException);
-		unsigned int getNumberOfSequences() const;
+		const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
+		void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (SequenceNotFoundException);
+		Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException);
+		void deleteSequence(const std::string& name) throw (SequenceNotFoundException);
+		unsigned int getNumberOfSequences() const { return sequences_.size(); }
 		void clear();
-		SequenceContainer * createEmptyContainer() const;
+		MapSequenceContainer* createEmptyContainer() const;
 
-    int & valueAt(const string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    int & valueAt(const std::string& sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
     {
-      return (* getSequenceInner(sequenceName))[elementIndex];
+      return getSequence_(sequenceName)[elementIndex];
     }
-    const int & valueAt(const string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    const int & valueAt(const std::string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
     {
-      return (* getSequence(sequenceName))[elementIndex];
+      return getSequence(sequenceName)[elementIndex];
     }
-    int & operator()(const string & sequenceName, unsigned int elementIndex)
+    int & operator()(const std::string & sequenceName, unsigned int elementIndex)
     {
-      return (* getSequenceInner(sequenceName))[elementIndex];
+      return getSequence_(sequenceName)[elementIndex];
     }
-    const int & operator()(const string & sequenceName, unsigned int elementIndex) const
+    const int & operator()(const std::string & sequenceName, unsigned int elementIndex) const
     {
-      return (* getSequence(sequenceName))[elementIndex];
+      return getSequence(sequenceName)[elementIndex];
     }
 
     int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException)
     {
-      return (* getSequenceInner(sequenceIndex))[elementIndex];
+      return getSequence_(sequenceIndex)[elementIndex];
     }
     const int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException)
     {
-      return (* getSequence(sequenceIndex))[elementIndex];
+      return getSequence(sequenceIndex)[elementIndex];
     }    
     int & operator()(unsigned int sequenceIndex, unsigned int elementIndex)
     {
-      return (* getSequenceInner(sequenceIndex))[elementIndex];
+      return getSequence_(sequenceIndex)[elementIndex];
     }
     const int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) const
     {
-      return (* getSequence(sequenceIndex))[elementIndex];
+      return getSequence(sequenceIndex)[elementIndex];
     }    
 		/** @} */
 
@@ -205,14 +204,14 @@ class MapSequenceContainer:
 		 *
 		 * @{
 		 */
-		const Sequence * getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
-		unsigned int     getSequencePosition(const string & name) const throw (SequenceNotFoundException);
-		void             setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (IndexOutOfBoundsException);
-		Sequence *    removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
-		void          deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
-		void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException);
-		vector<string> getSequencesNames() const;
-		void setSequencesNames(const vector<string> & names, bool checkNames) throw (Exception);
+		const Sequence& getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+		unsigned int    getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
+		void            setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName = true) throw (IndexOutOfBoundsException);
+		Sequence*    removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
+		void         deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
+		void setComments(unsigned int sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
+		std::vector<std::string> getSequencesNames() const;
+		void setSequencesNames(const std::vector<std::string>& names, bool checkNames) throw (Exception);
 		/** @} */
 
 		/**
@@ -220,8 +219,8 @@ class MapSequenceContainer:
 		 *
 		 * @{
 		 */
-		Sequence * getSequenceInner(unsigned int i)      throw (IndexOutOfBoundsException);
-		Sequence * getSequenceInner(const string & name) throw (SequenceNotFoundException);
+		Sequence& getSequence_(unsigned int i) throw (IndexOutOfBoundsException);
+		Sequence& getSequence_(const std::string& name) throw (SequenceNotFoundException);
 		/** @} */
 };
 

@@ -71,13 +71,13 @@ SequenceContainer * SequenceContainerTools::createContainerWithSequenceNames(
 
 /******************************************************************************/
 
-SequenceContainer * SequenceContainerTools::getSelectedSequences(
+SequenceContainer* SequenceContainerTools::getSelectedSequences(
   const OrderedSequenceContainer & sequences,
   const SequenceSelection & selection)
 {
-  VectorSequenceContainer * sc = new VectorSequenceContainer(sequences.getAlphabet());
+  VectorSequenceContainer* sc = new VectorSequenceContainer(sequences.getAlphabet());
   for(unsigned int i = 0; i < selection.size(); i++) {
-    sc -> addSequence(*sequences.getSequence(selection[i]), false);
+    sc->addSequence(sequences.getSequence(selection[i]), false);
     //We do not check names, we suppose that the container passed as an argument is correct.
     //WARNING: what if selection contains many times the same indice? ...
   }
@@ -110,10 +110,10 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer 
 {
 	vector<string> seqNames = sequences.getSequencesNames();
 	if(seqNames.size() <= 1) return true;
-	unsigned int length = sequences.getSequence(seqNames[0])->size();
+	unsigned int length = sequences.getSequence(seqNames[0]).size();
 	for(unsigned int i = 1; i < seqNames.size(); i++)
   {
-		if(sequences.getSequence(seqNames[i])->size() != length) return false;
+		if(sequences.getSequence(seqNames[i]).size() != length) return false;
 	}
 	return true;
 }

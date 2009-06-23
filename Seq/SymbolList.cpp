@@ -46,99 +46,105 @@ using namespace std;
 
 /****************************************************************************************/
 
-SymbolList::SymbolList(const Alphabet * alpha) : _alphabet(alpha) {}
+SymbolList::SymbolList(const Alphabet * alpha) : alphabet_(alpha) {}
 
-SymbolList::SymbolList(const vector<string> & list, const Alphabet * alpha) throw (BadCharException) :
-	_alphabet(alpha)
+SymbolList::SymbolList(const vector<string>& list, const Alphabet* alpha) throw (BadCharException) :
+	alphabet_(alpha)
 {
 	setContent(list);
 }
 
-SymbolList::SymbolList(const vector<int> & list, const Alphabet * alpha) throw (BadIntException) :
-	_alphabet(alpha)
+SymbolList::SymbolList(const vector<int>& list, const Alphabet* alpha) throw (BadIntException) :
+	alphabet_(alpha)
 {
 	setContent(list);
 }
 
 /****************************************************************************************/
 
-SymbolList::SymbolList(const SymbolList & list): Clonable(), _alphabet(list.getAlphabet()), _content(list.getContent()) {}
+SymbolList::SymbolList(const SymbolList & list):
+  alphabet_(list.getAlphabet()), content_(list.getContent()) {}
 
-SymbolList & SymbolList::operator = (const SymbolList & list)
+SymbolList& SymbolList::operator=(const SymbolList& list)
 {
-	_content  = list.getContent();
-	_alphabet = list.getAlphabet();
-	return * this;
+	content_  = list.getContent();
+	alphabet_ = list.getAlphabet();
+	return *this;
 }
 
 /****************************************************************************************/
 
-void SymbolList::setContent(const vector<string> & list) throw (BadCharException)
+void SymbolList::setContent(const vector<string>& list) throw (BadCharException)
 {
 	// Check list for incorrect characters
 	vector<int> coded(list.size());
-	for (unsigned int i = 0; i < list.size(); i++) {
-		if(!_alphabet -> isCharInAlphabet(list[i])) throw BadCharException(list[i], "SymbolList::setContent", _alphabet);
-	}
-	for (unsigned int i = 0; i < list.size(); i++) {
-		coded[i] = _alphabet -> charToInt(list[i]);
-	}
-	//SymbolList is valid:
-	_content = coded;
+	for (unsigned int i = 0; i < list.size(); i++)
+		if(!alphabet_->isCharInAlphabet(list[i])) throw BadCharException(list[i], "SymbolList::setContent", alphabet_);
+	
+  for (unsigned int i = 0; i < list.size(); i++) 
+		coded[i] = alphabet_->charToInt(list[i]);
+	
+  //SymbolList is valid:
+	content_ = coded;
 };
 
 /****************************************************************************************/
 
-void SymbolList::setContent(const vector<int> & list) throw (BadIntException)
+void SymbolList::setContent(const vector<int>& list) throw (BadIntException)
 {
 	// Check list for incorrect characters
-	for (unsigned int i = 0; i < list.size(); i++) {
-		if(!_alphabet -> isIntInAlphabet(list[i])) throw BadIntException(list[i], "SymbolList::setContent", _alphabet);
-	}
-	//Sequence is valid:
-	_content = list;
+	for (unsigned int i = 0; i < list.size(); i++)
+		if(!alphabet_->isIntInAlphabet(list[i]))
+      throw BadIntException(list[i], "SymbolList::setContent", alphabet_);
+	
+  //Sequence is valid:
+	content_ = list;
 };
 
 /****************************************************************************************/
 
 string SymbolList::toString() const
 {
-	return StringSequenceTools::decodeSequence(_content, _alphabet);
+	return StringSequenceTools::decodeSequence(content_, alphabet_);
 };
 
 /****************************************************************************************/
 
-void SymbolList::addElement(string c) throw (BadCharException)
+void SymbolList::addElement(const string& c) throw (BadCharException)
 {
-	_content.push_back(_alphabet -> charToInt(c));
+	content_.push_back(alphabet_->charToInt(c));
 }
 
 /****************************************************************************************/
 
-void SymbolList::addElement(unsigned int pos, string c) throw (BadCharException, IndexOutOfBoundsException)
+void SymbolList::addElement(unsigned int pos, const string& c) throw (BadCharException, IndexOutOfBoundsException)
 {
-  if(pos > _content.size()) throw IndexOutOfBoundsException("SymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-	_content.insert(_content.begin() + pos, _alphabet -> charToInt(c));
+  if(pos > content_.size()) throw IndexOutOfBoundsException("SymbolList::addElement. Invalid position.", pos, 0, size() - 1);
+	content_.insert(content_.begin() + pos, alphabet_->charToInt(c));
 }
 
 /****************************************************************************************/
 
-void SymbolList::setElement(unsigned int pos, string c) throw (BadCharException, IndexOutOfBoundsException)
+void SymbolList::setElement(unsigned int pos, const string& c) throw (BadCharException, IndexOutOfBoundsException)
 {
-	if(pos > _content.size()) throw IndexOutOfBoundsException("SymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-	_content[pos] = _alphabet -> charToInt(c);
+	if(pos > content_.size())
+    throw IndexOutOfBoundsException("SymbolList::setElement. Invalid position.", pos, 0, size() - 1);
+	content_[pos] = alphabet_->charToInt(c);
 }
 
 /****************************************************************************************/
 
 string SymbolList::getChar(unsigned int pos) const throw (IndexOutOfBoundsException)
 {
-	if(pos > _content.size()) throw IndexOutOfBoundsException("SymbolList::getChar. Invalid position.", pos, 0, size() - 1);
+	if(pos > content_.size())
+    throw IndexOutOfBoundsException("SymbolList::getChar. Invalid position.", pos, 0, size() - 1);
 	string c = "";
-	try {
-		c = _alphabet -> intToChar(_content[pos]);
-	} catch(BadIntException bie) {
-
+	try
+  {
+		c = alphabet_->intToChar(content_[pos]);
+	}
+  catch(BadIntException bie)
+  {
 		//This should never happen!
 	}
 	return c;
@@ -148,8 +154,9 @@ string SymbolList::getChar(unsigned int pos) const throw (IndexOutOfBoundsExcept
 
 void SymbolList::deleteElement(unsigned int pos) throw (IndexOutOfBoundsException)
 {
-	if(pos > _content.size()) throw IndexOutOfBoundsException("SymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
-	 _content.erase(_content.begin() + pos);
+	if(pos > content_.size())
+    throw IndexOutOfBoundsException("SymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
+	 content_.erase(content_.begin() + pos);
 }
 
 /****************************************************************************************/
@@ -157,8 +164,8 @@ void SymbolList::deleteElement(unsigned int pos) throw (IndexOutOfBoundsExceptio
 void SymbolList::addElement(int v) throw (BadIntException)
 {
 	//test:
-	_alphabet -> intToChar(v);
-	_content.push_back(v);
+	alphabet_->intToChar(v);
+	content_.push_back(v);
 }
 
 /****************************************************************************************/
@@ -166,9 +173,10 @@ void SymbolList::addElement(int v) throw (BadIntException)
 void SymbolList::addElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException)
 {
 	//test:
-	if(pos > _content.size()) throw IndexOutOfBoundsException("SymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-	_alphabet -> intToChar(v);
-	_content.insert(_content.begin() + pos, v);
+	if(pos > content_.size())
+    throw IndexOutOfBoundsException("SymbolList::addElement. Invalid position.", pos, 0, size() - 1);
+	alphabet_->intToChar(v);
+	content_.insert(content_.begin() + pos, v);
 }
 
 /****************************************************************************************/
@@ -176,17 +184,19 @@ void SymbolList::addElement(unsigned int pos, int v) throw (BadIntException, Ind
 void SymbolList::setElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException)
 {
 	//test:
-  if(pos > _content.size()) throw IndexOutOfBoundsException("SymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-	_alphabet -> intToChar(v);
-	_content[pos] = v;
+  if(pos > content_.size())
+    throw IndexOutOfBoundsException("SymbolList::setElement. Invalid position.", pos, 0, size() - 1);
+	alphabet_->intToChar(v);
+	content_[pos] = v;
 }
 
 /****************************************************************************************/
 
 int SymbolList::getValue(unsigned int pos) const throw (IndexOutOfBoundsException)
 {
-  if(pos > _content.size()) throw IndexOutOfBoundsException("SymbolList::getValue. Invalid position.", pos, 0, size() - 1);
-	return _content[pos];
+  if(pos > content_.size())
+    throw IndexOutOfBoundsException("SymbolList::getValue. Invalid position.", pos, 0, size() - 1);
+	return content_[pos];
 }
 
 /****************************************************************************************/

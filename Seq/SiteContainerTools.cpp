@@ -95,7 +95,7 @@ SiteContainer * SiteContainerTools::getSelectedSites(
   sc->setSequencesNames(seqNames, false);
   for(unsigned int i = 0; i < selection.size(); i++)
   {
-    sc->addSite(* sequences.getSite(selection[i]), false);
+    sc->addSite(sequences.getSite(selection[i]), false);
    //We do not check names, we suppose that the container passed as an argument is correct.
    //WARNING: what if selection contains many times the same indice? ...
   }
@@ -105,7 +105,7 @@ SiteContainer * SiteContainerTools::getSelectedSites(
 
 /******************************************************************************/
 
-const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, string name, bool ignoreGap, bool resolveUnknown)
+const Sequence* SiteContainerTools::getConsensus(const SiteContainer & sc, string name, bool ignoreGap, bool resolveUnknown)
 {
   Vint consensus;
   SimpleSiteIterator ssi(sc);
@@ -141,7 +141,7 @@ const Sequence * SiteContainerTools::getConsensus(const SiteContainer & sc, stri
     }
     consensus.push_back(cons);
   }
-  const Sequence * seqConsensus = new Sequence(name, consensus, sc.getSequence(0)->getAlphabet());
+  const Sequence* seqConsensus = new Sequence(name, consensus, sc.getAlphabet());
   return seqConsensus;
 }
 
@@ -186,8 +186,9 @@ SiteContainer * SiteContainerTools::removeGapOnlySites(const SiteContainer & sit
   noGapCont->setSequencesNames(seqNames, false);
   for(unsigned int i = 0; i < sites.getNumberOfSites(); i++)
   {
-    const Site * site = sites.getSite(i);
-    if(!SiteTools::isGapOnly(*site)) noGapCont->addSite(* site);
+    const Site* site = &sites.getSite(i);
+    if(!SiteTools::isGapOnly(*site))
+      noGapCont->addSite(*site);
   }
   return noGapCont;
 }
@@ -201,8 +202,9 @@ SiteContainer * SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCon
   noGapCont->setSequencesNames(seqNames, false);
   for(unsigned int i = 0; i < sites.getNumberOfSites(); i++)
   {
-    const Site * site = sites.getSite(i);
-    if(!SiteTools::isGapOrUnresolvedOnly(*site)) noGapCont->addSite(* site);
+    const Site* site = &sites.getSite(i);
+    if(!SiteTools::isGapOrUnresolvedOnly(*site))
+      noGapCont->addSite(* site);
   }
   return noGapCont;
 }
@@ -223,11 +225,12 @@ SiteContainer * SiteContainerTools::resolveDottedAlignment(
   const Sequence * refSeq = NULL;
   for(unsigned int  i = 0; i < n; i++) //Test each sequence
   {
-    const Sequence * seq = dottedAln.getSequence(i);
+    const Sequence* seq = &dottedAln.getSequence(i);
     bool isRef = true;
     for(unsigned int j = 0; isRef && j < seq->size(); j++) //For each site in the sequence
     {
-      if(seq->getChar(j) == ".") isRef = false;
+      if(seq->getChar(j) == ".")
+        isRef = false;
     }
     if(isRef) //We found the reference sequence!
     {
@@ -237,7 +240,7 @@ SiteContainer * SiteContainerTools::resolveDottedAlignment(
   if(!refSeq) throw Exception("SiteContainerTools::resolveDottedAlignment. No reference sequence was found in the input alignment.");
 
   //Now we build a new VectorSiteContainer:
-  VectorSiteContainer * sites = new VectorSiteContainer(n, resolvedAlphabet);
+  VectorSiteContainer* sites = new VectorSiteContainer(n, resolvedAlphabet);
 
   //We add each site one by one:
   unsigned int m = dottedAln.getNumberOfSites();
@@ -245,7 +248,7 @@ SiteContainer * SiteContainerTools::resolveDottedAlignment(
   for(unsigned int i = 0; i < m; i++)
   {
     string resolved = refSeq->getChar(i);
-    const Site * site = dottedAln.getSite(i);
+    const Site* site = &dottedAln.getSite(i);
     Site resolvedSite(resolvedAlphabet, site->getPosition());
     for(unsigned int j = 0; j < n; j++)
     {
@@ -366,8 +369,8 @@ map<unsigned int, unsigned int> SiteContainerTools::translateAlignment(const Seq
 
 map<unsigned int, unsigned int> SiteContainerTools::translateSequence(const SiteContainer & sequences, unsigned int i1, unsigned int i2)
 {
-  const Sequence * seq1 = sequences.getSequence(i1);
-  const Sequence * seq2 = sequences.getSequence(i2);
+  const Sequence* seq1 = &sequences.getSequence(i1);
+  const Sequence* seq2 = &sequences.getSequence(i2);
   map<unsigned int, unsigned int> tln;
   unsigned int count1 = 0; //Sequence 1 counter
   unsigned int count2 = 0; //Sequence 2 counter
@@ -596,7 +599,7 @@ VectorSiteContainer * SiteContainerTools::bootstrapSites(const SiteContainer & s
   for(unsigned int i = 0; i < nbSites; i++)
   {
     unsigned int pos = (unsigned int)RandomTools::giveIntRandomNumberBetweenZeroAndEntry(nbSites);
-    sample->addSite(*sites.getSite(pos), false);
+    sample->addSite(sites.getSite(pos), false);
   }
   return sample;
 }
@@ -686,10 +689,10 @@ DistanceMatrix * SiteContainerTools::computeSimilarityMatrix(const SiteContainer
   for(unsigned int i = 0; i < n; i++)
   {
     (*mat)(i, i) = 1.;
-    const Sequence *seq1 = sites2->getSequence(i);
+    const Sequence* seq1 = &sites2->getSequence(i);
     for(unsigned int j = i + 1; j < n; j++)
     {
-      const Sequence *seq2 = sites2->getSequence(j);
+      const Sequence* seq2 = &sites2->getSequence(j);
       (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(*seq1, *seq2, dist, pairwiseGapOption, unresolvedAsGap);
     }
   }

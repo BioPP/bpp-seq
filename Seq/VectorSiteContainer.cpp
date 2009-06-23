@@ -57,273 +57,240 @@ VectorSiteContainer::VectorSiteContainer(
   throw (Exception):
   AbstractSequenceContainer(alpha)
 {
-  if(vs.size() == 0) throw Exception("VectorSiteContainer::VectorSiteContainer. Empty site set.");
+  if (vs.size() == 0) throw Exception("VectorSiteContainer::VectorSiteContainer. Empty site set.");
   //Seq names and comments:
   unsigned int nbSeq = vs[0]->size();
-  _names.resize(nbSeq);
-  _comments.resize(nbSeq);
-  for(unsigned int i = 0; i < nbSeq; i++)
+  names_.resize(nbSeq);
+  comments_.resize(nbSeq);
+  for (unsigned int i = 0; i < nbSeq; i++)
   {
-    _names[i]    = new string("Seq_" + TextTools::toString(i));
-    _comments[i] = new Comments(); 
+    names_[i]    = new string("Seq_" + TextTools::toString(i));
+    comments_[i] = new Comments(); 
   }
   //Now try to add each site:
-  for(unsigned int i = 0; i < vs.size(); i++)
+  for (unsigned int i = 0; i < vs.size(); i++)
   {
     addSite(*vs[i], checkPositions); //This may throw an exception if position argument already exists or is size is not valid.
   }
   
-  Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
+  Sequence* s = 0;
+  sequences_ = vector<Sequence *>(nbSeq, s);
 }
 
 /******************************************************************************/
   
-VectorSiteContainer::VectorSiteContainer(unsigned int size, const Alphabet * alpha):
+VectorSiteContainer::VectorSiteContainer(unsigned int size, const Alphabet* alpha):
   AbstractSequenceContainer(alpha)
 {
   //Seq names and comments:
-  _names.resize(size);
-  _comments.resize(size);
-  for(unsigned int i = 0; i < size; i++)
+  names_.resize(size);
+  comments_.resize(size);
+  for (unsigned int i = 0; i < size; i++)
   {
-    _names[i]    = new string("Seq_" + i);
-    _comments[i] = new Comments();
+    names_[i]    = new string("Seq_" + i);
+    comments_[i] = new Comments();
   }
-  Sequence * s = NULL; _sequences = vector<Sequence *>(size, s);
+  Sequence * s = NULL; sequences_ = vector<Sequence *>(size, s);
 }
 
 /******************************************************************************/
   
-VectorSiteContainer::VectorSiteContainer(const vector<string> & names, const Alphabet * alpha):
+VectorSiteContainer::VectorSiteContainer(const vector<string>& names, const Alphabet* alpha):
   AbstractSequenceContainer(alpha)
 {
   //Seq names and comments:
-  _names.resize(names.size());
-  _comments.resize(names.size());
-  for(unsigned int i = 0; i < names.size(); i++)
+  names_.resize(names.size());
+  comments_.resize(names.size());
+  for (unsigned int i = 0; i < names.size(); i++)
   {
-    _names[i]    = new string(names[i]);
-    _comments[i] = new Comments();
+    names_[i]    = new string(names[i]);
+    comments_[i] = new Comments();
   }
-  Sequence * s = NULL; _sequences = vector<Sequence *>(names.size(), s);
+  Sequence * s = NULL; sequences_ = vector<Sequence *>(names.size(), s);
 }
 
 /******************************************************************************/
 
-VectorSiteContainer::VectorSiteContainer(const Alphabet * alpha):
+VectorSiteContainer::VectorSiteContainer(const Alphabet* alpha):
   AbstractSequenceContainer(alpha) {}
 
 /******************************************************************************/
 
-VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer & vsc):
+VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer& vsc):
   AbstractSequenceContainer(vsc)
 {
   // Seq names:
-  int nbSeq = vsc.getNumberOfSequences();
-  _names.resize(nbSeq);
+  unsigned int nbSeq = vsc.getNumberOfSequences();
+  names_.resize(nbSeq);
   setSequencesNames(vsc.getSequencesNames(), false);
   //Now try to add each site:
-  for(unsigned int i = 0; i < vsc.getNumberOfSites(); i++)
-  {
-    addSite(* vsc.getSite(i), false); //We assume that positions are correct.
-  }
+  for (unsigned int i = 0; i < vsc.getNumberOfSites(); i++)
+    addSite(vsc.getSite(i), false); //We assume that positions are correct.
   // Seq comments:
-  _comments.resize(nbSeq);
-  for(int i = 0; i < nbSeq; i++)
-  {
-    _comments[i] = new Comments(vsc.getComments(i));
-  }
-  Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
+  comments_.resize(nbSeq);
+  for (unsigned int i = 0; i < nbSeq; i++)
+    comments_[i] = new Comments(vsc.getComments(i));
+  Sequence* s = 0;
+  sequences_ = vector<Sequence*>(nbSeq, s);
 }
 
 /******************************************************************************/
 
-VectorSiteContainer::VectorSiteContainer(const SiteContainer & sc):
+VectorSiteContainer::VectorSiteContainer(const SiteContainer& sc):
   AbstractSequenceContainer(sc.getAlphabet())
 {
   // Seq names:
-  int nbSeq = sc.getNumberOfSequences();
-  _names.resize(nbSeq);
+  unsigned int nbSeq = sc.getNumberOfSequences();
+  names_.resize(nbSeq);
   setSequencesNames(sc.getSequencesNames(), false);
   //Now try to add each site:
-  for(unsigned int i = 0; i < sc.getNumberOfSites(); i++)
-  {
-    addSite(* sc.getSite(i), false); //We assume that positions are correct.
-  }
+  for (unsigned int i = 0; i < sc.getNumberOfSites(); i++)
+    addSite(sc.getSite(i), false); //We assume that positions are correct.
   // Seq comments:
-  _comments.resize(nbSeq);
-  for(int i = 0; i < nbSeq; i++)
-  {
-    _comments[i] = new Comments(sc.getComments(i));
-  }
-  Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
-
-  // General comments:
-  setGeneralComments(sc.getGeneralComments());
+  comments_.resize(nbSeq);
+  for (unsigned int i = 0; i < nbSeq; i++)
+    comments_[i] = new Comments(sc.getComments(i));
+  Sequence* s = 0;
+  sequences_ = vector<Sequence*>(nbSeq, s);
 }
 
 /******************************************************************************/
 
-VectorSiteContainer::VectorSiteContainer(const OrderedSequenceContainer & osc):
+VectorSiteContainer::VectorSiteContainer(const OrderedSequenceContainer& osc):
   AbstractSequenceContainer(osc.getAlphabet())
 {
   unsigned int nbSeq = osc.getNumberOfSequences();
   for (unsigned int i = 0 ; i < nbSeq ; i++)
-    addSequence(* osc.getSequence(i), false);
+    addSequence(osc.getSequence(i), false);
   reindexSites();
-
-  // General comments:
-  setGeneralComments(osc.getGeneralComments());
 }
 
 /******************************************************************************/
 
-VectorSiteContainer::VectorSiteContainer(const SequenceContainer & sc):
+VectorSiteContainer::VectorSiteContainer(const SequenceContainer& sc):
   AbstractSequenceContainer(sc.getAlphabet())
 {
   vector<string> names = sc.getSequencesNames();
-  for(unsigned int i = 0 ; i < names.size() ; i++)
-    addSequence(* sc.getSequence(names[i]), false);
+  for (unsigned int i = 0 ; i < names.size() ; i++)
+    addSequence(sc.getSequence(names[i]), false);
   reindexSites();
-
-  // General comments:
-  setGeneralComments(sc.getGeneralComments());
 }
 
 /******************************************************************************/
 
-VectorSiteContainer& VectorSiteContainer::operator = (const VectorSiteContainer & vsc)
+VectorSiteContainer& VectorSiteContainer::operator=(const VectorSiteContainer& vsc)
 {
-  //Setting up alphabet:
-  _alphabet = vsc.getAlphabet();
+  AbstractSequenceContainer::operator=(vsc);
   //Seq names:
-  _names.resize(vsc.getNumberOfSequences());
+  names_.resize(vsc.getNumberOfSequences());
   setSequencesNames(vsc.getSequencesNames(), true);
   //Now try to add each site:
-  for(unsigned int i = 0; i < vsc.getNumberOfSites(); i++)
-  {
-    addSite(* vsc.getSite(i), false); //We assume that positions are correct.
-  }
+  for (unsigned int i = 0; i < vsc.getNumberOfSites(); i++)
+    addSite(vsc.getSite(i), false); //We assume that positions are correct.
   //Seq comments:
   unsigned int nbSeq = vsc.getNumberOfSequences();
-  _comments.resize(nbSeq);
-  for(unsigned int i = 0; i < nbSeq; i++)
-  {
-    _comments[i] = new Comments(vsc.getComments(i));
-  }
-  Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
+  comments_.resize(nbSeq);
+  for (unsigned int i = 0; i < nbSeq; i++)
+    comments_[i] = new Comments(vsc.getComments(i));
+  Sequence* s = 0;
+  sequences_ = vector<Sequence*>(nbSeq, s);
 
-  // General comments:
-  setGeneralComments(vsc.getGeneralComments());
-
-  return * this;
+  return *this;
 }
 
 /******************************************************************************/
 
-VectorSiteContainer& VectorSiteContainer::operator = (const SiteContainer & sc)
+VectorSiteContainer& VectorSiteContainer::operator=(const SiteContainer& sc)
 {
-  //Setting up alphabet:
-  _alphabet = sc.getAlphabet();
+  AbstractSequenceContainer::operator=(sc);
   //Seq names:
-  _names.resize(sc.getNumberOfSequences());
+  names_.resize(sc.getNumberOfSequences());
   setSequencesNames(sc.getSequencesNames(), true);
   //Now try to add each site:
-  for(unsigned int i = 0; i < sc.getNumberOfSites(); i++)
-  {
-    addSite(* sc.getSite(i), false); //We assume that positions are correct.
-  }
+  for (unsigned int i = 0; i < sc.getNumberOfSites(); i++)
+    addSite(sc.getSite(i), false); //We assume that positions are correct.
   //Seq comments:
   unsigned int nbSeq = sc.getNumberOfSequences();
-  _comments.resize(nbSeq);
-  for(unsigned int i = 0; i < nbSeq; i++)
-  {
-    _comments[i] = new Comments(sc.getComments(i));
-  }
-  Sequence * s = NULL; _sequences = vector<Sequence *>(nbSeq, s);
+  comments_.resize(nbSeq);
+  for (unsigned int i = 0; i < nbSeq; i++)
+    comments_[i] = new Comments(sc.getComments(i));
+  Sequence* s = 0;
+  sequences_ = vector<Sequence*>(nbSeq, s);
 
-  // General comments:
-  setGeneralComments(sc.getGeneralComments());
-
-  return * this;
+  return *this;
 }
 
 /******************************************************************************/
 
-VectorSiteContainer& VectorSiteContainer::operator = (const OrderedSequenceContainer & osc)
+VectorSiteContainer& VectorSiteContainer::operator=(const OrderedSequenceContainer& osc)
 {
-  //Setting up alphabet:
-  _alphabet = osc.getAlphabet();
+  AbstractSequenceContainer::operator=(osc);
 
   unsigned int nbSeq = osc.getNumberOfSequences();
-  for (unsigned int i = 0 ; i < nbSeq ; i++) addSequence(* osc.getSequence(i), false);
+  for (unsigned int i = 0; i < nbSeq; i++)
+    addSequence(osc.getSequence(i), false);
   reindexSites();
 
-  // General comments:
-  setGeneralComments(osc.getGeneralComments());
-
-  return * this;
+  return *this;
 }
 
 /******************************************************************************/
 
-VectorSiteContainer& VectorSiteContainer::operator = (const SequenceContainer & sc)
+VectorSiteContainer& VectorSiteContainer::operator=(const SequenceContainer& sc)
 {
-  //Setting up alphabet:
-  _alphabet = sc.getAlphabet();
+  AbstractSequenceContainer::operator=(sc);
 
   vector<string> names = sc.getSequencesNames();
   for (unsigned int i = 0 ; i < names.size() ; i++)
-    addSequence(* sc.getSequence(names[i]), false);
+    addSequence(sc.getSequence(names[i]), false);
   reindexSites();
 
-  // General comments:
-  setGeneralComments(sc.getGeneralComments());
-
-  return * this;
+  return *this;
 }
 
 /******************************************************************************/
 
-const Site * VectorSiteContainer::getSite(unsigned int i) const throw (IndexOutOfBoundsException)
+const Site& VectorSiteContainer::getSite(unsigned int i) const throw (IndexOutOfBoundsException)
 {
-  if(i >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getSite.", i, 0, getNumberOfSites() - 1);
-  return _sites[i];
+  if (i >= getNumberOfSites())
+    throw IndexOutOfBoundsException("VectorSiteContainer::getSite.", i, 0, getNumberOfSites() - 1);
+  return *sites_[i];
 }
 
 /******************************************************************************/
 
-void VectorSiteContainer::setSite(unsigned int pos, const Site & site, bool checkPositions) throw (Exception)
+void VectorSiteContainer::setSite(unsigned int pos, const Site& site, bool checkPositions) throw (Exception)
 {
-  if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::setSite.", pos, 0, getNumberOfSites() - 1);
+  if (pos >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::setSite.", pos, 0, getNumberOfSites() - 1);
 
     // Check size:
-  if(site.size() != getNumberOfSequences()) throw SiteException("AlignedSequenceContainer::addSite. Site does not have the appropriate length", &site);
+  if (site.size() != getNumberOfSequences()) throw SiteException("AlignedSequenceContainer::addSite. Site does not have the appropriate length", &site);
 
   // New site's alphabet and site container's alphabet matching verification
-  if (site.getAlphabet()->getAlphabetType() != _alphabet->getAlphabetType()) {
-    throw AlphabetMismatchException("VectorSiteContainer::addSite", _alphabet, site.getAlphabet());
-  }
+  if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site.getAlphabet());
 
   // Check position:
-  if(checkPositions) {
+  if (checkPositions)
+  {
     int position = site.getPosition();
     // For all positions in vector : throw exception if position already exists
-    for(unsigned int i = 0; i < _sites.size(); i++) {
-      if (_sites[i]->getPosition() == position) throw SiteException("VectorSiteContainer::setSite: Site position already exists in container", &site);
+    for (unsigned int i = 0; i < sites_.size(); i++)
+    {
+      if (sites_[i]->getPosition() == position) throw SiteException("VectorSiteContainer::setSite: Site position already exists in container", &site);
     }
   }
-    delete _sites[pos];
-    _sites[pos] = dynamic_cast<Site *>(site.clone());
+    delete sites_[pos];
+    sites_[pos] = dynamic_cast<Site *>(site.clone());
 }
 
 /******************************************************************************/
 
-Site * VectorSiteContainer::removeSite(unsigned int i) throw (IndexOutOfBoundsException)
+Site* VectorSiteContainer::removeSite(unsigned int i) throw (IndexOutOfBoundsException)
 {
-  if(i >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::removeSite.", i, 0, getNumberOfSites() - 1);
-  Site * site = _sites[i];
-  _sites.erase(_sites.begin() + i);
+  if (i >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::removeSite.", i, 0, getNumberOfSites() - 1);
+  Site* site = sites_[i];
+  sites_.erase(sites_.begin() + i);
   return site;
 }
 
@@ -331,83 +298,73 @@ Site * VectorSiteContainer::removeSite(unsigned int i) throw (IndexOutOfBoundsEx
 
 void VectorSiteContainer::deleteSite(unsigned int i) throw (IndexOutOfBoundsException)
 {
-  if(i >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::deleteSite.", i, 0, getNumberOfSites() - 1);
-  delete _sites[i];
-  _sites.erase(_sites.begin() + i);  
+  if (i >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::deleteSite.", i, 0, getNumberOfSites() - 1);
+  delete sites_[i];
+  sites_.erase(sites_.begin() + i);  
 }
 
 /******************************************************************************/
 
-void VectorSiteContainer::addSite(const Site & site, bool checkPositions) throw (Exception)
+void VectorSiteContainer::addSite(const Site& site, bool checkPositions) throw (Exception)
 {
   // Check size:
-  if(site.size() != getNumberOfSequences()) throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
+  if (site.size() != getNumberOfSequences()) throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
 
   // New site's alphabet and site container's alphabet matching verification
-  if (site.getAlphabet()->getAlphabetType() != _alphabet->getAlphabetType())
+  if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
   {
-    throw AlphabetMismatchException("VectorSiteContainer::addSite", _alphabet, site.getAlphabet());
+    throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site.getAlphabet());
   }
 
     // Check position:
-  if(checkPositions)
+  if (checkPositions)
   {
     int position = site.getPosition();
     // For all positions in vector : throw exception if position already exists
-    for(unsigned int i = 0; i < _sites.size(); i++)
+    for (unsigned int i = 0; i < sites_.size(); i++)
     {
-      if (_sites[i]->getPosition() == position) throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
+      if (sites_[i]->getPosition() == position) throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
     }
   }
   
-  _sites.push_back(dynamic_cast<Site *>(site.clone()));  
+  sites_.push_back(dynamic_cast<Site *>(site.clone()));  
 }
 
 /******************************************************************************/
 
-void VectorSiteContainer::addSite(const Site & site, unsigned int pos, bool checkPositions) throw (Exception)
+void VectorSiteContainer::addSite(const Site& site, unsigned int pos, bool checkPositions) throw (Exception)
 {
-  if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::addSite", pos, 0, getNumberOfSites() - 1);
+  if (pos >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::addSite", pos, 0, getNumberOfSites() - 1);
 
   // Check size:
-  if(site.size() != getNumberOfSequences()) throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
+  if (site.size() != getNumberOfSequences()) throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
 
   // New site's alphabet and site container's alphabet matching verification
-  if (site.getAlphabet()->getAlphabetType() != _alphabet->getAlphabetType())
+  if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
   {
-    throw AlphabetMismatchException("VectorSiteContainer::addSite", _alphabet, site.getAlphabet());
+    throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site.getAlphabet());
   }
 
   // Check position:
-  if(checkPositions)
+  if (checkPositions)
   {
     int position = site.getPosition();
     // For all positions in vector : throw exception if position already exists
-    for(unsigned int i = 0; i < _sites.size(); i++)
+    for (unsigned int i = 0; i < sites_.size(); i++)
     {
-      if (_sites[i]->getPosition() == position) throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
+      if (sites_[i]->getPosition() == position) throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
     }
   }
 
   //insert(begin() + pos, new Site(site));
-  _sites.insert(_sites.begin() + pos, dynamic_cast<Site *>(site.clone()));
+  sites_.insert(sites_.begin() + pos, dynamic_cast<Site *>(site.clone()));
 }
 
 /******************************************************************************/
 
 unsigned int VectorSiteContainer::getNumberOfSites() const
 {
-  return _sites.size();
-}
-
-const vector<int> VectorSiteContainer::getPositions() const
-{
-  vector<int> positions(getNumberOfSites());
-  for(unsigned int i = 0; i < positions.size(); i++)
-  {
-    positions[i] = getSite(i)->getPosition();
-  }
-  return positions;
+  return sites_.size();
 }
 
 /******************************************************************************/
@@ -415,7 +372,7 @@ const vector<int> VectorSiteContainer::getPositions() const
 void VectorSiteContainer::reindexSites()
 {
   int pos = 1; //first position is 1.
-  for(vector<Site *>::iterator i = _sites.begin(); i < _sites.end(); i++)
+  for (vector<Site *>::iterator i = sites_.begin(); i < sites_.end(); i++)
   {
     (*i)->setPosition(pos++);
   }  
@@ -425,32 +382,33 @@ void VectorSiteContainer::reindexSites()
 
 Vint VectorSiteContainer::getSitePositions() const
 {
-  Vint positions(_sites.size());
-  for(unsigned int i = 0; i < _sites.size(); i++) positions[i] = _sites[i]->getPosition();
+  Vint positions(sites_.size());
+  for (unsigned int i = 0; i < sites_.size(); i++)
+    positions[i] = sites_[i]->getPosition();
   return positions;
 }
 
 /******************************************************************************/
 
-const Sequence * VectorSiteContainer::getSequence(unsigned int i) const throw (IndexOutOfBoundsException)
+const Sequence& VectorSiteContainer::getSequence(unsigned int i) const throw (IndexOutOfBoundsException)
 {
-  if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::getSequence.", i, 0, getNumberOfSequences() - 1);
+  if (i >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::getSequence.", i, 0, getNumberOfSequences() - 1);
 
 	// Main loop : for all sites
-	unsigned int n = _sites.size();
+	unsigned int n = sites_.size();
 	vector<int> sequence(n);
-  for(unsigned int j = 0; j < getNumberOfSites(); j++)
+  for (unsigned int j = 0; j < getNumberOfSites(); j++)
   {
-    sequence[j] = _sites[j]->getContent()[i];
+    sequence[j] = sites_[j]->getContent()[i];
   }
-  if(_sequences[i] != NULL) delete _sequences[i];
-  _sequences[i] = new Sequence(*_names[i], sequence, *_comments[i], _alphabet);
-  return _sequences[i];
+  if (sequences_[i]) delete sequences_[i];
+  sequences_[i] = new Sequence(*names_[i], sequence, *comments_[i], getAlphabet());
+  return *sequences_[i];
 }
 
 /******************************************************************************/
 
-const Sequence * VectorSiteContainer::getSequence(const string & name) const throw (SequenceNotFoundException)
+const Sequence& VectorSiteContainer::getSequence(const string& name) const throw (SequenceNotFoundException)
 {
   //Look for sequence name:
   int pos = getSequencePosition(name);
@@ -459,18 +417,18 @@ const Sequence * VectorSiteContainer::getSequence(const string & name) const thr
 
 /******************************************************************************/
 
-unsigned int VectorSiteContainer::getSequencePosition(const string & name) const throw (SequenceNotFoundException)
+unsigned int VectorSiteContainer::getSequencePosition(const string& name) const throw (SequenceNotFoundException)
 {
   //Look for sequence name:
-  for(unsigned int pos = 0; pos < _names.size(); pos++) {
-    if(*_names[pos] == name) return pos;
+  for (unsigned int pos = 0; pos < names_.size(); pos++) {
+    if (*names_[pos] == name) return pos;
   }
   throw SequenceNotFoundException("VectorSiteContainer::getSequencePosition().", name);
 }
 
 /******************************************************************************/
 
-void VectorSiteContainer::setSequence(const string & name, const Sequence & sequence, bool checkNames) throw (Exception)
+void VectorSiteContainer::setSequence(const string & name, const Sequence& sequence, bool checkNames) throw (Exception)
 {
   //Look for sequence name:
   unsigned int pos = getSequencePosition(name);
@@ -479,68 +437,74 @@ void VectorSiteContainer::setSequence(const string & name, const Sequence & sequ
 
 /******************************************************************************/
 
-void VectorSiteContainer::setSequence(unsigned int pos, const Sequence & sequence, bool checkNames)
+void VectorSiteContainer::setSequence(unsigned int pos, const Sequence& sequence, bool checkNames)
     throw (Exception)
 {
-  if(pos >= getNumberOfSequences()) throw BadIntegerException("VectorSiteContainer::saddSequence", pos);
+  if (pos >= getNumberOfSequences())
+    throw BadIntegerException("VectorSiteContainer::saddSequence", pos);
 
   // New sequence's alphabet and site container's alphabet matching verification
-  if (sequence.getAlphabet()->getAlphabetType() != _alphabet->getAlphabetType()) {
-    throw AlphabetMismatchException("VectorSiteContainer::addSite", _alphabet, sequence.getAlphabet());
-  }
+  if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), sequence.getAlphabet());
 
   //If the container has only one sequence, we set the size to the size of this sequence:
-  if(getNumberOfSequences() == 1) realloc(sequence.size());
+  if (getNumberOfSequences() == 1) realloc(sequence.size());
 
-  if(sequence.size() != _sites.size()) throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length.", &sequence);
+  if (sequence.size() != sites_.size())
+    throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length.", &sequence);
 
-  if(checkNames) {
-    for(unsigned int i = 0; i < _names.size(); i++) {
-      if(i != pos && sequence.getName() == *_names[i]) throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
-    }
+  if (checkNames)
+  {
+    for (unsigned int i = 0; i < names_.size(); i++)
+      if (i != pos && sequence.getName() == *names_[i])
+        throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
   }
   //Update name:
-  delete _names[pos]; _names[pos] = new string(sequence.getName());
+  delete names_[pos];
+  names_[pos] = new string(sequence.getName());
   //Update elements at each site:
-  for(unsigned int i = 0; i < _sites.size(); i++) {
-    _sites[i]->setElement(pos, sequence.getValue(i));
-  }
+  for (unsigned int i = 0; i < sites_.size(); i++)
+    sites_[i]->setElement(pos, sequence.getValue(i));
   //Update comments:
-  if(_comments[pos] != NULL) delete _comments[pos];
-  _comments[pos] = new Comments(sequence.getComments());
+  if (comments_[pos]) delete comments_[pos];
+  comments_[pos] = new Comments(sequence.getComments());
   //Update sequences:
-  if(_sequences[pos] != NULL) delete _sequences[pos];
-  _sequences[pos] = NULL;
+  if (sequences_[pos]) delete sequences_[pos];
+  sequences_[pos] = 0;
 }
 
 /******************************************************************************/
 
 Sequence * VectorSiteContainer::removeSequence(unsigned int i) throw (IndexOutOfBoundsException)
 {
-  if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::removeSequence.", i, 0, getNumberOfSequences() - 1);
+  if (i >= getNumberOfSequences())
+    throw IndexOutOfBoundsException("VectorSiteContainer::removeSequence.", i, 0, getNumberOfSequences() - 1);
 
-  Sequence * sequence = const_cast<Sequence *>(getSequence(i));
-  for(unsigned int j = 0; j < _sites.size(); j++) {
+  getSequence(i); //Actuallizes pointer.
+  Sequence* sequence = sequences_[i];
+  for (unsigned int j = 0; j < sites_.size(); j++)
+  {
     //For each site:
-    _sites[j]->deleteElement(i);
+    sites_[j]->deleteElement(i);
   }
   
   //Now actualize names and comments:
-  delete _names[i]; _names.erase(_names.begin() + i);
-  if(_comments[i] != NULL) delete _comments[i];
-  _comments.erase(_comments.begin() + i);
+  delete names_[i];
+  names_.erase(names_.begin() + i);
+  if (comments_[i]) delete comments_[i];
+  comments_.erase(comments_.begin() + i);
   // We remove the sequence, so the destruction of the sequence is up to the user:
-  //if(_sequences[i] != NULL) delete _sequences[i];
-  _sequences.erase(_sequences.begin() + i);
+  //if (sequences_[i] != NULL) delete sequences_[i];
+  sequences_.erase(sequences_.begin() + i);
   return sequence;
 }
 
 /******************************************************************************/
 
-Sequence * VectorSiteContainer::removeSequence(const string & name) throw (SequenceNotFoundException)
+Sequence * VectorSiteContainer::removeSequence(const string& name) throw (SequenceNotFoundException)
 {
   //Look for sequence name:
-  int pos = getSequencePosition(name);
+  unsigned int pos = getSequencePosition(name);
   return removeSequence(pos);
 }
 
@@ -548,59 +512,62 @@ Sequence * VectorSiteContainer::removeSequence(const string & name) throw (Seque
 
 void VectorSiteContainer::deleteSequence(unsigned int i) throw (IndexOutOfBoundsException)
 {
-  if(i >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::demeteSequence.", i, 0, getNumberOfSequences() - 1);
-  for(unsigned int j = 0; j < _sites.size(); j++) _sites[j]->deleteElement(i);
+  if (i >= getNumberOfSequences())
+    throw IndexOutOfBoundsException("VectorSiteContainer::demeteSequence.", i, 0, getNumberOfSequences() - 1);
+  for (unsigned int j = 0; j < sites_.size(); j++)
+    sites_[j]->deleteElement(i);
 
   //Now actualize names and comments:
-  delete _names[i]; _names.erase(_names.begin() + i);
-  if(_comments[i] != NULL) delete _comments[i];
-  _comments.erase(_comments.begin() + i);
-  if(_sequences[i] != NULL) delete _sequences[i];
-  _sequences.erase(_sequences.begin() + i);
+  delete names_[i];
+  names_.erase(names_.begin() + i);
+  if (comments_[i]) delete comments_[i];
+  comments_.erase(comments_.begin() + i);
+  if (sequences_[i]) delete sequences_[i];
+  sequences_.erase(sequences_.begin() + i);
 }
 
 /******************************************************************************/
 
-void VectorSiteContainer::deleteSequence(const string & name) throw (SequenceNotFoundException)
+void VectorSiteContainer::deleteSequence(const string& name) throw (SequenceNotFoundException)
 {
   //Look for sequence name:
-  int pos = getSequencePosition(name);
+  unsigned int pos = getSequencePosition(name);
   deleteSequence(pos);  
 }
 
 /******************************************************************************/
 
-void VectorSiteContainer::addSequence(const Sequence & sequence, bool checkNames) throw (Exception)
+void VectorSiteContainer::addSequence(const Sequence& sequence, bool checkNames) throw (Exception)
 {
   //If the container has no sequence, we set the size to the size of this sequence:
-  if(getNumberOfSequences() == 0) realloc(sequence.size());
+  if (getNumberOfSequences() == 0) realloc(sequence.size());
     
   // New sequence's alphabet and site container's alphabet matching verification
-  if (sequence.getAlphabet()->getAlphabetType() != _alphabet->getAlphabetType()) {
-    throw AlphabetMismatchException("VectorSiteContainer::addSite", _alphabet, sequence.getAlphabet());
-  }
+  if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("VectorSiteContainer::addSequence", getAlphabet(), sequence.getAlphabet());
 
-  if(sequence.size() != _sites.size()) throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length.", &sequence);
+  if (sequence.size() != sites_.size())
+    throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length.", &sequence);
 
-  if(checkNames) {
-    for(unsigned int i = 0; i < _names.size(); i++) {
-      if(sequence.getName() == *_names[i]) throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
+  if (checkNames) {
+    for (unsigned int i = 0; i < names_.size(); i++) {
+      if (sequence.getName() == *names_[i]) throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
     }
   }
   
   //Append name:
-  _names.push_back(new string(sequence.getName()));
+  names_.push_back(new string(sequence.getName()));
     
   //Append elements at each site:
-  for(unsigned int i = 0; i < _sites.size(); i++) {
-    _sites[i]->addElement(sequence.getValue(i));
+  for (unsigned int i = 0; i < sites_.size(); i++) {
+    sites_[i]->addElement(sequence.getValue(i));
   }
     
   //Append comments:
-  _comments.push_back(new Comments(sequence.getComments()));
+  comments_.push_back(new Comments(sequence.getComments()));
     
   //Sequences pointers:
-  _sequences.push_back(NULL);
+  sequences_.push_back(NULL);
 }
 
 /******************************************************************************/
@@ -611,39 +578,32 @@ void VectorSiteContainer::addSequence(
   bool checkNames)
   throw (Exception)
 {
-  if(pos >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::addSequence.", pos, 0, getNumberOfSequences() - 1);
-  if(sequence.size() != _sites.size()) throw SequenceNotAlignedException("VectorSiteContainer::setSequence", &sequence);
+  if (pos >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::addSequence.", pos, 0, getNumberOfSequences() - 1);
+  if (sequence.size() != sites_.size()) throw SequenceNotAlignedException("VectorSiteContainer::setSequence", &sequence);
 
   // New sequence's alphabet and site container's alphabet matching verification
-  if (sequence.getAlphabet()->getAlphabetType() != _alphabet->getAlphabetType())
+  if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
   {
-    throw AlphabetMismatchException("VectorSiteContainer::addSite", _alphabet, sequence.getAlphabet());
+    throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), sequence.getAlphabet());
   }
 
-  if(checkNames)
+  if (checkNames)
   {
-    for(unsigned int i = 0; i < _names.size(); i++)
+    for (unsigned int i = 0; i < names_.size(); i++)
     {
-      if(sequence.getName() == *_names[i]) throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
+      if (sequence.getName() == *names_[i]) throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
     }
   }
 
-  for(unsigned int i = 0; i < _sites.size(); i++)
+  for (unsigned int i = 0; i < sites_.size(); i++)
   {
     //For each site:
-    _sites[i]->addElement(pos, sequence.getValue(i));
+    sites_[i]->addElement(pos, sequence.getValue(i));
   }
   //Actualize names and comments:
-  _names.insert(_names.begin() + pos, new string(sequence.getName()));  
-  _comments.insert(_comments.begin() + pos, new Comments(sequence.getComments()));
-  _sequences.insert(_sequences.begin() + pos, NULL);
-}
-
-/******************************************************************************/
-
-unsigned int VectorSiteContainer::getNumberOfSequences() const
-{
-  return _names.size();
+  names_.insert(names_.begin() + pos, new string(sequence.getName()));  
+  comments_.insert(comments_.begin() + pos, new Comments(sequence.getComments()));
+  sequences_.insert(sequences_.begin() + pos, NULL);
 }
 
 /******************************************************************************/
@@ -651,22 +611,22 @@ unsigned int VectorSiteContainer::getNumberOfSequences() const
 void VectorSiteContainer::clear()
 {
   //Must delete all sites in the container:
-  for(unsigned int i = 0; i < _sites.size(); i++) delete _sites[i];
+  for (unsigned int i = 0; i < sites_.size(); i++) delete sites_[i];
 
   //must delete all sequence names too:
-  for(unsigned int i = 0; i < _names.size(); i++) delete _names[i];
+  for (unsigned int i = 0; i < names_.size(); i++) delete names_[i];
 
   //must delete all comments too:
-  for(unsigned int i = 0; i < _comments.size(); i++) if(_comments[i] != NULL) delete _comments[i];
+  for (unsigned int i = 0; i < comments_.size(); i++) if (comments_[i] != NULL) delete comments_[i];
 
   //Delete all sequences retrieved:
-  for(unsigned int i = 0; i < _sequences.size(); i++) if(_sequences[i] != NULL) delete(_sequences[i]);
+  for (unsigned int i = 0; i < sequences_.size(); i++) if (sequences_[i] != NULL) delete(sequences_[i]);
 
   // Delete all sites pointers
-  _sites.clear();
-  _names.clear();
-  _comments.clear();
-  _sequences.clear();
+  sites_.clear();
+  names_.clear();
+  comments_.clear();
+  sequences_.clear();
 }
 
 /******************************************************************************/
@@ -674,10 +634,9 @@ void VectorSiteContainer::clear()
 void VectorSiteContainer::realloc(unsigned int n)
 {
   clear();
-  _sites.resize(n);
-  for(unsigned int i = 0; i < n; i++) {
-    _sites[i] = new Site(_alphabet);
-  }
+  sites_.resize(n);
+  for (unsigned int i = 0; i < n; i++)
+    sites_[i] = new Site(getAlphabet());
   reindexSites();
 }
 
@@ -685,8 +644,8 @@ void VectorSiteContainer::realloc(unsigned int n)
 
 vector<string> VectorSiteContainer::getSequencesNames() const
 {
-  vector<string> seqnames(_names.size());
-  for(unsigned int i = 0; i < _names.size(); i++) seqnames[i] = *_names[i];
+  vector<string> seqnames(names_.size());
+  for (unsigned int i = 0; i < names_.size(); i++) seqnames[i] = *names_[i];
   return seqnames;
 }
 
@@ -697,20 +656,24 @@ void VectorSiteContainer::setSequencesNames(
   bool checkNames)
   throw (Exception)
 {
-  if(names.size() != getNumberOfSequences())
+  if (names.size() != getNumberOfSequences())
     throw BadIntegerException("VectorSiteContainer::setSequenceNames: bad number of names.", names.size());
-  if(checkNames) {
-    for(unsigned int i = 0; i < names.size(); i++) {
+  if (checkNames)
+  {
+    for (unsigned int i = 0; i < names.size(); i++)
+    {
       // For all names in vector : throw exception if name already exists
-      for(unsigned int j = 0; j < i; j++) {
+      for (unsigned int j = 0; j < i; j++)
+      {
         if (names[j] == names[i])
           throw Exception("VectorSiteContainer::setSequencesNames : Sequence's name already exists in container");
       }
     }
   }
-  for(unsigned int i = 0; i < names.size(); i++) {
-    delete _names[i];
-    _names[i] = new string(names[i]);
+  for (unsigned int i = 0; i < names.size(); i++)
+  {
+    delete names_[i];
+    names_[i] = new string(names[i]);
   }
 }
 
@@ -718,16 +681,16 @@ void VectorSiteContainer::setSequencesNames(
 
 void VectorSiteContainer::setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException)
 {
-  _comments[sequenceIndex] = new Comments(comments);
+  comments_[sequenceIndex] = new Comments(comments);
 }
 
 /******************************************************************************/
 
-SequenceContainer * VectorSiteContainer::createEmptyContainer() const
+VectorSiteContainer* VectorSiteContainer::createEmptyContainer() const
 { 
-  VectorSiteContainer * vsc = new VectorSiteContainer(_alphabet);
-  vsc->setGeneralComments(AbstractSequenceContainer::_comments);
-  return(dynamic_cast<AbstractSequenceContainer *>(vsc));
+  VectorSiteContainer* vsc = new VectorSiteContainer(getAlphabet());
+  vsc->setGeneralComments(getGeneralComments());
+  return vsc;
 }
 
 /******************************************************************************/

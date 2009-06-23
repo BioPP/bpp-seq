@@ -49,8 +49,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -70,18 +68,19 @@ class SymbolList:
   public virtual Clonable
 {
 
-  protected:
+  private:
  		/**
 		 * @brief The Alphabet attribute must be initialized in constructor and then can never be changed.
 		 * 
 		 * To apply another alphabet to a list you'll have to create a new list.
 		 */
-		const Alphabet * _alphabet;
+		const Alphabet* alphabet_;
 
+  protected:
 		/**
 		 * @brief The list content.
 		 */
-		mutable vector<int> _content;
+		std::vector<int> content_;
 
 	public: 
 		/**
@@ -89,7 +88,7 @@ class SymbolList:
 		 *
 		 * @param alpha The alphabet to use.
 		 */
-		SymbolList(const Alphabet * alpha);
+		SymbolList(const Alphabet* alpha);
 
 		/**
 		 * @brief Build a new SymbolList object with the specified alphabet.
@@ -99,7 +98,7 @@ class SymbolList:
 		 * @param alpha    The alphabet to use.
 		 * @throw BadCharException If the content does not match the specified alphabet.
 		 */
-		SymbolList(const vector<string> & list, const Alphabet * alpha) throw (BadCharException);
+		SymbolList(const std::vector<std::string>& list, const Alphabet* alpha) throw (BadCharException);
 
 		/**
 		 * @brief Build a new SymbolList object with the specified alphabet.
@@ -109,17 +108,17 @@ class SymbolList:
 		 * @param alpha    The alphabet to use.
 		 * @throw BadIntException If the content does not match the specified alphabet.
 		 */
-		SymbolList(const vector<int> & list, const Alphabet * alpha) throw (BadIntException);
+		SymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException);
 
 		/**
 		 * @brief The copy constructor.
 		 */
-		SymbolList(const SymbolList & list);
+		SymbolList(const SymbolList& list);
 
 		/**
 		 * @brief The assignment operator.
 		 */
-		SymbolList & operator = (const SymbolList & list);
+		SymbolList& operator=(const SymbolList& list);
 
 		/**
 		 * @name The Clonable interface
@@ -145,14 +144,14 @@ class SymbolList:
 		 * @return A const pointer to the alphabet.
 		 * @see Alphabet class.
 		 */
-		virtual const Alphabet* getAlphabet() const { return _alphabet; }
+		virtual const Alphabet* getAlphabet() const { return alphabet_; }
 
 		/**
 		 * @brief Get the number of elements in the list.
 		 *
 		 * @return The number of sites in the list.
 		 */
-		virtual unsigned int size() const { return _content.size(); }
+		virtual unsigned int size() const { return content_.size(); }
 
 		/**
 		 * @name Acting on the content of the list.
@@ -165,7 +164,7 @@ class SymbolList:
 		 *
 		 * @return A reference to the content of the list.
 		 */
-		virtual const vector<int>& getContent() const { return _content; }
+		virtual const vector<int>& getContent() const { return content_; }
 
 		/**
 		 * @brief Set the whole content of the list.
@@ -173,7 +172,7 @@ class SymbolList:
 		 * @param list The new content of the list.
 		 * @see The list constructor for information about the way lists are internaly stored.
 		 */
-		virtual void setContent(const vector<int> & list) throw (BadIntException);
+		virtual void setContent(const vector<int>& list) throw (BadIntException);
 
 		/**
 		 * @brief Set the whole content of the list.
@@ -181,7 +180,7 @@ class SymbolList:
 		 * @param list The new content of the list.
 		 * @see The list constructor for information about the way lists are internaly stored.
 		 */
-		virtual void setContent(const vector<string> & list) throw (BadCharException);
+		virtual void setContent(const std::vector<std::string>& list) throw (BadCharException);
 
 		/** @} */
 
@@ -192,7 +191,7 @@ class SymbolList:
 		 *
 		 * @return The whole list as a string.
 		 */
-		virtual string toString() const;
+		virtual std::string toString() const;
 
 		/**
 		 * @name Edition methods.
@@ -205,7 +204,7 @@ class SymbolList:
 		 *
 		 * @param c The character to add, given as a string.
 		 */
-		virtual void addElement(string c) throw (BadCharException);
+		virtual void addElement(const std::string& c) throw (BadCharException);
 
 		/**
 		 * @brief Add a character at a certain position in the list.
@@ -213,7 +212,7 @@ class SymbolList:
 		 * @param pos The postion where to insert the element.
 		 * @param c   The character to add, given as a string.
 		 */
-		virtual void addElement(unsigned int pos, string c) throw (BadCharException, IndexOutOfBoundsException);
+		virtual void addElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
 
 		/**
 		 * @brief Set the element at position 'pos' to character 'c'.
@@ -221,7 +220,7 @@ class SymbolList:
 		 * @param pos The position of the character to set.
 		 * @param c   The value of the element, given as a string.
 		 */
-		virtual void setElement(unsigned int pos, string c) throw (BadCharException, IndexOutOfBoundsException);
+		virtual void setElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
 
 		/**
 		 * @brief Delete the element at postion 'pos'.
@@ -235,7 +234,7 @@ class SymbolList:
 		 *
 		 * @param pos The position of the character to retrieve.
 		 */
-		virtual string getChar(unsigned int pos) const throw (IndexOutOfBoundsException);
+		virtual std::string getChar(unsigned int pos) const throw (IndexOutOfBoundsException);
 
 		/**
 		 * @brief Add a character to the end of the list.
@@ -285,14 +284,14 @@ class SymbolList:
 		 * @param i The position to retrieve.
 		 * @return The integer value of character at position i.
 		 */
-		virtual const int & operator[](unsigned int i) const { return _content[i]; }
+		virtual const int& operator[](unsigned int i) const { return content_[i]; }
 		/**
 		 * @brief Operator [] overloaded for quick access to a character in list.
 		 *
 		 * @param i The position to retrieve.
 		 * @return The integer value of character at position i.
 		 */
-		virtual int & operator[](unsigned int i) { return _content[i]; }
+		virtual int& operator[](unsigned int i) { return content_[i]; }
     /** @} */
 };
 

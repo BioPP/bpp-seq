@@ -56,19 +56,20 @@ namespace bpp
  *
  * This abstract class provides an alphabet and comments, with associated methods.
  */
-class AbstractSequenceContainer : public virtual OrderedSequenceContainer
+class AbstractSequenceContainer:
+  public virtual OrderedSequenceContainer
 {
-	protected:
+	private:
 
 		/**
 		 * @brief The container's alphabet.
 		 */
-		const Alphabet * _alphabet;
+		const Alphabet* alphabet_;
 
     /**
      * @brief The container's comments.
      */
-		Comments _comments;
+		Comments comments_;
 
 	public:
 
@@ -79,7 +80,28 @@ class AbstractSequenceContainer : public virtual OrderedSequenceContainer
 		 *
 		 * @param alpha The alphabet to be associated to this container.
 		 */
-		AbstractSequenceContainer(const Alphabet * alpha);
+		AbstractSequenceContainer(const Alphabet* alpha):
+      alphabet_(alpha) {}
+		
+    /**
+     * @brief Copy constructor from any SequenceContainer object.
+     *
+     * @param sc Another sequence container.
+     */
+    AbstractSequenceContainer(const SequenceContainer& sc):
+      alphabet_(sc.getAlphabet()), comments_(sc.getGeneralComments()) {}
+
+    /**
+     * @brief Assignation operator from any SequenceContainer object.
+     *
+     * @param sc Another sequence container.
+     */
+    AbstractSequenceContainer& operator=(const SequenceContainer& sc)
+    {
+      alphabet_ = sc.getAlphabet();
+      comments_ = sc.getGeneralComments();
+      return *this;
+    }
 
 		virtual ~AbstractSequenceContainer() {}
 		
@@ -90,14 +112,38 @@ class AbstractSequenceContainer : public virtual OrderedSequenceContainer
 		 *
 		 * @{
 		 */
-		const Alphabet * getAlphabet() const { return _alphabet; }
-		vector<int> getContent(const string & name) const throw (SequenceNotFoundException);
-		string toString(const string & name) const throw (SequenceNotFoundException);
-		Comments getComments(const string & name) const throw (SequenceNotFoundException);
-		void setComments(const string & name, const Comments & comments) throw (SequenceNotFoundException);
-		Comments getGeneralComments() const;
-		void setGeneralComments(const Comments & comments);
-		void deleteGeneralComments();
+		const Alphabet* getAlphabet() const { return alphabet_; }
+		const std::vector<int>& getContent(const string & name) const throw (SequenceNotFoundException)
+    {
+	    return getSequence(name).getContent();
+    }
+
+    std::string toString(const std::string & name) const throw (SequenceNotFoundException)
+    {
+      return getSequence(name).toString();
+    }
+
+		const Comments& getComments(const std::string & name) const throw (SequenceNotFoundException)
+    {
+      return getSequence(name).getComments();
+    }
+
+		void setComments(const std::string & name, const Comments & comments) throw (SequenceNotFoundException);
+		const Comments& getGeneralComments() const
+    {
+      return comments_;
+    }
+
+		void setGeneralComments(const Comments & comments)
+    {
+      comments_ = comments;
+    }
+
+		void deleteGeneralComments()
+    {
+      comments_.clear();
+    }
+
 		/** @} */
 
 		/**
@@ -105,11 +151,27 @@ class AbstractSequenceContainer : public virtual OrderedSequenceContainer
 		 *
 		 * @{
 		 */
-		virtual string getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
-		virtual vector<int> getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
-		virtual string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
-		virtual Comments getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
-		virtual void     setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) = 0;
+		virtual const string& getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException)
+    {
+	    return getSequence(sequenceIndex).getName();
+    }
+    
+		virtual const std::vector<int>& getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException)
+    {
+	    return getSequence(sequenceIndex).getContent();
+    }
+		
+    virtual std::string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException)
+    {
+      return getSequence(sequenceIndex).toString();
+    }
+
+		virtual const Comments& getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException)
+    {
+      return getSequence(sequenceIndex).getComments();
+    }
+
+		virtual void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) = 0;
 		/** @} */
 
 };

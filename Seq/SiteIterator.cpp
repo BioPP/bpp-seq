@@ -59,16 +59,16 @@ AbstractSiteIterator::AbstractSiteIterator(const SiteContainer & sites)
 	
 SimpleSiteIterator::SimpleSiteIterator(const SiteContainer & sites): AbstractSiteIterator(sites) {}
 
-const Site * SimpleSiteIterator::nextSite()
+const Site* SimpleSiteIterator::nextSite()
 {
-	const Site * s = sites -> getSite(currentPosition);
+	const Site* s = &sites->getSite(currentPosition);
 	currentPosition++;
 	return s;
 }
 
 bool SimpleSiteIterator::hasMoreSites() const
 {
-	return currentPosition < sites -> getNumberOfSites();
+	return currentPosition < sites->getNumberOfSites();
 }
 
 /******************************************************************************/
@@ -78,28 +78,31 @@ NoGapSiteIterator::NoGapSiteIterator(const SiteContainer & sites): AbstractSiteI
 	currentPosition = nextSiteWithoutGapPosition(-1);
 }
 
-const Site * NoGapSiteIterator::nextSite() {
-	const Site * s = sites -> getSite(currentPosition);
+const Site* NoGapSiteIterator::nextSite()
+{
+	const Site* s = &sites->getSite(currentPosition);
 	currentPosition = nextSiteWithoutGapPosition(currentPosition);
 	return s;
 }
 
 bool NoGapSiteIterator::hasMoreSites() const
 {
-	return currentPosition < sites -> getNumberOfSites();
+	return currentPosition < sites->getNumberOfSites();
 }
 
 int NoGapSiteIterator::nextSiteWithoutGapPosition(int current) const
 {
 	unsigned int position = current + 1;
-	while(position < sites -> getNumberOfSites() && SiteTools::hasGap(* sites -> getSite(position))) position++;
+	while(position < sites->getNumberOfSites() && SiteTools::hasGap(sites->getSite(position)))
+    position++;
 	return position;
 }
 
 int NoGapSiteIterator::previousSiteWithoutGapPosition(int current) const
 {
 	int position = current - 1;
-	while(position >= 0 && SiteTools::hasGap(* sites -> getSite(position))) position --;
+	while(position >= 0 && SiteTools::hasGap(sites->getSite(position)))
+    position --;
 	return position;
 }
 
@@ -110,9 +113,9 @@ CompleteSiteIterator::CompleteSiteIterator(const SiteContainer & sites): Abstrac
 	currentPosition = nextCompleteSitePosition(-1);
 }
 
-const Site * CompleteSiteIterator::nextSite()
+const Site* CompleteSiteIterator::nextSite()
 {
-	const Site * s = sites -> getSite(currentPosition);
+	const Site* s = &sites->getSite(currentPosition);
 	currentPosition = nextCompleteSitePosition(currentPosition);
 	return s;
 }
@@ -124,15 +127,17 @@ bool CompleteSiteIterator::hasMoreSites() const
 
 int CompleteSiteIterator::nextCompleteSitePosition(int current) const
 {
-    unsigned int position = current + 1;
-	while(position < sites -> getNumberOfSites() && !SiteTools::isComplete(* sites -> getSite(position))) position ++;
+  unsigned int position = current + 1;
+	while(position < sites->getNumberOfSites() && !SiteTools::isComplete(sites->getSite(position)))
+    position ++;
 	return position;
 }
 
 int CompleteSiteIterator::previousCompleteSitePosition(int current) const
 {
-    int position = current - 1;
-	while(position >= 0 && !SiteTools::isComplete(* sites -> getSite(position))) position --;
+  int position = current - 1;
+	while(position >= 0 && !SiteTools::isComplete(sites->getSite(position)))
+    position --;
 	return position;
 }
 

@@ -68,7 +68,7 @@ class OrderedSequenceContainer:
 		 * @return The content of the sequence as a vector of integers.
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
 		 */
-		virtual vector<int> getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const std::vector<int>& getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 		
 		/**
 		 * @brief Convert a particular sequence to a string.
@@ -77,17 +77,17 @@ class OrderedSequenceContainer:
 		 * @return A string describing the content of the sequence.
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
 		 */
-		virtual string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual std::string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Retrieve a sequence object from the container.
 
 		 *
 		 * @param sequenceIndex The position of the sequence.
-		 * @return A pointer toward the Sequence with corresponding name.
+		 * @return A reference toward the Sequence object with corresponding name.
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
 		 */
-		virtual const Sequence * getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const Sequence& getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Replace a sequence in the container.
@@ -108,7 +108,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual Sequence * removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException) = 0;
+		virtual Sequence* removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Delete a sequence of the container.
@@ -127,7 +127,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in
 		 * the container.
 		 */
-		virtual string getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const string& getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Get comments of a particular sequence.
@@ -137,7 +137,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in
 		 * the container.
 		 */
-		virtual Comments getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const Comments& getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Set the comments of a particular sequence.
@@ -177,7 +177,7 @@ class OrderedSequenceContainer:
      * @param elementIndex The element position within the sequence.
      * @throw IndexOutOfBoundsException If a position is not valid.
      */
-    virtual int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException) = 0;
+    virtual int& valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException) = 0;
     
     /**
      * @brief Element access operator.
@@ -188,7 +188,7 @@ class OrderedSequenceContainer:
      * @param elementIndex The element position within the sequence.
      * @throw IndexOutOfBoundsException If a position is not valid.
      */
-    virtual const int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const int& valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Element access operator.
@@ -200,7 +200,7 @@ class OrderedSequenceContainer:
      * @param sequenceIndex The sequence position.
      * @param elementIndex The element position within the sequence.
      */
-    virtual int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) = 0;
+    virtual int& operator()(unsigned int sequenceIndex, unsigned int elementIndex) = 0;
     
     /**
      * @brief Element access operator.
@@ -212,7 +212,7 @@ class OrderedSequenceContainer:
      * @param sequenceIndex The sequence position.
      * @param elementIndex The element position within the sequence.
      */
-    virtual const int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) const = 0;
+    virtual const int& operator()(unsigned int sequenceIndex, unsigned int elementIndex) const = 0;
     /** @} */
 	
   public:
@@ -222,17 +222,17 @@ class OrderedSequenceContainer:
 		 *
 		 * @{
 		 */
-		virtual vector<int> getContent(const string & name) const throw (SequenceNotFoundException) = 0;  
-		virtual string toString(const string & name) const throw (SequenceNotFoundException) = 0;  
-		virtual const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException) = 0;
-		virtual void setSequence(const string & name, const Sequence & sequence, bool checkName) throw (Exception) = 0;
-		virtual Sequence * removeSequence(const string & name) throw (SequenceNotFoundException) = 0;
-		virtual void deleteSequence(const string & name) throw (SequenceNotFoundException) = 0;
+		virtual const std::vector<int>& getContent(const std::string& name) const throw (SequenceNotFoundException) = 0;  
+		virtual std::string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
+		virtual const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) = 0;
+		virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;
+		virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException) = 0;
+		virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException) = 0;
 		virtual unsigned int getNumberOfSequences() const = 0;
-		virtual vector<string> getSequencesNames() const = 0;
-		virtual void setSequencesNames(const vector<string> & names, bool checkNames) throw (Exception) = 0;
-		virtual Comments getComments(const string & name) const throw (SequenceNotFoundException) = 0;
-		virtual void setComments(const string & name, const Comments & comments) throw (SequenceNotFoundException) = 0;
+		virtual std::vector<std::string> getSequencesNames() const = 0;
+		virtual void setSequencesNames(const std::vector<std::string> & names, bool checkNames) throw (Exception) = 0;
+		virtual const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException) = 0;
+		virtual void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException) = 0;
 		/** @} */
 };
 

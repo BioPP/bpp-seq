@@ -49,9 +49,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/Clonable.h>
 
 // From the STL:
-#include <cstdlib>
-
-using namespace std;
+#include <string>
 
 namespace bpp
 {
@@ -81,7 +79,8 @@ namespace bpp
  * @see Sequence
  */
 
-class SequenceContainer: public virtual Clonable
+class SequenceContainer:
+  public virtual Clonable
 {
 	public:
 		SequenceContainer() {}
@@ -93,7 +92,7 @@ class SequenceContainer: public virtual Clonable
 		 *
 		 * @return The alphabet associated to this container.
 		 */
-		virtual const Alphabet * getAlphabet() const = 0;
+		virtual const Alphabet* getAlphabet() const = 0;
 		
 		/**
 		 * @brief Get the content of a sequence.
@@ -102,7 +101,7 @@ class SequenceContainer: public virtual Clonable
 		 * @return The content of the sequence as a vector of integers.
 		 * @throw SequenceNotFoundException If the name does not match any sequence in the container.
 		 */
-		virtual vector<int> getContent(const string & name) const throw (SequenceNotFoundException) = 0;  
+		virtual const vector<int>& getContent(const std::string& name) const throw (SequenceNotFoundException) = 0;  
 		
 		/**
 		 * @brief Convert a particular sequence to a string.
@@ -111,16 +110,16 @@ class SequenceContainer: public virtual Clonable
 		 * @return A string describing the content of the sequence.
 		 * @throw SequenceNotFoundException If the name does not match any sequence in the container.
 		 */
-		virtual string toString(const string & name) const throw (SequenceNotFoundException) = 0;  
+		virtual string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
 
 		/**
 		 * @brief Retrieve a sequence object from the container.
 		 *
 		 * @param name The name of the sequence.
-		 * @return A pointer toward the Sequence with corresponding name.
+		 * @return A reference toward the Sequence with corresponding name.
 		 * @throw SequenceNotFoundException If the name does not match any sequence in the container.
 		 */
-		virtual const Sequence * getSequence(const string & name) const throw (SequenceNotFoundException) = 0;
+		virtual const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) = 0;
 
 		/**
 		 * @brief Replace a sequence in the container.
@@ -134,7 +133,7 @@ class SequenceContainer: public virtual Clonable
 		 * @throw Exception Any other kind of exception, if the name of the sequence is
 		 * already used, are whatever else depending on the implementation.
 		 */
-		virtual void setSequence(const string & name, const Sequence & sequence, bool checkName) throw (Exception) = 0;
+		virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;
 
 		/**
 		 * @brief Extract (and remove) a sequence from the container.
@@ -143,7 +142,7 @@ class SequenceContainer: public virtual Clonable
 		 * @throw SequenceNotFoundException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual Sequence * removeSequence(const string & name) throw (SequenceNotFoundException) = 0;
+		virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException) = 0;
 		
 		/**
 		 * @brief Delete a sequence of the container.
@@ -152,7 +151,7 @@ class SequenceContainer: public virtual Clonable
 		 * @throw SequenceNotFoundException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual void deleteSequence(const string & name) throw (SequenceNotFoundException) = 0;
+		virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException) = 0;
 
 		/**
 		 * @brief Get the number of sequences in the container.
@@ -166,7 +165,7 @@ class SequenceContainer: public virtual Clonable
 		 *
 		 * @return A vector of strings with all sequence names.
 		 */
-		virtual vector<string> getSequencesNames() const = 0;
+		virtual std::vector<std::string> getSequencesNames() const = 0;
 		
 		/**
 		 * @brief Set all sequence names.
@@ -178,7 +177,7 @@ class SequenceContainer: public virtual Clonable
 		 * is already used in the container before adding it.
 		 * @throw Exception If there are redundant names in the input vector.
 		 */
-		virtual void setSequencesNames(const vector<string> & names, bool checkNames) throw (Exception) = 0;
+		virtual void setSequencesNames(const std::vector<std::string>& names, bool checkNames) throw (Exception) = 0;
 
 		/**
 		 * @brief Get comments of a particular sequence.
@@ -188,7 +187,7 @@ class SequenceContainer: public virtual Clonable
 		 * @throw SequenceNotFoundException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual Comments getComments(const string & name) const throw (SequenceNotFoundException) = 0;
+		virtual const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException) = 0;
 		
 		/**
 		 * @brief Set the comments of a particular sequence.
@@ -198,21 +197,21 @@ class SequenceContainer: public virtual Clonable
 		 * @throw SequenceNotFoundException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual void setComments(const string & name, const Comments & comments) throw (SequenceNotFoundException) = 0;
+		virtual void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException) = 0;
 		
 		/**
 		 * @brief Get the comments of this container.
 		 *
 		 * @return The comments associated to this container.
 		 */
-		virtual Comments getGeneralComments() const = 0;
+		virtual const Comments& getGeneralComments() const = 0;
 
 		/**
 		 * @brief Set the comments of this container.
 		 *
 		 * @param comments The comments to be associated to this container.
 		 */
-		virtual void setGeneralComments(const Comments & comments) = 0;
+		virtual void setGeneralComments(const Comments& comments) = 0;
 		
 		/**
 		 * @brief Delete the comments associated to this container.
@@ -232,7 +231,7 @@ class SequenceContainer: public virtual Clonable
 		 *
 		 * @return A new empty container, with the same alphabet as this one.
 		 */
-		virtual SequenceContainer * createEmptyContainer() const = 0;
+		virtual SequenceContainer* createEmptyContainer() const = 0;
 
     /**
      * @name Provide direct access to sequences content.
@@ -254,7 +253,7 @@ class SequenceContainer: public virtual Clonable
      * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
      * @throw IndexOutOfBoundsException If the element position is not valid.
      */
-    virtual int & valueAt(const string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+    virtual int& valueAt(const std::string& sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Element access function.
@@ -266,7 +265,7 @@ class SequenceContainer: public virtual Clonable
      * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
      * @throw IndexOutOfBoundsException If the element position is not valid.
      */
-    virtual const int & valueAt(const string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+    virtual const int& valueAt(const std::string& sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Element access operator.
@@ -278,7 +277,7 @@ class SequenceContainer: public virtual Clonable
      * @param sequenceName The sequence name.
      * @param elementIndex The element position within the sequence.
      */
-    virtual int & operator()(const string & sequenceName, unsigned int elementIndex) = 0;
+    virtual int& operator()(const std::string& sequenceName, unsigned int elementIndex) = 0;
 
     /**
      * @brief Element access operator.
@@ -290,7 +289,7 @@ class SequenceContainer: public virtual Clonable
      * @param sequenceName The sequence name.
      * @param elementIndex The element position within the sequence.
      */
-    virtual const int & operator()(const string & sequenceName, unsigned int elementIndex) const = 0;
+    virtual const int& operator()(const std::string& sequenceName, unsigned int elementIndex) const = 0;
     /** @} */
 };
 
