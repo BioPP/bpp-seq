@@ -66,6 +66,11 @@ WordAlphabet::WordAlphabet(const Alphabet* palpha, unsigned int num) :
   build_();
 }
 
+WordAlphabet::~WordAlphabet()
+{
+  _VAbsAlph.clear();  
+}
+
 void WordAlphabet::build_()
 {
   unsigned int size = 1;
