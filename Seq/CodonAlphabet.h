@@ -88,6 +88,12 @@ public:
    *
    * @{
    */
+
+  /**
+   * @brief Returns the number of stop codons
+   */
+
+  unsigned int numberOfStopCodons() const;
   
   /**
    * @brief Get the int code for a codon given the int code of the three underlying positions.
