@@ -135,21 +135,35 @@ class SequenceContainerTools
     static bool sequencesHaveTheSameLength(const SequenceContainer & sequences);
   
     /**
-     * @brief Compute base frequencies.
+     * @brief Compute base counts
      *
-     * Example of usage: getting the GC content from a sequence container.
+     * Example of usage: getting the GC count from a sequence container.
      * <code>
-     *   map<int, double> freqs;
-     *   SequenceContainerTools::getFrequencies(myContainer, freqs); //My container is previously defined.
-     *   double GCcontent = (freqs[1] + freqs[2]) / (freqs[0] + freqs[1] + freqs[2] + freqs[3]);
+     *   map<int, int> counts;
+     *  SequenceContainerTools::getCounts(myContainer, counts); //My container is previously defined.
+     *   int GCcontent = counts[1] + counts[2] ;
      * </code>
      *
-     * @param sequences The container on which the frequencies will be computed
-     * @param f The output map with ecah state found as a key, and corresponding frequencies as values.
      * States are stored as their int code.
      */
-    static void getFrequencies(const SequenceContainer & sequences, map<int, double> & f);
 
+  static void  getCounts(const SequenceContainer & sequences,  map<int, int>&);
+
+  /**
+   * @brief Compute base frequencies.
+   *
+   * Example of usage: getting the GC content from a sequence container.
+   * <code>
+   *  map<int, double> freqs;
+   *  SequenceContainerTools::getFrequencies(myContainer, freqs); //My container is previously defined.
+   *   double GCcontent = (freqs[1] + freqs[2]) / (freqs[0] + freqs[1] + freqs[2] + freqs[3]);
+   * </code>
+   *
+   * States are stored as their int code.
+   */
+
+  static void  getFrequencies(const SequenceContainer & sequences, map<int, double>&);
+  
     /**
      * @brief Append all the sequences of a SequenceContainer to the end of another.
      *

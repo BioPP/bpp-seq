@@ -130,10 +130,21 @@ void SequenceContainerTools::getFrequencies(const SequenceContainer & sequences,
 		n += seq.size();
 	}
 	for(map<int, double>::iterator i = f.begin(); i != f.end(); i++) {
-		i -> second = i -> second / n;
-		//cout << i -> first << "\t" << i -> second << endl;
+          i -> second = i -> second / n;
 	}
 }
 
+/******************************************************************************/
+
+void  SequenceContainerTools::getCounts(const SequenceContainer & sequences, map<int, int>& f)
+{
+  int n = 0;
+  vector<string> names = sequences.getSequencesNames();
+  for(unsigned int j = 0; j < names.size(); j++) {
+    vector<int> seq = sequences.getContent(names[j]);
+    for(unsigned int i = 0; i < seq.size(); i++) f[seq[i]]++;
+    n += seq.size();
+  }
+}
 /******************************************************************************/
 
