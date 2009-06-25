@@ -82,15 +82,15 @@ Alphabet * SequenceApplicationTools::getAlphabet(
     chars = new DNA();
   else if (alphabet == "RNA")
     chars = new RNA();
-  else if (alphabet == "Proteic")
+  else if (alphabet == "Protein")
     chars = new ProteicAlphabet();
   else if (allowGeneric && alphabet == "Generic")
     chars = new DefaultAlphabet();
   else
   {
-    string suff="";
+    string suff = "";
     if (alphabet.find("CodonAlphabet") != string::npos)
-      suff="CodonAlphabet";
+      suff = "CodonAlphabet";
     
     if (suff == "")
       throw Exception("Alphabet not known: " + alphabet);
