@@ -56,7 +56,7 @@ using namespace std;
 
 /******************************************************************************/
 
-bool SiteTools::hasGap(const Site & site)
+bool SiteTools::hasGap(const Site& site)
 {
 	// Main loop : for all characters in site
 	for (unsigned int i = 0 ; i < site.size(); i++)
@@ -68,7 +68,7 @@ bool SiteTools::hasGap(const Site & site)
 
 /******************************************************************************/
 
-bool SiteTools::isGapOnly(const Site & site)
+bool SiteTools::isGapOnly(const Site& site)
 {
 	// Main loop : for all characters in site
 	for (unsigned int i = 0 ; i < site.size(); i++)
@@ -80,7 +80,7 @@ bool SiteTools::isGapOnly(const Site & site)
 
 /******************************************************************************/
 
-bool SiteTools::isGapOrUnresolvedOnly(const Site & site)
+bool SiteTools::isGapOrUnresolvedOnly(const Site& site)
 {
 	// Main loop : for all characters in site
 	for (unsigned int i = 0 ; i < site.size(); i++)
@@ -92,7 +92,7 @@ bool SiteTools::isGapOrUnresolvedOnly(const Site & site)
 
 /******************************************************************************/
 
-bool SiteTools::hasUnknown(const Site & site)
+bool SiteTools::hasUnknown(const Site& site)
 {
 	// Main loop : for all characters in site
 	for(unsigned int i = 0; i < site.size(); i++)
@@ -104,7 +104,7 @@ bool SiteTools::hasUnknown(const Site & site)
 
 /******************************************************************************/
 
-bool SiteTools::isComplete(const Site & site)
+bool SiteTools::isComplete(const Site& site)
 {
 	// Main loop : for all characters in site
 	for(unsigned int i = 0; i < site.size(); i++)
@@ -116,7 +116,7 @@ bool SiteTools::isComplete(const Site & site)
 
 /******************************************************************************/
 
-bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2)
+bool SiteTools::areSitesIdentical(const Site& site1, const Site& site2)
 {
 	// Site's size and content checking
   if(site1.getAlphabet()->getAlphabetType() != site2.getAlphabet()->getAlphabetType()) return false;
@@ -133,7 +133,7 @@ bool SiteTools::areSitesIdentical(const Site & site1, const Site & site2)
 
 /******************************************************************************/
 
-bool SiteTools::isConstant(const Site & site, bool ignoreUnknown) throw (EmptySiteException)
+bool SiteTools::isConstant(const Site& site, bool ignoreUnknown) throw (EmptySiteException)
 {
 	// Empty site checking
 	if (site.size() == 0) throw EmptySiteException("SiteTools::isConstant: Incorrect specified site", &site);
@@ -150,7 +150,7 @@ bool SiteTools::isConstant(const Site & site, bool ignoreUnknown) throw (EmptySi
       s = site[i];
       i++;
     }
-    if(s == unknown || s == gap) throw EmptySiteException("SiteTools::isConstant: Site is only made of gaps or generic characters.");
+    if(s == unknown || s == gap) throw EmptySiteException("SiteTools::isConstant: Siteis only made of gaps or generic characters.");
 	  while(i < site.size())
     {
       if (site[i] != s && site[i] != gap && site[i] != unknown) return false;
@@ -166,7 +166,7 @@ bool SiteTools::isConstant(const Site & site, bool ignoreUnknown) throw (EmptySi
       s = site[i];
       i++;
     }
-    if (s == gap) throw EmptySiteException("SiteTools::isConstant: Site is only made of gaps.");
+    if (s == gap) throw EmptySiteException("SiteTools::isConstant: Siteis only made of gaps.");
 	  while (i < site.size())
     {
       if (site[i] != s && site[i] != gap) return false;
@@ -179,7 +179,7 @@ bool SiteTools::isConstant(const Site & site, bool ignoreUnknown) throw (EmptySi
 
 /******************************************************************************/
 
-double SiteTools::variabilityShannon(const Site & site, bool resolveUnknown) throw (EmptySiteException)
+double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown) throw (EmptySiteException)
 {
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::variabilityShannon: Incorrect specified site", &site);
@@ -197,7 +197,7 @@ double SiteTools::variabilityShannon(const Site & site, bool resolveUnknown) thr
 
 /******************************************************************************/
 
-double SiteTools::mutualInformation(const Site & site1, const Site & site2, bool resolveUnknown) throw (DimensionException,EmptySiteException)
+double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool resolveUnknown) throw (DimensionException,EmptySiteException)
 {
 	// Empty site checking
 	if(site1.size() == 0) throw EmptySiteException("SiteTools::mutualInformation: Incorrect specified site", &site1);
@@ -234,7 +234,7 @@ double SiteTools::mutualInformation(const Site & site1, const Site & site2, bool
 
 /******************************************************************************/
 
-double SiteTools::variabilityFactorial(const Site & site) throw (EmptySiteException)
+double SiteTools::variabilityFactorial(const Site& site) throw (EmptySiteException)
 {
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::variabilityFactorial: Incorrect specified site", &site);
@@ -247,7 +247,7 @@ double SiteTools::variabilityFactorial(const Site & site) throw (EmptySiteExcept
 
 /******************************************************************************/
 
-double SiteTools::heterozygosity(const Site & site) throw (EmptySiteException)
+double SiteTools::heterozygosity(const Site& site) throw (EmptySiteException)
 {
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::heterozygosity: Incorrect specified site", &site);
@@ -260,7 +260,7 @@ double SiteTools::heterozygosity(const Site & site) throw (EmptySiteException)
 
 /******************************************************************************/
 
-unsigned int SiteTools::getNumberOfDistinctCharacters(const Site & site) throw (EmptySiteException)
+unsigned int SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::getNumberOfDistinctCharacters(): Incorrect specified site", &site);
@@ -278,7 +278,7 @@ unsigned int SiteTools::getNumberOfDistinctCharacters(const Site & site) throw (
 
 /******************************************************************************/
 
-bool SiteTools::hasSingleton(const Site & site) throw (EmptySiteException)
+bool SiteTools::hasSingleton(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::hasSingleton: Incorrect specified site", &site);
@@ -295,7 +295,7 @@ bool SiteTools::hasSingleton(const Site & site) throw (EmptySiteException)
 
 /******************************************************************************/
 
-bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteException)
+bool SiteTools::isParsimonyInformativeSite(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isParsimonyInformativeSite: Incorrect specified site", &site);
@@ -314,7 +314,7 @@ bool SiteTools::isParsimonyInformativeSite(const Site & site) throw (EmptySiteEx
 
 /******************************************************************************/
 
-bool SiteTools::isTriplet(const Site & site) throw (EmptySiteException)
+bool SiteTools::isTriplet(const Site& site) throw (EmptySiteException)
 {
 	// Empty site checking
 	if(site.size() == 0) throw EmptySiteException("SiteTools::isTriplet: Incorrect specified site", &site);

@@ -113,7 +113,7 @@ class AbstractSequenceContainer:
 		 * @{
 		 */
 		const Alphabet* getAlphabet() const { return alphabet_; }
-		const std::vector<int>& getContent(const string & name) const throw (SequenceNotFoundException)
+		const std::vector<int>& getContent(const string& name) const throw (SequenceNotFoundException)
     {
 	    return getSequence(name).getContent();
     }
@@ -123,18 +123,18 @@ class AbstractSequenceContainer:
       return getSequence(name).toString();
     }
 
-		const Comments& getComments(const std::string & name) const throw (SequenceNotFoundException)
+		const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException)
     {
       return getSequence(name).getComments();
     }
 
-		void setComments(const std::string & name, const Comments & comments) throw (SequenceNotFoundException);
+		void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException);
 		const Comments& getGeneralComments() const
     {
       return comments_;
     }
 
-		void setGeneralComments(const Comments & comments)
+		void setGeneralComments(const Comments& comments)
     {
       comments_ = comments;
     }
@@ -171,7 +171,7 @@ class AbstractSequenceContainer:
       return getSequence(sequenceIndex).getComments();
     }
 
-		virtual void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) = 0;
+		virtual void setComments(unsigned int sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException) = 0;
 		/** @} */
 
 };

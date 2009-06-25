@@ -164,7 +164,7 @@ class SymbolList:
 		 *
 		 * @return A reference to the content of the list.
 		 */
-		virtual const vector<int>& getContent() const { return content_; }
+		virtual const std::vector<int>& getContent() const { return content_; }
 
 		/**
 		 * @brief Set the whole content of the list.
@@ -172,7 +172,7 @@ class SymbolList:
 		 * @param list The new content of the list.
 		 * @see The list constructor for information about the way lists are internaly stored.
 		 */
-		virtual void setContent(const vector<int>& list) throw (BadIntException);
+		virtual void setContent(const std::vector<int>& list) throw (BadIntException);
 
 		/**
 		 * @brief Set the whole content of the list.

@@ -60,7 +60,7 @@ namespace bpp
 /**
  * @brief The VectorSiteContainer class.
  *
- * Sites are stored in a vector of pointers.
+ * Sites are stored in a std::vector of pointers.
  * Site access is hence in \f$O(1)\f$, and sequence access in \f$O(l)\f$, where
  * \f$l\f$ is the number of sites in the container.
  *
@@ -83,7 +83,7 @@ class VectorSiteContainer:
     /**
      * @brief Build a new container from a set of sites.
      *
-     * @param vs A vector of sites.
+     * @param vs A std::vector of sites.
      * @param alpha The common alphabet for all sites.
      * @param checkPositions Check for the redundancy of site position tag. This may turn to be very time consuming!
      * @throw Exception If sites differ in size or in alphabet.
@@ -160,43 +160,43 @@ class VectorSiteContainer:
 
     // Method to get a sequence object from sequence container
     const Sequence& getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
-    const Sequence& getSequence(const string& name) const throw (SequenceNotFoundException);
+    const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
 
     // Methods to get position of a sequence in sequence container from his name
     // This method is used by delete and remove methods
-    unsigned int getSequencePosition(const string& name) const throw (SequenceNotFoundException);
+    unsigned int getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
 
     Sequence* removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
-    Sequence* removeSequence(const string& name) throw (SequenceNotFoundException);
+    Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException);
 
     void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
-    void deleteSequence(const string& name) throw (SequenceNotFoundException);
+    void deleteSequence(const std::string& name) throw (SequenceNotFoundException);
     
     unsigned int getNumberOfSequences() const { return names_.size(); }
 
-    vector<string> getSequencesNames() const;
+    std::vector<std::string> getSequencesNames() const;
 
-    void setSequencesNames(const vector<string>& names, bool checkNames = true) throw (Exception);
+    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception);
 
     void clear();  
     
     VectorSiteContainer* createEmptyContainer() const;
 
-    int & valueAt(const string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    int & valueAt(const std::string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
     {
-      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
       return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
     }
-    const int & valueAt(const string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    const int & valueAt(const std::string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
     {
-      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
       return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
     }
-    int & operator()(const string & sequenceName, unsigned int elementIndex)
+    int & operator()(const std::string & sequenceName, unsigned int elementIndex)
     {
       return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
     }
-    const int & operator()(const string & sequenceName, unsigned int elementIndex) const
+    const int & operator()(const std::string & sequenceName, unsigned int elementIndex) const
     {
       return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
     }
@@ -223,11 +223,11 @@ class VectorSiteContainer:
     }
      /** @} */
 
-    void addSequence(const Sequence & sequence,                             bool checkName = true) throw (Exception);
-    void addSequence(const Sequence & sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
+    void addSequence(const Sequence& sequence,                             bool checkName = true) throw (Exception);
+    void addSequence(const Sequence& sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
     
-    void setSequence(const string & name,        const Sequence & sequence, bool checkName) throw (Exception);
-    void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName) throw (Exception);
+    void setSequence(const std::string& name,    const Sequence& sequence, bool checkName) throw (Exception);
+    void setSequence(unsigned int sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception);
 
 
   protected:

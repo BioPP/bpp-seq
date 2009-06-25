@@ -54,10 +54,10 @@ namespace bpp
 /**
  * @brief Declaration of Comments type.
  *
- * Comments are defined as a vector of strings to allow the later creation of a
+ * Comments are defined as a std::vector of std::strings to allow the later creation of a
  * full Comments class.
  */
-typedef vector<string> Comments;
+typedef std::vector<std::string> Comments;
 
 /**
  * @brief The sequence object. 
@@ -98,30 +98,30 @@ class Sequence:
   public: // Class constructors and destructor:
 
     /**
-     * @brief Direct constructor: build a Sequence object from a string
+     * @brief Direct constructor: build a Sequence object from a std::string
      * You can use it safely for RNA, DNA and protein sequences.
      *
-     * It can be used with codon sequences too, the string will be cut into
+     * It can be used with codon sequences too, the std::string will be cut into
      * parts of size 3. But for more complicated alphabets, you should use one
      * complete constructors.
      *
      * @param name     The sequence name.
-     * @param sequence The whole sequence to be parsed as a string.
+     * @param sequence The whole sequence to be parsed as a std::string.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
     Sequence(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException);
   
     /**
-     * @brief Direct constructor: build a Sequence object from a string.
+     * @brief Direct constructor: build a Sequence object from a std::string.
      * 
      * You can use it safely for RNA, DNA and protein sequences.
      *
-     * It can be used with codon sequences too, the string will be cut into
+     * It can be used with codon sequences too, the std::string will be cut into
      * tokens of size 3. But for more complicated alphabets, you should use one
      * complete constructors.
      *
      * @param name     The sequence name.
-     * @param sequence The whole sequence to be parsed as a string.
+     * @param sequence The whole sequence to be parsed as a std::string.
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
@@ -130,8 +130,8 @@ class Sequence:
     /**
      * @brief General purpose constructor, can be used with any alphabet.
      *
-     * You should note that the sequence is stored as a vector of int.
-     * Hence each string in the vector will be translated using the alphabet object.
+     * You should note that the sequence is stored as a std::vector of int.
+     * Hence each std::string in the std::vector will be translated using the alphabet object.
      *
      * @param name     The sequence name.
      * @param sequence The sequence content.
@@ -142,8 +142,8 @@ class Sequence:
     /**
      * @brief General purpose constructor, can be used with any alphabet.
      *
-     * You should note that the sequence is stored as a vector of int.
-     * Hence each string in the vector will be translated using the alphabet object.
+     * You should note that the sequence is stored as a std::vector of int.
+     * Hence each std::string in the std::vector will be translated using the alphabet object.
      *
      * @param name     The sequence name.
      * @param sequence The sequence content.
@@ -207,14 +207,14 @@ class Sequence:
      *
      * @return This sequence name.
      */
-    const string& getName() const { return name_; }
+    const std::string& getName() const { return name_; }
     
     /**
      * @brief Set the name of this sequence.
      *
      * @param name The new name of the sequence.
      */
-    void setName(const string& name) { name_ = name; }
+    void setName(const std::string& name) { name_ = name; }
     
     /** @} */
     

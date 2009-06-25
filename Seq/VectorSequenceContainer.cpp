@@ -44,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/TextTools.h>
 
 using namespace bpp;
+using namespace std;
 
 /** Class constructors: *******************************************************/
 
