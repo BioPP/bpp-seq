@@ -159,13 +159,17 @@ GeneticCode* SequenceApplicationTools::getGeneticCode(
 AlphabetIndex2<double>* SequenceApplicationTools::getAADistance(const string& description)
   throw (Exception)
 {
-  AlphabetIndex2<double>* distance;
+  AlphabetIndex2<double>* distance=0;
   if (description == "BLOSUM50")
     distance = new BLOSUM50();
-  else if (description == "GranthamAAChemicalDistance")
+  else if (description == "GranthamAAChemicalDistance"){
     distance = new GranthamAAChemicalDistance();
-  else if (description == "MiyataAAChemicalDistance")
+    ((GranthamAAChemicalDistance*) distance)->setSymmetric(1);
+  }
+  else if (description == "MiyataAAChemicalDistance"){
     distance = new MiyataAAChemicalDistance();
+    ((MiyataAAChemicalDistance*)distance)->setSymmetric(1);    
+  }
   else
     throw Exception("Unknown AA distance: " + description);
   return distance;
