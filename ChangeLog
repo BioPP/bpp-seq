@@ -1,3 +1,6 @@
+26/06/09 Sylvain Gaillard
+* Added new SequencePositionIterators classes.
+
 23/06/09 Julien Dutheil
 * Actualization of the Container classes: now returns references and not
 pointer. Several code updates, including copy contructors.

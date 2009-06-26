@@ -78,6 +78,7 @@ SequenceContainerExceptions.h\
 SequenceContainer.h\
 SequenceContainerTools.h\
 SequenceExceptions.h\
+SequencePositionIterators.h\
 Sequence.h\
 SequenceTools.h\
 SiteContainerExceptions.h\
@@ -148,6 +149,7 @@ RNA.cpp\
 SequenceContainerTools.cpp\
 Sequence.cpp\
 SequenceExceptions.cpp\
+SequencePositionIterators.cpp\
 SequenceTools.cpp\
 SiteContainerExceptions.cpp\
 SiteContainerTools.cpp\
