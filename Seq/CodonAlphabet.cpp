@@ -54,13 +54,10 @@ const string CodonAlphabet::INIT = "Init";
 
 
 /****************************************************************************************/
+
 unsigned int CodonAlphabet::numberOfStopCodons() const
 {
-  unsigned int i, n=0;
-  for (i=0;i<getSize();i++)
-    if (isStop(i))
-      n++;
-  return n;
+  return stopCodons_.size();
 }
 
 int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const throw (BadIntException)

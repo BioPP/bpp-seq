@@ -62,6 +62,14 @@ namespace bpp
 class CodonAlphabet:
   public WordAlphabet
 {
+protected:
+  /*
+   *@brief the vector of the numbers of the stop codon states.
+   */
+
+  vector<int>  stopCodons_;
+
+
 public:
   //Constant used for stop codons:
   static const string STOP;
@@ -94,6 +102,12 @@ public:
    */
 
   unsigned int numberOfStopCodons() const;
+  
+  /**
+   * @brief Returns the vector of the numbers of the stop codon states.
+   */
+
+  const vector<int>&  stopCodons() const { return stopCodons_;}
   
   /**
    * @brief Get the int code for a codon given the int code of the three underlying positions.
