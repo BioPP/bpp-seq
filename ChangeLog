@@ -1,3 +1,7 @@
+07/07/07 Julien Dutheil
+* Updated GranthamAAChemicalDistance, with a new signed, non-symmetric,
+	option.
+
 26/06/09 Sylvain Gaillard
 * Added new SequencePositionIterators classes.
 

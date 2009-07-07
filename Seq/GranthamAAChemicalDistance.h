@@ -43,8 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // from the STL:
 #include <string>
 
-using namespace std;
-
 #include "AlphabetIndex2.h"
 #include "ProteicAlphabet.h"
 #include "AlphabetExceptions.h"
@@ -64,6 +62,34 @@ namespace bpp
  * Two kinds of matrix can be built:
  * - a symmetric one, with \f$I_{i,j} = I_{i,j}\f$,
  * - or a non-symmetric one, with \f$I_{i,j} = -I_{i,j}\f$.
+ * In the second case, which one of the two entries between \f$I_{i,j}\f$ and \f$I_{i,j}\f$ is positive is arbitrary by default.
+ * It is also possible to use the coordinate on a principal component analysis between the elementary propoerties of the distance instead (setPC1Sign(true)).
+ * The following R code was use in order to get those signs:
+ * @code
+ * library(seqinr)
+ * data(aaindex)
+ * data<-data.frame(composition=aaindex[["GRAR740101"]]$I,
+ *                     polarity=aaindex[["GRAR740102"]]$I,
+ *                       volume=aaindex[["GRAR740103"]]$I)
+ * library(ade4)
+ * pca<-dudi.pca(data)
+ *
+ * plot(pca$li[, 1:2], type="n")
+ * text(pca$li[, 1:2], rownames(data))
+ *
+ * s.corcircle(pca$co)
+ * layout(matrix(1:3,nrow=1))
+ * a1<-pca$li[,1]; names(a1)<-rownames(data); dotchart(sort(a1))
+ * a2<-pca$li[,2]; names(a2)<-rownames(data); dotchart(sort(a2))
+ * a3<-pca$li[,3]; names(a3)<-rownames(data); dotchart(sort(a3))
+ *
+ * x<-pca$li[,1] #Contains the coordinates on the first axis.
+ * m<-matrix(nrow=20, ncol=20)
+ * for(i in 1:length(x))
+ *   for(j in 1:length(x))
+ *     m[i,j]<-sign(x[j] - x[i])
+ *
+ * @endcode
  *   
  * Reference:
  * Grantham, R.
@@ -72,12 +98,14 @@ namespace bpp
  *
  * Data from AAIndex2 database, Accession Number GRAR740104.
  */
-class GranthamAAChemicalDistance: public AlphabetIndex2<double>
+class GranthamAAChemicalDistance :
+  public AlphabetIndex2<double>
 {
 	private:
-		RowMatrix<double> _distanceMatrix;
-		const ProteicAlphabet * _alpha;
-		bool _sym;
+		RowMatrix<double> distanceMatrix_;
+		RowMatrix<double> signMatrix_;
+		const ProteicAlphabet* alpha_;
+		short int sign_;
 
 	public:
 		GranthamAAChemicalDistance();
@@ -90,15 +118,27 @@ class GranthamAAChemicalDistance: public AlphabetIndex2<double>
 		 * @{
 		 */
 		double getIndex(int state1, int state2) const throw (BadIntException);
-		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
-		const Alphabet * getAlphabet() const { return _alpha; };
-		GranthamAAChemicalDistance * clone() const { return new GranthamAAChemicalDistance(); }
-		Matrix<double> * getIndexMatrix() const;
+		double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException);
+		const Alphabet* getAlphabet() const { return alpha_; };
+		GranthamAAChemicalDistance* clone() const { return new GranthamAAChemicalDistance(); }
+		Matrix<double>* getIndexMatrix() const;
 		/** @} */
 
 	public:
-		void setSymmetric(bool yn) { _sym = yn; }
-		bool isSymmetric() const { return _sym; }
+		void setSymmetric(bool yn) { sign_ = (yn ? SIGN_NONE : SIGN_ARBITRARY); }
+		bool isSymmetric() const { return sign_ == SIGN_NONE; }
+    /**
+     * @brief The sign of the distance is computed using the coordinate on the first axis
+     * of a principal component analysis with the 3 elementary properties (Volume, Polarity, Composition).
+     * Otherwise, use the default arbitrary sign. Using this option will lead isSymmetric to return false.
+     *
+     * @param yn Tell is the PC1-based sign should be used instead of the arbitrary one.
+     */
+    void setPC1Sign(bool yn) { sign_ = (yn ? SIGN_PC1 : SIGN_ARBITRARY); }
+
+    static short int SIGN_ARBITRARY;
+    static short int SIGN_PC1;
+    static short int SIGN_NONE;
 
 };
 

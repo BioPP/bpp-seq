@@ -43,49 +43,66 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 #include "GranthamAAChemicalDistance.h"
+#include "AlphabetTools.h"
 
 //From NumCalc:
 #include <NumCalc/NumTools.h>
 
 using namespace bpp;
 
+short int GranthamAAChemicalDistance::SIGN_NONE = 0;
+short int GranthamAAChemicalDistance::SIGN_ARBITRARY = 1;
+short int GranthamAAChemicalDistance::SIGN_PC1 = 2;
+
 GranthamAAChemicalDistance::GranthamAAChemicalDistance()
 {
 	// Build the alphabet:
-	_alpha = new ProteicAlphabet();
+	alpha_ = &AlphabetTools::PROTEIN_ALPHABET;
 	
 	// Load the matrix:
-	_distanceMatrix.resize(20, 20);
+	distanceMatrix_.resize(20, 20);
+	signMatrix_.resize(20, 20);
 	#include "__GranthamMatrixCode"
 }
-GranthamAAChemicalDistance::~GranthamAAChemicalDistance() { delete _alpha; }
+GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
 
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const 
 throw (BadIntException)
 {
-	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", _alpha);
-	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", _alpha);
-	double d = _distanceMatrix(state1, state2);
-	return _sym ? NumTools::abs<double>(d) : d;
+	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", alpha_);
+	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", alpha_);
+	double d = distanceMatrix_(state1, state2);
+  if (sign_ == SIGN_NONE) return NumTools::abs<double>(d);
+  if (sign_ == SIGN_PC1) return signMatrix_(state1, state2) * NumTools::abs<double>(d);
+  return d;
 }
 
-double GranthamAAChemicalDistance::getIndex(const string & state1, const string & state2) const
+double GranthamAAChemicalDistance::getIndex(const string& state1, const string& state2) const
 throw (BadCharException)
 {
-	double d = _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
-	return _sym ? NumTools::abs(d) : d;
+	return getIndex(alpha_->charToInt(state1), alpha_->charToInt(state2));
 }
 
-Matrix<double> * GranthamAAChemicalDistance::getIndexMatrix() const
+Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const
 {
-	RowMatrix<double> * m = new RowMatrix<double>(_distanceMatrix);
-	if(_sym)
+	RowMatrix<double>* m = new RowMatrix<double>(distanceMatrix_);
+	if(sign_ == SIGN_NONE)
   {
 		for(unsigned int i = 0; i < 20; i++)
     {
 			for(unsigned int j = 0; j < 20; j++)
       {
-				(* m)(i,j) = NumTools::abs<double>((*m)(i,j));
+				(* m)(i, j) = NumTools::abs<double>((*m)(i, j));
+			}
+		}
+	}
+  else if(sign_ == SIGN_PC1)
+  {
+		for(unsigned int i = 0; i < 20; i++)
+    {
+			for(unsigned int j = 0; j < 20; j++)
+      {
+				(* m)(i, j) = signMatrix_(i, j) * NumTools::abs<double>((*m)(i, j));
 			}
 		}
 	}
