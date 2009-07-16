@@ -53,11 +53,12 @@ namespace bpp
 
 /**
  * @brief The abstract base class for codon alphabets.
+ * @author Laurent Guéguen
  * 
  * Since codons are made of 3 nucleic bases (RNA or DNA), this class
  * has a NucleicAlphabet field used to check char description. This
  * nucleic alphabet is passed to the constructor. This class also adds
- * some util specific to codon manipulation.
+ * some methods specific to codon manipulation.
  */
 class CodonAlphabet:
   public WordAlphabet

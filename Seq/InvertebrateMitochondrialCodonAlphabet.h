@@ -48,6 +48,7 @@ namespace bpp
 
 /**
  * @brief This class implements the Invertebrate
+ * @author Laurent Guéguen
  *
  * Mitochondrial codon alphabet as describe on the NCBI website:
  * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG5

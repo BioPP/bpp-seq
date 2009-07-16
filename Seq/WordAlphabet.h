@@ -55,6 +55,7 @@ namespace bpp
 
 /**
  * @brief The abstract base class for word alphabets.
+ * @author Laurent Guéguen
  * 
  * These alphabets are compounds of several alphabets. The only
  * constraint on these alphabets is that their words have length one
@@ -99,15 +100,26 @@ public:
    *
    * @{
    */
-  string getName(const string & state) const throw (BadCharException);
+  
+  /**
+   * @brief Get the complete name of a state given its string description.
+   *
+   * In case of undefined characters (i.e. N and X for nucleic alphabets),
+   * this method will return the name of the undefined word.
+   *
+   * @param state The string description of the given state.
+   * @return The name of the state.
+   * @throw BadCharException When state is not a valid char description.
+   */
+string getName(const string & state) const throw (BadCharException);
   int charToInt(const string & state) const throw (BadCharException);
   unsigned int getSize() const;
   
   /** @} */
 
   /**
-   * @brief Returns is the letters Alphabet in the word are the same
-   * type
+   * @brief Returns true if the letters Alphabets in the word share the
+   * same type.
    * 
    */
   
@@ -217,7 +229,9 @@ public:
   virtual vector<string> getPositions(const string& word) const throw (BadCharException);
 
   /**
-   * @brief Translate a whole sequence from letters alphabet to words alphabet.
+   * @brief Translate a whole sequence from letters alphabet to words
+   * alphabet. If the length of the sequence is not a multiple of the
+   * word length, remaining letters are forgotten.
    *
    * @param sequence A sequence in letters alphabet.
    * @param pos the start postion (default 0)

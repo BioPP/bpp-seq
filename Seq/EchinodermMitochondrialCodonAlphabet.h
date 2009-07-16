@@ -50,6 +50,7 @@ namespace bpp
  * @brief This class implements the Echinoderm and Faltworms
  * Mitochondrial codon alphabet as describe on the NCBI website:
  * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG9
+ * @author Laurent Guéguen
  */
 
 class EchinodermMitochondrialCodonAlphabet : public CodonAlphabet

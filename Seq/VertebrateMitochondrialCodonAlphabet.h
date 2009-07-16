@@ -48,6 +48,7 @@ namespace bpp
 /**
  * @brief This class implements the vertebrate mitochondrial codon alphabet as describe on the NCBI 
  *        web site: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG2
+ * @author Laurent Guéguen
  */
 
 class VertebrateMitochondrialCodonAlphabet : public CodonAlphabet
