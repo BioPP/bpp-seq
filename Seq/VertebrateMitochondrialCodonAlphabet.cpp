@@ -58,6 +58,7 @@ VertebrateMitochondrialCodonAlphabet::VertebrateMitochondrialCodonAlphabet(const
   unsigned int j;
   for (unsigned int i=0; i<vstop.size();i++){
     istop=charToInt(vstop[i]);
+    stopCodons_.push_back(istop);
           
     j=0;
     while (j<alphabet.size()){
