@@ -177,9 +177,10 @@ double SequenceTools::getPercentIdentity(const Sequence & seq1, const Sequence &
 unsigned int SequenceTools::getNumberOfSites(const Sequence & seq)
 {
 	unsigned int count = 0;
+  const Alphabet * alpha = seq.getAlphabet();
 	for(unsigned int i = 0; i < seq.size(); i++)
   {
-		if(seq[i] > -1) count++;
+		if(! alpha->isGap(seq[i])) count++;
 	}
 	return count;
 }
@@ -189,21 +190,34 @@ unsigned int SequenceTools::getNumberOfSites(const Sequence & seq)
 unsigned int SequenceTools::getNumberOfCompleteSites(const Sequence & seq)
 {
 	unsigned int count = 0;
+  const Alphabet * alpha = seq.getAlphabet();
 	for(unsigned int i = 0; i < seq.size(); i++)
   {
-		if(seq[i] > -1 && seq[i] < (int)seq.getAlphabet()->getSize()) count++;
+		if(! alpha->isGap(seq[i]) && ! alpha->isUnresolved(seq[i])) count++;
 	}
 	return count;
 }
 
 /****************************************************************************************/
+unsigned int SequenceTools::getNumberOfUnresolvedSites(const Sequence & seq)
+{
+  unsigned int count = 0;
+  const Alphabet * alpha = seq.getAlphabet();
+  for (unsigned int i = 0 ; i < seq.size() ; i++) {
+    if (alpha->isUnresolved(seq[i]))
+      count++;
+  }
+  return count;
+}
+/****************************************************************************************/
 
 Sequence * SequenceTools::removeGaps(const Sequence & seq)
 {
 	vector<int> content;
+  const Alphabet * alpha = seq.getAlphabet();
   for(unsigned int i = 0; i < seq.size(); i++)
   {
-		if(seq[i] > -1) content.push_back(seq[i]);
+		if(! alpha->isGap(seq[i])) content.push_back(seq[i]);
 	}
   Sequence * newSeq = dynamic_cast<Sequence *>(seq.clone());
   newSeq->setContent(content);

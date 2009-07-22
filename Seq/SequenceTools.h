@@ -220,6 +220,15 @@ class SequenceTools:
 		static unsigned int getNumberOfCompleteSites(const Sequence & seq);
 
     /**
+     * @return The number of unresolved sites in the sequence.
+     *
+     * @param seq The sequence to analyse.
+     *
+     * @author Sylvain Gaillard
+     */
+    static unsigned int getNumberOfUnresolvedSites(const Sequence & seq);
+
+    /**
      * @brief Remove gaps from a sequence.
      *
 		 * @param seq The sequence to analyse.
