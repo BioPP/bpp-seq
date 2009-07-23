@@ -45,12 +45,14 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From NumCalc:
 #include <NumCalc/Matrix.h>
+#include <NumCalc/VectorTools.h>
 
 using namespace bpp;
 
 // From the STL:
 #include <ctype.h>
 #include <cmath>
+#include <list>
 #include <iostream>
 
 using namespace std;
@@ -273,6 +275,46 @@ BowkerTest* SequenceTools::bowkerTest(const Sequence & seq1, const Sequence & se
   test->setStatistic(sb2);
   test->setPValue(pvalue);
   return test;
+}
+
+/****************************************************************************************/
+
+
+void SequenceTools::getPutativeHaplotypes(const Sequence & seq, std::vector<Sequence *> & hap, unsigned int level)
+{
+  vector< vector < int > > states(seq.size());
+  list<Sequence *> t_hap;
+  const Alphabet * alpha = seq.getAlphabet();
+  unsigned int hap_count = 1;
+  // Vector of available states at each position
+  for (unsigned int i = 0 ; i < seq.size() ; i++) {
+    vector<int> st = alpha->getAlias(seq[i]);
+    if (st.size() <= level) {
+      states[i] = st;
+    } else {
+      states[i] = vector <int> (1, seq[i]);
+    }
+  }
+  // Combinatorial haplotypes building (the use of tree may be more accurate)
+  t_hap.push_back(new Sequence(seq.getName() + "_hap" + TextTools::toString(hap_count++), "", alpha));
+  for (unsigned int i = 0 ; i < states.size() ; i++) {
+    for (list<Sequence *>::iterator it = t_hap.begin() ; it != t_hap.end() ; it++) {
+      for (unsigned int j = 0 ; j < states[i].size() ; j++) {
+        Sequence * tmp_seq = new Sequence(seq.getName() + "_hap", (** it).getContent(), alpha);
+        if (j < states[i].size() - 1) {
+          tmp_seq->setName(tmp_seq->getName() + TextTools::toString(hap_count++));
+          tmp_seq->addElement(states[i][j]);
+          t_hap.insert(it, tmp_seq);
+        }
+        else {
+          (** it).addElement(states[i][j]);
+        }
+      }
+    }
+  }
+  for (list<Sequence *>::reverse_iterator it = t_hap.rbegin() ; it != t_hap.rend() ; it++) {
+    hap.push_back(* it);
+  }
 }
 
 /****************************************************************************************/

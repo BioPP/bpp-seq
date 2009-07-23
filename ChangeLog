@@ -1,4 +1,7 @@
-22/07/09Sylvain Gaillard
+23/07/09 Sylvain Gaillard
+* Added SequenceTools::getPutativeHaplotypes
+
+22/07/09 Sylvain Gaillard
 * Added SequenceTools::getNumberOfUnresolvedSites
 * Updated SequenceTools::getNumberOfSites,
 	SequenceTools::getNumberOfCompleteSites and SequenceTools::removeGaps to be

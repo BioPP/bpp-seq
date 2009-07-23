@@ -254,6 +254,20 @@ class SequenceTools:
     static BowkerTest* bowkerTest(const Sequence & seq1, const Sequence & seq2) throw (SequenceNotAlignedException);
 
     /**
+     * @brief Get all putatives haplotypes from an heterozygous sequence.
+     *
+     * @param seq The sequence to resolve
+     * @param hap The vector to fill with the new sequences
+     * @param level The maximum number of states that a generic char must code
+     * (if this number is higher than level, the state will not be resolved).
+     * For instance if level = 3 and Alphabet is DNA, all generic char will be
+     * resolved but N.
+     *
+     * @author Sylvain Gaillard
+     */
+    static void getPutativeHaplotypes(const Sequence & seq, std::vector<Sequence *> & hap, unsigned int level = 2);
+
+    /**
      * @brief Subtract haplotype from an heterozygous sequence.
      *
      * Subtract an haplotype (i.e. a fully resolved sequence) from an heterozygous
@@ -275,6 +289,8 @@ class SequenceTools:
      * @param name The name of the new computed haplotype.
      * @param level The number of states from which the site is set to fully unresolved.
      * @throw SequenceNotAlignedException if s and h don't have the same size.
+     *
+     * @author Sylvain Gaillard
      */
     static Sequence * subtractHaplotype(const Sequence & s, const Sequence & h, string name = "", unsigned int level = 1) throw (SequenceNotAlignedException);
     
