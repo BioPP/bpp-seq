@@ -126,9 +126,9 @@ class SymbolList:
 		 * @{
 		 */
 #ifndef NO_VIRTUAL_COV
-		SymbolList*
-#else
 		Clonable*
+#else
+		SymbolList*
 #endif
 		clone() const { return new SymbolList(* this); }
 		/** @} */
