@@ -60,7 +60,7 @@ namespace bpp {
       virtual ~ProteicAlphabetState() {}
 
     public:
-      ProteicAlphabetState * clone() {
+      ProteicAlphabetState * clone() const {
         return new ProteicAlphabetState(* this);
       }
       /**
