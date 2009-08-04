@@ -289,6 +289,9 @@ void SequenceTools::getPutativeHaplotypes(const Sequence & seq, std::vector<Sequ
   // Vector of available states at each position
   for (unsigned int i = 0 ; i < seq.size() ; i++) {
     vector<int> st = alpha->getAlias(seq[i]);
+    if (!st.size()) {
+      st.push_back(alpha->getGapCharacterCode());
+    }
     if (st.size() <= level) {
       states[i] = st;
     } else {
