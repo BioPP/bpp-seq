@@ -79,7 +79,7 @@ void PhredPhd::appendFromStream(istream & input, VectorSequenceContainer & vsc) 
             getline(input, temp, '\n');
             StringTokenizer st3(temp, " ");
             if (st3.hasMoreToken()) {
-              flag = st3.getToken(0);
+              flag = TextTools::toUpper(st3.getToken(0));
               if (alpha->isCharInAlphabet(flag) && st3.numberOfRemainingTokens() == 3) {
                 sequence += flag;
                 q.push_back(TextTools::toInt(st3.getToken(1)));
