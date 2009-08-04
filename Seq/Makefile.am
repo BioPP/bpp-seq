@@ -38,6 +38,7 @@ AbstractSequenceContainer.h\
 AlignedSequenceContainer.h\
 AlphabetExceptions.h\
 Alphabet.h\
+AlphabetState.h\
 AlphabetIndex1.h\
 AlphabetIndex2.h\
 alphabets\
@@ -68,11 +69,13 @@ MapSequenceContainer.h\
 Mase.h\
 MaseTools.h\
 NucleicAlphabet.h\
+NucleicAlphabetState.h\
 NucleicAcidsReplication.h\
 OrderedSequenceContainer.h\
 OSequence.h\
 Phylip.h\
 ProteicAlphabet.h\
+ProteicAlphabetState.h\
 RNA.h\
 SequenceContainerExceptions.h\
 SequenceContainer.h\

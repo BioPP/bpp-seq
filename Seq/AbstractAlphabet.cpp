@@ -1,7 +1,8 @@
 //
 // File: AbstractAlphabet.cpp
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Tue Jul 22 2003
 //
 
@@ -52,86 +53,147 @@ using namespace bpp;
 
 using namespace std;
 
-/****************************************************************************************/
+/******************************************************************************/
 
-string AbstractAlphabet::getName(const string & state) const throw (BadCharException)
-{
-	string LETTER = TextTools::toUpper(state);
-	for(vector<sletter>::const_iterator i = alphabet.begin(); i < alphabet.end(); i++)
-    if(i->letter == LETTER) return i->name;
-  throw BadCharException(state, "AbstractAlphabet::getName(string): Specified base unknown", this);
+void AbstractAlphabet::updateMaps_(int pos, const AlphabetState& st) {
+  if (letters_.find(st.getLetter()) == letters_.end())
+    letters_[st.getLetter()] = pos;
+  if (nums_.find(st.getNum()) == nums_.end())
+    nums_[st.getNum()] = pos;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
+
+void AbstractAlphabet::registerState(const AlphabetState& st) {
+  // Add the state to the vector
+  alphabet_.push_back(st.clone());
+  // Update the maps
+  updateMaps_(alphabet_.size(), st);
+}
+
+/******************************************************************************/
+
+void AbstractAlphabet::setState(unsigned int pos, const AlphabetState& st)
+  throw (IndexOutOfBoundsException) {
+    if (pos > alphabet_.size())
+      throw IndexOutOfBoundsException("AbstractAlphabet::setState: incorect position", pos, 0, alphabet_.size());
+    // Delete the state if not empty
+    if (alphabet_[pos] != 0)
+      delete alphabet_[pos];
+    // Put the state in the vector
+    alphabet_[pos] = st.clone();
+    // Update the maps
+    updateMaps_(pos, st);
+  }
+
+/******************************************************************************/
+
+const AlphabetState& AbstractAlphabet::getState(const string& letter) const throw (BadCharException) {
+  map<string, unsigned int>::const_iterator it = letters_.find(letter);
+  if (it == letters_.end())
+    throw BadCharException(letter, "AbstractAlphabet::getState(string): Specified base unknown", this);
+  return * (alphabet_[it->second]);
+}
+
+/******************************************************************************/
+
+const AlphabetState& AbstractAlphabet::getState(int num) const throw (BadIntException) {
+  map<int, unsigned int>::const_iterator it = nums_.find(num);
+  if (it == nums_.end())
+    throw BadIntException(num, "AbstractAlphabet::getState(int): Specified base unknown", this);
+  return * (alphabet_[it->second]);
+}
+
+/******************************************************************************/
+
+AlphabetState& AbstractAlphabet::getStateAt(unsigned int pos) throw (IndexOutOfBoundsException) {
+  if (pos > alphabet_.size())
+    throw IndexOutOfBoundsException("AbstractAlphabet::getStateAt: incorect position", pos, 0, alphabet_.size());
+  return * (alphabet_[pos]);
+}
+
+/******************************************************************************/
+
+const AlphabetState& AbstractAlphabet::getStateAt(unsigned int pos) const throw (IndexOutOfBoundsException) {
+  if (pos > alphabet_.size())
+    throw IndexOutOfBoundsException("AbstractAlphabet::getStateAt: incorect position", pos, 0, alphabet_.size());
+  return * (alphabet_[pos]);
+}
+
+/******************************************************************************/
+
+string AbstractAlphabet::getName(const string& state) const throw (BadCharException)
+{
+  string LETTER = TextTools::toUpper(state);
+  return (getState(state)).getName();
+}
+
+/******************************************************************************/
 
 string AbstractAlphabet::getName(int state) const throw (BadIntException)
 {
-  for(unsigned int i = 0; i < alphabet.size(); i++)
-    if(alphabet[i].num == state) return alphabet[i].name;
-  throw BadIntException(state, "AbstractAlphabet::getName(int): Specified base unknown", this);
+  return (getState(state)).getName();
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-int AbstractAlphabet::charToInt(const string & state) const throw (BadCharException)
+int AbstractAlphabet::charToInt(const string& state) const throw (BadCharException)
 {
   string LETTER = TextTools::toUpper(state);
-  for (unsigned int i = 0; i < alphabet.size(); i++)
-    if (alphabet[i].letter == LETTER) return alphabet[i].num;
-  throw BadCharException(state, "AbstractAlphabet::charToInt: Specified base unknown", this);
+  return (getState(state)).getNum();
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 string AbstractAlphabet::intToChar(int state) const throw (BadIntException)
 {
-  for (unsigned int i = 0; i < alphabet.size(); i++)
-    if (alphabet[i].num == state) return alphabet[i].letter;
-  throw BadIntException(state, "AbstractAlphabet::intToChar: Specified base unknown", this);
+  return (getState(state)).getLetter();
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 bool AbstractAlphabet::isIntInAlphabet(int state) const
 {
-  for (unsigned int i = 0; i < alphabet.size(); i++)
-    if (alphabet[i].num == state) return true;
-	return false;
+  map<int, unsigned int>::const_iterator it = nums_.find(state);
+  if (it != nums_.end())
+    return true;
+  return false;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-bool AbstractAlphabet::isCharInAlphabet(const string & state) const
+bool AbstractAlphabet::isCharInAlphabet(const string& state) const
 {
   string C = TextTools::toUpper(state);
-  for (unsigned int i = 0; i < alphabet.size(); i++)
-    if (alphabet[i].letter == C) return true;
-	return false;
+  map<string, unsigned int>::const_iterator it = letters_.find(state);
+  if (it != letters_.end())
+    return true;
+  return false;
 }	
 
-/****************************************************************************************/
+/******************************************************************************/
 
 vector<int> AbstractAlphabet::getAlias(int state) const throw (BadIntException) 
 {
-	if(!isIntInAlphabet(state)) throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");
-	vector<int> v(1);
-	v[0] = state;
-	return v;
+  if(!isIntInAlphabet(state)) throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");
+  vector<int> v(1);
+  v[0] = state;
+  return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-vector<string> AbstractAlphabet::getAlias(const string & state) const throw (BadCharException) 
+vector<string> AbstractAlphabet::getAlias(const string& state) const throw (BadCharException) 
 {
-	if(!isCharInAlphabet(state)) throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.");
-	vector<string> v(1);
-	v[0] = state;
-	return v;
+  if(!isCharInAlphabet(state)) throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.");
+  vector<string> v(1);
+  v[0] = state;
+  return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-int AbstractAlphabet::getGeneric(const vector<int> & states) const throw (BadIntException) {
+int AbstractAlphabet::getGeneric(const vector<int>& states) const throw (BadIntException) {
   map<int, int> m;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
     vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
@@ -155,14 +217,14 @@ int AbstractAlphabet::getGeneric(const vector<int> & states) const throw (BadInt
   return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-string AbstractAlphabet::getGeneric(const vector<string> & states) const throw (AlphabetException) {
+string AbstractAlphabet::getGeneric(const vector<string>& states) const throw (AlphabetException) {
   map <string, int> m;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
     vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
     for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
-       m[tmp_s[j]] ++; // add each state to the list
+      m[tmp_s[j]] ++; // add each state to the list
     }
   }
   vector<string> ve = MapTools::getKeys(m);
@@ -181,39 +243,39 @@ string AbstractAlphabet::getGeneric(const vector<string> & states) const throw (
   return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-const vector<int> & AbstractAlphabet::getSupportedInts() const
+const vector<int>& AbstractAlphabet::getSupportedInts() const
 {
-  if(_intList.size() == 0)
+  if(intList_.size() == 0)
   {
-    _intList.resize(alphabet.size());
-    _charList.resize(alphabet.size());
-    for(unsigned int i = 0; i < alphabet.size(); i++)
+    intList_.resize(alphabet_.size());
+    charList_.resize(alphabet_.size());
+    for(unsigned int i = 0; i < alphabet_.size(); i++)
     {
-      _intList[i]  = alphabet[i].num;
-      _charList[i] = alphabet[i].letter;
+      intList_[i]  = alphabet_[i]->getNum();
+      charList_[i] = alphabet_[i]->getLetter();
     }
   }
-  return _intList;
+  return intList_;
 }
-    
-/****************************************************************************************/
-    
-const vector<string> & AbstractAlphabet::getSupportedChars() const
+
+/******************************************************************************/
+
+const vector<string>& AbstractAlphabet::getSupportedChars() const
 {
-  if(_charList.size() == 0)
+  if(charList_.size() == 0)
   {
-    _intList.resize(alphabet.size());
-    _charList.resize(alphabet.size());
-    for(unsigned int i = 0; i < alphabet.size(); i++)
+    intList_.resize(alphabet_.size());
+    charList_.resize(alphabet_.size());
+    for(unsigned int i = 0; i < alphabet_.size(); i++)
     {
-      _intList[i]  = alphabet[i].num;
-      _charList[i] = alphabet[i].letter;
+      intList_[i]  = alphabet_[i]->getNum();
+      charList_[i] = alphabet_[i]->getLetter();
     }
   }
-  return _charList;
+  return charList_;
 }
- 
-/****************************************************************************************/
+
+/******************************************************************************/
 

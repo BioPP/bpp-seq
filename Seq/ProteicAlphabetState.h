@@ -1,13 +1,11 @@
-//
-// File: RNA.h
-// Created by: Guillaume Deuchst
-// Created on: Tue Jul 22 2003
-//
+// 
+// File:    ProteicAlphabetState.h
+// Author:  Sylvain Gaillard
+// Created: 29/07/2009 13:56:01
+// 
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
+Copyright or Â© or Copr. CNRS, (July 29, 2009)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -39,41 +37,46 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _RNA_H_
-#define _RNA_H_
+#ifndef _PROTEICALPHABETSTATE_H_
+#define _PROTEICALPHABETSTATE_H_
 
-#include "NucleicAlphabet.h"
-
-//From the STL:
+// From the STL
 #include <string>
 
-namespace bpp
-{
+namespace bpp {
+  /**
+   * @brief This is the base class to describe states in a ProteicAlphabet.
+   *
+   * @author Sylvain Gaillard
+   */
+  class ProteicAlphabetState: public AlphabetState {
+    private:
+      std::string abbr_;
 
-/**
- * @brief This alphabet is used to deal with RNA sequences.
- *
- * It supports all 4 nucleotides (A, U, G and C) with their standard denomination.
- * Gaps are coded by '-', unresolved characters are coded by 'X, N, O, 0 or ?'.
- * Extensive support for generic characters (e.g. 'P', 'Y', etc.) is provided.
- */
-class RNA:
-  public NucleicAlphabet
-{
-	public:
-		// Class constructor
-		RNA();
-		// Class destructor
-		~RNA() {}
+    public:
+      ProteicAlphabetState(int num, const std::string & letter, const std::string & abbr, const std::string & name): AlphabetState(num, letter, name), abbr_(abbr) {}
 
-	public:
-    std::vector<int> getAlias(int state) const throw (BadIntException);
-    std::vector<std::string> getAlias(const std::string & state) const throw (BadCharException);
-    int getGeneric(const std::vector<int> & states) const throw (BadIntException);
-    std::string getGeneric(const std::vector<std::string> & states) const throw (BadCharException);
-    std::string getAlphabetType() const { return "RNA alphabet"; }
-};
+      // Class destructor
+      virtual ~ProteicAlphabetState() {}
 
-} //end of namespace bpp.
+    public:
+      ProteicAlphabetState * clone() {
+        return new ProteicAlphabetState(* this);
+      }
+      /**
+       * @brief Get the state's abbreviation.
+       *
+       * @return The state's abbreviation.
+       */
+      const std::string & getAbbreviation() const { return abbr_; }
+      /**
+       * @brief Set the state's abbreviation.
+       *
+       * @param abbr The state's abbreviation.
+       */
+      void setAbbreviation(const std::string & abbr) { abbr_ = abbr; }
+  };
+}
 
-#endif // _RNA_H_
+#endif // _PROTEICALPHABETSTATE_H_
+

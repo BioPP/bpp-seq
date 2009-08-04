@@ -45,7 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From the STL:
 #include <string>
-using namespace std;
+#include <vector>
 
 namespace bpp
 {
@@ -65,11 +65,11 @@ class DNA:
 		virtual ~DNA() {}
 	
 	public:
-		vector<int   > getAlias(      int      state) const throw (BadIntException);
-		vector<string> getAlias(const string & state) const throw (BadCharException);
-    int    getGeneric(const vector<int   > & states) const throw (BadIntException);
-    string getGeneric(const vector<string> & states) const throw (BadCharException);
-		string getAlphabetType() const { return "DNA alphabet"; }
+    std::vector<int> getAlias(int state) const throw (BadIntException);
+    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+    int getGeneric(const std::vector<int>& states) const throw (BadIntException);
+    std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
+    std::string getAlphabetType() const { return "DNA alphabet"; }
 };
 
 } //end of namespace bpp.

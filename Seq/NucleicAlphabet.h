@@ -1,7 +1,7 @@
 //
 // File: NucleicAlphabet.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
 // Created on: Tue Jul 22 2003
 //
 
@@ -42,12 +42,16 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _NUCLEICALPHABET_H_
 
 #include "AbstractAlphabet.h"
+#include "NucleicAlphabetState.h"
+
+#include <map>
+#include <iostream>
 
 namespace bpp
 {
 
 /**
- * @brief The abstract base class foc nucleic alphabets.
+ * @brief The abstract base class for nucleic alphabets.
  *
  * This class only implements a few methods, it is mainly designed for methods/classes
  * that will require to work with both RNA and DNA.
@@ -55,6 +59,69 @@ namespace bpp
 class NucleicAlphabet :
   public AbstractAlphabet
 {
+  private:
+    std::map<char, unsigned int> binCodes_;
+    void updateMaps_(int pos, const NucleicAlphabetState& st) {
+      if (binCodes_.find(st.getBinaryCode()) == binCodes_.end())
+        binCodes_[st.getBinaryCode()] = pos;
+    }
+
+    /**
+     * @name Overloaded methods from AbstractAlphabet
+     * @{
+     */
+  protected:
+    void registerState(const NucleicAlphabetState& st) {
+      AbstractAlphabet::registerState(st);
+      updateMaps_(getNumberOfChars(), st);
+    }
+    void setState(unsigned int pos, const NucleicAlphabetState& st) {
+      AbstractAlphabet::setState(pos, st);
+      updateMaps_(pos, st);
+    }
+    const NucleicAlphabetState& getStateAt(unsigned int pos) const
+      throw (IndexOutOfBoundsException) {
+        return dynamic_cast<const NucleicAlphabetState&>(
+            AbstractAlphabet::getStateAt(pos)
+            );
+      }
+    NucleicAlphabetState& getStateAt(unsigned int pos)
+      throw (IndexOutOfBoundsException) {
+        return dynamic_cast<NucleicAlphabetState&>(
+            AbstractAlphabet::getStateAt(pos)
+            );
+      }
+    /** @} */
+    /**
+     * @name Overloaded methods from AbstractAlphabet
+     * @{
+     */
+  public:
+    const NucleicAlphabetState& getState(const std::string& letter) const
+      throw (BadCharException) {
+        return dynamic_cast<const NucleicAlphabetState&>(
+            AbstractAlphabet::getState(letter)
+            );
+      }
+    const NucleicAlphabetState& getState(int num) const
+      throw (BadIntException) {
+        return dynamic_cast<const NucleicAlphabetState&>(
+            AbstractAlphabet::getState(num)
+            );
+      }
+    /** @} */
+    /**
+     * @name Specific methods
+     * @{
+     */
+    const NucleicAlphabetState& getStateByBinCode(char code) const
+      throw (BadIntException) {
+        std::map<char, unsigned int>::const_iterator it = binCodes_.find(code);
+      if (it == binCodes_.end())
+        throw BadIntException(code, "NucleicAlphabet::getState(char): Binary code not in alphabet", this);
+      return getStateAt(it->second);
+    }
+    /** @} */
 	public:
 	  NucleicAlphabet() {}
 		virtual ~NucleicAlphabet() {}
@@ -69,7 +136,7 @@ class NucleicAlphabet :
     int getUnknownCharacterCode() const { return 14; }
 
     bool isUnresolved(int state) const { return state > 3; }
-    bool isUnresolved(const string & state) const { return charToInt(state) > 3; }
+    bool isUnresolved(const string& state) const { return charToInt(state) > 3; }
     
 };
 

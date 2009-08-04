@@ -1,6 +1,6 @@
 //
 // File: DefaultAlphabet.h
-// Created by: Julien Dutheil
+// Author: Julien Dutheil
 //
 
 /*
@@ -51,9 +51,12 @@ namespace bpp
  * This should be used by who does not care of the sequence type.
  */
 class DefaultAlphabet:
-  public AbstractAlphabet
+  public virtual AbstractAlphabet
 {
 	protected:
+    void registerState(const AlphabetState& st) {
+      AbstractAlphabet::registerState(* (st.clone()));
+    }
 		const string _chars;
 		
 	public:
@@ -69,7 +72,7 @@ class DefaultAlphabet:
 		string getAlphabetType() const { return "Default alphabet"; }
     int getUnknownCharacterCode() const { return 38; }
     bool isUnresolved(int state) const { return state == 38; }
-    bool isUnresolved(const string & state) const { return false; }
+    bool isUnresolved(const string& state) const { return false; }
  };
 
 } //end of namespace bpp.

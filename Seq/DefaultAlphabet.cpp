@@ -1,6 +1,7 @@
 //
 // File: DefaultAlphabet.cpp
-// Created by: Julien Dutheil
+// Authors: Julien Dutheil
+//          Sylvain Gaillard
 // Created on: 2005
 //
 
@@ -39,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 
 #include "DefaultAlphabet.h"
+#include "AlphabetState.h"
 
 // From Utils:
 #include <Utils/TextTools.h>
@@ -49,20 +51,14 @@ DefaultAlphabet::DefaultAlphabet():
   _chars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
 {
 	// Alphabet size definition
-	alphabet.resize(_chars.size() + 1);
+	resize(_chars.size() + 1);
 
 	// Alphabet content definition
-	alphabet[0].num = -1;
-	alphabet[0].letter = "-";
-	alphabet[0].abbr = "GAP";
-	alphabet[0].name = "Gap";
+  setState(0, AlphabetState(-1, "-", "Gap"));
 
 	for(unsigned int i = 0; i < _chars.size(); i++)
   {
-		alphabet[i+1].num = i;
-		alphabet[i+1].letter = TextTools::toString(_chars[i]);
-		alphabet[i+1].abbr = "";
-		alphabet[i+1].name = "";
+    setState(i+1, AlphabetState(i, TextTools::toString(_chars[i]), ""));
 	}
 }
 

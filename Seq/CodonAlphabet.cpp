@@ -53,14 +53,15 @@ const string CodonAlphabet::STOP = "Stop";
 const string CodonAlphabet::INIT = "Init";
 
 
-/****************************************************************************************/
+/******************************************************************************/
 
 unsigned int CodonAlphabet::numberOfStopCodons() const
 {
   return stopCodons_.size();
 }
 
-int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const throw (BadIntException)
+int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const
+throw (BadIntException)
 {
   vector<int> vint;
   vint.push_back(pos1);
@@ -70,9 +71,10 @@ int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const throw (BadIntExc
   return getWord(vint);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-string CodonAlphabet::getCodon(const string & pos1, const string & pos2, const string & pos3) const throw (BadCharException)
+string CodonAlphabet::getCodon(const string & pos1, const string & pos2, const string & pos3) const
+throw (BadCharException)
 {
   vector<string> vint;
   vint.push_back(pos1);
@@ -82,44 +84,47 @@ string CodonAlphabet::getCodon(const string & pos1, const string & pos2, const s
   return getWord(vint);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 int CodonAlphabet::getFirstPosition (int codon) const throw (BadIntException)
 {
   return getNPosition(codon,0);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 int CodonAlphabet::getSecondPosition(int codon) const throw (BadIntException)
 {
   return getNPosition(codon,1);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 int CodonAlphabet::getThirdPosition (int codon) const throw (BadIntException)
 {
   return getNPosition(codon,2);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-string CodonAlphabet::getFirstPosition (const string & codon) const throw (BadCharException)
+string CodonAlphabet::getFirstPosition (const string & codon) const
+throw (BadCharException)
 {
   return getNPosition(codon,0);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-string CodonAlphabet::getSecondPosition(const string & codon) const throw (BadCharException)
+string CodonAlphabet::getSecondPosition(const string & codon) const
+throw (BadCharException)
 {
   return getNPosition(codon,1);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-string CodonAlphabet::getThirdPosition (const string & codon) const throw (BadCharException)
+string CodonAlphabet::getThirdPosition (const string & codon) const
+throw (BadCharException)
 {
   return getNPosition(codon,2);
 }

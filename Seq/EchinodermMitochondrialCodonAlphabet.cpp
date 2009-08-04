@@ -1,6 +1,7 @@
 //
 // File: EchinodermMitochondrialCodonAlphabet.h
-// Created by: Eric Bazin
+// Authors: Eric Bazin
+//          Sylvain Gaillard
 // Created on: 14 11:31:27 CET 2005
 //
 
@@ -45,29 +46,28 @@ using namespace bpp;
 EchinodermMitochondrialCodonAlphabet::EchinodermMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) :
   CodonAlphabet(alpha)
 {
-  string A= alpha->intToChar(0);
-  string G= alpha->intToChar(2);
-  string T= alpha->intToChar(3);
+  string A = alpha->intToChar(0);
+  string G = alpha->intToChar(2);
+  string T = alpha->intToChar(3);
                             
   vector<string> vstop;
   
-  vstop.push_back(T+A+A);
-  vstop.push_back(T+A+G);
+  vstop.push_back(T + A + A);
+  vstop.push_back(T + A + G);
  
   int istop;
   unsigned int j;
-  for (unsigned int i=0; i<vstop.size();i++){
-    istop=charToInt(vstop[i]);
+  for (unsigned int i = 0 ; i < vstop.size() ; i++) {
+    istop = charToInt(vstop[i]);
     stopCodons_.push_back(istop);
     
-    j=0;
-    while (j<alphabet.size()){
-      if (alphabet[j].num==istop){
-        alphabet[j].name=STOP;
+    j = 0;
+    while (j < getNumberOfChars()) {
+      if (getStateAt(j).getNum() == istop) {
+        getStateAt(j).setName(STOP);
         break;
       }
       j++;
-      
     }
   }
 }

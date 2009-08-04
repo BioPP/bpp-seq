@@ -1,7 +1,8 @@
 //
 // File: ProteicAlphabet.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Tue Jul 22 2003
 //
 
@@ -43,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _PROTEICALPHABET_H_
 
 #include "AbstractAlphabet.h"
+#include "ProteicAlphabetState.h"
 
 namespace bpp
 {
@@ -57,6 +59,37 @@ namespace bpp
 class ProteicAlphabet:
   public AbstractAlphabet
 {
+    /**
+     * @name Overloaded methods from AbstractAlphabet
+     * @{
+     */
+  public:
+    const ProteicAlphabetState& getState(const std::string& letter) const
+      throw (BadCharException) {
+        return dynamic_cast<const ProteicAlphabetState&>(
+            AbstractAlphabet::getState(letter)
+            );
+      }
+    const ProteicAlphabetState& getState(int num) const
+      throw (BadIntException) {
+        return dynamic_cast<const ProteicAlphabetState&>(
+            AbstractAlphabet::getState(num)
+            );
+      }
+  protected:
+    const ProteicAlphabetState& getStateAt(unsigned int pos) const
+      throw (IndexOutOfBoundsException) {
+        return dynamic_cast<const ProteicAlphabetState&>(
+            AbstractAlphabet::getStateAt(pos)
+            );
+      }
+    ProteicAlphabetState& getStateAt(unsigned int pos)
+      throw (IndexOutOfBoundsException) {
+        return dynamic_cast<ProteicAlphabetState&>(
+            AbstractAlphabet::getStateAt(pos)
+            );
+      }
+    /** @} */
 	public:
 		ProteicAlphabet();
 		virtual ~ProteicAlphabet() {}
@@ -65,13 +98,13 @@ class ProteicAlphabet:
 		unsigned int getSize() const { return 20; }
 		unsigned int getNumberOfTypes() const { return 23; }
     int getUnknownCharacterCode() const { return 22; }
- 		vector<int   > getAlias(      int      state) const throw (BadIntException);
-		vector<string> getAlias(const string & state) const throw (BadCharException);
-    int    getGeneric(const vector<int   > & states) const throw (BadIntException);
-    string getGeneric(const vector<string> & states) const throw (BadCharException);
+    std::vector<int> getAlias(int state) const throw (BadIntException);
+    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+    int getGeneric(const std::vector<int>& states) const throw (BadIntException);
+    std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
     bool isUnresolved(int state) const { return state > 19; }
-    bool isUnresolved(const string & state) const { return charToInt(state) > 19; }
-	  string getAlphabetType() const { return "Proteic alphabet"; }
+    bool isUnresolved(const std::string& state) const { return charToInt(state) > 19; }
+    std::string getAlphabetType() const { return "Proteic alphabet"; }
 	
 	public:
 
@@ -86,14 +119,14 @@ class ProteicAlphabet:
 		 *
 		 * @param aa Char description of the amino-acid to analyse.
 		 */
-		string getAbbr(const string & aa) const throw (AlphabetException);
+    std::string getAbbr(const std::string & aa) const throw (AlphabetException);
 	
 		/**
 		 * @brief Get the abbreviation (3 letter code) for a state coded as int.
 		 *
 		 * @param aa Int description of the amino-acid to analyse.
 		 */
-		string getAbbr(int aa) const throw (AlphabetException);
+    std::string getAbbr(int aa) const throw (AlphabetException);
 		/** @} */
 		
 };

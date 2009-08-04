@@ -1,6 +1,7 @@
 //
 // File: StandardCodonAlphabet.h
-// Created by: Julien Dutheil
+// Authors: Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Sun Oct 12 17:51:36 2003
 //
 
@@ -44,26 +45,26 @@ using namespace bpp;
 StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) :
   CodonAlphabet(alpha)
 {
-  string A= alpha->intToChar(0);
-  string G= alpha->intToChar(2);
-  string T= alpha->intToChar(3);
+  string A = alpha->intToChar(0);
+  string G = alpha->intToChar(2);
+  string T = alpha->intToChar(3);
                             
   vector<string> vstop;
   
-  vstop.push_back(T+A+A);
-  vstop.push_back(T+A+G);
-  vstop.push_back(T+G+A);
+  vstop.push_back(T + A + A);
+  vstop.push_back(T + A + G);
+  vstop.push_back(T + G + A);
   
   int istop;
   unsigned int j;
-  for (unsigned int i=0; i<vstop.size();i++){
-    istop=charToInt(vstop[i]);
+  for (unsigned int i = 0 ; i < vstop.size() ; i++) {
+    istop = charToInt(vstop[i]);
     stopCodons_.push_back(istop);
     
-    j=0;
-    while (j<alphabet.size()){
-      if (alphabet[j].num==istop){
-        alphabet[j].name=STOP;
+    j = 0;
+    while (j < getNumberOfChars()) {
+      if (getStateAt(j).getNum() == istop) {
+        getStateAt(j).setName(STOP);
         break;
       }
       j++;

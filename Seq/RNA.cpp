@@ -1,7 +1,8 @@
 //
 // File: RNA.cpp
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Tue Jul 22 2003
 //
 
@@ -51,93 +52,38 @@ using namespace bpp;
 
 using namespace std;
 
-/****************************************************************************************/
+/******************************************************************************/
 // class constructor
 RNA::RNA()
 {
 	// Alphabet size definition
-	alphabet.resize(20);
+	resize(20);
 
 	// Alphabet content definition
 	// all unresolved bases use n°14
-	alphabet[0].num = -1;
-  alphabet[0].letter = "-";
-  alphabet[0].name = "gap";
-	
-  alphabet[1].num = 0;
-  alphabet[1].letter = "A";
-  alphabet[1].name = "Adenine";
-  
-  alphabet[2].num = 1;
-  alphabet[2].letter = "C";
-  alphabet[2].name = "Cytosine";
-
-	alphabet[3].num = 2;
-  alphabet[3].letter = "G";
-  alphabet[3].name = "Guanine";
-
-	alphabet[4].num = 3;
-  alphabet[4].letter = "U";
-  alphabet[4].name = "Uracile";
-  
-  alphabet[5].num = 4;
-  alphabet[5].letter = "M";
-  alphabet[5].name = "Adenine or Cytosine";
-  
-  alphabet[6].num = 5;
-  alphabet[6].letter = "R";
-  alphabet[6].name = "Purine (Adenine or Guanine)";
-
-	alphabet[7].num = 6;
-	alphabet[7].letter = "W";
-  alphabet[7].name = "Adenine or Uracile";
-  
-  alphabet[8].num = 7;
-  alphabet[8].letter = "S";
-  alphabet[8].name = "Cytosine or Guanine";
-  
-  alphabet[9].num = 8;
-  alphabet[9].letter = "Y";
-  alphabet[9].name = "Pyrimidine (Cytosine or Uracile)";
-
-	alphabet[10].num = 9;
-  alphabet[10].letter = "K";
-  alphabet[10].name = "Guanine or Uracile";
-  
-  alphabet[11].num = 10;
-  alphabet[11].letter = "V";
-  alphabet[11].name = "Adenine or Cytosine or Guanine";
-  
-  alphabet[12].num = 11;
-  alphabet[12].letter = "H";
-  alphabet[12].name = "Adenine or Cytosine or Uracile";
-  
-  alphabet[13].num = 12;
-  alphabet[13].letter = "D";
-  alphabet[13].name = "Adenine or Guanine or Uracile";
-  
-  alphabet[14].num = 13;
-  alphabet[14].letter = "B";
-  alphabet[14].name = "Cytosine or Guanine or Uracile";
-  
-  alphabet[15].num = 14;
-  alphabet[15].letter = "N";
-  alphabet[15].name = "Unresolved base";
-  alphabet[16].num = 14;
-  alphabet[16].letter = "X";
-  alphabet[16].name = "Unresolved base";
-  alphabet[17].num = 14;
-  alphabet[17].letter = "O";
-  alphabet[17].name = "Unresolved base";
-  alphabet[18].num = 14;
-  alphabet[18].letter = "0";
-  alphabet[18].name = "Unresolved base";
-  alphabet[19].num = 14;
-  alphabet[19].letter = "?";
-  alphabet[19].name = "Unresolved base";
+  setState( 0, NucleicAlphabetState(-1, "-",  0, "Gap"));
+  setState( 1, NucleicAlphabetState( 0, "A",  1, "Adenine"));
+  setState( 2, NucleicAlphabetState( 1, "C",  2, "Cytosine"));
+  setState( 3, NucleicAlphabetState( 2, "G",  4, "Guanine"));
+  setState( 4, NucleicAlphabetState( 3, "U",  8, "Uracile"));
+  setState( 5, NucleicAlphabetState( 4, "M",  3, "Adenine or Cytosine"));
+  setState( 6, NucleicAlphabetState( 5, "R",  5, "Purine (Adenine or Guanine)"));
+  setState( 7, NucleicAlphabetState( 6, "W",  9, "Adenine or Uracile"));
+  setState( 8, NucleicAlphabetState( 7, "S",  6, "Cytosine or Guanine"));
+  setState( 9, NucleicAlphabetState( 8, "Y", 10, "Pyrimidine (Cytosine or Uracile)"));
+  setState(10, NucleicAlphabetState( 9, "K", 12, "Guanine or Uracile"));
+  setState(11, NucleicAlphabetState(10, "V",  7, "Adenine or Cytosine or Guanine"));
+  setState(12, NucleicAlphabetState(11, "H", 11, "Adenine or Cytosine or Uracile"));
+  setState(13, NucleicAlphabetState(12, "D", 13, "Adenine or Guanine or Uracile"));
+  setState(14, NucleicAlphabetState(13, "B", 14, "Cytosine or Guanine or Uracile"));
+  setState(15, NucleicAlphabetState(14, "N", 15, "Unresolved base"));
+  setState(16, NucleicAlphabetState(14, "X", 15, "Unresolved base"));
+  setState(17, NucleicAlphabetState(14, "O", 15, "Unresolved base"));
+  setState(18, NucleicAlphabetState(14, "0", 15, "Unresolved base"));
+  setState(19, NucleicAlphabetState(14, "?", 15, "Unresolved base"));
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 vector<int> RNA::getAlias(int state) const throw (BadIntException) 
 {
@@ -172,7 +118,7 @@ vector<int> RNA::getAlias(int state) const throw (BadIntException)
 }
 
 
-/****************************************************************************************/
+/******************************************************************************/
 
 vector<string> RNA::getAlias(const string & state) const throw (BadCharException) 
 {
@@ -211,7 +157,7 @@ vector<string> RNA::getAlias(const string & state) const throw (BadCharException
 	return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 int RNA::getGeneric(const vector<int> & states) const throw (BadIntException)
 {
@@ -252,7 +198,7 @@ int RNA::getGeneric(const vector<int> & states) const throw (BadIntException)
   return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 string RNA::getGeneric(const vector<string> & states) const throw (BadCharException)
 {
@@ -293,4 +239,5 @@ string RNA::getGeneric(const vector<string> & states) const throw (BadCharExcept
   return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
+

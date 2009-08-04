@@ -46,7 +46,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <string>
 
-using namespace std;
 
 namespace bpp
 {
@@ -64,18 +63,18 @@ class CodonAlphabet:
   public WordAlphabet
 {
 protected:
-  /*
+  /**
    *@brief the vector of the numbers of the stop codon states.
    */
 
-  vector<int>  stopCodons_;
+  std::vector<int> stopCodons_;
 
 
 public:
   //Constant used for stop codons:
-  static const string STOP;
+  static const std::string STOP;
   //Constant used for init codon:
-  static const string INIT;
+  static const std::string INIT;
   
 public: // Constructor and destructor.
 		
@@ -88,7 +87,7 @@ public: // Constructor and destructor.
   
   virtual ~CodonAlphabet() {}
   
-  virtual string getAlphabetType() const  = 0;
+  virtual std::string getAlphabetType() const  = 0;
   
 public:
   
@@ -108,7 +107,7 @@ public:
    * @brief Returns the vector of the numbers of the stop codon states.
    */
 
-  const vector<int>&  stopCodons() const { return stopCodons_;}
+  const std::vector<int>&  stopCodons() const { return stopCodons_;}
   
   /**
    * @brief Get the int code for a codon given the int code of the three underlying positions.
@@ -131,7 +130,7 @@ public:
    * @param pos3 Char description for position 3.
    * @return The Char code of the codon.
    */
-  virtual string getCodon(const string & pos1, const string & pos2, const string & pos3) const throw (BadCharException);
+  virtual std::string getCodon(const std::string & pos1, const std::string & pos2, const std::string & pos3) const throw (BadCharException);
   
   /**
    * @brief Get the int code of the first position of a codon given its int description.
@@ -163,7 +162,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the first position of the codon.
    */
-  virtual string getFirstPosition (const string & codon) const throw (BadCharException);
+  virtual std::string getFirstPosition (const std::string & codon) const throw (BadCharException);
   
   /**
    * @brief Get the char code of the second position of a codon given its char description.
@@ -171,7 +170,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the second position of the codon.
    */
-  virtual string getSecondPosition(const string & codon) const throw (BadCharException);
+  virtual std::string getSecondPosition(const std::string & codon) const throw (BadCharException);
   
   /**
    * @brief Get the char code of the third position of a codon given its char description.
@@ -179,7 +178,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the third position of the codon.
    */
-  virtual string getThirdPosition(const string & codon) const throw (BadCharException);
+  virtual std::string getThirdPosition(const std::string & codon) const throw (BadCharException);
   
   /**
    * @brief Tell whether a particular codon is a stop codon.
@@ -197,7 +196,7 @@ public:
    * @param codon The char description of the codon to test.
    * @return True if the codon is a stop codon.
    */
-  bool isStop(const string & codon) const {
+  bool isStop(const std::string & codon) const {
     return(getName(codon)==STOP);
   }
   

@@ -1,6 +1,7 @@
 //
 // File: WordAlphabet.h
-// Created by: Laurent Gueguen
+// Authors: Laurent Gueguen
+//          Sylvain Gaillard
 // Created on: Sun Dec 28 2008
 //
 
@@ -78,21 +79,17 @@ void WordAlphabet::build_()
   for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
     size *= _VAbsAlph[i]->getSize();
   
-  alphabet.resize(size + 2);
+  resize(size + 2);
   
   string s = "";
   for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
     s += "-";
       
-  alphabet[0].num = -1;
-  alphabet[0].letter = s;
-  alphabet[0].name = "Gap";
+  setState(0, AlphabetState(-1, s, "gap"));
 
   for (unsigned int i = 0; i < size; i++)
   {
-    alphabet[i+1].num = i;
-    alphabet[i+1].letter = "";
-    alphabet[i+1].name = "";    
+    setState(i+1, AlphabetState(i, "", ""));
   }
 
   unsigned lr = size;
@@ -106,8 +103,11 @@ void WordAlphabet::build_()
     {
       c = _VAbsAlph[na]->intToChar(i)[0];
       
-      for (unsigned int k = 0; k < lr; k++)
-        alphabet[j++].letter += c;
+      for (unsigned int k = 0; k < lr; k++) {
+        getStateAt(j).setLetter(getStateAt(j).getLetter() + c);
+        j++;
+        //alphabet[j++].letter += c;
+      }
       
       if (++i == _VAbsAlph[na]->getSize())
         i = 0;
@@ -118,12 +118,10 @@ void WordAlphabet::build_()
   for (unsigned i = 0; i < _VAbsAlph.size(); i++)
     s += "N";
       
-  alphabet[size+1].num = size;
-  alphabet[size+1].letter = s;
-  alphabet[size+1].name = "Unresolved";  
+  setState(size+1, AlphabetState(size, s, "Unresolved"));
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 int WordAlphabet::getUnknownCharacterCode() const
 {
@@ -164,7 +162,7 @@ bool WordAlphabet::containsUnresolved(const string & state) const throw (BadChar
   return false;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 bool WordAlphabet::containsGap(const string & state) const throw (BadCharException)
 {
@@ -181,16 +179,16 @@ bool WordAlphabet::containsGap(const string & state) const throw (BadCharExcepti
   return false;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 unsigned int WordAlphabet::getNumberOfTypes() const
 {
-  return alphabet.size() - 1;
+  return getNumberOfChars() - 1;
 }
 
 unsigned int WordAlphabet::getSize() const
 {
-  return alphabet.size() - 2;
+  return getNumberOfChars() - 2;
 }
 
 unsigned int WordAlphabet::getLength() const
@@ -198,22 +196,21 @@ unsigned int WordAlphabet::getLength() const
   return _VAbsAlph.size();
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 string WordAlphabet::getName(const string& state) const throw (BadCharException)
 {
-
   if(state.size() != _VAbsAlph.size())
     throw BadCharException(state, "WordAlphabet::getName", this);
   if(containsUnresolved(state))
-    return alphabet[getSize()+1].name;
+    return getStateAt(getSize()+1).getName();
   if(containsGap(state))
-    return alphabet[0].name;
+    return getStateAt(0).getName();
   else
     return AbstractAlphabet::getName(state);
 }
 		
-/****************************************************************************************/
+/******************************************************************************/
 
 int WordAlphabet::charToInt(const string& state) const throw (BadCharException)
 {
@@ -226,7 +223,7 @@ int WordAlphabet::charToInt(const string& state) const throw (BadCharException)
   else return AbstractAlphabet::charToInt(state);	
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 int WordAlphabet::getWord(vector<int>& vint, unsigned int pos) const throw (BadIntException)
 {
@@ -240,7 +237,7 @@ int WordAlphabet::getWord(vector<int>& vint, unsigned int pos) const throw (BadI
   return charToInt(getWord(vs));//This can't throw a BadCharException!
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 string WordAlphabet::getWord(const vector<string>& vpos, unsigned int pos) const throw (BadIntException, BadCharException)
 {
@@ -255,7 +252,7 @@ string WordAlphabet::getWord(const vector<string>& vpos, unsigned int pos) const
   return s;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 const Alphabet* WordAlphabet::getNAlphabet(unsigned int n) const
 {
@@ -274,7 +271,7 @@ int WordAlphabet::getNPosition (int word, unsigned int n) const throw (BadIntExc
   return _VAbsAlph[n]->charToInt(s.substr(n,1));
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 vector<int> WordAlphabet::getPositions(int word) const throw (BadIntException)
 {

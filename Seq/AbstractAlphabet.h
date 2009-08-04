@@ -1,7 +1,8 @@
 //
 // File: AbstractAlphabet.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Tue Jul 22 2003
 //
 
@@ -42,11 +43,15 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _ABSTRACTALPHABET_H_
 
 #include "Alphabet.h"
+#include "AlphabetState.h"
 
 // From Utils:
 #include <Utils/Exceptions.h>
 
-using namespace std;
+// From the STL:
+#include <string>
+#include <vector>
+#include <map>
 
 namespace bpp
 {
@@ -54,8 +59,8 @@ namespace bpp
 /**
  * @brief A partial implementation of the Alphabet interface.
  *
- * It defines a sletter structure used to store information for each state, and
- * contains a vector of this structure. All methods are based uppon this vector,
+ * It contains a vector of AlphabetState.
+ * All methods are based uppon this vector
  * but do not provide any method to initialize it.
  * This is up to each constructor of the derived classes.
  *
@@ -64,47 +69,96 @@ namespace bpp
 class AbstractAlphabet:
   public Alphabet
 {
-	protected:
-		/**
-		 * @brief sletter structure: an alphabet is a vector of sletter
-		 */
-		struct sletter
-    {
-           
-			/**
-			 * @brief State number id (i.e. -1 for gap (-))
-			 */
-			int num;
-
-			/**
-			 * @brief State string id. May be more than one char (for instance: codons)!
-			 */
-	    string letter;
-
-			/**
-			 * @brief Abbreviation for amino-acids (not used in nucleic alphabets).
-			 */
-    	string abbr;
-			
-			/**
-			 * @brief Full name of the state (i.e. Adenine)
-			 */
-    	string name;
-      
-      bool operator == (AbstractAlphabet::sletter & l2)
-      {
-        return name == l2.name;
-      }
-
-		};
-		
-	protected:
+	private:
 		
 		/**
-		 * @brief Alphabet : vector of structure sletter.
+		 * @brief Alphabet: vector of AlphabetState.
 		 */
-		vector<sletter> alphabet;
+    std::vector<AlphabetState*> alphabet_;
+    /**
+     * @name maps used to quick search for letter and num.
+     * @{
+     */
+    std::map<std::string, unsigned int> letters_;
+    std::map<int, unsigned int> nums_;
+    /** @} */
+    /**
+     * @brief Update the private maps letters_ and nums_ when adding a state.
+     *
+     * @param pos The index of the state in the alphabet_ vector.
+     * @param st The state that have been haded or modified
+     */
+    void updateMaps_(int pos, const AlphabetState& st);
 
+  protected:
+    /**
+     * @brief Add a state to the Alphabet.
+     *
+     * @param st The state to add.
+     */
+    virtual void registerState(const AlphabetState& st);
+    /**
+     * @brief Set a state in the Alphabet.
+     *
+     * @param pos The index of the state in the alphabet_ vector.
+     * @param st The new state to put in the Alphabet.
+     */
+    virtual void setState(unsigned int pos, const AlphabetState& st) throw (IndexOutOfBoundsException);
+    /**
+     * @brief Resize the private alphabet_ vector.
+     *
+     * @param size The new size of the Alphabet.
+     */
+    void resize(int size) { alphabet_.resize(size); }
+    /**
+     * @brief Get a state at a position in the alphabet_ vector.
+     *
+     * This method must be overloaded in specialized classes to send back
+     * a reference of the corect type.
+     *
+     * @param pos The index of the state in the alphabet_ vector.
+     * @throw IndexOutOfBoundsException If pos is out of the vector.
+     */
+    virtual AlphabetState& getStateAt(unsigned int pos) throw (IndexOutOfBoundsException);
+    /**
+     * @brief Get a state at a position in the alphabet_ vector.
+     *
+     * This method must be overloaded in specialized classes to send back
+     * a reference of the corect type.
+     *
+     * @param pos The index of the state in the alphabet_ vector.
+     * @throw IndexOutOfBoundsException If pos is out of the vector.
+     */
+    virtual const AlphabetState& getStateAt(unsigned int pos) const throw (IndexOutOfBoundsException);
+
+  public:
+    /**
+     * @name Specific methods to access AlphabetState
+     * @{
+     */
+    /**
+     * @brief Get a state by its letter.
+     *
+     * This method must be overloaded in specialized classes to send back
+     * a reference of the corect type.
+     *
+     * @param letter The letter of the state to find.
+     * @throw BadCharException If the letter is not in the Alphabet.
+     */
+    virtual const AlphabetState& getState(const std::string& letter) const throw (BadCharException);
+    /**
+     * @brief Get a state by its num.
+     *
+     * This method must be overloaded in specialized classes to send back
+     * a reference of the corect type.
+     *
+     * @param num The num of the state to find.
+     * @throw BadIntException If the num is not in the Alphabet.
+     */
+    virtual const AlphabetState& getState(int num) const throw (BadIntException);
+    /** @} */
+
+  protected:
     /**
      * @name Available codes
      *
@@ -112,38 +166,40 @@ class AbstractAlphabet:
      *
      * @{
      */
-    mutable vector<string> _charList;
-    mutable vector<int> _intList;
+    mutable std::vector<std::string> charList_;
+    mutable std::vector<int> intList_;
     /** @} */
 
 	public:
 		
 		AbstractAlphabet() {}
-		virtual ~AbstractAlphabet() {}
+		virtual ~AbstractAlphabet() {
+      for (unsigned int i = 0 ; i < alphabet_.size() ; i++)
+        delete alphabet_[i];
+    }
 	
 	public:
-    
     /**
 		 * @name Implement these methods from the Alphabet interface.
 		 *
 		 * @{
 		 */
-		unsigned int getNumberOfChars() const { return alphabet.size(); }
-		string getName(const string & state) const throw (BadCharException);
-		string getName(int state) const throw (BadIntException);
-		int charToInt(const string & state) const throw (BadCharException);
-		string intToChar(int state) const throw (BadIntException);
+		unsigned int getNumberOfChars() const { return alphabet_.size(); }
+    std::string getName(const std::string& state) const throw (BadCharException);
+    std::string getName(int state) const throw (BadIntException);
+		int charToInt(const std::string& state) const throw (BadCharException);
+    std::string intToChar(int state) const throw (BadIntException);
 		bool isIntInAlphabet(int state) const;
-		bool isCharInAlphabet(const string & state) const;
-		vector<int> getAlias(int state) const throw (BadIntException);
-		vector<string> getAlias(const string & state) const throw (BadCharException);
-    int    getGeneric(const vector<int   > & states) const throw (BadIntException);
-    string getGeneric(const vector<string> & states) const throw (AlphabetException);
-    const vector<int> & getSupportedInts() const;
-    const vector<string> & getSupportedChars() const;
+		bool isCharInAlphabet(const std::string& state) const;
+    std::vector<int> getAlias(int state) const throw (BadIntException);
+    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+    int getGeneric(const std::vector<int>& states) const throw (BadIntException);
+    std::string getGeneric(const std::vector<std::string>& states) const throw (AlphabetException);
+    const std::vector<int>& getSupportedInts() const;
+    const std::vector<std::string>& getSupportedChars() const;
     int getGapCharacterCode() const { return -1; }
     bool isGap(int state) const { return state == -1; }
-    bool isGap(const string & state) const { return charToInt(state) == -1; }
+    bool isGap(const std::string& state) const { return charToInt(state) == -1; }
 		/** @} */
 };
 

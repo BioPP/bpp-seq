@@ -48,8 +48,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Sequence.h"
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -72,7 +70,7 @@ class WordAlphabet:
 {
 protected:
 
-  vector<const Alphabet* > _VAbsAlph;
+  std::vector<const Alphabet* > _VAbsAlph;
 
 public: // Constructor and destructor.
 		
@@ -81,7 +79,7 @@ public: // Constructor and destructor.
    *
    * @param Valpha The vector of Alphabets to be used.
    */
-  WordAlphabet(const vector<const Alphabet* >& Valpha);
+  WordAlphabet(const std::vector<const Alphabet* >& Valpha);
   
   /**
    * @brief Builds a new word alphabet from a pointer to number of
@@ -111,8 +109,8 @@ public:
    * @return The name of the state.
    * @throw BadCharException When state is not a valid char description.
    */
-string getName(const string & state) const throw (BadCharException);
-  int charToInt(const string & state) const throw (BadCharException);
+  std::string getName(const std::string & state) const throw (BadCharException);
+  int charToInt(const std::string & state) const throw (BadCharException);
   unsigned int getSize() const;
   
   /** @} */
@@ -122,7 +120,6 @@ string getName(const string & state) const throw (BadCharException);
    * same type.
    * 
    */
-  
   bool hasUniqueAlphabet() const;
 
     /**
@@ -137,11 +134,11 @@ string getName(const string & state) const throw (BadCharException);
    */
   unsigned int getNumberOfTypes() const;
   
-  string getAlphabetType() const;
+  std::string getAlphabetType() const;
   int getUnknownCharacterCode() const;
 
   bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
-  bool isUnresolved(const string & state) const { return charToInt(state) == getUnknownCharacterCode(); }
+  bool isUnresolved(const std::string & state) const { return charToInt(state) == getUnknownCharacterCode(); }
 
 private:
   
@@ -150,12 +147,11 @@ private:
    *
    * @{
    */
-  bool containsUnresolved(const string & state) const throw (BadCharException);
-  bool containsGap(const string & state) const throw (BadCharException);
+  bool containsUnresolved(const std::string & state) const throw (BadCharException);
+  bool containsGap(const std::string & state) const throw (BadCharException);
   void build_();
   /** @} */
 
-  
 public:
   
   /**
@@ -180,7 +176,7 @@ public:
    * @param pos the start position to match in the vector.
    * @return The int code of the word.
    */
-  virtual int getWord(vector<int>& vint, unsigned int pos = 0) const throw (BadIntException);
+  virtual int getWord(std::vector<int>& vint, unsigned int pos = 0) const throw (BadIntException);
   
   /**
    * @brief Get the char code for a word given the char code of the
@@ -191,9 +187,8 @@ public:
    * @param pos the start position to match in the vector.
    * @return The string of the word.
    */
-  virtual string getWord(const vector<string>& vpos, unsigned int pos = 0) const throw (BadIntException, BadCharException);
+  virtual std::string getWord(const std::vector<std::string>& vpos, unsigned int pos = 0) const throw (BadIntException, BadCharException);
   
-
   /**
    * @brief Get the int code of the n-position of a word given its int description.
    * 
@@ -209,7 +204,7 @@ public:
    * @param word The int description of the word.
    * @return The int description of the positions of the codon.
    */
-  virtual vector<int> getPositions(int word) const throw (BadIntException);
+  virtual std::vector<int> getPositions(int word) const throw (BadIntException);
   
   /**
    * @brief Get the char code of the n-position of a word given its char description.
@@ -218,7 +213,7 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The char description of the n-position of the word.
    */
-  virtual string getNPosition (const string& word, unsigned int n) const throw (BadCharException);
+  virtual std::string getNPosition (const std::string& word, unsigned int n) const throw (BadCharException);
   
   /**
    * @brief Get the char codes of each position of a word given its char description.
@@ -226,7 +221,7 @@ public:
    * @param word The char description of the word.
    * @return The char description of the three positions of the word.
    */
-  virtual vector<string> getPositions(const string& word) const throw (BadCharException);
+  virtual std::vector<std::string> getPositions(const std::string& word) const throw (BadCharException);
 
   /**
    * @brief Translate a whole sequence from letters alphabet to words

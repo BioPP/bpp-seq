@@ -1,7 +1,8 @@
 //
 // File: ProteicAlphabet.cpp
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Tue Jul 22 2003
 //
 
@@ -39,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "ProteicAlphabet.h"
+#include "ProteicAlphabetState.h"
 
 // From Utils:
 #include <Utils/TextTools.h>
@@ -49,170 +51,59 @@ using namespace bpp;
 // From STL:
 #include <map>
 
-/****************************************************************************************/
+/******************************************************************************/
 
 ProteicAlphabet::ProteicAlphabet()
 {
 	// Alphabet size definition
-	alphabet.resize(27);
+	resize(27);
 
 	// Alphabet content definition
-	alphabet[0].num = -1;
-	alphabet[0].letter = "-";
-	alphabet[0].abbr = "GAP";
-	alphabet[0].name = "Gap";
-  
-	alphabet[1].num = 0;
-	alphabet[1].letter = "A";
-	alphabet[1].abbr = "ALA";
-	alphabet[1].name = "Alanine";
-  
-	alphabet[2].num = 1;
-	alphabet[2].letter = "R";
-	alphabet[2].abbr = "ARG";
-	alphabet[2].name = "Arginine";
-  
-	alphabet[3].num = 2;
-	alphabet[3].letter = "N";
-	alphabet[3].abbr = "ASN";
-	alphabet[3].name = "Asparagine";
-  
-	alphabet[4].num = 3;
-	alphabet[4].letter = "D";
-	alphabet[4].abbr = "ASP";
-	alphabet[4].name = "Asparatic Acid";
-  
-	alphabet[5].num = 4;
-	alphabet[5].letter = "C";
-	alphabet[5].abbr = "CYS";
-	alphabet[5].name = "Cysteine";
-  
-	alphabet[6].num = 5;
-	alphabet[6].letter = "Q";
-	alphabet[6].abbr = "GLN";
-	alphabet[6].name = "Glutamine";
-  
-	alphabet[7].num = 6;
-	alphabet[7].letter = "E";
-	alphabet[7].abbr = "GLU";
-	alphabet[7].name = "Glutamic acid";
-  
-	alphabet[8].num = 7;
-	alphabet[8].letter = "G";
-	alphabet[8].abbr = "GLY";
-	alphabet[8].name = "Glycine";
-  
-	alphabet[9].num = 8;
-	alphabet[9].letter = "H";
-	alphabet[9].abbr = "HIS";
-	alphabet[9].name = "Histidine";
-  
-	alphabet[10].num = 9;
-	alphabet[10].letter = "I";
-	alphabet[10].abbr = "ILE";
-	alphabet[10].name = "Isoleucine";
-  
-	alphabet[11].num = 10;
-	alphabet[11].letter = "L";
-	alphabet[11].abbr = "LEU";
-	alphabet[11].name = "Leucine";
-  
-	alphabet[12].num = 11;
-	alphabet[12].letter = "K";
-	alphabet[12].abbr = "LYS";
-	alphabet[12].name = "Lysine";
-  
-	alphabet[13].num = 12;
-	alphabet[13].letter = "M";
-	alphabet[13].abbr = "MET";
-	alphabet[13].name = "Methionine";
-  
-	alphabet[14].num = 13;
-	alphabet[14].letter = "F";
-	alphabet[14].abbr = "PHE";
-	alphabet[14].name = "Phenylalanine";
-  
-	alphabet[15].num = 14;
-	alphabet[15].letter = "P";
-	alphabet[15].abbr = "PRO";
-	alphabet[15].name = "Proline";
-  
-	alphabet[16].num = 15;
-	alphabet[16].letter = "S";
-	alphabet[16].abbr = "SER";
-	alphabet[16].name = "Serine";
-  
-	alphabet[17].num = 16;
-	alphabet[17].letter = "T";
-	alphabet[17].abbr = "THR";
-	alphabet[17].name = "Threonine";
-  
-	alphabet[18].num = 17;
-	alphabet[18].letter = "W";
-	alphabet[18].abbr = "TRP";
-	alphabet[18].name = "Tryptophan";
-  
-	alphabet[19].num = 18;
-	alphabet[19].letter = "Y";
-	alphabet[19].abbr = "TYR";
-	alphabet[19].name = "Tyrosine";
-  
-	alphabet[20].num = 19;
-	alphabet[20].letter = "V";
-	alphabet[20].abbr = "VAL";
-	alphabet[20].name = "Valine";
-  
-	alphabet[21].num = 20;
-	alphabet[21].letter = "B";
-	alphabet[21].abbr = "B";
-	alphabet[21].name = "N or D";
-  
-	alphabet[22].num = 21;
-	alphabet[22].letter = "Z";
-	alphabet[22].abbr = "Z";
-	alphabet[22].name = "Q or E";
-  
-	alphabet[23].num = 22;
-	alphabet[23].letter = "X";
-	alphabet[23].abbr = "X";
-	alphabet[23].name = "Unresolved amino acid";
-  
-	alphabet[24].num = 22;
-	alphabet[24].letter = "O";
-	alphabet[24].abbr = "O";
-	alphabet[24].name = "Unresolved amino acid";
-  
-	alphabet[25].num = 22;
-	alphabet[25].letter = "0";
-	alphabet[25].abbr = "0";
-	alphabet[25].name = "Unresolved amino acid";
-  
-	alphabet[26].num = 22;
-	alphabet[26].letter = "?";
-	alphabet[26].abbr = "?";
-	alphabet[26].name = "Unresolved amino acid";
+  setState( 0, ProteicAlphabetState(-1, "-", "GAP", "Gap"));
+  setState( 1, ProteicAlphabetState( 0, "A", "ALA", "Alanine"));
+  setState( 2, ProteicAlphabetState( 1, "R", "ARG", "Arginine"));
+  setState( 3, ProteicAlphabetState( 2, "N", "ASN", "Asparagine"));
+  setState( 4, ProteicAlphabetState( 3, "D", "ASP", "Asparatic Acid"));
+  setState( 5, ProteicAlphabetState( 4, "C", "CYS", "Cysteine"));
+  setState( 6, ProteicAlphabetState( 5, "Q", "GLN", "Glutamine"));
+  setState( 7, ProteicAlphabetState( 6, "E", "GLU", "Glutamic acid"));
+  setState( 8, ProteicAlphabetState( 7, "G", "GLY", "Glycine"));
+  setState( 9, ProteicAlphabetState( 8, "H", "HIS", "Histidine"));
+  setState(10, ProteicAlphabetState( 9, "I", "ILE", "Isoleucine"));
+  setState(11, ProteicAlphabetState(10, "L", "LEU", "Leucine"));
+  setState(12, ProteicAlphabetState(11, "K", "LYS", "Lysine"));
+  setState(13, ProteicAlphabetState(12, "M", "MET", "Methionine"));
+  setState(14, ProteicAlphabetState(13, "F", "PHE", "Phenylalanine"));
+  setState(15, ProteicAlphabetState(14, "P", "PRO", "Proline"));
+  setState(16, ProteicAlphabetState(15, "S", "SER", "Serine"));
+  setState(17, ProteicAlphabetState(16, "T", "THR", "Threonine"));
+  setState(18, ProteicAlphabetState(17, "W", "TRP", "Tryptophan"));
+  setState(19, ProteicAlphabetState(18, "Y", "TYR", "Tyrosine"));
+  setState(20, ProteicAlphabetState(19, "V", "VAL", "Valine"));
+  setState(21, ProteicAlphabetState(20, "B", "B", "N or D"));
+  setState(22, ProteicAlphabetState(21, "Z", "Z", "Q or E"));
+  setState(23, ProteicAlphabetState(22, "X", "X", "Unresolved amino acid"));
+  setState(24, ProteicAlphabetState(22, "O", "O", "Unresolved amino acid"));
+  setState(25, ProteicAlphabetState(22, "0", "0", "Unresolved amino acid"));
+  setState(26, ProteicAlphabetState(22, "?", "?", "Unresolved amino acid"));
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 string ProteicAlphabet::getAbbr(const string & aa) const throw (AlphabetException)
 {
 	string AA = TextTools::toUpper(aa);
-	for (unsigned int i = 0 ; i < getNumberOfChars() ; i++)
-		if (alphabet[i].letter == AA) return alphabet[i].abbr;
-	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid '" + aa + ".");
+  return (getState(aa).getAbbreviation());
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 string ProteicAlphabet::getAbbr(int aa) const throw (AlphabetException)
 {
-	for (unsigned int i = 0 ; i < getNumberOfChars() ; i++)
-		if (alphabet[i].num == aa) return alphabet[i].abbr;
-	throw AlphabetException ("ProteicAlphabet::getAbbr : Unknown specified amino acid '" + TextTools::toString(aa) + "'.");
+  return (getState(aa).getAbbreviation());
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 vector<int> ProteicAlphabet::getAlias(int state) const throw (BadIntException) 
 {
@@ -231,7 +122,7 @@ vector<int> ProteicAlphabet::getAlias(int state) const throw (BadIntException)
 	return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 vector<string> ProteicAlphabet::getAlias(const string & state) const throw (BadCharException) 
 {
@@ -247,14 +138,14 @@ vector<string> ProteicAlphabet::getAlias(const string & state) const throw (BadC
 	       || locstate == "0"
 	       || locstate == "?") {// all!
 		v.resize(20);
-    for(unsigned int i = 0; i < 20; i++) v[i] = alphabet[i+1].letter;
+    for(unsigned int i = 0; i < 20; i++) v[i] = getState(i).getLetter();
 	} else {
 		v.resize(1); v[0] = locstate;
 	}		
 	return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 int ProteicAlphabet::getGeneric(const vector<int> & states) const throw (BadIntException) {
   map<int, int> m;
@@ -286,7 +177,7 @@ int ProteicAlphabet::getGeneric(const vector<int> & states) const throw (BadIntE
   return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 string ProteicAlphabet::getGeneric(const vector<string> & states) const throw (BadCharException) {
   map <string, int> m;
@@ -318,4 +209,4 @@ string ProteicAlphabet::getGeneric(const vector<string> & states) const throw (B
   return v;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
