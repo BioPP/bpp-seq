@@ -54,13 +54,12 @@ StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) :
   vstop.push_back(T + A + A);
   vstop.push_back(T + A + G);
   vstop.push_back(T + G + A);
-  
+
   int istop;
   unsigned int j;
   for (unsigned int i = 0 ; i < vstop.size() ; i++) {
     istop = charToInt(vstop[i]);
     stopCodons_.push_back(istop);
-    
     j = 0;
     while (j < getNumberOfChars()) {
       if (getStateAt(j).getNum() == istop) {

@@ -55,7 +55,7 @@ using namespace std;
 
 /******************************************************************************/
 
-void AbstractAlphabet::updateMaps_(int pos, const AlphabetState& st) {
+void AbstractAlphabet::updateMaps_(unsigned int pos, const AlphabetState& st) {
   if (letters_.find(st.getLetter()) == letters_.end())
     letters_[st.getLetter()] = pos;
   if (nums_.find(st.getNum()) == nums_.end())
@@ -140,7 +140,7 @@ string AbstractAlphabet::getName(int state) const throw (BadIntException)
 int AbstractAlphabet::charToInt(const string& state) const throw (BadCharException)
 {
   string LETTER = TextTools::toUpper(state);
-  return (getState(state)).getNum();
+  return getState(LETTER).getNum();
 }
 
 /******************************************************************************/

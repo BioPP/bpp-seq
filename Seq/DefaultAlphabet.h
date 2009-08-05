@@ -51,7 +51,7 @@ namespace bpp
  * This should be used by who does not care of the sequence type.
  */
 class DefaultAlphabet:
-  public virtual AbstractAlphabet
+  public AbstractAlphabet
 {
 	protected:
     void registerState(const AlphabetState& st) {

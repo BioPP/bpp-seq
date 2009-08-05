@@ -119,6 +119,7 @@ void WordAlphabet::build_()
     s += "N";
       
   setState(size+1, AlphabetState(size, s, "Unresolved"));
+  remap();
 }
 
 /******************************************************************************/
@@ -217,10 +218,11 @@ int WordAlphabet::charToInt(const string& state) const throw (BadCharException)
   if(state.size() != _VAbsAlph.size())
     throw BadCharException(state, "WordAlphabet::charToInt", this);
   if(containsUnresolved(state))
-    return(getSize()); 
+    return(getSize());
   if(containsGap(state))
     return -1;
-  else return AbstractAlphabet::charToInt(state);	
+  else
+    return AbstractAlphabet::charToInt(state);
 }
 
 /******************************************************************************/

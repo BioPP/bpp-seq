@@ -88,7 +88,7 @@ class AbstractAlphabet:
      * @param pos The index of the state in the alphabet_ vector.
      * @param st The state that have been haded or modified
      */
-    void updateMaps_(int pos, const AlphabetState& st);
+    void updateMaps_(unsigned int pos, const AlphabetState& st);
 
   protected:
     /**
@@ -130,6 +130,15 @@ class AbstractAlphabet:
      * @throw IndexOutOfBoundsException If pos is out of the vector.
      */
     virtual const AlphabetState& getStateAt(unsigned int pos) const throw (IndexOutOfBoundsException);
+
+    /**
+     * @brief Re-update the maps using the alphabet_ vector content.
+     */
+    void remap() {
+      for (unsigned int i = 0 ; i < alphabet_.size() ; i++) {
+        updateMaps_(i, * alphabet_[i]);
+      }
+    }
 
   public:
     /**
