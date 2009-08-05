@@ -186,7 +186,7 @@ double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown) thro
 	map<int, double> p;
   getFrequencies(site, p, resolveUnknown);
   //We need to correct frequencies for gaps:
-  double s;
+  double s = 0.;
   for(unsigned int i = 0; i < site.getAlphabet()->getSize(); i++)
   {
     double f = p[i];
