@@ -53,7 +53,6 @@ namespace bpp
 
 /**
  * @brief The abstract base class for word alphabets.
- * @author Laurent Guéguen
  * 
  * These alphabets are compounds of several alphabets. The only
  * constraint on these alphabets is that their words have length one
@@ -98,7 +97,6 @@ public:
    *
    * @{
    */
-  
   /**
    * @brief Get the complete name of a state given its string description.
    *
@@ -109,15 +107,28 @@ public:
    * @return The name of the state.
    * @throw BadCharException When state is not a valid char description.
    */
-  std::string getName(const std::string & state) const throw (BadCharException);
-  int charToInt(const std::string & state) const throw (BadCharException);
-  unsigned int getSize() const;
+  string getName(const string & state) const throw (BadCharException);
+
+  int charToInt(const string & state) const throw (BadCharException){
+    if(state.size() != _VAbsAlph.size())
+      throw BadCharException(state, "WordAlphabet::charToInt", this);
+    if(containsUnresolved(state))
+      return(getSize()); 
+    if(containsGap(state))
+      return -1;
+    else return AbstractAlphabet::charToInt(state);	
+  }
+
+  unsigned int getSize() const
+  {
+    return getNumberOfChars() - 2;
+  }
   
   /** @} */
 
   /**
-   * @brief Returns true if the letters Alphabets in the word share the
-   * same type.
+   * @brief Returns is the letters Alphabet in the word are the same
+   * type
    * 
    */
   bool hasUniqueAlphabet() const;
@@ -126,19 +137,35 @@ public:
    * @brief Returns the length of the word
    * 
    */
-  unsigned int getLength() const;
+  unsigned int getLength() const
+  {
+    return _VAbsAlph.size();
+  }
+
 
   /**
    * @brief Returns the number of resolved states + one for unresolved
    * 
    */
-  unsigned int getNumberOfTypes() const;
+
+  unsigned int getNumberOfTypes() const
+  {
+    return getNumberOfChars() - 1;
+  }
   
-  std::string getAlphabetType() const;
-  int getUnknownCharacterCode() const;
+  string getAlphabetType() const;
+  int getUnknownCharacterCode() const
+  {
+    return getSize();
+  }
 
   bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
   bool isUnresolved(const std::string & state) const { return charToInt(state) == getUnknownCharacterCode(); }
+
+  vector<int   > getAlias(      int      state) const throw (BadIntException);
+  vector<string> getAlias(const string & state) const throw (BadCharException);
+  int    getGeneric(const vector<int   > & states) const throw (BadIntException);
+  string getGeneric(const vector<string> & states) const throw (BadCharException);
 
 private:
   
@@ -166,7 +193,13 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The pointer to the Alphabet of the n-position.
    */
-  const Alphabet* getNAlphabet(unsigned int n) const;
+  const Alphabet* getNAlphabet(unsigned int n) const
+  {
+    if (n>=_VAbsAlph.size())
+      throw BadIntException(n, "WordAlphabet::getNPosition", this);
+
+    return _VAbsAlph[n];
+  }
 
   /**
    * @brief Get the int code for a word given the int code of the underlying positions.
@@ -196,16 +229,32 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The int description of the n-position of the word.
    */
-  virtual int getNPosition(int word, unsigned int n) const throw (BadIntException);
+
+  int getNPosition (int word, unsigned int n) const throw (BadIntException)
+  {
+    if (n>=_VAbsAlph.size())
+      throw BadIntException(n, "WordAlphabet::getNPosition", this);
   
+    string s = intToChar(word);
+    return _VAbsAlph[n]->charToInt(s.substr(n,1));
+  }
+
   /**
    * @brief Get the int codes of each position of a word given its int description.
    * 
    * @param word The int description of the word.
    * @return The int description of the positions of the codon.
    */
-  virtual std::vector<int> getPositions(int word) const throw (BadIntException);
-  
+
+  vector<int> getPositions(int word) const throw (BadIntException)
+  {
+    string s = intToChar(word);
+    vector<int> positions;
+    for (unsigned int i = 0; i < s.size(); i++)
+      positions.push_back(_VAbsAlph[i]->charToInt(s.substr(i, 1)));
+
+    return positions;
+  }
   /**
    * @brief Get the char code of the n-position of a word given its char description.
    * 
@@ -213,7 +262,17 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The char description of the n-position of the word.
    */
-  virtual std::string getNPosition (const std::string& word, unsigned int n) const throw (BadCharException);
+
+  string getNPosition (const string& word, unsigned int n) const throw (BadCharException)
+  {
+    if (n>_VAbsAlph.size())
+      throw BadCharException("", "WordAlphabet::getNPosition", this);
+    //Test:
+    charToInt(word);
+  
+    return ""+word.substr(n, 1);
+  }
+
   
   /**
    * @brief Get the char codes of each position of a word given its char description.
@@ -221,12 +280,19 @@ public:
    * @param word The char description of the word.
    * @return The char description of the three positions of the word.
    */
-  virtual std::vector<std::string> getPositions(const std::string& word) const throw (BadCharException);
+
+  vector<string> getPositions(const string& word) const throw (BadCharException)
+  {
+    charToInt(word);
+    vector<string> positions;
+    for (unsigned int i = 0; i < word.size(); i++)
+      positions.push_back(word.substr(i, 1));
+
+    return positions;
+  }
 
   /**
-   * @brief Translate a whole sequence from letters alphabet to words
-   * alphabet. If the length of the sequence is not a multiple of the
-   * word length, remaining letters are forgotten.
+   * @brief Translate a whole sequence from letters alphabet to words alphabet.
    *
    * @param sequence A sequence in letters alphabet.
    * @param pos the start postion (default 0)

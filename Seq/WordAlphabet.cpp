@@ -124,11 +124,6 @@ void WordAlphabet::build_()
 
 /******************************************************************************/
 
-int WordAlphabet::getUnknownCharacterCode() const
-{
-  return getSize();
-}
-
 string WordAlphabet::getAlphabetType() const
 {
   string s = "Word alphabet:";
@@ -182,23 +177,6 @@ bool WordAlphabet::containsGap(const string & state) const throw (BadCharExcepti
 
 /******************************************************************************/
 
-unsigned int WordAlphabet::getNumberOfTypes() const
-{
-  return getNumberOfChars() - 1;
-}
-
-unsigned int WordAlphabet::getSize() const
-{
-  return getNumberOfChars() - 2;
-}
-
-unsigned int WordAlphabet::getLength() const
-{
-  return _VAbsAlph.size();
-}
-
-/******************************************************************************/
-
 string WordAlphabet::getName(const string& state) const throw (BadCharException)
 {
   if(state.size() != _VAbsAlph.size())
@@ -213,17 +191,63 @@ string WordAlphabet::getName(const string& state) const throw (BadCharException)
 		
 /******************************************************************************/
 
-int WordAlphabet::charToInt(const string& state) const throw (BadCharException)
+vector<int   > WordAlphabet::getAlias(      int      state) const throw (BadIntException)
 {
-  if(state.size() != _VAbsAlph.size())
-    throw BadCharException(state, "WordAlphabet::charToInt", this);
-  if(containsUnresolved(state))
-    return(getSize());
-  if(containsGap(state))
-    return -1;
-  else
-    return AbstractAlphabet::charToInt(state);
+  if(!isIntInAlphabet(state)) throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
+  vector<int> v;
+  int i, s=getSize();
+
+  if (state == s) {
+    v.resize(s);
+    for (i=0;i<s;i++)
+      v[i]=i;
+  } else {
+    v.resize(1); v[0] = state;
+  }
+  return v;
+    
 }
+
+/******************************************************************************/
+
+vector<string> WordAlphabet::getAlias(const string & state) const throw (BadCharException)
+{
+  string locstate = TextTools::toUpper(state);
+  if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "WordAlphabet::getAlias(string): Specified base unknown.");
+  vector<string> v;
+
+  int i, s=getSize();
+  
+  string st = "";
+  for ( i = 0; i < _VAbsAlph.size(); i++)
+    st += "N";
+
+  if (locstate == st) {
+    v.resize(s);
+    for (i=0;i<s;i++)
+      v[i]=intToChar(i);
+  } else {
+    v.resize(1); v[0] = state;
+  }		
+  return v;
+
+}
+
+/******************************************************************************/
+
+int    WordAlphabet::getGeneric(const vector<int   > & states) const throw (BadIntException)
+{
+  return states[0];
+}
+
+/******************************************************************************/
+
+string WordAlphabet::getGeneric(const vector<string> & states) const throw (BadCharException)
+{
+  return states[0];
+}
+
+
 
 /******************************************************************************/
 
@@ -239,7 +263,7 @@ int WordAlphabet::getWord(vector<int>& vint, unsigned int pos) const throw (BadI
   return charToInt(getWord(vs));//This can't throw a BadCharException!
 }
 
-/******************************************************************************/
+/****************************************************************************************/
 
 string WordAlphabet::getWord(const vector<string>& vpos, unsigned int pos) const throw (BadIntException, BadCharException)
 {
@@ -252,61 +276,6 @@ string WordAlphabet::getWord(const vector<string>& vpos, unsigned int pos) const
   // test
   charToInt(s);
   return s;
-}
-
-/******************************************************************************/
-
-const Alphabet* WordAlphabet::getNAlphabet(unsigned int n) const
-{
-  if (n>=_VAbsAlph.size())
-    throw BadIntException(n, "WordAlphabet::getNPosition", this);
-
-  return _VAbsAlph[n];
-}
-
-int WordAlphabet::getNPosition (int word, unsigned int n) const throw (BadIntException)
-{
-  if (n>=_VAbsAlph.size())
-    throw BadIntException(n, "WordAlphabet::getNPosition", this);
-  
-  string s = intToChar(word);
-  return _VAbsAlph[n]->charToInt(s.substr(n,1));
-}
-
-/******************************************************************************/
-
-vector<int> WordAlphabet::getPositions(int word) const throw (BadIntException)
-{
-  string s = intToChar(word);
-  vector<int> positions;
-  for (unsigned int i = 0; i < s.size(); i++)
-    positions.push_back(_VAbsAlph[i]->charToInt(s.substr(i, 1)));
-
-  return positions;
-}
-
-/****************************************************************************************/
-
-string WordAlphabet::getNPosition (const string& word, unsigned int n) const throw (BadCharException)
-{
-  if (n>_VAbsAlph.size())
-    throw BadCharException("", "WordAlphabet::getNPosition", this);
-  //Test:
-  charToInt(word);
-  
-  return ""+word.substr(n, 1);
-}
-
-/****************************************************************************************/
-
-vector<string> WordAlphabet::getPositions(const string& word) const throw (BadCharException)
-{
-  charToInt(word);
-  vector<string> positions;
-  for (unsigned int i = 0; i < word.size(); i++)
-    positions.push_back(word.substr(i, 1));
-
-  return positions;
 }
 
 /****************************************************************************************/
