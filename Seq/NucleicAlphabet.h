@@ -2,6 +2,7 @@
 // File: NucleicAlphabet.h
 // Authors: Guillaume Deuchst
 //          Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Tue Jul 22 2003
 //
 
@@ -60,7 +61,7 @@ class NucleicAlphabet :
   public AbstractAlphabet
 {
   private:
-    std::map<char, unsigned int> binCodes_;
+    std::map<unsigned char, unsigned int> binCodes_;
     void updateMaps_(int pos, const NucleicAlphabetState& st) {
       if (binCodes_.find(st.getBinaryCode()) == binCodes_.end())
         binCodes_[st.getBinaryCode()] = pos;
@@ -114,13 +115,121 @@ class NucleicAlphabet :
      * @name Specific methods
      * @{
      */
-    const NucleicAlphabetState& getStateByBinCode(char code) const
+
+    /**
+     * @brief Get a state by its binary representation.
+     * 
+     * @param code The binary representation as an unsigned char.
+     * @return The NucleicAlphabetState.
+     * @throw BadIntException If the code is not a valide state.
+     * @author Sylvain Gaillard
+     */
+    const NucleicAlphabetState& getStateByBinCode(unsigned char code) const
       throw (BadIntException) {
-        std::map<char, unsigned int>::const_iterator it = binCodes_.find(code);
+        std::map<unsigned char, unsigned int>::const_iterator it = binCodes_.find(code);
       if (it == binCodes_.end())
-        throw BadIntException(code, "NucleicAlphabet::getState(char): Binary code not in alphabet", this);
+        throw BadIntException(code, "NucleicAlphabet::getState(unsigned char): Binary code not in alphabet", this);
       return getStateAt(it->second);
     }
+
+    /**
+     * @brief Subtract states
+     *
+     * Get the remaining state when subtracting one state to another.
+     *
+     * @code
+     * int a = alpha->charToInt("A");
+     * int m = alpha->charToInt("M");
+     * int c = alpha->subtract(m, a);
+     * 
+     * cout << alpha->intToChar(c) << endl;
+     *
+     * // should print C because M - A = C
+     * @endcode
+     *
+     * @param s1 the first state as an int
+     * @param s2 the second state as an int
+     * @throw BadIntException if one of the states is not valide.
+     * @return The remaining state as an int
+     * @author Sylvain Gaillard
+     */
+    int subtract(int s1, int s2) const throw (BadIntException) {
+      return getStateByBinCode(getState(s1).getBinaryCode() & ~ getState(s2).getBinaryCode()).getNum();
+    }
+
+    /**
+     * @brief Subtract states
+     *
+     * Get the remaining state when subtracting one state to another.
+     *
+     * @code
+     * string a = "A";
+     * string m = "M";
+     * 
+     * cout << alpha->subtract(m, a) << endl;
+     *
+     * // should print C because M - A = C
+     * @endcode
+     *
+     * @param s1 the first state as a string
+     * @param s2 the second state as a string
+     * @throw BadCharException if one of the states is not valide.
+     * @return The remaining state as a string
+     * @author Sylvain Gaillard
+     */
+    std::string subtract(const std::string& s1, const std::string& s2) const throw (BadCharException) {
+      return intToChar(subtract(charToInt(s1), charToInt(s2)));
+    }
+
+    /**
+     * @brief Get the overlap between to states
+     *
+     * Get the overlapping states between two steps.
+     *
+     * @code
+     * int m = alpha->charToInt("M");
+     * int r = alpha->charToInt("R");
+     * int a = alpha->getOverlap(m, r);
+     *
+     * cout << alpha->intToChar(a) << endl;
+     *
+     * // should print A because M = A/C and R = A/G
+     * @endcode
+     *
+     * @param s1 the first state as an int
+     * @param s2 the second state as an int
+     * @throw BadIntException if one of the states is not valid
+     * @return The overlapping state
+     * @author Sylvain Gaillard
+     */
+    int getOverlap(int s1, int s2) const throw (BadIntException) {
+      return getStateByBinCode(getState(s1).getBinaryCode() & getState(s2).getBinaryCode()).getNum();
+    }
+
+    /**
+     * @brief Get the overlap between to states
+     *
+     * Get the overlapping states between two steps.
+     *
+     * @code
+     * string m = "M";
+     * string r = R;
+     *
+     * cout << alpha->getOverlap(m, r) << endl;
+     *
+     * // should print A because M = A/C and R = A/G
+     * @endcode
+     *
+     * @param s1 the first state as a string
+     * @param s2 the second state as a string
+     * @throw BadCharException if one of the states is not valid
+     * @return The overlapping state
+     * @author Sylvain Gaillard
+     */
+    std::string getOverlap(const std::string& s1, const std::string& s2) const throw (BadCharException) {
+      return intToChar(getOverlap(charToInt(s1), charToInt(s2)));
+    }
+
     /** @} */
 	public:
 	  NucleicAlphabet() {}

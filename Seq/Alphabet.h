@@ -47,6 +47,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 #include "AlphabetExceptions.h"
+#include "AlphabetState.h"
 
 /**
  * @mainpage
@@ -174,6 +175,32 @@ class Alphabet
      * @return 'true' if the state in known.
      */
     virtual bool isCharInAlphabet(const string & state) const = 0;
+    /** @} */
+
+    /**
+     * @name State access
+     *
+     * @{
+     */
+
+    /**
+     * @brief Get a state given its int description.
+     *
+     * @param state The int description.
+     * @return The AlphabetState.
+     * @throw BadIntException When state is not a valid integer.
+     */
+    virtual const AlphabetState& getState(int state) const throw (BadIntException) = 0;
+
+    /**
+     * @brief Get a state given its string description.
+     *
+     * @param state The string description.
+     * @return The AlphabetState.
+     * @throw BadCharException When state is not a valid string.
+     */
+    virtual const AlphabetState& getState(const std::string& state) const throw (BadCharException) = 0;
+
     /** @} */
         
     /**

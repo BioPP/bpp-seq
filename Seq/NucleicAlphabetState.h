@@ -84,10 +84,10 @@ namespace bpp {
    */
   class NucleicAlphabetState: public AlphabetState {
     private:
-      unsigned int binCode_;
+      unsigned char binCode_;
 
     public:
-      NucleicAlphabetState(int num, const std::string & letter, unsigned int code, const std::string & name): AlphabetState(num, letter, name), binCode_(code) {}
+      NucleicAlphabetState(int num, const std::string & letter, unsigned char code, const std::string & name): AlphabetState(num, letter, name), binCode_(code) {}
 
       // Class destructor
       virtual ~NucleicAlphabetState() {}
@@ -101,13 +101,13 @@ namespace bpp {
        *
        * @return The state's binary representation.
        */
-      unsigned int getBinaryCode() const { return binCode_; }
+      unsigned char getBinaryCode() const { return binCode_; }
       /**
        * @brief Set the state's binary representation.
        *
        * @param code The state's binary representation.
        */
-      void setBinaryCode(unsigned int code) { binCode_ = code; }
+      void setBinaryCode(unsigned char code) { binCode_ = code; }
   };
 }
 

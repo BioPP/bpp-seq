@@ -154,7 +154,7 @@ class AbstractAlphabet:
      * @param letter The letter of the state to find.
      * @throw BadCharException If the letter is not in the Alphabet.
      */
-    virtual const AlphabetState& getState(const std::string& letter) const throw (BadCharException);
+    const AlphabetState& getState(const std::string& letter) const throw (BadCharException);
     /**
      * @brief Get a state by its num.
      *
@@ -164,7 +164,7 @@ class AbstractAlphabet:
      * @param num The num of the state to find.
      * @throw BadIntException If the num is not in the Alphabet.
      */
-    virtual const AlphabetState& getState(int num) const throw (BadIntException);
+    const AlphabetState& getState(int num) const throw (BadIntException);
     /** @} */
 
   protected:
