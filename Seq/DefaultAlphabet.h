@@ -70,8 +70,8 @@ class DefaultAlphabet:
 		unsigned int getSize() const { return 26; }
 		unsigned int getNumberOfTypes() const { return 27; }
 		string getAlphabetType() const { return "Default alphabet"; }
-    int getUnknownCharacterCode() const { return 38; }
-    bool isUnresolved(int state) const { return state == 38; }
+    int getUnknownCharacterCode() const { return 37; }
+    bool isUnresolved(int state) const { return state == 37; }
     bool isUnresolved(const string& state) const { return false; }
  };
 

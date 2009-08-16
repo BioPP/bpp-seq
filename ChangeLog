@@ -1,3 +1,6 @@
+17/08/09 Adam Smith
+* Bug fixed in DefaultAlphabet: unknow state is 37 not 38.
+
 04/08/09 Sylvain Gaillard
 * Introduced new classes for Alphabet States
 
