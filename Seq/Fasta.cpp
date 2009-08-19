@@ -95,7 +95,7 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
     }
     // Sequence content
     if (inseq && ! inseqname) {
-      seq.append(TextTools::toString(c));
+      seq.addElement(TextTools::toString(c));
     }
   }
   // Sequence name and comments isolation
