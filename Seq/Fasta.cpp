@@ -1,8 +1,9 @@
 //
 // File: Fasta.cpp
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
-// Created on: Tue Aug 21 2003
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
+// Created: Tue Aug 21 2003
 //
 
 /*
@@ -43,108 +44,155 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Fasta.h"
 
 #include "StringSequenceTools.h"
+#include <Utils/TextTools.h>
+#include <Utils/FileTools.h>
 #include <Utils/StringTokenizer.h>
 
 using namespace bpp;
 
-/****************************************************************************************/
+/******************************************************************************/
+
+void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
+  if (!input) {
+    throw IOException("Fasta::nextSequence: can't read from istream input");
+  }
+  string seqname ="";
+  Comments seqcmts;
+  char c = '\n';
+  char last_c;
+  short seqcpt = 0;
+  bool inseq = false;
+  bool inseqname = false;
+  seq.setContent("");
+  while (!input.eof()) {
+    last_c = c;
+    input.get(c);
+    // Sequence begining detection
+    if (c == '>' && last_c == '\n') {
+      seqcpt++;
+      inseqname = true;
+      inseq = true;
+      // Stop if find a new sequence
+      if (seqcpt > 1) {
+        input.putback(c);
+        break;
+      }
+      continue;
+    }
+    // Sequence name end line detection and new line suppression
+    if (c == '\n') {
+      inseqname = false;
+      continue;
+    }
+    // Get the sequence name line
+    if (inseqname) {
+      seqname.append(1, c);
+      continue;
+    }
+    // Suppress spaces in sequence
+    if (c == ' ') {
+      continue;
+    }
+    // Sequence content
+    if (inseq && ! inseqname) {
+      seq.append(TextTools::toString(c));
+    }
+  }
+  // Sequence name and comments isolation
+  if (extended_) {
+    StringTokenizer * st = new StringTokenizer(seqname, " \\", true, false);
+    seqname = st->nextToken();
+    while (st->hasMoreToken()) {
+      seqcmts.push_back(st->nextToken());
+    }
+    delete st;
+    seq.setComments(seqcmts);
+  }
+  seq.setName(seqname);
+}
+
+/******************************************************************************/
+
+void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exception) {
+  if (!output) {
+    throw IOException("Fasta::writeSequence: can't write to ostream output");
+  }
+  output << ">" << seq.getName();
+  if (extended_) {
+    for (unsigned int i = 0 ; i < seq.getComments().size() ; i++) {
+      output << " \\" << seq.getComments()[i];
+    }
+  }
+  output << endl;
+  for (unsigned int i = 0 ; i < seq.size() ; i++) {
+    output << seq.getChar(i);
+    if ((i && ((i + 1) % charsByLine_) == 0) || i + 1 == seq.size()) {
+      output << endl;
+    }
+  }
+}
+
+
+/******************************************************************************/
 
 void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
 {
-	if (!input) { throw IOException ("Fasta::read: fail to open file"); }
-
-	string temp, name, sequence = "";  // Initialization
-  Comments cmts, seqcmts;
-
-	// Main loop : for all file lines
-	while(!input.eof())
-  {
-		getline(input, temp, '\n');  // Copy current line in temporary string
-
-    // If there is a header block
-    if (_extended && temp[0] == '#' && ! name.size())
-    {
-      temp.erase(temp.begin());
-      if (temp[0] == '\\')
-      {
-        temp.erase(temp.begin());
-        cmts.push_back(temp);
-      }
+  if (!input) {
+    throw IOException("Fasta::appendFromStream: can't read from istream input");
+  }
+  char c = '\n';
+  char last_c;
+  bool header = false;
+  string line = "";
+  Comments cmts;
+  while (!input.eof()) {
+    last_c = c;
+    input.get(c);
+    // Header detection
+    if (extended_ && c == '#') {
+      header = true;
+      continue;
     }
-
-		// If first character is >
-    else if(temp[0] == '>')
-    {
-			// If a name and a sequence were found
-			if((name != "") && (sequence != ""))
-      {
-				// New sequence creation, and addition in existing VectorSequenceContainer
-        if (! _extended)
-        {
-				  vsc.addSequence(Sequence(name, sequence, vsc.getAlphabet()), _checkNames);
+    // Header end detection
+    if (c == '\n') {
+      if (extended_ && header) {
+        if (line[0] == '\\') {
+          line.erase(line.begin());
+          cmts.push_back(line);
         }
-        else
-        {
-          vsc.addSequence(Sequence(name, sequence, seqcmts, vsc.getAlphabet()), _checkNames);
-          seqcmts.clear();
-        }
-        name = "";
-				sequence = "";
-			}
-			// Sequence name isolation
-      if (! _extended)
-      {
-			  name = temp;
+        line = "";
+        header = false;
       }
-      else
-      {
-        StringTokenizer * st = new StringTokenizer(temp, " \\", true, false);
-        name = st->nextToken();
-        while (st->hasMoreToken())
-        {
-          seqcmts.push_back(st->nextToken());
-        }
-        delete st;
-      }
-			name.erase(name.begin());  // Character > deletion
-		}
-    else sequence += temp;  // Sequence isolation
-	}
-	
-	// Addition of the last sequence in file
-	if((name != "") && (sequence != ""))
-  {
-		if (! _extended)
-    {
-      vsc.addSequence(Sequence(name, sequence, vsc.getAlphabet()), _checkNames);
+      continue;
     }
-    else
-    {
-      vsc.addSequence(Sequence(name, sequence, seqcmts, vsc.getAlphabet()), _checkNames);
+    // Header capture
+    if (header) {
+      line.append(1, c);
     }
-	}
-
-  // Addition of general comments
-  if (_extended && cmts.size())
-  {
+    // Sequence detection
+    if (c == '>' && last_c == '\n') {
+      input.putback(c);
+      c = last_c;
+      Sequence tmpseq("", "", vsc.getAlphabet());
+      nextSequence(input, tmpseq);
+      vsc.addSequence(tmpseq, checkNames_);
+    }
+  }
+  if (extended_ && cmts.size()) {
     vsc.setGeneralComments(cmts);
   }
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
-{
-	// Checking the existence of specified file, and possibility to open it in write mode
-	if (! output) { throw IOException ("Fasta::write: failed to open file"); }
+void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (Exception) {
+	if (!output) {
+    throw IOException("Fasta::write: can't write to ostream output");
+  }
 
-	string seq, temp = "";  // Initialization
-
-  if (_extended)
-  {
+  if (extended_) {
     // Loop for all general comments
-    for (unsigned int i = 0 ; i < sc.getGeneralComments().size() ; i++)
-    {
+    for (unsigned int i = 0 ; i < sc.getGeneralComments().size() ; i++) {
       output << "#\\" << sc.getGeneralComments()[i] << endl;
     }
     output << endl;
@@ -152,35 +200,10 @@ void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (E
 
 	// Main loop : for all sequences in vector container
 	vector<string> names = sc.getSequencesNames();
-	for (unsigned int i = 0; i < names.size(); i ++)
-  {
-    // Sequence's commentaries writing
-		output << ">" << names[i];
-    if (_extended)
-    {
-      for (unsigned int j = 0 ; j < sc.getComments(names[i]).size() ; j++)
-        output << " \\" << sc.getComments(names[i])[j];
-    }
-    output << endl;
-		
-		// Sequence cutting to specified characters number per line
-		seq = sc.toString(names[i]);
-		while (seq != "")
-    {
-			if (seq.size() > _charsByLine)
-      {
-				temp = string(seq.begin(), seq.begin() + _charsByLine);
-				output << temp  << endl;
-				seq.erase(seq.begin(), seq.begin() + _charsByLine);
-			}
-      else
-      {
-				output << seq << endl;
-				seq = "";
-			}
-		}
+	for (unsigned int i = 0; i < names.size(); i ++) {
+    writeSequence(output, sc.getSequence(names[i]));
 	}
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 

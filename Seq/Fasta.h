@@ -1,8 +1,9 @@
 //
 // File: Fasta.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
-// Created on: Tue Aug 21 2003
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
+// Created: Tue Aug 21 2003
 //
 
 /*
@@ -45,6 +46,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AbstractOSequence.h"
 #include "Sequence.h"
 #include "SequenceContainer.h"
+#include "ISequenceStream.h"
+#include "OSequenceStream.h"
 #include "VectorSequenceContainer.h"
 
 namespace bpp
@@ -57,18 +60,20 @@ namespace bpp
  */
 class Fasta:
   public virtual AbstractISequence,
-  public virtual AbstractOSequence
+  public virtual AbstractOSequence,
+  public virtual ISequenceStream,
+  public virtual OSequenceStream
 {
   protected:
 
     /**
      * @brief The maximum number of chars to be written on a line.
      */
-    unsigned int _charsByLine;
+    unsigned int charsByLine_;
 
-    bool _checkNames;
+    bool checkNames_;
 
-    bool _extended;
+    bool extended_;
 
   public:
   
@@ -79,7 +84,7 @@ class Fasta:
      * @param checkNames  Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      * @param extended Tell if we should read general comments and sequence comments in HUPO-PSI format.
      */
-    Fasta(unsigned int charsByLine = 100, bool checkNames = true, bool extended = false): _charsByLine(charsByLine), _checkNames(checkNames), _extended(extended) {}
+    Fasta(unsigned int charsByLine = 100, bool checkNames = true, bool extended = false): charsByLine_(charsByLine), checkNames_(checkNames), extended_(extended) {}
 
     // Class destructor
     virtual ~Fasta() {}
@@ -91,13 +96,21 @@ class Fasta:
      *
      * @{
      */
-    void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+    /**
+     * @copydoc AbstractISequence::appendFromStream(istream& input, VectorSequenceContainer& sc) const
+     * @author Sylvain Gaillard
+     */
+    void appendFromStream(istream& input, VectorSequenceContainer& sc) const throw (Exception);
     /** @} */
 
     /**
      * @name The OSequence interface.
      *
      * @{
+     */
+    /**
+     * @copydoc OSequence::write(ostream& output, const SequenceContainer& sc) const
+     * @author Sylvain Gaillard
      */
     void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
     void write(const string & path, const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
@@ -119,16 +132,40 @@ class Fasta:
     /** @} */
 
     /**
+     * @name The ISequenceStream interface.
+     *
+     * @{
+     */
+    /**
+     * @copydoc ISequenceStream::nextSequence(istream& input, Sequence& seq) const
+     * @author Sylvain Gaillard
+     */
+    void nextSequence(istream& input, Sequence& seq) const throw (Exception);
+    /** @} */
+
+    /**
+     * @name The OSequenceStream interface.
+     *
+     * @{
+     */
+    /**
+     * @copydoc OSequenceStream::writeSequence(ostream& output, const Sequence& seq) const
+     * @author Sylvain Gaillard
+     */
+    void writeSequence(ostream& output, const Sequence& seq) const throw (Exception);
+    /** @} */
+
+    /**
      * @return true if the names are to be checked when reading sequences from files.
      */
-    bool checkNames() const { return _checkNames; }
+    bool checkNames() const { return checkNames_; }
 
     /**
      * @brief Tell whether the sequence names should be checked when reading from files.
      *
      * @param yn whether the sequence names should be checked when reading from files.
      */
-    void checkNames(bool yn) { _checkNames = yn; }
+    void checkNames(bool yn) { checkNames_ = yn; }
 };
 
 } //end of namespace bpp.

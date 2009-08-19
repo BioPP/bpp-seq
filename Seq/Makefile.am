@@ -64,6 +64,8 @@ AAIndex1Entry.h\
 AAIndex2Entry.h\
 IOSequence.h\
 ISequence.h\
+ISequenceStream.h\
+IOSequenceStream.h\
 ioseq\
 MapSequenceContainer.h\
 Mase.h\
@@ -73,6 +75,7 @@ NucleicAlphabetState.h\
 NucleicAcidsReplication.h\
 OrderedSequenceContainer.h\
 OSequence.h\
+OSequenceStream.h\
 Phylip.h\
 ProteicAlphabet.h\
 ProteicAlphabetState.h\
