@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -40,6 +40,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _SITECONTAINEREXCEPTIONS_H_
 #define _SITECONTAINEREXCEPTIONS_H_
 
+// From STL
+#include <string>
+
 // From Utils:
 #include <Utils/Exceptions.h>
 
@@ -60,7 +63,7 @@ class SiteNotFoundException:
 		/**
 		 * @brief The id of the site that was to be found.
 		 */
-		const string id;
+		const std::string id;
 
 	public:	// Class constructor
 	
@@ -78,7 +81,7 @@ class SiteNotFoundException:
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param sId  A the id of the site that was to be found.
 		 */
-		SiteNotFoundException(const string & text, const string & sId = "");
+		SiteNotFoundException(const std::string & text, const std::string & sId = "");
 
 		// Class destructor
 		~SiteNotFoundException() throw();
@@ -90,7 +93,7 @@ class SiteNotFoundException:
 		 *
 		 * @return The id of the site that was to be found.
 		 */
-		virtual const string getSiteId() const;
+		virtual const std::string getSiteId() const;
 };
 
 } //end of namespace bpp.

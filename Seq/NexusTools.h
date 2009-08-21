@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -64,7 +64,7 @@ class NexusTools
      * @param input The input stream.
      * @return A string containing the next line in the file wichi is not empty and is no a comment line.
      */
-    static string getNextNonCommentLine(istream& input);
+    static std::string getNextNonCommentLine(std::istream& input);
 
     /**
      * @brief parse the next command name within a block.
@@ -76,7 +76,7 @@ class NexusTools
      * @return Whether a command was found in the current block.
      * @throw IOException In case of bad format.
      */
-    static bool getNextCommand(istream& input, string& name, string& arguments, bool lineBrk = true) throw (IOException);
+    static bool getNextCommand(std::istream& input, std::string& name, std::string& arguments, bool lineBrk = true) throw (IOException);
 
 };
 

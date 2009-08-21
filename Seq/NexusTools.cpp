@@ -44,8 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/FileTools.h>
 
 using namespace bpp;
+using namespace std;
 
-string NexusTools::getNextNonCommentLine(istream& input)
+std::string NexusTools::getNextNonCommentLine(std::istream& input)
 {
   string line = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(input));
   bool test = true;
@@ -70,7 +71,7 @@ string NexusTools::getNextNonCommentLine(istream& input)
 }
 
 
-bool NexusTools::getNextCommand(istream& input, string& name, string& arguments, bool lineBrk)
+bool NexusTools::getNextCommand(std::istream& input, std::string& name, std::string& arguments, bool lineBrk)
   throw (IOException)
 {
 	// Checking if the stream is readable

@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SiteContainerExceptions.h"
 
 using namespace bpp;
+using namespace std;
 
 /*******************************************************************************
  *                       Site containers exceptions                            *
