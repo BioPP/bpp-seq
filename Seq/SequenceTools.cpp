@@ -1,12 +1,13 @@
 //
 // File: SequenceTools.cpp
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Tue Aug 21 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -320,7 +321,29 @@ void SequenceTools::getPutativeHaplotypes(const Sequence & seq, std::vector<Sequ
   }
 }
 
-/****************************************************************************************/
+/******************************************************************************/
+
+Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2) throw (AlphabetMismatchException) {
+  if (s1.getAlphabet() != s2.getAlphabet()) {
+    throw AlphabetMismatchException("SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2): s1 and s2 don't have same Alphabet.", s1.getAlphabet(), s2.getAlphabet());
+  }
+  const Alphabet* alpha = s1.getAlphabet();
+  vector<int> st;
+  vector<int> seq;
+  unsigned int length = NumTools::max(s1.size(), s2.size());
+  for (unsigned int i = 0 ; i < length ; i++) {
+    if (i < s1.size())
+      st.push_back(s1.getValue(i));
+    if (i < s2.size())
+      st.push_back(s2.getValue(i));
+    seq.push_back(alpha->getGeneric(st));
+    st.clear();
+  }
+  Sequence* s = new Sequence(s1.getName() + "+" + s2.getName(), seq, alpha);
+  return s;
+}
+
+/******************************************************************************/
 
 Sequence * SequenceTools::subtractHaplotype(const Sequence & s, const Sequence & h, string name, unsigned int level) throw (SequenceNotAlignedException) {
   const Alphabet * alpha = s.getAlphabet();

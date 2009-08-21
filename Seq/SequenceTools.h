@@ -1,12 +1,13 @@
 //
 // File: SequenceTools.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// Authors: Guillaume Deuchst
+//          Julien Dutheil
+//          Sylvain Gaillard
 // Created on: Tue Aug 21 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -266,6 +267,14 @@ class SequenceTools:
      * @author Sylvain Gaillard
      */
     static void getPutativeHaplotypes(const Sequence & seq, std::vector<Sequence *> & hap, unsigned int level = 2);
+
+    /**
+     * @brief Combine two sequences.
+     *
+     * @author Sylvain Gaillard
+     */
+    
+    static Sequence* combineSequences(const Sequence& s1, const Sequence& s2) throw (AlphabetMismatchException);
 
     /**
      * @brief Subtract haplotype from an heterozygous sequence.
