@@ -1,12 +1,12 @@
 //
 // File: SiteContainerTools.cpp
 // Created by: Julien Dutheil
-//             Sylvain Glémin
+//             Sylvain GlÃ©min
 // Created on: Fri Dec 12 18:55:06 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.

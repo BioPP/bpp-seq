@@ -1,11 +1,11 @@
 //
 // File CodonSiteTools.h
-// Author : Sylvain Glémin
+// Author : Sylvain GlÃ©min
 // Last modification : November 2005
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.

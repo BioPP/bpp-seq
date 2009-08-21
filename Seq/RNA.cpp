@@ -7,7 +7,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -60,7 +60,7 @@ RNA::RNA()
 	resize(20);
 
 	// Alphabet content definition
-	// all unresolved bases use n°14
+	// all unresolved bases use nÂ°14
   setState( 0, NucleicAlphabetState(-1, "-",  0, "Gap"));
   setState( 1, NucleicAlphabetState( 0, "A",  1, "Adenine"));
   setState( 2, NucleicAlphabetState( 1, "C",  2, "Cytosine"));

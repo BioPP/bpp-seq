@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -52,7 +52,7 @@ namespace bpp
 
 /**
  * @brief The abstract base class for codon alphabets.
- * @author Laurent Guéguen
+ * @author Laurent GuÃ©guen
  * 
  * Since codons are made of 3 nucleic bases (RNA or DNA), this class
  * has a NucleicAlphabet field used to check char description. This

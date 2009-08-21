@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -48,7 +48,7 @@ namespace bpp
 
 /**
  * @brief This class implements the Invertebrate
- * @author Laurent Guéguen
+ * @author Laurent GuÃ©guen
  *
  * Mitochondrial codon alphabet as describe on the NCBI website:
  * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG5

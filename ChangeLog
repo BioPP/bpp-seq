@@ -180,7 +180,7 @@ pointer. Several code updates, including copy contructors.
 * New generic score scheme.
 * Compatibility update (NumCalc)
 
-24/04/07 Benoît Nabholz & Julien Dutheil
+24/04/07 BenoÃ®t Nabholz & Julien Dutheil
 * GeneticCode classes can now translate unknow codons to unknown amino acids.
 
 02/04/07 Julien Dutheil
@@ -249,7 +249,7 @@ needed.
 01/01/06 Julien Dutheil
 * VectorSiteContainer and AlignedSequenceContainer now number sites from 1 (and not 0). 
 
-17/05/06 Benoît Nabholz, Sylvain Glémin & Julien Dutheil
+17/05/06 BenoÃ®t Nabholz, Sylvain GlÃ©min & Julien Dutheil
 * Bug fixed in SiteContainerTools::getConsensus(), + SymbolListTools::getFrequencies() and getCounts() improved.
 
 15/05/06 Julien Dutheil

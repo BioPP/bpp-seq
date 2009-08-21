@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -47,8 +47,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // From STL:
 #include <string>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -65,7 +63,7 @@ class IOSequence: public virtual IOFormat
 
 	public:
 
-		const string getDataType() const { return "Sequence container"; }
+		const std::string getDataType() const { return "Sequence container"; }
 
 };
 

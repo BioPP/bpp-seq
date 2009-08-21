@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. Julien Dutheil, (November 17, 2004)
+Copyright or Â© or Copr. Julien Dutheil, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
