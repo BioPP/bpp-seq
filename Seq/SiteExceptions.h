@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -79,7 +79,7 @@ class SiteException:
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param s    A const pointer toward the site that threw the exception.
 		 */
-		SiteException(const string & text, const Site * s = NULL);
+		SiteException(const std::string & text, const Site * s = NULL);
 
 		// Class destructor
 		virtual ~SiteException() throw();
@@ -103,7 +103,7 @@ class EmptySiteException:
 	public:
 		// Class constructor
 		EmptySiteException(const char *   text, const Site * s = NULL);
-		EmptySiteException(const string & text, const Site * s = NULL);
+		EmptySiteException(const std::string & text, const Site * s = NULL);
 
 		// Class destructor
 		virtual ~EmptySiteException() throw();
@@ -118,7 +118,7 @@ class SiteWithGapException:
 	public:
 		// Class constructor
 		SiteWithGapException(const char *   text, const Site * s = NULL);
-		SiteWithGapException(const string & text, const Site * s = NULL);
+		SiteWithGapException(const std::string & text, const Site * s = NULL);
 
 		// Class destructor
 		virtual ~SiteWithGapException() throw();

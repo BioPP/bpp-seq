@@ -3,7 +3,7 @@
 // Created On: dim mar 7 2004
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or Â© or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/TextTools.h>
 
 using namespace bpp;
+using namespace std;
 
 /***************************************************************************/
 
