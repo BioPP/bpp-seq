@@ -185,7 +185,7 @@ set_target_properties(bppseq-shared
 target_link_libraries(bppseq-shared ${LIBS})
 
 # Install libs
-install(TARGETS bppseq-shared DESTINATION lib)
+install(TARGETS bppseq-static bppseq-shared DESTINATION lib)
 
 # Install headers
 install(FILES ${H_FILES} DESTINATION include/Seq)
