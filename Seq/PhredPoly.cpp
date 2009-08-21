@@ -50,11 +50,11 @@ using namespace bpp;
 
 /******************************************************************************/
 
-PhredPoly::PhredPoly(double ratio) : _ratio(ratio) {}
+PhredPoly::PhredPoly(double ratio) : ratio_(ratio) {}
 
 /******************************************************************************/
 
-void PhredPoly::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception) {
+void PhredPoly::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
   if (!input) { throw IOException ("PhredPoly::read: fail to open stream"); }
 
   string temp, name, sequence = "";  // Initialization
@@ -66,7 +66,8 @@ void PhredPoly::appendFromStream(istream & input, VectorSequenceContainer & vsc)
     name = st.getToken(0);
   }
 
-  const Alphabet * alpha = vsc.getAlphabet();
+  const Alphabet* alpha = seq.getAlphabet();
+
   // Main loop : for all other lines
   while (!input.eof()) {
     getline(input, temp, '\n');  // Copy current line in temporary string
@@ -79,15 +80,15 @@ void PhredPoly::appendFromStream(istream & input, VectorSequenceContainer & vsc)
       }
       vector<string> v;
       v.push_back(st.getToken(0)); // Get the called base
-      if (b / a > this->_ratio) {
+      if (b / a > this->ratio_) {
         v.push_back(st.getToken(4)); // Get the uncalled base if relative picks areas are similar
       }
       sequence += alpha->getGeneric(v);
     }
   }
   if(name == "") throw Exception("PhredPoly::read: sequence without name!");
-  Sequence * seq = new Sequence(name, sequence, alpha);
-  vsc.addSequence(* seq);
+  seq.setName(name);
+  seq.setContent(sequence);
 }
 
 /******************************************************************************/

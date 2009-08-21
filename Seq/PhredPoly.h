@@ -40,10 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _PHREDPOLY_H_
 #define _PHREDPOLY_H_
 
-#include "AbstractISequence.h"
+#include "ISequenceStream.h"
 #include "Sequence.h"
-#include "SequenceContainer.h"
-#include "VectorSequenceContainer.h"
 
 namespace bpp {
 
@@ -54,9 +52,9 @@ namespace bpp {
    * from the University of Washington.
    * For now, only read raw sequences and do a basic filter on heterozygous site.
    */
-  class PhredPoly: public AbstractISequence {
+  class PhredPoly: public ISequenceStream {
     protected:
-      double _ratio;
+      double ratio_;
 
     public:
 
@@ -73,7 +71,7 @@ namespace bpp {
        *
        * @{
        */
-      void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+      void nextSequence(std::istream& input, Sequence& seq) const throw (Exception);
       /** @} */
 
       /**
@@ -81,8 +79,9 @@ namespace bpp {
        *
        * @{
        */
-      const string getFormatName() const { return "poly file"; };
-      const string getFormatDescription() const {
+      const std::string getDataType() const { return "Sequence"; };
+      const std::string getFormatName() const { return "poly file"; };
+      const std::string getFormatDescription() const {
         return "Sequences following the poly format as describe in the phred documentation.";
       }
       /** @} */
