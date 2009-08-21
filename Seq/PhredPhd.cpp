@@ -44,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/StringTokenizer.h>
 
 using namespace bpp;
+using namespace std;
 
 /******************************************************************************/
 
@@ -51,13 +52,13 @@ PhredPhd::PhredPhd(double quality, unsigned int lframe, unsigned int rframe) : _
 
 /******************************************************************************/
 
-void PhredPhd::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception) {
+void PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exception) {
   if (!input) { throw IOException ("PhredPhd::read: fail to open stream"); }
 
   string temp, name, sequence = "";  // Initialization
   vector<double> q;
 
-  const Alphabet * alpha = vsc.getAlphabet();
+  const Alphabet * alpha = seq.getAlphabet();
   // Read sequence info
   // Main loop : for all lines
   while (!input.eof()) {
@@ -91,8 +92,10 @@ void PhredPhd::appendFromStream(istream & input, VectorSequenceContainer & vsc) 
     }
   }
   // Sequence creation
-  if(name == "") throw Exception("PhredPhd::read: sequence without name!");
-  Sequence * seq = new Sequence(name, sequence, alpha);
+  if(name == "")
+    throw Exception("PhredPhd::read: sequence without name!");
+  seq.setName(name);
+  seq.setContent(sequence);
   // Filter sequence
   for (unsigned int i = 0 ; i < sequence.size() ; ++i) {
     double lq = 0.;
@@ -112,11 +115,9 @@ void PhredPhd::appendFromStream(istream & input, VectorSequenceContainer & vsc) 
     }
     lq = lq / (hb - lb + 1);
     if (lq < _quality) {
-      seq->setElement(i, "N");
+      seq.setElement(i, "N");
     }
   }
-  // Adding sequence to container
-  vsc.addSequence(* seq);
 }
 
 /******************************************************************************/

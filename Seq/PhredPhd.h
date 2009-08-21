@@ -40,10 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _PHREDPHD_H_
 #define _PHREDPHD_H_
 
-#include "AbstractISequence.h"
+#include "ISequenceStream.h"
 #include "Sequence.h"
-#include "SequenceContainer.h"
-#include "VectorSequenceContainer.h"
 
 namespace bpp {
 
@@ -60,7 +58,7 @@ namespace bpp {
    * The sliding window is defined both at the left and the right of each site.
    *
    */
-  class PhredPhd: public AbstractISequence {
+  class PhredPhd: public ISequenceStream {
     protected:
       double _quality;
       unsigned int _lframe;
@@ -82,20 +80,21 @@ namespace bpp {
 
     public:
       /**
-       * @name The AbstractISequence interface.
+       * @name The ISequenceStream interface.
        *
        * @{
        */
-      void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+      void nextSequence(std::istream& input, Sequence& seq) const throw (Exception);
       /** @} */
 
       /**
-       * @name The IOSequence interface.
+       * @name The IOFormat interface.
        *
        * @{
        */
-      const string getFormatName() const { return "phd file"; };
-      const string getFormatDescription() const {
+      const std::string getDataType() const { return "Sequence"; };
+      const std::string getFormatName() const { return "phd file"; };
+      const std::string getFormatDescription() const {
         return "Sequences following the phd format as describe in the phred documentation.";
       }
       /** @} */
