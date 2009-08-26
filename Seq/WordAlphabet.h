@@ -313,6 +313,13 @@ public:
   Sequence * reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception);
   
   /** @} */
+
+  /**
+   * @name Overloaded AbstractAlphabet methods.
+   * @{
+   */
+  unsigned int getStateCodingSize() const { return _VAbsAlph.size(); }
+  /** @} */
 };
 
 } //end of namespace bpp.

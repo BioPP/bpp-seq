@@ -377,6 +377,13 @@ class Alphabet
      * @return A text describing the alphabet.
      */
     virtual string getAlphabetType() const = 0;
+
+    /**
+     * @brief Get the size of the string coding a state.
+     * @return The size of the tring coding each states in the Alphabet.
+     * @author Sylvain Gaillard
+     */
+    virtual unsigned int getStateCodingSize() const = 0;
 };
 
 } //end of namespace bpp.

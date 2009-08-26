@@ -58,44 +58,46 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
   }
   string seqname ="";
   Comments seqcmts;
-  char c = '\n';
-  char last_c;
-  short seqcpt = 0;
-  bool inseq = false;
-  bool inseqname = false;
   seq.setContent("");
+  char c;
+  short seqcpt = 0;
+  string linebuffer = "";
+  string bufferleft = "";
+  vector<string> splitline;
+  unsigned int wordsize = seq.getAlphabet()->getStateCodingSize();
   while (!input.eof()) {
-    last_c = c;
-    input.get(c);
+    c = input.peek();
     // Sequence begining detection
-    if (c == '>' && last_c == '\n') {
-      seqcpt++;
-      inseqname = true;
-      inseq = true;
+    if (c == '>') {
       // Stop if find a new sequence
-      if (seqcpt > 1) {
-        input.putback(c);
+      if (seqcpt++)
         break;
+    }
+    getline(input, linebuffer);
+    if (c == '>') {
+      // Get the sequence name line
+      seqname = string(linebuffer.begin() + 1, linebuffer.end());
+    }
+    if (c != '>') {
+      // Sequence content
+      if (wordsize == 1) {
+        for (unsigned int i = 0 ; i < linebuffer.size() ; i++) {
+          seq.addElement(string(1, toupper(linebuffer[i])));
+        }
+      } else {
+        if (bufferleft.size()) {
+          linebuffer = bufferleft + linebuffer;
+          bufferleft.clear();
+        }
+        splitline = TextTools::split(TextTools::toUpper(linebuffer), wordsize);
+        for (unsigned int j = 0 ; j < splitline.size() ; j++) {
+          if (splitline[j].size() == wordsize) {
+            seq.addElement(splitline[j]);
+          } else {
+            bufferleft += splitline[j];
+          }
+        }
       }
-      continue;
-    }
-    // Sequence name end line detection and new line suppression
-    if (c == '\n') {
-      inseqname = false;
-      continue;
-    }
-    // Get the sequence name line
-    if (inseqname) {
-      seqname.append(1, c);
-      continue;
-    }
-    // Suppress spaces in sequence
-    if (c == ' ') {
-      continue;
-    }
-    // Sequence content
-    if (inseq && ! inseqname) {
-      seq.addElement(TextTools::toString(c));
     }
   }
   // Sequence name and comments isolation

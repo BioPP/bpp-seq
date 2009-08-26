@@ -140,6 +140,8 @@ class AbstractAlphabet:
       }
     }
 
+    unsigned int getStateCodingSize() const { return 1; }
+
   public:
     /**
      * @name Specific methods to access AlphabetState
