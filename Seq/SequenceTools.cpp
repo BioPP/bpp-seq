@@ -324,7 +324,7 @@ void SequenceTools::getPutativeHaplotypes(const Sequence & seq, std::vector<Sequ
 /******************************************************************************/
 
 Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2) throw (AlphabetMismatchException) {
-  if (s1.getAlphabet() != s2.getAlphabet()) {
+  if (s1.getAlphabet()->getAlphabetType() != s2.getAlphabet()->getAlphabetType()) {
     throw AlphabetMismatchException("SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2): s1 and s2 don't have same Alphabet.", s1.getAlphabet(), s2.getAlphabet());
   }
   const Alphabet* alpha = s1.getAlphabet();
