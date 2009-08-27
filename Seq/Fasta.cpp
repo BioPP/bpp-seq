@@ -78,14 +78,14 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       // Get the sequence name line
       seqname = string(linebuffer.begin() + 1, linebuffer.end());
     }
-    if (c != '>') {
+    if (c != '>' && !TextTools::isWhiteSpaceCharacter(c) && !input.eof()) {
       // Sequence content
       if (wordsize == 1) {
         for (unsigned int i = 0 ; i < linebuffer.size() ; i++) {
           seq.addElement(string(1, toupper(linebuffer[i])));
         }
       } else {
-        if (bufferleft.size()) {
+        if (!bufferleft.empty()) {
           linebuffer = bufferleft + linebuffer;
           bufferleft.clear();
         }
@@ -119,21 +119,25 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exc
   if (!output) {
     throw IOException("Fasta::writeSequence: can't write to ostream output");
   }
+  // Sequence name
   output << ">" << seq.getName();
+  // Sequence comments
   if (extended_) {
     for (unsigned int i = 0 ; i < seq.getComments().size() ; i++) {
       output << " \\" << seq.getComments()[i];
     }
   }
   output << endl;
+  // Sequence content
+  string buffer; // use a buffer to format sequence with states > 1 char
   for (unsigned int i = 0 ; i < seq.size() ; i++) {
-    output << seq.getChar(i);
-    if ((i && ((i + 1) % charsByLine_) == 0) || i + 1 == seq.size()) {
-      output << endl;
+    buffer += seq.getChar(i);
+    if (buffer.size() >= charsByLine_ || i + 1 == seq.size()) {
+      cout << string(buffer.begin(), buffer.begin() + charsByLine_ < buffer.end() ? buffer.begin() + charsByLine_ : buffer.end()) << endl;
+      buffer.erase(0, charsByLine_);
     }
   }
 }
-
 
 /******************************************************************************/
 
