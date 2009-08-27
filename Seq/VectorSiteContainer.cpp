@@ -441,7 +441,7 @@ void VectorSiteContainer::setSequence(unsigned int pos, const Sequence& sequence
     throw (Exception)
 {
   if (pos >= getNumberOfSequences())
-    throw BadIntegerException("VectorSiteContainer::saddSequence", pos);
+    throw BadIntegerException("VectorSiteContainer::addSequence", pos);
 
   // New sequence's alphabet and site container's alphabet matching verification
   if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
@@ -547,7 +547,7 @@ void VectorSiteContainer::addSequence(const Sequence& sequence, bool checkNames)
     throw AlphabetMismatchException("VectorSiteContainer::addSequence", getAlphabet(), sequence.getAlphabet());
 
   if (sequence.size() != sites_.size())
-    throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length.", &sequence);
+    throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length: " + TextTools::toString(sequence.size()) + ", should be " + TextTools::toString(sites_.size()) + ".", &sequence);
 
   if (checkNames) {
     for (unsigned int i = 0; i < names_.size(); i++) {
