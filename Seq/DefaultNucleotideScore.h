@@ -83,6 +83,12 @@ class DefaultNucleotideScore: public AlphabetIndex2<double>
 		 *
 		 * @{
 		 */
+    /**
+     * @copydoc AlphabetIndex2<double>::getIndex(int state1, int state2) const
+     *
+     * If states are unresolved, takes the best score of all possible matches.
+     * @author Sylvain Gaillard
+     */
 		double getIndex(int state1, int state2) const throw (BadIntException);
 		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
 		const Alphabet * getAlphabet() const { return _alpha; };

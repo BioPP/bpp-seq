@@ -75,9 +75,21 @@ DefaultNucleotideScore::DefaultNucleotideScore(const NucleicAlphabet * alphabet)
 double DefaultNucleotideScore::getIndex(int state1, int state2) const 
 throw (BadIntException)
 {
-	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "DefaultNucleotideScore::getIndex(). Invalid state1.", _alpha);
-	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state2.", _alpha);
-  return _distanceMatrix(state1, state2);
+  if (_alpha->isGap(state1) || !_alpha->isIntInAlphabet(state1))
+    throw BadIntException(state1, "DefaultNucleotideScore::getIndex(). Invalid state1.", _alpha);
+  if (_alpha->isGap(state2) || !_alpha->isIntInAlphabet(state2))
+    throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state1.", _alpha);
+  if (! _alpha->isUnresolved(state1) && ! _alpha->isUnresolved(state2))
+    return _distanceMatrix(state1, state2);
+  vector<int> states1 = _alpha->getAlias(state1);
+  vector<int> states2 = _alpha->getAlias(state2);
+  double score = -5;
+  for (unsigned int i = 0 ; i < states1.size() ; i++) {
+    for (unsigned int j = 0 ; j < states2.size() ; j++) {
+      if (getIndex(states1[i], states2[j]) > score)
+        score = getIndex(states1[i], states2[j]);
+    }
+  }
 }
 
 double DefaultNucleotideScore::getIndex(const string & state1, const string & state2) const
