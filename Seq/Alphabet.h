@@ -44,8 +44,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <vector>
 
-using namespace std;
-
 #include "AlphabetExceptions.h"
 #include "AlphabetState.h"
 
@@ -138,7 +136,7 @@ class Alphabet
      * @return The name of the state.
      * @throw BadIntException When state is not a valid integer.
      */
-    virtual string getName(int state) const throw (BadIntException)  = 0;
+    virtual std::string getName(int state) const throw (BadIntException)  = 0;
         
     /**
      * @brief Get the complete name of a state given its string description.
@@ -150,7 +148,7 @@ class Alphabet
      * @return The name of the state.
      * @throw BadCharException When state is not a valid char description.
      */
-    virtual string getName(const string & state) const throw (BadCharException) = 0;
+    virtual std::string getName(const std::string& state) const throw (BadCharException) = 0;
 
     /**
      * @name = Tests
@@ -174,7 +172,7 @@ class Alphabet
      * @param state The string description.
      * @return 'true' if the state in known.
      */
-    virtual bool isCharInAlphabet(const string & state) const = 0;
+    virtual bool isCharInAlphabet(const std::string& state) const = 0;
     /** @} */
 
     /**
@@ -216,7 +214,7 @@ class Alphabet
      * @return The string description.
      * @throw BadIntException When state is not a valid integer.
      */
-    virtual string intToChar(int state) const throw (BadIntException) = 0;
+    virtual std::string intToChar(int state) const throw (BadIntException) = 0;
         
     /**
      * @brief Give the int description of a state given its string description.
@@ -225,7 +223,7 @@ class Alphabet
      * @return The int description.
      * @throw BadCharException When state is not a valid char description.
      */
-    virtual int charToInt(const string & state) const throw (BadCharException) = 0;
+    virtual int charToInt(const std::string& state) const throw (BadCharException) = 0;
     /** @} */
         
     /**
@@ -275,7 +273,7 @@ class Alphabet
      * @return A vector of resolved states.
      * @throw BadIntException When state is not a valid integer.
      */
-    virtual vector<int> getAlias(int state) const throw (BadIntException) = 0;
+    virtual std::vector<int> getAlias(int state) const throw (BadIntException) = 0;
     
     /**
      * @brief Get all resolved states that match a generic state.
@@ -286,7 +284,7 @@ class Alphabet
      * @return A vector of resolved states.
      * @throw BadCharException When state is not a valid char description.
      */
-    virtual vector<string> getAlias(const string & state) const throw (BadCharException) = 0;
+    virtual std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException) = 0;
 
     /**
      * @brief Get the generic state that match a set of states.
@@ -298,7 +296,7 @@ class Alphabet
      * @return A int code for the computed state.
      * @throw BadIntException When a state is not a valid integer.
      */
-    virtual int getGeneric(const vector<int> & states) const throw (BadIntException) = 0;
+    virtual int getGeneric(const std::vector<int>& states) const throw (BadIntException) = 0;
 
     /**
      * @brief Get the generic state that match a set of states.
@@ -311,7 +309,7 @@ class Alphabet
      * @throw BadCharException when a state is not a valid char description.
      * @throw CharStateNotSupportedException when the alphabet does not support Char state for unresolved state.
      */
-    virtual string getGeneric(const vector<string> & states) const throw (AlphabetException) = 0;
+    virtual std::string getGeneric(const std::vector<std::string>& states) const throw (AlphabetException) = 0;
 
     /**
      * @return A list of all supported int codes.
@@ -320,7 +318,7 @@ class Alphabet
      * we return a const reference here since the list is supposed to be
      * stored within the class and should not be modified outside the class.
      */
-    virtual const vector<int> & getSupportedInts() const = 0;
+    virtual const std::vector<int>& getSupportedInts() const = 0;
     
     /**
      * @return A list of all supported character codes.
@@ -329,7 +327,7 @@ class Alphabet
      * we return a const reference here since the list is supposed to be
      * stored within the class and should not be modified outside the class.
      */
-    virtual const vector<string> & getSupportedChars() const = 0;
+    virtual const std::vector<std::string>& getSupportedChars() const = 0;
     
     /**
      * @return The int code for unknown characters.
@@ -351,7 +349,7 @@ class Alphabet
      * @param state The state to test.
      * @return 'True' if the state is a gap.
      */
-    virtual bool isGap(const string & state) const = 0;
+    virtual bool isGap(const std::string& state) const = 0;
 
     /**
      * @param state The state to test.
@@ -363,7 +361,7 @@ class Alphabet
      * @param state The state to test.
      * @return 'True' if the state is unresolved.
      */
-    virtual bool isUnresolved(const string & state) const = 0;
+    virtual bool isUnresolved(const std::string& state) const = 0;
 
     /** @} */
 
@@ -376,7 +374,7 @@ class Alphabet
      *
      * @return A text describing the alphabet.
      */
-    virtual string getAlphabetType() const = 0;
+    virtual std::string getAlphabetType() const = 0;
 
     /**
      * @brief Get the size of the string coding a state.
