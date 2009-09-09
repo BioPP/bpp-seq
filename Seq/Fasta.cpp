@@ -82,9 +82,12 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       // Sequence content
       if (wordsize == 1) {
         for (unsigned int i = 0 ; i < linebuffer.size() ; i++) {
-          seq.addElement(string(1, toupper(linebuffer[i])));
+          if (! TextTools::isWhiteSpaceCharacter(linebuffer[i]))
+            seq.addElement(string(1, toupper(linebuffer[i])));
         }
       } else {
+        // Remove white spaces
+        linebuffer = TextTools::removeWhiteSpaces(linebuffer);
         if (!bufferleft.empty()) {
           linebuffer = bufferleft + linebuffer;
           bufferleft.clear();
