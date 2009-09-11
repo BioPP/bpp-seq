@@ -216,7 +216,7 @@ vector<string> WordAlphabet::getAlias(const string & state) const throw (BadChar
   if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "WordAlphabet::getAlias(string): Specified base unknown.");
   vector<string> v;
 
-  int i, s=getSize();
+  unsigned int i, s = getSize();
   
   string st = "";
   for ( i = 0; i < _VAbsAlph.size(); i++)

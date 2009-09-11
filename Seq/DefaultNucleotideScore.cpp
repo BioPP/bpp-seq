@@ -84,12 +84,15 @@ throw (BadIntException)
   vector<int> states1 = _alpha->getAlias(state1);
   vector<int> states2 = _alpha->getAlias(state2);
   double score = -5;
-  for (unsigned int i = 0 ; i < states1.size() ; i++) {
-    for (unsigned int j = 0 ; j < states2.size() ; j++) {
+  for (unsigned int i = 0 ; i < states1.size() ; i++)
+  {
+    for (unsigned int j = 0 ; j < states2.size() ; j++)
+    {
       if (getIndex(states1[i], states2[j]) > score)
         score = getIndex(states1[i], states2[j]);
     }
   }
+  return score;
 }
 
 double DefaultNucleotideScore::getIndex(const string & state1, const string & state2) const
