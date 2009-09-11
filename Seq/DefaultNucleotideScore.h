@@ -86,7 +86,8 @@ class DefaultNucleotideScore: public AlphabetIndex2<double>
     /**
      * @copydoc AlphabetIndex2<double>::getIndex(int state1, int state2) const
      *
-     * If states are unresolved, takes the best score of all possible matches.
+     * If states are unresolved, takes the best score of all possible matches
+     * and divides it by the number of different states.
      * @author Sylvain Gaillard
      */
 		double getIndex(int state1, int state2) const throw (BadIntException);
