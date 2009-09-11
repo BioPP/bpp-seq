@@ -4,6 +4,7 @@
 
 # File list
 set(CPP_FILES
+  ABI.cpp
   AbstractAlphabet.cpp
   AbstractSequenceContainer.cpp
   AlignedSequenceContainer.cpp
@@ -71,6 +72,7 @@ set(CPP_FILES
   __BLOSUM50MatrixCode
   )
 set(H_FILES
+  ABI.h
   AbstractAlphabet.h
   AbstractISequence.h
   AbstractISequence2.h
@@ -108,6 +110,7 @@ set(H_FILES
   ISequenceStream.h
   IOSequenceStream.h
   ioseq
+  LetterAlphabet.h
   MapSequenceContainer.h
   Mase.h
   MaseTools.h

@@ -42,7 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _NUCLEICALPHABET_H_
 #define _NUCLEICALPHABET_H_
 
-#include "AbstractAlphabet.h"
+#include "LetterAlphabet.h"
 #include "NucleicAlphabetState.h"
 
 #include <map>
@@ -58,7 +58,7 @@ namespace bpp
  * that will require to work with both RNA and DNA.
  */
 class NucleicAlphabet :
-  public AbstractAlphabet
+  public LetterAlphabet
 {
   private:
     std::map<unsigned char, unsigned int> binCodes_;
@@ -73,11 +73,11 @@ class NucleicAlphabet :
      */
   protected:
     void registerState(const NucleicAlphabetState& st) {
-      AbstractAlphabet::registerState(st);
+      LetterAlphabet::registerState(st);
       updateMaps_(getNumberOfChars(), st);
     }
     void setState(unsigned int pos, const NucleicAlphabetState& st) {
-      AbstractAlphabet::setState(pos, st);
+      LetterAlphabet::setState(pos, st);
       updateMaps_(pos, st);
     }
     const NucleicAlphabetState& getStateAt(unsigned int pos) const
@@ -232,7 +232,7 @@ class NucleicAlphabet :
 
     /** @} */
 	public:
-	  NucleicAlphabet() {}
+    NucleicAlphabet() {}
 		virtual ~NucleicAlphabet() {}
 	
 	public:
@@ -246,7 +246,7 @@ class NucleicAlphabet :
 
     bool isUnresolved(int state) const { return state > 3; }
     bool isUnresolved(const string& state) const { return charToInt(state) > 3; }
-    
+
 };
 
 } //end of namespace bpp.

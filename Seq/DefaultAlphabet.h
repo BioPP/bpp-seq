@@ -39,7 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _DEFAULTALPHABET_H_
 #define _DEFAULTALPHABET_H_
 
-#include "AbstractAlphabet.h"
+#include "LetterAlphabet.h"
 
 namespace bpp
 {
@@ -51,7 +51,7 @@ namespace bpp
  * This should be used by who does not care of the sequence type.
  */
 class DefaultAlphabet:
-  public AbstractAlphabet
+  public LetterAlphabet
 {
 	protected:
     void registerState(const AlphabetState& st) {

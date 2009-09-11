@@ -43,7 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _PROTEICALPHABET_H_
 #define _PROTEICALPHABET_H_
 
-#include "AbstractAlphabet.h"
+#include "LetterAlphabet.h"
 #include "ProteicAlphabetState.h"
 
 namespace bpp
@@ -57,7 +57,7 @@ namespace bpp
  */
 
 class ProteicAlphabet:
-  public AbstractAlphabet
+  public LetterAlphabet
 {
     /**
      * @name Overloaded methods from AbstractAlphabet
