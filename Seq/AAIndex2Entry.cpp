@@ -46,7 +46,7 @@ using namespace bpp;
 #include <Utils/TextTools.h>
 #include <Utils/StringTokenizer.h>
 
-AAIndex2Entry::AAIndex2Entry(istream & input, bool sym) throw (IOException)
+AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException)
 {
   _alpha = new ProteicAlphabet();
   _property.resize(20, 20);
@@ -58,22 +58,22 @@ AAIndex2Entry::AAIndex2Entry(istream & input, bool sym) throw (IOException)
   do
   {
     line = FileTools::getNextLine(input);
-    if(line[0] == 'M')
+    if (line[0] == 'M')
     {
-      for(unsigned int i = 0; i < 20; i++)
+      for (unsigned int i = 0; i < 20; i++)
       {
         line = FileTools::getNextLine(input);
         StringTokenizer st1(line, " ");
-        if(i == 0 && st1.numberOfRemainingTokens() == 1)
+        if (i == 0 && st1.numberOfRemainingTokens() == 1)
         {
           //Lower triangle only:
           diag = true;
         }
         //Amino acids are in the same order in the AAIndex1 database than in the ProteicAlphabet class:
-        if(diag)
+        if (diag)
         {
-          if(st1.numberOfRemainingTokens() != (int)(i+1)) break;
-          for(unsigned int j = 0; j <= i; j++)
+          if (st1.numberOfRemainingTokens() != i + 1) break;
+          for (unsigned int j = 0; j <= i; j++)
             _property(i,j) = TextTools::toDouble(st1.nextToken());
         }
         else
@@ -88,7 +88,7 @@ AAIndex2Entry::AAIndex2Entry(istream & input, bool sym) throw (IOException)
       ok = true;
     }
   }
-  while(!ok);
-  if(!ok) throw IOException("AAIndex2Entry: invalid AAIndex2 entry.");
+  while (!ok);
+  if (!ok) throw IOException("AAIndex2Entry: invalid AAIndex2 entry.");
 }
 
