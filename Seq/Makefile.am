@@ -67,6 +67,7 @@ ISequence.h\
 ISequenceStream.h\
 IOSequenceStream.h\
 ioseq\
+LetterAlphabet.h\
 MapSequenceContainer.h\
 Mase.h\
 MaseTools.h\
