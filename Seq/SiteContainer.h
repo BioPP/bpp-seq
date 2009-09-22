@@ -105,6 +105,16 @@ class SiteContainer:
     virtual void addSite(const Site& site, bool checkPosition) throw (Exception) = 0;
 
     /**
+     * @brief Add a site in the container.
+     *
+     * @param site          The site to add.
+     * @param position      The new position of the site, to superseed the one in 'site'.
+     * @param checkPosition Look if the position of the new site match a position attribute in the container.
+     * @throw Exception If the specified site does not exists or is not correct.
+     */
+    virtual void addSite(const Site& site, int position, bool checkPosition) throw (Exception) = 0;
+
+     /**
      * @brief Remove a site from the container.
      *
      * The site is not deleted, a pointer toward it is returned.

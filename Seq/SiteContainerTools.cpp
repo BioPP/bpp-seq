@@ -703,7 +703,7 @@ DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer&
 
 /******************************************************************************/
 
-void SiteContainerTools::merge(SiteContainer& seqCont1, const SiteContainer& seqCont2)
+void SiteContainerTools::merge(SiteContainer& seqCont1, const SiteContainer& seqCont2, bool leavePositionAsIs)
 throw (AlphabetMismatchException, Exception)
 {
   if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
@@ -727,9 +727,16 @@ throw (AlphabetMismatchException, Exception)
     del = true;
   }
 
-  for (unsigned int i = 0; i < seqCont2bis->getNumberOfSites(); i++)
+  if (leavePositionAsIs)
   {
-    seqCont1.addSite(seqCont2bis->getSite(i), false);
+    for (unsigned int i = 0; i < seqCont2bis->getNumberOfSites(); i++)
+      seqCont1.addSite(seqCont2bis->getSite(i), false);
+  }
+  else
+  {
+    int offset = static_cast<int>(seqCont1.getNumberOfSites());
+    for (unsigned int i = 0; i < seqCont2bis->getNumberOfSites(); i++)
+      seqCont1.addSite(seqCont2bis->getSite(i), offset + seqCont2bis->getSite(i).getPosition(), false);
   }
 
   if (del) delete seqCont2bis;

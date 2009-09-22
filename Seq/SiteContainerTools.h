@@ -323,10 +323,11 @@ class SiteContainerTools
      * @param seqCont1 First container.
      * @param seqCont2 Second container. This container must contain sequences with the same names as in seqcont1.
      * Additional sequences will be ignored.
+     * @param leavePositionAsIs Tell is site position should be unchanged. Otherwise (the default) is to add the size of container 1 to the positions in container 2.
      * @throw AlphabetMismatchException If the alphabet in the 2 containers do not match.
      * @throw Exception If sequence names do not match.
      */
-    static void merge(SiteContainer& seqCont1, const SiteContainer& seqCont2) throw (AlphabetMismatchException, Exception);
+    static void merge(SiteContainer& seqCont1, const SiteContainer& seqCont2, bool leavePositionAsIs = false) throw (AlphabetMismatchException, Exception);
 
 };
 

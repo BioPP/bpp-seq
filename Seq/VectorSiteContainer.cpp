@@ -95,7 +95,7 @@ VectorSiteContainer::VectorSiteContainer(unsigned int size, const Alphabet* alph
 
 /******************************************************************************/
   
-VectorSiteContainer::VectorSiteContainer(const vector<string>& names, const Alphabet* alpha):
+VectorSiteContainer::VectorSiteContainer(const std::vector<std::string>& names, const Alphabet* alpha):
   AbstractSequenceContainer(alpha)
 {
   //Seq names and comments:
@@ -328,6 +328,33 @@ void VectorSiteContainer::addSite(const Site& site, bool checkPositions) throw (
   }
   
   sites_.push_back(dynamic_cast<Site *>(site.clone()));  
+}
+
+/******************************************************************************/
+
+void VectorSiteContainer::addSite(const Site& site, int position, bool checkPositions) throw (Exception)
+{
+  // Check size:
+  if (site.size() != getNumberOfSequences()) throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
+
+  // New site's alphabet and site container's alphabet matching verification
+  if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+  {
+    throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site.getAlphabet());
+  }
+
+    // Check position:
+  if (checkPositions)
+  {
+    // For all positions in vector : throw exception if position already exists
+    for (unsigned int i = 0; i < sites_.size(); i++)
+    {
+      if (sites_[i]->getPosition() == position) throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
+    }
+  }
+  Site* copy = dynamic_cast<Site*>(site.clone());
+  copy->setPosition(position);
+  sites_.push_back(copy);  
 }
 
 /******************************************************************************/

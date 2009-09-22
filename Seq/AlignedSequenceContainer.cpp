@@ -294,6 +294,44 @@ void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions) th
 
 /******************************************************************************/
 
+void AlignedSequenceContainer::addSite(const Site& site, int position, bool checkPositions) throw (Exception)
+{
+  // New site's alphabet and site container's alphabet matching verification
+  if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("AlignedSequenceContainer::addSite");
+
+  // Initializing
+  std::vector<int> s = site.getContent();
+  
+  // Check size:
+  if(s.size() != getNumberOfSequences())
+    throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
+
+  // Check position:
+
+  if (checkPositions)
+  {
+    // For all positions in vector : throw exception if position already exists
+    for (unsigned int i = 0; i < positions_.size(); i++)
+      if (positions_[i] == position)
+        throw SiteException("AlignedSequenceContainer::addSite: Site position already exists in container", &site);
+  }
+  
+  // For all sequences
+  for (unsigned int j = 0; j < getNumberOfSequences(); j++)
+  {
+    getSequence_(j).addElement(s[j]);
+  }
+
+  length_++;
+  positions_.push_back(position);
+
+  //Actualizes the 'sites' vector:
+  sites_.push_back(0);
+}
+
+/******************************************************************************/
+
 void AlignedSequenceContainer::addSite(const Site& site, unsigned int pos, bool checkPositions) throw (Exception)
 {
   if(pos >= getNumberOfSites())
