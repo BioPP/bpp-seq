@@ -101,7 +101,7 @@ class SequenceContainer:
 		 * @return The content of the sequence as a vector of integers.
 		 * @throw SequenceNotFoundException If the name does not match any sequence in the container.
 		 */
-		virtual const vector<int>& getContent(const std::string& name) const throw (SequenceNotFoundException) = 0;  
+		virtual const std::vector<int>& getContent(const std::string& name) const throw (SequenceNotFoundException) = 0;  
 		
 		/**
 		 * @brief Convert a particular sequence to a string.
@@ -110,7 +110,7 @@ class SequenceContainer:
 		 * @return A string describing the content of the sequence.
 		 * @throw SequenceNotFoundException If the name does not match any sequence in the container.
 		 */
-		virtual string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
+		virtual std::string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
 
 		/**
 		 * @brief Retrieve a sequence object from the container.
@@ -120,6 +120,17 @@ class SequenceContainer:
 		 * @throw SequenceNotFoundException If the name does not match any sequence in the container.
 		 */
 		virtual const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) = 0;
+
+		/**
+		 * @brief Add a sequence to the container.
+		 *
+		 * @param sequence  The sequence to add.
+		 * @param checkName Tell if the container must check if the name of the sequence
+		 * is already used in the container before adding it.
+		 * @throw Exception Any other kind of exception, if the name of the sequence is
+		 * already used, are whatever else depending on the implementation.
+		 */
+		virtual void addSequence(const Sequence& sequence, bool checkName) throw (Exception) = 0;
 
 		/**
 		 * @brief Replace a sequence in the container.

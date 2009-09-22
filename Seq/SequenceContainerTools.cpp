@@ -49,18 +49,18 @@ using namespace std;
 
 /******************************************************************************/	
 	
-SequenceContainer * SequenceContainerTools::createContainerOfSpecifiedSize(const Alphabet * alphabet, int size)
+SequenceContainer * SequenceContainerTools::createContainerOfSpecifiedSize(const Alphabet* alphabet, unsigned int size)
 {
-	VectorSequenceContainer * vsc = new VectorSequenceContainer(alphabet);
-	for(int i = 0; i < size; i++)
-		vsc -> addSequence(Sequence("" + i, "", alphabet), false);
+	VectorSequenceContainer* vsc = new VectorSequenceContainer(alphabet);
+	for (unsigned int i = 0; i < size; i++)
+		vsc->addSequence(Sequence("" + i, "", alphabet), false);
 	return vsc;
 }
 
 /******************************************************************************/
 
-SequenceContainer * SequenceContainerTools::createContainerWithSequenceNames(
-  const Alphabet * alphabet,
+SequenceContainer* SequenceContainerTools::createContainerWithSequenceNames(
+  const Alphabet* alphabet,
   const vector<string> & seqNames)
   throw(Exception)
 {
@@ -71,25 +71,37 @@ SequenceContainer * SequenceContainerTools::createContainerWithSequenceNames(
 
 /******************************************************************************/
 
-SequenceContainer* SequenceContainerTools::getSelectedSequences(
-  const OrderedSequenceContainer & sequences,
-  const SequenceSelection & selection)
+void SequenceContainerTools::getSelectedSequences(
+  const OrderedSequenceContainer& sequences,
+  const SequenceSelection& selection,
+  SequenceContainer& outputCont) throw (Exception)
 {
-  VectorSequenceContainer* sc = new VectorSequenceContainer(sequences.getAlphabet());
-  for(unsigned int i = 0; i < selection.size(); i++) {
-    sc->addSequence(sequences.getSequence(selection[i]), false);
-    //We do not check names, we suppose that the container passed as an argument is correct.
-    //WARNING: what if selection contains many times the same indice? ...
+  bool checkNames = outputCont.getNumberOfSequences() > 0;
+  for (unsigned int i = 0; i < selection.size(); i++)
+  {
+    outputCont.addSequence(sequences.getSequence(selection[i]), checkNames);
   }
-  sc -> setGeneralComments(sequences.getGeneralComments());
-  return sc;
+}
+
+/******************************************************************************/
+
+void SequenceContainerTools::getSelectedSequences(
+  const SequenceContainer& sequences,
+  const std::vector<std::string>& selection,
+  SequenceContainer& outputCont) throw (Exception)
+{
+  bool checkNames = outputCont.getNumberOfSequences() > 0;
+  for (unsigned int i = 0; i < selection.size(); i++)
+  {
+    outputCont.addSequence(sequences.getSequence(selection[i]), checkNames);
+  }
 }
 
 /******************************************************************************/
 
 void SequenceContainerTools::keepOnlySelectedSequences(
-  OrderedSequenceContainer & sequences,
-  const SequenceSelection & selection)
+  OrderedSequenceContainer& sequences,
+  const SequenceSelection& selection)
 {
   vector<string> names = sequences.getSequencesNames();
 	for(unsigned int i = 0; i < names.size(); i++) {
@@ -106,7 +118,7 @@ void SequenceContainerTools::keepOnlySelectedSequences(
 
 /******************************************************************************/
 
-bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer & sequences)
+bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer& sequences)
 {
 	vector<string> seqNames = sequences.getSequencesNames();
 	if(seqNames.size() <= 1) return true;
@@ -120,7 +132,7 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer 
 
 /******************************************************************************/
 
-void SequenceContainerTools::getFrequencies(const SequenceContainer & sequences, map<int, double> & f)
+void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f)
 {
 	int n = 0;
 	vector<string> names = sequences.getSequencesNames();
@@ -136,7 +148,7 @@ void SequenceContainerTools::getFrequencies(const SequenceContainer & sequences,
 
 /******************************************************************************/
 
-void  SequenceContainerTools::getCounts(const SequenceContainer & sequences, map<int, int>& f)
+void  SequenceContainerTools::getCounts(const SequenceContainer& sequences, std::map<int, int>& f)
 {
   int n = 0;
   vector<string> names = sequences.getSequencesNames();

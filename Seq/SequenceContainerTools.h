@@ -45,7 +45,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <vector>
 #include <map>
-using namespace std;
 
 #include "SequenceContainer.h"
 #include "OrderedSequenceContainer.h"
@@ -53,7 +52,7 @@ using namespace std;
 namespace bpp
 {
 
-typedef vector<unsigned int> SequenceSelection;
+typedef std::vector<unsigned int> SequenceSelection;
 
 /**
  * @brief Utilitary methods dealing with sequence containers.
@@ -77,7 +76,7 @@ class SequenceContainerTools
      * @param size     The number of sequences in the container.
      * @return A pointer toward a newly created container.
      */
-    static SequenceContainer * createContainerOfSpecifiedSize(const Alphabet * alphabet, int size);
+    static SequenceContainer* createContainerOfSpecifiedSize(const Alphabet* alphabet, unsigned int size);
 
     /**
      * @brief Create a container with specified names.
@@ -91,26 +90,44 @@ class SequenceContainerTools
      * @return A pointer toward a newly created container.
      * @throw Exception If two sequence names are not unique.
      */
-    static SequenceContainer * createContainerWithSequenceNames(
-      const Alphabet * alphabet,
-      const vector<string> & seqNames)
+    static SequenceContainer* createContainerWithSequenceNames(
+      const Alphabet* alphabet,
+      const std::vector<std::string>& seqNames)
       throw (Exception);
       
     /**
-     * @brief Create a new container with a specified set of sequences.
+     * @brief Add a specified set of sequences from a container to another.
      *
-     * A new VectorSequenceContainer is created with specified sequences.
-     * The destruction of the container is up to the user.
      * Sequences are specified by their position, beginning at 0.
-     * No name verification is performed, based on the assumption that
-     * the container passed as an argument is a correct one.
+     * Name verification will be performed, only if the output contianer is not empty,
+     * based on the assumption that the container passed as argument is a correct one.
      * Redundant selection is not checked, so be careful with what you're doing!
+     *
+     * @author Julien Dutheil
      *
      * @param sequences The container from wich sequences are to be taken.
      * @param selection The positions of all sequences to retrieve.
-     * @return A new container with all selected sequences.
+     * @param outputCont A container where the selection should be added.
+     * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
      */
-    static SequenceContainer * getSelectedSequences(const OrderedSequenceContainer & sequences, const SequenceSelection & selection);
+    static void getSelectedSequences(const OrderedSequenceContainer& sequences, const SequenceSelection& selection, SequenceContainer& outputCont) throw (Exception);
+
+    /**
+     * @brief Add a specified set of sequences from a container to another.
+     *
+     * Sequences are specified by their names.
+     * Name verification will be performed, only if the output contianer is not empty,
+     * based on the assumption that the container passed as argument is a correct one.
+     * Redundant selection is not checked, so be careful with what you're doing!
+     *
+     * @author Julien Dutheil
+     *
+     * @param sequences The container from wich sequences are to be taken.
+     * @param selection The positions of all sequences to retrieve.
+     * @param outputCont A container where the selection should be added.
+     * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
+     */
+    static void getSelectedSequences(const SequenceContainer& sequences, const std::vector<std::string>& selection, SequenceContainer& outputCont) throw (Exception);
 
     /**
      * @brief Remove all sequences that are not in a given selection from a given container.
@@ -124,7 +141,7 @@ class SequenceContainerTools
      * @param selection The positions of all sequences to retrieve.
      * @return A new container with all selected sequences.
      */
-    static void keepOnlySelectedSequences(OrderedSequenceContainer & sequences, const SequenceSelection & selection);
+    static void keepOnlySelectedSequences(OrderedSequenceContainer& sequences, const SequenceSelection& selection);
     
     /**
      * @brief Check if all sequences in a SequenceContainer have the same length.
@@ -132,7 +149,7 @@ class SequenceContainerTools
      * @param sequences The container to check.
      * @return True is all sequence have the same length.
      */
-    static bool sequencesHaveTheSameLength(const SequenceContainer & sequences);
+    static bool sequencesHaveTheSameLength(const SequenceContainer& sequences);
   
     /**
      * @brief Compute base counts
@@ -147,7 +164,7 @@ class SequenceContainerTools
      * States are stored as their int code.
      */
 
-  static void  getCounts(const SequenceContainer & sequences,  map<int, int>&);
+  static void getCounts(const SequenceContainer& sequences, std::map<int, int>&);
 
   /**
    * @brief Compute base frequencies.
@@ -161,113 +178,82 @@ class SequenceContainerTools
    *
    * States are stored as their int code.
    */
-
-  static void  getFrequencies(const SequenceContainer & sequences, map<int, double>&);
+  static void  getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f);
   
     /**
      * @brief Append all the sequences of a SequenceContainer to the end of another.
      *
-     * This function is a template because of the non existance of the
-     * addSequence() methode in the SequenceContainer interface (see the doc
-     * of SequenceContainer for more details).
-     * The type of the template must be the type of the SequenceContainer which
-     * receives the sequences. This SequenceContainer <b>must have</b> an
-     * addSequence() methode like:
-     * <code>
-     * void addSequence(const Sequence &sequence, bool checkNames=true);
-     * </code>
      * @param seqCont1 The SequenceContainer in which the sequences will be added.
      * @param seqCont2 The SequenceContainer from which the sequences are taken.
+     * @param checkNames Tell if the sequence names should be check for unicity.
      */
-    template<class T>static void append(T & seqCont1, const SequenceContainer & seqCont2)
+    static void append(SequenceContainer& seqCont1, const SequenceContainer& seqCont2, bool checkNames = true)
     throw (Exception)
     {
-      try
-      {
-        vector<string> seqNames = seqCont2.getSequencesNames();
-        for(unsigned int i = 0; i < seqNames.size(); i++)
-          seqCont1.addSequence(seqCont2.getSequence(seqNames[i]));
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
+      std::vector<std::string> seqNames = seqCont2.getSequencesNames();
+      for (unsigned int i = 0; i < seqNames.size(); i++)
+        seqCont1.addSequence(seqCont2.getSequence(seqNames[i]), checkNames);
+    }
+    /**
+     * @brief Append all the sequences of a SequenceContainer to the end of another, OrderedSequenceContainer implementation.
+     *
+     * @param seqCont1 The SequenceContainer in which the sequences will be added.
+     * @param seqCont2 The SequenceContainer from which the sequences are taken.
+     * @param checkNames Tell if the sequence names should be check for unicity.
+     */
+    static void append(SequenceContainer& seqCont1, const OrderedSequenceContainer& seqCont2, bool checkNames=true)
+    throw (Exception)
+    {
+      for (unsigned int i = 0; i < seqCont2.getNumberOfSequences(); i++)
+        seqCont1.addSequence(seqCont2.getSequence(i), checkNames);
     }
     
     /**
      * @brief Concatenate the sequences from two containers.
      *
-     * This function is a template because of the non existence of the
-     * addSequence() method in the SequenceContainer interface (see the doc
-     * of SequenceContainer for more details).
-     * The type of the template must be the type of the SequenceContainer which
-     * receives the sequences. This SequenceContainer <b>must have</b> an
-     * addSequence() method like:<br>
-     * @code
-     * void addSequence(const Sequence &sequence, bool checkNames=true);
-     * @endcode
+     * This method will not check the original sequence names for unicity. If sequences do not have a unique name,
+     * then the resulting merged container will contain the first sequence with the given duplicated name.
+     *
+     * @author Julien Dutheil
+     *
      * @param seqCont1 First container.
      * @param seqCont2 Second container. This container must contain sequences with the same names as in seqcont1.
      * Additional sequences will be ignored.
-     * @param seqCont Output sequence container to which concatenated sequences will be added.
+     * @param outputCont Output sequence container to which concatenated sequences will be added.
      * @throw AlphabetMismatchException If the alphabet in the 3 containers do not match.
      */
-    template<class T>static void merge(const SequenceContainer& seqCont1, const SequenceContainer& seqCont2, T& seqCont)
+    static void merge(const SequenceContainer& seqCont1, const SequenceContainer& seqCont2, SequenceContainer& outputCont)
     throw (Exception)
     {
-      if(seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
+      if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
         throw AlphabetMismatchException("SequenceContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
 
-      try
+      std::vector<string> seqNames = seqCont1.getSequencesNames();
+      for (unsigned int i = 0; i < seqNames.size(); i++)
       {
-        vector<string> seqNames = seqCont1.getSequencesNames();
-        for(unsigned int i = 0; i < seqNames.size(); i++)
-        {
-          Sequence tmp = seqCont1.getSequence(seqNames[i]);
-          tmp.append(seqCont2.getContent(seqNames[i]));
-          seqCont.addSequence(tmp);
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
+        Sequence tmp = seqCont1.getSequence(seqNames[i]);
+        tmp.append(seqCont2.getContent(seqNames[i]));
+        outputCont.addSequence(tmp, false);
       }
     }
 
     /**
      * @brief Convert a SequenceContainer with a new alphabet.
      *
-     * This function is a template because of the non existance of the
-     * addSequence() method in the SequenceContainer interface (see the doc
-     * of SequenceContainer for more details).
-     * The type of the template must be the type of the SequenceContainer which
-     * receives the sequences. This SequenceContainer <b>must have</b> an
-     * addSequence() method like:<br>
-     * <code>
-     * void addSequence(const Sequence &sequence, bool checkNames=true);
-     * </code>
-     * It can be used with a VectorSequenceContainer or a VectorSiteContainer
-     * but not with a MapSequenceContainer.
+     * This method assume that the original container has proper sequence names.
+     * Names will be checked only if the output container is not empty.
      * @param seqCont The container to convert.
-     * @param alphabet The alphabet into the container will be converted.
-     * @return A new container.
+     * @param outputCont A container (most likely empty) with an alphabet into which the container will be converted.
      */
-    template<class T> static T* convertAlphabet(const T & seqCont, const Alphabet *alphabet)
+    void convertAlphabet(const SequenceContainer& seqCont, SequenceContainer& outputCont)
     throw (Exception)
     {  
-      try {
-        T *seqContNew = new T(alphabet);      
-        vector<string> seqNames = seqCont.getSequencesNames();
-        for(unsigned int i = 0; i < seqNames.size(); i++)
-        {
-          Sequence seq = Sequence(seqNames[i], seqCont.toString(seqNames[i]), alphabet);
-          seqContNew->addSequence(seq);
-        }
-        return seqContNew;
-      }
-      catch (Exception e)
+      std::vector<string> seqNames = seqCont.getSequencesNames();
+      bool checkNames = outputCont.getNumberOfSequences() > 0;
+      for (unsigned int i = 0; i < seqNames.size(); i++)
       {
-        throw e;
+        Sequence seq(seqNames[i], seqCont.toString(seqNames[i]), outputCont.getAlphabet());
+        outputCont.addSequence(seq, checkNames);
       }
     }
 

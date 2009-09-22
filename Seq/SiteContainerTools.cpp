@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "SiteContainerTools.h"
+#include "SequenceContainerTools.h"
 #include "VectorSiteContainer.h"
 #include "SiteIterator.h"
 #include "SiteTools.h"
@@ -56,7 +57,7 @@ using namespace std;
 
 /******************************************************************************/
 
-SiteContainer * SiteContainerTools::getSitesWithoutGaps(const SiteContainer & sites)
+SiteContainer* SiteContainerTools::getSitesWithoutGaps(const SiteContainer& sites)
 {
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
@@ -71,7 +72,7 @@ SiteContainer * SiteContainerTools::getSitesWithoutGaps(const SiteContainer & si
 
 /******************************************************************************/
 
-SiteContainer * SiteContainerTools::getCompleteSites(const SiteContainer & sites)
+SiteContainer* SiteContainerTools::getCompleteSites(const SiteContainer& sites)
 {
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
@@ -86,9 +87,9 @@ SiteContainer * SiteContainerTools::getCompleteSites(const SiteContainer & sites
 
 /******************************************************************************/
 
-SiteContainer * SiteContainerTools::getSelectedSites(
-    const SiteContainer & sequences,
-    const SiteSelection & selection)
+SiteContainer* SiteContainerTools::getSelectedSites(
+    const SiteContainer& sequences,
+    const SiteSelection& selection)
 {
   vector<string> seqNames = sequences.getSequencesNames();
   VectorSiteContainer * sc = new VectorSiteContainer(seqNames.size(), sequences.getAlphabet());
@@ -105,7 +106,7 @@ SiteContainer * SiteContainerTools::getSelectedSites(
 
 /******************************************************************************/
 
-const Sequence* SiteContainerTools::getConsensus(const SiteContainer & sc, string name, bool ignoreGap, bool resolveUnknown)
+const Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::string& name, bool ignoreGap, bool resolveUnknown)
 {
   Vint consensus;
   SimpleSiteIterator ssi(sc);
@@ -147,7 +148,7 @@ const Sequence* SiteContainerTools::getConsensus(const SiteContainer & sc, strin
 
 /******************************************************************************/
 
-void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainer & sites)
+void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainer& sites)
 {
   //NB: use iterators for a better algorithm? 
   int unknownCode = sites.getAlphabet()->getUnknownCharacterCode();
@@ -163,7 +164,7 @@ void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainer & sites)
 
 /******************************************************************************/
 
-void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainer & sites)
+void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainer& sites)
 {
   //NB: use iterators for a better algorithm? 
   int gapCode = sites.getAlphabet()->getGapCharacterCode();
@@ -179,7 +180,7 @@ void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainer & sites)
 
 /******************************************************************************/
 
-SiteContainer * SiteContainerTools::removeGapOnlySites(const SiteContainer & sites)
+SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites)
 {
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
@@ -195,7 +196,7 @@ SiteContainer * SiteContainerTools::removeGapOnlySites(const SiteContainer & sit
 
 /******************************************************************************/
 
-SiteContainer * SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteContainer & sites)
+SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteContainer& sites)
 {
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer * noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
@@ -211,9 +212,9 @@ SiteContainer * SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCon
 
 /******************************************************************************/
 
-SiteContainer * SiteContainerTools::resolveDottedAlignment(
-    const SiteContainer & dottedAln,
-    const Alphabet * resolvedAlphabet) throw (AlphabetException, Exception)
+SiteContainer* SiteContainerTools::resolveDottedAlignment(
+    const SiteContainer& dottedAln,
+    const Alphabet* resolvedAlphabet) throw (AlphabetException, Exception)
 {
   if(!AlphabetTools::isDefaultAlphabet(dottedAln.getAlphabet()))
     throw AlphabetException("SiteContainerTools::resolveDottedAlignment. Alignment alphabet should of class 'DefaultAlphabet'.", dottedAln.getAlphabet());
@@ -275,7 +276,7 @@ SiteContainer * SiteContainerTools::resolveDottedAlignment(
 
 /******************************************************************************/
 
-map<unsigned int, unsigned int> SiteContainerTools::getSequencePositions(const Sequence & seq)
+std::map<unsigned int, unsigned int> SiteContainerTools::getSequencePositions(const Sequence& seq)
 {
   map<unsigned int, unsigned int> tln;
   if(seq.size() == 0) return tln;
@@ -293,7 +294,7 @@ map<unsigned int, unsigned int> SiteContainerTools::getSequencePositions(const S
 
 /******************************************************************************/
 
-map<unsigned int, unsigned int> SiteContainerTools::getAlignmentPositions(const Sequence & seq)
+std::map<unsigned int, unsigned int> SiteContainerTools::getAlignmentPositions(const Sequence& seq)
 {
   map<unsigned int, unsigned int> tln;
   if(seq.size() == 0) return tln;
@@ -311,7 +312,7 @@ map<unsigned int, unsigned int> SiteContainerTools::getAlignmentPositions(const 
 
 /******************************************************************************/
 
-map<unsigned int, unsigned int> SiteContainerTools::translateAlignment(const Sequence & seq1, const Sequence & seq2)
+std::map<unsigned int, unsigned int> SiteContainerTools::translateAlignment(const Sequence& seq1, const Sequence& seq2)
   throw (AlphabetMismatchException, Exception)
 {
   if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
@@ -367,7 +368,7 @@ map<unsigned int, unsigned int> SiteContainerTools::translateAlignment(const Seq
 
 /******************************************************************************/
 
-map<unsigned int, unsigned int> SiteContainerTools::translateSequence(const SiteContainer & sequences, unsigned int i1, unsigned int i2)
+std::map<unsigned int, unsigned int> SiteContainerTools::translateSequence(const SiteContainer& sequences, unsigned int i1, unsigned int i2)
 {
   const Sequence* seq1 = &sequences.getSequence(i1);
   const Sequence* seq2 = &sequences.getSequence(i2);
@@ -392,10 +393,10 @@ map<unsigned int, unsigned int> SiteContainerTools::translateSequence(const Site
 
 /******************************************************************************/
     
-AlignedSequenceContainer * SiteContainerTools::alignNW(
-    const Sequence & seq1,
-    const Sequence & seq2,
-    const AlphabetIndex2<double> & s,
+AlignedSequenceContainer* SiteContainerTools::alignNW(
+    const Sequence& seq1,
+    const Sequence& seq2,
+    const AlphabetIndex2<double>& s,
     double gap)
 throw (AlphabetMismatchException)
 {
@@ -480,10 +481,10 @@ throw (AlphabetMismatchException)
 
 /******************************************************************************/
     
-AlignedSequenceContainer * SiteContainerTools::alignNW(
-    const Sequence & seq1,
-    const Sequence & seq2,
-    const AlphabetIndex2<double> & s,
+AlignedSequenceContainer* SiteContainerTools::alignNW(
+    const Sequence& seq1,
+    const Sequence& seq2,
+    const AlphabetIndex2<double>& s,
     double opening,
     double extending)
 throw (AlphabetMismatchException)
@@ -592,7 +593,7 @@ throw (AlphabetMismatchException)
 
 /******************************************************************************/
 
-VectorSiteContainer * SiteContainerTools::bootstrapSites(const SiteContainer & sites)
+VectorSiteContainer* SiteContainerTools::bootstrapSites(const SiteContainer& sites)
 {
   VectorSiteContainer * sample = new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet());
   unsigned int nbSites = sites.getNumberOfSites();
@@ -613,7 +614,7 @@ const string SiteContainerTools::SIMILARITY_NOGAP       = "no gap";
 
 /******************************************************************************/
 
-double SiteContainerTools::computeSimilarity(const Sequence & seq1, const Sequence & seq2, bool dist, const string & gapOption, bool unresolvedAsGap) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception)
+double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequence& seq2, bool dist, const std::string& gapOption, bool unresolvedAsGap) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception)
 {
   if(seq1.size() != seq2.size()) throw SequenceNotAlignedException("SiteContainerTools::computeSimilarity.", &seq2);
   if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SiteContainerTools::computeSimilarity.", seq1.getAlphabet(), seq2.getAlphabet());
@@ -621,7 +622,7 @@ double SiteContainerTools::computeSimilarity(const Sequence & seq1, const Sequen
   const Alphabet * alpha = seq1.getAlphabet();
   unsigned int s = 0;
   unsigned int t = 0;
-  for(unsigned int i = 0; i < seq1.size(); i++)
+  for (unsigned int i = 0; i < seq1.size(); i++)
   {
     int x = seq1[i];
     int y = seq2[i];
@@ -659,7 +660,7 @@ double SiteContainerTools::computeSimilarity(const Sequence & seq1, const Sequen
 
 /******************************************************************************/
 
-DistanceMatrix * SiteContainerTools::computeSimilarityMatrix(const SiteContainer & sites, bool dist, const string & gapOption, bool unresolvedAsGap)
+DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer& sites, bool dist, const std::string& gapOption, bool unresolvedAsGap)
 {
   unsigned int n = sites.getNumberOfSequences();
   DistanceMatrix *mat = new DistanceMatrix(sites.getSequencesNames());
@@ -702,3 +703,36 @@ DistanceMatrix * SiteContainerTools::computeSimilarityMatrix(const SiteContainer
 
 /******************************************************************************/
 
+void SiteContainerTools::merge(SiteContainer& seqCont1, const SiteContainer& seqCont2)
+throw (AlphabetMismatchException, Exception)
+{
+  if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("SiteContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
+
+
+  vector<string> seqNames1 = seqCont1.getSequencesNames();
+  vector<string> seqNames2 = seqCont2.getSequencesNames();
+  const SiteContainer* seqCont2bis = 0;
+  bool del = false;
+  if (seqNames1 == seqNames2)
+  {
+    seqCont2bis = &seqCont2;
+  }
+  else
+  {
+    //We shall reorder sequences first:
+    SiteContainer* seqCont2ter = new VectorSiteContainer(seqCont2.getAlphabet());
+    SequenceContainerTools::getSelectedSequences(seqCont2, seqNames1, *seqCont2ter);
+    seqCont2bis = seqCont2ter;
+    del = true;
+  }
+
+  for (unsigned int i = 0; i < seqCont2bis->getNumberOfSites(); i++)
+  {
+    seqCont1.addSite(seqCont2bis->getSite(i), false);
+  }
+
+  if (del) delete seqCont2bis;
+}
+
+/******************************************************************************/

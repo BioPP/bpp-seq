@@ -17,8 +17,6 @@
 #include <vector>
 #include <map>
 
-using namespace std;
-
 //From NumCalc
 #include <NumCalc/Matrix.h>
 
@@ -47,7 +45,7 @@ class SiteContainerTools
 		 * @param sites The container to analyse.
 		 * @return A pointer toward a new SiteContainer with only sites with no gaps.
 		 */
-		static SiteContainer * getSitesWithoutGaps(const SiteContainer & sites);
+		static SiteContainer* getSitesWithoutGaps(const SiteContainer& sites);
 
 		/**
 		 * @brief Retrieves complete sites from SiteContainer.
@@ -59,7 +57,7 @@ class SiteContainerTools
 		 * @param sites The container to analyse.
 		 * @return A pointer toward a new SiteContainer with only complete sites.
 		 */
-		static SiteContainer * getCompleteSites(const SiteContainer & sites);
+		static SiteContainer* getCompleteSites(const SiteContainer& sites);
 
 		/**
 		 * @brief Get a site set without gap-only sites.
@@ -70,7 +68,7 @@ class SiteContainerTools
 		 * @param sites The container to analyse.
 		 * @return A pointer toward a new SiteContainer.
 		 */
-		static SiteContainer * removeGapOnlySites(const SiteContainer & sites);
+		static SiteContainer* removeGapOnlySites(const SiteContainer& sites);
 
 		/**
 		 * @brief Get a site set without gap/unresolved-only sites.
@@ -81,7 +79,7 @@ class SiteContainerTools
 		 * @param sites The container to analyse.
 		 * @return A pointer toward a new SiteContainer.
 		 */
-		static SiteContainer * removeGapOrUnresolvedOnlySites(const SiteContainer & sites);
+		static SiteContainer* removeGapOrUnresolvedOnlySites(const SiteContainer& sites);
 
 		/**
 		 * @brief Create a new container with a specified set of sites.
@@ -97,7 +95,7 @@ class SiteContainerTools
 		 * @param selection The positions of all sites to retrieve.
 		 * @return A new container with all selected sites.
 		 */
-		static SiteContainer * getSelectedSites(const SiteContainer & sequences, const SiteSelection & selection);
+		static SiteContainer* getSelectedSites(const SiteContainer& sequences, const SiteSelection& selection);
 
 		/**
      * @brief create the consensus sequence of the alignment.
@@ -111,7 +109,7 @@ class SiteContainerTools
      * If this option is set to true, a consensus sequence will never contain an unknown character.
      * @return A new Sequence object with the consensus sequence.
      */
-		static const Sequence * getConsensus(const SiteContainer & sc,string name="consensus", bool ignoreGap = true, bool resolveUnknown = false);
+		static const Sequence* getConsensus(const SiteContainer & sc, const std::string& name = "consensus", bool ignoreGap = true, bool resolveUnknown = false);
     
     /**
      * @brief Change all gaps to unknown state in a container, according to its alphabet.
@@ -120,7 +118,7 @@ class SiteContainerTools
      *
      * @param sites The container to be modified.
      */
-    static void changeGapsToUnknownCharacters(SiteContainer & sites);
+    static void changeGapsToUnknownCharacters(SiteContainer& sites);
 
     /**
      * @brief Change all unresolved characters to gaps in a container, according to its alphabet.
@@ -129,7 +127,7 @@ class SiteContainerTools
      *
      * @param sites The container to be modified.
      */
-    static void changeUnresolvedCharactersToGaps(SiteContainer & sites);
+    static void changeUnresolvedCharactersToGaps(SiteContainer& sites);
 
     /**
      * @brief Resolve a container with "." notations.
@@ -159,7 +157,7 @@ class SiteContainerTools
      * @throw AlphabetException If the alphabet of the input alignment is not of class DefaultAlphabet, or if one character does not match with the output alphabet.
      * @throw Exception If no reference sequence was found, or if the input alignment contains no sequence.
      */
-    static SiteContainer * resolveDottedAlignment(const SiteContainer & dottedAln, const Alphabet * resolvedAlphabet) throw (AlphabetException, Exception);
+    static SiteContainer* resolveDottedAlignment(const SiteContainer& dottedAln, const Alphabet* resolvedAlphabet) throw (AlphabetException, Exception);
 
     /**
      * @brief Get the index of each sequence position in an aligned sequence.
@@ -170,7 +168,7 @@ class SiteContainerTools
      * @param seq The sequence to translate.
      * @return A map with original sequence positions as keys, and translated positions as values.
      */
-    static map<unsigned int, unsigned int> getSequencePositions(const Sequence & seq);
+    static std::map<unsigned int, unsigned int> getSequencePositions(const Sequence& seq);
 
     /**
      * @brief Get the index of each alignment position in an aligned sequence.
@@ -181,7 +179,7 @@ class SiteContainerTools
      * @param seq The sequence to translate.
      * @return A map with original alignement positions as keys, and translated positions as values.
      */
-    static map<unsigned int, unsigned int> getAlignmentPositions(const Sequence & seq);
+    static std::map<unsigned int, unsigned int> getAlignmentPositions(const Sequence& seq);
 
     /**
      * @brief Translate alignement positions from an aligned sequence to the same sequence in a different alignment.
@@ -196,7 +194,7 @@ class SiteContainerTools
      * @throw AlphabetMismatchException If the sequences do not share the same alphabet.
      * @throw Exception If the sequence do not match.
      */
-    static map<unsigned int, unsigned int> translateAlignment(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, Exception);
+    static std::map<unsigned int, unsigned int> translateAlignment(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception);
 
     /**
      * @brief Translate sequence positions from a sequence to another in the same alignment.
@@ -209,7 +207,7 @@ class SiteContainerTools
      * @param i2 The index of the reference sequence.
      * @return A map with original sequence positions as keys, and translated positions as values.
      */
-    static map<unsigned int, unsigned int> translateSequence(const SiteContainer & sequences, unsigned int i1, unsigned int i2);
+    static std::map<unsigned int, unsigned int> translateSequence(const SiteContainer& sequences, unsigned int i1, unsigned int i2);
 
     /**
      * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -225,7 +223,7 @@ class SiteContainerTools
      * @return A new SiteContainer instance.
      * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
      */
-    static AlignedSequenceContainer * alignNW(const Sequence & seq1, const Sequence & seq2, const AlphabetIndex2<double> & s, double gap) throw (AlphabetMismatchException);
+    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2<double>& s, double gap) throw (AlphabetMismatchException);
 
     /**
      * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -242,7 +240,7 @@ class SiteContainerTools
      * @return A new SiteContainer instance.
      * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
      */
-    static AlignedSequenceContainer * alignNW(const Sequence & seq1, const Sequence & seq2, const AlphabetIndex2<double> & s, double opening, double extending) throw (AlphabetMismatchException);
+    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2<double>& s, double opening, double extending) throw (AlphabetMismatchException);
 
     /**
      * @brief Bootstrap sites in an alignment.
@@ -255,7 +253,7 @@ class SiteContainerTools
      * @param sites An input alignment to sample.
      * @return A sampled alignment with the same number of sites than the input one.
      */
-    static VectorSiteContainer * bootstrapSites(const SiteContainer & sites);
+    static VectorSiteContainer* bootstrapSites(const SiteContainer& sites);
 
     /**
      * @brief Compute the similarity/distance score between two aligned sequences.
@@ -278,7 +276,7 @@ class SiteContainerTools
      * @throw AlphabetMismatchException If the two sequences do not share the same alphabet type.
      * @throw Exception If an invalid gapOption is passed.
      */
-    static double computeSimilarity(const Sequence & seq1, const Sequence & seq2, bool dist = false, const string & gapOption = SIMILARITY_NODOUBLEGAP, bool unresolvedAsGap = true) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception);
+    static double computeSimilarity(const Sequence& seq1, const Sequence& seq2, bool dist = false, const std::string& gapOption = SIMILARITY_NODOUBLEGAP, bool unresolvedAsGap = true) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception);
 
     /**
      * @brief Compute the similarity matrix of an alignment.
@@ -302,12 +300,33 @@ class SiteContainerTools
      * If set to yes, the gap option will also apply to unresolved characters.
      * @return All pairwise similarity measures.
      */
-    static DistanceMatrix * computeSimilarityMatrix(const SiteContainer & sites, bool dist = false, const string & gapOption = SIMILARITY_NOFULLGAP, bool unresolvedAsGap = true);
+    static DistanceMatrix* computeSimilarityMatrix(const SiteContainer& sites, bool dist = false, const std::string & gapOption = SIMILARITY_NOFULLGAP, bool unresolvedAsGap = true);
 
     static const string SIMILARITY_ALL;
     static const string SIMILARITY_NOFULLGAP;
     static const string SIMILARITY_NODOUBLEGAP;
     static const string SIMILARITY_NOGAP;
+
+    /**
+     * @brief Add the content of a site container to an exhisting one.
+     *
+     * The input containers are supposed to have unique sequence names.
+     * If it is not the case, several things can happen:
+     * - If the two containers have exactly the same names in the same order, then the content of the second one will be added as is to the first one.
+     * - If the second container does not have exactly the same sequences names or in a different order, then a reordered selection of the second contianer is created first,
+     *   and in that case, only the first sequence with a given name will be used and duplicated.
+     * In any case, note that the second container should always contains all the sequence names from the first one,
+     * otherwise an exception will be thrown.
+     *
+     * @author Julien Dutheil
+     *
+     * @param seqCont1 First container.
+     * @param seqCont2 Second container. This container must contain sequences with the same names as in seqcont1.
+     * Additional sequences will be ignored.
+     * @throw AlphabetMismatchException If the alphabet in the 2 containers do not match.
+     * @throw Exception If sequence names do not match.
+     */
+    static void merge(SiteContainer& seqCont1, const SiteContainer& seqCont2) throw (AlphabetMismatchException, Exception);
 
 };
 

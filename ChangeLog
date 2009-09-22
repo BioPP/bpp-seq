@@ -1,3 +1,10 @@
+22/09/09 Julien Dutheil
+* Finally added 'addSequence' method in SequenceContainer.
+* MapSequenceContainer now has a addSequence method that uses the name of the
+  sequence as a key by default.
+* Several methods in Sequence/SiteContainerTools are not templated anymore and
+  have been improved.
+
 09/09/09 Sylvain Gaillard
 * Fixed white space skip in Fasta sequence
 
