@@ -268,7 +268,7 @@ void VectorSiteContainer::setSite(unsigned int pos, const Site& site, bool check
 
   // New site's alphabet and site container's alphabet matching verification
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-    throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site.getAlphabet());
+    throw AlphabetMismatchException("VectorSiteContainer::setSite", getAlphabet(), site.getAlphabet());
 
   // Check position:
   if (checkPositions)
@@ -343,7 +343,7 @@ void VectorSiteContainer::addSite(const Site& site, int position, bool checkPosi
     throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site.getAlphabet());
   }
 
-    // Check position:
+  // Check position:
   if (checkPositions)
   {
     // For all positions in vector : throw exception if position already exists
@@ -359,9 +359,9 @@ void VectorSiteContainer::addSite(const Site& site, int position, bool checkPosi
 
 /******************************************************************************/
 
-void VectorSiteContainer::addSite(const Site& site, unsigned int pos, bool checkPositions) throw (Exception)
+void VectorSiteContainer::addSite(const Site& site, unsigned int siteIndex, bool checkPositions) throw (Exception)
 {
-  if (pos >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::addSite", pos, 0, getNumberOfSites() - 1);
+  if (siteIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
 
   // Check size:
   if (site.size() != getNumberOfSequences()) throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
@@ -384,7 +384,37 @@ void VectorSiteContainer::addSite(const Site& site, unsigned int pos, bool check
   }
 
   //insert(begin() + pos, new Site(site));
-  sites_.insert(sites_.begin() + pos, dynamic_cast<Site *>(site.clone()));
+  sites_.insert(sites_.begin() + siteIndex, dynamic_cast<Site*>(site.clone()));
+}
+
+/******************************************************************************/
+
+void VectorSiteContainer::addSite(const Site& site, unsigned int siteIndex, int position, bool checkPositions) throw (Exception)
+{
+  if (siteIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
+
+  // Check size:
+  if (site.size() != getNumberOfSequences()) throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
+
+  // New site's alphabet and site container's alphabet matching verification
+  if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+  {
+    throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site.getAlphabet());
+  }
+
+  // Check position:
+  if (checkPositions)
+  {
+    // For all positions in vector : throw exception if position already exists
+    for (unsigned int i = 0; i < sites_.size(); i++)
+    {
+      if (sites_[i]->getPosition() == position) throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
+    }
+  }
+
+  Site* copy = dynamic_cast<Site *>(site.clone());
+  copy->setPosition(position);
+  sites_.insert(sites_.begin() + siteIndex, copy);
 }
 
 /******************************************************************************/

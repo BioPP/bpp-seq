@@ -142,9 +142,10 @@ class VectorSiteContainer:
     void        setSite(unsigned int siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
     Site*    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
     void     deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
-    void        addSite(const Site& site,                         bool checkPosition = true) throw (Exception);
-    void        addSite(const Site& site, int position,           bool checkPosition = true) throw (Exception);
-    void        addSite(const Site& site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);
+    void        addSite(const Site& site,                                       bool checkPosition = true) throw (Exception);
+    void        addSite(const Site& site,                         int position, bool checkPosition = true) throw (Exception);
+    void        addSite(const Site& site, unsigned int siteIndex,               bool checkPosition = true) throw (Exception);
+    void        addSite(const Site& site, unsigned int siteIndex, int position, bool checkPosition = true) throw (Exception);
     unsigned int getNumberOfSites() const;
     void reindexSites();
     Vint getSitePositions() const;

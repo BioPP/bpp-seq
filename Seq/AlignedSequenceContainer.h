@@ -150,6 +150,7 @@ class AlignedSequenceContainer:
     void addSite(const Site& site, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, int position, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);
+    void addSite(const Site& site, unsigned int siteIndex, int position, bool checkPosition = true) throw (Exception);
     unsigned int getNumberOfSites() const { return length_; }
     Vint getSitePositions() const { return positions_; }
     void reindexSites();
