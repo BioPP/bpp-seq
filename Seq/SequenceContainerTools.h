@@ -245,7 +245,7 @@ class SequenceContainerTools
      * @param seqCont The container to convert.
      * @param outputCont A container (most likely empty) with an alphabet into which the container will be converted.
      */
-    void convertAlphabet(const SequenceContainer& seqCont, SequenceContainer& outputCont)
+    static void convertAlphabet(const SequenceContainer& seqCont, SequenceContainer& outputCont)
     throw (Exception)
     {  
       std::vector<string> seqNames = seqCont.getSequencesNames();
