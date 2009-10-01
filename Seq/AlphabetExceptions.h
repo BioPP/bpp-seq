@@ -61,8 +61,8 @@ class Alphabet;
 class AlphabetException:
   public Exception
 {
-	protected:
-		const Alphabet * _alphabet;
+	private:
+		const Alphabet* alphabet_;
 			
 	public:
 		/**
@@ -71,7 +71,15 @@ class AlphabetException:
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param alpha A const pointer toward the alphabet that threw the exception.
 		 */
-		AlphabetException(const string & text, const Alphabet * alpha = NULL);
+		AlphabetException(const std::string& text, const Alphabet* alpha = 0);
+		
+    AlphabetException(const AlphabetException& ae): Exception(ae), alphabet_(ae.alphabet_) {}
+    AlphabetException& operator=(const AlphabetException& ae)
+    {
+      Exception::operator=(ae);
+      alphabet_ = ae.alphabet_;
+      return *this;
+    }
 	
 		virtual ~AlphabetException() throw () {}
         
@@ -81,7 +89,7 @@ class AlphabetException:
 		 * 
 		 * @return a const pointer toward the alphabet.
 		 */
-		virtual const Alphabet * getAlphabet() const;
+		virtual const Alphabet* getAlphabet() const { return alphabet_; }
 };
 
 /**
@@ -130,7 +138,7 @@ class BadIntException:
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param alpha A const pointer toward the alphabet that threw the exception.
 		 */
-		BadIntException(int badInt, const string & text = "", const Alphabet * alpha = NULL);
+		BadIntException(int badInt, const std::string& text = "", const Alphabet* alpha = 0);
 	
 		virtual ~BadIntException() throw() {}
 
@@ -151,11 +159,11 @@ class BadIntException:
  */
 class AlphabetMismatchException : public Exception
 {
-	protected:
-		const Alphabet * _alphabet1, * _alphabet2;
+	private:
+		const Alphabet* alphabet1_, * alphabet2_;
 	
 	public:
-    
+           
 		/**
 		 * @brief Build a new AlphabetMismatchException object.
      *
@@ -163,18 +171,18 @@ class AlphabetMismatchException : public Exception
 		 * @param alpha1 A const pointer toward the first alphabet.
 		 * @param alpha2 A const pointer toward the second alphabet, i.e. the one which does not match with the first.
 		 */
-		AlphabetMismatchException(const char * text = "", const Alphabet * alpha1 = NULL, const Alphabet * alpha2 = NULL);
-        
-		/**
-		 * @brief Build a new AlphabetMismatchException object.
-     *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param alpha1 A const pointer toward the first alphabet.
-		 * @param alpha2 A const pointer toward the second alphabet, i.e. the one which does not match with the first.
-		 */
-		AlphabetMismatchException(const string & text = "", const Alphabet * alpha1 = NULL, const Alphabet * alpha2 = NULL);
+		AlphabetMismatchException(const std::string& text = "", const Alphabet* alpha1 = 0, const Alphabet* alpha2 = 0);
 	
-		virtual ~AlphabetMismatchException() throw();
+    AlphabetMismatchException(const AlphabetMismatchException& ame): Exception(ame), alphabet1_(ame.alphabet1_), alphabet2_(ame.alphabet2_) {}
+    AlphabetMismatchException& operator=(const AlphabetMismatchException& ame)
+    {
+      Exception::operator=(ame);
+      alphabet1_ = ame.alphabet1_;
+      alphabet2_ = ame.alphabet2_;
+      return *this;
+    }
+
+		virtual ~AlphabetMismatchException() throw() {}
 
 	public:
 		/**
