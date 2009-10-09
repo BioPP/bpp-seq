@@ -47,13 +47,6 @@ using namespace std; // for the STL
 //=================================
 /******************************************************************************/
 
-AbstractSequencePositionIterator::AbstractSequencePositionIterator(const Sequence & seq, unsigned int pos) {
-  this -> sequence_ = &seq;
-  currentPosition_ = pos;
-}
-
-/******************************************************************************/
-
 bool AbstractSequencePositionIterator::operator==(const SequencePositionIterator & it) const {
   return this->getPosition() == it.getPosition();
 }
@@ -100,10 +93,7 @@ string AbstractSequencePositionIterator::getChar() const {
 //===============================
 /******************************************************************************/
 
-SimpleSequencePositionIterator::SimpleSequencePositionIterator(const Sequence & seq, unsigned int pos): AbstractSequencePositionIterator(seq, pos) {};
-
-/******************************************************************************/
-SimpleSequencePositionIterator::SimpleSequencePositionIterator(const SequencePositionIterator & it):
+SimpleSequencePositionIterator::SimpleSequencePositionIterator(const SequencePositionIterator& it):
   AbstractSequencePositionIterator(it.getSequence(), it.getPosition()) {};
 
 /******************************************************************************/

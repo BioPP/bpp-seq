@@ -55,25 +55,17 @@ class Sequence;
  *
  * @see Exception
  */
-class SequenceException:
+class SequenceException :
   public Exception
 {
-	protected:
+	private:
 
 		/**
 		 * @brief A pointer toward a sequence object.
 		 */
-		const Sequence * sequence;
+		const Sequence* sequence_;
 	
 	public:
-    
-		/**
-		 * @brief Build a new SequenceException object.
-		 *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param seq A const pointer toward the sequence that threw the exception.
-		 */
-		SequenceException(const char * text, const Sequence * seq = NULL);
         
 		/**
 		 * @brief Build a new SequenceException object.
@@ -81,9 +73,17 @@ class SequenceException:
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param seq A const pointer toward the sequence that threw the exception.
 		 */
-		SequenceException(const string & text, const Sequence * seq = NULL);
+		SequenceException(const std::string& text, const Sequence * seq = 0);
+		
+    SequenceException(const SequenceException& se): Exception(se), sequence_(se.sequence_) {}
+    SequenceException& operator=(const SequenceException& se)
+    {
+      Exception::operator=(se);
+      sequence_ = se.sequence_;
+      return *this;
+    }
 	
-		virtual ~SequenceException() throw();
+		virtual ~SequenceException() throw() {}
 	
 	public:
     
@@ -92,39 +92,35 @@ class SequenceException:
 		 *
 		 * @return A const pointer toward the sequence.
 		 */
-		virtual const Sequence * getSequence() const;
+		virtual const Sequence* getSequence() const { return sequence_; }
 };
 
 /**
  * @brief Exception thrown when a sequence is found to be empty and it should not.
  */
-class EmptySequenceException : public SequenceException {
+class EmptySequenceException :
+  public SequenceException
+{
 
 	public:
-    
-		/**
-		 * @brief Build a new EmptySequenceException object.
-         *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param seq  A const pointer toward the sequence that threw the exception.
-		 */
-		EmptySequenceException(const char * text, const Sequence * seq = NULL);
-        
+     
 		/**
 		 * @brief Build a new EmptySequenceException object.
          *
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param seq A const pointer toward the sequence that threw the exception.
 		 */
-		EmptySequenceException(const string & text, const Sequence * seq = NULL);
+		EmptySequenceException(const std::string& text, const Sequence* seq = 0);
 	
-		virtual ~EmptySequenceException() throw();
+		virtual ~EmptySequenceException() throw() {}
 };
 
 /**
  * @brief Exception thrown when a sequence is found to have gap and it should not.
  */
-class SequenceWithGapException : public SequenceException {
+class SequenceWithGapException :
+  public SequenceException
+{
 
 	public:
     
@@ -134,17 +130,9 @@ class SequenceWithGapException : public SequenceException {
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param seq A const pointer toward the sequence that threw the exception.
 		 */
-		SequenceWithGapException(const char *   text, const Sequence * seq = NULL);
-        
-		/**
-		 * @brief Build a new SequenceWithGapException object.
-     *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param seq A const pointer toward the sequence that threw the exception.
-		 */
-		SequenceWithGapException(const string & text, const Sequence * seq = NULL);
+		SequenceWithGapException(const std::string& text, const Sequence* seq = 0);
 	
-		virtual ~SequenceWithGapException() throw();
+		virtual ~SequenceWithGapException() throw() {}
 };
 
 /**
@@ -152,7 +140,9 @@ class SequenceWithGapException : public SequenceException {
  *
  * Typically, this may occur when you try to add a bad sequence to a site container.
  */
-class SequenceNotAlignedException : public SequenceException {
+class SequenceNotAlignedException :
+  public SequenceException
+{
 
 	public:
     
@@ -162,17 +152,9 @@ class SequenceNotAlignedException : public SequenceException {
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param seq  A const pointer toward the sequence that threw the exception.
      */
-		SequenceNotAlignedException(const char * text, const Sequence * seq);
-
-		/**
-     * @brief Build a new SequenceNotAlignedException object.
-     *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param seq  A const pointer toward the sequence that threw the exception.
-     */
-    SequenceNotAlignedException(const string & text, const Sequence * seq);
+    SequenceNotAlignedException(const std::string& text, const Sequence* seq);
 	
-		virtual ~SequenceNotAlignedException() throw();
+		virtual ~SequenceNotAlignedException() throw() {}
 };
 
 } //end of namespace bpp.

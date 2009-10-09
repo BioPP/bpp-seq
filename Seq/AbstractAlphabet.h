@@ -104,7 +104,7 @@ class AbstractAlphabet:
 
 	public:
 		
-		AbstractAlphabet(): alphabet_(), letters_(), nums_() {}
+		AbstractAlphabet(): alphabet_(), letters_(), nums_(), charList_(), intList_() {}
 
 		virtual ~AbstractAlphabet()
     {

@@ -106,12 +106,13 @@ namespace bpp
   class AbstractSequencePositionIterator: public SequencePositionIterator
   {
     private:
-      const Sequence * sequence_;
+      const Sequence* sequence_;
       unsigned int currentPosition_;
 
 
     public:
-      AbstractSequencePositionIterator(const Sequence & seq, unsigned int pos = 0);
+      AbstractSequencePositionIterator(const Sequence& seq, unsigned int pos = 0):
+        sequence_(&seq), currentPosition_(pos) {}
       virtual ~AbstractSequencePositionIterator() {}
 
     public:
@@ -121,15 +122,15 @@ namespace bpp
        *
        * @{
        */
-      bool operator==(const SequencePositionIterator & it) const;
-      bool operator!=(const SequencePositionIterator & it) const;
+      bool operator==(const SequencePositionIterator& it) const;
+      bool operator!=(const SequencePositionIterator& it) const;
       /** @} */
 
       unsigned int getPosition() const;
       void setPosition(unsigned int pos);
       int getValue() const;
       std::string getChar() const;
-      const Sequence & getSequence() const;
+      const Sequence& getSequence() const;
   };
 
   /**
@@ -147,7 +148,8 @@ namespace bpp
    *
    * @author Sylvain Gaillard
    */
-  class SimpleSequencePositionIterator: public AbstractSequencePositionIterator
+  class SimpleSequencePositionIterator:
+    public AbstractSequencePositionIterator
   {
     public:
       /**
@@ -163,13 +165,14 @@ namespace bpp
        * @param pos Optional integer where to start on the Sequence object
        *
        */
-      SimpleSequencePositionIterator(const Sequence & seq, unsigned int pos = 0);
+      SimpleSequencePositionIterator(const Sequence& seq, unsigned int pos = 0):
+        AbstractSequencePositionIterator(seq, pos) {}
       /**
        * @brief Copie constructor.
        *
        * @param it A reference toward a SequencePositionIterator
        */
-      SimpleSequencePositionIterator(const SequencePositionIterator & it);
+      SimpleSequencePositionIterator(const SequencePositionIterator& it);
       virtual ~SimpleSequencePositionIterator() {}
        /** @} */
 

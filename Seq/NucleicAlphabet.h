@@ -67,11 +67,16 @@ class NucleicAlphabet :
         binCodes_[st.getBinaryCode()] = pos;
     }
 
+	public:
+    NucleicAlphabet(): binCodes_() {}
+
+		virtual ~NucleicAlphabet() {}
+
+  protected:
     /**
      * @name Overloaded methods from AbstractAlphabet
      * @{
      */
-  protected:
     void registerState(const NucleicAlphabetState& st) {
       LetterAlphabet::registerState(st);
       updateMaps_(getNumberOfChars(), st);
@@ -93,11 +98,12 @@ class NucleicAlphabet :
             );
       }
     /** @} */
+
+  public:
     /**
      * @name Overloaded methods from AbstractAlphabet
      * @{
      */
-  public:
     const NucleicAlphabetState& getState(const std::string& letter) const
       throw (BadCharException) {
         return dynamic_cast<const NucleicAlphabetState&>(
@@ -111,6 +117,7 @@ class NucleicAlphabet :
             );
       }
     /** @} */
+
     /**
      * @name Specific methods
      * @{
@@ -231,9 +238,6 @@ class NucleicAlphabet :
     }
 
     /** @} */
-	public:
-    NucleicAlphabet() {}
-		virtual ~NucleicAlphabet() {}
 	
 	public:
 		// return 4 : A, C, G, T (or U)
