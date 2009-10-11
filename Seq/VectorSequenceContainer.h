@@ -93,7 +93,7 @@ class VectorSequenceContainer:
 		 *
 		 * @param alpha The alphabet of the container.
 		 */
-		VectorSequenceContainer(const Alphabet* alpha): AbstractSequenceContainer(alpha) {}
+		VectorSequenceContainer(const Alphabet* alpha): AbstractSequenceContainer(alpha), sequences_() {}
 		
 		/**
 		 * @name Copy contructors:

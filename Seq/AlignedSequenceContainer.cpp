@@ -52,30 +52,11 @@ using namespace std;
 
 /***************************************************************************/
 
-AlignedSequenceContainer::AlignedSequenceContainer(const SiteContainer & sc): 
-  VectorSequenceContainer(sc)
-{
-  // Initializing
-  length_    = sc.getNumberOfSites();
-  positions_ = sc.getSitePositions();
-  sites_.resize(length_);
-}
-
-/***************************************************************************/
-
-AlignedSequenceContainer::AlignedSequenceContainer(const AlignedSequenceContainer & asc):
-  VectorSequenceContainer(asc)
-{
-  // Initializing
-  length_    = asc.getNumberOfSites();
-  positions_ = asc.getSitePositions();
-  sites_.resize(length_);
-}
-
-/***************************************************************************/
-
 AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException):
-  VectorSequenceContainer(osc.getAlphabet()) //We can't call the copy constructor because we want to use the overloaded addSequence method !!!
+  VectorSequenceContainer(osc.getAlphabet()), //We can't call the copy constructor because we want to use the overloaded addSequence method !!!
+  positions_(),
+  length_(),
+  sites_()
 {
   // Initializing
   for(unsigned int i = 0; i < osc.getNumberOfSequences(); i++)

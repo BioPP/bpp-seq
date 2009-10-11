@@ -81,8 +81,18 @@ class AbstractSequenceContainer:
 		 * @param alpha The alphabet to be associated to this container.
 		 */
 		AbstractSequenceContainer(const Alphabet* alpha):
-      alphabet_(alpha) {}
+      alphabet_(alpha), comments_() {}
 		
+    AbstractSequenceContainer(const AbstractSequenceContainer& sc):
+      alphabet_(sc.alphabet_), comments_(sc.comments_) {}
+    
+    AbstractSequenceContainer& operator=(const AbstractSequenceContainer& sc)
+    {
+      alphabet_ = sc.alphabet_;
+      comments_ = sc.comments_;
+      return *this;
+    }
+
     /**
      * @brief Copy constructor from any SequenceContainer object.
      *

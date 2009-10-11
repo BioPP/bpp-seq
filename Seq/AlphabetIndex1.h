@@ -80,19 +80,19 @@ class AlphabetIndex1: public Clonable
 		 * @param state The state to consider, as a string value.
 		 * @return The index associated to the state
 		 */
-		virtual T getIndex(const string & state) const = 0;
+		virtual T getIndex(const std::string& state) const = 0;
 
 		/**
 		 * @brief Get the alphabet associated to this index.
 		 *
 		 * @return Alphabet The alphabet associated to this index.
 		 */
-		virtual const Alphabet * getAlphabet() const = 0;
+		virtual const Alphabet* getAlphabet() const = 0;
 
 		/**
 		 * @return A vector object with all indices.
 		 */
-		virtual vector<T> * getIndexVector() const = 0;
+		virtual std::vector<T>* getIndexVector() const = 0;
 
 };
 

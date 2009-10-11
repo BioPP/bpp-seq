@@ -46,8 +46,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <map>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -64,25 +62,40 @@ namespace bpp
  * reverse transcription may be achieved from the some instance of the object by
  * using the translate and reverse methods.
  */
-class NucleicAcidsReplication : public ReverseTranslator
+class NucleicAcidsReplication :
+  public ReverseTranslator
 {
-  protected:
-    const NucleicAlphabet * _nuc1, *_nuc2;
-    mutable map<int, int> _trans;
+  private:
+    const NucleicAlphabet* nuc1_, * nuc2_;
+    mutable std::map<int, int> trans_;
   
   public:
-    NucleicAcidsReplication(const NucleicAlphabet * nuc1, const NucleicAlphabet * nuc2);
+    NucleicAcidsReplication(const NucleicAlphabet* nuc1, const NucleicAlphabet* nuc2);
+    NucleicAcidsReplication(const NucleicAcidsReplication& nar):
+      ReverseTranslator(nar),
+      nuc1_(nar.nuc1_), nuc2_(nar.nuc2_), trans_(nar.trans_)
+    {}
+    NucleicAcidsReplication& operator=(const NucleicAcidsReplication& nar)
+    {
+      ReverseTranslator::operator=(nar);
+      nuc1_ = nar.nuc1_;
+      nuc2_ = nar.nuc2_;
+      trans_ = nar.trans_;
+      return *this;
+    }
+
     virtual ~NucleicAcidsReplication() {}
   
   public:
-    const Alphabet * getSourceAlphabet() const { return _nuc1; }
-    const Alphabet * getTargetAlphabet() const { return _nuc2; }
-           int translate(int state) const throw (BadIntException);
-        string translate(const string & state) const throw (BadCharException);    
-    Sequence * translate(const Sequence & sequence) const throw (AlphabetMismatchException);
-           int reverse(int state) const throw (BadIntException);    
-        string reverse(const string & state) const throw (BadCharException);      
-    Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception);
+    const Alphabet* getSourceAlphabet() const { return nuc1_; }
+    const Alphabet* getTargetAlphabet() const { return nuc2_; }
+
+    int translate(int state) const throw (BadIntException);
+    std::string translate(const std::string& state) const throw (BadCharException);    
+      Sequence* translate(const Sequence& sequence) const throw (AlphabetMismatchException);
+            int reverse(int state) const throw (BadIntException);    
+    std::string reverse(const std::string& state) const throw (BadCharException);      
+      Sequence* reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception);
 
 };
 

@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "AAIndex2Entry.h"
+#include "AlphabetTools.h"
 
 using namespace bpp;
 
@@ -46,11 +47,10 @@ using namespace bpp;
 #include <Utils/TextTools.h>
 #include <Utils/StringTokenizer.h>
 
-AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException)
+AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException):
+  property_(20, 20),
+  alpha_(&AlphabetTools::PROTEIN_ALPHABET)
 {
-  _alpha = new ProteicAlphabet();
-  _property.resize(20, 20);
-
   //Parse entry:
   string line;
   bool ok = false;
@@ -74,13 +74,13 @@ AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException)
         {
           if (st1.numberOfRemainingTokens() != i + 1) break;
           for (unsigned int j = 0; j <= i; j++)
-            _property(i,j) = TextTools::toDouble(st1.nextToken());
+            property_(i,j) = TextTools::toDouble(st1.nextToken());
         }
         else
         {
           if(st1.numberOfRemainingTokens() != 20) break;
           for(unsigned int j = 0; j < 20; j++)
-            _property(i,j) = TextTools::toDouble(st1.nextToken());
+            property_(i,j) = TextTools::toDouble(st1.nextToken());
         }
       }
       //Jump to next entry...

@@ -37,52 +37,51 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
+#include "DefaultNucleotideScore.h"
+
 // from the STL:
 #include <string>
 
 using namespace std;
-
-#include "DefaultNucleotideScore.h"
-
 using namespace bpp;
 
-DefaultNucleotideScore::DefaultNucleotideScore(const NucleicAlphabet * alphabet):
-  _alpha(alphabet)
+DefaultNucleotideScore::DefaultNucleotideScore(const NucleicAlphabet* alphabet) :
+  distanceMatrix_(4, 4),
+  alpha_(alphabet)
 {
 	// Load the matrix:
-	_distanceMatrix.resize(4, 4);
-  _distanceMatrix(0, 0) = 10;
-  _distanceMatrix(0, 1) = -3;
-  _distanceMatrix(0, 2) = -1;
-  _distanceMatrix(0, 3) = -4;
+  distanceMatrix_(0, 0) = 10;
+  distanceMatrix_(0, 1) = -3;
+  distanceMatrix_(0, 2) = -1;
+  distanceMatrix_(0, 3) = -4;
   
-  _distanceMatrix(1, 0) = -3;
-  _distanceMatrix(1, 1) = 9;
-  _distanceMatrix(1, 2) = -5;
-  _distanceMatrix(1, 3) = 0;
+  distanceMatrix_(1, 0) = -3;
+  distanceMatrix_(1, 1) = 9;
+  distanceMatrix_(1, 2) = -5;
+  distanceMatrix_(1, 3) = 0;
   
-  _distanceMatrix(2, 0) = -1;
-  _distanceMatrix(2, 1) = -5;
-  _distanceMatrix(2, 2) = 7;
-  _distanceMatrix(2, 3) = -3;
+  distanceMatrix_(2, 0) = -1;
+  distanceMatrix_(2, 1) = -5;
+  distanceMatrix_(2, 2) = 7;
+  distanceMatrix_(2, 3) = -3;
   
-  _distanceMatrix(3, 0) = -4;
-  _distanceMatrix(3, 1) = 0;
-  _distanceMatrix(3, 2) = -3;
-  _distanceMatrix(3, 3) = 8;
+  distanceMatrix_(3, 0) = -4;
+  distanceMatrix_(3, 1) = 0;
+  distanceMatrix_(3, 2) = -3;
+  distanceMatrix_(3, 3) = 8;
 }
 
 double DefaultNucleotideScore::getIndex(int state1, int state2) const 
 throw (BadIntException)
 {
-  if (_alpha->isGap(state1) || !_alpha->isIntInAlphabet(state1))
-    throw BadIntException(state1, "DefaultNucleotideScore::getIndex(). Invalid state1.", _alpha);
-  if (_alpha->isGap(state2) || !_alpha->isIntInAlphabet(state2))
-    throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state1.", _alpha);
-  if (! _alpha->isUnresolved(state1) && ! _alpha->isUnresolved(state2))
-    return _distanceMatrix(state1, state2);
-  vector<int> states1 = _alpha->getAlias(state1);
-  vector<int> states2 = _alpha->getAlias(state2);
+  if (alpha_->isGap(state1) || !alpha_->isIntInAlphabet(state1))
+    throw BadIntException(state1, "DefaultNucleotideScore::getIndex(). Invalid state1.", alpha_);
+  if (alpha_->isGap(state2) || !alpha_->isIntInAlphabet(state2))
+    throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state1.", alpha_);
+  if (! alpha_->isUnresolved(state1) && ! alpha_->isUnresolved(state2))
+    return distanceMatrix_(state1, state2);
+  vector<int> states1 = alpha_->getAlias(state1);
+  vector<int> states2 = alpha_->getAlias(state2);
   double score = -5;
   double tmp_score;
   for (unsigned int i = 0 ; i < states1.size() ; i++) {
@@ -95,14 +94,14 @@ throw (BadIntException)
   return score / (states1.size() + states2.size() - 1);
 }
 
-double DefaultNucleotideScore::getIndex(const string & state1, const string & state2) const
+double DefaultNucleotideScore::getIndex(const std::string& state1, const std::string& state2) const
 throw (BadCharException)
 {
-	return _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
+	return distanceMatrix_(alpha_->charToInt(state1), alpha_->charToInt(state2));
 }
 
-Matrix<double> * DefaultNucleotideScore::getIndexMatrix() const
+LinearMatrix<double>* DefaultNucleotideScore::getIndexMatrix() const
 {
-	return new RowMatrix<double>(_distanceMatrix);
+	return new LinearMatrix<double>(distanceMatrix_);
 }
 

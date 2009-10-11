@@ -62,8 +62,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <algorithm>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -73,28 +71,24 @@ namespace bpp
 class BowkerTest:
   public StatTest
 {
-  protected:
-    double _pvalue;
-    double _stat;
+  private:
+    double pvalue_;
+    double stat_;
 
   public:
-    BowkerTest() {}
+    BowkerTest(): pvalue_(1.), stat_(0.) {}
+
     virtual ~BowkerTest() {}
 
-#ifndef NO_VIRTUAL_COV
-    BowkerTest*
-#else
-    Clonable*
-#endif
-    clone() const { return new BowkerTest(*this); }
+    BowkerTest* clone() const { return new BowkerTest(*this); }
 
   public:
-    string getName() const { return "Bowker's test for homogeneity."; }
-    double getStatistic() const { return _stat; }
-    double getPValue() const { return _pvalue; }
+    std::string getName() const { return "Bowker's test for homogeneity."; }
+    double getStatistic() const { return stat_; }
+    double getPValue() const { return pvalue_; }
 
-    void setStatistic(double stat) { _stat = stat; }
-    void setPValue(double pvalue) { _pvalue = pvalue; }
+    void setStatistic(double stat) { stat_ = stat; }
+    void setPValue(double pvalue) { pvalue_ = pvalue; }
 };
 
 /**

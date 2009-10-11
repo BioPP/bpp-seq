@@ -38,42 +38,39 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
+#include "BLOSUM50.h"
+
+#include "AlphabetTools.h"
+
 // from the STL:
 #include <string>
 
 using namespace std;
-
-#include "BLOSUM50.h"
-
 using namespace bpp;
 
-BLOSUM50::BLOSUM50()
+BLOSUM50::BLOSUM50():
+  distanceMatrix_(20, 20),
+  alpha_(&AlphabetTools::PROTEIN_ALPHABET)
 {
-	// Build the alphabet:
-	_alpha = new ProteicAlphabet();
-	
-	// Load the matrix:
-	_distanceMatrix.resize(20, 20);
 	#include "__BLOSUM50MatrixCode"
 }
-BLOSUM50::~BLOSUM50() { delete _alpha; }
 
 double BLOSUM50::getIndex(int state1, int state2) const 
 throw (BadIntException)
 {
-	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "BLOSUM50::getIndex(). Invalid state1.", _alpha);
-	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "BLOSUM50::getIndex(). Invalid state2.", _alpha);
-  return _distanceMatrix(state1, state2);
+	if (state1 < 0 || state1 > 19) throw BadIntException(state1, "BLOSUM50::getIndex(). Invalid state1.", alpha_);
+	if (state2 < 0 || state2 > 19) throw BadIntException(state2, "BLOSUM50::getIndex(). Invalid state2.", alpha_);
+  return distanceMatrix_(state1, state2);
 }
 
-double BLOSUM50::getIndex(const string & state1, const string & state2) const
+double BLOSUM50::getIndex(const std::string& state1, const std::string& state2) const
 throw (BadCharException)
 {
-	return _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
+	return distanceMatrix_(alpha_->charToInt(state1), alpha_->charToInt(state2));
 }
 
-Matrix<double> * BLOSUM50::getIndexMatrix() const
+LinearMatrix<double>* BLOSUM50::getIndexMatrix() const
 {
-	return new RowMatrix<double>(_distanceMatrix);
+  return new LinearMatrix<double>(distanceMatrix_);
 }
 

@@ -84,11 +84,30 @@ class GeneticCode:
   public AbstractTranslator
 {
 	protected:
-		const CodonAlphabet * _codonAlphabet;
-		const ProteicAlphabet * _proteicAlphabet;
+		const CodonAlphabet* codonAlphabet_;
+		const ProteicAlphabet* proteicAlphabet_;
 	
 	public:
-		GeneticCode(): AbstractTranslator() {}
+		GeneticCode():
+      AbstractTranslator() ,
+      codonAlphabet_(0),
+      proteicAlphabet_(0)
+    {}
+
+    GeneticCode(const GeneticCode& gc):
+      AbstractTranslator(gc),
+      codonAlphabet_(gc.codonAlphabet_),
+      proteicAlphabet_(gc.proteicAlphabet_)
+    {}
+
+    GeneticCode& operator=(const GeneticCode& gc)
+    {
+      AbstractTranslator::operator=(gc);
+      codonAlphabet_ = gc.codonAlphabet_;
+      proteicAlphabet_ = gc.proteicAlphabet_;
+      return *this;
+    }
+
 		virtual ~GeneticCode() {}
 	
 	public:
@@ -97,11 +116,11 @@ class GeneticCode:
 		 *
 		 * @{
 		 */
-		const Alphabet * getSourceAlphabet() const { return _codonAlphabet; }
-		const Alphabet * getTargetAlphabet() const { return _proteicAlphabet; }
+		const Alphabet* getSourceAlphabet() const { return codonAlphabet_; }
+		const Alphabet* getTargetAlphabet() const { return proteicAlphabet_; }
 		virtual int translate(int state) const throw (BadIntException, Exception)  = 0;		
-		virtual string translate(const string & state) const throw (BadCharException, Exception) = 0;
-		virtual Sequence * translate(const Sequence & sequence) const throw (Exception)
+		virtual string translate(const std::string& state) const throw (BadCharException, Exception) = 0;
+		virtual Sequence* translate(const Sequence& sequence) const throw (Exception)
     {
 			return AbstractTranslator::translate(sequence);	
 		}

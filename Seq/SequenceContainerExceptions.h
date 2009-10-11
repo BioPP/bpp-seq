@@ -51,7 +51,8 @@ class SequenceContainer;
 /**
  * @brief Exception thrown when a sequence is not found The sequence not found exception base class.
  */
-class SequenceNotFoundException : public Exception
+class SequenceNotFoundException :
+  public Exception
 {
 
 	protected:
@@ -99,15 +100,16 @@ class SequenceNotFoundException : public Exception
 /**
  * @brief Exception thrown when an empty container is found.
  */
-class EmptyContainerException : public Exception
+class EmptyContainerException :
+  public Exception
 {
 
-	protected:
+	private:
 
 		/**
 		 * @brief The empty container.
      */
-		const SequenceContainer * _container;
+		const SequenceContainer *container_;
 	
 	public:
 
@@ -117,20 +119,19 @@ class EmptyContainerException : public Exception
 		 * @param text  A message to be passed to the exception hierarchy.
 		 * @param container The empty container.
 		 */
-		EmptyContainerException(const char * text, const SequenceContainer * container) :
-    	Exception("EmptyContainerException: " + string(text)),
-	    _container(container) {};
-
-		/**
-		 * @brief Build a new EmptyContainerException object.
-		 *
-		 * @param text  A message to be passed to the exception hierarchy.
-		 * @param container The empty container.
-		 */
-		EmptyContainerException(const string & text, const SequenceContainer * container) :
+		EmptyContainerException(const std::string& text, const SequenceContainer* container) :
     	Exception("EmptyContainerException: " + text),
-	    _container(container) {};
+	    container_(container) {};
       
+    EmptyContainerException(const EmptyContainerException& ece):
+      Exception(ece), container_(ece.container_) {}
+	
+    EmptyContainerException& operator=(const EmptyContainerException& ece)
+    {
+      Exception::operator=(ece);
+      container_ = ece.container_;
+      return *this;
+    }
 	
 		// Class destructor
 		virtual ~EmptyContainerException() throw() {}
@@ -140,7 +141,7 @@ class EmptyContainerException : public Exception
 		/**
 		 * @return The empty container.
 		 */
-		virtual const SequenceContainer * getContainer() const { return _container; }
+		virtual const SequenceContainer* getContainer() const { return container_; }
 };
 
 } //end of namespace bpp.

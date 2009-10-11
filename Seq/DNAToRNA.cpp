@@ -43,50 +43,34 @@ using namespace bpp;
 
 /******************************************************************************/
 
-DNAToRNA::DNAToRNA() : AbstractReverseTranslator()
-{
-	dna = new DNA();
-	rna = new RNA();
-}
-
-/******************************************************************************/
-
-DNAToRNA::~DNAToRNA()
-{
-	delete dna;
-	delete rna;
-}
-
-/******************************************************************************/
-
 int DNAToRNA::translate(int state) const throw (BadIntException)
 {
-	dna -> intToChar(state);
+	dna_->intToChar(state);
 	return state;
 }
 
 /******************************************************************************/
 
-string DNAToRNA::translate(const string & state) const throw (BadCharException)
+string DNAToRNA::translate(const std::string& state) const throw (BadCharException)
 {
-	int i = dna -> charToInt(state);
-	return rna -> intToChar(i);
+	int i = dna_->charToInt(state);
+	return rna_->intToChar(i);
 }
 
 /******************************************************************************/
 
 int DNAToRNA::reverse(int state) const throw (BadIntException) 
 {
-	rna -> intToChar(state);
+	rna_->intToChar(state);
 	return state;
 }
 
 /******************************************************************************/
 
-string DNAToRNA::reverse(const string & state) const throw (BadCharException)
+string DNAToRNA::reverse(const std::string& state) const throw (BadCharException)
 {
-	int i = rna -> charToInt(state);
-	return dna -> intToChar(i);
+	int i = rna_->charToInt(state);
+	return dna_->intToChar(i);
 }
 
 /******************************************************************************/

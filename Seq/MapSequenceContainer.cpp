@@ -45,13 +45,12 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/TextTools.h>
 
 using namespace bpp;
-
 using namespace std;
 
 /******************************************************************************/
 
 MapSequenceContainer::MapSequenceContainer(const map<string, Sequence*>& ms, const Alphabet* alpha) :
-  AbstractSequenceContainer(alpha) 
+  AbstractSequenceContainer(alpha), sequences_() 
 {
   for (map<string, Sequence*>::const_iterator it = ms.begin(); it != ms.end(); it++)
   {    
@@ -62,7 +61,7 @@ MapSequenceContainer::MapSequenceContainer(const map<string, Sequence*>& ms, con
 /******************************************************************************/
 
 MapSequenceContainer::MapSequenceContainer(const MapSequenceContainer& msc) :
-  AbstractSequenceContainer(msc.getAlphabet()) 
+  AbstractSequenceContainer(msc.getAlphabet()), sequences_()
 { 
   for (unsigned int i = 0; i < msc.getNumberOfSequences(); i++)
     addSequence(msc.getKey(i), msc.getSequence(i), false);

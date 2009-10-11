@@ -43,43 +43,45 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 #include "MiyataAAChemicalDistance.h"
+#include "AlphabetTools.h"
+
+//From NumCalc:
 #include <NumCalc/NumTools.h>
 
 using namespace bpp;
 
-MiyataAAChemicalDistance::MiyataAAChemicalDistance()
+MiyataAAChemicalDistance::MiyataAAChemicalDistance() :
+  distanceMatrix_(20, 20),
+  alpha_(&AlphabetTools::PROTEIN_ALPHABET),
+  sym_(true)
 {
-	// Build the alphabet:
-	_alpha = new ProteicAlphabet();
-	
-	// Load the matrix:
-	_distanceMatrix.resize(20, 20);
 	#include "__MiyataMatrixCode"
 }
-MiyataAAChemicalDistance::~MiyataAAChemicalDistance() { delete _alpha; }
 
 double MiyataAAChemicalDistance::getIndex(int state1, int state2) const 
-throw (BadIntException) {
-	if(state1 < 0 || state1 > 19) throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", _alpha);
-	if(state2 < 0 || state2 > 19) throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", _alpha);
-	double d = _distanceMatrix(state1, state2);
-	return _sym ? NumTools::abs<double>(d) : d;
+throw (BadIntException)
+{
+	if (state1 < 0 || state1 > 19) throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", alpha_);
+	if (state2 < 0 || state2 > 19) throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", alpha_);
+	double d = distanceMatrix_(state1, state2);
+	return sym_ ? NumTools::abs<double>(d) : d;
 }
 
 double MiyataAAChemicalDistance::getIndex(const string & state1, const string & state2) const
-throw (BadCharException) {
-	double d = _distanceMatrix(_alpha->charToInt(state1), _alpha->charToInt(state2));
-	return _sym ? NumTools::abs(d) : d;
+throw (BadCharException)
+{
+	double d = distanceMatrix_(alpha_->charToInt(state1), alpha_->charToInt(state2));
+	return sym_ ? NumTools::abs(d) : d;
 }
 
-Matrix<double> * MiyataAAChemicalDistance::getIndexMatrix() const
+Matrix<double>* MiyataAAChemicalDistance::getIndexMatrix() const
 {
-	RowMatrix<double> * m = new RowMatrix<double>(_distanceMatrix);
-	if(_sym)
+	RowMatrix<double>* m = new RowMatrix<double>(distanceMatrix_);
+	if (sym_)
   {
-		for(unsigned int i = 0; i < 20; i++)
+		for (unsigned int i = 0; i < 20; i++)
     {
-			for(unsigned int j = 0; j < 20; j++)
+			for (unsigned int j = 0; j < 20; j++)
       {
 				(* m)(i,j) = NumTools::abs<double>((*m)(i,j));
 			}

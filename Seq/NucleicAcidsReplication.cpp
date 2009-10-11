@@ -43,42 +43,43 @@ using namespace bpp;
 
 using namespace std;
 
-NucleicAcidsReplication::NucleicAcidsReplication(const NucleicAlphabet * nuc1, const NucleicAlphabet * nuc2) : _nuc1(nuc1), _nuc2(nuc2)
+NucleicAcidsReplication::NucleicAcidsReplication(const NucleicAlphabet* nuc1, const NucleicAlphabet* nuc2) :
+  nuc1_(nuc1), nuc2_(nuc2), trans_()
 {
-  _trans[-1] = -1;
-  _trans[0] = 3;
-  _trans[1] = 2;
-  _trans[2] = 1;
-  _trans[3] = 0;
+  trans_[-1] = -1;
+  trans_[0] = 3;
+  trans_[1] = 2;
+  trans_[2] = 1;
+  trans_[3] = 0;
 
-  _trans[4] = 9;
-  _trans[5] = 8;
-  _trans[6] = 6;
-  _trans[7] = 7;
-  _trans[8] = 5;
-  _trans[9] = 4;
+  trans_[4] = 9;
+  trans_[5] = 8;
+  trans_[6] = 6;
+  trans_[7] = 7;
+  trans_[8] = 5;
+  trans_[9] = 4;
 
-  _trans[10] = 13;
-  _trans[11] = 12;
-  _trans[12] = 11;
-  _trans[13] = 10;
+  trans_[10] = 13;
+  trans_[11] = 12;
+  trans_[12] = 11;
+  trans_[13] = 10;
 
-  _trans[14] = 14;
+  trans_[14] = 14;
 }
 
 int NucleicAcidsReplication::translate(int state) const throw (BadIntException)
 {
-  _nuc1->intToChar(state);
-  return _trans[state];
+  nuc1_->intToChar(state);
+  return trans_[state];
 }
 
-string NucleicAcidsReplication::translate(const string & state) const throw (BadCharException)
+std::string NucleicAcidsReplication::translate(const std::string& state) const throw (BadCharException)
 {
-  int i = _nuc1->charToInt(state);
-  return _nuc2->intToChar(_trans[i]);
+  int i = nuc1_->charToInt(state);
+  return nuc2_->intToChar(trans_[i]);
 }
 
-Sequence * NucleicAcidsReplication::translate(const Sequence & sequence) const throw (AlphabetMismatchException)
+Sequence* NucleicAcidsReplication::translate(const Sequence& sequence) const throw (AlphabetMismatchException)
 {
   if(sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("NucleicAcidsReplication::translate", getSourceAlphabet(), getTargetAlphabet());
@@ -94,17 +95,17 @@ Sequence * NucleicAcidsReplication::translate(const Sequence & sequence) const t
 
 int NucleicAcidsReplication::reverse(int state) const throw (BadIntException) 
 {
-  _nuc2->intToChar(state);
-  return _trans[state];
+  nuc2_->intToChar(state);
+  return trans_[state];
 }
 
-string NucleicAcidsReplication::reverse(const string & state) const throw (BadCharException)
+std::string NucleicAcidsReplication::reverse(const std::string& state) const throw (BadCharException)
 {
-  int i = _nuc2->charToInt(state);
-  return _nuc1->intToChar(_trans[i]);
+  int i = nuc2_->charToInt(state);
+  return nuc1_->intToChar(trans_[i]);
 }
 
-Sequence * NucleicAcidsReplication::reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* NucleicAcidsReplication::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
 {
   if(sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("NucleicAcidsReplication::reverse", getSourceAlphabet(), getTargetAlphabet());

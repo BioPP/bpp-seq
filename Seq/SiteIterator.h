@@ -56,26 +56,34 @@ class SiteIterator
 		virtual ~SiteIterator() {}
 	
 	public:
-		virtual const Site * nextSite() = 0;
+		virtual const Site* nextSite() = 0;
 		virtual bool hasMoreSites() const = 0;
 };
 
 /**
  * @brief Partial implementation of the SiteIterator interface.
  */
-class AbstractSiteIterator: public SiteIterator
+class AbstractSiteIterator :
+  public SiteIterator
 {
 	protected:
-		const SiteContainer * sites;
-		unsigned int currentPosition;
+		const SiteContainer* sites_;
+		unsigned int currentPosition_;
 	
 	public:
-		AbstractSiteIterator(const SiteContainer & sites);
+		AbstractSiteIterator(const SiteContainer& sites);
+		
+    AbstractSiteIterator(const AbstractSiteIterator& asi) : sites_(asi.sites_), currentPosition_(asi.currentPosition_) {}
+    
+    AbstractSiteIterator& operator=(const AbstractSiteIterator& asi)
+    {
+      sites_ = asi.sites_;
+      currentPosition_ = asi.currentPosition_;
+      return *this;
+    }
+
 		virtual ~AbstractSiteIterator() {}
 	
-	public:
-		virtual const Site * nextSite() = 0;
-		virtual bool hasMoreSites() const = 0;
 };
 
 /**

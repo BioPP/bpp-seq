@@ -55,8 +55,8 @@ namespace bpp
 class AAIndex2Entry: public AlphabetIndex2<double>
 {
 	private:
-		RowMatrix<double> _property;
-		const ProteicAlphabet * _alpha;
+		LinearMatrix<double> property_;
+		const ProteicAlphabet* alpha_;
 
 	public:
     /**
@@ -69,42 +69,41 @@ class AAIndex2Entry: public AlphabetIndex2<double>
      * If sym==false, the other triangle will be set to (-) the given triangle.
      * @throw IOException if the stream content does not follow the AAIndex2 database entry format.
      */
-		AAIndex2Entry(istream & input, bool sym=true) throw (IOException);
+		AAIndex2Entry(std::istream& input, bool sym=true) throw (IOException);
 
-    AAIndex2Entry(const AAIndex2Entry & index)
-    {
-      _property = index._property;
-      _alpha = new ProteicAlphabet();
-    }
+    AAIndex2Entry(const AAIndex2Entry& index):
+      property_(index.property_),
+      alpha_(index.alpha_)
+    {}
 
-    AAIndex2Entry & operator=(const AAIndex2Entry & index)
+    AAIndex2Entry& operator=(const AAIndex2Entry& index)
     {
-      _property = index._property;
-      _alpha = new ProteicAlphabet();
+      property_ = index.property_;
+      alpha_ = index.alpha_;
       return *this;
     }
 
-		virtual ~AAIndex2Entry() { delete _alpha;	}
+		virtual ~AAIndex2Entry() {}
 
 	public:
 
-    const Alphabet * getAlphabet() const { return _alpha; }
+    const Alphabet* getAlphabet() const { return alpha_; }
 
-		AAIndex2Entry * clone() const { return new AAIndex2Entry(*this); }
+		AAIndex2Entry* clone() const { return new AAIndex2Entry(*this); }
 		
 		double getIndex(int state1, int state2) const throw (BadIntException)
     {
-	    if(state1 < 0 || state1 > 19) throw BadIntException(state1, "AAIndex2Entry::getIndex(). Invalid state1.", _alpha);
-	    if(state2 < 0 || state2 > 19) throw BadIntException(state2, "AAIndex2Entry::getIndex(). Invalid state2.", _alpha);
-	    return _property(state1, state2);
+	    if (state1 < 0 || state1 > 19) throw BadIntException(state1, "AAIndex2Entry::getIndex(). Invalid state1.", alpha_);
+	    if (state2 < 0 || state2 > 19) throw BadIntException(state2, "AAIndex2Entry::getIndex(). Invalid state2.", alpha_);
+	    return property_(state1, state2);
     }
 
-    double getIndex(const string & state1, const string & state2) const throw (BadCharException)
+    double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException)
     {
-	    return _property(_alpha->charToInt(state1), _alpha->charToInt(state2));
+	    return property_(alpha_->charToInt(state1), alpha_->charToInt(state2));
     }
 
-    Matrix<double> * getIndexMatrix() const { return new RowMatrix<double>(_property); }
+    LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(property_); }
 
 };
 

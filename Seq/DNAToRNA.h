@@ -43,6 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Translator.h"
 #include "DNA.h"
 #include "RNA.h"
+#include "AlphabetTools.h"
 
 namespace bpp
 {
@@ -57,25 +58,36 @@ namespace bpp
 class DNAToRNA:
   public AbstractReverseTranslator
 {
-	protected:
-		const Alphabet * dna, * rna;
+	private:
+		const Alphabet* dna_, * rna_;
 	
 	public:
-		DNAToRNA();
-		virtual ~DNAToRNA();
+		DNAToRNA(): AbstractReverseTranslator(), dna_(&AlphabetTools::DNA_ALPHABET), rna_(&AlphabetTools::RNA_ALPHABET) {}
+
+    DNAToRNA(const DNAToRNA& d2r): AbstractReverseTranslator(d2r), dna_(d2r.dna_), rna_(d2r.rna_) {}
+    
+    DNAToRNA& operator=(const DNAToRNA& d2r)
+    {
+      AbstractReverseTranslator::operator=(d2r);
+      dna_ = d2r.dna_;
+      rna_ = d2r.rna_;
+      return *this;
+    }
+		
+    virtual ~DNAToRNA() {}
 	
 	public:
-		virtual const Alphabet * getSourceAlphabet() const { return dna; }
-		virtual const Alphabet * getTargetAlphabet() const { return rna; }
+		virtual const Alphabet* getSourceAlphabet() const { return dna_; }
+		virtual const Alphabet* getTargetAlphabet() const { return rna_; }
 		int translate(int state) const throw (BadIntException);		
-		string translate(const string & state) const throw (BadCharException);		
-		Sequence * translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+    std::string translate(const std::string& state) const throw (BadCharException);		
+		Sequence* translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
     {
       return AbstractReverseTranslator::translate(sequence);
     }
 		int reverse(int state) const throw (BadIntException);
-		string reverse(const string & state) const throw (BadCharException);
-		Sequence * reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+		string reverse(const std::string& state) const throw (BadCharException);
+		Sequence* reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
     {
       return AbstractReverseTranslator::reverse(sequence);
     }

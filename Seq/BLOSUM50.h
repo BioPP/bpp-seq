@@ -71,12 +71,25 @@ namespace bpp
 class BLOSUM50: public AlphabetIndex2<double>
 {
 	private:
-		RowMatrix<double> _distanceMatrix;
-		const ProteicAlphabet * _alpha;
+		LinearMatrix<double> distanceMatrix_;
+		const ProteicAlphabet* alpha_;
 
 	public:
 		BLOSUM50();
-		virtual ~BLOSUM50();
+
+    BLOSUM50(const BLOSUM50& blosum) :
+      distanceMatrix_(blosum.distanceMatrix_),
+      alpha_(blosum.alpha_)
+    {}
+
+    BLOSUM50& operator=(const BLOSUM50& blosum)
+    {
+      distanceMatrix_ = blosum.distanceMatrix_;
+      alpha_ = blosum.alpha_;
+      return *this;
+    }
+
+		virtual ~BLOSUM50() {}
 
 	public:
 		/**
@@ -85,10 +98,10 @@ class BLOSUM50: public AlphabetIndex2<double>
 		 * @{
 		 */
 		double getIndex(int state1, int state2) const throw (BadIntException);
-		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
-		const Alphabet * getAlphabet() const { return _alpha; };
-		BLOSUM50 * clone() const { return new BLOSUM50(); }
-		Matrix<double> * getIndexMatrix() const;
+		double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException);
+		const Alphabet* getAlphabet() const { return alpha_; };
+		BLOSUM50* clone() const { return new BLOSUM50(); }
+		LinearMatrix<double>* getIndexMatrix() const; 
 		/** @} */
 
 };

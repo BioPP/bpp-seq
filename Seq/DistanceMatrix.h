@@ -43,8 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <string>
 
-using namespace std;
-
 // From Utils
 #include <Utils/Exceptions.h>
 #include <NumCalc/VectorExceptions.h> //DimensionException
@@ -63,7 +61,7 @@ class DistanceMatrix:
 {
 
 	private:
-		vector<string> _names;
+    std::vector<std::string> names_;
 
 	public:
 
@@ -74,7 +72,8 @@ class DistanceMatrix:
      *
      * @param names The names to use.
      */
-		DistanceMatrix(const vector<string> & names): RowMatrix<double>(names.size(), names.size()), _names(names)
+		DistanceMatrix(const std::vector<std::string>& names):
+      RowMatrix<double>(names.size(), names.size()), names_(names)
 		{
 			reset();
 		}
@@ -86,16 +85,16 @@ class DistanceMatrix:
      *
      * @param n The size of the matrix.
      */
-    DistanceMatrix(unsigned int n): RowMatrix<double>(n, n), _names(n)
+    DistanceMatrix(unsigned int n): RowMatrix<double>(n, n), names_(n)
 		{
-			for(unsigned int i = 0; i < n; i++) _names[i] = "Taxon " + i;
+			for(unsigned int i = 0; i < n; i++) names_[i] = "Taxon " + i;
 		}
 
 		virtual ~DistanceMatrix() {}
 
-		DistanceMatrix(const DistanceMatrix & dist): RowMatrix<double>(dist), _names(dist._names)	{}
+		DistanceMatrix(const DistanceMatrix& dist): RowMatrix<double>(dist), names_(dist.names_)	{}
 
-		DistanceMatrix & operator=(const DistanceMatrix & dist)
+		DistanceMatrix & operator=(const DistanceMatrix& dist)
 		{
 			unsigned int n = dist.size();
 			resize(n, n);
@@ -106,7 +105,7 @@ class DistanceMatrix:
 					operator()(i, j) = dist(i, j);
 				}
 			}
-			_names = dist._names;
+			names_ = dist.names_;
 			return *this;
 		}
 		
@@ -118,7 +117,7 @@ class DistanceMatrix:
 		void reset()
 		{
 			unsigned int n = size();
-			for(unsigned int i = 0; i < n; i++)
+			for (unsigned int i = 0; i < n; i++)
       {
 				for(unsigned int j = 0; j < n; j++)
         {
@@ -130,22 +129,22 @@ class DistanceMatrix:
     /**
      * @return The dimension of the matrix.
      */
-		unsigned int size() const { return _names.size(); }
+		unsigned int size() const { return names_.size(); }
 
     /**
      * @return The names associated to the matrix.
      */
-		vector<string> getNames() const { return _names; }
+    const std::vector<std::string>& getNames() const { return names_; }
 
     /**
      * @return The ith name.
      * @param i Name index.
      * @throw IndexOutOfBoundsException If i is not a valid index.
      */
-		string getName(unsigned int i) const throw (IndexOutOfBoundsException)
+    const std::string& getName(unsigned int i) const throw (IndexOutOfBoundsException)
     { 
       if(i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::getName. Invalid indice.", i, 0, size());
-      return _names[i];
+      return names_[i];
     }
     
     /**
@@ -155,10 +154,10 @@ class DistanceMatrix:
      * @param name The new name.
      * @throw IndexOutOfBoundsException If i is not a valid index.
      */
-		void setName(unsigned int i, const string & name) throw (IndexOutOfBoundsException)
+		void setName(unsigned int i, const std::string& name) throw (IndexOutOfBoundsException)
 		{
-			if(i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::setName. Invalid indice.", i, 0, size());
-			_names[i] = name;
+			if (i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::setName. Invalid indice.", i, 0, size());
+			names_[i] = name;
 		}
 
     /**
@@ -167,10 +166,10 @@ class DistanceMatrix:
      * @param names Matrix names.
      * @throw DimensionException If 'names' have not the same size as the matrix.
      */
-		void setNames(const vector<string> & names) throw (DimensionException)
+		void setNames(const std::vector<std::string>& names) throw (DimensionException)
 		{
-			if(names.size() != _names.size()) throw DimensionException("DistanceMatrix::setNames. Invalid number of names.", names.size(), _names.size());
-			_names = names;
+			if (names.size() != names_.size()) throw DimensionException("DistanceMatrix::setNames. Invalid number of names.", names.size(), names_.size());
+			names_ = names;
 		}
 
     /**
@@ -180,7 +179,7 @@ class DistanceMatrix:
      * @return The position of the name.
      * @throw Exception If no names are attached to this matrix, or if the name was not found.
      */
-    unsigned int getNameIndex(const string & name) const throw (Exception);
+    unsigned int getNameIndex(const std::string& name) const throw (Exception);
 
     /**
      * @brief Access by name.
@@ -190,7 +189,7 @@ class DistanceMatrix:
      * @return A reference toward the specified distance.
      * @throw Exception if the matrix has no name of if one of the name do not match existing names.
      */
-    virtual const double & operator()(const string & iName, const string & jName) const throw (Exception)
+    virtual const double & operator()(const std::string& iName, const std::string& jName) const throw (Exception)
     {
       unsigned int i = getNameIndex(iName);
       unsigned int j = getNameIndex(jName);
@@ -205,7 +204,7 @@ class DistanceMatrix:
      * @return A reference toward the specified distance.
      * @throw Exception if the matrix has no name of if one of the name do not match existing names.
      */
-    virtual double & operator()(const string & iName, const string & jName) throw (Exception)
+    virtual double & operator()(const std::string& iName, const std::string& jName) throw (Exception)
     {
       unsigned int i = getNameIndex(iName);
       unsigned int j = getNameIndex(jName);

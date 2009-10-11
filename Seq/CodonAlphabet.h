@@ -83,7 +83,7 @@ public: // Constructor and destructor.
    * 
    * @param alpha The nucleic alphabet to be used.
    */
-  CodonAlphabet(const NucleicAlphabet * alpha) : WordAlphabet(alpha, 3) {}
+  CodonAlphabet(const NucleicAlphabet* alpha) : WordAlphabet(alpha, 3), stopCodons_() {}
   
   virtual ~CodonAlphabet() {}
   

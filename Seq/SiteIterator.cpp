@@ -49,51 +49,50 @@ using namespace std;
 
 /******************************************************************************/
 	
-AbstractSiteIterator::AbstractSiteIterator(const SiteContainer & sites)
-{
-	this -> sites = &sites;
-	currentPosition = 0;	
-}
+AbstractSiteIterator::AbstractSiteIterator(const SiteContainer& sites) :
+  sites_(&sites),
+  currentPosition_(0)
+{}
 
 /******************************************************************************/
 	
-SimpleSiteIterator::SimpleSiteIterator(const SiteContainer & sites): AbstractSiteIterator(sites) {}
+SimpleSiteIterator::SimpleSiteIterator(const SiteContainer& sites): AbstractSiteIterator(sites) {}
 
 const Site* SimpleSiteIterator::nextSite()
 {
-	const Site* s = &sites->getSite(currentPosition);
-	currentPosition++;
+	const Site* s = &sites_->getSite(currentPosition_);
+	currentPosition_++;
 	return s;
 }
 
 bool SimpleSiteIterator::hasMoreSites() const
 {
-	return currentPosition < sites->getNumberOfSites();
+	return currentPosition_ < sites_->getNumberOfSites();
 }
 
 /******************************************************************************/
 	
-NoGapSiteIterator::NoGapSiteIterator(const SiteContainer & sites): AbstractSiteIterator(sites)
+NoGapSiteIterator::NoGapSiteIterator(const SiteContainer& sites): AbstractSiteIterator(sites)
 {
-	currentPosition = nextSiteWithoutGapPosition(-1);
+	currentPosition_ = nextSiteWithoutGapPosition(-1);
 }
 
 const Site* NoGapSiteIterator::nextSite()
 {
-	const Site* s = &sites->getSite(currentPosition);
-	currentPosition = nextSiteWithoutGapPosition(currentPosition);
+	const Site* s = &sites_->getSite(currentPosition_);
+	currentPosition_ = nextSiteWithoutGapPosition(currentPosition_);
 	return s;
 }
 
 bool NoGapSiteIterator::hasMoreSites() const
 {
-	return currentPosition < sites->getNumberOfSites();
+	return currentPosition_ < sites_->getNumberOfSites();
 }
 
 int NoGapSiteIterator::nextSiteWithoutGapPosition(int current) const
 {
 	unsigned int position = current + 1;
-	while(position < sites->getNumberOfSites() && SiteTools::hasGap(sites->getSite(position)))
+	while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->getSite(position)))
     position++;
 	return position;
 }
@@ -101,7 +100,7 @@ int NoGapSiteIterator::nextSiteWithoutGapPosition(int current) const
 int NoGapSiteIterator::previousSiteWithoutGapPosition(int current) const
 {
 	int position = current - 1;
-	while(position >= 0 && SiteTools::hasGap(sites->getSite(position)))
+	while (position >= 0 && SiteTools::hasGap(sites_->getSite(position)))
     position --;
 	return position;
 }
@@ -110,25 +109,25 @@ int NoGapSiteIterator::previousSiteWithoutGapPosition(int current) const
 	
 CompleteSiteIterator::CompleteSiteIterator(const SiteContainer & sites): AbstractSiteIterator(sites)
 {
-	currentPosition = nextCompleteSitePosition(-1);
+	currentPosition_ = nextCompleteSitePosition(-1);
 }
 
 const Site* CompleteSiteIterator::nextSite()
 {
-	const Site* s = &sites->getSite(currentPosition);
-	currentPosition = nextCompleteSitePosition(currentPosition);
+	const Site* s = &sites_->getSite(currentPosition_);
+	currentPosition_ = nextCompleteSitePosition(currentPosition_);
 	return s;
 }
 
 bool CompleteSiteIterator::hasMoreSites() const
 {
-	return currentPosition < sites -> getNumberOfSites();
+	return currentPosition_ < sites_->getNumberOfSites();
 }
 
 int CompleteSiteIterator::nextCompleteSitePosition(int current) const
 {
   unsigned int position = current + 1;
-	while(position < sites->getNumberOfSites() && !SiteTools::isComplete(sites->getSite(position)))
+	while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->getSite(position)))
     position ++;
 	return position;
 }
@@ -136,7 +135,7 @@ int CompleteSiteIterator::nextCompleteSitePosition(int current) const
 int CompleteSiteIterator::previousCompleteSitePosition(int current) const
 {
   int position = current - 1;
-	while(position >= 0 && !SiteTools::isComplete(sites->getSite(position)))
+	while (position >= 0 && !SiteTools::isComplete(sites_->getSite(position)))
     position --;
 	return position;
 }

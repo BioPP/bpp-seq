@@ -102,14 +102,31 @@ class GranthamAAChemicalDistance :
   public AlphabetIndex2<double>
 {
 	private:
-		RowMatrix<double> distanceMatrix_;
-		RowMatrix<double> signMatrix_;
+		LinearMatrix<double> distanceMatrix_;
+		LinearMatrix<double> signMatrix_;
 		const ProteicAlphabet* alpha_;
 		short int sign_;
 
 	public:
 		GranthamAAChemicalDistance();
-		virtual ~GranthamAAChemicalDistance();
+		
+    GranthamAAChemicalDistance(const GranthamAAChemicalDistance& gd):
+      distanceMatrix_(gd.distanceMatrix_),
+      signMatrix_(gd.signMatrix_),
+      alpha_(gd.alpha_),
+      sign_(gd.sign_)
+    {}
+    
+    GranthamAAChemicalDistance& operator=(const GranthamAAChemicalDistance& gd)
+    {
+      distanceMatrix_ = gd.distanceMatrix_;
+      signMatrix_ = gd.signMatrix_;
+      alpha_ = gd.alpha_;
+      sign_ = gd.sign_;
+      return *this;
+    }
+		
+    virtual ~GranthamAAChemicalDistance();
 
 	public:
 		/**

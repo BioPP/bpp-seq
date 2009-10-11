@@ -44,7 +44,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // from the STL:
 #include <string>
-using namespace std;
 
 #include "AlphabetIndex2.h"
 #include "ProteicAlphabet.h"
@@ -76,13 +75,30 @@ class MiyataAAChemicalDistance:
   public AlphabetIndex2<double>
 {
 	private:
-		RowMatrix<double> _distanceMatrix;
-		const ProteicAlphabet * _alpha;
-		bool _sym;
+		LinearMatrix<double> distanceMatrix_;
+		const ProteicAlphabet* alpha_;
+		bool sym_;
 
 	public:
 		MiyataAAChemicalDistance();
-		virtual ~MiyataAAChemicalDistance();
+		
+    MiyataAAChemicalDistance(const MiyataAAChemicalDistance& md):
+      distanceMatrix_(md.distanceMatrix_),
+      alpha_(md.alpha_),
+      sym_(md.sym_)
+    {}
+
+    MiyataAAChemicalDistance& operator=(const MiyataAAChemicalDistance& md)
+    {
+      distanceMatrix_ = md.distanceMatrix_;
+      alpha_ = md.alpha_;
+      sym_ = md.sym_;
+      return *this;
+    }
+
+		virtual ~MiyataAAChemicalDistance() {}
+		
+    MiyataAAChemicalDistance* clone() const { return new MiyataAAChemicalDistance(); }
 
 	public:
 		/**
@@ -91,15 +107,14 @@ class MiyataAAChemicalDistance:
 		 * @{
 		 */
 		double getIndex(int state1, int state2) const throw (BadIntException);
-		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
-		const Alphabet * getAlphabet() const { return _alpha; };
-		MiyataAAChemicalDistance * clone() const { return new MiyataAAChemicalDistance(); }
-		Matrix<double> * getIndexMatrix() const;
+		double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException);
+		const Alphabet* getAlphabet() const { return alpha_; };
+		Matrix<double>* getIndexMatrix() const;
 		/** @} */
 
 	public:
-		void setSymmetric(bool yn) { _sym = yn; }
-		bool isSymmetric() const { return _sym; }
+		void setSymmetric(bool yn) { sym_ = yn; }
+		bool isSymmetric() const { return sym_; }
 
 };
 

@@ -50,7 +50,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <string>
-using namespace std;
 
 namespace bpp
 {
@@ -84,20 +83,20 @@ class AlphabetIndex2: public Clonable
 		 * @param state2 Second state to consider, as a string value.
 		 * @return The index associated to the pair of states
 		 */
-		virtual T getIndex(const string & state1, const string & state2) const = 0;
+		virtual T getIndex(const std::string& state1, const std::string& state2) const = 0;
 
 		/**
 		 * @brief Get the alphabet associated to this index.
 		 *
 		 * @return Alphabet The alphabet associated to this index.
 		 */
-		virtual const Alphabet * getAlphabet() const = 0;
+		virtual const Alphabet* getAlphabet() const = 0;
 
 		/**
 		 * @return A matrix object with all indices.
 		 */
-		virtual Matrix<T> * getIndexMatrix() const = 0;
-
+		virtual Matrix<T>* getIndexMatrix() const = 0;
+		
 };
 
 } //end of namespace bpp.

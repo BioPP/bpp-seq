@@ -40,8 +40,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // from the STL:
 #include <string>
 
-using namespace std;
-
 #include "GranthamAAChemicalDistance.h"
 #include "AlphabetTools.h"
 
@@ -54,14 +52,13 @@ short int GranthamAAChemicalDistance::SIGN_NONE = 0;
 short int GranthamAAChemicalDistance::SIGN_ARBITRARY = 1;
 short int GranthamAAChemicalDistance::SIGN_PC1 = 2;
 
-GranthamAAChemicalDistance::GranthamAAChemicalDistance()
+GranthamAAChemicalDistance::GranthamAAChemicalDistance():
+  distanceMatrix_(20, 20),
+  signMatrix_(20, 20),
+  alpha_(&AlphabetTools::PROTEIN_ALPHABET),
+  sign_(0)
 {
-	// Build the alphabet:
-	alpha_ = &AlphabetTools::PROTEIN_ALPHABET;
-	
 	// Load the matrix:
-	distanceMatrix_.resize(20, 20);
-	signMatrix_.resize(20, 20);
 	#include "__GranthamMatrixCode"
 }
 GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
@@ -77,7 +74,7 @@ throw (BadIntException)
   return d;
 }
 
-double GranthamAAChemicalDistance::getIndex(const string& state1, const string& state2) const
+double GranthamAAChemicalDistance::getIndex(const std::string& state1, const std::string& state2) const
 throw (BadCharException)
 {
 	return getIndex(alpha_->charToInt(state1), alpha_->charToInt(state2));

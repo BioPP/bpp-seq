@@ -46,37 +46,9 @@ using namespace std;
 
 /***************************************************************************/
 
-SiteException::SiteException(const char *   text, const Site * s) :
-	Exception(text + (s != NULL ? "(" + TextTools::toString(s -> getPosition()) + ")" : string(""))),
-	site(s) {};
+SiteException::SiteException(const std::string& text, const Site* s) :
+	Exception(text + (s != 0 ? "(" + TextTools::toString(s->getPosition()) + ")" : string(""))),
+	site_(s) {};
     
-SiteException::SiteException(const string & text, const Site * s) :
-	Exception(text + (s != NULL ? "(" + TextTools::toString(s -> getPosition()) + ")" : string(""))),
-	site(s) {};
-    
-SiteException::~SiteException() throw() {};
-
-const Site * SiteException::getSite() const { return site; }
-
-/***************************************************************************/
-
-EmptySiteException::EmptySiteException(const char *   text, const Site * s) :
-	SiteException(text, s) {};
-
-EmptySiteException::EmptySiteException(const string & text, const Site * s) :
-	SiteException(text, s) {};
-
-EmptySiteException::~EmptySiteException() throw () {};
-
-/***************************************************************************/
-
-SiteWithGapException::SiteWithGapException(const char *   text, const Site * s) :
-	SiteException(text, s) {};
-
-SiteWithGapException::SiteWithGapException(const string & text, const Site * s) :
-	SiteException(text, s) {};
-
-SiteWithGapException::~SiteWithGapException() throw () {};
-
 /***************************************************************************/
 

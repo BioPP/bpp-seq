@@ -69,7 +69,7 @@ class MapSequenceContainer:
 	public:
 		MapSequenceContainer(const std::map<std::string, Sequence*>& ms, const Alphabet* alpha);
 		MapSequenceContainer(const Alphabet* alpha):
-      AbstractSequenceContainer(alpha) {}
+      AbstractSequenceContainer(alpha), sequences_() {}
 
 		MapSequenceContainer(const MapSequenceContainer& msc);
 		MapSequenceContainer& operator=(const MapSequenceContainer& msc);

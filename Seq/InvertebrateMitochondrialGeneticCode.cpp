@@ -49,20 +49,20 @@ using namespace std;
 
 InvertebrateMitochondrialGeneticCode::InvertebrateMitochondrialGeneticCode(const NucleicAlphabet * alpha) : GeneticCode() 
 {
-	_codonAlphabet   = new InvertebrateMitochondrialCodonAlphabet(alpha);
-	_proteicAlphabet = new ProteicAlphabet();
+	codonAlphabet_   = new InvertebrateMitochondrialCodonAlphabet(alpha);
+	proteicAlphabet_ = new ProteicAlphabet();
 }
 
 InvertebrateMitochondrialGeneticCode::~InvertebrateMitochondrialGeneticCode()
 {
-	delete _codonAlphabet;
-	delete _proteicAlphabet;	
+	delete codonAlphabet_;
+	delete proteicAlphabet_;	
 }
 
 int InvertebrateMitochondrialGeneticCode::translate(int state) const throw (Exception)
 {
-	if(state == _codonAlphabet->getUnknownCharacterCode()) return _proteicAlphabet->getUnknownCharacterCode();
- 	vector<int> positions = _codonAlphabet->getPositions(state);
+	if(state == codonAlphabet_->getUnknownCharacterCode()) return proteicAlphabet_->getUnknownCharacterCode();
+ 	vector<int> positions = codonAlphabet_->getPositions(state);
 	switch(positions[0])
   {
 		//First position:
@@ -74,24 +74,24 @@ int InvertebrateMitochondrialGeneticCode::translate(int state) const throw (Exce
 			switch(positions[2])
       {
 				//Third position:
-				case 0 : case 2 :          return _proteicAlphabet->charToInt("K"); //Lysine
-				case 1 : case 3 :          return _proteicAlphabet->charToInt("N"); //Asparagine
+				case 0 : case 2 :          return proteicAlphabet_->charToInt("K"); //Lysine
+				case 1 : case 3 :          return proteicAlphabet_->charToInt("N"); //Asparagine
 			}
 			case 1 : //AC
-			                             return _proteicAlphabet->charToInt("T"); //Threonine
+			                             return proteicAlphabet_->charToInt("T"); //Threonine
 			case 2 : //AG
 			switch(positions[2])
       {
 				//Third position:
-				case 0 : case 2 :          return _proteicAlphabet->charToInt("S"); //Serine
-				case 1 : case 3 :          return _proteicAlphabet->charToInt("S"); //Serine
+				case 0 : case 2 :          return proteicAlphabet_->charToInt("S"); //Serine
+				case 1 : case 3 :          return proteicAlphabet_->charToInt("S"); //Serine
 			}
 			case 3 : //AT
 			switch(positions[2])
       {
 				//Third position:
-				case 0 : case 2:           return _proteicAlphabet->charToInt("M"); //Methionine
-				case 1 : case 3 :          return _proteicAlphabet->charToInt("I"); //Isoleucine
+				case 0 : case 2:           return proteicAlphabet_->charToInt("M"); //Methionine
+				case 1 : case 3 :          return proteicAlphabet_->charToInt("I"); //Isoleucine
 			}
 		}
 		case 1 : //C
@@ -102,15 +102,15 @@ int InvertebrateMitochondrialGeneticCode::translate(int state) const throw (Exce
 			switch(positions[2])
       {
 				//Third position:
-				case 0 : case 2 :          return _proteicAlphabet->charToInt("Q"); //Glutamine
-				case 1 : case 3 :          return _proteicAlphabet->charToInt("H"); //Histidine
+				case 0 : case 2 :          return proteicAlphabet_->charToInt("Q"); //Glutamine
+				case 1 : case 3 :          return proteicAlphabet_->charToInt("H"); //Histidine
 			}
 			case 1 : //CC
-			                             return _proteicAlphabet->charToInt("P"); //Proline
+			                             return proteicAlphabet_->charToInt("P"); //Proline
 			case 2 : //CG
-			                             return _proteicAlphabet->charToInt("R"); //Arginine
+			                             return proteicAlphabet_->charToInt("R"); //Arginine
 			case 3 : //CT
-			                             return _proteicAlphabet->charToInt("L"); //Leucine
+			                             return proteicAlphabet_->charToInt("L"); //Leucine
 		}
 		case 2 : //G
 		switch(positions[1])
@@ -120,15 +120,15 @@ int InvertebrateMitochondrialGeneticCode::translate(int state) const throw (Exce
 			switch(positions[2])
       {
 				//Third position:
-				case 0 : case 2 :          return _proteicAlphabet->charToInt("E"); //Glutamic acid
-				case 1 : case 3 :          return _proteicAlphabet->charToInt("D"); //Aspartic acid
+				case 0 : case 2 :          return proteicAlphabet_->charToInt("E"); //Glutamic acid
+				case 1 : case 3 :          return proteicAlphabet_->charToInt("D"); //Aspartic acid
 			}
 			case 1 : //GC
-			                             return _proteicAlphabet->charToInt("A"); //Alanine
+			                             return proteicAlphabet_->charToInt("A"); //Alanine
 			case 2 : //GG
-			                             return _proteicAlphabet->charToInt("G"); //Glycine
+			                             return proteicAlphabet_->charToInt("G"); //Glycine
 			case 3 : //GT
-			                             return _proteicAlphabet->charToInt("V"); //Valine
+			                             return proteicAlphabet_->charToInt("V"); //Valine
 		}
 		case 3 : //T(U)
 		switch(positions[1])
@@ -140,31 +140,31 @@ int InvertebrateMitochondrialGeneticCode::translate(int state) const throw (Exce
 				//Third position:
 				case 0 :                   throw StopCodonException("", "TAA"); //Stop codon
 				case 2 :                   throw StopCodonException("", "TAG"); //Stop codon
-				case 1 : case 3 :          return _proteicAlphabet->charToInt("Y"); //Tyrosine
+				case 1 : case 3 :          return proteicAlphabet_->charToInt("Y"); //Tyrosine
 			}
 			case 1 : //TC
-			                             return _proteicAlphabet->charToInt("S"); //Serine
+			                             return proteicAlphabet_->charToInt("S"); //Serine
 			case 2 : //TG
 			switch(positions[2])
       {
 				//Third position:
-				case 0 : case 2 :          return _proteicAlphabet->charToInt("W"); //Tryptophane
-				case 1 : case 3 :          return _proteicAlphabet->charToInt("C"); //Cysteine
+				case 0 : case 2 :          return proteicAlphabet_->charToInt("W"); //Tryptophane
+				case 1 : case 3 :          return proteicAlphabet_->charToInt("C"); //Cysteine
 			}
 			case 3 : //TT
 			switch(positions[2])
       {
 				//Third position:
-				case 0 : case 2 :          return _proteicAlphabet->charToInt("L"); //Leucine
-				case 1 : case 3 :          return _proteicAlphabet->charToInt("F"); //Phenylalanine
+				case 0 : case 2 :          return proteicAlphabet_->charToInt("L"); //Leucine
+				case 1 : case 3 :          return proteicAlphabet_->charToInt("F"); //Phenylalanine
 			}
 		}
 	}
-	throw BadIntException(state, "InvertebrateMitochondrialGeneticCode::translate", _codonAlphabet);
+	throw BadIntException(state, "InvertebrateMitochondrialGeneticCode::translate", codonAlphabet_);
 }
 
 string InvertebrateMitochondrialGeneticCode::translate(const string & state) const throw (Exception)
 {
-	return _proteicAlphabet->intToChar(translate(_codonAlphabet->charToInt(state)));
+	return proteicAlphabet_->intToChar(translate(codonAlphabet_->charToInt(state)));
 }
 

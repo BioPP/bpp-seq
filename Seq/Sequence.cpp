@@ -58,16 +58,17 @@ const bool Sequence::ANTISENSE = false;
 
 /** Constructors: ***********************************************************************/
 
-Sequence::Sequence(const string& name, const string& sequence, const Alphabet* alpha)
+Sequence::Sequence(const std::string& name, const std::string& sequence, const Alphabet* alpha)
 throw (BadCharException) :
 	SymbolList(alpha),
 	name_(name),
+  comments_(),
 	sense_(true)
 {
 	setContent(sequence);
 }
 
-Sequence::Sequence(const string& name, const string& sequence, const Comments& comments, const Alphabet* alpha)
+Sequence::Sequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadCharException) :
 	SymbolList(alpha),
 	name_(name),
@@ -77,14 +78,15 @@ Sequence::Sequence(const string& name, const string& sequence, const Comments& c
 	setContent(sequence);
 }
 
-Sequence::Sequence(const string& name, const vector<string>& sequence, const Alphabet* alpha)
+Sequence::Sequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha)
 throw (BadCharException) :
 	SymbolList(sequence, alpha),
 	name_(name),
+  comments_(),
 	sense_(true)
 {}
 
-Sequence::Sequence(const string& name, const vector<string>& sequence, const Comments& comments, const Alphabet* alpha)
+Sequence::Sequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadCharException) :
 	SymbolList(sequence, alpha),
 	name_(name),
@@ -92,14 +94,15 @@ Sequence::Sequence(const string& name, const vector<string>& sequence, const Com
 	sense_(true)
 {}
 
-Sequence::Sequence(const string& name, const vector<int>& sequence, const Alphabet* alpha)
+Sequence::Sequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha)
   throw (BadIntException) :
 	SymbolList(sequence, alpha),
 	name_(name),
+  comments_(),
 	sense_(true)
 {}
 
-Sequence::Sequence(const string& name, const vector<int>& sequence, const Comments& comments, const Alphabet* alpha)
+Sequence::Sequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadIntException) :
 	SymbolList(sequence, alpha),
 	name_(name),
@@ -113,7 +116,8 @@ Sequence::Sequence(const Sequence& s) :
 	SymbolList(s),
 	name_(s.getName()),
 	comments_(s.getComments()),
-	sense_(s.getSense()) { }
+	sense_(s.getSense())
+{}
 
 /** Assignation operator: ***************************************************************/
 

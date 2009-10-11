@@ -56,12 +56,12 @@ class Site;
 class SiteException:
   public Exception
 {
-	protected:
+	private:
 
 		/**
 		 * @brief A pointer toward a site object.
 		 */
-		const Site * site;
+		const Site* site_;
 
 	public:	// Class constructor
 
@@ -71,18 +71,19 @@ class SiteException:
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param s    A const pointer toward the site that threw the exception.
 		 */
-		SiteException(const char *   text, const Site * s = NULL);
+		SiteException(const std::string& text, const Site* s = 0);
 
-		/**
-		 * @brief Build a new SiteException object.
-		 *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param s    A const pointer toward the site that threw the exception.
-		 */
-		SiteException(const std::string & text, const Site * s = NULL);
+    SiteException(const SiteException& se): Exception(se), site_(se.site_) {}
+    
+    SiteException& operator=(const SiteException& se)
+    {
+      Exception::operator=(se);
+      site_ = se.site_;
+      return *this;
+    }
 
 		// Class destructor
-		virtual ~SiteException() throw();
+		virtual ~SiteException() throw() {}
 
 	public:
 
@@ -91,7 +92,7 @@ class SiteException:
 		 *
 		 * @return A const pointer toward the site.
 		 */
-		virtual const Site * getSite() const;
+		virtual const Site* getSite() const { return site_; };
 };
 
 /**
@@ -101,12 +102,9 @@ class EmptySiteException:
   public SiteException
 {
 	public:
-		// Class constructor
-		EmptySiteException(const char *   text, const Site * s = NULL);
-		EmptySiteException(const std::string & text, const Site * s = NULL);
+		EmptySiteException(const std::string& text, const Site* s = 0): SiteException(text, s) {}
 
-		// Class destructor
-		virtual ~EmptySiteException() throw();
+		virtual ~EmptySiteException() throw() {}
 };
 
 /**
@@ -116,12 +114,9 @@ class SiteWithGapException:
   public SiteException
 {
 	public:
-		// Class constructor
-		SiteWithGapException(const char *   text, const Site * s = NULL);
-		SiteWithGapException(const std::string & text, const Site * s = NULL);
+		SiteWithGapException(const std::string& text, const Site* s = 0): SiteException(text, s) {}
 
-		// Class destructor
-		virtual ~SiteWithGapException() throw();
+		virtual ~SiteWithGapException() throw() {}
 };
 
 } //end of namespace bpp.

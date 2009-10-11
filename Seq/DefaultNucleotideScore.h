@@ -43,8 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // from the STL:
 #include <string>
 
-using namespace std;
-
 #include "AlphabetIndex2.h"
 #include "NucleicAlphabet.h"
 #include "AlphabetExceptions.h"
@@ -64,8 +62,8 @@ namespace bpp
 class DefaultNucleotideScore: public AlphabetIndex2<double>
 {
 	private:
-		RowMatrix<double> _distanceMatrix;
-		const NucleicAlphabet * _alpha;
+		LinearMatrix<double> distanceMatrix_;
+		const NucleicAlphabet* alpha_;
 
 	public:
     /**
@@ -73,7 +71,17 @@ class DefaultNucleotideScore: public AlphabetIndex2<double>
      *
      * @param alphabet The alphabet to use.
      */
-		DefaultNucleotideScore(const NucleicAlphabet * alphabet);
+		DefaultNucleotideScore(const NucleicAlphabet* alphabet);
+		
+    DefaultNucleotideScore(const DefaultNucleotideScore& dns):
+      distanceMatrix_(dns.distanceMatrix_), alpha_(dns.alpha_) {}      
+		
+    DefaultNucleotideScore& operator=(const DefaultNucleotideScore& dns)
+    {
+      distanceMatrix_ = dns.distanceMatrix_;
+      alpha_ = dns.alpha_;
+      return *this;
+    }      
 		
     virtual ~DefaultNucleotideScore() {}
 
@@ -91,10 +99,10 @@ class DefaultNucleotideScore: public AlphabetIndex2<double>
      * @author Sylvain Gaillard
      */
 		double getIndex(int state1, int state2) const throw (BadIntException);
-		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
-		const Alphabet * getAlphabet() const { return _alpha; };
-		DefaultNucleotideScore * clone() const { return new DefaultNucleotideScore(*this); }
-		Matrix<double> * getIndexMatrix() const;
+		double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException);
+		const Alphabet* getAlphabet() const { return alpha_; };
+		DefaultNucleotideScore* clone() const { return new DefaultNucleotideScore(*this); }
+		LinearMatrix<double>* getIndexMatrix() const;
 		/** @} */
 
 };

@@ -96,7 +96,9 @@ class AlignedSequenceContainer:
      */
     AlignedSequenceContainer(const Alphabet* alpha):
       VectorSequenceContainer(alpha),
-      length_(0)
+      positions_(),
+      length_(0),
+      sites_()
     {
       reindexSites();
     }
@@ -105,13 +107,25 @@ class AlignedSequenceContainer:
      *
      * @param asc The container to copy.
      */
-    AlignedSequenceContainer(const AlignedSequenceContainer& asc);
+    AlignedSequenceContainer(const AlignedSequenceContainer& asc):
+      VectorSequenceContainer(asc),
+      positions_(asc.getSitePositions()),
+      length_(asc.getNumberOfSites()),
+      sites_(asc.getNumberOfSites())
+    {}
+
     /**
      * @brief Convert any SiteContainer object into a AlignedSequenceContainer object.
      *
      * @param sc The container to copy.
      */
-    AlignedSequenceContainer(const SiteContainer& sc);
+    AlignedSequenceContainer(const SiteContainer& sc):
+      VectorSequenceContainer(sc),
+      positions_(sc.getSitePositions()),
+      length_(sc.getNumberOfSites()),
+      sites_(sc.getNumberOfSites())
+    {}
+
     /**
      * @brief Try to coerce an OrderedSequenceContainer object into an AlignedSequenceContainer object.
      *

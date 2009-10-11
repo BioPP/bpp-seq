@@ -56,43 +56,46 @@ string StopCodonException::getCodon() const { return codon; }
 vector<int> GeneticCode::getSynonymous(int aminoacid) const throw (BadIntException)
 {
 	//test:
-	_proteicAlphabet -> intToChar(aminoacid);
+	proteicAlphabet_->intToChar(aminoacid);
 	
 	vector<int> synonymes;
-	for(unsigned int i = 0; i < _codonAlphabet -> getSize(); i++) {
-		if(translate(i) == aminoacid) synonymes.push_back(i);
+	for (unsigned int i = 0; i < codonAlphabet_->getSize(); i++)
+  {
+		if (translate(i) == aminoacid) synonymes.push_back(i);
 	}
 	return synonymes;	
 }
 
 /**********************************************************************************************/
 
-vector<string> GeneticCode::getSynonymous(const string & aminoacid) const throw (BadCharException)
+std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid) const throw (BadCharException)
 {
 	//test:
-	int aa = _proteicAlphabet -> charToInt(aminoacid);
+	int aa = proteicAlphabet_->charToInt(aminoacid);
 	
 	vector<string> synonymes;
-	for(unsigned int i = 0; i < _codonAlphabet -> getSize(); i++) {
-		if(translate(i) == aa) synonymes.push_back(_codonAlphabet -> intToChar(i));
+	for (unsigned int i = 0; i < codonAlphabet_->getSize(); i++)
+  {
+		if (translate(i) == aa) synonymes.push_back(codonAlphabet_->intToChar(i));
 	}
 	return synonymes;	
 }
 
 /**********************************************************************************************/
 
-Sequence * GeneticCode::getCodingSequence(const Sequence & sequence, bool lookForInitCodon, bool includeInitCodon) const throw (Exception)
+Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForInitCodon, bool includeInitCodon) const throw (Exception)
 {
   unsigned int initPos = 0;
   unsigned int stopPos = sequence.size();
-  if(AlphabetTools::isCodonAlphabet(sequence.getAlphabet()))
+  if (AlphabetTools::isCodonAlphabet(sequence.getAlphabet()))
   {
     // Look for AUG(or ATG) codon:
-    if(lookForInitCodon) {
-      for(unsigned int i = 0; i < sequence.size(); i++)
+    if (lookForInitCodon)
+    {
+      for (unsigned int i = 0; i < sequence.size(); i++)
       {
-        vector<int> pos = _codonAlphabet->getPositions(sequence[i]);
-        if(pos[0] == 0 && pos[1] == 3 && pos[2] == 2)
+        vector<int> pos = codonAlphabet_->getPositions(sequence[i]);
+        if (pos[0] == 0 && pos[1] == 3 && pos[2] == 2)
         {
           initPos = includeInitCodon ? i : i+1;
           break;
@@ -100,21 +103,23 @@ Sequence * GeneticCode::getCodingSequence(const Sequence & sequence, bool lookFo
       }
     }
     // Look for stop codon:
-    for(unsigned int i = initPos; i < sequence.size(); i++)
+    for (unsigned int i = initPos; i < sequence.size(); i++)
     {
-      if(_codonAlphabet->isStop(sequence[i]))
+      if (codonAlphabet_->isStop(sequence[i]))
       {
         stopPos = i;
         break;
       }
     }
-  } else if(AlphabetTools::isNucleicAlphabet(sequence.getAlphabet()))
+  }
+  else if (AlphabetTools::isNucleicAlphabet(sequence.getAlphabet()))
   {
     // Look for AUG(or ATG) codon:
-    if(lookForInitCodon) {
-      for(unsigned int i = 0; i < sequence.size() - 2; i++)
+    if (lookForInitCodon)
+    {
+      for (unsigned int i = 0; i < sequence.size() - 2; i++)
       {
-        if(sequence[i] == 0 && sequence[i+1] == 3 && sequence[i+2] == 2)
+        if (sequence[i] == 0 && sequence[i+1] == 3 && sequence[i+2] == 2)
         {
           initPos = includeInitCodon ? i : i+3;
           break;
@@ -122,19 +127,20 @@ Sequence * GeneticCode::getCodingSequence(const Sequence & sequence, bool lookFo
       }
     }
     // Look for stop codon:
-    const NucleicAlphabet * nucAlpha = _codonAlphabet->getNucleicAlphabet();
-    for(unsigned int i = initPos; i < sequence.size() - 2; i+=3)
+    const NucleicAlphabet* nucAlpha = codonAlphabet_->getNucleicAlphabet();
+    for (unsigned int i = initPos; i < sequence.size() - 2; i+=3)
     {
-      string codon = nucAlpha -> intToChar(sequence[i])
-                   + nucAlpha -> intToChar(sequence[i+1])
-                   + nucAlpha -> intToChar(sequence[i+2]);
-      if(_codonAlphabet->isStop(codon))
+      string codon = nucAlpha->intToChar(sequence[i])
+                   + nucAlpha->intToChar(sequence[i+1])
+                   + nucAlpha->intToChar(sequence[i+2]);
+      if (codonAlphabet_->isStop(codon))
       {
         stopPos = i;
         break;
       }
     }
-  } else throw AlphabetMismatchException("Sequence must have alphabet of type nucleic or codon in GeneticCode::getCodingSequence.", NULL, sequence.getAlphabet());
+  }
+  else throw AlphabetMismatchException("Sequence must have alphabet of type nucleic or codon in GeneticCode::getCodingSequence.", 0, sequence.getAlphabet());
   
   return SequenceTools::subseq(sequence, initPos, stopPos - 1);
 }
