@@ -1,4 +1,4 @@
-# CMake script for Bio++ Utils
+# CMake script for Bio++ SeqLib
 # Author: Sylvain Gaillard and Julien Dutheil
 # Created: 20/08/2009
 
