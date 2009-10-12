@@ -58,22 +58,22 @@ class Mase:
   public virtual AbstractOSequence
 {
 
-  protected:
+  private:
 
     /**
      * @brief The maximum number of chars to be written on a line.
      */
-    unsigned int _charsByLine;
-    bool _checkNames;
+    unsigned int charsByLine_;
+    bool checkNames_;
 
   public :
     /**
      * @brief Build a new Mase object.
      *
      * @param charsByLine Number of character per line when writing files.
-     * @param checkNames  Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     * @param checkSequenceNames  Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      */
-    Mase(unsigned int charsByLine = 100, bool checkNames = true): _charsByLine(charsByLine), _checkNames(checkNames) {}
+    Mase(unsigned int charsByLine = 100, bool checkSequenceNames = true): charsByLine_(charsByLine), checkNames_(checkSequenceNames) {}
 
     // Class destructor
     virtual ~Mase() {}
@@ -116,14 +116,14 @@ class Mase:
     /**
      * @return true if the names are to be checked when reading sequences from files.
      */
-    bool checkNames() const { return _checkNames; }
+    bool checkNames() const { return checkNames_; }
 
     /**
      * @brief Tell whether the sequence names should be checked when reading from files.
      *
      * @param yn whether the sequence names should be checked when reading from files.
      */
-    void checkNames(bool yn) { _checkNames = yn; }
+    void checkNames(bool yn) { checkNames_ = yn; }
 };
 
 } //end of namespace bpp.

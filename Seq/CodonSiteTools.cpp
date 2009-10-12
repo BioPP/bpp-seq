@@ -222,10 +222,11 @@ unsigned int CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphab
 
 double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const GeneticCode & gc, bool minchange)
 {
-  const CodonAlphabet * ca = dynamic_cast<const CodonAlphabet *>(gc.getSourceAlphabet());
+  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet *>(gc.getSourceAlphabet());
   vector<int> ci=ca->getPositions(i);
   vector<int> cj=ca->getPositions(j);
-  switch(numberOfDifferences(i,j,*ca))
+  
+  switch (numberOfDifferences(i,j,*ca))
   {
     case 0 : return 0;
     case 1 :
@@ -238,7 +239,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
       if(gc.areSynonymous(i,j)) return 2;
       vector<double> path(2,0); // Vector of number of synonymous changes per path (2 here)
       vector<double> weight(2,1); //Weight to exclude path through stop codon
-      if(ci[0]==cj[0])
+      if (ci[0]==cj[0])
       {
         int trans1 = ca->getCodon(ci[0],cj[1],ci[2]); // transitory codon between NcNiNi et NcNjNj: NcNjNi, Nc = identical site
         int trans2 = ca->getCodon(ci[0],ci[1],cj[2]); // transitory codon between NcNiNi et NcNjNj: NcNiNj, Nc = identical site
@@ -253,7 +254,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
         }
         else weight[1]=0;
       }
-      if(ci[1]==cj[1])
+      if (ci[1]==cj[1])
       {
         int trans1 = ca->getCodon(cj[0],ci[1],ci[2]); // transitory codon between NiNcNi et NjNcNj: NjNcNi, Nc = identical site
         int trans2 = ca->getCodon(ci[0],ci[1],cj[2]); // transitory codon between NiNcNi et NjNcNj: NiNcNj, Nc = identical site
@@ -268,7 +269,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
         }
         else weight[1]=0;
       }
-      if(ci[2]==cj[2])
+      if (ci[2]==cj[2])
       {
         int trans1 = ca->getCodon(cj[0],ci[1],ci[2]); // transitory codon between NiNiNc et NjNjNc: NjNiNc, Nc = identical site
         int trans2 = ca->getCodon(ci[0],cj[1],ci[2]); // transitory codon between NiNiNc et NjNjNc: NiNjNc, Nc = identical site
@@ -285,10 +286,13 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
         }
         else weight[1]=0;
       }
-      if(minchange) return VectorTools::max(path);
-      double nbdif =0;
-      for(unsigned int i=0; i<2; i++) nbdif += path[i] * weight[i];
-      return nbdif/VectorTools::sum(weight);
+      if (minchange) return VectorTools::max(path);
+
+      double nbdif = 0;
+      for (unsigned int k = 0; k < 2; k++)
+        nbdif += path[k] * weight[k];
+
+      return nbdif / VectorTools::sum(weight);
     }
     case 3 :
     {
@@ -303,7 +307,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
       int trans101 = ca->getCodon(cj[0],ci[1],cj[2]);
       int trans011 = ca->getCodon(ci[0],cj[1],cj[2]);
       //Paths
-      if(!ca->isStop(trans100))
+      if (!ca->isStop(trans100))
       {
         if (gc.areSynonymous(i,trans100)) {path[0]++; path[1]++;}
         if (!ca->isStop(trans110)) {
@@ -318,7 +322,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
         else weight[1]=0;
       }
       else {weight[0]=0;weight[1]=0;}
-      if(!ca->isStop(trans010))
+      if (!ca->isStop(trans010))
       {
         if (gc.areSynonymous(i,trans010)) {path[2]++;path[3]++;}
         if(!ca->isStop(trans110)) {
@@ -333,7 +337,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
         else weight[3]=0;
       }
       else {weight[2]=0; weight[3]=0;}
-      if(!ca->isStop(trans001))
+      if (!ca->isStop(trans001))
       {
         if (gc.areSynonymous(i,trans001)) {path[4]++;path[5]++;}
         if(!ca->isStop(trans101)) {
@@ -349,8 +353,11 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
       }
       else {weight[4]=0; weight[5]=0;}
       if(minchange) return VectorTools::max(path);
-      double nbdif=0;
-      for(unsigned int i=0; i<6; i++) nbdif += path[i]*weight[i];
+
+      double nbdif = 0;
+      for (unsigned int k = 0; k < 6; k++)
+        nbdif += path[k] * weight[k];
+
       return nbdif/VectorTools::sum(weight);
     }
   }

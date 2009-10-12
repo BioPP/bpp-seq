@@ -64,7 +64,7 @@ class Fasta:
   public virtual ISequenceStream,
   public virtual OSequenceStream
 {
-  protected:
+  private:
 
     /**
      * @brief The maximum number of chars to be written on a line.
@@ -81,10 +81,10 @@ class Fasta:
      * @brief Build a new Fasta object.
      *
      * @param charsByLine Number of character per line when writing files.
-     * @param checkNames  Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     * @param checkSequenceNames  Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      * @param extended Tell if we should read general comments and sequence comments in HUPO-PSI format.
      */
-    Fasta(unsigned int charsByLine = 100, bool checkNames = true, bool extended = false): charsByLine_(charsByLine), checkNames_(checkNames), extended_(extended) {}
+    Fasta(unsigned int charsByLine = 100, bool checkSequenceNames = true, bool extended = false): charsByLine_(charsByLine), checkNames_(checkSequenceNames), extended_(extended) {}
 
     // Class destructor
     virtual ~Fasta() {}

@@ -141,38 +141,38 @@ void Sequence::setContent(const string & sequence) throw (BadCharException)
 
 /****************************************************************************************/
 
-void Sequence::setToSizeR(unsigned int size)
+void Sequence::setToSizeR(unsigned int newSize)
 {
 	unsigned int seqSize = content_.size();
 	// Size verification
-	if (size < seqSize)
+	if (newSize < seqSize)
   {
-		content_.resize(size);
+		content_.resize(newSize);
 		return;
 	}
-	if (size == seqSize) return;
+	if (newSize == seqSize) return;
 
 	// Add gaps up to specified size
-	while(content_.size() < size) content_.push_back(-1);
+	while (content_.size() < newSize) content_.push_back(-1);
 }
 
 /****************************************************************************************/
 
-void Sequence::setToSizeL(unsigned int size)
+void Sequence::setToSizeL(unsigned int newSize)
 {
 	// Size verification
 	unsigned int seqSize = content_.size();
-	if (size < seqSize)
+	if (newSize < seqSize)
   {
 		//We must truncate sequence from the left.
 		//This is a very unefficient method!
-		content_.erase(content_.begin(), content_.begin() + (seqSize - size));
+		content_.erase(content_.begin(), content_.begin() + (seqSize - newSize));
 		return;
 	}
-	if (size == seqSize) return;
+	if (newSize == seqSize) return;
 
 	// Add gaps up to specified size
-	content_.insert(content_.begin(), size - seqSize, -1);
+	content_.insert(content_.begin(), newSize - seqSize, -1);
 }
 
 /****************************************************************************************/

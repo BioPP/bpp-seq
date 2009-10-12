@@ -54,15 +54,15 @@ using namespace std;
 
 /******************************************************************************/
 
-const vector<string> Phylip::splitNameAndSequence(const string & s) const throw (Exception)
+const std::vector<std::string> Phylip::splitNameAndSequence(const std::string& s) const throw (Exception)
 {
   vector<string> v(2);
-  if(_extended)
+  if (extended_)
   {
-    string::size_type index = s.find(_namesSplit);
+    string::size_type index = s.find(namesSplit_);
     if(index == string::npos) throw Exception("No sequence name found.");
     v[0] = TextTools::removeSurroundingWhiteSpaces(s.substr(0, index));
-    v[1] = TextTools::removeFirstWhiteSpaces      (s.substr(index + _namesSplit.size())); //There may be more than 2 white spaces.
+    v[1] = TextTools::removeFirstWhiteSpaces      (s.substr(index + namesSplit_.size())); //There may be more than 2 white spaces.
   }
   else
   {
@@ -74,7 +74,7 @@ const vector<string> Phylip::splitNameAndSequence(const string & s) const throw 
 
 /******************************************************************************/
 
-void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const throw (Exception)
+void Phylip::readSequential(std::istream& in, AlignedSequenceContainer& asc) const throw (Exception)
 {
   string temp;
   
@@ -103,7 +103,7 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
       if(!TextTools::isEmpty(name)) //If this is not the first sequence!
       {
         // Add the previous sequence to the container:
-        asc.addSequence(Sequence(name, seq, asc.getAlphabet()), _checkNames);
+        asc.addSequence(Sequence(name, seq, asc.getAlphabet()), checkNames_);
       }
       name = v[0];
       seq  = v[1];
@@ -124,13 +124,13 @@ void Phylip::readSequential(istream & in, AlignedSequenceContainer & asc) const 
     temp = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(in));
   }
   // Add last sequence:
-  asc.addSequence(Sequence(name, seq, asc.getAlphabet()), _checkNames);
+  asc.addSequence(Sequence(name, seq, asc.getAlphabet()), checkNames_);
 }
 
 /******************************************************************************/
 
-void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const throw (Exception)
- {
+void Phylip::readInterleaved(std::istream& in, AlignedSequenceContainer& asc) const throw (Exception)
+{
   string temp;
   
   //Read first line:
@@ -142,7 +142,7 @@ void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const
   
   vector<string> names, seqs;
   // Read first block:
-  for(unsigned int i = 0; i < nbSequences && !in.eof() && !TextTools::isEmpty(temp); i++)
+  for (unsigned int i = 0; i < nbSequences && !in.eof() && !TextTools::isEmpty(temp); i++)
   {
     vector<string> v = splitNameAndSequence(temp);
     names.push_back(v[0]);
@@ -152,7 +152,7 @@ void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const
   
   //Then read all other blocks:
   temp = FileTools::getNextLine(in);
-  while(!in.eof())
+  while (!in.eof())
   {
     for(unsigned int i = 0; i < names.size(); i++)
     {
@@ -163,26 +163,26 @@ void Phylip::readInterleaved(istream & in, AlignedSequenceContainer & asc) const
     }
     temp = FileTools::getNextLine(in);
   }
-  for(unsigned int i = 0; i < names.size(); i++)
+  for (unsigned int i = 0; i < names.size(); i++)
   {
-    asc.addSequence(Sequence(names[i], seqs[i], asc.getAlphabet()), _checkNames);
+    asc.addSequence(Sequence(names[i], seqs[i], asc.getAlphabet()), checkNames_);
   }
 }
   
 /******************************************************************************/
 
-void Phylip::appendFromStream(istream & input, AlignedSequenceContainer & vsc) const throw (Exception)
+void Phylip::appendFromStream(std::istream & input, AlignedSequenceContainer& vsc) const throw (Exception)
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("Phylip::read: fail to open file"); }
   
-  if(_sequential) readSequential (input, vsc);
+  if(sequential_) readSequential (input, vsc);
   else            readInterleaved(input, vsc);
 }
 
 /******************************************************************************/
 
-unsigned int Phylip::getNumberOfSequences(const string & path) const throw (IOException)
+unsigned int Phylip::getNumberOfSequences(const std::string& path) const throw (IOException)
 {
   // Checking the existence of specified file
   ifstream file (path.c_str(), ios::in);
@@ -198,18 +198,19 @@ unsigned int Phylip::getNumberOfSequences(const string & path) const throw (IOEx
  
 /******************************************************************************/
 
-vector<string> Phylip::getSizedNames(const vector<string> & names) const
+std::vector<std::string> Phylip::getSizedNames(const std::vector<std::string>& names) const
 {
   vector<string> sizedNames(names.size());
-  if(_extended)
+  if (extended_)
   {
     //Add 6 white spaces to the larger name and align other names.
     //First, determine the size of the wider name:
     unsigned int sizeMax = 0;
-    for(unsigned int i = 0; i < names.size(); i++)
+    for (unsigned int i = 0; i < names.size(); i++)
       if(names[i].size() > sizeMax) sizeMax = names[i].size();
     //Quite easy ;-) Now update all lengths:
-    for(unsigned int i = 0; i < names.size(); i++) sizedNames[i] = TextTools::resizeRight(names[i], sizeMax) + _namesSplit;  
+    for (unsigned int i = 0; i < names.size(); i++)
+      sizedNames[i] = TextTools::resizeRight(names[i], sizeMax) + namesSplit_;  
   }
   else
   {
@@ -222,7 +223,7 @@ vector<string> Phylip::getSizedNames(const vector<string> & names) const
 
 /******************************************************************************/
 
-void Phylip::writeSequential(ostream & out, const SequenceContainer & sc, int charsByLine) const
+void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int charsByLine) const
 {
   //cout << "Write sequential" << endl;
   int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size();
@@ -242,7 +243,7 @@ void Phylip::writeSequential(ostream & out, const SequenceContainer & sc, int ch
   }
 }
 
-void Phylip::writeInterleaved(ostream & out, const SequenceContainer & sc, int charsByLine) const
+void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, int charsByLine) const
 {
   //cout << "Write interleaved;" << endl;
   int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size();
@@ -275,7 +276,7 @@ void Phylip::writeInterleaved(ostream & out, const SequenceContainer & sc, int c
 
 /******************************************************************************/
 
-void Phylip::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
+void Phylip::write(ostream & output, const SequenceContainer& sc) const throw (Exception)
 {
   //First must check if all sequences are aligned:
   if(sc.getNumberOfSequences() == 0)
@@ -287,17 +288,17 @@ void Phylip::write(ostream & output, const SequenceContainer & sc) const throw (
   // Checking the existence of specified file, and possibility to open it in write mode
   if (!output) { throw IOException ("Phylip::write : failed to open file"); }
 
-  if(_sequential) writeSequential (output, sc, _charsByLine);
-  else            writeInterleaved(output, sc, _charsByLine);
+  if (sequential_) writeSequential (output, sc, charsByLine_);
+  else             writeInterleaved(output, sc, charsByLine_);
 }
 
 /******************************************************************************/
 
-const string Phylip::getFormatName() const { return "Phylip file, " + string(_extended ? "extended," : "") + string(_sequential ? "sequential" : "interleaved"); }
+const std::string Phylip::getFormatName() const { return "Phylip file, " + string(extended_ ? "extended," : "") + string(sequential_ ? "sequential" : "interleaved"); }
 
 /******************************************************************************/
 
-const string Phylip::getFormatDescription() const
+const std::string Phylip::getFormatDescription() const
 {
   return "Phylip file format, sequential and interleaved. PAML extension also supported.";
 }

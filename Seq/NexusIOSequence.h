@@ -84,10 +84,10 @@ class NexusIOSequence:
      * @brief Build a new Phylip file reader.
      *
      * @param charsByLine The number of base to display in a row (ignored for now, no writing support).
-     * @param checkNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      */
-    NexusIOSequence(unsigned int charsByLine = 100, bool checkNames = true):
-      charsByLine_(charsByLine), checkNames_(checkNames) {}
+    NexusIOSequence(unsigned int charsByLine = 100, bool checkSequenceNames = true):
+      charsByLine_(charsByLine), checkNames_(checkSequenceNames) {}
 
     virtual ~NexusIOSequence() {}
 

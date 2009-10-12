@@ -58,18 +58,18 @@ namespace bpp
 class StopCodonException:
   public Exception
 {
-	protected:
-		string codon;
+	private:
+    std::string codon_;
 			
 	public:
 		// Class constructor
-		StopCodonException(const string & text, const string & codon);
+		StopCodonException(const std::string& text, const std::string& codon);
 	
 		// Class destructor
-		virtual ~StopCodonException() throw ();
+		virtual ~StopCodonException() throw () {}
 		
 	public:
-		virtual string getCodon() const;
+		virtual const std::string& getCodon() const { return codon_; }
 };
 
 /**

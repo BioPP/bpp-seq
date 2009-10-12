@@ -1,5 +1,5 @@
 12/10/09 Julien Dutheil
-* Now SeqLib compiles with -Weffc++ without any warning :)
+* Now SeqLib compiles with -Weffc++ and -Wshadow without any warning :)
 
 22/09/09 Julien Dutheil
 * Finally added 'addSequence' method in SequenceContainer.

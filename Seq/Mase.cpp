@@ -78,7 +78,7 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 				if((name != "") && (sequence != ""))
         {
 					// New sequence creation, and addition in existing VectorSequenceContainer
-					vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), _checkNames);
+					vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
 					name = "";
 					sequence = "";
 					seqComments.clear();
@@ -106,7 +106,7 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 	// Addition of the last sequence in file
 	if((name != "") && (sequence != ""))
   {
-		vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), _checkNames);
+		vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
 	}
 
 	// Set new general comments in VectorSequenceContainer (old + new comments)
@@ -149,14 +149,17 @@ void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Ex
 
 		// Sequence cutting to specified characters number per line
 		seq = sc.toString(names[i]);
-		while (seq != "") {
-			if (seq.size() > _charsByLine) {
+		while (seq != "")
+    {
+			if (seq.size() > charsByLine_)
+      {
 				temp = seq;
-				temp.erase(temp.begin() + _charsByLine , temp.end());
+				temp.erase(temp.begin() + charsByLine_ , temp.end());
 				output << temp  << endl;
-				seq.erase(seq.begin(), seq.begin() + _charsByLine);
+				seq.erase(seq.begin(), seq.begin() + charsByLine_);
 			}
-			else {
+			else
+      {
 				output << seq << endl;
 				seq = "";
 			}

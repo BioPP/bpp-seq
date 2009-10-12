@@ -291,9 +291,9 @@ class Sequence:
      * All new characters are filled with gaps.
      * If the specified size is < to the sequence size, the sequence will be truncated.
      *
-     * @param size The new size of the sequence.
+     * @param newSize The new size of the sequence.
      */
-    void setToSizeR(unsigned int size);
+    void setToSizeR(unsigned int newSize);
     
     /**
      * @brief Set up the size of a sequence from the left side.
@@ -301,9 +301,9 @@ class Sequence:
      * All new characters are filled with gaps.
      * If the specified size is < to the sequence size, the sequence will be truncated.
      *
-     * @param size The new size of the sequence.
+     * @param newSize The new size of the sequence.
      */
-    void setToSizeL(unsigned int size);
+    void setToSizeL(unsigned int newSize);
 
     /**
      * @brief Append the specified content to the sequence.

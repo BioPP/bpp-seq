@@ -50,8 +50,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <iostream>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -67,25 +65,25 @@ class Phylip:
   public virtual AbstractISequence2,
   public virtual AbstractOSequence
 {
-  protected:
+  private:
 
     /* this class allows two kind of Phylip format:
      * traditional, with names limited to 10 chars,
      * and 'extended', defined by PAML, with names separated from sequences by at least 6 white spaces.
      */
-    bool _extended;
+    bool extended_;
     /* tells if sequences are in the seuqential or the interleave format/
      */
-    bool _sequential;
+    bool sequential_;
 
     /**
      * @brief The maximum number of chars to be written on a line.
      */
-    unsigned int _charsByLine;
+    unsigned int charsByLine_;
 
-    bool _checkNames;
+    bool checkNames_;
 
-    string _namesSplit;
+    std::string namesSplit_;
   
   public:
     /**
@@ -94,11 +92,11 @@ class Phylip:
      * @param extended If true, sequences with names longer than 10 characters are allowed.
      * @param sequential If false, sequences are supposed to be interlaved.
      * @param charsByLine The number of base to display in a row.
-     * @param checkNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      * @param split The string to use to split sequence name from content (only for 'extended' format). This will typically be "  " (two spaces) or "\t" (a tabulation).
      */
-    Phylip(bool extended = true, bool sequential = true, unsigned int charsByLine = 100, bool checkNames = true, const string & split = "  "):
-      _extended(extended), _sequential(sequential), _charsByLine(charsByLine), _checkNames(checkNames), _namesSplit(split) {}
+    Phylip(bool extended = true, bool sequential = true, unsigned int charsByLine = 100, bool checkSequenceNames = true, const std::string& split = "  "):
+      extended_(extended), sequential_(sequential), charsByLine_(charsByLine), checkNames_(checkSequenceNames), namesSplit_(split) {}
 
     virtual ~Phylip() {}
 
@@ -145,34 +143,34 @@ class Phylip:
     /**
      * @return true if the names are to be checked when reading sequences from files.
      */
-    bool checkNames() const { return _checkNames; }
+    bool checkNames() const { return checkNames_; }
 
     /**
      * @brief Tell whether the sequence names should be checked when reading from files.
      *
      * @param yn whether the sequence names should be checked when reading from files.
      */
-    void checkNames(bool yn) { _checkNames = yn; }
+    void checkNames(bool yn) { checkNames_ = yn; }
 
     /**
      * @return The string used to split sequence name from content.
      */
-    string getSplit() const { return _namesSplit; }
+    const std::string& getSplit() const { return namesSplit_; }
 
     /**
      * @param split The string to be used to split sequence name from content.
      */
-    void setSplit(const string & split) { _namesSplit = split; }
+    void setSplit(const std::string& split) { namesSplit_ = split; }
      
   protected:
     //Reading tools:
-    const vector<string> splitNameAndSequence(const string & s) const throw (Exception); 
-    void readSequential (istream & in, AlignedSequenceContainer & asc) const throw (Exception);
-    void readInterleaved(istream & in, AlignedSequenceContainer & asc) const throw (Exception);
+    const std::vector<std::string> splitNameAndSequence(const std::string& s) const throw (Exception); 
+    void readSequential (std::istream& in, AlignedSequenceContainer& asc) const throw (Exception);
+    void readInterleaved(std::istream& in, AlignedSequenceContainer& asc) const throw (Exception);
     //Writing tools:
-    vector<string> getSizedNames(const vector<string> & names) const;
-    void writeSequential (ostream & out, const SequenceContainer & sc, int charsByLine) const;
-    void writeInterleaved(ostream & out, const SequenceContainer & sc, int charsByLine) const;
+    std::vector<std::string> getSizedNames(const std::vector<std::string>& names) const;
+    void writeSequential (std::ostream& out, const SequenceContainer& sc, int charsByLine) const;
+    void writeInterleaved(std::ostream& out, const SequenceContainer& sc, int charsByLine) const;
 };
 
 } //end of namespace bpp.

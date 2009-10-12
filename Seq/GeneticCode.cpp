@@ -45,11 +45,9 @@ using namespace bpp;
 
 /**********************************************************************************************/
 
-StopCodonException::StopCodonException(const string & text, const string & codon) :
+StopCodonException::StopCodonException(const std::string& text, const std::string& codon) :
 	Exception("StopCodonException: " + text + "(" + codon + ")"),
-	codon(codon) {};
-StopCodonException::~StopCodonException() throw() {};
-string StopCodonException::getCodon() const { return codon; }
+	codon_(codon) {};
 
 /**********************************************************************************************/
 
