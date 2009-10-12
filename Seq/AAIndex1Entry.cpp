@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "AAIndex1Entry.h"
+#include "AlphabetTools.h"
 
 //From Utils:
 #include <Utils/FileTools.h>
@@ -46,39 +47,37 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-AAIndex1Entry::AAIndex1Entry(istream & input) throw (IOException)
+AAIndex1Entry::AAIndex1Entry(std::istream& input) throw (IOException) :
+  property_(20), alpha_(&AlphabetTools::PROTEIN_ALPHABET)
 {
-  _alpha = new ProteicAlphabet();
-  _property.resize(20);
-
   //Parse entry:
   string line;
   bool ok = false;
   do
   {
     line = FileTools::getNextLine(input);
-    if(line[0] == 'I')
+    if (line[0] == 'I')
     {
       string line1 = FileTools::getNextLine(input);
       string line2 = FileTools::getNextLine(input);
       StringTokenizer st1(line1, " ");
       StringTokenizer st2(line2, " ");
-      if(st1.numberOfRemainingTokens() != (int)10 || st1.numberOfRemainingTokens() != (int)10) break;
+      if (st1.numberOfRemainingTokens() != 10 || st1.numberOfRemainingTokens() != 10) break;
       //Amino acids are in the same order in the AAIndex1 database than in the ProteicAlphabet class:
-      for(unsigned int i = 0; i < 10; i++)
+      for (unsigned int i = 0; i < 10; i++)
       {
-        _property[i] = TextTools::toDouble(st1.nextToken());
+        property_[i] = TextTools::toDouble(st1.nextToken());
       }
       for(unsigned int i = 10; i < 20; i++)
       {
-        _property[i] = TextTools::toDouble(st2.nextToken());
+        property_[i] = TextTools::toDouble(st2.nextToken());
       }
       //Jump to next entry...
       FileTools::getNextLine(input);
       ok = true;
     }
   }
-  while(!ok);
-  if(!ok) throw IOException("AAIndex1Entry: invalid AAIndex1 entry.");
+  while (!ok);
+  if (!ok) throw IOException("AAIndex1Entry: invalid AAIndex1 entry.");
 }
 

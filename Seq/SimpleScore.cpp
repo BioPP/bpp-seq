@@ -46,17 +46,17 @@ using namespace std;
 
 using namespace bpp;
 
-SimpleScore::SimpleScore(const Alphabet * alphabet, double match, double mismatch):
-  _alphabet(alphabet)
+SimpleScore::SimpleScore(const Alphabet* alphabet, double match, double mismatch):
+  distanceMatrix_(alphabet->getSize(), alphabet->getSize()),
+  alphabet_(alphabet)
 {
 	// Load the matrix:
-  unsigned int n = _alphabet->getSize();
-	_distanceMatrix.resize(n, n);
+  unsigned int n = alphabet_->getSize();
   for(unsigned int i = 0; i < n; i++)
   {
     for(unsigned int j = 0; j < n; j++)
     {
-      _distanceMatrix(i, j) = (i == j ? match : mismatch);
+      distanceMatrix_(i, j) = (i == j ? match : mismatch);
     }
   }
 }
@@ -64,19 +64,19 @@ SimpleScore::SimpleScore(const Alphabet * alphabet, double match, double mismatc
 double SimpleScore::getIndex(int state1, int state2) const 
 throw (BadIntException)
 {
-	if(state1 < 0 || state1 > (int)_alphabet->getSize()) throw BadIntException(state1, "SimpleScore::getIndex(). Invalid state1.", _alphabet);
-	if(state2 < 0 || state2 > (int)_alphabet->getSize()) throw BadIntException(state2, "SimpleScore::getIndex(). Invalid state2.", _alphabet);
-  return _distanceMatrix(state1, state2);
+	if(state1 < 0 || state1 > (int)alphabet_->getSize()) throw BadIntException(state1, "SimpleScore::getIndex(). Invalid state1.", alphabet_);
+	if(state2 < 0 || state2 > (int)alphabet_->getSize()) throw BadIntException(state2, "SimpleScore::getIndex(). Invalid state2.", alphabet_);
+  return distanceMatrix_(state1, state2);
 }
 
-double SimpleScore::getIndex(const string & state1, const string & state2) const
+double SimpleScore::getIndex(const std::string& state1, const std::string& state2) const
 throw (BadCharException)
 {
-	return _distanceMatrix(_alphabet->charToInt(state1), _alphabet->charToInt(state2));
+	return distanceMatrix_(alphabet_->charToInt(state1), alphabet_->charToInt(state2));
 }
 
-Matrix<double> * SimpleScore::getIndexMatrix() const
+LinearMatrix<double>* SimpleScore::getIndexMatrix() const
 {
-	return new RowMatrix<double>(_distanceMatrix);
+	return new LinearMatrix<double>(distanceMatrix_);
 }
 

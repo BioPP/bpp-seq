@@ -42,7 +42,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // from the STL:
 #include <string>
-using namespace std;
 
 #include "AlphabetIndex2.h"
 #include "Alphabet.h"
@@ -64,8 +63,8 @@ class SimpleScore:
   public AlphabetIndex2<double>
 {
 	private:
-		RowMatrix<double> _distanceMatrix;
-		const Alphabet * _alphabet;
+		LinearMatrix<double> distanceMatrix_;
+		const Alphabet* alphabet_;
 
 	public:
     /**
@@ -75,11 +74,23 @@ class SimpleScore:
      * @param match Matching score.
      * @param mismatch Mismatching penalty.
      */
-		SimpleScore(const Alphabet * alphabet, double match, double mismatch);
+		SimpleScore(const Alphabet* alphabet, double match, double mismatch);
+		
+    SimpleScore(const SimpleScore& sc):
+      distanceMatrix_(sc.distanceMatrix_),
+      alphabet_(sc.alphabet_)
+    {}
+		
+    SimpleScore& operator=(const SimpleScore& sc)
+    {
+      distanceMatrix_ = sc.distanceMatrix_;
+      alphabet_ = sc.alphabet_;
+      return *this;
+    }
 		
     virtual ~SimpleScore() {}
 		
-    SimpleScore * clone() const { return new SimpleScore(*this); }
+    SimpleScore* clone() const { return new SimpleScore(*this); }
 
 	public:
 		/**
@@ -88,9 +99,9 @@ class SimpleScore:
 		 * @{
 		 */
 		double getIndex(int state1, int state2) const throw (BadIntException);
-		double getIndex(const string & state1, const string & state2) const throw (BadCharException);
-		const Alphabet * getAlphabet() const { return _alphabet; };
-		Matrix<double> * getIndexMatrix() const;
+		double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException);
+		const Alphabet* getAlphabet() const { return alphabet_; };
+		LinearMatrix<double>* getIndexMatrix() const;
 		/** @} */
 
 };

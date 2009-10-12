@@ -60,7 +60,10 @@ public:
   virtual ~EchinodermMitochondrialCodonAlphabet() {};
 	
 public:
-  string getAlphabetType() const { return "Codon alphabet: EchinodermMitochondrialCodonAlphabet("+ _VAbsAlph[0]->getAlphabetType()+")"; }
+  std::string getAlphabetType() const
+  {
+    return "Codon alphabet: EchinodermMitochondrialCodonAlphabet(" + vAbsAlph_[0]->getAlphabetType() + ")";
+  }
 
 };
 

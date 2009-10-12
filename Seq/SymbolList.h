@@ -88,7 +88,7 @@ class SymbolList:
 		 *
 		 * @param alpha The alphabet to use.
 		 */
-		SymbolList(const Alphabet* alpha);
+		SymbolList(const Alphabet* alpha) : alphabet_(alpha), content_() {}
 
 		/**
 		 * @brief Build a new SymbolList object with the specified alphabet.

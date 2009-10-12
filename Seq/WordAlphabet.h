@@ -69,26 +69,30 @@ class WordAlphabet:
 {
 protected:
 
-  std::vector<const Alphabet* > _VAbsAlph;
+  std::vector<const Alphabet* > vAbsAlph_;
 
 public: // Constructor and destructor.
 		
   /**
    * @brief Builds a new word alphabet from a vector of Alphabets.
    *
-   * @param Valpha The vector of Alphabets to be used.
+   * The unit alphabets are not owned by the world alphabet, and won't
+   * be destroyed when this instance is destroyed.
+   *
+   * @param vAlpha The vector of Alphabets to be used.
    */
-  WordAlphabet(const std::vector<const Alphabet* >& Valpha);
+  WordAlphabet(const std::vector<const Alphabet*>& vAlpha);
   
   /**
    * @brief Builds a new word alphabet from a pointer to number of
    * Alphabets.
    *
-   * @param palpha The Pointer to the Alphabet to be used.
+   * @param pAlpha The Pointer to the Alphabet to be used.
    * @param num the length of the words.
    */
-  WordAlphabet(const Alphabet* palpha, unsigned int num);
-  virtual ~WordAlphabet();
+  WordAlphabet(const Alphabet* pAlpha, unsigned int num);
+  
+  virtual ~WordAlphabet() {}
   
 public:
   
@@ -107,14 +111,15 @@ public:
    * @return The name of the state.
    * @throw BadCharException When state is not a valid char description.
    */
-  string getName(const string & state) const throw (BadCharException);
+  string getName(const std::string& state) const throw (BadCharException);
 
-  int charToInt(const string & state) const throw (BadCharException){
-    if(state.size() != _VAbsAlph.size())
+  int charToInt(const std::string& state) const throw (BadCharException)
+  {
+    if (state.size() != vAbsAlph_.size())
       throw BadCharException(state, "WordAlphabet::charToInt", this);
-    if(containsUnresolved(state))
+    if (containsUnresolved(state))
       return(getSize()); 
-    if(containsGap(state))
+    if (containsGap(state))
       return -1;
     else return AbstractAlphabet::charToInt(state);	
   }
@@ -139,7 +144,7 @@ public:
    */
   unsigned int getLength() const
   {
-    return _VAbsAlph.size();
+    return vAbsAlph_.size();
   }
 
 
@@ -160,12 +165,12 @@ public:
   }
 
   bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
-  bool isUnresolved(const std::string & state) const { return charToInt(state) == getUnknownCharacterCode(); }
+  bool isUnresolved(const std::string& state) const { return charToInt(state) == getUnknownCharacterCode(); }
 
-  vector<int   > getAlias(      int      state) const throw (BadIntException);
-  vector<string> getAlias(const string & state) const throw (BadCharException);
-  int    getGeneric(const vector<int   > & states) const throw (BadIntException);
-  string getGeneric(const vector<string> & states) const throw (BadCharException);
+  vector<int   > getAlias(      int     state) const throw (BadIntException);
+  vector<string> getAlias(const string& state) const throw (BadCharException);
+  int    getGeneric(const vector<int   >& states) const throw (BadIntException);
+  string getGeneric(const vector<string>& states) const throw (BadCharException);
 
 private:
   
@@ -195,10 +200,10 @@ public:
    */
   const Alphabet* getNAlphabet(unsigned int n) const
   {
-    if (n>=_VAbsAlph.size())
+    if (n>=vAbsAlph_.size())
       throw BadIntException(n, "WordAlphabet::getNPosition", this);
 
-    return _VAbsAlph[n];
+    return vAbsAlph_[n];
   }
 
   /**
@@ -209,7 +214,7 @@ public:
    * @param pos the start position to match in the vector.
    * @return The int code of the word.
    */
-  virtual int getWord(std::vector<int>& vint, unsigned int pos = 0) const throw (BadIntException);
+  virtual int getWord(const std::vector<int>& vint, unsigned int pos = 0) const throw (BadIntException);
   
   /**
    * @brief Get the char code for a word given the char code of the
@@ -232,11 +237,11 @@ public:
 
   int getNPosition (int word, unsigned int n) const throw (BadIntException)
   {
-    if (n>=_VAbsAlph.size())
+    if (n>=vAbsAlph_.size())
       throw BadIntException(n, "WordAlphabet::getNPosition", this);
   
     string s = intToChar(word);
-    return _VAbsAlph[n]->charToInt(s.substr(n,1));
+    return vAbsAlph_[n]->charToInt(s.substr(n,1));
   }
 
   /**
@@ -246,12 +251,12 @@ public:
    * @return The int description of the positions of the codon.
    */
 
-  vector<int> getPositions(int word) const throw (BadIntException)
+  std::vector<int> getPositions(int word) const throw (BadIntException)
   {
     string s = intToChar(word);
     vector<int> positions;
     for (unsigned int i = 0; i < s.size(); i++)
-      positions.push_back(_VAbsAlph[i]->charToInt(s.substr(i, 1)));
+      positions.push_back(vAbsAlph_[i]->charToInt(s.substr(i, 1)));
 
     return positions;
   }
@@ -263,14 +268,14 @@ public:
    * @return The char description of the n-position of the word.
    */
 
-  string getNPosition (const string& word, unsigned int n) const throw (BadCharException)
+  string getNPosition (const std::string& word, unsigned int n) const throw (BadCharException)
   {
-    if (n>_VAbsAlph.size())
+    if (n>vAbsAlph_.size())
       throw BadCharException("", "WordAlphabet::getNPosition", this);
     //Test:
     charToInt(word);
   
-    return ""+word.substr(n, 1);
+    return "" + word.substr(n, 1);
   }
 
   
@@ -281,7 +286,7 @@ public:
    * @return The char description of the three positions of the word.
    */
 
-  vector<string> getPositions(const string& word) const throw (BadCharException)
+  std::vector<std::string> getPositions(const std::string& word) const throw (BadCharException)
   {
     charToInt(word);
     vector<string> positions;
@@ -300,7 +305,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence * translate(const Sequence& sequence, int pos=0) const throw (AlphabetMismatchException, Exception);
+  Sequence* translate(const Sequence& sequence, int pos=0) const throw (AlphabetMismatchException, Exception);
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -310,7 +315,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence * reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception);
+  Sequence* reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception);
   
   /** @} */
 
@@ -318,7 +323,7 @@ public:
    * @name Overloaded AbstractAlphabet methods.
    * @{
    */
-  unsigned int getStateCodingSize() const { return _VAbsAlph.size(); }
+  unsigned int getStateCodingSize() const { return vAbsAlph_.size(); }
   /** @} */
 };
 

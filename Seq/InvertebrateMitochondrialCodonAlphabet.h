@@ -62,7 +62,10 @@ public:
 	
 public:
 
-  string getAlphabetType() const { return "Codon alphabet: InvertebrateMitochondrial("+ _VAbsAlph[0]->getAlphabetType()+")"; }
+  std::string getAlphabetType() const
+  {
+    return "Codon alphabet: InvertebrateMitochondrial(" + vAbsAlph_[0]->getAlphabetType() + ")";
+  }
 
 };
 

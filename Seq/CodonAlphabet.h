@@ -186,8 +186,9 @@ public:
    * @param codon The int description of the codon to test.
    * @return True if the codon is a stop codon.
    */
-  bool isStop(      int      codon) const {
-    return(getName(intToChar(codon))==STOP);
+  bool isStop(int codon) const
+  {
+    return (getName(intToChar(codon))==STOP);
   }
 
   /**
@@ -196,15 +197,18 @@ public:
    * @param codon The char description of the codon to test.
    * @return True if the codon is a stop codon.
    */
-  bool isStop(const std::string & codon) const {
-    return(getName(codon)==STOP);
+  bool isStop(const std::string& codon) const
+  {
+    return (getName(codon) == STOP);
   }
   
   /**
    * @return The nucleic alphabet associated to this codon alphabet.
    */
-  virtual const NucleicAlphabet * const getNucleicAlphabet() const
-  { return (const NucleicAlphabet* const)_VAbsAlph[0]; }
+  virtual const NucleicAlphabet* const getNucleicAlphabet() const
+  {
+    return dynamic_cast<const NucleicAlphabet*>(vAbsAlph_[0]);
+  }
   
   /** @} */
 };

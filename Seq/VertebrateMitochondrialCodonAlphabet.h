@@ -59,7 +59,10 @@ public:
 	
 public:
 
-  string getAlphabetType() const { return "Codon alphabet: VertebrateMitochondrial("+ _VAbsAlph[0]->getAlphabetType()+")"; }
+  std::string getAlphabetType() const
+  {
+    return "Codon alphabet: VertebrateMitochondrial(" + vAbsAlph_[0]->getAlphabetType() + ")";
+  }
 };
   
 } //end of namespace bpp.

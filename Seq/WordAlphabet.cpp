@@ -50,39 +50,32 @@ using namespace bpp;
 
 using namespace std;
 
-WordAlphabet::WordAlphabet(const vector<const Alphabet* >& Valpha) :
-  AbstractAlphabet(), _VAbsAlph(Valpha)
+WordAlphabet::WordAlphabet(const vector<const Alphabet*>& vAlpha) :
+  AbstractAlphabet(), vAbsAlph_(vAlpha)
 {
   build_();
 }
 
-WordAlphabet::WordAlphabet(const Alphabet* palpha, unsigned int num) :
-  AbstractAlphabet()
+WordAlphabet::WordAlphabet(const Alphabet* pAlpha, unsigned int num) :
+  AbstractAlphabet(), vAbsAlph_(0)
 {
-  _VAbsAlph.clear();
-
   for (unsigned int i = 0; i < num; i++)
-    _VAbsAlph.push_back(palpha);
+    vAbsAlph_.push_back(pAlpha);
 
   build_();
-}
-
-WordAlphabet::~WordAlphabet()
-{
-  _VAbsAlph.clear();  
 }
 
 void WordAlphabet::build_()
 {
   unsigned int size = 1;
   
-  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
-    size *= _VAbsAlph[i]->getSize();
+  for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
+    size *= vAbsAlph_[i]->getSize();
   
   resize(size + 2);
   
   string s = "";
-  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+  for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
     s += "-";
       
   setState(0, AlphabetState(-1, s, "gap"));
@@ -94,14 +87,14 @@ void WordAlphabet::build_()
 
   unsigned lr = size;
   char c;
-  for (unsigned int na = 0; na < _VAbsAlph.size(); na++)
+  for (unsigned int na = 0; na < vAbsAlph_.size(); na++)
   {
-    lr /= _VAbsAlph[na]->getSize();
+    lr /= vAbsAlph_[na]->getSize();
     unsigned int j = 1;
     unsigned int i = 0;
     while (j <= size)
     {
-      c = _VAbsAlph[na]->intToChar(i)[0];
+      c = vAbsAlph_[na]->intToChar(i)[0];
       
       for (unsigned int k = 0; k < lr; k++) {
         getStateAt(j).setLetter(getStateAt(j).getLetter() + c);
@@ -109,13 +102,13 @@ void WordAlphabet::build_()
         //alphabet[j++].letter += c;
       }
       
-      if (++i == _VAbsAlph[na]->getSize())
+      if (++i == vAbsAlph_[na]->getSize())
         i = 0;
     }
   }
   
   s = "";
-  for (unsigned i = 0; i < _VAbsAlph.size(); i++)
+  for (unsigned i = 0; i < vAbsAlph_.size(); i++)
     s += "N";
       
   setState(size+1, AlphabetState(size, s, "Unresolved"));
@@ -124,33 +117,33 @@ void WordAlphabet::build_()
 
 /******************************************************************************/
 
-string WordAlphabet::getAlphabetType() const
+std::string WordAlphabet::getAlphabetType() const
 {
   string s = "Word alphabet:";
-  for (unsigned int i = 0; i< _VAbsAlph.size(); i++)
-    s += " " +  _VAbsAlph[i]->getAlphabetType();
+  for (unsigned int i = 0; i< vAbsAlph_.size(); i++)
+    s += " " +  vAbsAlph_[i]->getAlphabetType();
   
   return s;
 }
 
 bool WordAlphabet::hasUniqueAlphabet() const
 {
-  string s = _VAbsAlph[0]->getAlphabetType();
-  for (unsigned int i = 1; i < _VAbsAlph.size(); i++)
-    if (_VAbsAlph[i]->getAlphabetType() != s)
+  string s = vAbsAlph_[0]->getAlphabetType();
+  for (unsigned int i = 1; i < vAbsAlph_.size(); i++)
+    if (vAbsAlph_[i]->getAlphabetType() != s)
       return false;
   return true;
 }
 
-bool WordAlphabet::containsUnresolved(const string & state) const throw (BadCharException)
+bool WordAlphabet::containsUnresolved(const std::string& state) const throw (BadCharException)
 {
-  unsigned int s = _VAbsAlph.size();
+  unsigned int s = vAbsAlph_.size();
   if (state.length() != s)
     throw BadCharException(state, "WordAlphabet::containsUnresolved", this);
   
-  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+  for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
   {
-    if (_VAbsAlph[i]->isUnresolved(state.substr(i, 1)))
+    if (vAbsAlph_[i]->isUnresolved(state.substr(i, 1)))
     {
       return true;
     }
@@ -160,15 +153,15 @@ bool WordAlphabet::containsUnresolved(const string & state) const throw (BadChar
 
 /******************************************************************************/
 
-bool WordAlphabet::containsGap(const string & state) const throw (BadCharException)
+bool WordAlphabet::containsGap(const std::string& state) const throw (BadCharException)
 {
-  unsigned int s = _VAbsAlph.size();
+  unsigned int s = vAbsAlph_.size();
   if (state.length() != s)
     throw BadCharException(state, "WordAlphabet::containsGap", this);
   
-  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+  for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
   {
-    if (_VAbsAlph[i]->isGap(state.substr(i, 1)))
+    if (vAbsAlph_[i]->isGap(state.substr(i, 1)))
       return true;
   }
 
@@ -177,9 +170,9 @@ bool WordAlphabet::containsGap(const string & state) const throw (BadCharExcepti
 
 /******************************************************************************/
 
-string WordAlphabet::getName(const string& state) const throw (BadCharException)
+std::string WordAlphabet::getName(const std::string& state) const throw (BadCharException)
 {
-  if(state.size() != _VAbsAlph.size())
+  if(state.size() != vAbsAlph_.size())
     throw BadCharException(state, "WordAlphabet::getName", this);
   if(containsUnresolved(state))
     return getStateAt(getSize()+1).getName();
@@ -191,7 +184,7 @@ string WordAlphabet::getName(const string& state) const throw (BadCharException)
 		
 /******************************************************************************/
 
-vector<int   > WordAlphabet::getAlias(      int      state) const throw (BadIntException)
+std::vector<int> WordAlphabet::getAlias(int state) const throw (BadIntException)
 {
   if(!isIntInAlphabet(state)) throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
   vector<int> v;
@@ -210,7 +203,7 @@ vector<int   > WordAlphabet::getAlias(      int      state) const throw (BadIntE
 
 /******************************************************************************/
 
-vector<string> WordAlphabet::getAlias(const string & state) const throw (BadCharException)
+std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const throw (BadCharException)
 {
   string locstate = TextTools::toUpper(state);
   if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "WordAlphabet::getAlias(string): Specified base unknown.");
@@ -219,7 +212,7 @@ vector<string> WordAlphabet::getAlias(const string & state) const throw (BadChar
   unsigned int i, s = getSize();
   
   string st = "";
-  for ( i = 0; i < _VAbsAlph.size(); i++)
+  for ( i = 0; i < vAbsAlph_.size(); i++)
     st += "N";
 
   if (locstate == st) {
@@ -235,43 +228,41 @@ vector<string> WordAlphabet::getAlias(const string & state) const throw (BadChar
 
 /******************************************************************************/
 
-int    WordAlphabet::getGeneric(const vector<int   > & states) const throw (BadIntException)
+int WordAlphabet::getGeneric(const std::vector<int> & states) const throw (BadIntException)
 {
   return states[0];
 }
 
 /******************************************************************************/
 
-string WordAlphabet::getGeneric(const vector<string> & states) const throw (BadCharException)
+std::string WordAlphabet::getGeneric(const std::vector<std::string>& states) const throw (BadCharException)
 {
   return states[0];
 }
 
-
-
 /******************************************************************************/
 
-int WordAlphabet::getWord(vector<int>& vint, unsigned int pos) const throw (BadIntException)
+int WordAlphabet::getWord(const std::vector<int>& vint, unsigned int pos) const throw (BadIntException)
 {
-  if (vint.size() < pos + _VAbsAlph.size())
+  if (vint.size() < pos + vAbsAlph_.size())
     throw BadIntException(vint.size(), "WordAlphabet::getWord", this);
   
   vector<string> vs;
-  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
-    vs.push_back(_VAbsAlph[i]->intToChar(vint[i + pos]));
+  for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
+    vs.push_back(vAbsAlph_[i]->intToChar(vint[i + pos]));
 
   return charToInt(getWord(vs));//This can't throw a BadCharException!
 }
 
 /****************************************************************************************/
 
-string WordAlphabet::getWord(const vector<string>& vpos, unsigned int pos) const throw (BadIntException, BadCharException)
+std::string WordAlphabet::getWord(const std::vector<string>& vpos, unsigned int pos) const throw (BadIntException, BadCharException)
 {
-  if (vpos.size() < pos + _VAbsAlph.size())
+  if (vpos.size() < pos + vAbsAlph_.size())
     throw BadIntException(vpos.size(), "WordAlphabet::getWord", this);
   
   string s = "";
-  for (unsigned int i = 0; i < _VAbsAlph.size(); i++)
+  for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
     s += vpos[pos + i];
   // test
   charToInt(s);
@@ -280,11 +271,11 @@ string WordAlphabet::getWord(const vector<string>& vpos, unsigned int pos) const
 
 /****************************************************************************************/
 
-Sequence * WordAlphabet::translate(const Sequence & sequence, int pos) const throw (AlphabetMismatchException, Exception)
+Sequence* WordAlphabet::translate(const Sequence& sequence, int pos) const throw (AlphabetMismatchException, Exception)
 {
   if ((! hasUniqueAlphabet()) or
-      (sequence.getAlphabet()->getAlphabetType() != _VAbsAlph[0]->getAlphabetType()))
-    throw AlphabetMismatchException("No matching alphabets", sequence.getAlphabet(), _VAbsAlph[0]);
+      (sequence.getAlphabet()->getAlphabetType() != vAbsAlph_[0]->getAlphabetType()))
+    throw AlphabetMismatchException("No matching alphabets", sequence.getAlphabet(), vAbsAlph_[0]);
 
 
   vector<int> v1 = sequence.getContent();
@@ -305,7 +296,7 @@ Sequence * WordAlphabet::translate(const Sequence & sequence, int pos) const thr
 
 /****************************************************************************************/
 
-Sequence * WordAlphabet::reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* WordAlphabet::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
 {
   if ((! hasUniqueAlphabet()) or
       (sequence.getAlphabet()->getAlphabetType() != getAlphabetType()))
@@ -319,4 +310,6 @@ Sequence * WordAlphabet::reverse(const Sequence & sequence) const throw (Alphabe
 
   return pseq;
 }
+
+/****************************************************************************************/
 

@@ -1,3 +1,6 @@
+12/10/09 Julien Dutheil
+* Now SeqLib compiles with -Weffc++ without any warning :)
+
 22/09/09 Julien Dutheil
 * Finally added 'addSequence' method in SequenceContainer.
 * MapSequenceContainer now has a addSequence method that uses the name of the

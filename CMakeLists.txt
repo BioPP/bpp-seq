@@ -8,7 +8,7 @@ project(bppseq CXX)
 if(NOT DEFINED CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif(NOT DEFINED CMAKE_BUILD_TYPE)
-set(CMAKE_CXX_FLAGS "-Wall")
+set(CMAKE_CXX_FLAGS "-Wall -Weffc++")
 
 # Libtool-like version number
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R

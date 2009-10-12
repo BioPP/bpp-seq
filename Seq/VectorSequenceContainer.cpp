@@ -49,10 +49,11 @@ using namespace std;
 /** Class constructors: *******************************************************/
 
 VectorSequenceContainer::VectorSequenceContainer(
-	const std::vector<const Sequence*> & vs,
+	const std::vector<const Sequence*>& vs,
 	const Alphabet* alpha)
 	throw (AlphabetMismatchException):
-	AbstractSequenceContainer(alpha)
+	AbstractSequenceContainer(alpha),
+  sequences_()
 {
 	for (std::vector<const Sequence *>::const_iterator i = vs.begin() ; i < vs.end() ; i++)
   {
@@ -64,7 +65,8 @@ VectorSequenceContainer::VectorSequenceContainer(
 	
 VectorSequenceContainer::VectorSequenceContainer(
 	const VectorSequenceContainer& vsc):
-	AbstractSequenceContainer(vsc)
+	AbstractSequenceContainer(vsc),
+  sequences_()
 {
 	unsigned int max = vsc.getNumberOfSequences();
 	for (unsigned int i = 0 ; i < max ; i++)
@@ -73,7 +75,8 @@ VectorSequenceContainer::VectorSequenceContainer(
 
 VectorSequenceContainer::VectorSequenceContainer(
 	const OrderedSequenceContainer& osc):
-	AbstractSequenceContainer(osc.getAlphabet())
+	AbstractSequenceContainer(osc.getAlphabet()),
+  sequences_()
 {
 	// Sequences insertion
 	for (unsigned int i = 0; i < osc.getNumberOfSequences(); i++)
@@ -82,7 +85,8 @@ VectorSequenceContainer::VectorSequenceContainer(
 
 VectorSequenceContainer::VectorSequenceContainer(
 	const SequenceContainer& sc):
-	AbstractSequenceContainer(sc.getAlphabet())
+	AbstractSequenceContainer(sc.getAlphabet()),
+  sequences_()
 {
 	// Sequences insertion
   std::vector<std::string> names = sc.getSequencesNames();  

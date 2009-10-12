@@ -58,7 +58,10 @@ public:
 	
 public:
   
-  string getAlphabetType() const { return "Codon alphabet: Standard("+ _VAbsAlph[0]->getAlphabetType()+")"; }
+  std::string getAlphabetType() const
+  {
+    return "Codon alphabet: Standard("+ vAbsAlph_[0]->getAlphabetType() + ")";
+  }
 
 };
 

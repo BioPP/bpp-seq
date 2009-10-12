@@ -103,7 +103,8 @@ namespace bpp
    *
    * @author Sylvain Gaillard
    */
-  class AbstractSequencePositionIterator: public SequencePositionIterator
+  class AbstractSequencePositionIterator :
+    public virtual SequencePositionIterator
   {
     private:
       const Sequence* sequence_;
@@ -111,8 +112,19 @@ namespace bpp
 
 
     public:
-      AbstractSequencePositionIterator(const Sequence& seq, unsigned int pos = 0):
+      AbstractSequencePositionIterator(const Sequence& seq, unsigned int pos = 0) :
         sequence_(&seq), currentPosition_(pos) {}
+      
+      AbstractSequencePositionIterator(const AbstractSequencePositionIterator& aspi) :
+        sequence_(aspi.sequence_), currentPosition_(aspi.currentPosition_) {}
+      
+      AbstractSequencePositionIterator& operator=(const AbstractSequencePositionIterator& aspi)
+      {
+        sequence_ = aspi.sequence_;
+        currentPosition_ = aspi.currentPosition_;
+        return *this;
+      }
+      
       virtual ~AbstractSequencePositionIterator() {}
 
     public:

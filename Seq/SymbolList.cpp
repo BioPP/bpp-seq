@@ -46,16 +46,14 @@ using namespace std;
 
 /****************************************************************************************/
 
-SymbolList::SymbolList(const Alphabet* alpha) : alphabet_(alpha) {}
-
-SymbolList::SymbolList(const vector<string>& list, const Alphabet* alpha) throw (BadCharException) :
-	alphabet_(alpha)
+SymbolList::SymbolList(const std::vector<string>& list, const Alphabet* alpha) throw (BadCharException) :
+	alphabet_(alpha), content_()
 {
 	setContent(list);
 }
 
-SymbolList::SymbolList(const vector<int>& list, const Alphabet* alpha) throw (BadIntException) :
-	alphabet_(alpha)
+SymbolList::SymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException) :
+	alphabet_(alpha), content_()
 {
 	setContent(list);
 }
