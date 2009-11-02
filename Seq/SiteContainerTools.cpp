@@ -593,16 +593,22 @@ throw (AlphabetMismatchException)
 
 /******************************************************************************/
 
-VectorSiteContainer* SiteContainerTools::bootstrapSites(const SiteContainer& sites)
+VectorSiteContainer* SiteContainerTools::sampleSites(const SiteContainer& sites, unsigned int nbSites)
 {
-  VectorSiteContainer * sample = new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet());
-  unsigned int nbSites = sites.getNumberOfSites();
-  for(unsigned int i = 0; i < nbSites; i++)
+  VectorSiteContainer* sample = new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet());
+  for (unsigned int i = 0; i < nbSites; i++)
   {
-    unsigned int pos = (unsigned int)RandomTools::giveIntRandomNumberBetweenZeroAndEntry(nbSites);
+    unsigned int pos = (unsigned int)RandomTools::giveIntRandomNumberBetweenZeroAndEntry(sites.getNumberOfSites());
     sample->addSite(sites.getSite(pos), false);
   }
   return sample;
+}
+
+/******************************************************************************/
+
+VectorSiteContainer* SiteContainerTools::bootstrapSites(const SiteContainer& sites)
+{
+  return sampleSites(sites, sites.getNumberOfSites());
 }
 
 /******************************************************************************/

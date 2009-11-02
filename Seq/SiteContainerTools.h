@@ -243,6 +243,20 @@ class SiteContainerTools
     static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2<double>& s, double opening, double extending) throw (AlphabetMismatchException);
 
     /**
+     * @brief Sample sites in an alignment.
+     *
+     * Original site positions will be kept. The resulting container will hence probably have duplicated
+     * positions. You may wish to call the reindexSites() method on the returned container.
+     *
+     * Note: This method will be optimal with a container with vertical storage like VectorSiteContainer.
+     *
+     * @param sites An input alignment to sample.
+     * @param nbSites The size of the resulting container.
+     * @return A sampled alignment with nbSites sites taken from the input one.
+     */
+    static VectorSiteContainer* sampleSites(const SiteContainer& sites, unsigned int nbSites);
+
+    /**
      * @brief Bootstrap sites in an alignment.
      *
      * Original site positions will be kept. The resulting container will hence probably have duplicated
