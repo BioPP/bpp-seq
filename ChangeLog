@@ -1,3 +1,7 @@
+04/11/09 Julien Dutheil
+* Remove SymbolListTools::randomizeContent to a more efficient SymbolList::shuffle
+method.
+
 12/10/09 Julien Dutheil
 * Now SeqLib compiles with -Weffc++ and -Wshadow without any warning :)
 

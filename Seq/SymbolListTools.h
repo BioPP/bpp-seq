@@ -202,13 +202,6 @@ class SymbolListTools
      */
     static void changeUnresolvedCharactersToGaps(SymbolList& l);
 
-    /**
-     * @brief Shuffle the list content.
-     *
-     * @param l The input list content.
-     */
-    static void randomizeContent(SymbolList& l);
-
 };
 
 } //end of namespace bpp.

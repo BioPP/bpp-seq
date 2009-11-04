@@ -48,6 +48,7 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <string>
 #include <vector>
+#include <algorithm>
 
 namespace bpp
 {
@@ -292,6 +293,14 @@ class SymbolList:
 		 * @return The integer value of character at position i.
 		 */
 		virtual int& operator[](unsigned int i) { return content_[i]; }
+
+    /**
+     * @brief Randomly shuffle the content of the list, with linear complexity.
+     */
+    virtual void shuffle()
+    {
+      random_shuffle(content_.begin(), content_.end());
+    }
     /** @} */
 };
 

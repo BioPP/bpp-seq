@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <NumCalc/RandomTools.h>
 
 //From the STL:
+#include <algorithm>
+
 using namespace std;
 
 using namespace bpp;
@@ -193,10 +195,5 @@ void SymbolListTools::changeUnresolvedCharactersToGaps(SymbolList& l)
   {
     if (l.getAlphabet()->isUnresolved(l[i])) l[i] = gapCode;
   }
-}
-
-void SymbolListTools::randomizeContent(SymbolList& l)
-{
-  l.setContent(RandomTools::getSample(l.getContent(), l.size(), false));
 }
 
