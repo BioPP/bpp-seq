@@ -126,7 +126,7 @@ class SymbolList:
 		 *
 		 * @{
 		 */
-#ifndef NO_VIRTUAL_COV
+#ifdef NO_VIRTUAL_COV
 		Clonable*
 #else
 		SymbolList*
