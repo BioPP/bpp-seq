@@ -46,8 +46,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <vector>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -99,7 +97,7 @@ class BadCharException:
   public AlphabetException
 {
 	protected:
-		string _c;
+    std::string _c;
 	
 	public:
 		/**
@@ -109,7 +107,7 @@ class BadCharException:
 		 * @param text A message to be passed to the exception hierarchy.
 		 * @param alpha A const pointer toward the alphabet that threw the exception.
 		 */
-		BadCharException(const string & badChar, const string & text = "", const Alphabet * alpha = NULL);
+		BadCharException(const std::string & badChar, const std::string & text = "", const Alphabet * alpha = 0);
 	
 		virtual ~BadCharException() throw() {};
 	
@@ -119,7 +117,7 @@ class BadCharException:
 		 * 
 		 * @return the faulty character.
 		 */
-		virtual string getBadChar() const;
+		virtual std::string getBadChar() const;
 };
 
 /**
@@ -190,7 +188,7 @@ class AlphabetMismatchException : public Exception
      *
 		 * @return a vector of pointers toward the alphabets.
 		 */
-		vector<const Alphabet *> getAlphabets() const;
+    std::vector<const Alphabet *> getAlphabets() const;
 };
 
 /**
@@ -205,7 +203,7 @@ class CharStateNotSupportedException : public AlphabetException
      * @param text A message to be passed to the exception hierarchy.
      * @param alpha A const pointer toward the alphabet that threw the exception.
      */
-    CharStateNotSupportedException(const string & text = "", const Alphabet * alpha = NULL);
+    CharStateNotSupportedException(const std::string & text = "", const Alphabet * alpha = 0);
 
     virtual ~CharStateNotSupportedException() throw() {};
 };

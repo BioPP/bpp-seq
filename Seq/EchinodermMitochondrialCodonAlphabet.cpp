@@ -38,10 +38,10 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-
 #include "EchinodermMitochondrialCodonAlphabet.h"
 
 using namespace bpp;
+using namespace std;
 
 EchinodermMitochondrialCodonAlphabet::EchinodermMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) :
   CodonAlphabet(alpha)

@@ -1,3 +1,6 @@
+16/11/09 Sylvain Gaillard
+* No more "using namespace" in header files.
+
 04/11/09 Julien Dutheil
 * Remove SymbolListTools::randomizeContent to a more efficient SymbolList::shuffle
 method.

@@ -57,7 +57,7 @@ class DefaultAlphabet:
     void registerState(const AlphabetState& st) {
       AbstractAlphabet::registerState(* (st.clone()));
     }
-		const string _chars;
+		const std::string _chars;
 		
 	public:
 		// class constructor
@@ -69,10 +69,10 @@ class DefaultAlphabet:
 	public:
 		unsigned int getSize() const { return 26; }
 		unsigned int getNumberOfTypes() const { return 27; }
-		string getAlphabetType() const { return "Default alphabet"; }
+    std::string getAlphabetType() const { return "Default alphabet"; }
     int getUnknownCharacterCode() const { return 37; }
     bool isUnresolved(int state) const { return state == 37; }
-    bool isUnresolved(const string& state) const { return false; }
+    bool isUnresolved(const std::string& state) const { return false; }
  };
 
 } //end of namespace bpp.

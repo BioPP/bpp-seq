@@ -119,7 +119,7 @@ class GeneticCode:
 		const Alphabet* getSourceAlphabet() const { return codonAlphabet_; }
 		const Alphabet* getTargetAlphabet() const { return proteicAlphabet_; }
 		virtual int translate(int state) const throw (BadIntException, Exception)  = 0;		
-		virtual string translate(const std::string& state) const throw (BadCharException, Exception) = 0;
+		virtual std::string translate(const std::string& state) const throw (BadCharException, Exception) = 0;
 		virtual Sequence* translate(const Sequence& sequence) const throw (Exception)
     {
 			return AbstractTranslator::translate(sequence);	
@@ -136,12 +136,12 @@ class GeneticCode:
     {
     	return (translate(i) == translate(j));
     }
-		bool areSynonymous(const string & i, const string & j) const throw (BadCharException)
+		bool areSynonymous(const std::string & i, const std::string & j) const throw (BadCharException)
     {
       return (translate(i) == translate(j));
     }
-		vector<int> getSynonymous(int aminoacid) const throw (BadIntException);
-		vector<string> getSynonymous(const string & aminoacid) const throw (BadCharException);
+    std::vector<int> getSynonymous(int aminoacid) const throw (BadIntException);
+    std::vector<std::string> getSynonymous(const std::string & aminoacid) const throw (BadCharException);
     /**
      * @brief Get the subsequence corresponding to the coding part of a given sequence.
      *

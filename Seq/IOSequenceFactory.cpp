@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "IOSequenceFactory.h"
 
 using namespace bpp;
+using namespace std;
 
 const string IOSequenceFactory::FASTA_FORMAT              = "Fasta";
 const string IOSequenceFactory::MASE_FORMAT               = "Mase";  

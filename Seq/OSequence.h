@@ -49,41 +49,41 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief The OSequence interface.
- * 
- * This interface defines the basic methods for writing sequences to a file.
- */
-class OSequence:
-  public virtual IOSequence
-{
-	public:
-		OSequence() {}
-		virtual ~OSequence() {}
+  /**
+   * @brief The OSequence interface.
+   * 
+   * This interface defines the basic methods for writing sequences to a file.
+   */
+  class OSequence:
+    public virtual IOSequence
+  {
+    public:
+      OSequence() {}
+      virtual ~OSequence() {}
 
-	public:
+    public:
 
-		/**
-		 * @brief Write a container to a stream.
-		 *
-		 * @param output The output stream where to write.
-		 * @param sc        The container to write.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual void write(ostream & output, const SequenceContainer & sc) const throw (Exception) = 0;
+      /**
+       * @brief Write a container to a stream.
+       *
+       * @param output The output stream where to write.
+       * @param sc        The container to write.
+       * @throw Exception If the file is not in the specified format.
+       */
+      virtual void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception) = 0;
 
-		/**
-		 * @brief Write a container to a file.
-		 *
-		 * @param path      The path to the file to write.
-		 * @param sc        The container to write.
-		 * @param overwrite If true the sequences are written at the beginning of the file instead of being appended.
-		 *                  Any previous content will be lost.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) = 0;
+      /**
+       * @brief Write a container to a file.
+       *
+       * @param path      The path to the file to write.
+       * @param sc        The container to write.
+       * @param overwrite If true the sequences are written at the beginning of the file instead of being appended.
+       *                  Any previous content will be lost.
+       * @throw Exception If the file is not in the specified format.
+       */
+      virtual void write(const std::string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) = 0;
 
-};
+  };
 
 } //end of namespace bpp.
 

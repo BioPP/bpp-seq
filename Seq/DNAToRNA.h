@@ -86,7 +86,7 @@ class DNAToRNA:
       return AbstractReverseTranslator::translate(sequence);
     }
 		int reverse(int state) const throw (BadIntException);
-		string reverse(const std::string& state) const throw (BadCharException);
+    std::string reverse(const std::string& state) const throw (BadCharException);
 		Sequence* reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
     {
       return AbstractReverseTranslator::reverse(sequence);

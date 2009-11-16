@@ -49,8 +49,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -75,7 +73,7 @@ class MaseTools
      * @param setName        The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-		static SiteSelection getSiteSet(const Comments & maseFileHeader, const string & setName) throw (IOException);
+		static SiteSelection getSiteSet(const Comments & maseFileHeader, const std::string & setName) throw (IOException);
 
     /**
      * @brief Get a sequence selection from a Mase+ header file.
@@ -84,7 +82,7 @@ class MaseTools
      * @param setName        The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SequenceSelection getSequenceSet(const Comments & maseFileHeader, const string & setName) throw (IOException);
+    static SequenceSelection getSequenceSet(const Comments & maseFileHeader, const std::string & setName) throw (IOException);
 
     /**
      * @brief Create a new container corresponding to a site set given in the mase+ format.
@@ -98,7 +96,7 @@ class MaseTools
      * @param setName   The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SiteContainer * getSelectedSites(const SiteContainer & sequences, const string & setName) throw (IOException);
+    static SiteContainer * getSelectedSites(const SiteContainer & sequences, const std::string & setName) throw (IOException);
 
     /**
      * @brief Create a new container corresponding to a site set given in the mase+ format.
@@ -112,7 +110,7 @@ class MaseTools
      * @param setName   The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SequenceContainer * getSelectedSequences(const OrderedSequenceContainer & sequences, const string & setName) throw (IOException);
+    static SequenceContainer * getSelectedSequences(const OrderedSequenceContainer & sequences, const std::string & setName) throw (IOException);
 
     /**
      * @brief Get a list of all available site selections.
@@ -120,7 +118,7 @@ class MaseTools
      * @param maseHeader Comments as described in the Mase+ format specification.
      * @return A vector of selection names.
      */
-    static map<string, unsigned int> getAvailableSiteSelections(const Comments & maseHeader);
+    static std::map<std::string, unsigned int> getAvailableSiteSelections(const Comments & maseHeader);
 
     /**
      * @brief Get a list of all available sequences selections.
@@ -128,7 +126,7 @@ class MaseTools
      * @param maseHeader Comments as described in the Mase+ format specification.
      * @return A vector of selection names.
      */
-		static map<string, unsigned int> getAvailableSequenceSelections(const Comments & maseHeader);
+		static std::map<std::string, unsigned int> getAvailableSequenceSelections(const Comments & maseHeader);
 
 		/**
 		 * @brief Get the phase of a given coding region from a mase+ header.
@@ -140,7 +138,7 @@ class MaseTools
 		 * @return 1,2 or 3.
 		 * @throw Exception If no corresponding tag found in file.
 		 */
-		static unsigned int getPhase(const Comments & maseFileHeader, const string &setName) throw (Exception);
+		static unsigned int getPhase(const Comments & maseFileHeader, const std::string &setName) throw (Exception);
 
 };
 

@@ -45,7 +45,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <iostream>
-using namespace std;
 
 namespace bpp
 {
@@ -82,7 +81,7 @@ class Clustal:
   	 *
 		 * @{
 		 */	
-		void appendFromStream(istream& input, AlignedSequenceContainer& sc) const throw (Exception);
+		void appendFromStream(std::istream& input, AlignedSequenceContainer& sc) const throw (Exception);
 		/** @} */
 
 		/**
@@ -90,9 +89,9 @@ class Clustal:
 		 *
 		 * @{
 		 */
-		const string getFormatName() const { return "Clustal"; }
+		const std::string getFormatName() const { return "Clustal"; }
 
-		const string getFormatDescription() const { return "The Clustal alignment tool output format."; }
+		const std::string getFormatDescription() const { return "The Clustal alignment tool output format."; }
 
 		/** @} */
 

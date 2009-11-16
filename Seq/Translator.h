@@ -89,7 +89,7 @@ class Translator
 		 * @throw BadCharException If the state is not a proper state for source alphabet.
 		 * @throw Exception        Other kind of error, depending on the implementation.
 		 */
-		virtual string translate(const string & state) const throw (BadCharException, Exception) = 0;
+		virtual std::string translate(const std::string & state) const throw (BadCharException, Exception) = 0;
 		
 		/**
 		 * @brief Translate a whole sequence from source alphabet to target alphabet.
@@ -132,7 +132,7 @@ class ReverseTranslator:
 		 * @throw BadCharException If the state is not a proper state for target alphabet.
 		 * @throw Exception        Other kind of error, depending on the implementation.
 		 */
-		virtual string reverse(const string & state) const throw (BadCharException, Exception) = 0;			
+		virtual std::string reverse(const std::string & state) const throw (BadCharException, Exception) = 0;			
 
 		/**
 		 * @brief Translate a whole sequence from target alphabet to source alphabet.
@@ -157,7 +157,7 @@ class AbstractTranslator:
 	
 	public:
 		virtual int translate(int state) const throw (BadIntException, Exception) = 0;		
-		virtual string translate(const string & state) const throw (BadCharException, Exception) = 0;
+		virtual std::string translate(const std::string & state) const throw (BadCharException, Exception) = 0;
 		virtual Sequence * translate(const Sequence & sequence) const throw (AlphabetMismatchException, Exception); 
 };
 
@@ -177,7 +177,7 @@ class AbstractReverseTranslator:
 		virtual const Alphabet * getSourceAlphabet() const = 0;
 		virtual const Alphabet * getTargetAlphabet() const = 0;
 		virtual int reverse(int state) const throw (BadIntException, Exception) = 0;
-		virtual string reverse(const string & state) const throw (BadCharException, Exception) = 0;			
+		virtual std::string reverse(const std::string & state) const throw (BadCharException, Exception) = 0;			
 		virtual Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception);
 };
 

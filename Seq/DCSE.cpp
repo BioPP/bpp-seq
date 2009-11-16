@@ -50,6 +50,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/StringTokenizer.h>
 
 using namespace bpp;
+using namespace std;
 
 void DCSE::appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception)
 {

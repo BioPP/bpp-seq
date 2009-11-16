@@ -74,7 +74,7 @@ class ISequenceStream: public virtual IOSequenceStream
      * @param seq The sequence to fill.
      * @throw Exception IOExecption and Sequence related Exceptions.
      */
-    virtual void nextSequence(istream& input, Sequence& seq) const throw (Exception) = 0;
+    virtual void nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
 
 };
 

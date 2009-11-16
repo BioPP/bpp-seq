@@ -48,7 +48,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <iostream>
-using namespace std;
 
 namespace bpp
 {
@@ -98,7 +97,7 @@ class NexusIOSequence:
      *
      * @{
      */
-    void appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception);
+    void appendFromStream(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception);
     /** @} */
 
     /**
@@ -106,8 +105,8 @@ class NexusIOSequence:
      *
      * @{
      */
-    const string getFormatName() const;
-    const string getFormatDescription() const;
+    const std::string getFormatName() const;
+    const std::string getFormatDescription() const;
     /** @} */
 
     /**
@@ -125,7 +124,7 @@ class NexusIOSequence:
     
   private:
     //Reading tools:
-    const vector<string> splitNameAndSequence_(const string & s) const throw (Exception); 
+    const std::vector<std::string> splitNameAndSequence_(const std::string & s) const throw (Exception); 
 };
 
 } //end of namespace bpp.

@@ -49,8 +49,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iostream>
 #include <fstream>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -80,7 +78,7 @@ class AbstractISequence2:
 		 * @param sc     The sequence container to update.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual void read(istream & input, AlignedSequenceContainer & sc) const throw (Exception)
+		virtual void read(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception)
 		{
 			appendFromStream(input, sc);
 		}
@@ -95,7 +93,7 @@ class AbstractISequence2:
 		 * @param sc     The sequence container to update.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual void appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception) = 0;
+		virtual void appendFromStream(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception) = 0;
 	
 	public:
 		/**
@@ -105,7 +103,7 @@ class AbstractISequence2:
 		 * @param sc    The sequence container to update.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual void read(const string & path, AlignedSequenceContainer & sc) const throw (Exception)
+		virtual void read(const std::string & path, AlignedSequenceContainer & sc) const throw (Exception)
 		{
 			appendFromFile(path, sc);
 		}
@@ -118,9 +116,9 @@ class AbstractISequence2:
 		 * @param sc    The sequence container to update.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual void appendFromFile(const string & path , AlignedSequenceContainer & sc) const throw (Exception)
+		virtual void appendFromFile(const std::string & path , AlignedSequenceContainer & sc) const throw (Exception)
 		{
-			ifstream input(path.c_str(), ios::in);
+      std::ifstream input(path.c_str(), std::ios::in);
 			read(input, sc);
 			input.close();
 		}
@@ -132,7 +130,7 @@ class AbstractISequence2:
 #else
 		AlignedSequenceContainer *
 #endif
-		read(istream & input, const Alphabet * alpha) const throw (Exception)
+		read(std::istream & input, const Alphabet * alpha) const throw (Exception)
 		{
 			return readFromStream(input, alpha);
 		}
@@ -152,7 +150,7 @@ class AbstractISequence2:
 #else
 		AlignedSequenceContainer *
 #endif
-		readFromStream(istream & input, const Alphabet * alpha) const throw (Exception)
+		readFromStream(std::istream & input, const Alphabet * alpha) const throw (Exception)
 		{
 			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
 			appendFromStream(input, *asc);
@@ -166,7 +164,7 @@ class AbstractISequence2:
 #else
 		AlignedSequenceContainer *
 #endif
-		read(const string & path , const Alphabet * alpha) const throw (Exception)
+		read(const std::string & path , const Alphabet * alpha) const throw (Exception)
 		{
 			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
 			read(path, *asc);
@@ -188,7 +186,7 @@ class AbstractISequence2:
 #else
 		AlignedSequenceContainer *
 #endif
-		readFromFile(const string & path , const Alphabet * alpha) const throw (Exception)
+		readFromFile(const std::string & path , const Alphabet * alpha) const throw (Exception)
 		{
 			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
 			appendFromFile(path, *asc);

@@ -93,12 +93,12 @@ class SequenceApplicationTools
    * @return A new Alphabet object according to options specified.
    */
   
-        static Alphabet * getAlphabet(
-                                      map<string, string> & params,
-                                      const string & suffix = "",
-                                      bool suffixIsOptional = true,
-                                      bool verbose = true,
-                                      bool allowGeneric = false) throw (Exception);
+    static Alphabet * getAlphabet(
+        std::map<std::string, std::string> & params,
+        const std::string & suffix = "",
+        bool suffixIsOptional = true,
+        bool verbose = true,
+        bool allowGeneric = false) throw (Exception);
 		
   /**
    * @brief Build a Geneticcode object according to options.
@@ -113,7 +113,7 @@ class SequenceApplicationTools
    * @return A new GeneticCode object
    * @throw Exception in case of bad description.
    */
-  static GeneticCode * getGeneticCode(const NucleicAlphabet* alphabet, const string& description) throw (Exception);
+  static GeneticCode * getGeneticCode(const NucleicAlphabet* alphabet, const std::string& description) throw (Exception);
 
 
   
@@ -128,7 +128,7 @@ class SequenceApplicationTools
    * @return A new AlphabetIndex2<double> object.
    * @throw Exception in case of bad description.
    */  
-  static AlphabetIndex2<double>* getAADistance(const string& description) throw (Exception);
+  static AlphabetIndex2<double>* getAADistance(const std::string& description) throw (Exception);
 
   /**
 		 * @brief Build a SequenceContainer object according to options.
@@ -149,8 +149,8 @@ class SequenceApplicationTools
   
   static SequenceContainer * getSequenceContainer(
 			const Alphabet * alpha,
-			map<string, string> & params,
-			const string & suffix = "",
+			std::map<std::string, std::string> & params,
+			const std::string & suffix = "",
 			bool suffixIsOptional = true,
 			bool verbose = true);
 
@@ -171,8 +171,8 @@ class SequenceApplicationTools
 		 */
 		static VectorSiteContainer * getSiteContainer(
 			const Alphabet * alpha,
-			map<string, string> & params,
-			const string & suffix = "",
+			std::map<std::string, std::string> & params,
+			const std::string & suffix = "",
 			bool suffixIsOptional = true,
 			bool verbose = true);
 			
@@ -205,8 +205,8 @@ class SequenceApplicationTools
 		 */
 		static VectorSiteContainer * getSitesToAnalyse(
 			const SiteContainer & allSites,
-			map<string, string> & params,
-			string suffix = "",
+			std::map<std::string, std::string> & params,
+			std::string suffix = "",
 			bool suffixIsOptional = true,
       bool gapAsUnknown = true,
 			bool verbose = true);
@@ -225,8 +225,8 @@ class SequenceApplicationTools
 		 */
 		static void writeSequenceFile(
 			const SequenceContainer & sequences,
-			map<string, string> & params,
-			const string & suffix = "",
+			std::map<std::string, std::string> & params,
+			const std::string & suffix = "",
       bool verbose = true);
 
 };

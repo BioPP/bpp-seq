@@ -228,7 +228,7 @@ class SequenceContainerTools
       if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
         throw AlphabetMismatchException("SequenceContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
 
-      std::vector<string> seqNames = seqCont1.getSequencesNames();
+      std::vector<std::string> seqNames = seqCont1.getSequencesNames();
       for (unsigned int i = 0; i < seqNames.size(); i++)
       {
         Sequence tmp = seqCont1.getSequence(seqNames[i]);
@@ -248,7 +248,7 @@ class SequenceContainerTools
     static void convertAlphabet(const SequenceContainer& seqCont, SequenceContainer& outputCont)
     throw (Exception)
     {  
-      std::vector<string> seqNames = seqCont.getSequencesNames();
+      std::vector<std::string> seqNames = seqCont.getSequencesNames();
       bool checkNames = outputCont.getNumberOfSequences() > 0;
       for (unsigned int i = 0; i < seqNames.size(); i++)
       {

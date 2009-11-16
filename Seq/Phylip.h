@@ -107,7 +107,7 @@ class Phylip:
      *
      * @{
      */
-    void appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception);
+    void appendFromStream(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception);
     /** @} */
 
     /**
@@ -116,15 +116,15 @@ class Phylip:
      * This methods parses the firt line of the phylip file.
      * @param path The path of the file to parse.
      */
-    unsigned int getNumberOfSequences(const string & path) const throw (IOException);
+    unsigned int getNumberOfSequences(const std::string & path) const throw (IOException);
 
     /**
      * @name The OSequence interface.
      *
      * @{
      */
-    void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
-    void write(const string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception)
+    void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception);
+    void write(const std::string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception)
     {
       AbstractOSequence::write(path, sc, overwrite);
     }
@@ -136,8 +136,8 @@ class Phylip:
      *
      * @{
      */
-    const string getFormatName() const;
-    const string getFormatDescription() const;
+    const std::string getFormatName() const;
+    const std::string getFormatDescription() const;
     /** @} */
 
     /**

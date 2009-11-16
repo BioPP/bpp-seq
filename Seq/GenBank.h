@@ -74,7 +74,7 @@ class GenBank:
 		 *
 		 * @{
 		 */
-		void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+		void appendFromStream(std::istream & input, VectorSequenceContainer & sc) const throw (Exception);
 		/** @} */
 	
 		/**
@@ -82,8 +82,8 @@ class GenBank:
 		 *
 		 * @{
 		 */
-		const string getFormatName() const { return "GenBank file"; };
-		const string getFormatDescription() const
+		const std::string getFormatName() const { return "GenBank file"; };
+		const std::string getFormatDescription() const
 		{
 			return "Sequences following the GenBank data base format.";
 		}

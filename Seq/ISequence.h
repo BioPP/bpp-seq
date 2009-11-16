@@ -54,8 +54,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -82,7 +80,7 @@ class ISequence:
      * @return A new SequenceContainer object.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual SequenceContainer * read(istream & input, const Alphabet * alpha) const throw (Exception) = 0;
+		virtual SequenceContainer * read(std::istream & input, const Alphabet * alpha) const throw (Exception) = 0;
 		/**
 		 * @brief Create a new container from a file.
 		 *
@@ -91,7 +89,7 @@ class ISequence:
      * @return A new SequenceContainer object.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual SequenceContainer * read(const string & path, const Alphabet * alpha) const throw (Exception) = 0;
+		virtual SequenceContainer * read(const std::string & path, const Alphabet * alpha) const throw (Exception) = 0;
 
 };
 
@@ -123,7 +121,7 @@ class ISequence2:
 #else
 		SiteContainer *
 #endif
-		read(istream & input, const Alphabet * alpha) const throw (Exception) = 0;
+		read(std::istream & input, const Alphabet * alpha) const throw (Exception) = 0;
 		/**
 		 * @brief Create a new container from a file.
 		 *
@@ -138,7 +136,7 @@ class ISequence2:
 #else
 		SiteContainer *
 #endif
-    read(const string & path, const Alphabet * alpha) const throw (Exception) = 0;
+    read(const std::string & path, const Alphabet * alpha) const throw (Exception) = 0;
 
 };
 

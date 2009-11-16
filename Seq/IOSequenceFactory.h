@@ -52,16 +52,16 @@ namespace bpp
 class IOSequenceFactory
 {
   public:
-    static const string FASTA_FORMAT;  
-    static const string MASE_FORMAT;  
-    static const string CLUSTAL_FORMAT;  
-    static const string DCSE_FORMAT;  
-    static const string PHYLIP_FORMAT_INTERLEAVED;  
-    static const string PHYLIP_FORMAT_SEQUENTIAL;  
-    static const string PAML_FORMAT_INTERLEAVED;  
-    static const string PAML_FORMAT_SEQUENTIAL;  
-    static const string GENBANK_FORMAT;  
-    static const string NEXUS_FORMAT;  
+    static const std::string FASTA_FORMAT;  
+    static const std::string MASE_FORMAT;  
+    static const std::string CLUSTAL_FORMAT;  
+    static const std::string DCSE_FORMAT;  
+    static const std::string PHYLIP_FORMAT_INTERLEAVED;  
+    static const std::string PHYLIP_FORMAT_SEQUENTIAL;  
+    static const std::string PAML_FORMAT_INTERLEAVED;  
+    static const std::string PAML_FORMAT_SEQUENTIAL;  
+    static const std::string GENBANK_FORMAT;  
+    static const std::string NEXUS_FORMAT;  
 
   public:
 
@@ -86,7 +86,7 @@ class IOSequenceFactory
      * @return A pointer toward a new ISequence object.
      * @throw Exception If the format name do not match any available format.
      */
-    virtual ISequence * createReader(const string & format) throw (Exception);
+    virtual ISequence * createReader(const std::string & format) throw (Exception);
   
     /**
      * @brief Get a new dynamically created OSequence object.
@@ -95,7 +95,7 @@ class IOSequenceFactory
      * @return A pointer toward a new OSequence object.
      * @throw Exception If the format name do not match any available format.
      */
-    virtual OSequence * createWriter(const string & format) throw (Exception);
+    virtual OSequence * createWriter(const std::string & format) throw (Exception);
 };
 
 } //end of namespace bpp.

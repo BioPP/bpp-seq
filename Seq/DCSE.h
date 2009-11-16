@@ -71,7 +71,7 @@ class DCSE : public virtual AbstractISequence2
 		 *
 		 * @{
 		 */
-		void appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception);
+		void appendFromStream(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception);
 		/** @} */
 
 		
@@ -80,8 +80,8 @@ class DCSE : public virtual AbstractISequence2
 		 *
 		 * @{
 		 */
-		const string getFormatName() const;
-		const string getFormatDescription() const;
+		const std::string getFormatName() const;
+		const std::string getFormatDescription() const;
 		/** @} */
 };
 

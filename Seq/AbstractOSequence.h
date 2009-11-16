@@ -47,7 +47,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <string>
 #include <fstream>
-using namespace std;
 
 namespace bpp
 {
@@ -70,11 +69,11 @@ class AbstractOSequence:
 		 *
 		 * @{
 		 */ 
-		void write(ostream & output, const SequenceContainer & sc) const throw (Exception) = 0;
-		void write(const string & path, const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
+		void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception) = 0;
+		void write(const std::string & path, const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
 		{
 			// Open file in specified mode
-			ofstream output(path.c_str(), overwrite ? (ios::out) : (ios::out|ios::app));
+      std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
 			write(output, sc);
 			output.close();
 		}

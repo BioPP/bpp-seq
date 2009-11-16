@@ -60,7 +60,7 @@ class SequenceNotFoundException :
 		/**
 		 * @brief The id of the sequence that was to be found.
 		 */
-		const string id;
+		const std::string id;
 	
 	public:
 
@@ -71,7 +71,7 @@ class SequenceNotFoundException :
 		 * @param seqId A the id of the sequence that was to be found.
 		 */
 		SequenceNotFoundException(const char * text, const char * seqId = "") :
-    	Exception("SequenceNotFoundException: " + string(text) + "(" + seqId + ")"),
+    	Exception("SequenceNotFoundException: " + std::string(text) + "(" + seqId + ")"),
 	    id(seqId) {};
 
 		/**
@@ -80,7 +80,7 @@ class SequenceNotFoundException :
 		 * @param text  A message to be passed to the exception hierarchy.
 		 * @param seqId A the id of the sequence that was to be found.
 		 */
-		SequenceNotFoundException(const string & text, const string & seqId = "") :
+		SequenceNotFoundException(const std::string & text, const std::string & seqId = "") :
     	Exception("SequenceNotFoundException: " + text + "(" + seqId + ")"),
 	    id(seqId) {};
 	
@@ -94,7 +94,7 @@ class SequenceNotFoundException :
 		 *
 		 * @return The id of the sequence that was to be found.
 		 */
-		virtual const string getSequenceId() const { return id; }
+		virtual const std::string getSequenceId() const { return id; }
 };
 
 /**

@@ -249,7 +249,7 @@ class NucleicAlphabet :
     int getUnknownCharacterCode() const { return 14; }
 
     bool isUnresolved(int state) const { return state > 3; }
-    bool isUnresolved(const string& state) const { return charToInt(state) > 3; }
+    bool isUnresolved(const std::string& state) const { return charToInt(state) > 3; }
 
 };
 

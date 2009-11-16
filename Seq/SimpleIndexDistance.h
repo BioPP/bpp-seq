@@ -42,7 +42,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // from the STL:
 #include <string>
-using namespace std;
 
 #include "AlphabetIndex1.h"
 #include "AlphabetIndex2.h"

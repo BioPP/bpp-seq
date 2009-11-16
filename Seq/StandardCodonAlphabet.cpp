@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "StandardCodonAlphabet.h"
 
 using namespace bpp;
+using namespace std;
 
 StandardCodonAlphabet::StandardCodonAlphabet(const NucleicAlphabet * alpha) :
   CodonAlphabet(alpha)

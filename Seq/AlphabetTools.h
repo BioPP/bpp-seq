@@ -188,9 +188,9 @@ class AlphabetTools
      */
     static bool match(const Alphabet * alphabet, int i, int j)
     {
-      vector<int> a = alphabet->getAlias(i);
-      vector<int> b = alphabet->getAlias(j);
-      vector<int> u = VectorTools::vectorIntersection(a, b);
+      std::vector<int> a = alphabet->getAlias(i);
+      std::vector<int> b = alphabet->getAlias(j);
+      std::vector<int> u = VectorTools::vectorIntersection(a, b);
       return u.size() > 0;
     }
 
@@ -201,9 +201,9 @@ class AlphabetTools
       try
       {
         const Y* t = dynamic_cast<const Y*>(alphabet);
-        return t!= NULL; //Solves strange behavior in new gcc?
+        return t!= 0; //Solves strange behavior in new gcc?
       }
-      catch(exception & e)
+      catch(std::exception & e)
       {
         return false;
       }

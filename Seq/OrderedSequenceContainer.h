@@ -127,7 +127,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in
 		 * the container.
 		 */
-		virtual const string& getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const std::string& getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Get comments of a particular sequence.
@@ -156,7 +156,7 @@ class OrderedSequenceContainer:
 		 * @return The position of the sequence with name 'name', if it exists.
 		 * @throw SequenceNotFoundException If no sequence with name 'name' could be found.
 		 */
-		virtual unsigned int getSequencePosition(const string & name) const throw (SequenceNotFoundException) = 0;
+		virtual unsigned int getSequencePosition(const std::string & name) const throw (SequenceNotFoundException) = 0;
 
     /**
      * @name Provide direct access to sequences content.

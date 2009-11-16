@@ -295,7 +295,7 @@ class SequenceTools:
      *
      * @author Sylvain Gaillard
      */
-    static Sequence * subtractHaplotype(const Sequence & s, const Sequence & h, string name = "", unsigned int level = 1) throw (SequenceNotAlignedException);
+    static Sequence* subtractHaplotype(const Sequence& s, const Sequence& h, std::string name = "", unsigned int level = 1) throw (SequenceNotAlignedException);
     
 };
 

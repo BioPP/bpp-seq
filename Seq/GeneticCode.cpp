@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetTools.h"
 
 using namespace bpp;
+using namespace std;
 
 /**********************************************************************************************/
 

@@ -282,7 +282,7 @@ string StringSequenceTools::decodeSequence(const vector<int> & sequence, const A
 
 /****************************************************************************************/
 
-Alphabet * StringSequenceTools::getAlphabetFromSequence(const string sequence)
+Alphabet* StringSequenceTools::getAlphabetFromSequence(const std::string& sequence)
 throw (EmptySequenceException, SequenceException, AlphabetException)
 {
   // empty sequence test

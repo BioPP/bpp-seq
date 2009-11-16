@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "InvertebrateMitochondrialCodonAlphabet.h"
 
 using namespace bpp;
+using namespace std;
 
 InvertebrateMitochondrialCodonAlphabet::InvertebrateMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) : CodonAlphabet(alpha)
 {

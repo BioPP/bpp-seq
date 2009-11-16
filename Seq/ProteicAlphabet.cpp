@@ -47,6 +47,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/MapTools.h>
 
 using namespace bpp;
+using namespace std;
 
 // From STL:
 #include <map>

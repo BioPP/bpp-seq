@@ -43,8 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "GeneticCode.h"
 #include "NucleicAlphabet.h"
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -62,8 +60,8 @@ class EchinodermMitochondrialGeneticCode:
 		virtual ~EchinodermMitochondrialGeneticCode();
 	
 	public:
-		int    translate(           int state) const throw (Exception);
-		string translate(const string & state) const throw (Exception);
+		int translate(int state) const throw (Exception);
+    std::string translate(const std::string & state) const throw (Exception);
 		Sequence * translate(const Sequence & sequence) const throw (Exception)
     {
 			return GeneticCode::translate(sequence);	

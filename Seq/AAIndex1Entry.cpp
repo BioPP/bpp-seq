@@ -46,6 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/StringTokenizer.h>
 
 using namespace bpp;
+using namespace std;
 
 AAIndex1Entry::AAIndex1Entry(std::istream& input) throw (IOException) :
   property_(20), alpha_(&AlphabetTools::PROTEIN_ALPHABET)

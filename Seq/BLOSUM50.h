@@ -43,8 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // from the STL:
 #include <string>
 
-using namespace std;
-
 #include "AlphabetIndex2.h"
 #include "ProteicAlphabet.h"
 #include "AlphabetExceptions.h"

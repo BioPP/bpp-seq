@@ -111,7 +111,7 @@ public:
    * @return The name of the state.
    * @throw BadCharException When state is not a valid char description.
    */
-  string getName(const std::string& state) const throw (BadCharException);
+  std::string getName(const std::string& state) const throw (BadCharException);
 
   int charToInt(const std::string& state) const throw (BadCharException)
   {
@@ -158,7 +158,7 @@ public:
     return getNumberOfChars() - 1;
   }
   
-  string getAlphabetType() const;
+  std::string getAlphabetType() const;
   int getUnknownCharacterCode() const
   {
     return getSize();
@@ -167,10 +167,10 @@ public:
   bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
   bool isUnresolved(const std::string& state) const { return charToInt(state) == getUnknownCharacterCode(); }
 
-  vector<int   > getAlias(      int     state) const throw (BadIntException);
-  vector<string> getAlias(const string& state) const throw (BadCharException);
-  int    getGeneric(const vector<int   >& states) const throw (BadIntException);
-  string getGeneric(const vector<string>& states) const throw (BadCharException);
+  std::vector<int> getAlias(int state) const throw (BadIntException);
+  std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+  int getGeneric(const std::vector<int>& states) const throw (BadIntException);
+  std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
 
 private:
   
@@ -240,7 +240,7 @@ public:
     if (n>=vAbsAlph_.size())
       throw BadIntException(n, "WordAlphabet::getNPosition", this);
   
-    string s = intToChar(word);
+    std::string s = intToChar(word);
     return vAbsAlph_[n]->charToInt(s.substr(n,1));
   }
 
@@ -253,8 +253,8 @@ public:
 
   std::vector<int> getPositions(int word) const throw (BadIntException)
   {
-    string s = intToChar(word);
-    vector<int> positions;
+    std::string s = intToChar(word);
+    std::vector<int> positions;
     for (unsigned int i = 0; i < s.size(); i++)
       positions.push_back(vAbsAlph_[i]->charToInt(s.substr(i, 1)));
 
@@ -268,7 +268,7 @@ public:
    * @return The char description of the n-position of the word.
    */
 
-  string getNPosition (const std::string& word, unsigned int n) const throw (BadCharException)
+  std::string getNPosition (const std::string& word, unsigned int n) const throw (BadCharException)
   {
     if (n>vAbsAlph_.size())
       throw BadCharException("", "WordAlphabet::getNPosition", this);
@@ -289,7 +289,7 @@ public:
   std::vector<std::string> getPositions(const std::string& word) const throw (BadCharException)
   {
     charToInt(word);
-    vector<string> positions;
+    std::vector<std::string> positions;
     for (unsigned int i = 0; i < word.size(); i++)
       positions.push_back(word.substr(i, 1));
 

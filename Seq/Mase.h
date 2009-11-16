@@ -85,7 +85,7 @@ class Mase:
      *
      * @{
      */
-    void appendFromStream(istream & input, VectorSequenceContainer & sc) const throw (Exception);
+    void appendFromStream(std::istream & input, VectorSequenceContainer & sc) const throw (Exception);
     /** @} */
 
     /**
@@ -93,8 +93,8 @@ class Mase:
      *
      * @{
      */
-    void write(ostream & output, const SequenceContainer & sc) const throw (Exception);
-    void write(const string & path, const SequenceContainer & sc, bool overwrite = true) const throw (Exception)
+    void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception);
+    void write(const std::string & path, const SequenceContainer & sc, bool overwrite = true) const throw (Exception)
     {
       AbstractOSequence::write(path, sc, overwrite);
     }
@@ -105,9 +105,9 @@ class Mase:
      *
      * @{
      */
-    const string getFormatName() const { return "MASE file"; }
+    const std::string getFormatName() const { return "MASE file"; }
 
-    const string getFormatDescription() const
+    const std::string getFormatDescription() const
     {
       return "Optional file comments (preceeded by ;;), sequence comments (preceeded by ;), sequence name, sequence";
     }

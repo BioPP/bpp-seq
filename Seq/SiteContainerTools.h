@@ -23,7 +23,7 @@
 namespace bpp
 {
 
-typedef vector<unsigned int> SiteSelection;
+typedef std::vector<unsigned int> SiteSelection;
 
 /**
  * @brief Some utililitary methods to deal with site containers.
@@ -316,10 +316,10 @@ class SiteContainerTools
      */
     static DistanceMatrix* computeSimilarityMatrix(const SiteContainer& sites, bool dist = false, const std::string & gapOption = SIMILARITY_NOFULLGAP, bool unresolvedAsGap = true);
 
-    static const string SIMILARITY_ALL;
-    static const string SIMILARITY_NOFULLGAP;
-    static const string SIMILARITY_NODOUBLEGAP;
-    static const string SIMILARITY_NOGAP;
+    static const std::string SIMILARITY_ALL;
+    static const std::string SIMILARITY_NOFULLGAP;
+    static const std::string SIMILARITY_NODOUBLEGAP;
+    static const std::string SIMILARITY_NOGAP;
 
     /**
      * @brief Add the content of a site container to an exhisting one.

@@ -51,8 +51,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -70,8 +68,8 @@ namespace bpp
 class StringSequenceTools
 {
 	public:
-		StringSequenceTools() {};
-		 ~StringSequenceTools() {};
+    StringSequenceTools() {};
+    ~StringSequenceTools() {};
 	
 	public:
     
@@ -84,7 +82,7 @@ class StringSequenceTools
      * @return A string with the subsequence.
      * @throw Exception If position does not not match the interval [0, length].
      */
-		static string subseq(const string & sequence, int begin, int end) throw (Exception);
+		static std::string subseq(const std::string& sequence, int begin, int end) throw (Exception);
 
 		/**
 		 * @brief Set up the size of a sequence from the right side.
@@ -95,7 +93,7 @@ class StringSequenceTools
      * @param sequence The input sequence.
 		 * @param size The new size of the sequence.
 		 */
-		static string setToSizeR(const string & sequence, int size);
+		static std::string setToSizeR(const std::string& sequence, int size);
 
     /**
 		 * @brief Set up the size of a sequence from the left side.
@@ -106,7 +104,7 @@ class StringSequenceTools
      * @param sequence The input sequence.
 		 * @param size The new size of the sequence.
 		 */
-		static string setToSizeL(const string & sequence, int size);
+		static std::string setToSizeL(const std::string& sequence, int size);
 
 		/**
      * @brief Delete all occurence of a character in the sequence.
@@ -115,7 +113,7 @@ class StringSequenceTools
      * @param chars    The character to remove.
      * @return         The sequence with all specified characters removed.
      */
-		static string deleteChar(const string & sequence, char chars);
+		static std::string deleteChar(const std::string& sequence, char chars);
 
     /**
      * @brief Delete all occurence of several characters in the sequence.
@@ -124,7 +122,7 @@ class StringSequenceTools
      * @param chars    The characters to remove.
      * @return         The sequence with all specified characters removed.
      */
-		static string deleteChar(const string & sequence, string chars);
+		static std::string deleteChar(const std::string& sequence, std::string chars);
 
     /**
      * @brief Reverse the sequence.
@@ -132,7 +130,7 @@ class StringSequenceTools
      * @param sequence The sequence to reverse.
      * @return The reversed sequence.
      */
-    static string * reverse(const string & sequence);
+    static std::string* reverse(const std::string& sequence);
 
     /**
      * @brief Get the complement of a sequence.
@@ -145,7 +143,7 @@ class StringSequenceTools
 		 * @see Sequence
 		 * @see NucleicAcidsReplication
      */
-		static string * complement(const string & sequence);
+		static std::string* complement(const std::string& sequence);
 
     /**
      * @brief Calculate the local GC content of a sequence.
@@ -161,7 +159,7 @@ class StringSequenceTools
      * @throw BadIntException If the sequence is not of type DNA or RNA.
      * @throw Exception       Error in calculus (if the sequence contain gaps for instance).
      */
-		static double getGCcontent(const string & sequence, unsigned int pos, unsigned int window) throw (BadIntegerException, Exception);
+		static double getGCcontent(const std::string& sequence, unsigned int pos, unsigned int window) throw (BadIntegerException, Exception);
 
     /**
      * @brief Convert a string sequence to a vector of int.
@@ -177,7 +175,7 @@ class StringSequenceTools
      * @return A vector of int codes.
      * @throw BarCharException If some character does not match the specified alphabet.
      */
-		static vector<int> codeSequence(const string & sequence, const Alphabet * alphabet) throw (BadCharException);
+		static std::vector<int> codeSequence(const std::string& sequence, const Alphabet* alphabet) throw (BadCharException);
 
     /**
      * @brief Convert a sequence to its string representation.
@@ -187,7 +185,7 @@ class StringSequenceTools
      * @return A string representation of the sequence.
      * @throw BarIntException If some value does not match the specified alphabet.
      */
-    static string decodeSequence(const vector<int> & sequence, const Alphabet * alphabet) throw (BadIntException);
+    static std::string decodeSequence(const std::vector<int>& sequence, const Alphabet* alphabet) throw (BadIntException);
 
 		/**
 		 * @brief Parse a sequence and try to guess the correct alphabet to use.
@@ -198,7 +196,7 @@ class StringSequenceTools
      * @throw SequenceException if their is an ambiguity between several alphabet.
      * @throw AlphabetException if the sequence does not match any alphabet.
 		 */
-		static Alphabet * getAlphabetFromSequence(const string sequence) throw (EmptySequenceException, SequenceException, AlphabetException);
+		static Alphabet* getAlphabetFromSequence(const std::string& sequence) throw (EmptySequenceException, SequenceException, AlphabetException);
 
 };
 

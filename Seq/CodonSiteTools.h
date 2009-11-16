@@ -52,8 +52,6 @@ knowledge of the CeCILL license and that you accept its terms.
 // From the STL:
 #include <map>
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -310,7 +308,7 @@ class CodonSiteTools:
 		 * @throw AlphabetMismatchException If the codon alphabet each the site do not match the codon alphabet of the genetic code.
 		 * @throw EmptySiteException        If one of the sites has size 0.
 		 */
-		static vector<unsigned int> fixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const GeneticCode & gc)
+		static std::vector<unsigned int> fixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const GeneticCode & gc)
 			  throw (AlphabetException, AlphabetMismatchException, EmptySiteException);
 
 };

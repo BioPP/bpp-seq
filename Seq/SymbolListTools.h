@@ -48,7 +48,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <map>
-using namespace std;
 
 namespace bpp
 {
@@ -70,9 +69,9 @@ class SymbolListTools
      * @param list The list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-    static void getCounts(const SymbolList& list, map<int, unsigned int>& counts)
+    static void getCounts(const SymbolList& list, std::map<int, unsigned int>& counts)
     {
-      for(vector<int>::const_iterator seqit = list.getContent().begin();
+      for(std::vector<int>::const_iterator seqit = list.getContent().begin();
           seqit != list.getContent().end();
           seqit++)
         counts[*seqit]++;
@@ -90,7 +89,7 @@ class SymbolListTools
      * @param list2 The second list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-    static void getCounts(const SymbolList& list1, const SymbolList& list2, map<int, map<int, unsigned int> >& counts) throw (DimensionException)
+    static void getCounts(const SymbolList& list1, const SymbolList& list2, std::map<int, std::map<int, unsigned int> >& counts) throw (DimensionException)
     {
       if(list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
       for(unsigned int i = 0; i < list1.size(); i++)
@@ -109,7 +108,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @return A map with all states and corresponding counts.
      */
-    static void getCounts(const SymbolList& list, map<int, double>& counts, bool resolveUnknowns);
+    static void getCounts(const SymbolList& list, std::map<int, double>& counts, bool resolveUnknowns);
     
     /**
      * @brief Count all pair of states for two lists of the same size, optionaly resolving unknown characters.
@@ -128,7 +127,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @return A map with all states and corresponding counts.
      */
-    static void getCounts(const SymbolList& list1, const SymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException);
+    static void getCounts(const SymbolList& list1, const SymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException);
     
     /**
      * @brief Get all states frequencies in the list.
@@ -139,7 +138,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @param frequencies The output map with all states and corresponding frequencies. Existing frequencies will be erased if any.
      */
-    static void getFrequencies(const SymbolList& list, map<int, double>& frequencies, bool resolveUnknowns = false);
+    static void getFrequencies(const SymbolList& list, std::map<int, double>& frequencies, bool resolveUnknowns = false);
 
     /**
      * @brief Get all state pairs frequencies for two lists of the same size..
@@ -151,7 +150,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @param frequencies The output map with all state pairs and corresponding frequencies. Existing frequencies will be erased if any.
      */
-    static void getFrequencies(const SymbolList& list1, const SymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns = false) throw (DimensionException);
+    static void getFrequencies(const SymbolList& list1, const SymbolList& list2, std::map<int, std::map<int, double> >& frequencies, bool resolveUnknowns = false) throw (DimensionException);
 
     /**
      * @brief Get the GC content of a symbol list.
