@@ -97,7 +97,7 @@ class Fasta:
      * @{
      */
     /**
-     * @copydoc AbstractISequence::appendFromStream(istream& input, VectorSequenceContainer& sc) const
+     * @copydoc AbstractISequence::appendFromStream(std::istream& input, VectorSequenceContainer& sc) const
      * @author Sylvain Gaillard
      */
     void appendFromStream(std::istream& input, VectorSequenceContainer& sc) const throw (Exception);
@@ -109,7 +109,7 @@ class Fasta:
      * @{
      */
     /**
-     * @copydoc OSequence::write(ostream& output, const SequenceContainer& sc) const
+     * @copydoc OSequence::write(std::ostream& output, const SequenceContainer& sc) const
      * @author Sylvain Gaillard
      */
     void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception);
@@ -137,7 +137,7 @@ class Fasta:
      * @{
      */
     /**
-     * @copydoc ISequenceStream::nextSequence(istream& input, Sequence& seq) const
+     * @copydoc ISequenceStream::nextSequence(std::istream& input, Sequence& seq) const
      * @author Sylvain Gaillard
      */
     void nextSequence(std::istream& input, Sequence& seq) const throw (Exception);
@@ -149,7 +149,7 @@ class Fasta:
      * @{
      */
     /**
-     * @copydoc OSequenceStream::writeSequence(ostream& output, const Sequence& seq) const
+     * @copydoc OSequenceStream::writeSequence(std::ostream& output, const Sequence& seq) const
      * @author Sylvain Gaillard
      */
     void writeSequence(std::ostream& output, const Sequence& seq) const throw (Exception);
