@@ -48,17 +48,17 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 
 DefaultAlphabet::DefaultAlphabet():
-  _chars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
+  chars_("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
 {
 	// Alphabet size definition
-	resize(_chars.size() + 1);
+	resize(chars_.size() + 1);
 
 	// Alphabet content definition
   setState(0, AlphabetState(-1, "-", "Gap"));
 
-	for(unsigned int i = 0; i < _chars.size(); i++)
+	for(unsigned int i = 0; i < chars_.size(); i++)
   {
-    setState(i+1, AlphabetState(i, TextTools::toString(_chars[i]), ""));
+    setState(i+1, AlphabetState(i, TextTools::toString(chars_[i]), ""));
 	}
 }
 

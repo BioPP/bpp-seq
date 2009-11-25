@@ -40,8 +40,12 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _LETTERALPHABET_
 #define _LETTERALPHABET_
 
-#include "AbstractAlphabet.h"
+// From the STL
+#include <string>
 #include <vector>
+
+// From Seq
+#include "AbstractAlphabet.h"
 
 namespace bpp {
   /**

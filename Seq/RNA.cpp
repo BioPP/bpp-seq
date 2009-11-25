@@ -85,7 +85,7 @@ RNA::RNA()
 
 /******************************************************************************/
 
-vector<int> RNA::getAlias(int state) const throw (BadIntException) 
+std::vector<int> RNA::getAlias(int state) const throw (BadIntException) 
 {
 	if(!isIntInAlphabet(state)) throw BadIntException(state, "RNA::getAlias(int): Specified base unknown.");
 	vector<int> v;
@@ -120,7 +120,7 @@ vector<int> RNA::getAlias(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-vector<string> RNA::getAlias(const string & state) const throw (BadCharException) 
+std::vector<std::string> RNA::getAlias(const std::string & state) const throw (BadCharException) 
 {
   string locstate = TextTools::toUpper(state);
 	if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "RNA::getAlias(int): Specified base unknown.");
@@ -159,7 +159,7 @@ vector<string> RNA::getAlias(const string & state) const throw (BadCharException
 
 /******************************************************************************/
 
-int RNA::getGeneric(const vector<int> & states) const throw (BadIntException)
+int RNA::getGeneric(const std::vector<int> & states) const throw (BadIntException)
 {
   map<int, int> m;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
@@ -200,7 +200,7 @@ int RNA::getGeneric(const vector<int> & states) const throw (BadIntException)
 
 /******************************************************************************/
 
-string RNA::getGeneric(const vector<string> & states) const throw (BadCharException)
+std::string RNA::getGeneric(const std::vector<std::string> & states) const throw (BadCharException)
 {
   map <string, int> m;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {

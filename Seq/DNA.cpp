@@ -88,7 +88,7 @@ DNA::DNA()
 
 /******************************************************************************/
 
-vector<int> DNA::getAlias(int state) const throw (BadIntException) 
+std::vector<int> DNA::getAlias(int state) const throw (BadIntException) 
 {
 	if(!isIntInAlphabet(state)) throw BadIntException(state, "DNA::getAlias(int): Specified base unknown.");
 	vector<int> v;
@@ -107,7 +107,7 @@ vector<int> DNA::getAlias(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-vector<string> DNA::getAlias(const string& state) const throw (BadCharException) 
+std::vector<std::string> DNA::getAlias(const std::string& state) const throw (BadCharException) 
 {
   string locstate = TextTools::toUpper(state);
 	if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "DNA::getAlias(int): Specified base unknown.");
@@ -120,7 +120,7 @@ vector<string> DNA::getAlias(const string& state) const throw (BadCharException)
 
 /******************************************************************************/
 
-int DNA::getGeneric(const vector<int>& states) const throw (BadIntException)
+int DNA::getGeneric(const std::vector<int>& states) const throw (BadIntException)
 {
   char v = 0;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
@@ -132,7 +132,7 @@ int DNA::getGeneric(const vector<int>& states) const throw (BadIntException)
 
 /******************************************************************************/
 
-string DNA::getGeneric(const vector<string>& states) const throw (BadCharException)
+std::string DNA::getGeneric(const std::vector<std::string>& states) const throw (BadCharException)
 {
   vector<int> vi;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {

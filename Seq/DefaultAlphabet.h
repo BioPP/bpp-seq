@@ -39,6 +39,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _DEFAULTALPHABET_H_
 #define _DEFAULTALPHABET_H_
 
+// From Utils
+#include <Utils/TextTools.h>
+
 #include "LetterAlphabet.h"
 
 namespace bpp
@@ -57,7 +60,7 @@ class DefaultAlphabet:
     void registerState(const AlphabetState& st) {
       AbstractAlphabet::registerState(* (st.clone()));
     }
-		const std::string _chars;
+		const std::string chars_;
 		
 	public:
 		// class constructor
@@ -73,6 +76,7 @@ class DefaultAlphabet:
     int getUnknownCharacterCode() const { return 37; }
     bool isUnresolved(int state) const { return state == 37; }
     bool isUnresolved(const std::string& state) const { return false; }
+
  };
 
 } //end of namespace bpp.
