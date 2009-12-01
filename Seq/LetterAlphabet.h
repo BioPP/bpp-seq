@@ -74,12 +74,14 @@ namespace bpp {
     protected:
       void registerState(const AlphabetState& st) {
         AbstractAlphabet::registerState(st);
-        letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();
+        letters_[static_cast<unsigned int>(tolower(st.getLetter()[0]))] = st.getNum();
+        letters_[static_cast<unsigned int>(toupper(st.getLetter()[0]))] = st.getNum();
       }
 
       void setState(unsigned int pos, const AlphabetState& st) throw (IndexOutOfBoundsException) {
         AbstractAlphabet::setState(pos, st);
-        letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();
+        letters_[static_cast<unsigned int>(tolower(st.getLetter()[0]))] = st.getNum();
+        letters_[static_cast<unsigned int>(toupper(st.getLetter()[0]))] = st.getNum();
       }
 
     private:
