@@ -46,7 +46,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
+void Mase::appendFromStream(istream& input, VectorSequenceContainer& vsc) const throw (Exception)
 {
 	if (!input) { throw IOException ("Mase::read : fail to open file"); }
 	
@@ -59,15 +59,15 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 	fileComments = vsc.getGeneralComments();
 
 	// Main loop : for all file lines
-	while(!input.eof())
+	while (!input.eof())
   {
 		getline(input, temp, '\n');  // Copy current line in temporary string
 		
 		// If first character is ;
-		if(temp[0] == ';')
+		if (temp[0] == ';')
     {
 			// If second character is also ;
-			if(temp[1] == ';')
+			if (temp[1] == ';')
       {
 				// File comments isolation
 				temp.erase(0,2);  // Characters ;; deletion
@@ -76,7 +76,7 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
       else
       {
 				// If a name and a sequence were founded
-				if((name != "") && (sequence != ""))
+				if ((name != "") && (sequence != ""))
         {
 					// New sequence creation, and addition in existing VectorSequenceContainer
 					vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
@@ -87,14 +87,14 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 				
 				// Sequence commentaries isolation
 				temp.erase(temp.begin());  // Character ; deletion
-				if(temp != "") seqComments.push_back(temp);
+				if (temp != "") seqComments.push_back(temp);
 				comments = true;
 			}
 		}
     else
     {
 			// If sequence commentaries were just isolated
-			if(comments)
+			if (comments)
       {
 				// Sequence name isolation
 				name = temp;
@@ -105,7 +105,7 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 	}
 	
 	// Addition of the last sequence in file
-	if((name != "") && (sequence != ""))
+	if ((name != "") && (sequence != ""))
   {
 		vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
 	}
@@ -116,7 +116,7 @@ void Mase::appendFromStream(istream & input, VectorSequenceContainer & vsc) cons
 
 /****************************************************************************************/
 
-void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Exception)
+void Mase::write(ostream& output, const SequenceContainer& sc) const throw (Exception)
 {
 	// Checking the existence of specified file, and possibility to open it in write mode
 	if (!output) { throw IOException ("Mase::write : failed to open file"); }
@@ -124,7 +124,8 @@ void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Ex
 	Comments comments = sc.getGeneralComments();
 
 	// Writing all general commentaries in file
-	for (unsigned int i = 0 ; i < comments.size() ; i++) {
+	for (unsigned int i = 0 ; i < comments.size() ; i++)
+  {
 		output << ";;" << comments[i] << endl;
 	}
 
@@ -132,15 +133,20 @@ void Mase::write(ostream & output, const SequenceContainer & sc) const throw (Ex
 
 	// Main loop : for all sequences
 	vector<string> names = sc.getSequencesNames();
-	for (unsigned int i = 0 ; i < names.size() ; i ++) {
+	for (unsigned int i = 0 ; i < names.size() ; i ++)
+  {
 		comments = sc.getComments(names[i]);
 
 		// Writing all sequence comments in file
 		// If no comments are associated with current sequence, an empy commentary line will be writed
-		if (comments.size() == 0) {
+		if (comments.size() == 0)
+    {
 			output << ";" << endl;
-		} else {
-			for (unsigned int j = 0 ; j < comments.size() ; j++) {
+		}
+    else
+    {
+			for (unsigned int j = 0 ; j < comments.size() ; j++)
+      {
 				output << ";" << comments[j] << endl;
 			}
 		}

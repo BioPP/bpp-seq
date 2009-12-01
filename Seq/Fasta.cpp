@@ -54,10 +54,9 @@ using namespace std;
 /******************************************************************************/
 
 void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
-  if (!input) {
+  if (!input)
     throw IOException("Fasta::nextSequence: can't read from istream input");
-  }
-  string seqname ="";
+  string seqname = "";
   Comments seqcmts;
   seq.setContent("");
   char c;
@@ -66,38 +65,49 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
   string bufferleft = "";
   vector<string> splitline;
   unsigned int wordsize = seq.getAlphabet()->getStateCodingSize();
-  while (!input.eof()) {
+  while (!input.eof())
+  {
     c = input.peek();
     // Sequence begining detection
-    if (c == '>') {
+    if (c == '>')
+    {
       // Stop if find a new sequence
       if (seqcpt++)
         break;
     }
     getline(input, linebuffer);
-    if (c == '>') {
+    if (c == '>')
+    {
       // Get the sequence name line
       seqname = string(linebuffer.begin() + 1, linebuffer.end());
     }
     if (c != '>' && !TextTools::isWhiteSpaceCharacter(c) && !input.eof()) {
       // Sequence content
-      if (wordsize == 1) {
-        for (unsigned int i = 0 ; i < linebuffer.size() ; i++) {
+      if (wordsize == 1)
+      {
+        for (unsigned int i = 0 ; i < linebuffer.size() ; i++)
+        {
           if (! TextTools::isWhiteSpaceCharacter(linebuffer[i]))
             seq.addElement(string(1, toupper(linebuffer[i])));
         }
-      } else {
+      }
+      else
+      {
         // Remove white spaces
         linebuffer = TextTools::removeWhiteSpaces(linebuffer);
         if (!bufferleft.empty()) {
           linebuffer = bufferleft + linebuffer;
           bufferleft.clear();
         }
-        splitline = TextTools::split(TextTools::toUpper(linebuffer), wordsize);
-        for (unsigned int j = 0 ; j < splitline.size() ; j++) {
-          if (splitline[j].size() == wordsize) {
+        splitline = TextTools::split(linebuffer, wordsize);
+        for (unsigned int j = 0 ; j < splitline.size() ; j++)
+        {
+          if (splitline[j].size() == wordsize)
+          {
             seq.addElement(splitline[j]);
-          } else {
+          }
+          else
+          {
             bufferleft += splitline[j];
           }
         }
@@ -119,24 +129,28 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
 
 /******************************************************************************/
 
-void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exception) {
-  if (!output) {
+void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exception)
+{
+  if (!output)
     throw IOException("Fasta::writeSequence: can't write to ostream output");
-  }
   // Sequence name
   output << ">" << seq.getName();
   // Sequence comments
-  if (extended_) {
-    for (unsigned int i = 0 ; i < seq.getComments().size() ; i++) {
+  if (extended_)
+  {
+    for (unsigned int i = 0 ; i < seq.getComments().size() ; i++)
+    {
       output << " \\" << seq.getComments()[i];
     }
   }
   output << endl;
   // Sequence content
   string buffer; // use a buffer to format sequence with states > 1 char
-  for (unsigned int i = 0 ; i < seq.size() ; i++) {
+  for (unsigned int i = 0 ; i < seq.size() ; i++)
+  {
     buffer += seq.getChar(i);
-    if (buffer.size() >= charsByLine_ || i + 1 == seq.size()) {
+    if (buffer.size() >= charsByLine_ || i + 1 == seq.size())
+    {
       output << string(buffer.begin(), buffer.begin() + charsByLine_ < buffer.end() ? buffer.begin() + charsByLine_ : buffer.end()) << endl;
       buffer.erase(0, charsByLine_);
     }
@@ -145,28 +159,32 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exc
 
 /******************************************************************************/
 
-void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
+void Fasta::appendFromStream(istream& input, VectorSequenceContainer& vsc) const throw (Exception)
 {
-  if (!input) {
+  if (!input)
     throw IOException("Fasta::appendFromStream: can't read from istream input");
-  }
   char c = '\n';
   char last_c;
   bool header = false;
   string line = "";
   Comments cmts;
-  while (!input.eof()) {
+  while (!input.eof())
+  {
     last_c = c;
     input.get(c);
     // Header detection
-    if (extended_ && c == '#') {
+    if (extended_ && c == '#')
+    {
       header = true;
       continue;
     }
     // Header end detection
-    if (c == '\n') {
-      if (extended_ && header) {
-        if (line[0] == '\\') {
+    if (c == '\n')
+    {
+      if (extended_ && header)
+      {
+        if (line[0] == '\\')
+        {
           line.erase(line.begin());
           cmts.push_back(line);
         }
@@ -176,11 +194,13 @@ void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) con
       continue;
     }
     // Header capture
-    if (header) {
+    if (header)
+    {
       line.append(1, c);
     }
     // Sequence detection
-    if (c == '>' && last_c == '\n') {
+    if (c == '>' && last_c == '\n')
+    {
       input.putback(c);
       c = last_c;
       Sequence tmpseq("", "", vsc.getAlphabet());
@@ -195,14 +215,16 @@ void Fasta::appendFromStream(istream & input, VectorSequenceContainer & vsc) con
 
 /******************************************************************************/
 
-void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (Exception) {
-	if (!output) {
+void Fasta::write(ostream& output, const SequenceContainer& sc) const throw (Exception)
+{
+	if (!output)
     throw IOException("Fasta::write: can't write to ostream output");
-  }
 
-  if (extended_) {
+  if (extended_)
+  {
     // Loop for all general comments
-    for (unsigned int i = 0 ; i < sc.getGeneralComments().size() ; i++) {
+    for (unsigned int i = 0 ; i < sc.getGeneralComments().size() ; i++)
+    {
       output << "#\\" << sc.getGeneralComments()[i] << endl;
     }
     output << endl;
@@ -210,7 +232,8 @@ void Fasta::write(ostream & output, const SequenceContainer & sc) const throw (E
 
 	// Main loop : for all sequences in vector container
 	vector<string> names = sc.getSequencesNames();
-	for (unsigned int i = 0; i < names.size(); i ++) {
+	for (unsigned int i = 0; i < names.size(); i ++)
+  {
     writeSequence(output, sc.getSequence(names[i]));
 	}
 }
