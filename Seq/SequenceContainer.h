@@ -153,7 +153,7 @@ class SequenceContainer:
 		 * @throw SequenceNotFoundException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException) = 0;
+		virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
 		
 		/**
 		 * @brief Delete a sequence of the container.
@@ -162,7 +162,7 @@ class SequenceContainer:
 		 * @throw SequenceNotFoundException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException) = 0;
+		virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
 
 		/**
 		 * @brief Get the number of sequences in the container.

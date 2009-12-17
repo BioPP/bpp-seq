@@ -108,7 +108,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual Sequence* removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException) = 0;
+		virtual Sequence* removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException, Exception) = 0;
 
 		/**
 		 * @brief Delete a sequence of the container.
@@ -117,7 +117,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in
 		 * the container.
 		 */
-		virtual void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException) = 0;
+		virtual void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException, Exception) = 0;
 
 		/**
 		 * @brief Get the name of a particular sequence.
@@ -226,8 +226,8 @@ class OrderedSequenceContainer:
 		virtual std::string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
 		virtual const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) = 0;
 		virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;
-		virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException) = 0;
-		virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException) = 0;
+		virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
+		virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
 		virtual unsigned int getNumberOfSequences() const = 0;
 		virtual std::vector<std::string> getSequencesNames() const = 0;
 		virtual void setSequencesNames(const std::vector<std::string> & names, bool checkNames) throw (Exception) = 0;

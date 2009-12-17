@@ -75,7 +75,7 @@ class VectorSiteContainer:
 {
   protected:
     std::vector<Site*> sites_;
-    std::vector<std::string*> names_;
+    std::vector<std::string> names_;
     std::vector<Comments*> comments_; //Sequences comments.
     mutable std::vector<Sequence*> sequences_; //To store pointer toward sequences retrieves (cf. AlignedSequenceContainer).
   

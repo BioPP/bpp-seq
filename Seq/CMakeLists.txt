@@ -56,6 +56,7 @@ set(CPP_FILES
   Translator.cpp
   VectorSequenceContainer.cpp
   VectorSiteContainer.cpp
+  CompressedVectorSiteContainer.cpp
   SequenceApplicationTools.cpp
   IOSequenceFactory.cpp
   SimpleScore.cpp
@@ -150,6 +151,7 @@ set(H_FILES
   Translator.h
   VectorSequenceContainer.h
   VectorSiteContainer.h
+  CompressedVectorSiteContainer.h
   KleinAANetChargeIndex.h
   AAChargeIndex.h
   SequenceApplicationTools.h

@@ -103,6 +103,7 @@ VectorSequenceContainer::VectorSequenceContainer(
 VectorSequenceContainer& VectorSequenceContainer::operator=(
 	const VectorSequenceContainer& vsc)
 {
+  clear();
   AbstractSequenceContainer::operator=(vsc);
 
 	// Sequences insertion
@@ -116,6 +117,7 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
 VectorSequenceContainer& VectorSequenceContainer::operator=(
 	const OrderedSequenceContainer& osc)
 {
+  clear();
   AbstractSequenceContainer::operator=(osc);
 
 	// Sequences insertion
@@ -131,6 +133,7 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
 VectorSequenceContainer& VectorSequenceContainer::operator=(
   const SequenceContainer& sc)
 {
+  clear();
   AbstractSequenceContainer::operator=(sc);
   
   //Seq names:

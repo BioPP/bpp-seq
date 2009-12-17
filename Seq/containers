@@ -9,6 +9,7 @@
 #include "SiteContainer.h"
 #include "AlignedSequenceContainer.h"
 #include "VectorSiteContainer.h"
+#include "CompressedVectorSiteContainer.h"
 #include "SequenceContainerExceptions.h"
 #include "SiteContainerExceptions.h"
 #include "SequenceContainerTools.h"

@@ -46,6 +46,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetTools.h"
 #include "SequenceTools.h"
 
+//From SeqLib:
+#include <Utils/ApplicationTools.h>
+
 using namespace bpp;
 
 // From the STL:
@@ -669,20 +672,20 @@ double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequenc
 DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer& sites, bool dist, const std::string& gapOption, bool unresolvedAsGap)
 {
   unsigned int n = sites.getNumberOfSequences();
-  DistanceMatrix *mat = new DistanceMatrix(sites.getSequencesNames());
+  DistanceMatrix* mat = new DistanceMatrix(sites.getSequencesNames());
   string pairwiseGapOption = gapOption;
-  SiteContainer * sites2;
-  if(gapOption == SIMILARITY_NOFULLGAP)
+  SiteContainer* sites2;
+  if (gapOption == SIMILARITY_NOFULLGAP)
   {
-    if(unresolvedAsGap)
+    if (unresolvedAsGap)
     {
-      SiteContainer * tmp = removeGapOrUnresolvedOnlySites(sites);
+      SiteContainer* tmp = removeGapOrUnresolvedOnlySites(sites);
       sites2 = new AlignedSequenceContainer(*tmp);
       delete tmp;
     }
     else
     {
-      SiteContainer * tmp = removeGapOnlySites(sites);
+      SiteContainer* tmp = removeGapOnlySites(sites);
       sites2 = new AlignedSequenceContainer(*tmp);
       delete tmp;
     }
@@ -693,11 +696,11 @@ DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer&
     sites2 = new AlignedSequenceContainer(sites);
   }
 
-  for(unsigned int i = 0; i < n; i++)
+  for (unsigned int i = 0; i < n; i++)
   {
     (*mat)(i, i) = 1.;
     const Sequence* seq1 = &sites2->getSequence(i);
-    for(unsigned int j = i + 1; j < n; j++)
+    for (unsigned int j = i + 1; j < n; j++)
     {
       const Sequence* seq2 = &sites2->getSequence(j);
       (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(*seq1, *seq2, dist, pairwiseGapOption, unresolvedAsGap);

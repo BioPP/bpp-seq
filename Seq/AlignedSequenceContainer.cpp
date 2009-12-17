@@ -80,8 +80,7 @@ AlignedSequenceContainer& AlignedSequenceContainer::operator=(const AlignedSeque
   // Initializing
   length_    = asc.getNumberOfSites();
   positions_ = asc.getSitePositions();
-  Site* s    = 0;
-  sites_     = std::vector<Site*>(length_, s);
+  sites_.resize(length_);
 
   return *this;
 }
@@ -95,8 +94,7 @@ AlignedSequenceContainer& AlignedSequenceContainer::operator=(const SiteContaine
   // Initializing
   length_    = sc.getNumberOfSites();
   positions_ = sc.getSitePositions();
-  Site * s   = 0;
-  sites_     = std::vector<Site*>(length_, s);
+  sites_.resize(length_);
 
   return *this;
 }
@@ -110,8 +108,7 @@ AlignedSequenceContainer& AlignedSequenceContainer::operator=(const OrderedSeque
   // Initializing
   length_ = 0;
   reindexSites();
-  Site * s = 0;
-  sites_ = std::vector<Site*>(length_, s);
+  sites_.resize(length_);
 
   return *this;
 }

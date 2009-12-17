@@ -144,7 +144,7 @@ class SiteContainer:
      * @return A pointer toward site i in the alignment.
      * @throw IndexOutOfBoundsException If the specified site does not exists.
      */
-    virtual Site* removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) = 0;
+    virtual Site* removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
 
     /**
      * @brief Delete a site in the container.
@@ -152,7 +152,7 @@ class SiteContainer:
      * @param siteIndex The position of the site in the container.
      * @throw IndexOutOfBoundsException If the specified site does not exists.
      */
-    virtual void deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) = 0;
+    virtual void deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
 
     /**
      * @brief Get the number of sites in the container.

@@ -69,8 +69,9 @@ MapSequenceContainer::MapSequenceContainer(const MapSequenceContainer& msc) :
 
 /******************************************************************************/
 
-MapSequenceContainer & MapSequenceContainer::operator=(const MapSequenceContainer& msc) 
+MapSequenceContainer& MapSequenceContainer::operator=(const MapSequenceContainer& msc) 
 {
+  clear();
   AbstractSequenceContainer::operator=(msc);
   
   // Sequences insertion
