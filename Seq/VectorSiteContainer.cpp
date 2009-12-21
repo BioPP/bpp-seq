@@ -511,7 +511,7 @@ void VectorSiteContainer::setSequence(unsigned int pos, const Sequence& sequence
     throw (Exception)
 {
   if (pos >= getNumberOfSequences())
-    throw BadIntegerException("VectorSiteContainer::addSequence", pos);
+    throw BadIntegerException("VectorSiteContainer::setSequence", pos);
 
   // New sequence's alphabet and site container's alphabet matching verification
   if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
@@ -521,13 +521,13 @@ void VectorSiteContainer::setSequence(unsigned int pos, const Sequence& sequence
   if (getNumberOfSequences() == 1) realloc(sequence.size());
 
   if (sequence.size() != sites_.size())
-    throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length.", &sequence);
+    throw SequenceException("VectorSiteContainer::setSequence. Sequence has not the appropriate length.", &sequence);
 
   if (checkNames)
   {
     for (unsigned int i = 0; i < names_.size(); i++)
       if (i != pos && sequence.getName() == names_[i])
-        throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
+        throw SequenceException("VectorSiteContainer::settSequence. Name already exists in container.", &sequence);
   }
   //Update name:
   names_[pos] = sequence.getName();
@@ -562,7 +562,7 @@ Sequence * VectorSiteContainer::removeSequence(unsigned int i) throw (IndexOutOf
   if (comments_[i]) delete comments_[i];
   comments_.erase(comments_.begin() + i);
   // We remove the sequence, so the destruction of the sequence is up to the user:
-  //if (sequences_[i] != NULL) delete sequences_[i];
+  //if (sequences_[i] != 0) delete sequences_[i];
   sequences_.erase(sequences_.begin() + i);
   return sequence;
 }
@@ -634,7 +634,7 @@ void VectorSiteContainer::addSequence(const Sequence& sequence, bool checkNames)
   comments_.push_back(new Comments(sequence.getComments()));
     
   //Sequences pointers:
-  sequences_.push_back(NULL);
+  sequences_.push_back(0);
 }
 
 /******************************************************************************/
@@ -670,7 +670,7 @@ void VectorSiteContainer::addSequence(
   //Actualize names and comments:
   names_.insert(names_.begin() + pos, sequence.getName());  
   comments_.insert(comments_.begin() + pos, new Comments(sequence.getComments()));
-  sequences_.insert(sequences_.begin() + pos, NULL);
+  sequences_.insert(sequences_.begin() + pos, 0);
 }
 
 /******************************************************************************/
@@ -681,10 +681,10 @@ void VectorSiteContainer::clear()
   for (unsigned int i = 0; i < sites_.size(); i++) delete sites_[i];
 
   //must delete all comments too:
-  for (unsigned int i = 0; i < comments_.size(); i++) if (comments_[i] != NULL) delete comments_[i];
+  for (unsigned int i = 0; i < comments_.size(); i++) if (comments_[i] != 0) delete comments_[i];
 
   //Delete all sequences retrieved:
-  for (unsigned int i = 0; i < sequences_.size(); i++) if (sequences_[i] != NULL) delete(sequences_[i]);
+  for (unsigned int i = 0; i < sequences_.size(); i++) if (sequences_[i] != 0) delete(sequences_[i]);
 
   // Delete all sites pointers
   sites_.clear();
