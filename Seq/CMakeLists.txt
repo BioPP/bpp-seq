@@ -33,6 +33,7 @@ set(CPP_FILES
   RNA.cpp
   SequenceContainerTools.cpp
   Sequence.cpp
+  SequenceWithQuality.cpp
   SequenceExceptions.cpp
   SequencePositionIterators.cpp
   SequenceTools.cpp
@@ -129,6 +130,7 @@ set(H_FILES
   SequenceExceptions.h
   SequencePositionIterators.h
   Sequence.h
+  SequenceWithQuality.h
   SequenceTools.h
   SiteContainerExceptions.h
   SiteContainer.h
