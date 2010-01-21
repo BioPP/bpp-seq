@@ -47,12 +47,6 @@ using namespace bpp;
 
 const int SequenceWithQuality::DEFAULT_QUALITY_VALUE = 20;
 
-SequenceWithQuality::~SequenceWithQuality() {
-  std::cout << getName() << std::endl;
-  std::cout << toString() << std::endl;
-  std::cout << VectorTools::paste(qualScores_) << std::endl;
-}
-
 /******************************************************************************/
 
 void SequenceWithQuality::setToSizeR(unsigned int newSize) {
@@ -126,5 +120,6 @@ void SequenceWithQuality::addElement(unsigned int pos, int v) throw (BadIntExcep
 /******************************************************************************/
 
 void SequenceWithQuality::deleteElement(unsigned int pos) throw (IndexOutOfBoundsException) {
+  Sequence::deleteElement(pos);
   qualScores_.erase(qualScores_.begin() + pos);
 }

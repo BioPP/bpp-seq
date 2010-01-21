@@ -60,7 +60,6 @@ namespace bpp {
    * for nucleic sequence.
    *
    * @todo 
-   * - geter and seter for quality score
    * - append and addElement with quality score
    *
    * @author Sylvain Gaillard
@@ -178,15 +177,20 @@ namespace bpp {
        * @name Destructor
        * @{
        */
-      virtual ~SequenceWithQuality();
+      virtual ~SequenceWithQuality() {}
       /** @} */
 
+      /**
+       * @name The Clonable interface
+       * @{
+       */
 #ifdef NO_VIRTUAL_COV
       Clonable*
 #else
       SequenceWithQuality*
 #endif
       clone() const { return new SequenceWithQuality(*this); }
+      /** @} */
 
       void setToSizeR(unsigned int newSize);
 
@@ -202,6 +206,66 @@ namespace bpp {
       void addElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException);
 
       void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException);
+
+      /**
+       * @name Dealing with quality
+       * @{
+       */
+
+      /**
+       * @brief Set the quality score
+       *
+       * @param pos The position where the quality must be set
+       * @param quality The quality value
+       *
+       * @throw IndexOutOfBoundsException if pos is greater than the
+       * sequence size
+       */
+      void setQuality(unsigned int pos, int quality) throw (IndexOutOfBoundsException) {
+        if (pos >= qualScores_.size())
+          throw IndexOutOfBoundsException("SequenceWithQuality::setQuality: pos out of bounds", pos, 0, qualScores_.size() - 1);
+        qualScores_[pos] = quality;
+      }
+      
+      /**
+       * @brief Get the quality score
+       *
+       * @param pos The position where the quality is read
+       *
+       * @return The quality score
+       *
+       * @throw IndexOutOfBoundsException if pos is greater than the
+       * sequence size
+       */
+      int getQuality(unsigned int pos) const throw (IndexOutOfBoundsException) {
+        if (pos >= qualScores_.size())
+          throw IndexOutOfBoundsException("SequenceWithQuality::getQuality: pos out of boundsé", pos, 0, qualScores_.size() - 1);
+        return qualScores_[pos];
+      }
+
+      /**
+       * @brief Set the whole quality scores
+       *
+       * @param quality The vector of quality scores
+       *
+       * @throw DimensionException if the quality vector does not feet the
+       * sequence size
+       */
+      void setQualities(const std::vector<int>& quality) throw (DimensionException) {
+        if (quality.size() != qualScores_.size())
+          throw DimensionException("SequenceWithQuality::setQualities: quality must feet sequence size", quality.size(), qualScores_.size());
+        qualScores_ = quality;
+      }
+
+      /**
+       * @brief Get the whole quality scores
+       *
+       * @return A reference to the quality vector
+       */
+      const std::vector<int>& getQualities() const {
+        return qualScores_;
+      }
+      /** @} */
 
     private:
       void extendQualityScores_() {
