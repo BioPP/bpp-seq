@@ -274,7 +274,7 @@ class Sequence:
      * @param sequence The new content of the sequence.
      * @see The Sequence constructor for information about the way sequences are internaly stored.
      */
-    void setContent(const std::string& sequence) throw (BadCharException);
+    virtual void setContent(const std::string& sequence) throw (BadCharException);
     void setContent(const std::vector<int>& list) throw (BadIntException)
     {
       SymbolList::setContent(list);
@@ -293,7 +293,7 @@ class Sequence:
      *
      * @param newSize The new size of the sequence.
      */
-    void setToSizeR(unsigned int newSize);
+    virtual void setToSizeR(unsigned int newSize);
     
     /**
      * @brief Set up the size of a sequence from the left side.
@@ -303,7 +303,7 @@ class Sequence:
      *
      * @param newSize The new size of the sequence.
      */
-    void setToSizeL(unsigned int newSize);
+    virtual void setToSizeL(unsigned int newSize);
 
     /**
      * @brief Append the specified content to the sequence.
@@ -311,7 +311,7 @@ class Sequence:
      * @param content The content to append to the sequence.
      * @throw BadIntException If the content does not match the current alphabet.
      */
-    void append(const std::vector<int>& content) throw (BadIntException);
+    virtual void append(const std::vector<int>& content) throw (BadIntException);
 
     /**
      * @brief Append the specified content to the sequence.
@@ -319,7 +319,7 @@ class Sequence:
      * @param content The content to append to the sequence.
      * @throw BadCharException If the content does not match the current alphabet.
      */
-    void append(const std::vector<std::string>& content) throw (BadCharException);
+    virtual void append(const std::vector<std::string>& content) throw (BadCharException);
 
     /**
      * @brief Append the specified content to the sequence.
@@ -327,7 +327,7 @@ class Sequence:
      * @param content The content to append to the sequence.
      * @throw BadCharException If the content does not match the current alphabet.
      */
-    void append(const std::string& content) throw (BadCharException);
+    virtual void append(const std::string& content) throw (BadCharException);
 
     /** @} */
 };

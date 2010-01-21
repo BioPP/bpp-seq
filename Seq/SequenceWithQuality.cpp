@@ -119,6 +119,23 @@ void SequenceWithQuality::addElement(unsigned int pos, int v) throw (BadIntExcep
 
 /******************************************************************************/
 
+void SequenceWithQuality::setContent(const std::string& sequence) throw (BadCharException) {
+  Sequence::setContent(sequence);
+  extendQualityScores_();
+}
+
+void SequenceWithQuality::setContent(const std::vector<int>& list) throw (BadIntException) {
+  Sequence::setContent(list);
+  extendQualityScores_();
+}
+
+void SequenceWithQuality::setContent(const std::vector<std::string>& list) throw (BadCharException) {
+  Sequence::setContent(list);
+  extendQualityScores_();
+}
+
+/******************************************************************************/
+
 void SequenceWithQuality::deleteElement(unsigned int pos) throw (IndexOutOfBoundsException) {
   Sequence::deleteElement(pos);
   qualScores_.erase(qualScores_.begin() + pos);

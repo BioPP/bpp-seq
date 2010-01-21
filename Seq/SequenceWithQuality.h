@@ -205,6 +205,10 @@ namespace bpp {
       void addElement(int v) throw (BadIntException);
       void addElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException);
 
+      void setContent(const std::string& sequence) throw (BadCharException);
+      void setContent(const std::vector<int>& list) throw (BadIntException);
+      void setContent(const std::vector<std::string>& list) throw (BadCharException);
+
       void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException);
 
       /**
