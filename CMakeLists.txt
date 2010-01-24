@@ -95,8 +95,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
  ".*Makefile"
  ".*_CPack_Packages"
  ".*CMakeCache.txt"
- "debian/"
- "Seq.spec"
  ".*\\\\.cmake"
  ".*CVS/"
  ".*.gz"
@@ -113,4 +111,15 @@ INCLUDE(CPack)
 
 #This adds the 'dist' target
 ADD_CUSTOM_TARGET(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+
+IF (UNIX)
+#This creates deb packages:
+ADD_CUSTOM_TARGET(deb fakeroot debian/rules binary)
+ADD_DEPENDENCIES(deb dist)
+
+#This creates rpm packages:
+ADD_CUSTOM_TARGET(rpm rpmbuild -ta ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
+ADD_DEPENDENCIES(rpm dist)
+
+ENDIF()
 
