@@ -56,7 +56,7 @@ using namespace std;
 const bool Sequence::SENSE = true;
 const bool Sequence::ANTISENSE = false;
 
-/** Constructors: ***********************************************************************/
+/* Constructors: **************************************************************/
 
 Sequence::Sequence(const std::string& name, const std::string& sequence, const Alphabet* alpha)
 throw (BadCharException) :
@@ -110,7 +110,7 @@ Sequence::Sequence(const std::string& name, const std::vector<int>& sequence, co
 	sense_(true)
 {}
 
-/** Copy constructors: ******************************************************************/
+/* Copy constructors: *********************************************************/
 
 Sequence::Sequence(const Sequence& s) :
 	SymbolList(s),
@@ -119,9 +119,9 @@ Sequence::Sequence(const Sequence& s) :
 	sense_(s.getSense())
 {}
 
-/** Assignation operator: ***************************************************************/
+/* Assignation operator: ******************************************************/
 
-Sequence & Sequence::operator=(const Sequence& s)
+Sequence& Sequence::operator=(const Sequence& s)
 {
   SymbolList::operator=(s);
 	name_     = s.getName();
@@ -130,38 +130,42 @@ Sequence & Sequence::operator=(const Sequence& s)
 	return *this;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-void Sequence::setContent(const string & sequence) throw (BadCharException)
+void Sequence::setContent(const std::string& sequence) throw (BadCharException)
 {
 	// Remove blanks in sequence
 	content_ = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet());
   //Warning, an exception may be thrown here!
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 void Sequence::setToSizeR(unsigned int newSize)
 {
-	unsigned int seqSize = content_.size();
 	// Size verification
+	unsigned int seqSize = content_.size();
+	if (newSize == seqSize) return;
+
 	if (newSize < seqSize)
   {
 		content_.resize(newSize);
 		return;
 	}
-	if (newSize == seqSize) return;
 
 	// Add gaps up to specified size
-	while (content_.size() < newSize) content_.push_back(-1);
+  int gap = getAlphabet()->getGapCharacterCode();
+	while (content_.size() < newSize) content_.push_back(gap);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 void Sequence::setToSizeL(unsigned int newSize)
 {
 	// Size verification
 	unsigned int seqSize = content_.size();
+	if (newSize == seqSize) return;
+
 	if (newSize < seqSize)
   {
 		//We must truncate sequence from the left.
@@ -169,15 +173,15 @@ void Sequence::setToSizeL(unsigned int newSize)
 		content_.erase(content_.begin(), content_.begin() + (seqSize - newSize));
 		return;
 	}
-	if (newSize == seqSize) return;
 
 	// Add gaps up to specified size
-	content_.insert(content_.begin(), newSize - seqSize, -1);
+  int gap = getAlphabet()->getGapCharacterCode();
+	content_.insert(content_.begin(), newSize - seqSize, gap);
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
-void Sequence::append(const vector<int>& content) throw (BadIntException)
+void Sequence::append(const std::vector<int>& content) throw (BadIntException)
 {
 	// Check list for incorrect characters
 	for (unsigned int i = 0; i < content.size(); i++)
@@ -188,7 +192,7 @@ void Sequence::append(const vector<int>& content) throw (BadIntException)
 		content_.push_back(content[i]);
 }
 
-void Sequence::append(const vector<string>& content) throw (BadCharException)
+void Sequence::append(const std::vector<std::string>& content) throw (BadCharException)
 {
 	// Check list for incorrect characters
 	for (unsigned int i = 0; i < content.size(); i++)
@@ -200,10 +204,10 @@ void Sequence::append(const vector<string>& content) throw (BadCharException)
 		content_.push_back(getAlphabet()->charToInt(content[i]));
 }
 
-void Sequence::append(const string& content) throw (BadCharException)
+void Sequence::append(const std::string& content) throw (BadCharException)
 {
 	append(StringSequenceTools::codeSequence(content, getAlphabet()));
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
