@@ -92,7 +92,7 @@ VectorSiteContainer::VectorSiteContainer(unsigned int size, const Alphabet* alph
   //Seq names and comments:
   for (unsigned int i = 0; i < size; i++)
   {
-    names_[i]    = "Seq_" + i;
+    names_[i]    = string("Seq_") + TextTools::toString(i);
     comments_[i] = new Comments();
   }
 }
