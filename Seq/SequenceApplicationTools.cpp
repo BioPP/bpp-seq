@@ -39,7 +39,6 @@
  */
 
 #include "SequenceApplicationTools.h"
-#include "SequenceTools.h"
 #include "SiteTools.h"
 #include "ioseq"
 #include "alphabets"
@@ -69,7 +68,6 @@ Alphabet* SequenceApplicationTools::getAlphabet(
 
    KeyvalTools::parseProcedure(alphtt, alphabet, args);
    unsigned int lg = 1;
-   int flag = 0;
 
   if (alphabet == "Word")
   {
@@ -79,19 +77,9 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     if (args.find("letter") == args.end())
       throw Exception("Missing letter alphabet for Word alphabet");
     alphabet = args["letter"];
-    flag = 1;
-  }
-  else if (alphabet == "RNY")
-  {
-    if (args.find("letter") == args.end())
-      throw Exception("Missing letter alphabet for RNY alphabet");
-    alphabet = args["letter"];
-    flag = 2;
   }
 
-  if (alphabet == "Binary")
-    chars = new BinaryAlphabet();
-  else if (alphabet == "DNA")
+  if (alphabet == "DNA")
     chars = new DNA();
   else if (alphabet == "RNA")
     chars = new RNA();
@@ -134,7 +122,7 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     alphabet = alphabet + "(" + alphn + ")";
   }
 
-  if (flag == 1)
+  if (lg > 1)
   {
     chars = new WordAlphabet(chars, lg);
     string al = " ";
@@ -143,16 +131,6 @@ Alphabet* SequenceApplicationTools::getAlphabet(
       al += alphabet + " ";
     }
     alphabet = "Word(" + al + ")";
-  }
-  else if (flag == 2)
-  {
-    if (AlphabetTools::isNucleicAlphabet(chars))
-    {
-      chars = new RNY(*(dynamic_cast<NucleicAlphabet*>(chars)));
-      alphabet = "RNY(" + alphabet + ")";
-    }
-    else
-      throw Exception("RNY needs a Nucleic Alphabet, instead of " + alphabet);
   }
 
   if (verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
@@ -362,32 +340,10 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
    ApplicationTools::displayError("Unknown sequence format: " + format);
     exit(-1);
   }
-  const Alphabet* alpha2;
-  if (AlphabetTools::isRNYAlphabet(alpha))
-    alpha2 = &dynamic_cast<const RNY*>(alpha)->getLetterAlphabet();
-  else
-    alpha2 = alpha;
-
-  const OrderedSequenceContainer* seqCont = dynamic_cast<OrderedSequenceContainer*>(iSeq->read(sequenceFilePath, alpha2));
-
-  VectorSiteContainer* sites2 = new VectorSiteContainer(*seqCont);
+  const SequenceContainer* seqCont = iSeq->read(sequenceFilePath, alpha);
+  VectorSiteContainer* sites = new VectorSiteContainer(*dynamic_cast<const OrderedSequenceContainer*>(seqCont));
   delete seqCont;
   delete iSeq;
-
-  VectorSiteContainer* sites;
-
-  if (AlphabetTools::isRNYAlphabet(alpha))
-  {
-   const SequenceTools ST;
-    sites = new VectorSiteContainer(alpha);
-    for (unsigned int i = 0; i < sites2->getNumberOfSequences(); i++)
-    {
-   sites->addSequence(*(ST.RNYslice(sites2->getSequence(i))));
-    }
-    delete sites2;
-  }
-  else
-    sites = sites2;
 
   if (verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
 
