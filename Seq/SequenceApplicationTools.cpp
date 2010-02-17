@@ -388,7 +388,8 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   bool verbose)
 {
   // Fully resolved sites, i.e. without jokers and gaps:
-  VectorSiteContainer* sitesToAnalyse;
+  SiteContainer* sitesToAnalyse;
+  VectorSiteContainer* sitesToAnalyse2;
 
   string option = ApplicationTools::getStringParameter("input.sequence.sites_to_use", params, "complete", suffix, suffixIsOptional);
   if (verbose) ApplicationTools::displayResult("Sites to use", option);
@@ -423,13 +424,13 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   }
   else if (option == "complete")
   {
-    sitesToAnalyse = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getCompleteSites(allSites));
+    sitesToAnalyse = SiteContainerTools::getCompleteSites(allSites);
     int nbSites = sitesToAnalyse->getNumberOfSites();
     if (verbose) ApplicationTools::displayResult("Complete sites", TextTools::toString(nbSites));
   }
   else if (option == "nogap")
   {
-    sitesToAnalyse = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSitesWithoutGaps(allSites));
+    sitesToAnalyse = SiteContainerTools::getSitesWithoutGaps(allSites);
     int nbSites = sitesToAnalyse->getNumberOfSites();
     if (verbose) ApplicationTools::displayResult("Sites without gap", TextTools::toString(nbSites));
   }
@@ -439,7 +440,18 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     exit(-1);
   }
 
-  return sitesToAnalyse;
+  option = ApplicationTools::getStringParameter("input.sequence.removeStopCodons", params, "", suffix, true);
+  if ((option != "") && verbose) ApplicationTools::displayResult("Remove Stop Codons", option);
+  
+  if (option == "coucou")
+    {
+      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse));
+      delete sitesToAnalyse;
+    }
+  else
+    sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(sitesToAnalyse);
+  
+  return sitesToAnalyse2;
 }
 
 /******************************************************************************/
