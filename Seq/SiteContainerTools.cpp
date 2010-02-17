@@ -215,6 +215,25 @@ SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCont
 
 /******************************************************************************/
 
+SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sites)  throw (AlphabetException)
+{
+  const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
+  if (pca == NULL)
+    throw AlphabetException("Not a Codon Alphabet",sites.getAlphabet());
+  vector<string> seqNames = sites.getSequencesNames();
+  VectorSiteContainer* noStopCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+  noStopCont->setSequencesNames(seqNames, false);
+  for (unsigned int i = 0; i < sites.getNumberOfSites(); i++)
+    {
+      const Site* site = &sites.getSite(i);
+      if (!SiteTools::hasStopCodon(*site))
+        noStopCont->addSite(*site);
+    }
+  return noStopCont;
+}
+
+/******************************************************************************/
+
 SiteContainer* SiteContainerTools::resolveDottedAlignment(
     const SiteContainer& dottedAln,
     const Alphabet* resolvedAlphabet) throw (AlphabetException, Exception)
