@@ -440,14 +440,18 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     exit(-1);
   }
 
-  option = ApplicationTools::getStringParameter("input.sequence.removeStopCodons", params, "", suffix, true);
-  if ((option != "") && verbose) ApplicationTools::displayResult("Remove Stop Codons", option);
-  
-  if (option == "coucou")
-    {
-      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse));
-      delete sitesToAnalyse;
-    }
+  if (AlphabetTools::isCodonAlphabet(sitesToAnalyse->getAlphabet())){
+    option = ApplicationTools::getStringParameter("input.sequence.removeStopCodons", params, "", suffix, true);
+    if ((option != "") && verbose) ApplicationTools::displayResult("Remove Stop Codons", option);
+    
+    if (option == "coucou")
+      {
+        sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse));
+        delete sitesToAnalyse;
+      }
+    else
+      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(sitesToAnalyse);
+  }
   else
     sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(sitesToAnalyse);
   
