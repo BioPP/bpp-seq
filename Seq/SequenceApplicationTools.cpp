@@ -40,6 +40,7 @@
 
 #include "SequenceApplicationTools.h"
 #include "SiteTools.h"
+#include "SequenceTools.h"
 #include "ioseq"
 #include "alphabets"
 
@@ -65,6 +66,7 @@ Alphabet* SequenceApplicationTools::getAlphabet(
 
    string alphabet = "";
    map<string, string> args;
+   int flag = 0;
 
    KeyvalTools::parseProcedure(alphtt, alphabet, args);
    unsigned int lg = 1;
@@ -77,6 +79,7 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     if (args.find("letter") == args.end())
       throw Exception("Missing letter alphabet for Word alphabet");
     alphabet = args["letter"];
+    flag = 1;
   }
 
   if (alphabet == "DNA")
@@ -122,16 +125,16 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     alphabet = alphabet + "(" + alphn + ")";
   }
 
-  if (lg > 1)
-  {
-    chars = new WordAlphabet(chars, lg);
-    string al = " ";
-    for (unsigned i = 0; i < lg; i++)
+  if (flag == 1)
     {
-      al += alphabet + " ";
+      chars = new WordAlphabet(chars, lg);
+      string al = " ";
+      for (unsigned i = 0; i < lg; i++)
+        {
+          al += alphabet + " ";
+        }
+      alphabet = "Word(" + al + ")";
     }
-    alphabet = "Word(" + al + ")";
-  }
 
   if (verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
   return chars;
@@ -340,6 +343,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
    ApplicationTools::displayError("Unknown sequence format: " + format);
     exit(-1);
   }
+
   const SequenceContainer* seqCont = iSeq->read(sequenceFilePath, alpha);
   VectorSiteContainer* sites = new VectorSiteContainer(*dynamic_cast<const OrderedSequenceContainer*>(seqCont));
   delete seqCont;
@@ -441,10 +445,10 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   }
 
   if (AlphabetTools::isCodonAlphabet(sitesToAnalyse->getAlphabet())){
-    option = ApplicationTools::getStringParameter("input.sequence.removeStopCodons", params, "", suffix, true);
+    option = ApplicationTools::getStringParameter("input.sequence.remove_stop_codons", params, "no", suffix, true);
     if ((option != "") && verbose) ApplicationTools::displayResult("Remove Stop Codons", option);
     
-    if (option == "coucou")
+    if (option == "yes")
       {
         sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse));
         delete sitesToAnalyse;
