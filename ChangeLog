@@ -1,3 +1,6 @@
+11/03/10 Julien Dutheil
+* Nexus format now deals with lower case keywords.
+
 17/12/09 Julien Dutheil
 * Code cleaning for VectorSiteContainer
 * New class CompressedVectorSiteContainer using less memory than

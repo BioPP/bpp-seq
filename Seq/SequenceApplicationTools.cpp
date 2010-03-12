@@ -90,19 +90,12 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     chars = new ProteicAlphabet();
   else if (allowGeneric && alphabet == "Generic")
     chars = new DefaultAlphabet();
-  else
+  else if (alphabet == "Codon")
   {
-   string suff = "";
-    if (alphabet.find("CodonAlphabet") != string::npos)
-      suff = "CodonAlphabet";
-
-    if (suff == "")
-      throw Exception("Alphabet not known: " + alphabet);
-
     if (args.find("letter") == args.end())
       throw Exception("Missing alphabet in Codon : " + alphabet);
 
-    string alphn = args["letter"];
+    string alphn = ApplicationTools::getStringParameter("letter", args, "RNA");
 
     NucleicAlphabet* pnalph;
     if (alphn == "RNA")
@@ -112,29 +105,33 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     else
       throw Exception("Alphabet not known in Codon : " + alphn);
 
-    if (alphabet.find("EchinodermMitochondrial") != string::npos)
+    string type = ApplicationTools::getStringParameter("type", args, "Standard");
+
+    if (type == "EchinodermMitochondrial")
       chars = new EchinodermMitochondrialCodonAlphabet(pnalph);
-    else if (alphabet.find("InvertebrateMitochondrial") != string::npos)
+    else if (type == "InvertebrateMitochondrial")
       chars = new InvertebrateMitochondrialCodonAlphabet(pnalph);
-    else if (alphabet.find("Standard") != string::npos)
+    else if (type == "Standard")
       chars = new StandardCodonAlphabet(pnalph);
-    else if (alphabet.find("VertebrateMitochondrial") != string::npos)
+    else if (type == "VertebrateMitochondrial")
       chars = new VertebrateMitochondrialCodonAlphabet(pnalph);
     else
       throw Exception("Unknown Alphabet : " + alphabet);
     alphabet = alphabet + "(" + alphn + ")";
   }
+  else
+    throw Exception("Alphabet not known: " + alphabet);
 
   if (flag == 1)
+  {
+    chars = new WordAlphabet(chars, lg);
+    string al = " ";
+    for (unsigned i = 0; i < lg; i++)
     {
-      chars = new WordAlphabet(chars, lg);
-      string al = " ";
-      for (unsigned i = 0; i < lg; i++)
-        {
-          al += alphabet + " ";
-        }
-      alphabet = "Word(" + al + ")";
+      al += alphabet + " ";
     }
+    alphabet = "Word(" + al + ")";
+  }
 
   if (verbose) ApplicationTools::displayResult("Alphabet type ", alphabet);
   return chars;

@@ -56,7 +56,7 @@ using namespace std;
 
 /******************************************************************************/
 
-const vector<string> NexusIOSequence::splitNameAndSequence_(const string & s) const throw (Exception)
+const std::vector<std::string> NexusIOSequence::splitNameAndSequence_(const std::string& s) const throw (Exception)
 {
   vector<string> v(2);
   string::size_type index = s.find(" ");
@@ -69,14 +69,14 @@ const vector<string> NexusIOSequence::splitNameAndSequence_(const string & s) co
   
 /******************************************************************************/
 
-void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer & vsc) const throw (Exception)
+void NexusIOSequence::appendFromStream(std::istream& input, AlignedSequenceContainer& vsc) const throw (Exception)
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("NexusIOSequence::read(). Fail to open file"); }
 
   //Look for the DATA block:
   string line = "";
-  while (line != "BEGIN DATA;")
+  while (TextTools::toUpper(line) != "BEGIN DATA;")
   {
     if (input.eof())
       throw Exception("NexusIOSequence::appendFromStream(). No data block was found.");
@@ -90,12 +90,16 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
     if (input.eof())
       throw Exception("NexusIOSequence::appendFromStream(). No DIMENSIONS command was found.");
     NexusTools::getNextCommand(input, cmdName, cmdArgs);
+    cmdName = TextTools::toUpper(cmdName);
   }
   map<string, string> args;
   KeyvalTools::multipleKeyvals(cmdArgs, args, " ");
-  if (args["NTAX"] == "")
+  map<string, string> argsUp;
+  for (map<string, string>::iterator it = args.begin(); it != args.end(); it++)
+    argsUp[TextTools::toUpper(it->first)] = it->second;
+  if (argsUp["NTAX"] == "")
     throw Exception("NexusIOSequence::appendFromStream(). DIMENSIONS command does not have a NTAX argument.");
-  unsigned int ntax = TextTools::to<unsigned int>(args["NTAX"]);
+  unsigned int ntax = TextTools::to<unsigned int>(argsUp["NTAX"]);
 
   //Look for the FORMAT command:
   while (cmdName != "FORMAT")
@@ -103,12 +107,13 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
     if (input.eof())
       throw Exception("NexusIOSequence::appendFromStream(). No FORMAT command was found.");
     NexusTools::getNextCommand(input, cmdName, cmdArgs);
+    cmdName = TextTools::toUpper(cmdName);
   }
   if (TextTools::hasSubstring(cmdArgs, "TRANSPOSE"))
     throw Exception("NexusIOSequence::appendFromStream(). TRANSPOSE option is not supported.");
 
   //Check if the alignment is dotted or not:
-  bool matchChar = TextTools::hasSubstring(cmdArgs, "MATCHCHAR");
+  bool matchChar = TextTools::hasSubstring(TextTools::toUpper(cmdArgs), "MATCHCHAR");
 
   AlignedSequenceContainer* alignment = 0;
   if (matchChar)
@@ -118,7 +123,7 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
 
   //Look for the MATRIX command:
   line = "";
-  while (!TextTools::startsWith(line, "MATRIX"))
+  while (!TextTools::startsWith(TextTools::toUpper(line), "MATRIX"))
   {
     if (input.eof())
       throw Exception("NexusIOSequence::appendFromStream(). No MATRIX command was found.");
@@ -193,11 +198,11 @@ void NexusIOSequence::appendFromStream(istream & input, AlignedSequenceContainer
 
 /******************************************************************************/
 
-const string NexusIOSequence::getFormatName() const { return "Nexus"; }
+const std::string NexusIOSequence::getFormatName() const { return "Nexus"; }
 
 /******************************************************************************/
 
-const string NexusIOSequence::getFormatDescription() const
+const std::string NexusIOSequence::getFormatDescription() const
 {
   return "Nexus file format.";
 }
