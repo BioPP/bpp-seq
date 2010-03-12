@@ -55,7 +55,7 @@ namespace bpp
  * An AlignedSequenceContainer object is used instead of a VectorSequenceContainer.
  */
 class Clustal:
-  public virtual AbstractISequence2
+  public AbstractISequence2
 {
   public:
     bool checkNames_;

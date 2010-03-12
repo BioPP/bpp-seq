@@ -54,8 +54,8 @@ namespace bpp
  * @brief The mase sequence file format.
  */
 class Mase:
-  public virtual AbstractISequence,
-  public virtual AbstractOSequence
+  public AbstractISequence,
+  public AbstractOSequence
 {
 
   private:

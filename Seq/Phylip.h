@@ -61,9 +61,9 @@ namespace bpp
  * This format is described on the Phylip package documentation website:
  * http://evolution.genetics.washington.edu/phylip/doc/sequence.html
  */
-class Phylip:
-  public virtual AbstractISequence2,
-  public virtual AbstractOSequence
+class Phylip :
+  public AbstractISequence2,
+  public AbstractOSequence
 {
   private:
 
@@ -107,7 +107,7 @@ class Phylip:
      *
      * @{
      */
-    void appendFromStream(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception);
+    void appendFromStream(std::istream& input, AlignedSequenceContainer& sc) const throw (Exception);
     /** @} */
 
     /**
@@ -116,15 +116,15 @@ class Phylip:
      * This methods parses the firt line of the phylip file.
      * @param path The path of the file to parse.
      */
-    unsigned int getNumberOfSequences(const std::string & path) const throw (IOException);
+    unsigned int getNumberOfSequences(const std::string& path) const throw (IOException);
 
     /**
      * @name The OSequence interface.
      *
      * @{
      */
-    void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception);
-    void write(const std::string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception)
+    void write(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
+    void write(const std::string& path, const SequenceContainer& sc, bool overwrite) const throw (Exception)
     {
       AbstractOSequence::write(path, sc, overwrite);
     }

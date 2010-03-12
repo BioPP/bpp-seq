@@ -188,21 +188,21 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   bool suffixIsOptional,
   bool verbose)
 {
-   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file",params, true, true, suffix, suffixIsOptional);
-   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional);
-   string format = "";
-   map<string, string> args;
-   KeyvalTools::parseProcedure(sequenceFormat, format, args);
+  string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file",params, true, true, suffix, suffixIsOptional);
+  string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional);
+  string format = "";
+  map<string, string> args;
+  KeyvalTools::parseProcedure(sequenceFormat, format, args);
   if (verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
-  ISequence* iSeq = NULL;
+  ISequence* iSeq = 0;
   if (format == "Mase")
   {
     iSeq = new Mase();
   }
   else if (format == "Phylip")
   {
-   bool sequential = true, extended = true;
-   string split = "  ";
+    bool sequential = true, extended = true;
+    string split = "  ";
     if (args.find("order") != args.end())
     {
       if (args["order"] == "sequential") sequential = true;
@@ -237,7 +237,7 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   }
   else if (format == "Clustal")
   {
-   unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
+    unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
     iSeq = new Clustal(true, extraSpaces);
   }
   else if (format == "Dcse")
@@ -254,7 +254,7 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   }
   else
   {
-   ApplicationTools::displayError("Unknown sequence format.");
+    ApplicationTools::displayError("Unknown sequence format.");
     exit(-1);
   }
   SequenceContainer* sequences = iSeq->read(sequenceFilePath, alpha);

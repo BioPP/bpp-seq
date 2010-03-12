@@ -53,11 +53,9 @@ namespace bpp
  *
  * For now, only read raw sequences. Features are not yet supported.
  */
-class GenBank:
+class GenBank :
   public AbstractISequence
 {
-	protected:
-
 	public:
 	
 		/**
@@ -74,7 +72,7 @@ class GenBank:
 		 *
 		 * @{
 		 */
-		void appendFromStream(std::istream & input, VectorSequenceContainer & sc) const throw (Exception);
+		void appendFromStream(std::istream& input, VectorSequenceContainer& sc) const throw (Exception);
 		/** @} */
 	
 		/**

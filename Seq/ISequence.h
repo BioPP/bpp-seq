@@ -80,7 +80,7 @@ class ISequence:
      * @return A new SequenceContainer object.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual SequenceContainer * read(std::istream & input, const Alphabet * alpha) const throw (Exception) = 0;
+		virtual SequenceContainer* read(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
 		/**
 		 * @brief Create a new container from a file.
 		 *
@@ -89,7 +89,7 @@ class ISequence:
      * @return A new SequenceContainer object.
 		 * @throw Exception If the file is not in the specified format.
 		 */
-		virtual SequenceContainer * read(const std::string & path, const Alphabet * alpha) const throw (Exception) = 0;
+		virtual SequenceContainer* read(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
 
 };
 
@@ -117,11 +117,11 @@ class ISequence2:
 		 */
     virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+		SequenceContainer*
 #else
-		SiteContainer *
+		SiteContainer*
 #endif
-		read(std::istream & input, const Alphabet * alpha) const throw (Exception) = 0;
+		read(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
 		/**
 		 * @brief Create a new container from a file.
 		 *
@@ -132,11 +132,11 @@ class ISequence2:
 		 */
     virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+		SequenceContainer*
 #else
-		SiteContainer *
+		SiteContainer*
 #endif
-    read(const std::string & path, const Alphabet * alpha) const throw (Exception) = 0;
+    read(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
 
 };
 

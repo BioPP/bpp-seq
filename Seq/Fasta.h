@@ -59,8 +59,8 @@ namespace bpp
  * Read and write from/to Fasta files.
  */
 class Fasta:
-  public virtual AbstractISequence,
-  public virtual AbstractOSequence,
+  public AbstractISequence,
+  public AbstractOSequence,
   public virtual ISequenceStream,
   public virtual OSequenceStream
 {

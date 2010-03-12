@@ -57,7 +57,8 @@ namespace bpp
  * A description of this format may be found here:
  * http://www.psb.ugent.be/rRNA/help/formats/aliformat.html
  */
-class DCSE : public virtual AbstractISequence2
+class DCSE :
+  public AbstractISequence2
 {
     
 	public: 
@@ -71,7 +72,7 @@ class DCSE : public virtual AbstractISequence2
 		 *
 		 * @{
 		 */
-		void appendFromStream(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception);
+		void appendFromStream(std::istream& input, AlignedSequenceContainer& sc) const throw (Exception);
 		/** @} */
 
 		
