@@ -199,7 +199,7 @@ bool SiteTools::isConstant(const Site& site, bool ignoreUnknown) throw (EmptySit
 double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown) throw (EmptySiteException)
 {
   // Empty site checking
-  if (site.size() == 0) throw EmptySiteException("SiteTools::variabilityShannon: Incorrect specified site", &site);
+  if (site.size() == 0) throw EmptySiteException("SiteTools::variabilityShannon: Incorrect specified site, size must be > 0", &site);
   map<int, double> p;
   getFrequencies(site, p, resolveUnknown);
   // We need to correct frequencies for gaps:
@@ -217,8 +217,8 @@ double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown) thro
 double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool resolveUnknown) throw (DimensionException,EmptySiteException)
 {
   // Empty site checking
-  if (site1.size() == 0) throw EmptySiteException("SiteTools::mutualInformation: Incorrect specified site", &site1);
-  if (site2.size() == 0) throw EmptySiteException("SiteTools::mutualInformation: Incorrect specified site", &site2);
+  if (site1.size() == 0) throw EmptySiteException("SiteTools::mutualInformation: Incorrect specified site, size must be > 0", &site1);
+  if (site2.size() == 0) throw EmptySiteException("SiteTools::mutualInformation: Incorrect specified site, size must be > 0", &site2);
   if (site1.size() != site2.size()) throw DimensionException("SiteTools::mutualInformation: sites must have the same size!", site1.size(), site2.size());
   vector<double> p1(site1.getAlphabet()->getSize());
   vector<double> p2(site2.getAlphabet()->getSize());
@@ -230,7 +230,7 @@ double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool r
   {
     for (unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++)
     {
-      pxy = p12[(int)i][(int)j];
+      pxy = p12[static_cast<int>(i)][static_cast<int>(j)];
       tot += pxy;
       p1[i] += pxy;
       p2[j] += pxy;
@@ -248,7 +248,7 @@ double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool r
   {
     for (unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++)
     {
-      pxy = p12[(int)i][(int)j] / tot;
+      pxy = p12[static_cast<int>(i)][static_cast<int>(j)] / tot;
       if (pxy > 0) mi += pxy * log(pxy / (p1[i] * p2[j]));
     }
   }
@@ -260,12 +260,12 @@ double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool r
 double SiteTools::variabilityFactorial(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
-  if (site.size() == 0) throw EmptySiteException("SiteTools::variabilityFactorial: Incorrect specified site", &site);
+  if (site.size() == 0) throw EmptySiteException("SiteTools::variabilityFactorial: Incorrect specified site, size must be > 0", &site);
   map<int, unsigned int> p;
   getCounts(site, p);
   vector<unsigned int> c = MapTools::getValues(p);
   unsigned int s = VectorTools::sum(c);
-  return std::log((double)NumTools::fact(s) / (double)VectorTools::sum(VectorTools::fact(c)));
+  return std::log(static_cast<double>(NumTools::fact(s)) / static_cast<double>(VectorTools::sum(VectorTools::fact(c))));
 }
 
 /******************************************************************************/
@@ -273,7 +273,7 @@ double SiteTools::variabilityFactorial(const Site& site) throw (EmptySiteExcepti
 double SiteTools::heterozygosity(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
-  if (site.size() == 0) throw EmptySiteException("SiteTools::heterozygosity: Incorrect specified site", &site);
+  if (site.size() == 0) throw EmptySiteException("SiteTools::heterozygosity: Incorrect specified site, size must be > 0", &site);
   map<int, double> p;
   getFrequencies(site, p);
   vector<double> c = MapTools::getValues(p);
@@ -286,7 +286,7 @@ double SiteTools::heterozygosity(const Site& site) throw (EmptySiteException)
 unsigned int SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
-  if (site.size() == 0) throw EmptySiteException("SiteTools::getNumberOfDistinctCharacters(): Incorrect specified site", &site);
+  if (site.size() == 0) throw EmptySiteException("SiteTools::getNumberOfDistinctCharacters(): Incorrect specified site, size must be > 0", &site);
   // For all site's characters
   if (SiteTools::isConstant(site)) return 1;
   map<int,unsigned int> counts;
@@ -304,7 +304,7 @@ unsigned int SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (E
 bool SiteTools::hasSingleton(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
-  if (site.size() == 0) throw EmptySiteException("SiteTools::hasSingleton: Incorrect specified site", &site);
+  if (site.size() == 0) throw EmptySiteException("SiteTools::hasSingleton: Incorrect specified site, size must be > 0", &site);
   // For all site's characters
   if (SiteTools::isConstant(site)) return false;
   map<int,unsigned int> counts;
@@ -321,7 +321,7 @@ bool SiteTools::hasSingleton(const Site& site) throw (EmptySiteException)
 bool SiteTools::isParsimonyInformativeSite(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
-  if (site.size() == 0) throw EmptySiteException("SiteTools::isParsimonyInformativeSite: Incorrect specified site", &site);
+  if (site.size() == 0) throw EmptySiteException("SiteTools::isParsimonyInformativeSite: Incorrect specified site, size must be > 0", &site);
   // For all site's characters
   if (SiteTools::isConstant(site)) return false;
   map<int,unsigned int> counts;
@@ -340,7 +340,7 @@ bool SiteTools::isParsimonyInformativeSite(const Site& site) throw (EmptySiteExc
 bool SiteTools::isTriplet(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
-  if (site.size() == 0) throw EmptySiteException("SiteTools::isTriplet: Incorrect specified site", &site);
+  if (site.size() == 0) throw EmptySiteException("SiteTools::isTriplet: Incorrect specified site, size must be > 0", &site);
   // For all site's characters
   if (SiteTools::getNumberOfDistinctCharacters(site) >= 3) return true;
   else return false;
