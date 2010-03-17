@@ -63,7 +63,7 @@ bool SiteTools::hasGap(const Site& site)
   // Main loop : for all characters in site
   for (unsigned int i = 0; i < site.size(); i++)
   {
-    if (site[i] == -1) return true;
+    if (site.getAlphabet()->isGap(site[i])) return true;
   }
   return false;
 }
@@ -110,7 +110,7 @@ bool SiteTools::hasStopCodon(const Site& site)
 {
   // Main loop : for all characters in site
   const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
-  if (pca == NULL)
+  if (pca == 0)
     return false;
   for (unsigned int i = 0; i < site.size(); i++)
   {
@@ -126,7 +126,7 @@ bool SiteTools::isComplete(const Site& site)
   // Main loop : for all characters in site
   for (unsigned int i = 0; i < site.size(); i++)
   {
-    if (site[i] < 0 || site[i] >= (int)site.getAlphabet()->getSize()) return false;
+    if (site.getAlphabet()->isGap(site[i]) || site.getAlphabet()->isUnresolved(site[i])) return false;
   }
   return true;
 }
@@ -153,7 +153,7 @@ bool SiteTools::areSitesIdentical(const Site& site1, const Site& site2)
 bool SiteTools::isConstant(const Site& site, bool ignoreUnknown) throw (EmptySiteException)
 {
   // Empty site checking
-  if (site.size() == 0) throw EmptySiteException("SiteTools::isConstant: Incorrect specified site", &site);
+  if (site.size() == 0) throw EmptySiteException("SiteTools::isConstant: Incorrect specified site, size must be > 0", &site);
 
   // For all site's characters
   int gap = site.getAlphabet()->getGapCharacterCode();
@@ -167,7 +167,7 @@ bool SiteTools::isConstant(const Site& site, bool ignoreUnknown) throw (EmptySit
       s = site[i];
       i++;
     }
-    if (s == unknown || s == gap) throw EmptySiteException("SiteTools::isConstant: Siteis only made of gaps or generic characters.");
+    if (s == unknown || s == gap) throw EmptySiteException("SiteTools::isConstant: Site is only made of gaps or generic characters.");
     while (i < site.size())
     {
       if (site[i] != s && site[i] != gap && site[i] != unknown) return false;
@@ -183,7 +183,7 @@ bool SiteTools::isConstant(const Site& site, bool ignoreUnknown) throw (EmptySit
       s = site[i];
       i++;
     }
-    if (s == gap) throw EmptySiteException("SiteTools::isConstant: Siteis only made of gaps.");
+    if (s == gap) throw EmptySiteException("SiteTools::isConstant: Site is only made of gaps.");
     while (i < site.size())
     {
       if (site[i] != s && site[i] != gap) return false;
