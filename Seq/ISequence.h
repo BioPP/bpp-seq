@@ -63,33 +63,33 @@ namespace bpp
  * This interface defines the basic methods for reading sequences from a file.
  * NB: This interfqce is effective only if the VIRTUAL_COV option is enabled (default behavior).
  */
-class ISequence:
+class ISequence :
   public virtual IOSequence
 {
-	public:
-		ISequence() {}
-		virtual ~ISequence() {}
+  public:
+    ISequence() {}
+    virtual ~ISequence() {}
 
-	public:
-	
-		/**
-		 * @brief Create a new container from a stream.
-		 *
-		 * @param input  The input stream to read.
-		 * @param alpha The alphabet to be associated to the container.
+  public:
+  
+    /**
+     * @brief Create a new container from a stream.
+     *
+     * @param input  The input stream to read.
+     * @param alpha The alphabet to be associated to the container.
      * @return A new SequenceContainer object.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual SequenceContainer* read(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
-		/**
-		 * @brief Create a new container from a file.
-		 *
-		 * @param path  The path to the file to read.
-		 * @param alpha The alphabet to be associated to the container.
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual SequenceContainer* read(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
+    /**
+     * @brief Create a new container from a file.
+     *
+     * @param path  The path to the file to read.
+     * @param alpha The alphabet to be associated to the container.
      * @return A new SequenceContainer object.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual SequenceContainer* read(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual SequenceContainer* read(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
 
 };
 
@@ -101,40 +101,40 @@ class ISequence:
 class ISequence2:
   public virtual ISequence
 {
-	public:
-		ISequence2() {}
-		virtual ~ISequence2() {}
+  public:
+    ISequence2() {}
+    virtual ~ISequence2() {}
 
-	public:
-	
-		/**
-		 * @brief Create a new container from a stream.
-		 *
-		 * @param input  The input stream to read.
-		 * @param alpha The alphabet to be associated to the container.
+  public:
+  
+    /**
+     * @brief Create a new container from a stream.
+     *
+     * @param input  The input stream to read.
+     * @param alpha The alphabet to be associated to the container.
      * @return A new SiteContainer object.
-		 * @throw Exception If the file is not in the specified format.
-		 */
+     * @throw Exception If the file is not in the specified format.
+     */
     virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer*
+    SequenceContainer*
 #else
-		SiteContainer*
+    SiteContainer*
 #endif
-		read(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
-		/**
-		 * @brief Create a new container from a file.
-		 *
-		 * @param path  The path to the file to read.
-		 * @param alpha The alphabet to be associated to the container.
+    read(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
+    /**
+     * @brief Create a new container from a file.
+     *
+     * @param path  The path to the file to read.
+     * @param alpha The alphabet to be associated to the container.
      * @return A new SiteContainer object.
-		 * @throw Exception If the file is not in the specified format.
-		 */
+     * @throw Exception If the file is not in the specified format.
+     */
     virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer*
+    SequenceContainer*
 #else
-		SiteContainer*
+    SiteContainer*
 #endif
     read(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
 
@@ -142,5 +142,5 @@ class ISequence2:
 
 } //end of namespace bpp.
 
-#endif	// ISEQUENCE_H
+#endif  // _ISEQUENCE_H_
 

@@ -67,7 +67,7 @@ namespace bpp
  * @author Julien Dutheil
  */
 class NexusIOSequence:
-  public virtual AbstractISequence2
+  public AbstractISequence2
 {
   protected:
 
@@ -97,7 +97,7 @@ class NexusIOSequence:
      *
      * @{
      */
-    void appendFromStream(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception);
+    void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
     /** @} */
 
     /**

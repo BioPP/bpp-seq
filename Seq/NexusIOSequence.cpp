@@ -69,7 +69,7 @@ const std::vector<std::string> NexusIOSequence::splitNameAndSequence_(const std:
   
 /******************************************************************************/
 
-void NexusIOSequence::appendFromStream(std::istream& input, AlignedSequenceContainer& vsc) const throw (Exception)
+void NexusIOSequence::appendFromStream(std::istream& input, SiteContainer& vsc) const throw (Exception)
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("NexusIOSequence::read(). Fail to open file"); }
@@ -115,7 +115,7 @@ void NexusIOSequence::appendFromStream(std::istream& input, AlignedSequenceConta
   //Check if the alignment is dotted or not:
   bool matchChar = TextTools::hasSubstring(TextTools::toUpper(cmdArgs), "MATCHCHAR");
 
-  AlignedSequenceContainer* alignment = 0;
+  SiteContainer* alignment = 0;
   if (matchChar)
     alignment = new AlignedSequenceContainer(&AlphabetTools::DEFAULT_ALPHABET);
   else
@@ -190,7 +190,7 @@ void NexusIOSequence::appendFromStream(std::istream& input, AlignedSequenceConta
     delete alignment;
     for (unsigned int i = 0; i < resolvedAlignment->getNumberOfSequences(); i++)
     {
-      vsc.addSequence(resolvedAlignment->getSequence(i));
+      vsc.addSequence(resolvedAlignment->getSequence(i), false);
     }
     delete resolvedAlignment;
   }

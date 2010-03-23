@@ -52,46 +52,46 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-void DCSE::appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception)
+void DCSE::appendFromStream(istream& input, SiteContainer& sc) const throw (Exception)
 {
-	// Checking the existence of specified file
-	if (!input) { throw IOException ("DCSE::read : fail to open file"); }
+  // Checking the existence of specified file
+  if (!input) { throw IOException ("DCSE::read : fail to open file"); }
 
-	// Initialization
+  // Initialization
   const Alphabet * alpha = sc.getAlphabet();
-	string line, name, sequence = "";
+  string line, name, sequence = "";
 
-	line = FileTools::getNextLine(input); // Copy current line in temporary string
-	//StringTokenizer st(line);
-	//st.nextToken();
-	//First line ignored for now!
-	//int n1 = TextTools::toInt(st.nextToken());
-	//int n2 = TextTools::toInt(st.nextToken());
-	//int nbSites = n2 - n1
-	//cout << nbSpecies << " species and " << nbSites << " sites." << endl;
+  line = FileTools::getNextLine(input); // Copy current line in temporary string
+  //StringTokenizer st(line);
+  //st.nextToken();
+  //First line ignored for now!
+  //int n1 = TextTools::toInt(st.nextToken());
+  //int n2 = TextTools::toInt(st.nextToken());
+  //int nbSites = n2 - n1
+  //cout << nbSpecies << " species and " << nbSites << " sites." << endl;
 
-	// Main loop : for all file lines
-	while(!input.eof())
+  // Main loop : for all file lines
+  while (!input.eof())
   {
-		line = FileTools::getNextLine(input); // Copy current line in temporary string
-		if(line == "") break;
+    line = FileTools::getNextLine(input); // Copy current line in temporary string
+    if(line == "") break;
     string::size_type endOfSeq = line.find("     ");
-		if(endOfSeq == line.npos) break;
-		sequence = string(line.begin(), line.begin() + endOfSeq);
-		sequence = TextTools::removeWhiteSpaces(sequence);
-		sequence = TextTools::removeChar(sequence, '{');
-		sequence = TextTools::removeChar(sequence, '}');
-		sequence = TextTools::removeChar(sequence, '[');
-		sequence = TextTools::removeChar(sequence, ']');
-		sequence = TextTools::removeChar(sequence, '(');
-		sequence = TextTools::removeChar(sequence, ')');
-		sequence = TextTools::removeChar(sequence, '^');
-		name     = string(line.begin() + endOfSeq + 1, line.end()),
-		name     = TextTools::removeFirstWhiteSpaces(name);
-		if(name.find("Helix numbering") == name.npos
-		&& name.find("mask") == name.npos)
-			sc.addSequence(Sequence(name, sequence, alpha));
-	}
+    if(endOfSeq == line.npos) break;
+    sequence = string(line.begin(), line.begin() + endOfSeq);
+    sequence = TextTools::removeWhiteSpaces(sequence);
+    sequence = TextTools::removeChar(sequence, '{');
+    sequence = TextTools::removeChar(sequence, '}');
+    sequence = TextTools::removeChar(sequence, '[');
+    sequence = TextTools::removeChar(sequence, ']');
+    sequence = TextTools::removeChar(sequence, '(');
+    sequence = TextTools::removeChar(sequence, ')');
+    sequence = TextTools::removeChar(sequence, '^');
+    name     = string(line.begin() + endOfSeq + 1, line.end()),
+    name     = TextTools::removeFirstWhiteSpaces(name);
+    if(name.find("Helix numbering") == name.npos
+    && name.find("mask") == name.npos)
+      sc.addSequence(Sequence(name, sequence, alpha), true);
+  }
 }
 
 const string DCSE::getFormatName() const { return "DCSE"; }

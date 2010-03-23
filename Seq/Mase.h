@@ -85,7 +85,7 @@ class Mase:
      *
      * @{
      */
-    void appendFromStream(std::istream & input, VectorSequenceContainer & sc) const throw (Exception);
+    void appendFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
     /** @} */
 
     /**
@@ -93,8 +93,8 @@ class Mase:
      *
      * @{
      */
-    void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception);
-    void write(const std::string & path, const SequenceContainer & sc, bool overwrite = true) const throw (Exception)
+    void write(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
+    void write(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const throw (Exception)
     {
       AbstractOSequence::write(path, sc, overwrite);
     }

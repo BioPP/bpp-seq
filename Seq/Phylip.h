@@ -107,7 +107,7 @@ class Phylip :
      *
      * @{
      */
-    void appendFromStream(std::istream& input, AlignedSequenceContainer& sc) const throw (Exception);
+    void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
     /** @} */
 
     /**
@@ -165,8 +165,8 @@ class Phylip :
   protected:
     //Reading tools:
     const std::vector<std::string> splitNameAndSequence(const std::string& s) const throw (Exception); 
-    void readSequential (std::istream& in, AlignedSequenceContainer& asc) const throw (Exception);
-    void readInterleaved(std::istream& in, AlignedSequenceContainer& asc) const throw (Exception);
+    void readSequential (std::istream& in, SiteContainer& asc) const throw (Exception);
+    void readInterleaved(std::istream& in, SiteContainer& asc) const throw (Exception);
     //Writing tools:
     std::vector<std::string> getSizedNames(const std::vector<std::string>& names) const;
     void writeSequential (std::ostream& out, const SequenceContainer& sc, int charsByLine) const;

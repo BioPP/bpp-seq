@@ -50,39 +50,39 @@ using namespace std;
 
 /****************************************************************************************/
 
-void GenBank::appendFromStream(istream & input, VectorSequenceContainer & vsc) const throw (Exception)
+void GenBank::appendFromStream(std::istream& input, SequenceContainer& vsc) const throw (Exception)
 {
-	if (!input) { throw IOException ("GenBank::read: fail to open file"); }
+  if (!input) { throw IOException ("GenBank::read: fail to open file"); }
 
-	string temp, name, sequence = "";  // Initialization
+  string temp, name, sequence = "";  // Initialization
 
-	// Main loop : for all file lines
-	while (!input.eof())
+  // Main loop : for all file lines
+  while (!input.eof())
   {
-		getline(input, temp, '\n');  // Copy current line in temporary string
+    getline(input, temp, '\n');  // Copy current line in temporary string
 
-		if(temp.size() >= 9 && temp.substr(0,9) == "ACCESSION")
+    if(temp.size() >= 9 && temp.substr(0,9) == "ACCESSION")
     {
       name = TextTools::removeSurroundingWhiteSpaces(temp.substr(10));
       StringTokenizer st(name, " ");
       name = st.nextToken();
       //cout << name << endl;
     }
-    if(temp.size() >=6 && temp.substr(0,6) == "ORIGIN")
+    if (temp.size() >=6 && temp.substr(0,6) == "ORIGIN")
     {
       sequence = "";
       getline(input, temp, '\n');  // Copy current line in temporary string
-      while(!input.eof() && temp.size() > 2 && temp.substr(0,2) != "//")
+      while (!input.eof() && temp.size() > 2 && temp.substr(0,2) != "//")
       {
         sequence += TextTools::removeWhiteSpaces(temp.substr(10));
         getline(input, temp, '\n');  // Copy current line in temporary string
       }
       if(name == "") throw Exception("GenBank::read(). Sequence with no ACCESSION number!");
-      Sequence * seq = new Sequence(name, sequence, vsc.getAlphabet());
-		  vsc.addSequence(* seq);
+      Sequence* seq = new Sequence(name, sequence, vsc.getAlphabet());
+      vsc.addSequence(*seq, true);
       name = "";
     }
-	}	
+  }  
 }
 
 /****************************************************************************************/

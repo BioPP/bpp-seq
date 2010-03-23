@@ -51,21 +51,21 @@ using namespace bpp;
 #include <iomanip>
 using namespace std;
 
-void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) const throw (Exception)
+void Clustal::appendFromStream(std::istream& input, SiteContainer & sc) const throw (Exception)
 {
-	// Checking the existence of specified file
-	if (!input) { throw IOException ("Clustal::read : fail to open file"); }
+  // Checking the existence of specified file
+  if (!input) { throw IOException ("Clustal::read : fail to open file"); }
 
   const Alphabet * alpha = sc.getAlphabet();
-	vector<Sequence> sequences;
+  vector<Sequence> sequences;
 
-	string lineRead("");
+  string lineRead("");
 
-	Comments comments(1);
-	comments[0] = FileTools::getNextLine(input); // First line gives file generator.
+  Comments comments(1);
+  comments[0] = FileTools::getNextLine(input); // First line gives file generator.
 
   lineRead = FileTools::getNextLine(input); // This is the first sequence of the first block.
-		
+    
   string::size_type beginSeq = 0;
   unsigned int count = 0;
   for(unsigned int i = lineRead.size(); i > 0; i--)
@@ -82,40 +82,40 @@ void Clustal::appendFromStream(istream & input, AlignedSequenceContainer & sc) c
     }
     else count = 0;
   }
-	if(beginSeq == 0) throw IOException("Clustal::read. Bad intput file.");
+  if(beginSeq == 0) throw IOException("Clustal::read. Bad intput file.");
 
-	unsigned int countSequences = 0;
+  unsigned int countSequences = 0;
 
   //Read first sequences block:
-	bool test = true;
-	do
+  bool test = true;
+  do
   {
-		sequences.push_back(Sequence(TextTools::removeSurroundingWhiteSpaces(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_)), lineRead.substr(beginSeq), alpha));
-		getline(input, lineRead, '\n');
-		countSequences++;
-		test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_));
-	}
+    sequences.push_back(Sequence(TextTools::removeSurroundingWhiteSpaces(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_)), lineRead.substr(beginSeq), alpha));
+    getline(input, lineRead, '\n');
+    countSequences++;
+    test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_));
+  }
   while(input && test);
 
-	// Read other blocks
-	lineRead = FileTools::getNextLine(input); // Read first sequence of next block.
-	while(!TextTools::isEmpty(lineRead))
+  // Read other blocks
+  lineRead = FileTools::getNextLine(input); // Read first sequence of next block.
+  while(!TextTools::isEmpty(lineRead))
   {
-		// Read next block:
-		for(unsigned int i = 0; i < countSequences; i++)
+    // Read next block:
+    for(unsigned int i = 0; i < countSequences; i++)
     {
       // Complete sequences
-			if(TextTools::isEmpty(lineRead))
+      if(TextTools::isEmpty(lineRead))
         throw IOException("Clustal::read. Bad intput file.");
-		 	sequences[i].append(lineRead.substr(beginSeq));
-			getline(input, lineRead, '\n');
-  	}
-		//At this point, lineRead is the first line after the current block.
-		lineRead = FileTools::getNextLine(input);
-	}
+       sequences[i].append(lineRead.substr(beginSeq));
+      getline(input, lineRead, '\n');
+    }
+    //At this point, lineRead is the first line after the current block.
+    lineRead = FileTools::getNextLine(input);
+  }
 
-	for(unsigned int i = 0; i < countSequences; i++)
+  for(unsigned int i = 0; i < countSequences; i++)
     sc.addSequence(sequences[i], checkNames_);
-	sc.setGeneralComments(comments);
+  sc.setGeneralComments(comments);
 }
 

@@ -74,7 +74,7 @@ const std::vector<std::string> Phylip::splitNameAndSequence(const std::string& s
 
 /******************************************************************************/
 
-void Phylip::readSequential(std::istream& in, AlignedSequenceContainer& asc) const throw (Exception)
+void Phylip::readSequential(std::istream& in, SiteContainer& asc) const throw (Exception)
 {
   string temp;
   
@@ -129,7 +129,7 @@ void Phylip::readSequential(std::istream& in, AlignedSequenceContainer& asc) con
 
 /******************************************************************************/
 
-void Phylip::readInterleaved(std::istream& in, AlignedSequenceContainer& asc) const throw (Exception)
+void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const throw (Exception)
 {
   string temp;
   
@@ -171,7 +171,7 @@ void Phylip::readInterleaved(std::istream& in, AlignedSequenceContainer& asc) co
   
 /******************************************************************************/
 
-void Phylip::appendFromStream(std::istream & input, AlignedSequenceContainer& vsc) const throw (Exception)
+void Phylip::appendFromStream(std::istream& input, SiteContainer& vsc) const throw (Exception)
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("Phylip::read: fail to open file"); }

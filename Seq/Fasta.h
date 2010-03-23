@@ -100,7 +100,7 @@ class Fasta:
      * @copydoc AbstractISequence::appendFromStream(std::istream& input, VectorSequenceContainer& sc) const
      * @author Sylvain Gaillard
      */
-    void appendFromStream(std::istream& input, VectorSequenceContainer& sc) const throw (Exception);
+    void appendFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
     /** @} */
 
     /**

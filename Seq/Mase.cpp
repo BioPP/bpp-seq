@@ -46,7 +46,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-void Mase::appendFromStream(istream& input, VectorSequenceContainer& vsc) const throw (Exception)
+void Mase::appendFromStream(std::istream& input, SequenceContainer& vsc) const throw (Exception)
 {
 	if (!input) { throw IOException ("Mase::read : fail to open file"); }
 	

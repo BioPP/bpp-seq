@@ -59,140 +59,140 @@ class AbstractISequence2:
   public virtual ISequence2
 {
 
-	public:
-		AbstractISequence2() {}
-		virtual ~AbstractISequence2() {}
+  public:
+    AbstractISequence2() {}
+    virtual ~AbstractISequence2() {}
 
-	public:
+  public:
 
-		/**
-		 * @name ISequence methods:
-		 *
-		 * @{
-		 */ 
-		
-		/**
-		 * @brief Add sequences to a container from a stream.
-		 *
-		 * @param input  The input stream to read.
-		 * @param sc     The sequence container to update.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual void read(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception)
-		{
-			appendFromStream(input, sc);
-		}
-		
-	protected:
-		/**
-		 * @brief Append sequences to a container from a stream.
-		 * 
-		 * This is the unique method to implement!
-		 * 
-		 * @param input  The input stream to read.
-		 * @param sc     The sequence container to update.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual void appendFromStream(std::istream & input, AlignedSequenceContainer & sc) const throw (Exception) = 0;
-	
-	public:
-		/**
-		 * @brief Add sequences to a container from a file.
-		 *
-		 * @param path  The path to the file to read.
-		 * @param sc    The sequence container to update.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual void read(const std::string & path, AlignedSequenceContainer & sc) const throw (Exception)
-		{
-			appendFromFile(path, sc);
-		}
-		
-	protected:
-		/**
-		 * @brief Append sequences to a container from a file.
-		 *
-		 * @param path  The path to the file to read.
-		 * @param sc    The sequence container to update.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual void appendFromFile(const std::string & path , AlignedSequenceContainer & sc) const throw (Exception)
-		{
+    /**
+     * @name ISequence methods:
+     *
+     * @{
+     */ 
+    
+    /**
+     * @brief Add sequences to a container from a stream.
+     *
+     * @param input  The input stream to read.
+     * @param sc     The sequence container to update.
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual void read(std::istream& input, SiteContainer& sc) const throw (Exception)
+    {
+      appendFromStream(input, sc);
+    }
+    
+  protected:
+    /**
+     * @brief Append sequences to a container from a stream.
+     * 
+     * This is the unique method to implement!
+     * 
+     * @param input  The input stream to read.
+     * @param sc     The sequence container to update.
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception) = 0;
+  
+  public:
+    /**
+     * @brief Add sequences to a container from a file.
+     *
+     * @param path  The path to the file to read.
+     * @param sc    The sequence container to update.
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual void read(const std::string& path, SiteContainer& sc) const throw (Exception)
+    {
+      appendFromFile(path, sc);
+    }
+    
+  protected:
+    /**
+     * @brief Append sequences to a container from a file.
+     *
+     * @param path  The path to the file to read.
+     * @param sc    The sequence container to update.
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual void appendFromFile(const std::string& path , SiteContainer& sc) const throw (Exception)
+    {
       std::ifstream input(path.c_str(), std::ios::in);
-			read(input, sc);
-			input.close();
-		}
+      read(input, sc);
+      input.close();
+    }
 
-	public:
-		virtual
+  public:
+    virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+    SequenceContainer*
 #else
-		AlignedSequenceContainer *
+    AlignedSequenceContainer*
 #endif
-		read(std::istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			return readFromStream(input, alpha);
-		}
+    read(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    {
+      return readFromStream(input, alpha);
+    }
 
-	protected:
-		/**
-		 * @brief Read sequences from a stream.
-		 * 
-		 * @param input  The input stream to read.
-		 * @param alpha  The alphabet to use.
-		 * @return A sequence container.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual
+  protected:
+    /**
+     * @brief Read sequences from a stream.
+     * 
+     * @param input  The input stream to read.
+     * @param alpha  The alphabet to use.
+     * @return A sequence container.
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+    SequenceContainer*
 #else
-		AlignedSequenceContainer *
+    AlignedSequenceContainer*
 #endif
-		readFromStream(std::istream & input, const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			appendFromStream(input, *asc);
-			return asc;
-		}
+    readFromStream(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    {
+      AlignedSequenceContainer* asc = new AlignedSequenceContainer(alpha);
+      appendFromStream(input, *asc);
+      return asc;
+    }
 
-	public:
-		virtual
+  public:
+    virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+    SequenceContainer*
 #else
-		AlignedSequenceContainer *
+    AlignedSequenceContainer*
 #endif
-		read(const std::string & path , const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			read(path, *asc);
-			return asc;
-		}
-	
-	protected:
-		/**
-		 * @brief Read sequences from a file.
-		 *
-		 * @param path  The path to the file to read.
-		 * @param alpha The alphabet to use.
-		 * @return A sequence container.
-		 * @throw Exception If the file is not in the specified format.
-		 */
-		virtual
+    read(const std::string& path , const Alphabet* alpha) const throw (Exception)
+    {
+      AlignedSequenceContainer* asc = new AlignedSequenceContainer(alpha);
+      read(path, *asc);
+      return asc;
+    }
+  
+  protected:
+    /**
+     * @brief Read sequences from a file.
+     *
+     * @param path  The path to the file to read.
+     * @param alpha The alphabet to use.
+     * @return A sequence container.
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual
 #if defined(NO_VIRTUAL_COV)
-		SequenceContainer *
+    SequenceContainer*
 #else
-		AlignedSequenceContainer *
+    AlignedSequenceContainer*
 #endif
-		readFromFile(const std::string & path , const Alphabet * alpha) const throw (Exception)
-		{
-			AlignedSequenceContainer * asc = new AlignedSequenceContainer(alpha);
-			appendFromFile(path, *asc);
-			return asc;
-		}
-		/** @} */
+    readFromFile(const std::string& path , const Alphabet* alpha) const throw (Exception)
+    {
+      AlignedSequenceContainer* asc = new AlignedSequenceContainer(alpha);
+      appendFromFile(path, *asc);
+      return asc;
+    }
+    /** @} */
 };
 
 } //end of namespace bpp.

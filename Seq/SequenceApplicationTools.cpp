@@ -194,10 +194,10 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   map<string, string> args;
   KeyvalTools::parseProcedure(sequenceFormat, format, args);
   if (verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
-  ISequence* iSeq = 0;
+  auto_ptr<ISequence> iSeq;
   if (format == "Mase")
   {
-    iSeq = new Mase();
+    iSeq.reset(new Mase());
   }
   else if (format == "Phylip")
   {
@@ -229,28 +229,28 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
                                             "Default used instead: extended.");
     }
     else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
-    iSeq = new Phylip(extended, sequential, 100, true, split);
+    iSeq.reset(new Phylip(extended, sequential, 100, true, split));
   }
   else if (format == "Fasta")
   {
-    iSeq = new Fasta();
+    iSeq.reset(new Fasta());
   }
   else if (format == "Clustal")
   {
     unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
-    iSeq = new Clustal(true, extraSpaces);
+    iSeq.reset(new Clustal(true, extraSpaces));
   }
   else if (format == "Dcse")
   {
-    iSeq = new DCSE();
+    iSeq.reset(new DCSE());
   }
   else if (format == "GenBank")
   {
-    iSeq = new GenBank();
+    iSeq.reset(new GenBank());
   }
   else if (format == "Nexus")
   {
-    iSeq = new NexusIOSequence();
+    iSeq.reset(new NexusIOSequence());
   }
   else
   {
@@ -258,7 +258,6 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
     exit(-1);
   }
   SequenceContainer* sequences = iSeq->read(sequenceFilePath, alpha);
-  delete iSeq;
 
   if (verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
 
@@ -281,10 +280,10 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
    KeyvalTools::parseProcedure(sequenceFormat, format, args);
 
   if (verbose) ApplicationTools::displayResult("Sequence format " + suffix, format);
-  ISequence* iSeq = NULL;
+  auto_ptr<ISequence> iSeq;
   if (format == "Mase")
   {
-    iSeq = new Mase();
+    iSeq.reset(new Mase());
   }
   else if (format == "Phylip")
   {
@@ -316,35 +315,34 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
                                             "Default used instead: extended.");
     }
     else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
-    iSeq = new Phylip(extended, sequential, 100, true, split);
+    iSeq.reset(new Phylip(extended, sequential, 100, true, split));
   }
   else if (format == "Fasta")
   {
-    iSeq = new Fasta();
+    iSeq.reset(new Fasta());
   }
   else if (format == "Clustal")
   {
    unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
-    iSeq = new Clustal(true, extraSpaces);
+    iSeq.reset(new Clustal(true, extraSpaces));
   }
   else if (format == "Dcse")
   {
-    iSeq = new DCSE();
+    iSeq.reset(new DCSE());
   }
   else if (format == "Nexus")
   {
-    iSeq = new NexusIOSequence();
+    iSeq.reset(new NexusIOSequence());
   }
   else
   {
-   ApplicationTools::displayError("Unknown sequence format: " + format);
+    ApplicationTools::displayError("Unknown sequence format: " + format);
     exit(-1);
   }
 
   const SequenceContainer* seqCont = iSeq->read(sequenceFilePath, alpha);
   VectorSiteContainer* sites = new VectorSiteContainer(*dynamic_cast<const OrderedSequenceContainer*>(seqCont));
   delete seqCont;
-  delete iSeq;
 
   if (verbose) ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
 

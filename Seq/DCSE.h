@@ -61,29 +61,29 @@ class DCSE :
   public AbstractISequence2
 {
     
-	public: 
-		DCSE() {};
-		virtual ~DCSE() {};
+  public: 
+    DCSE() {};
+    virtual ~DCSE() {};
 
-	public:
-	
-		/**
-		 * @name The AbstractISequence2 interface.
-		 *
-		 * @{
-		 */
-		void appendFromStream(std::istream& input, AlignedSequenceContainer& sc) const throw (Exception);
-		/** @} */
+  public:
+  
+    /**
+     * @name The AbstractISequence2 interface.
+     *
+     * @{
+     */
+    void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    /** @} */
 
-		
-		/**
-		 * @name The IOSequence interface.
-		 *
-		 * @{
-		 */
-		const std::string getFormatName() const;
-		const std::string getFormatDescription() const;
-		/** @} */
+    
+    /**
+     * @name The IOSequence interface.
+     *
+     * @{
+     */
+    const std::string getFormatName() const;
+    const std::string getFormatDescription() const;
+    /** @} */
 };
 
 } //end of namespace bpp.

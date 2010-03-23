@@ -61,39 +61,39 @@ class Clustal:
     bool checkNames_;
     unsigned int nbSpacesBeforeSeq_;
 
-	public:
+  public:
     /**
      * @brief Build a new Clustal object.
      *
      * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      * @param nbExtraSpacesBeforeSeq Specify the number of extra space characters separating the sequence name form content. The default is 5 (hence 6 spaces in total) for backward compatibility, using 0 will not allow for any space in the sequence names.
      */
-		Clustal(bool checkSequenceNames = true, unsigned int nbExtraSpacesBeforeSeq = 5) throw (Exception) :
+    Clustal(bool checkSequenceNames = true, unsigned int nbExtraSpacesBeforeSeq = 5) throw (Exception) :
       checkNames_(checkSequenceNames), nbSpacesBeforeSeq_(nbExtraSpacesBeforeSeq + 1)
     {};
 
-		virtual ~Clustal() {};
+    virtual ~Clustal() {};
 
-	public:
+  public:
 
-		/**
-		 * @name The AbstractISequence2 interface.
-  	 *
-		 * @{
-		 */	
-		void appendFromStream(std::istream& input, AlignedSequenceContainer& sc) const throw (Exception);
-		/** @} */
+    /**
+     * @name The AbstractISequence2 interface.
+     *
+     * @{
+     */  
+    void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    /** @} */
 
-		/**
-		 * @name The IOSequence interface.
-		 *
-		 * @{
-		 */
-		const std::string getFormatName() const { return "Clustal"; }
+    /**
+     * @name The IOSequence interface.
+     *
+     * @{
+     */
+    const std::string getFormatName() const { return "Clustal"; }
 
-		const std::string getFormatDescription() const { return "The Clustal alignment tool output format."; }
+    const std::string getFormatDescription() const { return "The Clustal alignment tool output format."; }
 
-		/** @} */
+    /** @} */
 
     /**
      * @return true if the names are to be checked when reading sequences from files.

@@ -56,36 +56,36 @@ namespace bpp
 class GenBank :
   public AbstractISequence
 {
-	public:
-	
-		/**
-		 * @brief Build a new GenBank object.
-		 */
-		GenBank() {}
+  public:
+  
+    /**
+     * @brief Build a new GenBank object.
+     */
+    GenBank() {}
 
-		virtual ~GenBank() {}
+    virtual ~GenBank() {}
 
-	public:
+  public:
 
-		/**
-		 * @name The AbstractISequence interface.
-		 *
-		 * @{
-		 */
-		void appendFromStream(std::istream& input, VectorSequenceContainer& sc) const throw (Exception);
-		/** @} */
-	
-		/**
-		 * @name The IOSequence interface.
-		 *
-		 * @{
-		 */
-		const std::string getFormatName() const { return "GenBank file"; };
-		const std::string getFormatDescription() const
-		{
-			return "Sequences following the GenBank data base format.";
-		}
-		/** @} */
+    /**
+     * @name The AbstractISequence interface.
+     *
+     * @{
+     */
+    void appendFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
+    /** @} */
+  
+    /**
+     * @name The IOSequence interface.
+     *
+     * @{
+     */
+    const std::string getFormatName() const { return "GenBank file"; };
+    const std::string getFormatDescription() const
+    {
+      return "Sequences following the GenBank data base format.";
+    }
+    /** @} */
 };
 
 } //end of namespace bpp.
