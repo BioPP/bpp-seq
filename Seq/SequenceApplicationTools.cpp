@@ -246,7 +246,7 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   }
   else if (format == "GenBank")
   {
-    iSeq.reset(new GenBank());
+    iSeq.reset(reinterpret_cast<ISequence*>(new GenBank())); //This is required to remove a strict-aliasing warning in gcc 4.4
   }
   else if (format == "Nexus")
   {

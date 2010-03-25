@@ -1,5 +1,5 @@
 %define name bpp-seq
-%define version 1.6.0
+%define version 1.7.0
 %define release 1
 %define _prefix /usr/local
 
@@ -15,8 +15,8 @@ BuildRoot: %{_builddir}/%{name}-root
 Packager: Julien Dutheil
 AutoreqProv: no
 Requires: libstdc++6
-Requires: bpp-utils = 1.4.0
-Requires: bpp-numcalc = 1.7.0
+Requires: bpp-utils = 1.5.0
+Requires: bpp-numcalc = 1.8.0
 
 %description
 This library contains utilitary and classes for bio-sequence analysis.
@@ -26,8 +26,8 @@ It is part of the Bio++ project.
 Summary: Libraries, includes to develop applications with %{name}.
 Group: Development/Libraries
 Requires: %{name} = %{version}
-Requires: bpp-utils-devel = 1.4.0
-Requires: bpp-numcalc-devel = 1.7.0
+Requires: bpp-utils-devel = 1.5.0
+Requires: bpp-numcalc-devel = 1.8.0
 
 %description devel
 The %{name}-devel package contains the header files and static libraries for
@@ -53,17 +53,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS COPYING INSTALL NEWS README ChangeLog
+%doc AUTHORS COPYING INSTALL ChangeLog
 %{_prefix}/lib/lib*.so
 %{_prefix}/lib/lib*.so.*
 
 %files devel
 %defattr(-,root,root)
-%doc AUTHORS COPYING INSTALL NEWS README ChangeLog
+%doc AUTHORS COPYING INSTALL ChangeLog
 %{_prefix}/lib/lib*.a
 %{_prefix}/include/*
 
 %changelog
+* Thu Mar 25 2010 Julien Dutheil <julien.dutheil@univ-montp2.fr>
+- Version 1.7.0
 * Wed Jun 10 2009 Julien Dutheil <jdutheil@birc.au.dk>
 - Version 1.6.0
 * Thu Dec 11 2008 Julien Dutheil <jdutheil@birc.au.dk>
