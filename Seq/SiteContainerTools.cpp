@@ -654,35 +654,35 @@ double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequenc
   {
     int x = seq1[i];
     int y = seq2[i];
-    if(unresolvedAsGap)
+    if (unresolvedAsGap)
     {
       if(alpha->isUnresolved(x)) x = alpha->getGapCharacterCode();
       if(alpha->isUnresolved(y)) y = alpha->getGapCharacterCode();
     }
-    if(gapOption == SIMILARITY_ALL)
+    if (gapOption == SIMILARITY_ALL)
     {
       t++;
-      if(x == y && !alpha->isGap(x) && !alpha->isGap(y)) s++;
+      if (x == y && !alpha->isGap(x) && !alpha->isGap(y)) s++;
     }
-    else if(gapOption == SIMILARITY_NODOUBLEGAP)
+    else if (gapOption == SIMILARITY_NODOUBLEGAP)
     {
-      if(!alpha->isGap(x) || !alpha->isGap(y))
+      if (!alpha->isGap(x) || !alpha->isGap(y))
       {
         t++;
-        if(x == y) s++;
+        if (x == y) s++;
       }
     }
-    else if(gapOption == SIMILARITY_NOGAP)
+    else if (gapOption == SIMILARITY_NOGAP)
     {
-      if(!alpha->isGap(x) && !alpha->isGap(y))
+      if (!alpha->isGap(x) && !alpha->isGap(y))
       {
         t++;
-        if(x == y) s++;
+        if (x == y) s++;
       }
     }
     else throw Exception("SiteContainerTools::computeSimilarity. Invalid gap option: " + gapOption);
   }
-  double r = (t == 0 ? 0. : (double)s / (double)t);
+  double r = (t == 0 ? 0. : static_cast<double>(s) / static_cast<double>(t));
   return dist ? 1 - r : r;
 }
 
@@ -717,7 +717,7 @@ DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer&
 
   for (unsigned int i = 0; i < n; i++)
   {
-    (*mat)(i, i) = 1.;
+    (*mat)(i, i) = dist ? 0. : 1.;
     const Sequence* seq1 = &sites2->getSequence(i);
     for (unsigned int j = i + 1; j < n; j++)
     {
