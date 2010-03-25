@@ -654,10 +654,11 @@ double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequenc
   {
     int x = seq1[i];
     int y = seq2[i];
+    int gapCode = alpha->getGapCharacterCode();
     if (unresolvedAsGap)
     {
-      if(alpha->isUnresolved(x)) x = alpha->getGapCharacterCode();
-      if(alpha->isUnresolved(y)) y = alpha->getGapCharacterCode();
+      if(alpha->isUnresolved(x)) x = gapCode;
+      if(alpha->isUnresolved(y)) y = gapCode;
     }
     if (gapOption == SIMILARITY_ALL)
     {

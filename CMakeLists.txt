@@ -31,7 +31,7 @@ ENDIF(NO_VIRTUAL_COV)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(BPPSEQ_VERSION_CURRENT "8")
+SET(BPPSEQ_VERSION_CURRENT "9")
 SET(BPPSEQ_VERSION_REVISION "0")
 SET(BPPSEQ_VERSION_AGE "0")
 
