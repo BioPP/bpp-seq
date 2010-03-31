@@ -1,7 +1,7 @@
 %define name bpp-seq
 %define version 1.7.0
 %define release 1
-%define _prefix /usr/local
+%define _prefix /usr
 
 Summary: The Bio++ SeqLib library.
 Name: %{name}
