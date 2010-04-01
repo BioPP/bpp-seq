@@ -13,10 +13,8 @@ License: CeCILL 2
 Group: System Environment/Libraries
 BuildRoot: %{_builddir}/%{name}-root
 Packager: Julien Dutheil
-AutoreqProv: no
-Requires: libstdc++
-Requires: bpp-utils = 1.5.0
-Requires: bpp-numcalc = 1.8.0
+AutoReq: yes
+AutoProv: yes
 
 %description
 This library contains utilitary and classes for bio-sequence analysis.
@@ -26,8 +24,6 @@ It is part of the Bio++ project.
 Summary: Libraries, includes to develop applications with %{name}.
 Group: Development/Libraries
 Requires: %{name} = %{version}
-Requires: bpp-utils-devel = 1.5.0
-Requires: bpp-numcalc-devel = 1.8.0
 
 %description devel
 The %{name}-devel package contains the header files and static libraries for
