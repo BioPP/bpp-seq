@@ -102,6 +102,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
  ".*\\\\.rpm"
  "\\\\..*\\\\.swp"
  "Seq/\\\\..*"
+ "Seq/libbpp*"
  "html"
  "Seq.tag"
  ${CPACK_SOURCE_IGNORE_FILES}
