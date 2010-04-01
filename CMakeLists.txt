@@ -103,6 +103,8 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "\\\\..*\\\\.swp"
  "Seq/\\\\..*"
  "Seq/libbpp*"
+ "debian/libbpp*"
+ "debian/tmp"
  "html"
  "Seq.tag"
  ${CPACK_SOURCE_IGNORE_FILES}
