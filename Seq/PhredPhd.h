@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "ISequenceStream.h"
 #include "Sequence.h"
+#include "SequenceWithQuality.h"
 
 namespace bpp {
 
@@ -51,30 +52,15 @@ namespace bpp {
    * This class read DNA sequence from phd files produced by the phred program
    * from the University of Washington.
    *
-   * When the sequence is readed from the file, a sliding window is used to
-   * estimate the quality of the sequence at each site. If the mean quality
-   * is to bad, the site is set to 'undefined'.
-   *
-   * The sliding window is defined both at the left and the right of each site.
-   *
+   * @author Sylvain Gaillard
    */
   class PhredPhd: public ISequenceStream {
-    protected:
-      double _quality;
-      unsigned int _lframe;
-      unsigned int _rframe;
-
     public:
 
       /**
        * @brief Build a new PhredPhd object.
-       *
-       * @param quality The mean quality threshold. The state is set to 'undefined' if
-       * mean quality is smaller or equal to this value.
-       * @param lframe The size of the sliding window at the left of the site.
-       * @param rframe The size of the sliding winfow at the right of the site.
        */
-      PhredPhd(double quality = 15, unsigned int lframe = 5, unsigned int rframe = 5);
+      PhredPhd() {}
 
       virtual ~PhredPhd() {}
 

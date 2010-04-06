@@ -48,7 +48,7 @@ using namespace std;
 
 /******************************************************************************/
 
-PhredPhd::PhredPhd(double quality, unsigned int lframe, unsigned int rframe) : _quality(quality), _lframe(lframe), _rframe(rframe) {}
+//PhredPhd::PhredPhd() {}
 
 /******************************************************************************/
 
@@ -56,7 +56,7 @@ void PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exc
   if (!input) { throw IOException ("PhredPhd::read: fail to open stream"); }
 
   string temp, name, sequence = "";  // Initialization
-  vector<double> q;
+  vector<int> q;
 
   const Alphabet * alpha = seq.getAlphabet();
   // Read sequence info
@@ -96,28 +96,7 @@ void PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exc
     throw Exception("PhredPhd::read: sequence without name!");
   seq.setName(name);
   seq.setContent(sequence);
-  // Filter sequence
-  for (unsigned int i = 0 ; i < sequence.size() ; ++i) {
-    double lq = 0.;
-    unsigned int lb, hb;
-    if (i < _lframe ) {
-      lb = 0;
-    } else {
-      lb = i - _lframe;
-    }
-    if (i + _rframe >= sequence.size()) {
-      hb = sequence.size() - 1;
-    } else {
-      hb = i + _rframe;
-    }
-    for (unsigned int j = lb ; j <= hb ; ++j) {
-      lq += q[j];
-    }
-    lq = lq / (hb - lb + 1);
-    if (lq < _quality) {
-      seq.setElement(i, "N");
-    }
-  }
+  //seq.setQualities(q);
 }
 
 /******************************************************************************/
