@@ -49,6 +49,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From Bio++
 
+#include <NumCalc/VectorTools.h>
 #include <NumCalc/VectorExceptions.h>
 
 namespace bpp {
@@ -60,7 +61,7 @@ namespace bpp {
    * for nucleic sequence.
    *
    * @todo 
-   * - append and addElement with quality score
+   * - addElement with quality score
    *
    * @author Sylvain Gaillard
    */
@@ -257,7 +258,7 @@ namespace bpp {
        */
       void setQualities(const std::vector<int>& quality) throw (DimensionException) {
         if (quality.size() != qualScores_.size())
-          throw DimensionException("SequenceWithQuality::setQualities: quality must feet sequence size", quality.size(), qualScores_.size());
+          throw DimensionException("SequenceWithQuality::setQualities: quality must fit sequence size", quality.size(), qualScores_.size());
         qualScores_ = quality;
       }
 
@@ -269,6 +270,81 @@ namespace bpp {
       const std::vector<int>& getQualities() const {
         return qualScores_;
       }
+
+      /**
+       * @brief Append content with quality
+       *
+       * @param content A vector of int to append to the sequence
+       * @param qualities A vector of int to append to the qualities
+       *
+       * @throw BadIntException if one of the content int is not in the
+       * Alphabet
+       * @throw DimensionException if qualities does not have the same size as
+       * content
+       */
+      void append(
+          const std::vector<int>& content,
+          const std::vector<int>& qualities
+          ) throw (BadIntException, DimensionException) {
+        if (content.size() != qualities.size())
+          throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
+        Sequence::append(content);
+        VectorTools::append(qualScores_, qualities);
+      }
+
+      /**
+       * @brief Append content with quality
+       *
+       * @param content A vector of string to append to the sequence
+       * @param qualities A vector of int to append to the qualities
+       *
+       * @throw BadCharException if one of the content string is not in the
+       * Alphabet
+       * @throw DimensionException if qualities does not have the same size as
+       * content
+       */
+      void append(
+          const std::vector<std::string>& content,
+          const std::vector<int>& qualities
+          ) throw (BadCharException, DimensionException) {
+        if (content.size() != qualities.size())
+          throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
+        Sequence::append(content);
+        VectorTools::append(qualScores_, qualities);
+      }
+
+      /**
+       * @brief Append content with quality
+       *
+       * @param content A string to append to the sequence
+       * @param qualities A vector of int to append to the qualities
+       *
+       * @throw BadCharException if one of the character of the string is not in
+       * the Alphabet
+       * @throw DimensionException if qualities does not have the same size as
+       * content
+       */
+      void append(
+          const std::string& content,
+          const std::vector<int> qualities
+          ) throw (BadCharException, DimensionException) {
+        if (content.size() / this->getAlphabet()->getStateCodingSize()
+            != qualities.size())
+          throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size() / this->getAlphabet()->getStateCodingSize());
+        Sequence::append(content);
+        VectorTools::append(qualScores_, qualities);
+      }
+
+      /**
+       * Add a character to the end of the list with quality
+       */
+      void addElement(
+          const std::string& c, int q
+          ) throw (BadCharException) {
+        Sequence::addElement(c);
+        qualScores_.push_back(q);
+      }
+
       /** @} */
 
     private:
