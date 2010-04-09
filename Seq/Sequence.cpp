@@ -65,7 +65,8 @@ throw (BadCharException) :
   comments_(),
 	sense_(true)
 {
-	setContent(sequence);
+  if (sequence!="")
+    setContent(sequence);
 }
 
 Sequence::Sequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha)
@@ -75,7 +76,8 @@ Sequence::Sequence(const std::string& name, const std::string& sequence, const C
 	comments_(comments),
 	sense_(true)
 {
-	setContent(sequence);
+  if (sequence!="")
+    setContent(sequence);
 }
 
 Sequence::Sequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha)
