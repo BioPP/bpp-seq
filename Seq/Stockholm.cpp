@@ -67,7 +67,10 @@ void Stockholm::write(ostream& output, const SiteContainer& sc) const throw (Exc
 	vector<string> names = sc.getSequencesNames();
   unsigned int maxSize = 0; 
   for(unsigned int i = 0; i < names.size(); ++i)
+  {
+    names[i] = TextTools::removeWhiteSpaces(names[i]);
     if (names[i].size() > maxSize) maxSize = names[i].size();
+  }
   if (maxSize > 255) maxSize = 255;
   for (unsigned int i = 0; i < sc.getNumberOfSequences(); ++i)
   {
