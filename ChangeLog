@@ -1,4 +1,8 @@
-21/07/08 -*- Version 1.7.0 -*-
+16/04/10 Julien Dutheil
+* New Stockholm sequence format (output only).
+* Refactoring of class ISequence2 => IAlignment + new interface OAlignment.
+
+24/03/10 -*- Version 1.7.0 -*-
 
 11/03/10 Julien Dutheil
 * Nexus format now deals with lower case keywords.

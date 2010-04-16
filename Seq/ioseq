@@ -14,7 +14,9 @@
 #include "Phylip.h"
 #include "DCSE.h"
 #include "GenBank.h"
+#include "Stockholm.h"
 #include "MaseTools.h"
 #include "NexusIOSequence.h"
-
+#include "Stockholm.h"
+#
 #endif //_IOSEQ_

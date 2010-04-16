@@ -159,7 +159,7 @@ double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolv
 
 unsigned int SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
 {
-	if (l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
+	if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	unsigned int n = min(l1.size(), l2.size());
 	unsigned int count = 0;
 	for (unsigned int i = 0; i < n; i++) {

@@ -1,11 +1,11 @@
 //
-// File: NexusIOSequence.h
-// Created by: Julien Dutheil
-// Created on: Wed May 27 16:15 2009
+// File: Stockholm.h
+// Authors: Julien Dutheil
+// Created: Thu Apr 15 2010
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team (2010)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,79 +37,76 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _NEXUSIOSEQUENCE_H_
-#define _NEXUSIOSEQUENCE_H_
+#ifndef _STOCKHOLM_H_
+#define _STOCKHOLM_H_
 
-#include "AbstractISequence2.h"
+#include "AbstractISequence.h"
+#include "AbstractOSequence.h"
 #include "Sequence.h"
 #include "SequenceContainer.h"
-#include "VectorSequenceContainer.h"
+#include "ISequenceStream.h"
+#include "OSequenceStream.h"
 #include "AlignedSequenceContainer.h"
-
-// From the STL:
-#include <iostream>
 
 namespace bpp
 {
 
 /**
- * @brief The Nexus format reader for sequences.
+ * @brief The Stockholm alignment file format.
  *
- * An AlignedSequenceContainer is used instead of a VectorSequenceContainer.
- *
- * This reader is not supposed to be a full parser of the Nexus files,
- * but only extract the sequence data. Only a basic subset of the options
- * are and will be supported.
- *
- * This format is described in the following paper:
- * Maddison D, Swofford D, and Maddison W (1997), _Syst Biol_ 46(4):590-621
- *
- * @author Julien Dutheil
+ * Write to Stockholm files.
+ * Only sequence data is read/written, annotation and secondary structures are ignored.
  */
-class NexusIOSequence:
-  public AbstractIAlignment
+class Stockholm:
+  public AbstractOAlignment
 {
-  protected:
-
-    /**
-     * @brief The maximum number of chars to be written on a line.
-     */
-    unsigned int charsByLine_;
+  private:
 
     bool checkNames_;
 
   public:
+  
     /**
-     * @brief Build a new Phylip file reader.
+     * @brief Build a new Stockholm object.
      *
-     * @param charsByLine The number of base to display in a row (ignored for now, no writing support).
      * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      */
-    NexusIOSequence(unsigned int charsByLine = 100, bool checkSequenceNames = true):
-      charsByLine_(charsByLine), checkNames_(checkSequenceNames) {}
+    Stockholm(bool checkSequenceNames = true) : checkNames_(checkSequenceNames) {}
 
-    virtual ~NexusIOSequence() {}
+    // Class destructor
+    virtual ~Stockholm() {}
 
   public:
 
     /**
-     * @name The AbstractISequence2 interface.
+     * @name The OAlignment interface.
      *
      * @{
      */
-    void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    /**
+     * @copydoc OAlignment::write(std::ostream& output, const SiteContainer& sc) const
+     */
+    void write(std::ostream& output, const SiteContainer& sc) const throw (Exception);
+    void write(const std::string& path, const SiteContainer& sc, bool overwrite=true) const throw (Exception)
+    {
+      AbstractOAlignment::write(path, sc, overwrite);
+    }
     /** @} */
-
+  
     /**
      * @name The IOSequence interface.
      *
      * @{
      */
-    const std::string getFormatName() const;
-    const std::string getFormatDescription() const;
+    const std::string getFormatName() const { return "Stockholm file"; };
+    const std::string getFormatDescription() const
+    {
+      return "See http://en.wikipedia.org/wiki/Stockholm_format";
+    }
     /** @} */
 
     /**
+     * @warning This is not used for now, will be when reading is implemented.
      * @return true if the names are to be checked when reading sequences from files.
      */
     bool checkNames() const { return checkNames_; }
@@ -117,17 +114,13 @@ class NexusIOSequence:
     /**
      * @brief Tell whether the sequence names should be checked when reading from files.
      *
+     * @warning This is not used for now, will be when reading is implemented.
      * @param yn whether the sequence names should be checked when reading from files.
      */
     void checkNames(bool yn) { checkNames_ = yn; }
-
-    
-  private:
-    //Reading tools:
-    const std::vector<std::string> splitNameAndSequence_(const std::string & s) const throw (Exception); 
 };
 
 } //end of namespace bpp.
 
-#endif  //_NEXUSIOSEQUENCE_H_
+#endif // _FASTA_H_
 

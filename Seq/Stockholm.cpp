@@ -1,11 +1,13 @@
 //
-// File: DCSE.h
-// Created by: Julien Dutheil
-// Created on: Wed Mar 3 2004
+// File: Stockholm.cpp
+// Authors: Julien Dutheil
+// Created: Thu Apr 15 2010
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team (2010)
+
+Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,56 +39,42 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _DCSE_H_
-#define _DCSE_H_
+#include "Stockholm.h"
 
-#include "AbstractISequence2.h"
-#include "Sequence.h"
-#include "SequenceContainer.h"
-#include "AlignedSequenceContainer.h"
+#include "StringSequenceTools.h"
+#include <Utils/TextTools.h>
+#include <Utils/FileTools.h>
+#include <Utils/StringTokenizer.h>
 
-namespace bpp
+using namespace bpp;
+using namespace std;
+
+/******************************************************************************/
+
+void Stockholm::write(ostream& output, const SiteContainer& sc) const throw (Exception)
 {
+	if (!output)
+    throw IOException("Stockholm::write: can't write to ostream output");
 
-/**
- * @brief Support for the Dedicated Comparative Sequence Editor format.
- *
- * Only the sequence information is retrieved.
- * All structural information is dropped for now.
- * 
- * A description of this format may be found here:
- * http://www.psb.ugent.be/rRNA/help/formats/aliformat.html
- */
-class DCSE :
-  public AbstractIAlignment
-{
-    
-  public: 
-    DCSE() {};
-    virtual ~DCSE() {};
+  output << "# STOCKHOLM 1.0" << endl; 
+  // Loop for all general comments
+  for (unsigned int i = 0; i < sc.getGeneralComments().size(); ++i)
+  {
+    output << "#=GF CC " << sc.getGeneralComments()[i] << endl;
+  }
 
-  public:
-  
-    /**
-     * @name The AbstractISequence2 interface.
-     *
-     * @{
-     */
-    void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
-    /** @} */
+	// Main loop : for all sequences in vector container
+	vector<string> names = sc.getSequencesNames();
+  unsigned int maxSize = 0; 
+  for(unsigned int i = 0; i < names.size(); ++i)
+    if (names[i].size() > maxSize) maxSize = names[i].size();
+  if (maxSize > 255) maxSize = 255;
+  for (unsigned int i = 0; i < sc.getNumberOfSequences(); ++i)
+  {
+    output << TextTools::resizeRight(names[i], maxSize) << " " << sc.getSequence(i).toString() << endl;
+	}
+  output << "//" << endl;
+}
 
-    
-    /**
-     * @name The IOSequence interface.
-     *
-     * @{
-     */
-    const std::string getFormatName() const;
-    const std::string getFormatDescription() const;
-    /** @} */
-};
-
-} //end of namespace bpp.
-
-#endif // _DCSE_H_
+/******************************************************************************/
 

@@ -481,7 +481,7 @@ const Sequence& VectorSiteContainer::getSequence(unsigned int i) const throw (In
 const Sequence& VectorSiteContainer::getSequence(const string& name) const throw (SequenceNotFoundException)
 {
   //Look for sequence name:
-  int pos = getSequencePosition(name);
+  unsigned int pos = getSequencePosition(name);
   return getSequence(pos);
 }
 

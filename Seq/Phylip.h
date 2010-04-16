@@ -62,8 +62,8 @@ namespace bpp
  * http://evolution.genetics.washington.edu/phylip/doc/sequence.html
  */
 class Phylip :
-  public AbstractISequence2,
-  public AbstractOSequence
+  public AbstractIAlignment,
+  public AbstractOAlignment
 {
   private:
 
@@ -123,10 +123,10 @@ class Phylip :
      *
      * @{
      */
-    void write(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
-    void write(const std::string& path, const SequenceContainer& sc, bool overwrite) const throw (Exception)
+    void write(std::ostream& output, const SiteContainer& sc) const throw (Exception);
+    void write(const std::string& path, const SiteContainer& sc, bool overwrite) const throw (Exception)
     {
-      AbstractOSequence::write(path, sc, overwrite);
+      AbstractOAlignment::write(path, sc, overwrite);
     }
     /** @} */
 

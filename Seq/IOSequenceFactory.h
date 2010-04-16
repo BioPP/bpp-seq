@@ -70,9 +70,9 @@ class IOSequenceFactory
      *
      * Example:
      * @code
-     * Alphabet * alphabet = new DNA();
-     * ISequence * seqReader = IOSequenceFactory().createReader(IOSequenceFactory::FASTA_FORMAT);
-     * SequenceContainer * sequences = seqReader->read("file.fasta", alphabet);
+     * Alphabet* alphabet = new DNA();
+     * ISequence* seqReader = IOSequenceFactory().createReader(IOSequenceFactory::FASTA_FORMAT);
+     * SequenceContainer* sequences = seqReader->read("file.fasta", alphabet);
      * delete seqReader;
      * @endcode
      */
@@ -86,7 +86,16 @@ class IOSequenceFactory
      * @return A pointer toward a new ISequence object.
      * @throw Exception If the format name do not match any available format.
      */
-    virtual ISequence * createReader(const std::string & format) throw (Exception);
+    virtual ISequence* createReader(const std::string& format) throw (Exception);
+  
+    /**
+     * @brief Get a new dynamically created IAlignment object.
+     *
+     * @param format The input file format.
+     * @return A pointer toward a new IAlignment object.
+     * @throw Exception If the format name do not match any available format.
+     */
+    virtual IAlignment* createAlignmentReader(const std::string& format) throw (Exception);
   
     /**
      * @brief Get a new dynamically created OSequence object.
@@ -95,7 +104,17 @@ class IOSequenceFactory
      * @return A pointer toward a new OSequence object.
      * @throw Exception If the format name do not match any available format.
      */
-    virtual OSequence * createWriter(const std::string & format) throw (Exception);
+    virtual OSequence* createWriter(const std::string& format) throw (Exception);
+    
+    /**
+     * @brief Get a new dynamically created OAlignment object.
+     *
+     * @param format The output file format.
+     * @return A pointer toward a new OAlignment object.
+     * @throw Exception If the format name do not match any available format.
+     */
+    virtual OAlignment* createAlignmentWriter(const std::string& format) throw (Exception);
+
 };
 
 } //end of namespace bpp.

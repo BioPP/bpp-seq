@@ -68,6 +68,7 @@ set(CPP_FILES
   WordAlphabet.cpp
   NexusIOSequence.cpp
   NexusTools.cpp
+  Stockholm.cpp
   __GranthamMatrixCode
   __MiyataMatrixCode
   __BLOSUM50MatrixCode
@@ -167,6 +168,7 @@ set(H_FILES
   WordAlphabet.h
   NexusIOSequence.h
   NexusTools.h
+  Stockholm.h
   geneticcodes
   aadistances
   )

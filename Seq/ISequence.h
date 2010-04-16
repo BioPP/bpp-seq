@@ -94,16 +94,16 @@ class ISequence :
 };
 
 /**
- * @brief The ISequence2 interface.
+ * @brief The IAlignment interface.
  *
  * This interface defines the basic methods for reading aligned sequences from a file.
  */
-class ISequence2:
+class IAlignment:
   public virtual ISequence
 {
   public:
-    ISequence2() {}
-    virtual ~ISequence2() {}
+    IAlignment() {}
+    virtual ~IAlignment() {}
 
   public:
   

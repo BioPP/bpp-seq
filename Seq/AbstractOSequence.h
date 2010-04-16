@@ -52,10 +52,11 @@ namespace bpp
 {
 
 /**
- * @brief Partial implementation of the OSequence interface.
+ * @brief Partial implementation of the OSequence and OAlignment interfaces.
  */
 class AbstractOSequence:
-  public virtual OSequence
+  public virtual OSequence,
+  public virtual OAlignment
 {
 
 	public: 
@@ -69,8 +70,53 @@ class AbstractOSequence:
 		 *
 		 * @{
 		 */ 
-		void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception) = 0;
-		void write(const std::string & path, const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
+		void write(std::ostream& output, const SequenceContainer& sc) const throw (Exception) = 0;
+		void write(const std::string& path, const SequenceContainer& sc, bool overwrite=true) const throw (Exception)
+		{
+			// Open file in specified mode
+      std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
+			write(output, sc);
+			output.close();
+		}
+		/** @} */
+    
+    /**
+		 * @name OAlignment methods:
+		 *
+		 * @{
+		 */ 
+		void write(std::ostream& output, const SiteContainer& sc) const throw (Exception)
+    {
+      write(output, dynamic_cast<const SequenceContainer&>(sc));
+    }
+		void write(const std::string& path, const SiteContainer& sc, bool overwrite=true) const throw (Exception)
+		{
+      write(path, dynamic_cast<const SequenceContainer&>(sc), overwrite);
+		}
+		/** @} */
+
+};
+
+/**
+ * @brief Partial implementation of the OAlignment interface.
+ */
+class AbstractOAlignment:
+  public virtual OAlignment
+{
+
+	public: 
+		AbstractOAlignment() {}
+		virtual ~AbstractOAlignment() {}
+
+	public:
+
+		/**
+		 * @name OAlignment methods:
+		 *
+		 * @{
+		 */ 
+		void write(std::ostream& output, const SiteContainer& sc) const throw (Exception) = 0;
+		void write(const std::string& path, const SiteContainer& sc, bool overwrite = true) const throw (Exception)
 		{
 			// Open file in specified mode
       std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));

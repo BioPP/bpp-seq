@@ -169,7 +169,7 @@ class SequenceApplicationTools
 		 * @param verbose Print some info to the 'message' output stream.
 		 * @return A new VectorSiteContainer object according to options specified.
 		 */
-		static VectorSiteContainer * getSiteContainer(
+		static VectorSiteContainer* getSiteContainer(
 			const Alphabet * alpha,
 			std::map<std::string, std::string> & params,
 			const std::string & suffix = "",
@@ -203,7 +203,7 @@ class SequenceApplicationTools
 		 * @param verbose Print some info to the 'message' output stream.
 		 * @return A new VectorSiteContainer object containing sites of interest.
 		 */
-		static VectorSiteContainer * getSitesToAnalyse(
+		static VectorSiteContainer* getSitesToAnalyse(
 			const SiteContainer & allSites,
 			std::map<std::string, std::string> & params,
 			std::string suffix = "",
@@ -214,18 +214,38 @@ class SequenceApplicationTools
 		/**
 		 * @brief Write a sequence file according to options.
 		 *
-     * The supported sequence formats are Fasta, Mase and Phylip.
+     * The supported sequence formats are Fasta and Mase.
      *
      * See the Bio++ program suite manual for a full description of the syntax.
 		 *
+     * @see writeSequenceFile(SiteContainer) for writing alignments, with more output formats.
+     *
 		 * @param sequences The sequences to write.
 		 * @param params  The attribute map where options may be found.
 		 * @param suffix  A suffix to be applied to each attribute name.
 		 * @param verbose Print some info to the 'message' output stream.
 		 */
 		static void writeSequenceFile(
-			const SequenceContainer & sequences,
-			std::map<std::string, std::string> & params,
+			const SequenceContainer& sequences,
+			std::map<std::string, std::string>& params,
+			const std::string & suffix = "",
+      bool verbose = true);
+
+		/**
+		 * @brief Write a sequence alignment file according to options.
+		 *
+     * The supported sequence formats are Fasta, Mase and Phylip.
+     *
+     * See the Bio++ program suite manual for a full description of the syntax.
+		 *
+		 * @param sequences The aligned sequences to write.
+		 * @param params  The attribute map where options may be found.
+		 * @param suffix  A suffix to be applied to each attribute name.
+		 * @param verbose Print some info to the 'message' output stream.
+		 */
+		static void writeAlignmentFile(
+			const SiteContainer& sequences,
+			std::map<std::string, std::string>& params,
 			const std::string & suffix = "",
       bool verbose = true);
 

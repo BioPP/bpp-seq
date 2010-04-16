@@ -465,13 +465,54 @@ void SequenceApplicationTools::writeSequenceFile(
   const string& suffix,
   bool verbose)
 {
-   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
-   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);
-   string format = "";
-   map<string, string> args;
-   KeyvalTools::parseProcedure(sequenceFormat, format, args);
-   unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", args, 100, "", true, false);
-   OSequence* oSeq;
+  string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
+  string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);
+  string format = "";
+  map<string, string> args;
+  KeyvalTools::parseProcedure(sequenceFormat, format, args);
+  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", args, 100, "", true, false);
+  OSequence* oSeq;
+  if (format == "Fasta")
+  {
+    oSeq = new Fasta(ncol);
+  }
+  else if (format == "Mase")
+  {
+    oSeq = new Mase(ncol);
+  }
+  else
+  {
+    ApplicationTools::displayError("Format '" + format + "' unknown.");
+    exit(-1);
+  }
+
+  if (verbose)
+  {
+    ApplicationTools::displayResult("Output file format", format);
+    ApplicationTools::displayResult("Output file ", sequenceFilePath);
+  }
+
+  // Write sequences:
+  oSeq->write(sequenceFilePath, sequences, true);
+
+  delete oSeq;
+}
+
+/******************************************************************************/
+
+void SequenceApplicationTools::writeAlignmentFile(
+  const SiteContainer& sequences,
+  map<string, string>& params,
+  const string& suffix,
+  bool verbose)
+{
+  string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
+  string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);
+  string format = "";
+  map<string, string> args;
+  KeyvalTools::parseProcedure(sequenceFormat, format, args);
+  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", args, 100, "", true, false);
+  OAlignment* oSeq;
   if (format == "Fasta")
   {
     oSeq = new Fasta(ncol);
@@ -482,8 +523,8 @@ void SequenceApplicationTools::writeSequenceFile(
   }
   else if (format == "Phylip")
   {
-   bool sequential = true, extended = true;
-   string split = "  ";
+    bool sequential = true, extended = true;
+    string split = "  ";
     if (args.find("order") != args.end())
     {
       if (args["order"] == "sequential") sequential = true;
@@ -512,16 +553,20 @@ void SequenceApplicationTools::writeSequenceFile(
     else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
     oSeq = new Phylip(extended, sequential, ncol, true, split);
   }
+  else if (format == "Stockholm")
+  {
+    oSeq = new Stockholm();
+  }
   else
   {
-   ApplicationTools::displayError("Format '" + format + "' unknown.");
+    ApplicationTools::displayError("Format '" + format + "' unknown.");
     exit(-1);
   }
 
   if (verbose)
   {
-   ApplicationTools::displayResult("Output file format", format);
-   ApplicationTools::displayResult("Output file ", sequenceFilePath);
+    ApplicationTools::displayResult("Output file format", format);
+    ApplicationTools::displayResult("Output file ", sequenceFilePath);
   }
 
   // Write sequences:
@@ -529,6 +574,7 @@ void SequenceApplicationTools::writeSequenceFile(
 
   delete oSeq;
 }
+
 
 /******************************************************************************/
 

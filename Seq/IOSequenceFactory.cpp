@@ -53,11 +53,10 @@ const string IOSequenceFactory::PAML_FORMAT_SEQUENTIAL    = "PAML S";
 const string IOSequenceFactory::GENBANK_FORMAT            = "GenBank";  
 const string IOSequenceFactory::NEXUS_FORMAT              = "Nexus";  
 
-ISequence * IOSequenceFactory::createReader(const string & format) throw (Exception)
+ISequence* IOSequenceFactory::createReader(const string& format) throw (Exception)
 {
        if(format == FASTA_FORMAT) return new Fasta();
   else if(format == MASE_FORMAT) return new Mase();
-  else if(format == CLUSTAL_FORMAT) return new Clustal();
   else if(format == DCSE_FORMAT) return new DCSE();
   else if(format == PHYLIP_FORMAT_INTERLEAVED) return new Phylip(false, false);
   else if(format == PHYLIP_FORMAT_SEQUENTIAL) return new Phylip(false, true);
@@ -68,7 +67,26 @@ ISequence * IOSequenceFactory::createReader(const string & format) throw (Except
   else throw Exception("Format " + format + " is not supported for input.");
 }
   
-OSequence * IOSequenceFactory::createWriter(const string & format) throw (Exception)
+IAlignment* IOSequenceFactory::createAlignmentReader(const string& format) throw (Exception)
+{
+       if(format == CLUSTAL_FORMAT) return new Clustal();
+  else if(format == DCSE_FORMAT) return new DCSE();
+  else if(format == PHYLIP_FORMAT_INTERLEAVED) return new Phylip(false, false);
+  else if(format == PHYLIP_FORMAT_SEQUENTIAL) return new Phylip(false, true);
+  else if(format == PAML_FORMAT_INTERLEAVED) return new Phylip(true, false);
+  else if(format == PAML_FORMAT_SEQUENTIAL) return new Phylip(true, true);
+  else if(format == NEXUS_FORMAT) return new NexusIOSequence();
+  else throw Exception("Format " + format + " is not supported for alignment input.");
+}
+  
+OSequence* IOSequenceFactory::createWriter(const string& format) throw (Exception)
+{
+       if(format == FASTA_FORMAT) return new Fasta();
+  else if(format == MASE_FORMAT) return new Mase();
+  else throw Exception("Format " + format + " is not supported for output.");
+}
+
+OAlignment* IOSequenceFactory::createAlignmentWriter(const string& format) throw (Exception)
 {
        if(format == FASTA_FORMAT) return new Fasta();
   else if(format == MASE_FORMAT) return new Mase();

@@ -53,20 +53,20 @@ namespace bpp
 {
 
 /**
- * @brief Partial implementation of the ISequence interface, dedicated to alignement readers.
+ * @brief Partial implementation of the IAlignment interface, dedicated to alignement readers.
  */
-class AbstractISequence2:
-  public virtual ISequence2
+class AbstractIAlignment:
+  public virtual IAlignment
 {
 
   public:
-    AbstractISequence2() {}
-    virtual ~AbstractISequence2() {}
+    AbstractIAlignment() {}
+    virtual ~AbstractIAlignment() {}
 
   public:
 
     /**
-     * @name ISequence methods:
+     * @name IAlignment methods:
      *
      * @{
      */ 

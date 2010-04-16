@@ -85,6 +85,42 @@ namespace bpp
 
   };
 
+
+  /**
+   * @brief The OAlignment interface.
+   * 
+   * This interface defines the basic methods for writing alignments to a file.
+   */
+  class OAlignment:
+    public virtual IOSequence
+  {
+    public:
+      OAlignment() {}
+      virtual ~OAlignment() {}
+
+    public:
+
+      /**
+       * @brief Write a container to a stream.
+       *
+       * @param output The output stream where to write.
+       * @param sc        The container to write.
+       * @throw Exception If the file is not in the specified format.
+       */
+      virtual void write(std::ostream& output, const SiteContainer& sc) const throw (Exception) = 0;
+
+      /**
+       * @brief Write a container to a file.
+       *
+       * @param path      The path to the file to write.
+       * @param sc        The container to write.
+       * @param overwrite If true the sequences are written at the beginning of the file instead of being appended.
+       *                  Any previous content will be lost.
+       * @throw Exception If the file is not in the specified format.
+       */
+      virtual void write(const std::string& path, const SiteContainer& sc, bool overwrite) const throw (Exception) = 0;
+
+  };
 } //end of namespace bpp.
 
 #endif	// _OSEQUENCE_H_

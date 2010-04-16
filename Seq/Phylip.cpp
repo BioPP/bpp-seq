@@ -276,7 +276,7 @@ void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, in
 
 /******************************************************************************/
 
-void Phylip::write(ostream & output, const SequenceContainer& sc) const throw (Exception)
+void Phylip::write(std::ostream& output, const SiteContainer& sc) const throw (Exception)
 {
   //First must check if all sequences are aligned:
   if(sc.getNumberOfSequences() == 0)
