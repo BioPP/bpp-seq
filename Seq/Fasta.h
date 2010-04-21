@@ -49,6 +49,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ISequenceStream.h"
 #include "OSequenceStream.h"
 #include "VectorSequenceContainer.h"
+#include "SequenceFileIndex.h"
 
 namespace bpp
 {
@@ -166,6 +167,23 @@ class Fasta:
      * @param yn whether the sequence names should be checked when reading from files.
      */
     void checkNames(bool yn) { checkNames_ = yn; }
+
+    /**
+     * @brief The SequenceFileIndex class for Fasta format
+     */
+    class FileIndex: SequenceFileIndex {
+      public:
+        FileIndex(): index_(), fileSize_(0) {}
+        ~FileIndex() {}
+        void build(const std::string& path) throw (Exception);
+        int getSequencePosition(const std::string& id) const throw (Exception);
+        unsigned int getNumberOfSequences() const throw (Exception) {
+          return index_.size();
+        }
+      private:
+        std::map<std::string, int> index_;
+        int fileSize_;
+    };
 };
 
 } //end of namespace bpp.

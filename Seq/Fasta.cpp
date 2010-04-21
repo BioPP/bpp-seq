@@ -240,3 +240,36 @@ void Fasta::write(ostream& output, const SequenceContainer& sc) const throw (Exc
 
 /******************************************************************************/
 
+// FaileIndex class
+
+void Fasta::FileIndex::build(const std::string& path) throw (Exception) {
+  // open the file
+  std::ifstream f_in(path.c_str());
+  // get the size of the file
+  f_in.seekg(0, std::ios::end);
+  fileSize_ = f_in.tellg();
+  // feed the map
+  f_in.seekg(0, std::ios::beg);
+  int pos = f_in.tellg();
+  char ch;
+  std::string seq_id = "";
+  while(f_in.get(ch)) {
+    if (ch == '>') {
+      pos = static_cast<int>(f_in.tellg()) - 1;
+      std::getline(f_in, seq_id);
+      index_[seq_id] = pos;
+    }
+  }
+  f_in.close();
+}
+
+int Fasta::FileIndex::getSequencePosition(const std::string& id) const throw (Exception) {
+  std::map<std::string, int>::const_iterator it = index_.find(id);
+  if (it != index_.end()) {
+    return it->second;
+  }
+  throw Exception("Sequence not found");
+}
+
+/******************************************************************************/
+

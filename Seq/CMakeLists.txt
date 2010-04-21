@@ -129,6 +129,7 @@ set(H_FILES
   SequenceContainer.h
   SequenceContainerTools.h
   SequenceExceptions.h
+  SequenceFileIndex.h
   SequencePositionIterators.h
   Sequence.h
   SequenceWithQuality.h
