@@ -58,6 +58,13 @@ const bool Sequence::ANTISENSE = false;
 
 /* Constructors: **************************************************************/
 
+Sequence::Sequence(const Alphabet* alpha):
+  SymbolList(alpha),
+  name_(),
+  comments_(),
+  sense_(true)
+{}
+
 Sequence::Sequence(const std::string& name, const std::string& sequence, const Alphabet* alpha)
 throw (BadCharException) :
 	SymbolList(alpha),

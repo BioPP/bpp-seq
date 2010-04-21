@@ -98,6 +98,16 @@ class Sequence:
   public: // Class constructors and destructor:
 
     /**
+     * @brief Empty constructor: build a void Sequence with just an Alphabet
+     *
+     * You can use it safely for all type of Alphabet in order to build an
+     * empty Sequence i.e. without name nor sequence data.
+     *
+     * @param alpha    A pointer toward the Alphabet to be used with this Sequence.
+     */
+    Sequence(const Alphabet* alpha);
+
+    /**
      * @brief Direct constructor: build a Sequence object from a std::string
      * You can use it safely for RNA, DNA and protein sequences.
      *
