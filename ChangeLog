@@ -1,3 +1,10 @@
+22/04/10 Sylvain Gaillard
+* Break SequenceTools interface:
+		- renamed invert -> getInvert
+		- renamed complement -> getComplement
+	now invert and complement methods deals with sequence ref
+		- New method invertComplement
+
 16/04/10 Julien Dutheil
 * New Stockholm sequence format (output only).
 * Refactoring of class ISequence2 => IAlignment + new interface OAlignment.

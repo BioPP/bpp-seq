@@ -139,19 +139,31 @@ class SequenceTools:
 		static Sequence * concatenate(const Sequence & seq1, const Sequence & seq2)
 		     throw (AlphabetMismatchException, Exception) ;
 
+    /**
+     * @brief Complement the nucleotide sequence itself
+     *
+     * @param seq The sequence to be complemented.
+     * @return A ref toward the complemented sequence.
+     * @throw AlphabetException if the sequence is not a nucleotide sequence.
+     * @author Sylvain Gaillard
+     */
+    static Sequence& complement(Sequence& seq) throw (AlphabetException);
+
 		/**
 		 * @brief Get the complementary sequence of a nucleotide sequence.
 		 *
 		 * @see DNAReplication
-		 * @return sequence A new sequence object with the complementary sequence.
+		 * @return A new sequence object with the complementary sequence.
 		 * @param sequence The sequence to complement.
 		 * @throw AlphabetException If the sequence is not a nucleotide sequence.
 		 */
-		static Sequence * complement(const Sequence & sequence) throw (AlphabetException);
+		static Sequence * getComplement(const Sequence & sequence) throw (AlphabetException);
 		
 		/**
 		 * @brief Get the transcription sequence of a DNA sequence.
 		 *
+     * Translate DNA sequence into RNA sequence.
+     *
 		 * @see DNAReplication
 		 * @return sequence A new sequence object with the transcription sequence.
 		 * @param sequence The sequence to transcript.
@@ -161,6 +173,8 @@ class SequenceTools:
 		
 		/**
 		 * @brief Get the reverse-transcription sequence of a RNA sequence.
+     *
+     * Translate RNA sequence into DNA sequence.
 		 *
 		 * @see DNAReplication
 		 * @return sequence A new sequence object with the reverse-transcription sequence.
@@ -169,26 +183,46 @@ class SequenceTools:
 		 */
 		static Sequence * reverseTranscript(const Sequence & sequence) throw (AlphabetException);
 		
+    /**
+     * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
+     *
+		 * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be
+     * inhibited).
+     *
+     * @param seq The sequence to inverse.
+     * @param chgSense Tell if the sense tag should be shifted.
+     * @return A ref toward the sequence.
+     * @author Sylvain Gaillard
+     */
+    static Sequence& invert(Sequence& seq, bool chgSense = true);
+
 		/**
 		 * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
 		 *
-		 * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be inhibited).
+		 * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be
+     * inhibited).
      *
-		 * @return A new sequence object containing the inverted sequence.
 		 * @param sequence The sequence to inverse.
-     * @param chgSense Tell if the sense tag should be shifted.
+     * @param chgSense Tell if the sense tag should be shifted (true by
+     * default).
+		 * @return A new sequence object containing the inverted sequence.
+     * @author Sylvain Gaillard
 		 */
-		static Sequence * invert(const Sequence & sequence, bool chgSense = true);
+		static Sequence* getInvert(const Sequence & sequence, bool chgSense = true);
 		
-		/**
-		 * @brief Alias for invert (DEPRECATED).
-		 *
-		 * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be inhibited).
+    /**
+     * @brief Inverse and complement a sequence.
      *
-		 * @return A new sequence object containing the inverted sequence.
-		 * @param sequence The sequence to inverse.
-		 */
-		static Sequence * reverse(const Sequence & sequence) { return invert(sequence, true); }
+     * This methode is more accurate than calling invert and complement
+     * separatly.
+     *
+     * @param seq The sequence to inverse and complement.
+     * @param chgSense Tell if the sense tag should be shifted (false by
+     * default).
+     * @return A ref toward the sequence.
+     * @author Sylvain Gaillard
+     */
+    static Sequence& invertComplement(Sequence& seq, bool chgSense = false);
 
     /**
 		 * @return The identity percent of 2 sequence.
