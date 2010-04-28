@@ -69,10 +69,12 @@ set(CPP_FILES
   NexusIOSequence.cpp
   NexusTools.cpp
   Stockholm.cpp
+  MafAlignmentParser.cpp
   __GranthamMatrixCode
   __MiyataMatrixCode
   __BLOSUM50MatrixCode
   )
+
 set(H_FILES
   AbstractAlphabet.h
   AbstractISequence.h
@@ -170,6 +172,7 @@ set(H_FILES
   NexusIOSequence.h
   NexusTools.h
   Stockholm.h
+  MafAlignmentParser.h
   geneticcodes
   aadistances
   )

@@ -471,14 +471,14 @@ void SequenceApplicationTools::writeSequenceFile(
   map<string, string> args;
   KeyvalTools::parseProcedure(sequenceFormat, format, args);
   unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", args, 100, "", true, false);
-  OSequence* oSeq;
+  auto_ptr<OSequence> oSeq;
   if (format == "Fasta")
   {
-    oSeq = new Fasta(ncol);
+    oSeq.reset(new Fasta(ncol));
   }
   else if (format == "Mase")
   {
-    oSeq = new Mase(ncol);
+    oSeq.reset(new Mase(ncol));
   }
   else
   {
@@ -494,8 +494,6 @@ void SequenceApplicationTools::writeSequenceFile(
 
   // Write sequences:
   oSeq->write(sequenceFilePath, sequences, true);
-
-  delete oSeq;
 }
 
 /******************************************************************************/
@@ -512,14 +510,14 @@ void SequenceApplicationTools::writeAlignmentFile(
   map<string, string> args;
   KeyvalTools::parseProcedure(sequenceFormat, format, args);
   unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", args, 100, "", true, false);
-  OAlignment* oSeq;
+  auto_ptr<OAlignment> oSeq;
   if (format == "Fasta")
   {
-    oSeq = new Fasta(ncol);
+    oSeq.reset(new Fasta(ncol));
   }
   else if (format == "Mase")
   {
-    oSeq = new Mase(ncol);
+    oSeq.reset(new Mase(ncol));
   }
   else if (format == "Phylip")
   {
@@ -551,11 +549,11 @@ void SequenceApplicationTools::writeAlignmentFile(
                                             "Default used instead: extended.");
     }
     else ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
-    oSeq = new Phylip(extended, sequential, ncol, true, split);
+    oSeq.reset(new Phylip(extended, sequential, ncol, true, split));
   }
   else if (format == "Stockholm")
   {
-    oSeq = new Stockholm();
+    oSeq.reset(reinterpret_cast<OAlignment*>(new Stockholm()));
   }
   else
   {
@@ -571,8 +569,6 @@ void SequenceApplicationTools::writeAlignmentFile(
 
   // Write sequences:
   oSeq->write(sequenceFilePath, sequences, true);
-
-  delete oSeq;
 }
 
 

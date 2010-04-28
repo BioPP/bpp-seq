@@ -1,3 +1,6 @@
+28/04/10 Julien Dutheil
+* New MAF genome alignment parser.
+
 22/04/10 Sylvain Gaillard
 * Break SequenceTools interface:
 		- renamed invert -> getInvert
