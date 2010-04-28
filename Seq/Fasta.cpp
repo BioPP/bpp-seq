@@ -268,7 +268,29 @@ int Fasta::FileIndex::getSequencePosition(const std::string& id) const throw (Ex
   if (it != index_.end()) {
     return it->second;
   }
-  throw Exception("Sequence not found");
+  throw Exception("Sequence not found: " + id);
+}
+
+void Fasta::FileIndex::read(const std::string& path) throw (Exception) {
+  std::ifstream f_in(path.c_str());
+  std::string line_buffer = "";
+  while (!f_in.eof()) {
+    std::getline(f_in, line_buffer);
+    if (bpp::TextTools::isEmpty(bpp::TextTools::removeSurroundingWhiteSpaces(line_buffer))) {
+      continue;
+    }
+    bpp::StringTokenizer tk(line_buffer, "\t");
+    index_[tk.getToken(0)] = bpp::TextTools::toInt(tk.getToken(1));
+  }
+  f_in.close();
+}
+
+void Fasta::FileIndex::write(const std::string& path) throw (Exception) {
+  std::ofstream f_out(path.c_str());
+  for (std::map<std::string, int>::const_iterator it = index_.begin() ; it != index_.end() ; ++it) {
+    f_out << it->first << "\t" << bpp::TextTools::toString(it->second) << std::endl;
+  }
+  f_out.close();
 }
 
 /******************************************************************************/

@@ -170,6 +170,7 @@ class Fasta:
 
     /**
      * @brief The SequenceFileIndex class for Fasta format
+     * @author Sylvain Gaillard
      */
     class FileIndex: SequenceFileIndex {
       public:
@@ -180,6 +181,14 @@ class Fasta:
         unsigned int getNumberOfSequences() const throw (Exception) {
           return index_.size();
         }
+        /**
+         * @brief Read the index from a file
+         */
+        void read(const std::string& path) throw (Exception);
+        /**
+         * @brief Write the index to a file
+         */
+        void write(const std::string& path) throw (Exception);
       private:
         std::map<std::string, int> index_;
         int fileSize_;
