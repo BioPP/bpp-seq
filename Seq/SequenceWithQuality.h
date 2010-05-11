@@ -1,6 +1,7 @@
 // 
 // File:    SequenceWithQuality.h
-// Author:  Sylvain Gaillard
+// Authors: Sylvain Gaillard
+//          Vincent Cahais
 // Created: 19/01/2010 16:01:20
 // 
 
@@ -80,21 +81,51 @@ namespace bpp {
        */
 
       /**
-       * @brief Build a new SequenceWithQuality
+       * @brief Build a new SequenceWithQuality from a std::string
        *
        * Build a new SequenceWithQuality and set the quality scores to
        * the default value DEFAULT_QUALITY_VALUE.
        *
-       * @param name The name of the sequence
+       * @param name     The name of the sequence
        * @param sequence The string representing the sequence
-       * @param alpha A pointer to an Alphabet
+       * @param alpha    A pointer to an Alphabet
        *
        * @throw BadCharException if a state is not alowed by the Alphabet
        */
-      SequenceWithQuality(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException): Sequence(name, sequence, alpha), qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
+      SequenceWithQuality(
+          const std::string& name,
+          const std::string& sequence,
+          const Alphabet* alpha
+          ) throw (BadCharException):
+        Sequence(name, sequence, alpha),
+        qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
 
       /**
-       * @brief Build a new SequenceWithQuality
+       * @brief Build a new SequenceWithQuality from a std::string
+       *
+       * Build a new SequenceWithQuality and set the quality scores to
+       * the default value DEFAULT_QUALITY_VALUE.
+       *
+       * @param name     The name of the sequence
+       * @param sequence The string representing the sequence
+       * @param comments Comments to add to the sequence
+       * @param alpha    A pointer to an Alphabet
+       *
+       * @throw BadCharException if a state is not alowed by the Alphabet
+       *
+       * @author Vincent Cahais
+       */
+      SequenceWithQuality(
+          const std::string& name,
+          const std::string& sequence,
+          const Comments& comments,
+          const Alphabet* alpha
+          ) throw (BadCharException):
+        Sequence(name, sequence, comments, alpha),
+        qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
+
+      /**
+       * @brief Build a new SequenceWithQuality from a std::string
        *
        * Build a new SequenceWithQuality and assign quality scores from
        * a vector of int.
@@ -105,15 +136,54 @@ namespace bpp {
        * @param alpha A pointer to an alphabet
        *
        * @throw BadCharException if a state is not alowed by the Alphabet
-       * @throw DimensionException if the number of quality values is not equal to the number of sequence states
+       * @throw DimensionException if the number of quality values is not equal
+       * to the number of sequence states
        */
-      SequenceWithQuality(const std::string& name, const std::string& sequence, const std::vector<int>& quality, const Alphabet* alpha) throw (BadCharException, DimensionException): Sequence(name, sequence, alpha), qualScores_(quality) {
-        if (size() != qualScores_.size())
-          throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
-      }
+      SequenceWithQuality(
+          const std::string& name,
+          const std::string& sequence,
+          const std::vector<int>& quality,
+          const Alphabet* alpha
+          ) throw (BadCharException, DimensionException):
+        Sequence(name, sequence, alpha),
+        qualScores_(quality) {
+          if (size() != qualScores_.size())
+            throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
+        }
 
       /**
-       * @brief Build a new SequenceWithQuality
+       * @brief Build a new SequenceWithQuality from a std::string
+       *
+       * Build a new SequenceWithQuality and assign quality scores from
+       * a vector of int.
+       *
+       * @param name The name of the sequence
+       * @param sequence The string representing the sequence
+       * @param quality The quality scores
+       * @param comments Comments to add to the sequence
+       * @param alpha A pointer to an alphabet
+       *
+       * @throw BadCharException if a state is not alowed by the Alphabet
+       * @throw DimensionException if the number of quality values is not equal
+       * to the number of sequence states
+       *
+       * @author Vincent Cahais
+       */
+      SequenceWithQuality(
+          const std::string& name,
+          const std::string& sequence,
+          const std::vector<int>& quality,
+          const Comments& comments,
+          const Alphabet* alpha
+          ) throw (BadCharException, DimensionException):
+        Sequence(name, sequence, comments, alpha),
+        qualScores_(quality) {
+          if (size() != qualScores_.size())
+            throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
+        }
+
+      /**
+       * @brief Build a new SequenceWithQuality from a std::vector<int>
        *
        * Build a new SequenceWithQuality and set the quality scores to
        * the default value DEFAULT_QUALITY_VALUE.
@@ -124,10 +194,40 @@ namespace bpp {
        *
        * @throw BadIntException if a state is not alowed by the Alphabet
        */
-      SequenceWithQuality(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) throw (BadIntException): Sequence(name, sequence, alpha), qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
+      SequenceWithQuality(
+          const std::string& name,
+          const std::vector<int>& sequence,
+          const Alphabet* alpha
+          ) throw (BadIntException):
+        Sequence(name, sequence, alpha),
+        qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
 
       /**
-       * @brief Build a new SequenceWithQuality
+       * @brief Build a new SequenceWithQuality from a std::vector<int>
+       *
+       * Build a new SequenceWithQuality and set the quality scores to
+       * the default value DEFAULT_QUALITY_VALUE.
+       *
+       * @param name The name of the sequence
+       * @param sequence The sequence in int
+       * @param comments Comments to add to the sequence
+       * @param alpha A pointer to an Alphabet
+       *
+       * @throw BadIntException if a state is not alowed by the Alphabet
+       *
+       * @author Vincent Cahais
+       */
+      SequenceWithQuality(
+          const std::string& name,
+          const std::vector<int>& sequence,
+          const Comments& comments,
+          const Alphabet* alpha
+          ) throw (BadIntException):
+        Sequence(name, sequence, comments, alpha),
+        qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
+
+      /**
+       * @brief Build a new SequenceWithQuality from a std::vector<int>
        *
        * Build a new SequenceWithQuality and assign quality scores from
        * a vector of int.
@@ -138,12 +238,51 @@ namespace bpp {
        * @param alpha A pointer to an Alphabet
        *
        * @throw BadIntException if a state is not alowed by the Alphabet
-       * @throw DimensionException if the number of quality values is not equal to the number of sequence states
+       * @throw DimensionException if the number of quality values is not equal
+       * to the number of sequence states
        */
-      SequenceWithQuality(const std::string& name, const std::vector<int>& sequence, const std::vector<int>& quality, const Alphabet* alpha) throw (BadIntException, DimensionException): Sequence(name, sequence, alpha), qualScores_(quality) {
-        if (size() != qualScores_.size())
-          throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
-      }
+      SequenceWithQuality(
+          const std::string& name,
+          const std::vector<int>& sequence,
+          const std::vector<int>& quality,
+          const Alphabet* alpha
+          ) throw (BadIntException, DimensionException):
+        Sequence(name, sequence, alpha),
+        qualScores_(quality) {
+          if (size() != qualScores_.size())
+            throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
+        }
+
+      /**
+       * @brief Build a new SequenceWithQuality from a std::vector<int>
+       *
+       * Build a new SequenceWithQuality and assign quality scores from
+       * a vector of int.
+       *
+       * @param name The name of the sequence
+       * @param sequence The sequence in int
+       * @param quality The quality scores
+       * @param comments Comments to add to the sequence
+       * @param alpha A pointer to an Alphabet
+       *
+       * @throw BadIntException if a state is not alowed by the Alphabet
+       * @throw DimensionException if the number of quality values is not equal
+       * to the number of sequence states
+       *
+       * @author Vincent Cahais
+       */
+      SequenceWithQuality(
+          const std::string& name,
+          const std::vector<int>& sequence,
+          const std::vector<int>& quality,
+          const Comments& comments,
+          const Alphabet* alpha
+          ) throw (BadIntException, DimensionException):
+        Sequence(name, sequence, comments, alpha),
+        qualScores_(quality) {
+          if (size() != qualScores_.size())
+            throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
+        }
 
       /**
        * @brief Build a new SequenceWithQuality
@@ -164,13 +303,19 @@ namespace bpp {
        * @param s The Sequence object
        * @param sc The quality scores
        *
-       * @throw DimensionException if the number of quality values is not equal to the number of sequence states
+       * @throw DimensionException if the number of quality values is not equal
+       * to the number of sequence states
        */
-      SequenceWithQuality(const Sequence& s, const std::vector<int>& sc) throw (DimensionException): Sequence(s), qualScores_(sc) {
-        if (s.size() != qualScores_.size()) {
-          throw DimensionException("SequenceWithQuality constructor: sequence and qualities must have the same length", qualScores_.size(),  s.size());
+      SequenceWithQuality(
+          const Sequence& s,
+          const std::vector<int>& sc
+          ) throw (DimensionException):
+        Sequence(s),
+        qualScores_(sc) {
+          if (s.size() != qualScores_.size()) {
+            throw DimensionException("SequenceWithQuality constructor: sequence and qualities must have the same length", qualScores_.size(),  s.size());
+          }
         }
-      }
 
       /** @} */
 
