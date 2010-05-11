@@ -51,7 +51,6 @@ namespace bpp {
    * Implement methods to manipulate SequencesWithQuality
    *
    * @todo
-   * - remove the SequenceTools inheritance
    * - does complement, transcript and reverseTranscript have a meaning on
    *   SequenceWithQuality as the quality is not transferable
    *
