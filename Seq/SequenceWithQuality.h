@@ -58,8 +58,8 @@ namespace bpp {
    * @brief The SequenceWithQuality class
    *
    * This is a sequence with quality score associated to each element.
-   * The score is a signed int value that can represent the phred score
-   * for nucleic sequence.
+   * The score is a signed int value that can represent the phred or the
+   * Solexa qyality score for nucleic sequence.
    *
    * @author Sylvain Gaillard
    */
