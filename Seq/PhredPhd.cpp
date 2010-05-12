@@ -44,7 +44,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/StringTokenizer.h>
 
 using namespace bpp;
-using namespace std;
 
 /******************************************************************************/
 
@@ -53,22 +52,61 @@ using namespace std;
 /******************************************************************************/
 
 void PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exception) {
-  if (!input) { throw IOException ("PhredPhd::read: fail to open stream"); }
+  if (!input) {
+    throw IOException ("PhredPhd::read: fail to open stream");
+  }
 
-  string temp, name, sequence = "";  // Initialization
-  vector<int> q;
+  std::string temp, name, sequence = "";  // Initialization
+  std::vector<int> q, p;
 
-  const Alphabet * alpha = seq.getAlphabet();
+  parseFile_(input, name, sequence, q, p);
+  // Sequence creation
+  if(name == "")
+    throw Exception("PhredPhd::read: sequence without name!");
+  seq.setName(name);
+  seq.setContent(sequence);
+}
+
+/******************************************************************************/
+
+void PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq) const throw (Exception) {
+  std::vector<int> pos;
+  nextSequence(input, seq, pos);
+}
+
+/******************************************************************************/
+
+void PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq, std::vector<int>& pos) const throw (Exception) {
+  if (!input) {
+    throw IOException ("PhredPhd::read: fail to open stream");
+  }
+
+  std::string name, sequence = "";  // Initialization
+  std::vector<int> q, p;
+
+  parseFile_(input, name, sequence, q, p);
+  // Sequence creation
+  if(name == "")
+    throw Exception("PhredPhd::read: sequence without name!");
+  seq.setName(name);
+  seq.setContent(sequence);
+  seq.setQualities(q);
+}
+
+/******************************************************************************/
+
+void PhredPhd::parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const {
+  std::string temp;
   // Read sequence info
   // Main loop : for all lines
   while (!input.eof()) {
-    getline(input, temp, '\n');  // Copy current line in temporary string
+    std::getline(input, temp, '\n');  // Copy current line in temporary string
     StringTokenizer st(temp, " ");
     if (st.hasMoreToken()) {
       if (st.getToken(0) == "BEGIN_SEQUENCE") {
         name = st.getToken(1);
       }
-      string flag = st.getToken(0);
+      std::string flag = st.getToken(0);
       while (flag != "END_SEQUENCE" && !input.eof()) {
         getline(input, temp, '\n');
         StringTokenizer st2(temp, " ");
@@ -76,27 +114,34 @@ void PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exc
           flag = st2.getToken(0);
         }
         if (flag == "BEGIN_DNA") {
-          while (flag != "END_DNA" && !input.eof()) {
-            getline(input, temp, '\n');
-            StringTokenizer st3(temp, " ");
-            if (st3.hasMoreToken()) {
-              flag = TextTools::toUpper(st3.getToken(0));
-              if (alpha->isCharInAlphabet(flag) && st3.numberOfRemainingTokens() == 3) {
-                sequence += flag;
-                q.push_back(TextTools::toInt(st3.getToken(1)));
-              }
-            }
-          }
+          parseDNA_(input, sequence, qual, pos);
+          break; // End the whole loop after parsing DNA
         }
       }
     }
   }
-  // Sequence creation
-  if(name == "")
-    throw Exception("PhredPhd::read: sequence without name!");
-  seq.setName(name);
-  seq.setContent(sequence);
-  //seq.setQualities(q);
+}
+
+/******************************************************************************/
+
+void PhredPhd::parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const {
+  std::string line_buffer;
+  std::string flag;
+  sequence.clear();
+  qual.clear();
+  pos.clear();
+  while (flag != "END_DNA" && !input.eof()) {
+    std::getline(input, line_buffer, '\n');
+    StringTokenizer st(line_buffer, " ");
+    if (st.hasMoreToken()) {
+      flag = TextTools::toUpper(st.getToken(0));
+      if (st.numberOfRemainingTokens() == 3) {
+        sequence += flag;
+        qual.push_back(TextTools::toInt(st.getToken(1)));
+        pos.push_back(TextTools::toInt(st.getToken(2)));
+      }
+    }
+  }
 }
 
 /******************************************************************************/
