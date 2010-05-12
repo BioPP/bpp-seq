@@ -59,6 +59,8 @@ namespace bpp {
 
   class SequenceWithQualityTools {
     private:
+      static DNA _DNA;
+      static RNA _RNA;
       static NucleicAcidsReplication _DNARep;
       static NucleicAcidsReplication _RNARep;
       static NucleicAcidsReplication _transc;

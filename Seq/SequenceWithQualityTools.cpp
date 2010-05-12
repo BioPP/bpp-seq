@@ -43,8 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-DNA SequenceTools::_DNA;
-RNA SequenceTools::_RNA;
+DNA SequenceWithQualityTools::_DNA;
+RNA SequenceWithQualityTools::_RNA;
 NucleicAcidsReplication SequenceWithQualityTools::_DNARep(& _DNA, & _DNA);
 NucleicAcidsReplication SequenceWithQualityTools::_RNARep(& _RNA, & _RNA);
 NucleicAcidsReplication SequenceWithQualityTools::_transc(& _DNA, & _RNA);
