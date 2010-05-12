@@ -43,6 +43,12 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
+NucleicAcidsReplication SequenceWithQualityTools::_DNARep(& _DNA, & _DNA);
+NucleicAcidsReplication SequenceWithQualityTools::_RNARep(& _RNA, & _RNA);
+NucleicAcidsReplication SequenceWithQualityTools::_transc(& _DNA, & _RNA);
+
+/******************************************************************************/
+
 SequenceWithQuality * SequenceWithQualityTools::subseq(const SequenceWithQuality & sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception)
 {
 	// Checking interval
@@ -64,7 +70,7 @@ SequenceWithQuality * SequenceWithQualityTools::subseq(const SequenceWithQuality
 
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 SequenceWithQuality * SequenceWithQualityTools::concatenate(const SequenceWithQuality & seqwq1, const SequenceWithQuality & seqwq2) throw (AlphabetMismatchException, Exception)
 {
@@ -87,7 +93,7 @@ SequenceWithQuality * SequenceWithQualityTools::concatenate(const SequenceWithQu
 	return new SequenceWithQuality(seqwq1.getName(), sequence, qualities, seqwq1.getComments(), seqwq1.getAlphabet());
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 SequenceWithQuality * SequenceWithQualityTools::complement(const SequenceWithQuality & sequence) throw (AlphabetException)
 {
@@ -111,7 +117,7 @@ SequenceWithQuality * SequenceWithQualityTools::complement(const SequenceWithQua
   return seqwq;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 SequenceWithQuality * SequenceWithQualityTools::transcript(const SequenceWithQuality & sequence) throw (AlphabetException)
 {
@@ -126,7 +132,7 @@ SequenceWithQuality * SequenceWithQualityTools::transcript(const SequenceWithQua
   return seqwq;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 SequenceWithQuality * SequenceWithQualityTools::reverseTranscript(const SequenceWithQuality & sequence) throw (AlphabetException)
 {
@@ -142,7 +148,7 @@ SequenceWithQuality * SequenceWithQualityTools::reverseTranscript(const Sequence
   return seqwq;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 SequenceWithQuality * SequenceWithQualityTools::invert(const SequenceWithQuality & sequence, bool chgSense)
 {
@@ -156,7 +162,7 @@ SequenceWithQuality * SequenceWithQualityTools::invert(const SequenceWithQuality
   return iSeq;
 }
 
-/****************************************************************************************/
+/******************************************************************************/
 
 SequenceWithQuality * SequenceWithQualityTools::removeGaps(const SequenceWithQuality & seq)
 {
