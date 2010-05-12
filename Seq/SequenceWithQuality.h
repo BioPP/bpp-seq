@@ -61,9 +61,6 @@ namespace bpp {
    * The score is a signed int value that can represent the phred score
    * for nucleic sequence.
    *
-   * @todo 
-   * - addElement with quality score
-   *
    * @author Sylvain Gaillard
    */
   class SequenceWithQuality: public Sequence {
@@ -338,6 +335,10 @@ namespace bpp {
       clone() const { return new SequenceWithQuality(*this); }
       /** @} */
 
+      /**
+       * @name Adjusting the size of the sequence.
+       * @{
+       */
       void setToSizeR(unsigned int newSize);
 
       void setToSizeL(unsigned int newSize);
@@ -356,6 +357,7 @@ namespace bpp {
       void setContent(const std::vector<std::string>& list) throw (BadCharException);
 
       void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException);
+      /** @} */
 
       /**
        * @name Dealing with quality
@@ -481,13 +483,71 @@ namespace bpp {
       }
 
       /**
-       * Add a character to the end of the list with quality
+       * @brief Add a character to the end of the list with quality
+       *
+       * @param c The element to add to the sequence
+       * @param q The quality of this element
+       *
+       * @throw BadCharException if one of the character of the string is not in
+       * the Alphabet
        */
       void addElement(
           const std::string& c, int q
           ) throw (BadCharException) {
         Sequence::addElement(c);
         qualScores_.push_back(q);
+      }
+
+      /**
+       * @brief Add a character to a certain position in the list with quality
+       *
+       * @param pos The position where the element will be inserted
+       * @param c The element to add to the sequence
+       * @param q The quality of this element
+       *
+       * @throw BadCharException if one of the character of the string is not in
+       * the Alphabet
+       * @throw IndexOutOfBoundsException if pos is greater than the sequence
+       * size
+       */
+      void addElement(
+          unsigned int pos, const std::string& c, int q
+          ) throw (BadCharException, IndexOutOfBoundsException) {
+        Sequence::addElement(pos, c);
+        qualScores_.insert(qualScores_.begin() + pos, q);
+      }
+
+      /**
+       * @brief Add a character to the end of the list with quality
+       *
+       * @param v The element to add to the sequence
+       * @param q The quality of this element
+       *
+       * @throw BadIntException if the value does not match the current Alphabet
+       */
+      void addElement(
+          int v, int q
+          ) throw (BadCharException) {
+        Sequence::addElement(v);
+        qualScores_.push_back(q);
+      }
+
+      /**
+       * @brief Add a character to a certain position in the list with quality
+       *
+       * @param pos The position where the element will be inserted
+       * @param v The element to add to the sequence
+       * @param q The quality of this element
+       *
+       * @throw BadIntException if the value does not match the current Alphabet
+       * @throw IndexOutOfBoundsException if pos is greater than the sequence
+       * size
+       */
+      void addElement(
+          unsigned int pos, int v, int q
+          ) throw (BadCharException, IndexOutOfBoundsException) {
+        Sequence::addElement(pos, v);
+        qualScores_.insert(qualScores_.begin() + pos, q);
       }
 
       /** @} */
