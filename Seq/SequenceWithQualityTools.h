@@ -41,8 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef SEQUENCEWITHQUALITYTOOLS_H_
 #define SEQUENCEWITHQUALITYTOOLS_H_
 
-#include <Seq/SequenceTools.h>
-#include <Seq/SequenceWithQuality.h>
+#include "SequenceTools.h"
+#include "SequenceWithQuality.h"
 
 namespace bpp {
   /**
