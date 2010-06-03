@@ -68,56 +68,55 @@ namespace bpp
 class GranthamAAVolumeIndex:
   public AlphabetIndex1<double>
 {
-	private:
-		vector<double> _volume;
-		const ProteicAlphabet * _alpha;
+  private:
+    std::vector<double> volume_;
 
-	public:
-		GranthamAAVolumeIndex()
-		{
-			_alpha = new ProteicAlphabet();
-			_volume.resize(20);
-			_volume[ 0] =  31.; //A
-			_volume[ 1] = 124.; //R
-			_volume[ 2] =  56.; //N
-			_volume[ 3] =  54.; //D
-			_volume[ 4] =  55.; //C
-			_volume[ 5] =  85.; //Q
-			_volume[ 6] =  83.; //E
-			_volume[ 7] =   3.; //G
-			_volume[ 8] =  96.; //H
-			_volume[ 9] = 111.; //I
-			_volume[10] = 111.; //L
-			_volume[11] = 119.; //K
-			_volume[12] = 105.; //M
-			_volume[13] = 132.; //F
-			_volume[14] =  32.5;//P
-			_volume[15] =  32.; //S
-			_volume[16] =  61.; //T
-			_volume[17] = 170.; //W
-			_volume[18] = 136.; //Y
-			_volume[19] =  84.; //V
-		}
+  public:
+    GranthamAAVolumeIndex() :
+      volume_()
+    {
+      volume_.resize(20);
+      volume_[ 0] =  31.; //A
+      volume_[ 1] = 124.; //R
+      volume_[ 2] =  56.; //N
+      volume_[ 3] =  54.; //D
+      volume_[ 4] =  55.; //C
+      volume_[ 5] =  85.; //Q
+      volume_[ 6] =  83.; //E
+      volume_[ 7] =   3.; //G
+      volume_[ 8] =  96.; //H
+      volume_[ 9] = 111.; //I
+      volume_[10] = 111.; //L
+      volume_[11] = 119.; //K
+      volume_[12] = 105.; //M
+      volume_[13] = 132.; //F
+      volume_[14] =  32.5;//P
+      volume_[15] =  32.; //S
+      volume_[16] =  61.; //T
+      volume_[17] = 170.; //W
+      volume_[18] = 136.; //Y
+      volume_[19] =  84.; //V
+    }
 
-		virtual ~GranthamAAVolumeIndex() { delete _alpha;	}
-		
-    GranthamAAVolumeIndex * clone() const { return new GranthamAAVolumeIndex(); }
+    virtual ~GranthamAAVolumeIndex() {}
+    
+    GranthamAAVolumeIndex* clone() const { return new GranthamAAVolumeIndex(); }
 
-	public:
-		double getIndex(int state) const throw (BadIntException)
-		{
-			if(state < 0 || state > 19) throw BadIntException(state, "GranthamAAVolumeIndex::getIndex(). Invalid state.", _alpha);
-			return _volume[state];
-		}
-		
-		double getIndex(const string & state) const throw (BadCharException)
-		{
-			return _volume[_alpha->charToInt(state)];
-		}
+  public:
+    double getIndex(int state) const throw (BadIntException)
+    {
+      if (state < 0 || state > 19) throw BadIntException(state, "GranthamAAVolumeIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
+      return volume_[state];
+    }
+    
+    double getIndex(const std::string& state) const throw (BadCharException)
+    {
+      return volume_[AlphabetTools::PROTEIN_ALPHABET.charToInt(state)];
+    }
 
-    vector<double> * getIndexVector() const { return new vector<double>(_volume); }
+    std::vector<double>* getIndexVector() const { return new vector<double>(volume_); }
 
-		const Alphabet * getAlphabet() const { return _alpha; }
+    const Alphabet* getAlphabet() const { return &AlphabetTools::PROTEIN_ALPHABET; }
 
 };
 

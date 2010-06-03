@@ -95,56 +95,55 @@ namespace bpp
 class AAChargeIndex:
   public AlphabetIndex1<double>
 {
-	private:
-		vector<double> _charge;
-		const ProteicAlphabet * _alpha;
+  private:
+    std::vector<double> charge_;
 
-	public:
-		AAChargeIndex()
-		{
-			_alpha = new ProteicAlphabet();
-			_charge.resize(20);
-			_charge[ 0] =  0.; //A
-			_charge[ 1] =  1.; //R
-			_charge[ 2] =  0.; //N
-			_charge[ 3] = -1.; //D
-			_charge[ 4] =  0.; //C
-			_charge[ 5] =  0.; //Q
-			_charge[ 6] = -1.; //E
-			_charge[ 7] =  0.; //G
-			_charge[ 8] =  1.; //H
-			_charge[ 9] =  0.; //I
-			_charge[10] =  0.; //L
-			_charge[11] =  1.; //K
-			_charge[12] =  0.; //M
-			_charge[13] =  0.; //F
-			_charge[14] =  0.; //P
-			_charge[15] =  0.; //S
-			_charge[16] =  0.; //T
-			_charge[17] =  0.; //W
-			_charge[18] =  0.; //Y
-			_charge[19] =  0.; //V
-		}
+  public:
+    AAChargeIndex() :
+      charge_()
+    {
+      charge_.resize(20);
+      charge_[ 0] =  0.; //A
+      charge_[ 1] =  1.; //R
+      charge_[ 2] =  0.; //N
+      charge_[ 3] = -1.; //D
+      charge_[ 4] =  0.; //C
+      charge_[ 5] =  0.; //Q
+      charge_[ 6] = -1.; //E
+      charge_[ 7] =  0.; //G
+      charge_[ 8] =  1.; //H
+      charge_[ 9] =  0.; //I
+      charge_[10] =  0.; //L
+      charge_[11] =  1.; //K
+      charge_[12] =  0.; //M
+      charge_[13] =  0.; //F
+      charge_[14] =  0.; //P
+      charge_[15] =  0.; //S
+      charge_[16] =  0.; //T
+      charge_[17] =  0.; //W
+      charge_[18] =  0.; //Y
+      charge_[19] =  0.; //V
+    }
 
-		virtual ~AAChargeIndex() { delete _alpha;	}
-		
-    AAChargeIndex * clone() const { return new AAChargeIndex(); }
+    virtual ~AAChargeIndex() {}
+    
+    AAChargeIndex* clone() const { return new AAChargeIndex(); }
 
-	public:
-		double getIndex(int state) const throw (BadIntException)
-		{
-			if(state < 0 || state > 19) throw BadIntException(state, "AAChargeIndex::getIndex(). Invalid state.", _alpha);
-			return _charge[state];
-		}
-		
-		double getIndex(const string & state) const throw (BadCharException)
-		{
-			return _charge[_alpha->charToInt(state)];
-		}
+  public:
+    double getIndex(int state) const throw (BadIntException)
+    {
+      if (state < 0 || state > 19) throw BadIntException(state, "AAChargeIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
+      return charge_[state];
+    }
+    
+    double getIndex(const std::string& state) const throw (BadCharException)
+    {
+      return charge_[AlphabetTools::PROTEIN_ALPHABET.charToInt(state)];
+    }
 
-    vector<double> * getIndexVector() const { return new vector<double>(_charge); }
+    std::vector<double>* getIndexVector() const { return new std::vector<double>(charge_); }
 
-		const Alphabet * getAlphabet() const { return _alpha; }
+    const Alphabet* getAlphabet() const { return &AlphabetTools::PROTEIN_ALPHABET; }
 
 };
 

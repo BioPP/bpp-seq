@@ -68,55 +68,72 @@ class SimpleIndexDistance:
   public AlphabetIndex2<T>
 {
 
-	private:
-		AlphabetIndex1<T> * _index;
-		bool _sym;
+  private:
+    AlphabetIndex1<T>* index_;
+    bool sym_;
 
-	public:
-		SimpleIndexDistance(const AlphabetIndex1<T> & index) { _index = (AlphabetIndex1<T> *)index.clone(); }
-		virtual ~SimpleIndexDistance() { delete _index; }
+  public:
+    SimpleIndexDistance(const AlphabetIndex1<T>& index) :
+      index_(dynamic_cast<AlphabetIndex1<T>*>(index.clone()));
+      sym_(false)
+    {}
+    
+    SimpleIndexDistance(const SimpleIndexDistance& sid) :
+      index_(dynamic_cast<AlphabetIndex1<T>*>(sid.index_->clone())),
+      sym_(sid.sym_)
+    {}
 
-	public:
-		T getIndex(int state1, int state2) const throw (BadIntException)
-		{
-			if(state1 < 0 || state1 > 19) throw BadIntException(state1, "SimpleIndexDistance::getIndex(). Invalid state1.", _index -> getAlphabet());
-			if(state2 < 0 || state2 > 19) throw BadIntException(state2, "SimpleIndexDistance::getIndex(). Invalid state2.", _index -> getAlphabet());
-			T d = _index -> getIndex(state2) - _index -> getIndex(state1);
-			return _sym ? NumTools::abs<double>(d) : d;
-		}
-		
-		T getIndex(const string & state1, const string & state2) const throw (BadCharException)
+    SimpleIndexDistance& operator=(const SimpleIndexDistance& sid)
     {
-			T d = _index -> getIndex(state2) - _index -> getIndex(state1);
-			return _sym ? NumTools::abs<double>(d) : d;
-		}
+      delete index_;
+      index_ = dynamic_cast<AlphabetIndex1<T>*>(sid.index_->clone());
+      sym_ = sid.sym_;
+      return *this;
+    }
 
-		const Alphabet * getAlphabet() const { return _index -> getAlphabet(); }
+    virtual ~SimpleIndexDistance() { delete index_; }
 
-		Clonable * clone() const { return new SimpleIndexDistance<T>(* _index); }
-
-    Matrix<T> * getIndexMatrix() const
+  public:
+    T getIndex(int state1, int state2) const throw (BadIntException)
     {
-	    RowMatrix<T> * m = new RowMatrix<T>(20, 20);
-		  for(unsigned int i = 0; i < 20; i++) {
-			  for(unsigned int j = 0; j < 20; j++) {
-			    (* m)(i,j) = getIndex(i,j);
-			  }
-		  }
-	    return m;
+      if(state1 < 0 || state1 > 19) throw BadIntException(state1, "SimpleIndexDistance::getIndex(). Invalid state1.", index_ -> getAlphabet());
+      if(state2 < 0 || state2 > 19) throw BadIntException(state2, "SimpleIndexDistance::getIndex(). Invalid state2.", index_ -> getAlphabet());
+      T d = index_ -> getIndex(state2) - index_ -> getIndex(state1);
+      return sym_ ? NumTools::abs<double>(d) : d;
     }
     
-	public:
-		void setSymmetric(bool yn) { _sym = yn; }
-		bool isSymmetric() const { return _sym; }
+    T getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException)
+    {
+      T d = index_ -> getIndex(state2) - index_ -> getIndex(state1);
+      return sym_ ? NumTools::abs<double>(d) : d;
+    }
+
+    const Alphabet* getAlphabet() const { return index_->getAlphabet(); }
+
+    Clonable* clone() const { return new SimpleIndexDistance<T>(*index_); }
+
+    Matrix<T>* getIndexMatrix() const
+    {
+      RowMatrix<T> * m = new RowMatrix<T>(20, 20);
+      for(unsigned int i = 0; i < 20; i++) {
+        for(unsigned int j = 0; j < 20; j++) {
+          (* m)(i,j) = getIndex(i,j);
+        }
+      }
+      return m;
+    }
+    
+  public:
+    void setSymmetric(bool yn) { sym_ = yn; }
+    bool isSymmetric() const { return sym_; }
     /**
      * @return The AlphabetIndex1 object associated to this object.
      */
-    const AlphabetIndex1<T> * getAlphabetIndex1() const { return _index; }
+    const AlphabetIndex1<T>* getAlphabetIndex1() const { return index_; }
     /**
      * @return The AlphabetIndex1 object associated to this object.
      */
-    AlphabetIndex1<T> * getAlphabetIndex1() { return _index; }
+    AlphabetIndex1<T>* getAlphabetIndex1() { return index_; }
 
 };
 

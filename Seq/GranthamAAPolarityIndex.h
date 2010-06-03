@@ -68,56 +68,55 @@ namespace bpp
 class GranthamAAPolarityIndex:
   public AlphabetIndex1<double>
 {
-	private:
-		vector<double> _polarity;
-		const ProteicAlphabet * _alpha;
+  private:
+    std::vector<double> polarity_;
 
-	public:
-		GranthamAAPolarityIndex()
-		{
-			_alpha = new ProteicAlphabet();
-			_polarity.resize(20);
-			_polarity[ 0] =  8.1; //A
-			_polarity[ 1] = 10.5; //R
-			_polarity[ 2] = 11.6; //N
-			_polarity[ 3] = 13.0; //D
-			_polarity[ 4] =  5.5; //C
-			_polarity[ 5] = 10.5; //Q
-			_polarity[ 6] = 12.3; //E
-			_polarity[ 7] =  9.0; //G
-			_polarity[ 8] = 10.4; //H
-			_polarity[ 9] =  5.2; //I
-			_polarity[10] =  4.9; //L
-			_polarity[11] = 11.3; //K
-			_polarity[12] =  5.7; //M
-			_polarity[13] =  5.2; //F
-			_polarity[14] =  8.0; //P
-			_polarity[15] =  9.2; //S
-			_polarity[16] =  8.6; //T
-			_polarity[17] =  5.4; //W
-			_polarity[18] =  6.2; //Y
-			_polarity[19] =  5.9; //V
-		}
+  public:
+    GranthamAAPolarityIndex() :
+      polarity_()
+    {
+      polarity_.resize(20);
+      polarity_[ 0] =  8.1; //A
+      polarity_[ 1] = 10.5; //R
+      polarity_[ 2] = 11.6; //N
+      polarity_[ 3] = 13.0; //D
+      polarity_[ 4] =  5.5; //C
+      polarity_[ 5] = 10.5; //Q
+      polarity_[ 6] = 12.3; //E
+      polarity_[ 7] =  9.0; //G
+      polarity_[ 8] = 10.4; //H
+      polarity_[ 9] =  5.2; //I
+      polarity_[10] =  4.9; //L
+      polarity_[11] = 11.3; //K
+      polarity_[12] =  5.7; //M
+      polarity_[13] =  5.2; //F
+      polarity_[14] =  8.0; //P
+      polarity_[15] =  9.2; //S
+      polarity_[16] =  8.6; //T
+      polarity_[17] =  5.4; //W
+      polarity_[18] =  6.2; //Y
+      polarity_[19] =  5.9; //V
+    }
 
-		virtual ~GranthamAAPolarityIndex() { delete _alpha;	}
-		
-    GranthamAAPolarityIndex * clone() const { return new GranthamAAPolarityIndex(); }
+    virtual ~GranthamAAPolarityIndex() {}
+    
+    GranthamAAPolarityIndex* clone() const { return new GranthamAAPolarityIndex(); }
 
-	public:
-		double getIndex(int state) const throw (BadIntException)
-		{
-			if(state < 0 || state > 19) throw BadIntException(state, "GranthamAAPolarityIndex::getIndex(). Invalid state.", _alpha);
-			return _polarity[state];
-		}
-		
-		double getIndex(const string & state) const throw (BadCharException)
-		{
-			return _polarity[_alpha->charToInt(state)];
-		}
+  public:
+    double getIndex(int state) const throw (BadIntException)
+    {
+      if (state < 0 || state > 19) throw BadIntException(state, "GranthamAAPolarityIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
+      return polarity_[state];
+    }
+    
+    double getIndex(const std::string& state) const throw (BadCharException)
+    {
+      return polarity_[AlphabetTools::PROTEIN_ALPHABET.charToInt(state)];
+    }
 
-    vector<double> * getIndexVector() const { return new vector<double>(_polarity); }
+    std::vector<double>* getIndexVector() const { return new std::vector<double>(polarity_); }
 
-		const Alphabet * getAlphabet() const { return _alpha; }
+    const Alphabet* getAlphabet() const { return &AlphabetTools::PROTEIN_ALPHABET; }
 
 };
 
