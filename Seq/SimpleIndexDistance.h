@@ -74,7 +74,7 @@ class SimpleIndexDistance:
 
   public:
     SimpleIndexDistance(const AlphabetIndex1<T>& index) :
-      index_(dynamic_cast<AlphabetIndex1<T>*>(index.clone()));
+      index_(dynamic_cast<AlphabetIndex1<T>*>(index.clone())),
       sym_(false)
     {}
     
