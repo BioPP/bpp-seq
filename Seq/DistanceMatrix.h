@@ -87,20 +87,22 @@ class DistanceMatrix:
      */
     DistanceMatrix(unsigned int n): RowMatrix<double>(n, n), names_(n)
 		{
-			for(unsigned int i = 0; i < n; i++) names_[i] = "Taxon " + i;
+			for (unsigned int i = 0; i < n; ++i)
+        names_[i] = "Taxon " + i;
+      reset();
 		}
 
 		virtual ~DistanceMatrix() {}
 
 		DistanceMatrix(const DistanceMatrix& dist): RowMatrix<double>(dist), names_(dist.names_)	{}
 
-		DistanceMatrix & operator=(const DistanceMatrix& dist)
+		DistanceMatrix& operator=(const DistanceMatrix& dist)
 		{
 			unsigned int n = dist.size();
 			resize(n, n);
-			for(unsigned int i = 0; i < n; i++)
+			for(unsigned int i = 0; i < n; ++i)
       {
-				for(unsigned int j = 0; j < n; j++)
+				for(unsigned int j = 0; j < n; ++j)
         {
 					operator()(i, j) = dist(i, j);
 				}
@@ -119,7 +121,7 @@ class DistanceMatrix:
 			unsigned int n = size();
 			for (unsigned int i = 0; i < n; i++)
       {
-				for(unsigned int j = 0; j < n; j++)
+				for (unsigned int j = 0; j < n; j++)
         {
 					operator()(i, j) = 0;
 				}
@@ -143,7 +145,7 @@ class DistanceMatrix:
      */
     const std::string& getName(unsigned int i) const throw (IndexOutOfBoundsException)
     { 
-      if(i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::getName. Invalid indice.", i, 0, size());
+      if (i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::getName. Invalid indice.", i, 0, size());
       return names_[i];
     }
     

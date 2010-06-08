@@ -44,9 +44,9 @@ using namespace bpp;
 
 unsigned int DistanceMatrix::getNameIndex(const std::string& name) const throw (Exception)
 {
-  for(unsigned int i = 0; i < names_.size(); i++)
+  for (unsigned int i = 0; i < names_.size(); ++i)
   {
-    if(names_[i] == name) return i;
+    if (names_[i] == name) return i;
   }
   throw Exception("DistanceMatrix::getNameIndex. Name not found: '" + name + "'.");
 }
