@@ -43,7 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-VertebrateMitochondrialCodonAlphabet::VertebrateMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) : CodonAlphabet(alpha)
+VertebrateMitochondrialCodonAlphabet::VertebrateMitochondrialCodonAlphabet(const NucleicAlphabet* alpha) : CodonAlphabet(alpha)
 {
   string A = alpha->intToChar(0);
   string G = alpha->intToChar(2);
@@ -71,5 +71,6 @@ VertebrateMitochondrialCodonAlphabet::VertebrateMitochondrialCodonAlphabet(const
       j++;
     }
   }
+  initCodon_ = charToInt(A + T + G);
 }
 

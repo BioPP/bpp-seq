@@ -43,7 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-EchinodermMitochondrialCodonAlphabet::EchinodermMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) :
+EchinodermMitochondrialCodonAlphabet::EchinodermMitochondrialCodonAlphabet(const NucleicAlphabet* alpha) :
   CodonAlphabet(alpha)
 {
   string A = alpha->intToChar(0);
@@ -70,5 +70,6 @@ EchinodermMitochondrialCodonAlphabet::EchinodermMitochondrialCodonAlphabet(const
       j++;
     }
   }
+  initCodon_ = charToInt(A + T + G);
 }
 

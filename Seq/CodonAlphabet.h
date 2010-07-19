@@ -66,15 +66,15 @@ protected:
   /**
    *@brief the vector of the numbers of the stop codon states.
    */
-
   std::vector<int> stopCodons_;
+  
+  //Constant used for init codon:
+  int initCodon_;
 
 
 public:
   //Constant used for stop codons:
   static const std::string STOP;
-  //Constant used for init codon:
-  static const std::string INIT;
   
 public: // Constructor and destructor.
 		
@@ -83,7 +83,7 @@ public: // Constructor and destructor.
    * 
    * @param alpha The nucleic alphabet to be used.
    */
-  CodonAlphabet(const NucleicAlphabet* alpha) : WordAlphabet(alpha, 3), stopCodons_() {}
+  CodonAlphabet(const NucleicAlphabet* alpha) : WordAlphabet(alpha, 3), stopCodons_(), initCodon_() {}
   
   virtual ~CodonAlphabet() {}
   
@@ -107,7 +107,7 @@ public:
    * @brief Returns the vector of the numbers of the stop codon states.
    */
 
-  const std::vector<int>&  stopCodons() const { return stopCodons_;}
+  const std::vector<int>& stopCodons() const { return stopCodons_;}
   
   /**
    * @brief Get the int code for a codon given the int code of the three underlying positions.
@@ -130,7 +130,7 @@ public:
    * @param pos3 Char description for position 3.
    * @return The Char code of the codon.
    */
-  virtual std::string getCodon(const std::string & pos1, const std::string & pos2, const std::string & pos3) const throw (BadCharException);
+  virtual std::string getCodon(const std::string& pos1, const std::string& pos2, const std::string& pos3) const throw (BadCharException);
   
   /**
    * @brief Get the int code of the first position of a codon given its int description.
@@ -162,7 +162,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the first position of the codon.
    */
-  virtual std::string getFirstPosition (const std::string & codon) const throw (BadCharException);
+  virtual std::string getFirstPosition (const std::string& codon) const throw (BadCharException);
   
   /**
    * @brief Get the char code of the second position of a codon given its char description.
@@ -170,7 +170,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the second position of the codon.
    */
-  virtual std::string getSecondPosition(const std::string & codon) const throw (BadCharException);
+  virtual std::string getSecondPosition(const std::string& codon) const throw (BadCharException);
   
   /**
    * @brief Get the char code of the third position of a codon given its char description.
@@ -178,7 +178,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the third position of the codon.
    */
-  virtual std::string getThirdPosition(const std::string & codon) const throw (BadCharException);
+  virtual std::string getThirdPosition(const std::string& codon) const throw (BadCharException);
   
   /**
    * @brief Tell whether a particular codon is a stop codon.
@@ -188,7 +188,7 @@ public:
    */
   bool isStop(int codon) const
   {
-    return (getName(intToChar(codon))==STOP);
+    return (getName(intToChar(codon)) == STOP);
   }
 
   /**
@@ -200,6 +200,28 @@ public:
   bool isStop(const std::string& codon) const
   {
     return (getName(codon) == STOP);
+  }
+  
+  /**
+   * @brief Tell whether a particular codon is the init codon.
+   * 
+   * @param codon The int description of the codon to test.
+   * @return True if the codon is the init codon.
+   */
+  bool isInit(int codon) const
+  {
+    return (codon == initCodon_);
+  }
+
+  /**
+   * @brief Tell whether a particular codon is the init codon.
+   * 
+   * @param codon The char description of the codon to test.
+   * @return True if the codon is a init codon.
+   */
+  bool isInit(const std::string& codon) const
+  {
+    return (charToInt(codon) == initCodon_);
   }
   
   /**

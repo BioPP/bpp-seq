@@ -122,7 +122,7 @@ class SequenceTools:
 		 * @return A new sequence object with the given subsequence.
 		 * @throw IndexOutOfBoundsException, Exception In case of bad indices.
 		 */
-		static Sequence * subseq(const Sequence & sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception) ;
+		static Sequence* subseq(const Sequence & sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception) ;
 
 		/**
 		 * @brief Concatenate two sequences.
@@ -136,7 +136,7 @@ class SequenceTools:
 		 * @throw AlphabetMismatchException If the two alphabets do not match.
 		 * @throw Exception If the sequence names do not match.
 		 */
-		static Sequence * concatenate(const Sequence & seq1, const Sequence & seq2)
+		static Sequence* concatenate(const Sequence& seq1, const Sequence& seq2)
 		     throw (AlphabetMismatchException, Exception) ;
 
     /**
@@ -157,7 +157,7 @@ class SequenceTools:
 		 * @param sequence The sequence to complement.
 		 * @throw AlphabetException If the sequence is not a nucleotide sequence.
 		 */
-		static Sequence * getComplement(const Sequence & sequence) throw (AlphabetException);
+		static Sequence* getComplement(const Sequence& sequence) throw (AlphabetException);
 		
 		/**
 		 * @brief Get the transcription sequence of a DNA sequence.
@@ -169,7 +169,7 @@ class SequenceTools:
 		 * @param sequence The sequence to transcript.
 		 * @throw AlphabetException If the sequence is not a DNA sequence.
 		 */
-		static Sequence * transcript(const Sequence & sequence) throw (AlphabetException);
+		static Sequence* transcript(const Sequence& sequence) throw (AlphabetException);
 		
 		/**
 		 * @brief Get the reverse-transcription sequence of a RNA sequence.
@@ -181,7 +181,7 @@ class SequenceTools:
 		 * @param sequence The sequence to reverse-transcript.
 		 * @throw AlphabetException If the sequence is not a RNA sequence.
 		 */
-		static Sequence * reverseTranscript(const Sequence & sequence) throw (AlphabetException);
+		static Sequence* reverseTranscript(const Sequence& sequence) throw (AlphabetException);
 		
     /**
      * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
@@ -208,7 +208,7 @@ class SequenceTools:
 		 * @return A new sequence object containing the inverted sequence.
      * @author Sylvain Gaillard
 		 */
-		static Sequence* getInvert(const Sequence & sequence, bool chgSense = true);
+		static Sequence* getInvert(const Sequence& sequence, bool chgSense = true);
 		
     /**
      * @brief Inverse and complement a sequence.
@@ -232,21 +232,21 @@ class SequenceTools:
 		 * @throw AlphabetMismatchException If the two sequences do not have the same alphabet.
 		 * @throw SequenceNotAlignedException If the two sequences do not have the same length.
 		 */
-		static double getPercentIdentity(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, SequenceNotAlignedException);
+		static double getPercentIdentity(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, SequenceNotAlignedException);
 
 		/**
 		 * @return The number of sites in the sequences, <i>i.e.</i> all positions without gaps.
 		 *
 		 * @param seq The sequence to analyse.
 		 */
-		static unsigned int getNumberOfSites(const Sequence & seq);
+		static unsigned int getNumberOfSites(const Sequence& seq);
 
 		/**
 		 * @return The number of complete sites in the sequences, <i>i.e.</i> all positions without gaps and unresolved states (generic characters).
 		 *
 		 * @param seq The sequence to analyse.
 		 */
-		static unsigned int getNumberOfCompleteSites(const Sequence & seq);
+		static unsigned int getNumberOfCompleteSites(const Sequence& seq);
 
     /**
      * @return The number of unresolved sites in the sequence.
@@ -255,7 +255,7 @@ class SequenceTools:
      *
      * @author Sylvain Gaillard
      */
-    static unsigned int getNumberOfUnresolvedSites(const Sequence & seq);
+    static unsigned int getNumberOfUnresolvedSites(const Sequence& seq);
 
     /**
      * @brief Remove gaps from a sequence.
@@ -263,7 +263,7 @@ class SequenceTools:
 		 * @param seq The sequence to analyse.
      * @return A new sequence object without gaps.
      */
-    static Sequence * removeGaps(const Sequence & seq);
+    static Sequence* removeGaps(const Sequence& seq);
 
     /**
      * @brief Bowker's test for homogeneity.
@@ -280,7 +280,7 @@ class SequenceTools:
      * @return A BowkerTest object with the computed statistic and p-value (computed from a chi square distribution).
      * @throw SequenceNotAlignedException If the two sequences do not have the same length.
      */
-    static BowkerTest* bowkerTest(const Sequence & seq1, const Sequence & seq2) throw (SequenceNotAlignedException);
+    static BowkerTest* bowkerTest(const Sequence& seq1, const Sequence& seq2) throw (SequenceNotAlignedException);
 
     /**
      * @brief Get all putatives haplotypes from an heterozygous sequence.
@@ -294,7 +294,7 @@ class SequenceTools:
      *
      * @author Sylvain Gaillard
      */
-    static void getPutativeHaplotypes(const Sequence & seq, std::vector<Sequence *> & hap, unsigned int level = 2);
+    static void getPutativeHaplotypes(const Sequence& seq, std::vector<Sequence *>& hap, unsigned int level = 2);
 
     /**
      * @brief Combine two sequences.
@@ -331,6 +331,16 @@ class SequenceTools:
      */
     static Sequence* subtractHaplotype(const Sequence& s, const Sequence& h, std::string name = "", unsigned int level = 1) throw (SequenceNotAlignedException);
     
+    /**
+     * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.
+     *
+     * @param sequence The sequence to be reduced to CDS part.
+     * @param checkInit If true, then everything before the initiator codon will be removed, together with the initiator codon if includeInit is false.
+     * @param checkStop If true, then everything after the first stop codon will be removed, together with the stop codon if includeStop is false.
+     * @param includeInit Tell if initiator codon should be kept or removed. No effect if checkInit is false.
+     * @param includeStop Tell if stop codon should be kept or removed. No effect if checkStop is false.
+     */
+    static void getCDS(Sequence& sequence, bool checkInit, bool checkStop, bool includeInit=true, bool includeStop=true);
 };
 
 } //end of namespace bpp.

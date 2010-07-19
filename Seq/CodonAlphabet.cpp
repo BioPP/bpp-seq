@@ -50,8 +50,6 @@ using namespace bpp;
 using namespace std;
 
 const string CodonAlphabet::STOP = "Stop";
-const string CodonAlphabet::INIT = "Init";
-
 
 /******************************************************************************/
 

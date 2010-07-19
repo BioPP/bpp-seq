@@ -402,7 +402,7 @@ Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2
 
 /******************************************************************************/
 
-Sequence * SequenceTools::subtractHaplotype(const Sequence & s, const Sequence & h, string name, unsigned int level) throw (SequenceNotAlignedException) {
+Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h, string name, unsigned int level) throw (SequenceNotAlignedException) {
   const Alphabet * alpha = s.getAlphabet();
   if (name.size() == 0) 
     name = s.getName() + "_haplotype";
@@ -428,3 +428,25 @@ Sequence * SequenceTools::subtractHaplotype(const Sequence & s, const Sequence &
 }
 
 /******************************************************************************/
+
+void SequenceTools::getCDS(Sequence& sequence, bool checkInit, bool checkStop, bool includeInit, bool includeStop)
+{
+  const CodonAlphabet* alphabet = dynamic_cast<const CodonAlphabet*>(sequence.getAlphabet());
+  if (!alphabet)
+    throw AlphabetException("SequenceTools::getCDS. Sequence is not a codon sequence.");
+  if (checkInit) {
+    unsigned int i;
+    for (i = 0; i < sequence.size() && !alphabet->isInit(sequence[i]); ++i) {}
+    for (unsigned int j = 0; includeInit ? j < i : j <= i; ++j)
+      sequence.deleteElement(j);
+  }
+  if (checkStop) {
+    unsigned int i;
+    for (i = 0; i < sequence.size() && !alphabet->isStop(sequence[i]); ++i) {}
+    for (unsigned int j = includeStop ? i + 1 : i; j < sequence.size(); ++j)
+      sequence.deleteElement(j);
+  }
+}
+
+/******************************************************************************/
+
