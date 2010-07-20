@@ -38,6 +38,9 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "MafAlignmentParser.h"
+#include "SequenceWithQuality.h"
+
+//From Utils:
 #include <Utils/KeyvalTools.h>
 #include <Utils/TextTools.h>
 
@@ -50,16 +53,29 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
 
   string line;
   bool test = true;
+  MafSequence* currentSequence = 0;
   while (test)
   {
     getline(*stream_, line, '\n');
     if (TextTools::isEmpty(line))
     {
+      if (currentSequence) {
+        //Add previous sequence:
+        block->addSequence(*currentSequence); //The sequence is copied in the container.
+        delete currentSequence;
+      }
+
       //end of paragraph
       test = false;
     }
     else if (line[0] == 'a')
     {
+      if (currentSequence) {
+        //Add previous sequence:
+        block->addSequence(*currentSequence); //The sequence is copied in the container.
+        delete currentSequence;
+      }
+      
       //New block.
       block = new MafBlock();
 
@@ -87,10 +103,40 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
       char strand = tmp[0];
 
       unsigned int srcSize = TextTools::to<unsigned int>(st.nextToken());
-      MafSequence sequence(name, st.nextToken(), start, strand, srcSize);
-      if (sequence.getGenomicSize() != size)
-        throw Exception("MafAlignmentParser::nextBlock. sequence found does not match specified size: " + TextTools::toString(sequence.getGenomicSize()) + ", should be " + TextTools::toString(size) + ".");
-      block->addSequence(sequence);
+      if (currentSequence) {
+        //Add previous sequence:
+        block->addSequence(*currentSequence); //The sequence is copied in the container.
+        delete currentSequence;
+      }
+      currentSequence = new MafSequence(name, st.nextToken(), start, strand, srcSize);
+      if (currentSequence->getGenomicSize() != size)
+        throw Exception("MafAlignmentParser::nextBlock. Sequence found does not match specified size: " + TextTools::toString(currentSequence->getGenomicSize()) + ", should be " + TextTools::toString(size) + ".");
+    }
+    else if (line[0] == 'q')
+    {
+      if (!currentSequence)
+        throw Exception("MafAlignmentParser::nextBlock(). Quality scores found, but there is currently no sequence!");
+      StringTokenizer st(line);
+      st.nextToken(); //The 'q' tag
+      string name = st.nextToken();
+      if (name != currentSequence->getName())
+        throw Exception("MafAlignmentParser::nextBlock(). Quality scores found, but with a different name from the previous sequence: " + name + ", should be " + currentSequence->getName() + ".");
+      string qstr = st.nextToken();
+      //Now parse the score string:
+      SequenceQuality* seqQual = new SequenceQuality(qstr.size());
+      for (unsigned int i = 0; i < qstr.size(); ++i) {
+        char c = qstr[i];
+        if (c == '-') {
+          seqQual->setScore(i, -1);
+        } else if (c == '0' || c == '1' || c == '2' || c== '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9') {
+          seqQual->setScore(i, c - '0');
+        } else if (c == 'F' || c == 'f') { //Finished
+          seqQual->setScore(i, 10);
+        } else {
+          throw Exception("MafAlignmentParser::nextBlock(). Unvalid quality score: " + TextTools::toString(c) + ". Should be 0-9, F or '-'.");
+        }
+      }
+      currentSequence->addAnnotation(seqQual);
     }
   }
   return block;

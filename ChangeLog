@@ -1,5 +1,6 @@
 20/07/10 Julien Dutheil
 * New Sequence interface design.
+* Maf parser now reads quality scores if there are some.
 
 19/07/10 Julien Dutheil
 * New method isInit in CodonAlphabet.

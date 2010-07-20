@@ -119,6 +119,8 @@ class MafBlock
 
     void addSequence(const MafSequence& sequence) { alignment_.addSequence(sequence, false); }
 
+    unsigned int getNumberOfSequences() const { return alignment_.getNumberOfSequences(); }
+
 };
 
 /**
