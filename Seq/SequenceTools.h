@@ -122,7 +122,7 @@ class SequenceTools:
 		 * @return A new sequence object with the given subsequence.
 		 * @throw IndexOutOfBoundsException, Exception In case of bad indices.
 		 */
-		static Sequence* subseq(const Sequence & sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception) ;
+		static Sequence* subseq(const Sequence& sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception) ;
 
 		/**
 		 * @brief Concatenate two sequences.
@@ -190,11 +190,10 @@ class SequenceTools:
      * inhibited).
      *
      * @param seq The sequence to inverse.
-     * @param chgSense Tell if the sense tag should be shifted.
      * @return A ref toward the sequence.
      * @author Sylvain Gaillard
      */
-    static Sequence& invert(Sequence& seq, bool chgSense = true);
+    static Sequence& invert(Sequence& seq);
 
 		/**
 		 * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
@@ -203,12 +202,10 @@ class SequenceTools:
      * inhibited).
      *
 		 * @param sequence The sequence to inverse.
-     * @param chgSense Tell if the sense tag should be shifted (true by
-     * default).
 		 * @return A new sequence object containing the inverted sequence.
      * @author Sylvain Gaillard
 		 */
-		static Sequence* getInvert(const Sequence& sequence, bool chgSense = true);
+		static Sequence* getInvert(const Sequence& sequence);
 		
     /**
      * @brief Inverse and complement a sequence.
@@ -217,12 +214,10 @@ class SequenceTools:
      * separatly.
      *
      * @param seq The sequence to inverse and complement.
-     * @param chgSense Tell if the sense tag should be shifted (false by
-     * default).
      * @return A ref toward the sequence.
      * @author Sylvain Gaillard
      */
-    static Sequence& invertComplement(Sequence& seq, bool chgSense = false);
+    static Sequence& invertComplement(Sequence& seq);
 
     /**
 		 * @return The identity percent of 2 sequence.
@@ -294,7 +289,7 @@ class SequenceTools:
      *
      * @author Sylvain Gaillard
      */
-    static void getPutativeHaplotypes(const Sequence& seq, std::vector<Sequence *>& hap, unsigned int level = 2);
+    static void getPutativeHaplotypes(const Sequence& seq, std::vector<Sequence*>& hap, unsigned int level = 2);
 
     /**
      * @brief Combine two sequences.

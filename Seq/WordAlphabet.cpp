@@ -320,7 +320,7 @@ Sequence* WordAlphabet::translate(const Sequence& sequence, int pos) const throw
     i += l;
   }
 
-  return new Sequence(sequence.getName(), v2, this);
+  return new BasicSequence(sequence.getName(), v2, this);
 }
 
 /****************************************************************************************/
@@ -331,7 +331,7 @@ Sequence* WordAlphabet::reverse(const Sequence& sequence) const throw (AlphabetM
       (sequence.getAlphabet()->getAlphabetType() != getAlphabetType()))
     throw AlphabetMismatchException("No matching alphabets");
 
-  Sequence* pseq = new Sequence(sequence.getName(), "", getNAlphabet(0));
+  Sequence* pseq = new BasicSequence(sequence.getName(), "", getNAlphabet(0));
 
   unsigned int s = sequence.size();
   for (unsigned int i = 0; i < s; i++)

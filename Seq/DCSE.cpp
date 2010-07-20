@@ -90,7 +90,7 @@ void DCSE::appendFromStream(istream& input, SiteContainer& sc) const throw (Exce
     name     = TextTools::removeFirstWhiteSpaces(name);
     if(name.find("Helix numbering") == name.npos
     && name.find("mask") == name.npos)
-      sc.addSequence(Sequence(name, sequence, alpha), true);
+      sc.addSequence(BasicSequence(name, sequence, alpha), true);
   }
 }
 

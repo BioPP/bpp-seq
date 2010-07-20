@@ -66,7 +66,7 @@ NucleicAcidsReplication SequenceTools::_transc(& _DNA, & _RNA);
 
 /******************************************************************************/
 
-Sequence * SequenceTools::subseq(const Sequence & sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception)
+Sequence* SequenceTools::subseq(const Sequence& sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception)
 {
 	// Checking interval
 	if (end >= sequence.size()) throw IndexOutOfBoundsException ("SequenceTools::subseq : Invalid upper bound", end, 0, sequence.size());
@@ -80,12 +80,12 @@ Sequence * SequenceTools::subseq(const Sequence & sequence, unsigned int begin, 
 	temp.erase(temp.begin(), temp.begin() + begin);
 
 	// New sequence creation
-	return new Sequence(sequence.getName(), temp, sequence.getComments(), sequence.getAlphabet());
+	return new BasicSequence(sequence.getName(), temp, sequence.getComments(), sequence.getAlphabet());
 }
 	
 /******************************************************************************/
 
-Sequence * SequenceTools::concatenate(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, Exception)
+Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception)
 {
 	// Sequence's alphabets matching verification
 	if ((seq1.getAlphabet()->getAlphabetType()) != (seq2.getAlphabet()->getAlphabetType())) 
@@ -99,7 +99,7 @@ Sequence * SequenceTools::concatenate(const Sequence & seq1, const Sequence & se
 	vector<int> sequence  = seq1.getContent();
 	vector<int> sequence2 = seq2.getContent();
 	sequence.insert(sequence.end(), sequence2.begin(), sequence2.end());
-	return new Sequence(seq1.getName(), sequence, seq1.getComments(), seq1.getAlphabet());
+	return new BasicSequence(seq1.getName(), sequence, seq1.getComments(), seq1.getAlphabet());
 }
 		
 /******************************************************************************/
@@ -138,7 +138,7 @@ Sequence* SequenceTools::getComplement(const Sequence& sequence) throw (Alphabet
 
 /******************************************************************************/
 
-Sequence * SequenceTools::transcript(const Sequence & sequence) throw (AlphabetException)
+Sequence* SequenceTools::transcript(const Sequence& sequence) throw (AlphabetException)
 {
 	// Alphabet type checking
 	if (sequence.getAlphabet()->getAlphabetType() != "DNA alphabet")
@@ -151,7 +151,7 @@ Sequence * SequenceTools::transcript(const Sequence & sequence) throw (AlphabetE
 
 /******************************************************************************/
 
-Sequence * SequenceTools::reverseTranscript(const Sequence & sequence) throw (AlphabetException)
+Sequence* SequenceTools::reverseTranscript(const Sequence& sequence) throw (AlphabetException)
 {
 	// Alphabet type checking
 	if (sequence.getAlphabet()->getAlphabetType() != "RNA alphabet")
@@ -164,7 +164,7 @@ Sequence * SequenceTools::reverseTranscript(const Sequence & sequence) throw (Al
 
 /******************************************************************************/
 
-Sequence& SequenceTools::invert(Sequence& seq, bool chgSense) {
+Sequence& SequenceTools::invert(Sequence& seq) {
   unsigned int seq_size = seq.size(); // store seq size for efficiency
   unsigned int tmp_state = 0; // to store one state when swapping positions
   unsigned int j = seq_size; // symetric position iterator from sequence end
@@ -174,21 +174,20 @@ Sequence& SequenceTools::invert(Sequence& seq, bool chgSense) {
     seq.setElement(i, seq.getValue(j));
     seq.setElement(j, tmp_state);
   }
-  if(chgSense) seq.setSense(!seq.getSense());
   return seq;
 }
 
 /******************************************************************************/
 
-Sequence* SequenceTools::getInvert(const Sequence& sequence, bool chgSense) {
+Sequence* SequenceTools::getInvert(const Sequence& sequence) {
   Sequence* iSeq = sequence.clone();
-  invert(* iSeq);
+  invert(*iSeq);
   return iSeq;
 }
 
 /******************************************************************************/
 
-Sequence& SequenceTools::invertComplement(Sequence& seq, bool chgSense) {
+Sequence& SequenceTools::invertComplement(Sequence& seq) {
 	// Alphabet type checking
 	NucleicAcidsReplication* NAR;
 	if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet") {
@@ -213,13 +212,12 @@ Sequence& SequenceTools::invertComplement(Sequence& seq, bool chgSense) {
   if (seq_size % 2) { // treate the state in the middle of odd sequences
     seq.setElement(seq_size / 2, NAR->translate(seq.getValue(seq_size / 2)));
   }
-  if(chgSense) seq.setSense(!seq.getSense());
   return seq;
 }
 
 /******************************************************************************/
 
-double SequenceTools::getPercentIdentity(const Sequence & seq1, const Sequence & seq2) throw (AlphabetMismatchException, SequenceNotAlignedException)
+double SequenceTools::getPercentIdentity(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, SequenceNotAlignedException)
 {
 	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
 		throw AlphabetMismatchException("SequenceTools::getPercentIdentity", seq1.getAlphabet(), seq2.getAlphabet());
@@ -233,10 +231,10 @@ double SequenceTools::getPercentIdentity(const Sequence & seq1, const Sequence &
 
 /******************************************************************************/
 
-unsigned int SequenceTools::getNumberOfSites(const Sequence & seq)
+unsigned int SequenceTools::getNumberOfSites(const Sequence& seq)
 {
 	unsigned int count = 0;
-  const Alphabet * alpha = seq.getAlphabet();
+  const Alphabet* alpha = seq.getAlphabet();
 	for(unsigned int i = 0; i < seq.size(); i++)
   {
 		if(! alpha->isGap(seq[i])) count++;
@@ -357,11 +355,11 @@ void SequenceTools::getPutativeHaplotypes(const Sequence & seq, std::vector<Sequ
     }
   }
   // Combinatorial haplotypes building (the use of tree may be more accurate)
-  t_hap.push_back(new Sequence(seq.getName() + "_hap" + TextTools::toString(hap_count++), "", alpha));
+  t_hap.push_back(new BasicSequence(seq.getName() + "_hap" + TextTools::toString(hap_count++), "", alpha));
   for (unsigned int i = 0 ; i < states.size() ; i++) {
     for (list<Sequence *>::iterator it = t_hap.begin() ; it != t_hap.end() ; it++) {
       for (unsigned int j = 0 ; j < states[i].size() ; j++) {
-        Sequence * tmp_seq = new Sequence(seq.getName() + "_hap", (** it).getContent(), alpha);
+        Sequence * tmp_seq = new BasicSequence(seq.getName() + "_hap", (** it).getContent(), alpha);
         if (j < states[i].size() - 1) {
           tmp_seq->setName(tmp_seq->getName() + TextTools::toString(hap_count++));
           tmp_seq->addElement(states[i][j]);
@@ -396,7 +394,7 @@ Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2
     seq.push_back(alpha->getGeneric(st));
     st.clear();
   }
-  Sequence* s = new Sequence(s1.getName() + "+" + s2.getName(), seq, alpha);
+  Sequence* s = new BasicSequence(s1.getName() + "+" + s2.getName(), seq, alpha);
   return s;
 }
 
@@ -423,7 +421,7 @@ Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h,
     }  
     seq += c; 
   }  
-  Sequence * hap = new Sequence(name, seq, alpha);
+  Sequence* hap = new BasicSequence(name, seq, alpha);
   return hap;
 }
 

@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _MAFALIGNMENTPARSER_H_
 #define _MAFALIGNMENTPARSER_H_
 
-#include "Sequence.h"
+#include "SequenceWithAnnotation.h"
 #include "SequenceTools.h"
 #include "AlphabetTools.h"
 #include "AlignedSequenceContainer.h"
@@ -53,12 +53,12 @@ namespace bpp {
 /**
  * @brief A sequence class which is used to store data from MAF files.
  * 
- * It extends the simple Sequence class to store MAF-specific features,
+ * It extends the SequenceWithAnnotation class to store MAF-specific features,
  * like the chromosome position.
  * A MAF sequence is necessarily a DNA sequence.
  */
 class MafSequence:
-  public Sequence
+  public SequenceWithAnnotation
 {
   private:
     unsigned int begin_;
@@ -68,13 +68,13 @@ class MafSequence:
 
   public:
     MafSequence(const std::string& name, const std::string& sequence):
-      Sequence(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(0), strand_(0), size_(0), srcSize_(0)
+      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(0), strand_(0), size_(0), srcSize_(0)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
     }
 
     MafSequence(const std::string& name, const std::string& sequence, unsigned int begin, char strand, unsigned int srcSize) :
-      Sequence(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(begin), strand_(strand), size_(0), srcSize_(srcSize)
+      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(begin), strand_(strand), size_(0), srcSize_(srcSize)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
     }

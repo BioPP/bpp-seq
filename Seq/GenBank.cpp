@@ -78,7 +78,7 @@ void GenBank::appendFromStream(std::istream& input, SequenceContainer& vsc) cons
         getline(input, temp, '\n');  // Copy current line in temporary string
       }
       if(name == "") throw Exception("GenBank::read(). Sequence with no ACCESSION number!");
-      Sequence* seq = new Sequence(name, sequence, vsc.getAlphabet());
+      Sequence* seq = new BasicSequence(name, sequence, vsc.getAlphabet());
       vsc.addSequence(*seq, true);
       name = "";
     }

@@ -79,7 +79,7 @@ void Mase::appendFromStream(std::istream& input, SequenceContainer& vsc) const t
 				if ((name != "") && (sequence != ""))
         {
 					// New sequence creation, and addition in existing VectorSequenceContainer
-					vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
+					vsc.addSequence(BasicSequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
 					name = "";
 					sequence = "";
 					seqComments.clear();
@@ -107,7 +107,7 @@ void Mase::appendFromStream(std::istream& input, SequenceContainer& vsc) const t
 	// Addition of the last sequence in file
 	if ((name != "") && (sequence != ""))
   {
-		vsc.addSequence(Sequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
+		vsc.addSequence(BasicSequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
 	}
 
 	// Set new general comments in VectorSequenceContainer (old + new comments)

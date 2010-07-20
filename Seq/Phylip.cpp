@@ -103,7 +103,7 @@ void Phylip::readSequential(std::istream& in, SiteContainer& asc) const throw (E
       if(!TextTools::isEmpty(name)) //If this is not the first sequence!
       {
         // Add the previous sequence to the container:
-        asc.addSequence(Sequence(name, seq, asc.getAlphabet()), checkNames_);
+        asc.addSequence(BasicSequence(name, seq, asc.getAlphabet()), checkNames_);
       }
       name = v[0];
       seq  = v[1];
@@ -124,7 +124,7 @@ void Phylip::readSequential(std::istream& in, SiteContainer& asc) const throw (E
     temp = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(in));
   }
   // Add last sequence:
-  asc.addSequence(Sequence(name, seq, asc.getAlphabet()), checkNames_);
+  asc.addSequence(BasicSequence(name, seq, asc.getAlphabet()), checkNames_);
 }
 
 /******************************************************************************/
@@ -165,7 +165,7 @@ void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const throw (
   }
   for (unsigned int i = 0; i < names.size(); i++)
   {
-    asc.addSequence(Sequence(names[i], seqs[i], asc.getAlphabet()), checkNames_);
+    asc.addSequence(BasicSequence(names[i], seqs[i], asc.getAlphabet()), checkNames_);
   }
 }
   

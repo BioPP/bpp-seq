@@ -43,100 +43,35 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
+#include <string>
 #include <iostream>
 
-const int SequenceWithQuality::DEFAULT_QUALITY_VALUE = 20;
+using namespace std;
+
+const string SequenceQuality::QUALITY_SCORE = "Quality score";
+const int SequenceQuality::DEFAULT_QUALITY_VALUE = 20;
 
 /******************************************************************************/
 
-void SequenceWithQuality::setToSizeR(unsigned int newSize) {
-  Sequence::setToSizeR(newSize);
-  unsigned int seqSize = qualScores_.size();
-  if (newSize == seqSize) return;
-  if (newSize < seqSize) {
-    qualScores_.resize(newSize);
-    return;
-  }
-  if (newSize > seqSize) {
-    extendQualityScores_();
-  }
+void SequenceQuality::afterSequenceChanged(const SymbolListEditionEvent& event)
+{
+  qualScores_.clear();
+  qualScores_.insert(qualScores_.begin(), event.getSymbolList()->size(), DEFAULT_QUALITY_VALUE);
 }
 
 /******************************************************************************/
 
-void SequenceWithQuality::setToSizeL(unsigned int newSize) {
-  Sequence::setToSizeL(newSize);
-  unsigned int seqSize = qualScores_.size();
-  if (newSize == seqSize) return;
-  if (newSize < seqSize) {
-    //We must truncate vector from the left
-    //This is a very unefficient method!
-    qualScores_.erase(qualScores_.begin(), qualScores_.begin() + (seqSize - newSize));
-    return;
-  }
-  if (newSize > seqSize) {
-    qualScores_.insert(qualScores_.begin(), newSize - seqSize, DEFAULT_QUALITY_VALUE);
-  }
+void SequenceQuality::afterSequenceInserted(const SymbolListInsertionEvent& event)
+{
+  qualScores_.insert(qualScores_.begin() + event.getPosition(), event.getLength(), DEFAULT_QUALITY_VALUE);
 }
 
 /******************************************************************************/
 
-void SequenceWithQuality::append(const std::vector<int>& content) throw (BadIntException) {
-  Sequence::append(content);
-  extendQualityScores_();
-}
-
-void SequenceWithQuality::append(const std::vector<std::string>& content) throw (BadCharException) {
-  Sequence::append(content);
-  extendQualityScores_();
-}
-
-void SequenceWithQuality::append(const std::string& content) throw (BadCharException) {
-  extendQualityScores_();
+void SequenceQuality::afterSequenceDeleted(const SymbolListDeletionEvent& event)
+{
+  qualScores_.erase(qualScores_.begin() + event.getPosition(), qualScores_.begin() + event.getPosition() + event.getLength());
 }
 
 /******************************************************************************/
 
-void SequenceWithQuality::addElement(const std::string& c) throw (BadCharException) {
-  Sequence::addElement(c);
-  qualScores_.push_back(DEFAULT_QUALITY_VALUE);
-}
-
-void SequenceWithQuality::addElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) {
-  Sequence::addElement(pos, c);
-  qualScores_.insert(qualScores_.begin() + pos, DEFAULT_QUALITY_VALUE);
-}
-
-void SequenceWithQuality::addElement(int v) throw (BadIntException) {
-  Sequence::addElement(v);
-  qualScores_.push_back(DEFAULT_QUALITY_VALUE);
-}
-
-void SequenceWithQuality::addElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException) {
-  Sequence::addElement(pos, v);
-  qualScores_.insert(qualScores_.begin() + pos, DEFAULT_QUALITY_VALUE);
-}
-
-/******************************************************************************/
-
-void SequenceWithQuality::setContent(const std::string& sequence) throw (BadCharException) {
-  Sequence::setContent(sequence);
-  extendQualityScores_();
-}
-
-void SequenceWithQuality::setContent(const std::vector<int>& list) throw (BadIntException) {
-  Sequence::setContent(list);
-  extendQualityScores_();
-}
-
-void SequenceWithQuality::setContent(const std::vector<std::string>& list) throw (BadCharException) {
-  Sequence::setContent(list);
-  extendQualityScores_();
-}
-
-/******************************************************************************/
-
-void SequenceWithQuality::deleteElement(unsigned int pos) throw (IndexOutOfBoundsException) {
-  Sequence::deleteElement(pos);
-  qualScores_.erase(qualScores_.begin() + pos);
-}

@@ -145,7 +145,7 @@ const Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const 
     }
     consensus.push_back(cons);
   }
-  const Sequence* seqConsensus = new Sequence(name, consensus, sc.getAlphabet());
+  const Sequence* seqConsensus = new BasicSequence(name, consensus, sc.getAlphabet());
   return seqConsensus;
 }
 
@@ -238,29 +238,29 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
     const SiteContainer& dottedAln,
     const Alphabet* resolvedAlphabet) throw (AlphabetException, Exception)
 {
-  if(!AlphabetTools::isDefaultAlphabet(dottedAln.getAlphabet()))
+  if (!AlphabetTools::isDefaultAlphabet(dottedAln.getAlphabet()))
     throw AlphabetException("SiteContainerTools::resolveDottedAlignment. Alignment alphabet should of class 'DefaultAlphabet'.", dottedAln.getAlphabet());
   
   //First we look for the reference sequence:
   unsigned int n = dottedAln.getNumberOfSequences();
-  if(n == 0) throw Exception("SiteContainerTools::resolveDottedAlignment. Input alignment contains no sequence.");
+  if (n == 0) throw Exception("SiteContainerTools::resolveDottedAlignment. Input alignment contains no sequence.");
 
-  const Sequence * refSeq = NULL;
-  for(unsigned int  i = 0; i < n; i++) //Test each sequence
+  const Sequence* refSeq = 0;
+  for (unsigned int  i = 0; i < n; ++i) //Test each sequence
   {
     const Sequence* seq = &dottedAln.getSequence(i);
     bool isRef = true;
-    for(unsigned int j = 0; isRef && j < seq->size(); j++) //For each site in the sequence
+    for (unsigned int j = 0; isRef && j < seq->size(); ++j) //For each site in the sequence
     {
       if(seq->getChar(j) == ".")
         isRef = false;
     }
-    if(isRef) //We found the reference sequence!
+    if (isRef) //We found the reference sequence!
     {
-      refSeq = new Sequence(*seq);
+      refSeq = new BasicSequence(*seq);
     }
   }
-  if(!refSeq) throw Exception("SiteContainerTools::resolveDottedAlignment. No reference sequence was found in the input alignment.");
+  if (!refSeq) throw Exception("SiteContainerTools::resolveDottedAlignment. No reference sequence was found in the input alignment.");
 
   //Now we build a new VectorSiteContainer:
   VectorSiteContainer* sites = new VectorSiteContainer(n, resolvedAlphabet);
@@ -268,7 +268,7 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
   //We add each site one by one:
   unsigned int m = dottedAln.getNumberOfSites();
   string state;
-  for(unsigned int i = 0; i < m; i++)
+  for (unsigned int i = 0; i < m; ++i)
   {
     string resolved = refSeq->getChar(i);
     const Site* site = &dottedAln.getSite(i);

@@ -2,6 +2,7 @@
 // File:    SequenceWithQuality.h
 // Authors: Sylvain Gaillard
 //          Vincent Cahais
+//          Julien Dutheil
 // Created: 19/01/2010 16:01:20
 // 
 
@@ -38,10 +39,10 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _SEQUENCEWITHQUALITY_H_
-#define _SEQUENCEWITHQUALITY_H_
+#ifndef _SEQUENCEQUALITY_H_
+#define _SEQUENCEQUALITY_H_
 
-#include "Sequence.h"
+#include "SequenceWithAnnotation.h"
 
 // From the STL
 
@@ -55,20 +56,150 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp {
   /**
-   * @brief The SequenceWithQuality class
+   * @brief The SequenceQuality class
    *
    * This is a sequence with quality score associated to each element.
    * The score is a signed int value that can represent the phred or the
-   * Solexa qyality score for nucleic sequence.
+   * Solexa quality score for nucleic sequence.
    *
-   * @author Sylvain Gaillard
+   * @author Sylvain Gaillard, Vincent Cahais, Julien Dutheil
    */
-  class SequenceWithQuality: public Sequence {
+  class SequenceQuality :
+    public virtual SequenceAnnotation
+  {
     private:
+      bool removable_;
       std::vector<int> qualScores_;
+
+    public:
+      static const std::string QUALITY_SCORE; 
 
     private:
       static const int DEFAULT_QUALITY_VALUE;
+
+    public:
+
+      /**
+       * @name Constructors
+       * @{
+       */
+
+      /**
+       * @brief Build a new SequenceQuality object
+       *
+       * Build a new SequenceQuality object and set the quality scores to
+       * the default value DEFAULT_QUALITY_VALUE.
+       *
+       * @param size The size of the sequence. 
+       * @param removable Tell if this listener can be removed by the user.
+       */
+      SequenceQuality(unsigned int size = 0, bool removable = true) :
+        removable_(removable),
+        qualScores_(size, DEFAULT_QUALITY_VALUE) {}
+
+
+      /**
+       * @brief Build a new SequenceQuality object
+       *
+       * Build a new SequenceQuality and assign quality scores from
+       * a vector of int.
+       *
+       * @param quality The quality scores
+       * @param removable Tell if this listener can be removed by the user.
+       */
+      SequenceQuality(const std::vector<int>& quality, bool removable = true) :
+        removable_(removable),
+        qualScores_(quality)
+      {
+      //    if (size() != qualScores_.size())
+      //      throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
+      }
+
+      /** @} */
+
+      /**
+       * @name Destructor
+       * @{
+       */
+      virtual ~SequenceQuality() {}
+      /** @} */
+
+      /**
+       * @name The Clonable interface
+       * @{
+       */
+#ifdef NO_VIRTUAL_COV
+      Clonable*
+#else
+      SequenceQuality*
+#endif
+      clone() const { return new SequenceQuality(*this); }
+      /** @} */
+
+    public:
+      const std::string& getType() const { return QUALITY_SCORE; }
+
+      bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const
+      {
+        if (throwException && qualScores_.size() != sequence.size()) throw Exception("SequenceQuality. Quality scores must match the sequence size.");
+        return (qualScores_.size() == sequence.size());
+      }
+
+      bool isRemovable() const { return removable_; }
+      bool isShared() const { return false; }
+      void beforeSequenceChanged(const SymbolListEditionEvent& event) {}
+      void afterSequenceChanged(const SymbolListEditionEvent& event);
+      void beforeSequenceInserted(const SymbolListInsertionEvent& event) {}
+      void afterSequenceInserted(const SymbolListInsertionEvent& event);
+      void beforeSequenceDeleted(const SymbolListDeletionEvent& event) {}
+      void afterSequenceDeleted(const SymbolListDeletionEvent& event);
+      void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
+      void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
+
+      unsigned int getSize() const { return qualScores_.size(); }
+
+      const int& operator[](unsigned int i) const { return qualScores_[i]; }
+      int& operator[](unsigned int i) { return qualScores_[i]; }
+
+      void setScores(const std::vector<int>& scores) {
+        if (scores.size() != qualScores_.size())
+          throw DimensionException("SequenceQuality::setScores. Trying to replace score by a vector with different length.", scores.size(), qualScores_.size());
+        qualScores_ = scores;
+      }
+
+      /**
+       * @return All scores as a vector.
+       */
+      const std::vector<int>& getScores() const { return qualScores_; }
+
+      void setScore(unsigned int pos, int score) {
+        if (pos >= qualScores_.size())
+          throw Exception("SequenceQuality::setScore. Vector overflow. Scores number: " + TextTools::toString(qualScores_.size()) + ", but trying to insert score at position " + TextTools::toString(pos) + ".");
+        qualScores_[pos] = score;
+      }
+      
+      void setScores(unsigned int pos, const std::vector<int>& scores) {
+        if (pos + scores.size() > qualScores_.size())
+          throw Exception("SequenceQuality::setScores. Vector overflow. Scores number: " + TextTools::toString(qualScores_.size()) + ", but trying to insert " + TextTools::toString(scores.size()) + " scores at position " + TextTools::toString(pos) + ".");
+        std::copy(scores.begin(), scores.end(), qualScores_.begin() + pos); 
+      }
+  };
+
+
+
+  /**
+   * @brief A SequenceWithAnnotation class with quality scores attached.
+   *
+   * This classes adds some usefull functions to handle quality scores.
+   *
+   * @see SequenceQuality
+   * @author Sylvain Gaillard, Vincent Cahais, Julien Dutheil
+   */
+  class SequenceWithQuality :
+    public SequenceWithAnnotation
+  {
+    private:
+      SequenceQuality* qualScores_;
 
     public:
 
@@ -94,8 +225,11 @@ namespace bpp {
           const std::string& sequence,
           const Alphabet* alpha
           ) throw (BadCharException):
-        Sequence(name, sequence, alpha),
-        qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
+        SequenceWithAnnotation(name, sequence, alpha),
+        qualScores_(new SequenceQuality(sequence.size(), false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality from a std::string
@@ -118,8 +252,11 @@ namespace bpp {
           const Comments& comments,
           const Alphabet* alpha
           ) throw (BadCharException):
-        Sequence(name, sequence, comments, alpha),
-        qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
+        SequenceWithAnnotation(name, sequence, comments, alpha),
+        qualScores_(new SequenceQuality(sequence.size(), false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality from a std::string
@@ -140,13 +277,13 @@ namespace bpp {
           const std::string& name,
           const std::string& sequence,
           const std::vector<int>& quality,
-          const Alphabet* alpha
-          ) throw (BadCharException, DimensionException):
-        Sequence(name, sequence, alpha),
-        qualScores_(quality) {
-          if (size() != qualScores_.size())
-            throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
-        }
+          const Alphabet* alpha)
+        throw (BadCharException, DimensionException):
+        SequenceWithAnnotation(name, sequence, alpha),
+        qualScores_(new SequenceQuality(quality, false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality from a std::string
@@ -171,13 +308,13 @@ namespace bpp {
           const std::string& sequence,
           const std::vector<int>& quality,
           const Comments& comments,
-          const Alphabet* alpha
-          ) throw (BadCharException, DimensionException):
-        Sequence(name, sequence, comments, alpha),
-        qualScores_(quality) {
-          if (size() != qualScores_.size())
-            throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
-        }
+          const Alphabet* alpha)
+        throw (BadCharException, DimensionException):
+        SequenceWithAnnotation(name, sequence, comments, alpha),
+        qualScores_(new SequenceQuality(quality, false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality from a std::vector<int>
@@ -194,10 +331,13 @@ namespace bpp {
       SequenceWithQuality(
           const std::string& name,
           const std::vector<int>& sequence,
-          const Alphabet* alpha
-          ) throw (BadIntException):
-        Sequence(name, sequence, alpha),
-        qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
+          const Alphabet* alpha)
+        throw (BadIntException):
+        SequenceWithAnnotation(name, sequence, alpha),
+        qualScores_(new SequenceQuality(sequence.size(), false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality from a std::vector<int>
@@ -218,10 +358,13 @@ namespace bpp {
           const std::string& name,
           const std::vector<int>& sequence,
           const Comments& comments,
-          const Alphabet* alpha
-          ) throw (BadIntException):
-        Sequence(name, sequence, comments, alpha),
-        qualScores_(sequence.size(), DEFAULT_QUALITY_VALUE) {}
+          const Alphabet* alpha)
+        throw (BadIntException):
+        SequenceWithAnnotation(name, sequence, comments, alpha),
+        qualScores_(new SequenceQuality(sequence.size(), false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality from a std::vector<int>
@@ -242,13 +385,13 @@ namespace bpp {
           const std::string& name,
           const std::vector<int>& sequence,
           const std::vector<int>& quality,
-          const Alphabet* alpha
-          ) throw (BadIntException, DimensionException):
-        Sequence(name, sequence, alpha),
-        qualScores_(quality) {
-          if (size() != qualScores_.size())
-            throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
-        }
+          const Alphabet* alpha)
+        throw (BadIntException, DimensionException):
+        SequenceWithAnnotation(name, sequence, alpha),
+        qualScores_(new SequenceQuality(quality, false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality from a std::vector<int>
@@ -273,13 +416,13 @@ namespace bpp {
           const std::vector<int>& sequence,
           const std::vector<int>& quality,
           const Comments& comments,
-          const Alphabet* alpha
-          ) throw (BadIntException, DimensionException):
-        Sequence(name, sequence, comments, alpha),
-        qualScores_(quality) {
-          if (size() != qualScores_.size())
-            throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
-        }
+          const Alphabet* alpha)
+        throw (BadIntException, DimensionException):
+        SequenceWithAnnotation(name, sequence, comments, alpha),
+        qualScores_(new SequenceQuality(quality, false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality
@@ -289,7 +432,11 @@ namespace bpp {
        *
        * @param s The Sequence object
        */
-      SequenceWithQuality(const Sequence& s): Sequence(s), qualScores_(s.size(), DEFAULT_QUALITY_VALUE) {}
+      SequenceWithQuality(const Sequence& s) :
+        SequenceWithAnnotation(s), qualScores_(new SequenceQuality(s.size(), false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /**
        * @brief Build a new SequenceWithQuality
@@ -305,14 +452,13 @@ namespace bpp {
        */
       SequenceWithQuality(
           const Sequence& s,
-          const std::vector<int>& sc
-          ) throw (DimensionException):
-        Sequence(s),
-        qualScores_(sc) {
-          if (s.size() != qualScores_.size()) {
-            throw DimensionException("SequenceWithQuality constructor: sequence and qualities must have the same length", qualScores_.size(),  s.size());
-          }
-        }
+          const std::vector<int>& sc)
+        throw (DimensionException):
+        SequenceWithAnnotation(s),
+        qualScores_(new SequenceQuality(sc, false))
+      {
+        addAnnotation(qualScores_);
+      }
 
       /** @} */
 
@@ -322,6 +468,19 @@ namespace bpp {
        */
       virtual ~SequenceWithQuality() {}
       /** @} */
+
+      SequenceWithQuality(const SequenceWithQuality& sequence) : 
+        SequenceWithAnnotation(sequence), qualScores_(0)
+      {
+        qualScores_ = dynamic_cast<SequenceQuality*>(&getAnnotation(SequenceQuality::QUALITY_SCORE));                  
+      }
+
+      SequenceWithQuality& operator=(const SequenceWithQuality& sequence)
+      { 
+        SequenceWithAnnotation::operator=(sequence);
+        qualScores_ = dynamic_cast<SequenceQuality*>(&getAnnotation(SequenceQuality::QUALITY_SCORE));
+        return *this;
+      }
 
       /**
        * @name The Clonable interface
@@ -333,30 +492,6 @@ namespace bpp {
       SequenceWithQuality*
 #endif
       clone() const { return new SequenceWithQuality(*this); }
-      /** @} */
-
-      /**
-       * @name Adjusting the size of the sequence.
-       * @{
-       */
-      void setToSizeR(unsigned int newSize);
-
-      void setToSizeL(unsigned int newSize);
-
-      void append(const std::vector<int>& content) throw (BadIntException);
-      void append(const std::vector<std::string>& content) throw (BadCharException);
-      void append(const std::string& content) throw (BadCharException);
-
-      void addElement(const std::string& c) throw (BadCharException);
-      void addElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
-      void addElement(int v) throw (BadIntException);
-      void addElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException);
-
-      void setContent(const std::string& sequence) throw (BadCharException);
-      void setContent(const std::vector<int>& list) throw (BadIntException);
-      void setContent(const std::vector<std::string>& list) throw (BadCharException);
-
-      void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException);
       /** @} */
 
       /**
@@ -374,8 +509,8 @@ namespace bpp {
        * sequence size
        */
       void setQuality(unsigned int pos, int quality) throw (IndexOutOfBoundsException) {
-        if (pos >= qualScores_.size())
-          throw IndexOutOfBoundsException("SequenceWithQuality::setQuality: pos out of bounds", pos, 0, qualScores_.size() - 1);
+        if (pos >= qualScores_->getSize())
+          throw IndexOutOfBoundsException("SequenceWithQuality::setQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
         qualScores_[pos] = quality;
       }
       
@@ -390,9 +525,9 @@ namespace bpp {
        * sequence size
        */
       int getQuality(unsigned int pos) const throw (IndexOutOfBoundsException) {
-        if (pos >= qualScores_.size())
-          throw IndexOutOfBoundsException("SequenceWithQuality::getQuality: pos out of boundsé", pos, 0, qualScores_.size() - 1);
-        return qualScores_[pos];
+        if (pos >= qualScores_->getSize())
+          throw IndexOutOfBoundsException("SequenceWithQuality::getQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
+        return (*qualScores_)[pos];
       }
 
       /**
@@ -404,9 +539,9 @@ namespace bpp {
        * sequence size
        */
       void setQualities(const std::vector<int>& quality) throw (DimensionException) {
-        if (quality.size() != qualScores_.size())
-          throw DimensionException("SequenceWithQuality::setQualities: quality must fit sequence size", quality.size(), qualScores_.size());
-        qualScores_ = quality;
+        if (quality.size() != qualScores_->getSize())
+          throw DimensionException("SequenceWithQuality::setQualities: quality must fit sequence size", quality.size(), qualScores_->getSize());
+        qualScores_->setScores(quality);
       }
 
       /**
@@ -415,7 +550,13 @@ namespace bpp {
        * @return A reference to the quality vector
        */
       const std::vector<int>& getQualities() const {
-        return qualScores_;
+        return qualScores_->getScores();
+      }
+
+      void append(const std::vector<int>& content)
+        throw (BadIntException)
+      {
+        SequenceWithAnnotation::append(content);
       }
 
       /**
@@ -431,12 +572,14 @@ namespace bpp {
        */
       void append(
           const std::vector<int>& content,
-          const std::vector<int>& qualities
-          ) throw (BadIntException, DimensionException) {
+          const std::vector<int>& qualities)
+        throw (BadIntException, DimensionException)
+      {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
-        Sequence::append(content);
-        VectorTools::append(qualScores_, qualities);
+        append(content);
+        //Update scores:
+        qualScores_->setScores(content.size(), qualities);
       }
 
       /**
@@ -452,12 +595,14 @@ namespace bpp {
        */
       void append(
           const std::vector<std::string>& content,
-          const std::vector<int>& qualities
-          ) throw (BadCharException, DimensionException) {
+          const std::vector<int>& qualities)
+        throw (BadCharException, DimensionException)
+      {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
         Sequence::append(content);
-        VectorTools::append(qualScores_, qualities);
+        //Update scores:
+        qualScores_->setScores(content.size(), qualities);
       }
 
       /**
@@ -473,13 +618,15 @@ namespace bpp {
        */
       void append(
           const std::string& content,
-          const std::vector<int> qualities
-          ) throw (BadCharException, DimensionException) {
+          const std::vector<int>& qualities)
+        throw (BadCharException, DimensionException)
+      {
         if (content.size() / this->getAlphabet()->getStateCodingSize()
             != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size() / this->getAlphabet()->getStateCodingSize());
         Sequence::append(content);
-        VectorTools::append(qualScores_, qualities);
+        //Update scores:
+        qualScores_->setScores(content.size() / this->getAlphabet()->getStateCodingSize(), qualities);
       }
 
       /**
@@ -492,10 +639,11 @@ namespace bpp {
        * the Alphabet
        */
       void addElement(
-          const std::string& c, int q
-          ) throw (BadCharException) {
+          const std::string& c, int q)
+        throw (BadCharException)
+      {
         Sequence::addElement(c);
-        qualScores_.push_back(q);
+        qualScores_->setScore(size() - 1, q);
       }
 
       /**
@@ -511,10 +659,11 @@ namespace bpp {
        * size
        */
       void addElement(
-          unsigned int pos, const std::string& c, int q
-          ) throw (BadCharException, IndexOutOfBoundsException) {
+          unsigned int pos, const std::string& c, int q)
+        throw (BadCharException, IndexOutOfBoundsException)
+      {
         Sequence::addElement(pos, c);
-        qualScores_.insert(qualScores_.begin() + pos, q);
+        qualScores_->setScore(pos, q);
       }
 
       /**
@@ -525,11 +674,11 @@ namespace bpp {
        *
        * @throw BadIntException if the value does not match the current Alphabet
        */
-      void addElement(
-          int v, int q
-          ) throw (BadCharException) {
+      void addElement(int v, int q)
+        throw (BadCharException)
+      {
         Sequence::addElement(v);
-        qualScores_.push_back(q);
+        qualScores_->setScore(size() - 1, q);
       }
 
       /**
@@ -543,22 +692,18 @@ namespace bpp {
        * @throw IndexOutOfBoundsException if pos is greater than the sequence
        * size
        */
-      void addElement(
-          unsigned int pos, int v, int q
-          ) throw (BadCharException, IndexOutOfBoundsException) {
+      void addElement(unsigned int pos, int v, int q)
+        throw (BadCharException, IndexOutOfBoundsException)
+      {
         Sequence::addElement(pos, v);
-        qualScores_.insert(qualScores_.begin() + pos, q);
+        qualScores_->setScore(pos, q);
       }
 
       /** @} */
 
-    private:
-      void extendQualityScores_() {
-        if (qualScores_.size() >= size()) return;
-        while (qualScores_.size() < size())
-          qualScores_.push_back(DEFAULT_QUALITY_VALUE);
-      }
   };
-}
+
+} // end of namespace bpp.
 
 #endif // _SEQUENCEWITHQUALITY_H_
+

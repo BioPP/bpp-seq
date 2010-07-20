@@ -51,21 +51,21 @@ using namespace std;
 
 /****************************************************************************************/
 
-Site::Site(const Alphabet* alpha) : SymbolList(alpha), position_(0) {}
+Site::Site(const Alphabet* alpha) : BasicSymbolList(alpha), position_(0) {}
 
-Site::Site(const Alphabet* alpha, int position) : SymbolList(alpha), position_(position) {}
+Site::Site(const Alphabet* alpha, int position) : BasicSymbolList(alpha), position_(position) {}
 
-Site::Site(const vector<string>& site, const Alphabet* alpha) throw (BadCharException) : SymbolList(site, alpha), position_(0) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha) throw (BadCharException) : BasicSymbolList(site, alpha), position_(0) {}
 
-Site::Site(const vector<string>& site, const Alphabet* alpha, int position) throw (BadCharException) : SymbolList(site, alpha), position_(position) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha, int position) throw (BadCharException) : BasicSymbolList(site, alpha), position_(position) {}
 
-Site::Site(const vector<int>& site, const Alphabet* alpha) throw (BadIntException) : SymbolList(site, alpha), position_(0) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha) throw (BadIntException) : BasicSymbolList(site, alpha), position_(0) {}
 
-Site::Site(const vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException) : SymbolList(site, alpha), position_(position) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException) : BasicSymbolList(site, alpha), position_(position) {}
 
 /****************************************************************************************/
 
-Site::Site(const Site& site): SymbolList(site), position_(site.getPosition()) {}
+Site::Site(const Site& site): BasicSymbolList(site), position_(site.getPosition()) {}
 
 Site& Site::operator=(const Site& s)
 {

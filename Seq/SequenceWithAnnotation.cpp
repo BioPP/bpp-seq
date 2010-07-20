@@ -1,8 +1,7 @@
 //
-// File: Sequence.cpp
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
-// Created on: Tue Aug 21 2003
+// File: SequenceWithAnnotation.cpp
+// Created by: Julien Dutheil
+// Created on: Mon Jul 19 2010
 //
 
 /*
@@ -38,7 +37,7 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "Sequence.h" // class's header file
+#include "SequenceWithAnnotation.h" // class's header file
 
 #include "AlphabetTools.h"
 #include "StringSequenceTools.h"
@@ -55,15 +54,15 @@ using namespace std;
 
 /* Constructors: **************************************************************/
 
-BasicSequence::BasicSequence(const Alphabet* alpha):
-  BasicSymbolList(alpha),
+SequenceWithAnnotation::SequenceWithAnnotation(const Alphabet* alpha):
+  EdSymbolList(alpha),
   name_(),
   comments_()
 {}
 
-BasicSequence::BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha)
+SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha)
 throw (BadCharException) :
-	BasicSymbolList(alpha),
+	EdSymbolList(alpha),
 	name_(name),
   comments_()
 {
@@ -71,71 +70,71 @@ throw (BadCharException) :
     setContent(sequence);
 }
 
-BasicSequence::BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha)
+SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadCharException) :
-	BasicSymbolList(alpha),
+	EdSymbolList(alpha),
 	name_(name),
 	comments_(comments)
 {
-  if (sequence!="")
+  if (sequence != "")
     setContent(sequence);
 }
 
-BasicSequence::BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha)
+SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha)
 throw (BadCharException) :
-	BasicSymbolList(sequence, alpha),
+	EdSymbolList(sequence, alpha),
 	name_(name),
   comments_()
 {}
 
-BasicSequence::BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha)
+SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadCharException) :
-	BasicSymbolList(sequence, alpha),
+	EdSymbolList(sequence, alpha),
 	name_(name),
 	comments_(comments)
 {}
 
-BasicSequence::BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha)
+SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha)
   throw (BadIntException) :
-	BasicSymbolList(sequence, alpha),
+	EdSymbolList(sequence, alpha),
 	name_(name),
   comments_()
 {}
 
-BasicSequence::BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha)
+SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadIntException) :
-	BasicSymbolList(sequence, alpha),
+	EdSymbolList(sequence, alpha),
 	name_(name),
 	comments_(comments)
 {}
 
 /* Copy constructors: *********************************************************/
 
-BasicSequence::BasicSequence(const Sequence& s) :
-	BasicSymbolList(s),
+SequenceWithAnnotation::SequenceWithAnnotation(const Sequence& s) :
+	EdSymbolList(s),
 	name_(s.getName()),
 	comments_(s.getComments())
 {}
 
-BasicSequence::BasicSequence(const BasicSequence& s) :
-	BasicSymbolList(s),
+SequenceWithAnnotation::SequenceWithAnnotation(const SequenceWithAnnotation& s) :
+	EdSymbolList(s),
 	name_(s.getName()),
 	comments_(s.getComments())
 {}
 
 /* Assignation operator: ******************************************************/
 
-BasicSequence& BasicSequence::operator=(const Sequence& s)
+SequenceWithAnnotation& SequenceWithAnnotation::operator=(const Sequence& s)
 {
-  BasicSymbolList::operator=(s);
+  EdSymbolList::operator=(s);
 	name_     = s.getName();
 	comments_ = s.getComments();
-	return *this;
+  return *this;
 }
 
-BasicSequence& BasicSequence::operator=(const BasicSequence& s)
+SequenceWithAnnotation& SequenceWithAnnotation::operator=(const SequenceWithAnnotation& s)
 {
-  BasicSymbolList::operator=(s);
+  EdSymbolList::operator=(s);
 	name_     = s.getName();
 	comments_ = s.getComments();
 	return *this;
@@ -143,16 +142,19 @@ BasicSequence& BasicSequence::operator=(const BasicSequence& s)
 
 /******************************************************************************/
 
-void BasicSequence::setContent(const std::string& sequence) throw (BadCharException)
+void SequenceWithAnnotation::setContent(const std::string& sequence) throw (BadCharException)
 {
+  SymbolListEditionEvent event(this);
+  fireBeforeSequenceChanged(event);
 	// Remove blanks in sequence
 	content_ = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet());
   //Warning, an exception may be thrown here!
+  fireAfterSequenceChanged(event);
 }
 
 /******************************************************************************/
 
-void BasicSequence::setToSizeR(unsigned int newSize)
+void SequenceWithAnnotation::setToSizeR(unsigned int newSize)
 {
 	// Size verification
 	unsigned int seqSize = content_.size();
@@ -160,18 +162,24 @@ void BasicSequence::setToSizeR(unsigned int newSize)
 
 	if (newSize < seqSize)
   {
+    SymbolListDeletionEvent event(this, newSize, seqSize - newSize);
+    fireBeforeSequenceDeleted(event);
 		content_.resize(newSize);
+    fireAfterSequenceDeleted(event);
 		return;
 	}
 
 	// Add gaps up to specified size
+  SymbolListInsertionEvent event(this, seqSize, newSize - seqSize);
+  fireBeforeSequenceInserted(event);
   int gap = getAlphabet()->getGapCharacterCode();
 	while (content_.size() < newSize) content_.push_back(gap);
+  fireAfterSequenceInserted(event);
 }
 
 /******************************************************************************/
 
-void BasicSequence::setToSizeL(unsigned int newSize)
+void SequenceWithAnnotation::setToSizeL(unsigned int newSize)
 {
 	// Size verification
 	unsigned int seqSize = content_.size();
@@ -180,42 +188,55 @@ void BasicSequence::setToSizeL(unsigned int newSize)
 	if (newSize < seqSize)
   {
 		//We must truncate sequence from the left.
-		//This is a very unefficient method!
+    SymbolListDeletionEvent event(this, 0, seqSize - newSize);
+    fireBeforeSequenceDeleted(event);
 		content_.erase(content_.begin(), content_.begin() + (seqSize - newSize));
+    fireAfterSequenceDeleted(event);
 		return;
 	}
 
 	// Add gaps up to specified size
+  SymbolListInsertionEvent event(this, 0, newSize - seqSize);
+  fireBeforeSequenceInserted(event);
   int gap = getAlphabet()->getGapCharacterCode();
 	content_.insert(content_.begin(), newSize - seqSize, gap);
+  fireAfterSequenceInserted(event);
 }
 
 /******************************************************************************/
 
-void BasicSequence::append(const std::vector<int>& content) throw (BadIntException)
+void SequenceWithAnnotation::append(const std::vector<int>& content) throw (BadIntException)
 {
+  SymbolListInsertionEvent event(this, content_.size(), content.size());
+  fireBeforeSequenceInserted(event);
 	// Check list for incorrect characters
 	for (unsigned int i = 0; i < content.size(); i++)
 		if(!getAlphabet()->isIntInAlphabet(content[i]))
-      throw BadIntException(content[i], "BasicSequence::append", getAlphabet());
-	//BasicSequence is valid:
+      throw BadIntException(content[i], "SequenceWithAnnotation::append", getAlphabet());
+	//SequenceWithAnnotation is valid:
 	for (unsigned int i = 0; i < content.size(); i++)
 		content_.push_back(content[i]);
+  
+  fireAfterSequenceInserted(event);
 }
 
-void BasicSequence::append(const std::vector<std::string>& content) throw (BadCharException)
+void SequenceWithAnnotation::append(const std::vector<std::string>& content) throw (BadCharException)
 {
+  SymbolListInsertionEvent event(this, content_.size(), content.size());
+  fireBeforeSequenceInserted(event);
 	// Check list for incorrect characters
 	for (unsigned int i = 0; i < content.size(); i++)
 		if(!getAlphabet()->isCharInAlphabet(content[i]))
-      throw BadCharException(content[i], "BasicSequence::append", getAlphabet());
+      throw BadCharException(content[i], "SequenceWithAnnotation::append", getAlphabet());
 	
-	//BasicSequence is valid:
+	//SequenceWithAnnotation is valid:
 	for (unsigned int i = 0; i < content.size(); i++)
 		content_.push_back(getAlphabet()->charToInt(content[i]));
+  
+  fireAfterSequenceInserted(event);
 }
 
-void BasicSequence::append(const std::string& content) throw (BadCharException)
+void SequenceWithAnnotation::append(const std::string& content) throw (BadCharException)
 {
 	append(StringSequenceTools::codeSequence(content, getAlphabet()));
 }

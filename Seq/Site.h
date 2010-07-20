@@ -59,7 +59,7 @@ namespace bpp
  * This should not be a constraint, since you never read sites directly from a file.
  */
 class Site:
-  public SymbolList 
+  public BasicSymbolList 
 {  
   private:
     /**

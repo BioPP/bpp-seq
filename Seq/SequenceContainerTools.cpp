@@ -52,8 +52,8 @@ using namespace std;
 SequenceContainer * SequenceContainerTools::createContainerOfSpecifiedSize(const Alphabet* alphabet, unsigned int size)
 {
 	VectorSequenceContainer* vsc = new VectorSequenceContainer(alphabet);
-	for (unsigned int i = 0; i < size; i++)
-		vsc->addSequence(Sequence("" + i, "", alphabet), false);
+	for (unsigned int i = 0; i < size; ++i)
+		vsc->addSequence(BasicSequence("" + i, "", alphabet), false);
 	return vsc;
 }
 

@@ -1,8 +1,7 @@
 //
-// File: Sequence.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
-// Created on: Tue Aug 21 2003
+// File: SequenceWithAnnotation.h
+// Created by: Julien Dutheil
+// Created on: Mon Jul 19 2010
 //
 
 /*
@@ -38,11 +37,10 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _SEQUENCE_H_
-#define _SEQUENCE_H_
+#ifndef _SEQUENCEWITHANNOTATION_H_
+#define _SEQUENCEWITHANNOTATION_H_
 
-#include "SymbolList.h"
-#include "SequenceExceptions.h"
+#include "Sequence.h"
 
 // From the STL:
 #include <string>
@@ -51,147 +49,32 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief Declaration of Comments type.
- *
- * Comments are defined as a std::vector of std::strings to allow the later creation of a
- * full Comments class.
- */
-typedef std::vector<std::string> Comments;
+class SequenceWithAnnotation;
 
 /**
- * @brief The sequence interface. 
- *
- * This is a general purpose container, containing an ordered list of states.
- * The states that allowed to be present in the sequence are defined
- * by an alphabet object.
- *
- * Sequence objets also contain a name attribute and potentially several comment lines.
- * A sequence object is also event-driven, allowing easy extension.
- *
- * @see Alphabet
+ * @brief Interface for sequence annotations.
  */
-class Sequence:
-  public virtual SymbolList
+class SequenceAnnotation :
+  public virtual SymbolListListener
 {
   public:
-    virtual ~Sequence() {}
-
-  public:
-  
-#ifndef NO_VIRTUAL_COV
-    Sequence* clone() const = 0;
-#endif
-    
     /**
-     * @name Setting/getting the name of the sequence.
-     *
-     * @{
+     * @return The type of the annotation. This is used for querying annotations.
      */
-     
-    /**
-     * @brief Get the name of this sequence.
-     *
-     * @return This sequence name.
-     */
-    virtual const std::string& getName() const = 0;
-    
-    /**
-     * @brief Set the name of this sequence.
-     *
-     * @param name The new name of the sequence.
-     */
-    virtual void setName(const std::string& name) = 0;    
-    /** @} */
-    
-    /**
-     * @name Setting/getting the comments associated to the sequence.
-     *
-     * @{
-     */
-     
-    /**
-     * @brief Get the comments associated to this sequence.
-     *
-     * @return The comments of the sequence.
-     */
-    virtual const Comments& getComments() const = 0;
-    
-    /**
-     * @brief Set the comments associated to this sequence.
-     *
-     * @param comments The new comments of the sequence.
-     */
-    virtual void setComments(const Comments& comments) = 0;
-    
-    /** @} */
-    
-    /**
-     * @name Adjusting the size of the sequence.
-     *
-     * @{
-     */
-     
-    /**
-     * @brief Set the whole content of the sequence.
-     *
-     * @param sequence The new content of the sequence.
-     * @see The Sequence constructor for information about the way sequences are internaly stored.
-     */
-    virtual void setContent(const std::string& sequence) throw (BadCharException) = 0;
-    virtual void setContent(const std::vector<int>& list) throw (BadIntException) = 0;
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException) = 0;
+    virtual const std::string& getType() const = 0;
 
     /**
-     * @brief Set up the size of a sequence from the right side.
+     * @brief Test is the annotation is valid for a given sequence.
      *
-     * All new characters are filled with gaps.
-     * If the specified size is < to the sequence size, the sequence will be truncated.
-     *
-     * @param newSize The new size of the sequence.
+     * @param sequence The sequence to be validated against.
+     * @param throwException If set to yes, throw an exception if the sequence is not valid.
+     * @return true if this annotation is complient with the given sequence.
      */
-    virtual void setToSizeR(unsigned int newSize) = 0;
-    
-    /**
-     * @brief Set up the size of a sequence from the left side.
-     *
-     * All new characters are filled with gaps.
-     * If the specified size is < to the sequence size, the sequence will be truncated.
-     *
-     * @param newSize The new size of the sequence.
-     */
-    virtual void setToSizeL(unsigned int newSize) = 0;
-
-    /**
-     * @brief Append the specified content to the sequence.
-     *
-     * @param content The content to append to the sequence.
-     * @throw BadIntException If the content does not match the current alphabet.
-     */
-    virtual void append(const std::vector<int>& content) throw (BadIntException) = 0;
-
-    /**
-     * @brief Append the specified content to the sequence.
-     *
-     * @param content The content to append to the sequence.
-     * @throw BadCharException If the content does not match the current alphabet.
-     */
-    virtual void append(const std::vector<std::string>& content) throw (BadCharException) = 0;
-
-    /**
-     * @brief Append the specified content to the sequence.
-     *
-     * @param content The content to append to the sequence.
-     * @throw BadCharException If the content does not match the current alphabet.
-     */
-    virtual void append(const std::string& content) throw (BadCharException) = 0;
-    /** @} */
-
+    virtual bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const = 0;
 };
 
-
 /**
- * @brief A basic implementation of the Sequence interface. 
+ * @brief An implementation of the Sequence interface that supports annotation. 
  *
  * This is a general purpose container, containing an ordered list of states.
  * The states that allowed to be present in the sequence are defined
@@ -202,11 +85,14 @@ class Sequence:
  *
  * Sequence objets also contain a name attribute and potentially several comment lines.
  *
- * @see Alphabet
+ * The gestion of sequence content is identical to the BasicSequence object, but edition events are
+ * properly fired. Listener are therefore properly handled.
+ *
+ * @see BasicSequence
  */
-class BasicSequence :
+class SequenceWithAnnotation :
   public Sequence,
-  public BasicSymbolList
+  public EdSymbolList
 {
   private:
 
@@ -230,7 +116,7 @@ class BasicSequence :
      *
      * @param alpha    A pointer toward the Alphabet to be used with this Sequence.
      */
-    BasicSequence(const Alphabet* alpha);
+    SequenceWithAnnotation(const Alphabet* alpha);
 
     /**
      * @brief Direct constructor: build a Sequence object from a std::string
@@ -244,7 +130,7 @@ class BasicSequence :
      * @param sequence The whole sequence to be parsed as a std::string.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException);
   
     /**
      * @brief Direct constructor: build a Sequence object from a std::string.
@@ -260,7 +146,7 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -272,7 +158,7 @@ class BasicSequence :
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha) throw (BadCharException);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -285,7 +171,7 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -294,7 +180,7 @@ class BasicSequence :
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) throw (BadIntException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) throw (BadIntException);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -304,33 +190,33 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadIntException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadIntException);
 
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
      */
-    BasicSequence(const Sequence& s);
+    SequenceWithAnnotation(const Sequence& s);
    
     /**
      * @brief The Sequence copy constructor. This does not perform a hard copy of the alphabet object.
      */
-    BasicSequence(const BasicSequence& s);
+    SequenceWithAnnotation(const SequenceWithAnnotation& s);
  
     /**
      * @brief The Sequence generic assignment operator. This does not perform a hard copy of the alphabet object.
      *
      * @return A ref toward the assigned Sequence.
      */
-    BasicSequence& operator=(const Sequence& s);
+    SequenceWithAnnotation& operator=(const Sequence& s);
    
     /**
      * @brief The Sequence assignment operator. This does not perform a hard copy of the alphabet object.
      *
      * @return A ref toward the assigned Sequence.
      */
-    BasicSequence& operator=(const BasicSequence& s);
+    SequenceWithAnnotation& operator=(const SequenceWithAnnotation& s);
 
-    virtual ~BasicSequence() {}
+    virtual ~SequenceWithAnnotation() {}
 
   public:
   
@@ -339,7 +225,7 @@ class BasicSequence :
      *
      * @{
      */
-    BasicSequence* clone() const { return new BasicSequence(*this); }
+    SequenceWithAnnotation* clone() const { return new SequenceWithAnnotation(*this); }
     /** @} */
         
     
@@ -403,11 +289,11 @@ class BasicSequence :
     virtual void setContent(const std::string& sequence) throw (BadCharException);
     void setContent(const std::vector<int>& list) throw (BadIntException)
     {
-      BasicSymbolList::setContent(list);
+      EdSymbolList::setContent(list);
     }
     void setContent(const std::vector<std::string>& list) throw (BadCharException)
     {
-      BasicSymbolList::setContent(list);
+      EdSymbolList::setContent(list);
     }
 
 
@@ -457,9 +343,42 @@ class BasicSequence :
 
     /** @} */
 
+    /**
+     * @brief Add a new annotation to the sequence.
+     *
+     * @param anno The annotation object to be added. Unless the annotation is shared,
+     * the annotation object will be owned by the sequence object, and will be copied
+     * and deleted when needed.
+     * @throw Exception If the annotation is not valid for this sequence.
+     * @see SequenceWithAnnotation::isValidWith
+     */
+    void addAnnotation(SequenceAnnotation* anno) throw (Exception)
+    {
+      anno->isValidWith(*this);
+      addSymbolListListener(anno);
+    }
+    
+    const SequenceAnnotation& getAnnotation(const std::string& type) const
+    {
+      for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
+        const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(&getListener(i));
+        if (anno && anno->getType() == type) return *anno;
+      }
+      throw Exception("SequenceWithAnnotation::getAnnotation. No annotation found with type '" + type + "'.");
+    }
+    
+    SequenceAnnotation& getAnnotation(const std::string& type)
+    {
+      for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
+        SequenceAnnotation* anno = dynamic_cast<SequenceAnnotation*>(&getListener(i));
+        if (anno && anno->getType() == type) return *anno;
+      }
+      throw Exception("SequenceWithAnnotation::getAnnotation. No annotation found with type '" + type + "'.");
+    }
+
 };
 
 } //end of namespace bpp.
 
-#endif // _SEQUENCE_H_
+#endif // _SEQUENCEWITHANNOTATION_H_
 

@@ -203,7 +203,7 @@ void Fasta::appendFromStream(istream& input, SequenceContainer& vsc) const throw
     {
       input.putback(c);
       c = last_c;
-      Sequence tmpseq("", "", vsc.getAlphabet());
+      BasicSequence tmpseq("", "", vsc.getAlphabet());
       nextSequence(input, tmpseq);
       vsc.addSequence(tmpseq, checkNames_);
     }

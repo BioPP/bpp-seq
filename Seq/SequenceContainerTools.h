@@ -231,7 +231,7 @@ class SequenceContainerTools
       std::vector<std::string> seqNames = seqCont1.getSequencesNames();
       for (unsigned int i = 0; i < seqNames.size(); i++)
       {
-        Sequence tmp = seqCont1.getSequence(seqNames[i]);
+        BasicSequence tmp = seqCont1.getSequence(seqNames[i]);
         tmp.append(seqCont2.getContent(seqNames[i]));
         outputCont.addSequence(tmp, false);
       }
@@ -252,7 +252,7 @@ class SequenceContainerTools
       bool checkNames = outputCont.getNumberOfSequences() > 0;
       for (unsigned int i = 0; i < seqNames.size(); i++)
       {
-        Sequence seq(seqNames[i], seqCont.toString(seqNames[i]), outputCont.getAlphabet());
+        BasicSequence seq(seqNames[i], seqCont.toString(seqNames[i]), outputCont.getAlphabet());
         outputCont.addSequence(seq, checkNames);
       }
     }

@@ -179,7 +179,7 @@ void NexusIOSequence::appendFromStream(std::istream& input, SiteContainer& vsc) 
   }
   for (unsigned int i = 0; i < names.size(); i++)
   {
-    alignment->addSequence(Sequence(names[i], seqs[i], vsc.getAlphabet()), checkNames_);
+    alignment->addSequence(BasicSequence(names[i], seqs[i], vsc.getAlphabet()), checkNames_);
   }
 
   if (matchChar)

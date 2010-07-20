@@ -440,7 +440,7 @@ const Sequence& CompressedVectorSiteContainer::getSequence(unsigned int i) const
     sequence[j] = sites_[index_[j]]->getContent()[i];
   }
   if (sequences_[i]) delete sequences_[i];
-  sequences_[i] = new Sequence(names_[i], sequence, *comments_[i], getAlphabet());
+  sequences_[i] = new BasicSequence(names_[i], sequence, *comments_[i], getAlphabet());
   return *sequences_[i];
 }
 
