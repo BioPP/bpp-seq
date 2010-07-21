@@ -165,7 +165,9 @@ class VectorSequenceContainer:
 		 *
 		 * @{
 		 */
-		const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
+		bool hasSequence(const std::string& name) const;
+	
+    const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
 
 		void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception)
     {

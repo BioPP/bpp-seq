@@ -172,6 +172,7 @@ public:
   // Method to get a sequence object from sequence container
   const Sequence& getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
   const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
+  bool hasSequence(const std::string& name) const;
 
   // Methods to get position of a sequence in sequence container from his name
   // This method is used by delete and remove methods

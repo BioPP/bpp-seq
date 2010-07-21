@@ -118,6 +118,17 @@ const Sequence& MapSequenceContainer::getSequence(const string& name) const thro
 
 /******************************************************************************/
 
+bool MapSequenceContainer::hasSequence(const string& name) const
+{
+  // Specified sequence name research into all sequences
+  for (map<string, Sequence*>::const_iterator it = sequences_.begin(); it != sequences_.end(); it++)
+    if (it->second->getName() == name)
+      return true;
+  return false;
+}
+
+/******************************************************************************/
+
 Sequence& MapSequenceContainer::getSequence_(unsigned int i) throw (IndexOutOfBoundsException)
 {
   if (i >= sequences_.size())

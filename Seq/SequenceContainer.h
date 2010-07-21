@@ -122,6 +122,14 @@ class SequenceContainer:
 		virtual const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) = 0;
 
 		/**
+		 * @brief Check if a sequence with a given name is present in the container.
+		 *
+		 * @param name The name of the sequence.
+		 * @return True if a sequence with the given name is present in the container.
+		 */
+		virtual bool hasSequence(const std::string& name) const = 0;
+
+		/**
 		 * @brief Add a sequence to the container.
 		 *
 		 * @param sequence  The sequence to add.

@@ -157,6 +157,9 @@ class MapSequenceContainer:
 		 * @{
 		 */
 		const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
+
+		bool hasSequence(const std::string& name) const;
+    
     /**
      * @brief The SequenceContainer method. Calls the addSeqeucne(key, Sequence) method while using the resut of sequence.getName() as a key.
      */

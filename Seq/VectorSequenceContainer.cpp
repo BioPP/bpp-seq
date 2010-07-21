@@ -158,6 +158,17 @@ const Sequence& VectorSequenceContainer::getSequence(unsigned int sequenceIndex)
 
 /******************************************************************************/
 
+bool VectorSequenceContainer::hasSequence(const string& name) const
+{
+	// Specified sequence name research into all sequences
+	for (unsigned int i = 0; i < sequences_.size(); i++)
+		if (sequences_[i]->getName() == name)
+      return true;
+  return false;
+} 
+
+/******************************************************************************/
+
 const Sequence& VectorSequenceContainer::getSequence(const string& name) const throw (SequenceNotFoundException)
 {
 	// Specified sequence name research into all sequences

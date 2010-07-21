@@ -487,6 +487,17 @@ const Sequence& VectorSiteContainer::getSequence(const string& name) const throw
 
 /******************************************************************************/
 
+bool VectorSiteContainer::hasSequence(const string& name) const
+{
+  //Look for sequence name:
+  for (unsigned int pos = 0; pos < names_.size(); pos++) {
+    if (names_[pos] == name) return true;
+  }
+  return false;
+}
+
+/******************************************************************************/
+
 unsigned int VectorSiteContainer::getSequencePosition(const string& name) const throw (SequenceNotFoundException)
 {
   //Look for sequence name:
@@ -498,7 +509,7 @@ unsigned int VectorSiteContainer::getSequencePosition(const string& name) const 
 
 /******************************************************************************/
 
-void VectorSiteContainer::setSequence(const string & name, const Sequence& sequence, bool checkNames) throw (Exception)
+void VectorSiteContainer::setSequence(const string& name, const Sequence& sequence, bool checkNames) throw (Exception)
 {
   //Look for sequence name:
   unsigned int pos = getSequencePosition(name);

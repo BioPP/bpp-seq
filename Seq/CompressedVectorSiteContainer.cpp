@@ -455,6 +455,17 @@ const Sequence& CompressedVectorSiteContainer::getSequence(const std::string& na
 
 /******************************************************************************/
 
+bool CompressedVectorSiteContainer::hasSequence(const string& name) const
+{
+  //Look for sequence name:
+  for (unsigned int pos = 0; pos < names_.size(); pos++) {
+    if (names_[pos] == name) return true;
+  }
+  return false;
+}
+
+/******************************************************************************/
+
 unsigned int CompressedVectorSiteContainer::getSequencePosition(const std::string& name) const throw (SequenceNotFoundException)
 {
   // Look for sequence name:

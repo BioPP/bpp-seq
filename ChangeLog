@@ -1,3 +1,6 @@
+21/07/10 Julien Dutheil
+* Added method hasSequence(name) in SequenceContainer interface.
+
 20/07/10 Julien Dutheil
 * New Sequence interface design.
 * Maf parser now reads quality scores if there are some.
