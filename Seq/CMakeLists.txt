@@ -38,6 +38,7 @@ set(CPP_FILES
   SequenceExceptions.cpp
   SequencePositionIterators.cpp
   SequenceTools.cpp
+  SequenceWithQualityTools.cpp
   SiteContainerExceptions.cpp
   SiteContainerTools.cpp
   Site.cpp
@@ -138,6 +139,7 @@ set(H_FILES
   SequenceWithAnnotation.h
   SequenceWithQuality.h
   SequenceTools.h
+  SequenceWithQualityTools.h
   SiteContainerExceptions.h
   SiteContainer.h
   SiteContainerTools.h

@@ -76,8 +76,8 @@ namespace bpp {
        * @return A new SequenceWithQuality object with the given subsequence.
        * @throw IndexOutOfBoundsException, Exception In case of bad indices.
        */
-      static SequenceWithQuality * subseq(
-          const SequenceWithQuality & sequence,
+      static SequenceWithQuality* subseq(
+          const SequenceWithQuality& sequence,
           unsigned int begin,
           unsigned int end
           ) throw (IndexOutOfBoundsException, Exception) ;
@@ -95,9 +95,9 @@ namespace bpp {
        * @throw AlphabetMismatchException If the two alphabets do not match.
        * @throw Exception If the sequence names do not match.
        */
-      static SequenceWithQuality * concatenate(
-          const SequenceWithQuality & seqwq1,
-          const SequenceWithQuality & seqwq2
+      static SequenceWithQuality* concatenate(
+          const SequenceWithQuality& seqwq1,
+          const SequenceWithQuality& seqwq2
           ) throw (AlphabetMismatchException, Exception) ;
 
       /**
@@ -109,8 +109,8 @@ namespace bpp {
        * @param sequence The sequence to complement.
        * @throw AlphabetException If the sequence is not a nucleotide sequence.
        */
-      static SequenceWithQuality * complement(
-          const SequenceWithQuality & sequence
+      static SequenceWithQuality* complement(
+          const SequenceWithQuality& sequence
           ) throw (AlphabetException);
 
       /**
@@ -122,8 +122,8 @@ namespace bpp {
        * @param sequence The sequence to transcript.
        * @throw AlphabetException If the sequence is not a DNA sequence.
        */
-      static SequenceWithQuality * transcript(
-          const SequenceWithQuality & sequence
+      static SequenceWithQuality* transcript(
+          const SequenceWithQuality& sequence
           ) throw (AlphabetException);
 
       /**
@@ -136,8 +136,8 @@ namespace bpp {
        * @throw AlphabetException If the sequence is not a RNA sequence.
        */
 
-      static SequenceWithQuality * reverseTranscript(
-          const SequenceWithQuality & sequence
+      static SequenceWithQuality* reverseTranscript(
+          const SequenceWithQuality& sequence
           ) throw (AlphabetException);
       /**
        * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
@@ -148,11 +148,9 @@ namespace bpp {
        * @return A new SequenceWithQuality object containing the inverted
        * sequence.
        * @param sequence The SequenceWithQuality to inverse.
-       * @param chgSense Tell if the sense tag should be shifted.
        */
-      static SequenceWithQuality * invert(
-          const SequenceWithQuality & sequence,
-          bool chgSense = true
+      static SequenceWithQuality* invert(
+          const SequenceWithQuality& sequence
           );
 
       /**
@@ -161,7 +159,7 @@ namespace bpp {
        * @param seq The sequence to analyse.
        * @return A new SequenceWithQuality object without gaps.
        */
-      static SequenceWithQuality * removeGaps(const SequenceWithQuality & seq);
+      static SequenceWithQuality* removeGaps(const SequenceWithQuality& seq);
 
   };
 }

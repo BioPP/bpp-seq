@@ -74,7 +74,7 @@ SequenceWithQuality * SequenceWithQualityTools::subseq(const SequenceWithQuality
 
 /******************************************************************************/
 
-SequenceWithQuality * SequenceWithQualityTools::concatenate(const SequenceWithQuality & seqwq1, const SequenceWithQuality & seqwq2) throw (AlphabetMismatchException, Exception)
+SequenceWithQuality* SequenceWithQualityTools::concatenate(const SequenceWithQuality& seqwq1, const SequenceWithQuality& seqwq2) throw (AlphabetMismatchException, Exception)
 {
 	// Sequence's alphabets matching verification
 	if ((seqwq1.getAlphabet()->getAlphabetType()) != (seqwq2.getAlphabet()->getAlphabetType()))
@@ -97,7 +97,7 @@ SequenceWithQuality * SequenceWithQualityTools::concatenate(const SequenceWithQu
 
 /******************************************************************************/
 
-SequenceWithQuality * SequenceWithQualityTools::complement(const SequenceWithQuality & sequence) throw (AlphabetException)
+SequenceWithQuality* SequenceWithQualityTools::complement(const SequenceWithQuality& sequence) throw (AlphabetException)
 {
   // Alphabet type checking
   NucleicAcidsReplication * NAR;
@@ -121,7 +121,7 @@ SequenceWithQuality * SequenceWithQualityTools::complement(const SequenceWithQua
 
 /******************************************************************************/
 
-SequenceWithQuality * SequenceWithQualityTools::transcript(const SequenceWithQuality & sequence) throw (AlphabetException)
+SequenceWithQuality* SequenceWithQualityTools::transcript(const SequenceWithQuality& sequence) throw (AlphabetException)
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "DNA alphabet")
@@ -136,7 +136,7 @@ SequenceWithQuality * SequenceWithQualityTools::transcript(const SequenceWithQua
 
 /******************************************************************************/
 
-SequenceWithQuality * SequenceWithQualityTools::reverseTranscript(const SequenceWithQuality & sequence) throw (AlphabetException)
+SequenceWithQuality* SequenceWithQualityTools::reverseTranscript(const SequenceWithQuality& sequence) throw (AlphabetException)
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "RNA alphabet")
@@ -152,21 +152,20 @@ SequenceWithQuality * SequenceWithQualityTools::reverseTranscript(const Sequence
 
 /******************************************************************************/
 
-SequenceWithQuality * SequenceWithQualityTools::invert(const SequenceWithQuality & sequence, bool chgSense)
+SequenceWithQuality* SequenceWithQualityTools::invert(const SequenceWithQuality& sequence)
 {
   vector<int> iContent(sequence.getContent().rbegin(),sequence.getContent().rend());
   vector<int> iQualities(sequence.getQualities().rbegin(),sequence.getQualities().rend());
-  SequenceWithQuality * iSeq = sequence.clone();
+  SequenceWithQuality* iSeq = sequence.clone();
   iSeq->setContent(iContent);
   iSeq->setQualities(iQualities);
-  if(chgSense) iSeq->setSense(!iSeq->getSense());
 
   return iSeq;
 }
 
 /******************************************************************************/
 
-SequenceWithQuality * SequenceWithQualityTools::removeGaps(const SequenceWithQuality & seq)
+SequenceWithQuality* SequenceWithQualityTools::removeGaps(const SequenceWithQuality& seq)
 {
   vector<int> content;
   vector<int> qualities;
