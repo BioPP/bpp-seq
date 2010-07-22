@@ -582,6 +582,12 @@ namespace bpp {
         qualScores_->setScores(content.size(), qualities);
       }
 
+      void append(const std::vector<std::string>& content)
+        throw (BadCharException)
+      {
+        SequenceWithAnnotation::append(content);
+      }
+
       /**
        * @brief Append content with quality
        *
@@ -600,9 +606,15 @@ namespace bpp {
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
-        Sequence::append(content);
+        SequenceWithAnnotation::append(content);
         //Update scores:
         qualScores_->setScores(content.size(), qualities);
+      }
+
+      void append(const std::string& content)
+        throw (BadCharException)
+      {
+        SequenceWithAnnotation::append(content);
       }
 
       /**
@@ -624,9 +636,16 @@ namespace bpp {
         if (content.size() / this->getAlphabet()->getStateCodingSize()
             != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size() / this->getAlphabet()->getStateCodingSize());
-        Sequence::append(content);
+        SequenceWithAnnotation::append(content);
         //Update scores:
         qualScores_->setScores(content.size() / this->getAlphabet()->getStateCodingSize(), qualities);
+      }
+
+      void addElement(
+          const std::string& c)
+        throw (BadCharException)
+      {
+        SequenceWithAnnotation::addElement(c);
       }
 
       /**
@@ -642,8 +661,14 @@ namespace bpp {
           const std::string& c, int q)
         throw (BadCharException)
       {
-        Sequence::addElement(c);
+        SequenceWithAnnotation::addElement(c);
         qualScores_->setScore(size() - 1, q);
+      }
+
+      void addElement(unsigned int pos, const std::string& c)
+        throw (BadCharException, IndexOutOfBoundsException)
+      {
+        SequenceWithAnnotation::addElement(pos, c);
       }
 
       /**
@@ -662,8 +687,14 @@ namespace bpp {
           unsigned int pos, const std::string& c, int q)
         throw (BadCharException, IndexOutOfBoundsException)
       {
-        Sequence::addElement(pos, c);
+        SequenceWithAnnotation::addElement(pos, c);
         qualScores_->setScore(pos, q);
+      }
+
+      void addElement(int v)
+        throw (BadIntException)
+      {
+        SequenceWithAnnotation::addElement(v);
       }
 
       /**
@@ -675,10 +706,16 @@ namespace bpp {
        * @throw BadIntException if the value does not match the current Alphabet
        */
       void addElement(int v, int q)
-        throw (BadCharException)
+        throw (BadIntException)
       {
-        Sequence::addElement(v);
+        SequenceWithAnnotation::addElement(v);
         qualScores_->setScore(size() - 1, q);
+      }
+
+      void addElement(unsigned int pos, int v)
+        throw (BadIntException, IndexOutOfBoundsException)
+      {
+        SequenceWithAnnotation::addElement(pos, v);
       }
 
       /**
@@ -695,7 +732,7 @@ namespace bpp {
       void addElement(unsigned int pos, int v, int q)
         throw (BadCharException, IndexOutOfBoundsException)
       {
-        Sequence::addElement(pos, v);
+        SequenceWithAnnotation::addElement(pos, v);
         qualScores_->setScore(pos, q);
       }
 
