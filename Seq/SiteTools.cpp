@@ -257,6 +257,37 @@ double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool r
 
 /******************************************************************************/
 
+double SiteTools::jointEntropy(const Site& site1, const Site& site2, bool resolveUnknown) throw (DimensionException,EmptySiteException)
+{
+  // Empty site checking
+  if (site1.size() == 0) throw EmptySiteException("SiteTools::jointEntropy: Incorrect specified site, size must be > 0", &site1);
+  if (site2.size() == 0) throw EmptySiteException("SiteTools::jointEntropy: Incorrect specified site, size must be > 0", &site2);
+  if (site1.size() != site2.size()) throw DimensionException("SiteTools::jointEntropy: sites must have the same size!", site1.size(), site2.size());
+  map<int, map<int, double> > p12;
+  getCounts(site1, site2, p12, resolveUnknown);
+  double tot = 0, pxy, h = 0;
+  // We need to correct frequencies for gaps:
+  for (unsigned int i = 0; i < site1.getAlphabet()->getSize(); i++)
+  {
+    for (unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++)
+    {
+      pxy = p12[static_cast<int>(i)][static_cast<int>(j)];
+      tot += pxy;
+    }
+  }
+  for (unsigned int i = 0; i < site1.getAlphabet()->getSize(); i++)
+  {
+    for (unsigned int j = 0; j < site2.getAlphabet()->getSize(); j++)
+    {
+      pxy = p12[static_cast<int>(i)][static_cast<int>(j)] / tot;
+      if (pxy > 0) h += pxy * log(pxy);
+    }
+  }
+  return -h;
+}
+
+/******************************************************************************/
+
 double SiteTools::variabilityFactorial(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking

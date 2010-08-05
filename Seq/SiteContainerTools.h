@@ -263,9 +263,10 @@ class SiteContainerTools
      *
      * @param sites An input alignment to sample.
      * @param nbSites The size of the resulting container.
+     * @param index [out] If non-null the underlying vector will be appended with the original site indices.
      * @return A sampled alignment with nbSites sites taken from the input one.
      */
-    static VectorSiteContainer* sampleSites(const SiteContainer& sites, unsigned int nbSites);
+    static VectorSiteContainer* sampleSites(const SiteContainer& sites, unsigned int nbSites, std::vector<unsigned int>* index = 0);
 
     /**
      * @brief Bootstrap sites in an alignment.

@@ -121,7 +121,7 @@ public:
    * @brief Compute the Shannon entropy index of a site.
    *
    * \f[
-   * I = \sum_x f_x\cdot \ln(f_x)
+   * I = - \sum_x f_x\cdot \ln(f_x)
    * \f]
    * where \f$f_x\f$ is the frequency of state \f$x\f$.
    *
@@ -166,6 +166,43 @@ public:
    * @throw EmptySiteException If the sites have size 0.
    */
   static double mutualInformation(const Site& site1, const Site& site2, bool resolveUnknowns) throw (DimensionException,EmptySiteException);
+
+  /**
+   * @brief Compute the entropy of a site. This is an alias of method variabilityShannon.
+   *
+   * \f[
+   * I = - \sum_x f_x\cdot \ln(f_x)
+   * \f]
+   * where \f$f_x\f$ is the frequency of state \f$x\f$.
+   *
+   * @author J. Dutheil
+   * @param site A site.
+   * @param resolveUnknowns Tell is unknown characters must be resolved.
+   * @return The Shannon entropy index of this site.
+   * @throw EmptySiteException If the site has size 0.
+   */
+  static double entropy(const Site& site, bool resolveUnknowns) throw (EmptySiteException) {
+    return variabilityShannon(site, resolveUnknowns); 
+  }
+
+
+  /**
+   * @brief Compute the joint entropy between two sites.
+   *
+   * \f[
+   * H_{i,j} = - \sum_x \sum_y p_{x,y}\ln\left(p_{x,y}\right)
+   * \f]
+   * where \f$p_{x,y}\f$ is the frequency of the pair \f$(x,y)\f$.
+   *
+   * @author J. Dutheil
+   * @param site1 First site
+   * @param site2 Second site
+   * @param resolveUnknowns Tell is unknown characters must be resolved.
+   * @return The mutual information for the pair of sites.
+   * @throw DimensionException If the sites do not have the same length.
+   * @throw EmptySiteException If the sites have size 0.
+   */
+  static double jointEntropy(const Site& site1, const Site& site2, bool resolveUnknowns) throw (DimensionException,EmptySiteException);
 
   /**
    * @brief Compute the heterozygosity index of a site.
