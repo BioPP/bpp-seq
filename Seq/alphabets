@@ -16,6 +16,7 @@
 #include "DefaultAlphabet.h"
 #include "AlphabetExceptions.h"
 #include "AlphabetTools.h"
+#include "CaseMaskedAlphabet.h"
 
 #endif //_ALPHABETS_
 #

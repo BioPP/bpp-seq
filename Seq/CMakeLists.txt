@@ -14,6 +14,7 @@ set(CPP_FILES
   CodonSiteTools.cpp
   DCSE.cpp
   DefaultAlphabet.cpp
+  CaseMaskedAlphabet.cpp
   DNA.cpp
   DNAToRNA.cpp
   Fasta.cpp
@@ -97,6 +98,7 @@ set(H_FILES
   containers
   DCSE.h
   DefaultAlphabet.h
+  CaseMaskedAlphabet.h
   DNA.h
   DNAToRNA.h
   Fasta.h

@@ -53,9 +53,16 @@ namespace bpp {
    *
    * @author Sylvain Gaillard
    */
-  class LetterAlphabet: public AbstractAlphabet {
+  class LetterAlphabet:
+    public AbstractAlphabet
+  {
+    private:
+      static const int LETTER_UNDEF_VALUE = -99;
+      std::vector<int> letters_;
+      bool caseSensitive_;
+
     public:
-      LetterAlphabet(): letters_(256, LETTER_UNDEF_VALUE) {}
+      LetterAlphabet(bool caseSensitive = false): letters_(256, LETTER_UNDEF_VALUE), caseSensitive_(caseSensitive) {}
       virtual ~LetterAlphabet() {}
 
     public:
@@ -74,19 +81,24 @@ namespace bpp {
     protected:
       void registerState(const AlphabetState& st) {
         AbstractAlphabet::registerState(st);
-        letters_[static_cast<unsigned int>(tolower(st.getLetter()[0]))] = st.getNum();
-        letters_[static_cast<unsigned int>(toupper(st.getLetter()[0]))] = st.getNum();
+        if (caseSensitive_) {
+          letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();
+        } else {
+          letters_[static_cast<unsigned int>(tolower(st.getLetter()[0]))] = st.getNum();
+          letters_[static_cast<unsigned int>(toupper(st.getLetter()[0]))] = st.getNum();
+        }
       }
 
       void setState(unsigned int pos, const AlphabetState& st) throw (IndexOutOfBoundsException) {
         AbstractAlphabet::setState(pos, st);
-        letters_[static_cast<unsigned int>(tolower(st.getLetter()[0]))] = st.getNum();
-        letters_[static_cast<unsigned int>(toupper(st.getLetter()[0]))] = st.getNum();
+        if (caseSensitive_) {
+          letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();
+        } else {
+          letters_[static_cast<unsigned int>(tolower(st.getLetter()[0]))] = st.getNum();
+          letters_[static_cast<unsigned int>(toupper(st.getLetter()[0]))] = st.getNum();
+        }
       }
 
-    private:
-      static const int LETTER_UNDEF_VALUE = -99;
-      std::vector<int> letters_;
   };
 }
 

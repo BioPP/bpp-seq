@@ -93,7 +93,7 @@ namespace bpp {
       virtual ~NucleicAlphabetState() {}
 
     public:
-      NucleicAlphabetState * clone() const {
+      NucleicAlphabetState* clone() const {
         return new NucleicAlphabetState(* this);
       }
       /**
