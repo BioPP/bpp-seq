@@ -44,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceTools.h"
 #include "AlphabetTools.h"
 #include "AlignedSequenceContainer.h"
+#include "CaseMaskedAlphabet.h"
 
 //From the STL:
 #include <iostream>
@@ -62,7 +63,7 @@ class MafSequence:
 {
   private:
     unsigned int begin_;
-    char strand_;
+    char         strand_;
     unsigned int size_;
     unsigned int srcSize_;
 
@@ -137,14 +138,17 @@ class MafAlignmentParser
 {
   private:
     std::istream* stream_;
+    bool mask_;
+    CaseMaskedAlphabet cmAlphabet_;
 
   public:
-    MafAlignmentParser(std::istream* stream) : stream_(stream) {}
+    MafAlignmentParser(std::istream* stream, bool parseMask = false) :
+      stream_(stream), mask_(parseMask), cmAlphabet_(&AlphabetTools::DNA_ALPHABET) {}
 
   private:
     //Recopy is forbidden!
-    MafAlignmentParser(const MafAlignmentParser& maf): stream_(0) {}
-    MafAlignmentParser& operator=(const MafAlignmentParser& maf) { stream_ = 0; return *this; }
+    MafAlignmentParser(const MafAlignmentParser& maf): stream_(0), mask_(maf.mask_), cmAlphabet_(&AlphabetTools::DNA_ALPHABET) {}
+    MafAlignmentParser& operator=(const MafAlignmentParser& maf) { stream_ = 0; mask_ = maf.mask_; return *this; }
 
   public:
     MafBlock* nextBlock() throw (Exception);

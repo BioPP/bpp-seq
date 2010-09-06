@@ -35,6 +35,7 @@ set(CPP_FILES
   SequenceContainerTools.cpp
   Sequence.cpp
   SequenceWithAnnotation.cpp
+  SequenceWithAnnotationTools.cpp
   SequenceWithQuality.cpp
   SequenceExceptions.cpp
   SequencePositionIterators.cpp
@@ -139,6 +140,7 @@ set(H_FILES
   SequencePositionIterators.h
   Sequence.h
   SequenceWithAnnotation.h
+  SequenceWithAnnotationTools.h
   SequenceWithQuality.h
   SequenceTools.h
   SequenceWithQualityTools.h

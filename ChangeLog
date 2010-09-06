@@ -1,3 +1,6 @@
+06/09/10 Julien Dutheil
+* Added support for masked sequences in SequenceWithAnnotationTools and MafParser.
+
 05/09/10 Julien Dutheil
 * First draft of CaseMaskedAlphabet, for dealing with repeat-masked sequences for instance.
 

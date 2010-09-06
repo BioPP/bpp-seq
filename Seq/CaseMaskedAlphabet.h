@@ -73,6 +73,15 @@ class CaseMaskedAlphabet :
     }
 
   public:
+		unsigned int getSize() const { return nocaseAlphabet_->getSize(); }
+		unsigned int getNumberOfTypes() const { return nocaseAlphabet_->getNumberOfTypes(); }
+    std::string getAlphabetType() const { return "Default alphabet"; }
+    int getUnknownCharacterCode() const { return nocaseAlphabet_->getUnknownCharacterCode(); }
+    bool isUnresolved(int state) const { return nocaseAlphabet_->isUnresolved(state); }
+    bool isUnresolved(const std::string& state) const { return nocaseAlphabet_->isUnresolved(state); }
+
+    const Alphabet* getUnmaskedAlphabet() const { return nocaseAlphabet_; }
+
     bool isMasked(int state) const { return state >= 100; }
     bool isMasked(const std::string& state) const {
       char c = state.c_str()[0];

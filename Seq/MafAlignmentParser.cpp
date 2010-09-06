@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "MafAlignmentParser.h"
 #include "SequenceWithQuality.h"
+#include "SequenceWithAnnotationTools.h"
 
 //From Utils:
 #include <Utils/KeyvalTools.h>
@@ -108,9 +109,19 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
         block->addSequence(*currentSequence); //The sequence is copied in the container.
         delete currentSequence;
       }
-      currentSequence = new MafSequence(name, st.nextToken(), start, strand, srcSize);
+      const string seq = st.nextToken();
+      currentSequence = new MafSequence(name, seq, start, strand, srcSize);
       if (currentSequence->getGenomicSize() != size)
         throw Exception("MafAlignmentParser::nextBlock. Sequence found does not match specified size: " + TextTools::toString(currentSequence->getGenomicSize()) + ", should be " + TextTools::toString(size) + ".");
+      
+      //Add mask:
+      if (mask_) {
+        vector<bool> mask(currentSequence->size());
+        for (unsigned int i = 0; i < mask.size(); ++i) {
+          mask[i] = cmAlphabet_.isMasked(seq[i]);
+        }
+        currentSequence->addAnnotation(new SequenceMask(mask));
+      }
     }
     else if (line[0] == 'q')
     {
