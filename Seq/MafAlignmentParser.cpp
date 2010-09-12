@@ -97,10 +97,17 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
       StringTokenizer st(line);
       st.nextToken(); //The 's' tag
       string name = st.nextToken();
+      string chr = "";
+      size_t pos = name.find(".");
+      if (pos != string::npos) {
+        chr = name.substr(pos + 1);
+        name = name.substr(0, pos);
+      }
       unsigned int start = TextTools::to<unsigned int>(st.nextToken());
       unsigned int size = TextTools::to<unsigned int>(st.nextToken());
       string tmp = st.nextToken();
-      if (tmp.size() != 1) throw Exception("MafAlignmentParser::nextBlock. Strand specification is incorrect, should be only one character long, found " + TextTools::toString(tmp.size()) + ".");
+      if (tmp.size() != 1)
+        throw Exception("MafAlignmentParser::nextBlock. Strand specification is incorrect, should be only one character long, found " + TextTools::toString(tmp.size()) + ".");
       char strand = tmp[0];
 
       unsigned int srcSize = TextTools::to<unsigned int>(st.nextToken());
@@ -110,7 +117,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
         delete currentSequence;
       }
       const string seq = st.nextToken();
-      currentSequence = new MafSequence(name, seq, start, strand, srcSize);
+      currentSequence = new MafSequence(name, seq, start, chr, strand, srcSize);
       if (currentSequence->getGenomicSize() != size)
         throw Exception("MafAlignmentParser::nextBlock. Sequence found does not match specified size: " + TextTools::toString(currentSequence->getGenomicSize()) + ", should be " + TextTools::toString(size) + ".");
       
@@ -130,7 +137,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
       StringTokenizer st(line);
       st.nextToken(); //The 'q' tag
       string name = st.nextToken();
-      if (name != currentSequence->getName())
+      if (name != currentSequence->getSrc())
         throw Exception("MafAlignmentParser::nextBlock(). Quality scores found, but with a different name from the previous sequence: " + name + ", should be " + currentSequence->getName() + ".");
       string qstr = st.nextToken();
       //Now parse the score string:
@@ -153,5 +160,76 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
     }
   }
   return block;
+}
+
+void MafAlignmentParser::writeHeader(std::ostream& out) const
+{
+  out << "##maf version=1 program=Bio++" << endl << endl;
+  //There are more options in the header that we may want to support...
+}
+
+void MafAlignmentParser::writeBlock(std::ostream& out, const MafBlock& block) const
+{
+  out << "a";
+  if (block.getScore() > -1.)
+    out << " score=" << block.getScore();
+  if (block.getPass() > 0)
+    out << " pass=" << block.getPass();
+  out << endl;
+  
+  //Now we write sequences. First need to count characters for aligning blocks:
+  size_t mxcSrc = 0, mxcStart = 0, mxcSize = 0, mxcSrcSize = 0;
+  for (unsigned int i = 0; i < block.getNumberOfSequences(); i++) {
+    const MafSequence* seq = &block.getSequence(i);
+    mxcSrc     = max(mxcSrc    , seq->getSrc().size());
+    mxcStart   = max(mxcStart  , TextTools::toString(seq->start()).size());
+    mxcSize    = max(mxcSize   , TextTools::toString(seq->getGenomicSize()).size());
+    mxcSrcSize = max(mxcSrcSize, TextTools::toString(seq->getSrcSize()).size());
+  }
+  //Now print each sequence:
+  for (unsigned int i = 0; i < block.getNumberOfSequences(); i++) {
+    const MafSequence* seq = new MafSequence(block.getSequence(i));
+    out << "s ";
+    out << TextTools::resizeRight(seq->getSrc(), mxcSrc, ' ') << " ";
+    out << TextTools::resizeLeft(TextTools::toString(seq->start()), mxcStart, ' ') << " ";
+    out << TextTools::resizeLeft(TextTools::toString(seq->getGenomicSize()), mxcSize, ' ') << " ";
+    out << seq->getStrand() << " ";
+    out << TextTools::resizeLeft(TextTools::toString(seq->getSrcSize()), mxcSrcSize, ' ') << " ";
+    //Shall we write the sequence as masked?
+    string seqstr = seq->toString();
+    if (mask_ && seq->hasAnnotation(SequenceMask::MASK)) {
+      const SequenceMask* mask = &dynamic_cast<const SequenceMask&>(seq->getAnnotation(SequenceMask::MASK));
+      for (unsigned int j = 0; j < seqstr.size(); ++j) {
+        char c = ((*mask)[j] ? tolower(seqstr[j]) : seqstr[j]);
+        out << c;
+      }
+    } else {
+      out << seqstr;
+    }
+    out << endl;
+    //Write quality scores if any:
+    if (mask_ && seq->hasAnnotation(SequenceQuality::QUALITY_SCORE)) {
+      const SequenceQuality* qual = &dynamic_cast<const SequenceQuality&>(seq->getAnnotation(SequenceQuality::QUALITY_SCORE));
+      out << "q ";
+      out << TextTools::resizeRight(seq->getSrc(), mxcSrc + mxcStart + mxcSize + mxcSrcSize + 5, ' ') << " ";
+      string qualStr;
+      for (unsigned int j = 0; j < seq->size(); ++j) {
+        double s = (*qual)[i];
+        if (s == -1) {
+          qualStr += "-";
+        } else if (s == -2) {
+          qualStr += "?";
+        } else if (s >=0 && s < 10) {
+          qualStr += TextTools::toString(s);
+        } else if (s == 10) {
+          qualStr += "F";
+        } else {
+          throw Exception("MafAlignmentParser::writeBlock. Unsuported score value: " + TextTools::toString(s));
+        }
+      }
+      out << qualStr << endl;
+    }
+  }
+  out << endl;
 }
 

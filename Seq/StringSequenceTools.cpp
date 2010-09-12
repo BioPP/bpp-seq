@@ -180,7 +180,7 @@ string * StringSequenceTools::complement(const string & sequence)
 
 /****************************************************************************************/
 
-double StringSequenceTools::getGCcontent(const string & sequence, unsigned int pos, unsigned int window) throw (BadIntegerException, Exception)
+double StringSequenceTools::getGCcontent(const string& sequence, unsigned int pos, unsigned int window) throw (BadIntegerException, Exception)
 {
   // Frequency counts for nucleotids A, C, G, T
   map<char, double> counts;
@@ -254,7 +254,7 @@ double StringSequenceTools::getGCcontent(const string & sequence, unsigned int p
 
 /****************************************************************************************/
 
-vector<int> StringSequenceTools::codeSequence(const string & sequence, const Alphabet * alphabet)
+vector<int> StringSequenceTools::codeSequence(const string& sequence, const Alphabet* alphabet)
     throw (BadCharException)
 {
   unsigned int size = AlphabetTools::getAlphabetCodingSize(alphabet); //Warning, an exception may be casted here!
@@ -262,7 +262,7 @@ vector<int> StringSequenceTools::codeSequence(const string & sequence, const Alp
   unsigned int pos = 0;
   unsigned int count = 0;
   while(pos + size <= sequence.size()) {
-    code[count] = alphabet -> charToInt(sequence.substr(pos, size));
+    code[count] = alphabet->charToInt(sequence.substr(pos, size));
     count++;
     pos += size;
   }

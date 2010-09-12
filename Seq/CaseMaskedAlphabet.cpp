@@ -46,6 +46,7 @@ using namespace bpp;
 
 //From the STL:
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -63,6 +64,35 @@ CaseMaskedAlphabet::CaseMaskedAlphabet(const LetterAlphabet* nocaseAlphabet) :
         registerState(AlphabetState(state.getNum() + 100, TextTools::toLower(state.getLetter()), string("Masked ") + state.getName()));
       }
     }
+  }
+}
+
+int CaseMaskedAlphabet::getMaskedEquivalentState(int state) const
+  throw (BadIntException)
+{
+  if (!isIntInAlphabet(state))
+    throw BadIntException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. Unsupported state code.");
+  if (state >= 100) return state;
+  else {
+    state += 100;
+    if (!isIntInAlphabet(state))
+      throw BadIntException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. State has masked equivalent.");
+    return state;
+  }
+}
+
+const string CaseMaskedAlphabet::getMaskedEquivalentState(const string& state) const
+  throw (BadCharException, BadIntException)
+{
+  if (!isCharInAlphabet(state))
+    throw BadCharException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. Unsupported state code.");
+  int code = charToInt(state);
+  if (code >= 100) return state;
+  else {
+    code += 100;
+    if (!isIntInAlphabet(code))
+      throw BadIntException(code, "CaseMaskedAlphabet::getMaskedEquivalentState. State has masked equivalent.");
+    return intToChar(code);
   }
 }
 

@@ -49,6 +49,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 namespace bpp
 {
@@ -499,6 +500,8 @@ class EdSymbolList:
 		 */
 		const Alphabet* alphabet_;
 
+    bool propagateEvents_;
+
   protected:
 		/**
 		 * @brief The list content.
@@ -517,7 +520,7 @@ class EdSymbolList:
 		 *
 		 * @param alpha The alphabet to use.
 		 */
-		EdSymbolList(const Alphabet* alpha) : alphabet_(alpha), content_(), listeners_() {}
+		EdSymbolList(const Alphabet* alpha) : alphabet_(alpha), propagateEvents_(true), content_(), listeners_() {}
 
 		/**
 		 * @brief Build a new BasicSymbolList object with the specified alphabet.
@@ -575,9 +578,11 @@ class EdSymbolList:
     // Class destructor
 		virtual ~EdSymbolList()
     {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        if (!listeners_[i]->isShared())
+      for (unsigned int i = 0; i < listeners_.size(); ++i) {
+        if (listeners_[i] && !listeners_[i]->isShared()) {
           delete listeners_[i];
+        }
+      }
     }
 
 	public:
@@ -628,14 +633,20 @@ class EdSymbolList:
      */
     virtual unsigned int getNumberOfListeners() const { return listeners_.size(); }
 
-    virtual const SymbolListListener& getListener(unsigned int i) const { return *listeners_[i]; }
+    virtual const SymbolListListener& getListener(unsigned int i) const {
+      if (listeners_[i] == 0) std::cout << "aie!!!" << std::endl;
+      return *listeners_[i];
+    }
     
-    virtual SymbolListListener& getListener(unsigned int i) { return *listeners_[i]; }
+    virtual SymbolListListener& getListener(unsigned int i) { 
+      if (listeners_[i] == 0) std::cout << "aie!!!" << std::endl;
+      return *listeners_[i];
+    }
 
     virtual void addSymbolListListener(SymbolListListener* listener) { 
       listeners_.push_back(listener);
     }
-    
+
     virtual void removeSymbolListListener(SymbolListListener* listener) {
       if (listener->isRemovable())
         listeners_.erase(remove(listeners_.begin(), listeners_.end(), listener), listeners_.end());
@@ -643,46 +654,76 @@ class EdSymbolList:
         throw Exception("EdSymbolList::removeSymbolListListener. Listener is not removable.");
     } 
  
-    virtual void fireBeforeSequenceChanged(const SymbolListEditionEvent& event) {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        listeners_[i]->beforeSequenceChanged(event);
+  protected:
+    virtual void beforeSequenceChanged(const SymbolListEditionEvent& event) {};
+    virtual void afterSequenceChanged(const SymbolListEditionEvent& event) {};
+    virtual void beforeSequenceInserted(const SymbolListInsertionEvent& event) {};
+    virtual void afterSequenceInserted(const SymbolListInsertionEvent& event) {};
+    virtual void beforeSequenceDeleted(const SymbolListDeletionEvent& event) {};
+    virtual void afterSequenceDeleted(const SymbolListDeletionEvent& event) {};
+    virtual void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {};
+    virtual void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {};
+
+    void fireBeforeSequenceChanged(const SymbolListEditionEvent& event) {
+      beforeSequenceChanged(event);
+      if (propagateEvents_)
+        for (unsigned int i = 0; i < listeners_.size(); ++i)
+          listeners_[i]->beforeSequenceChanged(event);
     }
 
-    virtual void fireAfterSequenceChanged(const SymbolListEditionEvent& event) {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        listeners_[i]->afterSequenceChanged(event);
+    void fireAfterSequenceChanged(const SymbolListEditionEvent& event) {
+      afterSequenceChanged(event);
+      if (propagateEvents_)
+        for (unsigned int i = 0; i < listeners_.size(); ++i)
+          listeners_[i]->afterSequenceChanged(event);
     }
    
-    virtual void fireBeforeSequenceInserted(const SymbolListInsertionEvent& event) {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        listeners_[i]->beforeSequenceInserted(event);
+    void fireBeforeSequenceInserted(const SymbolListInsertionEvent& event) {
+      beforeSequenceInserted(event);
+      if (propagateEvents_)
+        for (unsigned int i = 0; i < listeners_.size(); ++i)
+          listeners_[i]->beforeSequenceInserted(event);
     }
 
-    virtual void fireAfterSequenceInserted(const SymbolListInsertionEvent& event) {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        listeners_[i]->afterSequenceInserted(event);
+    void fireAfterSequenceInserted(const SymbolListInsertionEvent& event) {
+      afterSequenceInserted(event);
+      if (propagateEvents_)
+        for (unsigned int i = 0; i < listeners_.size(); ++i)
+          listeners_[i]->afterSequenceInserted(event);
     }
 
-    virtual void fireBeforeSequenceDeleted(const SymbolListDeletionEvent& event) {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        listeners_[i]->beforeSequenceDeleted(event);
+    void fireBeforeSequenceDeleted(const SymbolListDeletionEvent& event) {
+      beforeSequenceDeleted(event);
+      if (propagateEvents_)
+        for (unsigned int i = 0; i < listeners_.size(); ++i)
+          listeners_[i]->beforeSequenceDeleted(event);
     }
 
-    virtual void fireAfterSequenceDeleted(const SymbolListDeletionEvent& event) {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        listeners_[i]->afterSequenceDeleted(event);
+    void fireAfterSequenceDeleted(const SymbolListDeletionEvent& event) {
+      afterSequenceDeleted(event);
+      if (propagateEvents_)
+        for (unsigned int i = 0; i < listeners_.size(); ++i)
+          listeners_[i]->afterSequenceDeleted(event);
     }
 
-    virtual void fireBeforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        listeners_[i]->beforeSequenceSubstituted(event);
+    void fireBeforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {
+      beforeSequenceSubstituted(event);
+      if (propagateEvents_)
+        for (unsigned int i = 0; i < listeners_.size(); ++i)
+          listeners_[i]->beforeSequenceSubstituted(event);
     }
 
-    virtual void fireAfterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {
-      for (unsigned int i = 0; i < listeners_.size(); ++i)
-        listeners_[i]->afterSequenceSubstituted(event);
+    void fireAfterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {
+      afterSequenceSubstituted(event);
+      if (propagateEvents_)
+        for (unsigned int i = 0; i < listeners_.size(); ++i)
+          listeners_[i]->afterSequenceSubstituted(event);
     }
     /** @} */
+
+  protected:
+    void propagateEvents(bool yn) { propagateEvents_ = yn; }
+    bool propagateEvents() const { return propagateEvents_; }
 
 };
 

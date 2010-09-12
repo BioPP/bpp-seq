@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceTools.h"
 #include "SequenceWithAnnotation.h"
 
+//From NumCalc:
+#include <NumCalc/VectorTools.h>
+
 namespace bpp {
 
   class SequenceMask :
@@ -156,6 +159,17 @@ namespace bpp {
           throw Exception("SequenceMask::setMask. Vector overflow. Scores number: " + TextTools::toString(mask_.size()) + ", but trying to insert " + TextTools::toString(mask.size()) + " scores at position " + TextTools::toString(pos) + ".");
         std::copy(mask.begin(), mask.end(), mask_.begin() + pos); 
       }
+
+      bool merge(const SequenceAnnotation& anno) {
+        try {
+          const SequenceMask* mask = & dynamic_cast<const SequenceMask&>(anno);
+          VectorTools::append(mask_, mask->getMask());
+          return true;
+        } catch (std::exception& e) {
+          return false;
+        }
+      }
+ 
   };
   
   /**

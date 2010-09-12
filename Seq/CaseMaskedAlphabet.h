@@ -85,8 +85,29 @@ class CaseMaskedAlphabet :
     bool isMasked(int state) const { return state >= 100; }
     bool isMasked(const std::string& state) const {
       char c = state.c_str()[0];
-      return isalpha(c) && !isupper(c);
+      return isMasked(c);
     }
+    bool isMasked(char state) const {
+      return isalpha(state) && !isupper(state);
+    }
+
+    /**
+     * @brief Get the masked state equivalent to the input one.
+     *
+     * If the input state is masked, returns it "as is".
+     * @param state The input state.
+     * @throw BadIntException if the input state is not supported, or if there is no quivallent masked state.
+     */
+    int getMaskedEquivalentState(int state) const throw (BadIntException);
+    /**
+     * @brief Get the masked state equivalent to the input one.
+     *
+     * If the input state is masked, returns it "as is".
+     * @param state The input state.
+     * @throw BadCharException if the input state is not supported.
+     * @throw BadIntException if there is no equivalent masked state.
+     */
+    const std::string getMaskedEquivalentState(const std::string& state) const throw (BadCharException, BadIntException);
 
 };
 

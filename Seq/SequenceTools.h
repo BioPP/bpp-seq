@@ -137,7 +137,7 @@ class SequenceTools:
 		 * @throw Exception If the sequence names do not match.
 		 */
 		static Sequence* concatenate(const Sequence& seq1, const Sequence& seq2)
-		     throw (AlphabetMismatchException, Exception) ;
+		     throw (AlphabetMismatchException, Exception);
 
     /**
      * @brief Complement the nucleotide sequence itself

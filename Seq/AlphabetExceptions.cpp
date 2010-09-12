@@ -59,17 +59,17 @@ AlphabetException::AlphabetException(const std::string& text, const Alphabet* al
 
 BadCharException::BadCharException(const std::string& badChar, const std::string& text, const Alphabet* alpha) :
 	AlphabetException("BadCharException: " + badChar + ". " + text, alpha),
-	_c(badChar) {}
+	c_(badChar) {}
 		
-string BadCharException::getBadChar() const { return _c; }
+string BadCharException::getBadChar() const { return c_; }
 
 /******************************************************************************/
 
 BadIntException::BadIntException(int badInt, const std::string& text, const Alphabet* alpha) :
 	AlphabetException("BadIntException: " + TextTools::toString(badInt) + ". " + text, alpha),
-	_i(badInt) {}
+	i_(badInt) {}
 		
-int BadIntException::getBadInt() const { return _i; }
+int BadIntException::getBadInt() const { return i_; }
 
 /******************************************************************************/
 		

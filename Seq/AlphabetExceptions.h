@@ -97,7 +97,7 @@ class BadCharException:
   public AlphabetException
 {
 	protected:
-    std::string _c;
+    std::string c_;
 	
 	public:
 		/**
@@ -127,7 +127,7 @@ class BadIntException:
   public AlphabetException
 {
 	protected:
-		int _i;
+		int i_;
 	
 	public:
 		/**

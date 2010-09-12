@@ -242,4 +242,45 @@ void SequenceWithAnnotation::append(const std::string& content) throw (BadCharEx
 }
 
 /******************************************************************************/
+ 
+vector<string> SequenceWithAnnotation::getAnnotationTypes() const
+{
+  vector<string> types;
+  for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
+    const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(&getListener(i));
+    if (anno)
+      types.push_back(anno->getType());
+  }
+  return types;
+}
+
+/******************************************************************************/
+
+void SequenceWithAnnotation::merge(const SequenceWithAnnotation& swa)
+  throw (AlphabetMismatchException, Exception)
+{
+  // Sequence's alphabets matching verification
+	if ((swa.getAlphabet()->getAlphabetType()) != (getAlphabet()->getAlphabetType())) 
+		throw AlphabetMismatchException("SequenceWithAnnotation::merge: Sequence's alphabets don't match ", swa.getAlphabet(), getAlphabet());
+	
+	// Sequence's names matching verification
+	if (swa.getName() != getName())
+    throw Exception ("SequenceWithAnnotation::merge: Sequence's names don't match");
+
+	// Concatenate sequences and send result
+	propagateEvents(false);
+  append(swa.getContent());
+	propagateEvents(true);
+
+  // Try to merge annotations:
+  vector<string> types = getAnnotationTypes();
+  vector<string> newTypes = getAnnotationTypes();
+  vector<string> allTypes = VectorTools::vectorUnion(types, newTypes);
+  for (unsigned int i = 0; i < allTypes.size(); ++i) {
+
+  }
+}
+
+
+/******************************************************************************/
 

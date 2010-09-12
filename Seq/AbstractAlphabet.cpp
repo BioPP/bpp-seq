@@ -124,7 +124,6 @@ const AlphabetState& AbstractAlphabet::getStateAt(unsigned int pos) const throw 
 
 std::string AbstractAlphabet::getName(const std::string& state) const throw (BadCharException)
 {
-  string LETTER = TextTools::toUpper(state);
   return (getState(state)).getName();
 }
 
@@ -139,8 +138,7 @@ std::string AbstractAlphabet::getName(int state) const throw (BadIntException)
 
 int AbstractAlphabet::charToInt(const std::string& state) const throw (BadCharException)
 {
-  string LETTER = TextTools::toUpper(state);
-  return getState(LETTER).getNum();
+  return getState(state).getNum();
 }
 
 /******************************************************************************/
@@ -164,7 +162,6 @@ bool AbstractAlphabet::isIntInAlphabet(int state) const
 
 bool AbstractAlphabet::isCharInAlphabet(const std::string& state) const
 {
-  string C = TextTools::toUpper(state);
   map<string, unsigned int>::const_iterator it = letters_.find(state);
   if (it != letters_.end())
     return true;
@@ -175,7 +172,7 @@ bool AbstractAlphabet::isCharInAlphabet(const std::string& state) const
 
 std::vector<int> AbstractAlphabet::getAlias(int state) const throw (BadIntException) 
 {
-  if(!isIntInAlphabet(state)) throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");
+  if (!isIntInAlphabet(state)) throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");
   vector<int> v(1);
   v[0] = state;
   return v;
@@ -185,7 +182,7 @@ std::vector<int> AbstractAlphabet::getAlias(int state) const throw (BadIntExcept
 
 std::vector<std::string> AbstractAlphabet::getAlias(const std::string& state) const throw (BadCharException) 
 {
-  if(!isCharInAlphabet(state)) throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.");
+  if (!isCharInAlphabet(state)) throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.");
   vector<string> v(1);
   v[0] = state;
   return v;

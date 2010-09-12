@@ -85,3 +85,5 @@ SequenceWithAnnotation* SequenceWithAnnotationTools::createMaskAnnotation(const 
   }
 }
 
+/******************************************************************************/
+

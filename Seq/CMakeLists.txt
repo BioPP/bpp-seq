@@ -74,6 +74,7 @@ set(CPP_FILES
   NexusTools.cpp
   Stockholm.cpp
   MafAlignmentParser.cpp
+  MafIterator.cpp
   __GranthamMatrixCode
   __MiyataMatrixCode
   __BLOSUM50MatrixCode
@@ -181,6 +182,7 @@ set(H_FILES
   NexusTools.h
   Stockholm.h
   MafAlignmentParser.h
+  MafIterator.h
   geneticcodes
   aadistances
   )

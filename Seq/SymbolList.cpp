@@ -213,13 +213,13 @@ int BasicSymbolList::getValue(unsigned int pos) const throw (IndexOutOfBoundsExc
 /****************************************************************************************/
 
 EdSymbolList::EdSymbolList(const std::vector<string>& list, const Alphabet* alpha) throw (BadCharException) :
-	alphabet_(alpha), content_(), listeners_()
+	alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
 {
 	setContent(list);
 }
 
 EdSymbolList::EdSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException) :
-	alphabet_(alpha), content_(), listeners_()
+	alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
 {
 	setContent(list);
 }
@@ -227,10 +227,10 @@ EdSymbolList::EdSymbolList(const std::vector<int>& list, const Alphabet* alpha) 
 /****************************************************************************************/
 
 EdSymbolList::EdSymbolList(const SymbolList& list):
-  alphabet_(list.getAlphabet()), content_(list.getContent()), listeners_() {}
+  alphabet_(list.getAlphabet()), propagateEvents_(true), content_(list.getContent()), listeners_() {}
 
 EdSymbolList::EdSymbolList(const EdSymbolList& list):
-  alphabet_(list.getAlphabet()), content_(list.getContent()), listeners_(list.listeners_)
+  alphabet_(list.getAlphabet()), propagateEvents_(list.propagateEvents_), content_(list.getContent()), listeners_(list.listeners_)
 {
   for (unsigned int i = 0; i < listeners_.size(); ++i)
     if (!list.listeners_[i]->isShared())
@@ -239,8 +239,9 @@ EdSymbolList::EdSymbolList(const EdSymbolList& list):
 
 EdSymbolList& EdSymbolList::operator=(const SymbolList& list)
 {
-	content_  = list.getContent();
-	alphabet_ = list.getAlphabet();
+	content_         = list.getContent();
+	alphabet_        = list.getAlphabet();
+  propagateEvents_ = true;
   for (unsigned int i = 0; i < listeners_.size(); ++i)
     if (!listeners_[i]->isShared())
      delete listeners_[i];
@@ -250,8 +251,9 @@ EdSymbolList& EdSymbolList::operator=(const SymbolList& list)
 
 EdSymbolList& EdSymbolList::operator=(const EdSymbolList& list)
 {
-	content_  = list.getContent();
-	alphabet_ = list.getAlphabet();
+	content_         = list.getContent();
+	alphabet_        = list.getAlphabet();
+  propagateEvents_ = list.propagateEvents_;
   for (unsigned int i = 0; i < listeners_.size(); ++i)
     delete listeners_[i];
   listeners_ = list.listeners_;

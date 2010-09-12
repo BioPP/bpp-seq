@@ -71,6 +71,14 @@ class SequenceAnnotation :
      * @return true if this annotation is complient with the given sequence.
      */
     virtual bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const = 0;
+
+    /**
+     * @brief Merge the input annotation with the current one.
+     * 
+     * @param anno The annotation to fuse.
+     * @return true if the fusion was possible and succesful.
+     */
+    virtual bool merge(const SequenceAnnotation& anno) = 0;
 };
 
 /**
@@ -323,7 +331,7 @@ class SequenceWithAnnotation :
      * @param content The content to append to the sequence.
      * @throw BadIntException If the content does not match the current alphabet.
      */
-    virtual void append(const std::vector<int>& content) throw (BadIntException);
+    void append(const std::vector<int>& content) throw (BadIntException);
 
     /**
      * @brief Append the specified content to the sequence.
@@ -331,7 +339,7 @@ class SequenceWithAnnotation :
      * @param content The content to append to the sequence.
      * @throw BadCharException If the content does not match the current alphabet.
      */
-    virtual void append(const std::vector<std::string>& content) throw (BadCharException);
+    void append(const std::vector<std::string>& content) throw (BadCharException);
 
     /**
      * @brief Append the specified content to the sequence.
@@ -339,7 +347,7 @@ class SequenceWithAnnotation :
      * @param content The content to append to the sequence.
      * @throw BadCharException If the content does not match the current alphabet.
      */
-    virtual void append(const std::string& content) throw (BadCharException);
+    void append(const std::string& content) throw (BadCharException);
 
     /** @} */
 
@@ -352,29 +360,63 @@ class SequenceWithAnnotation :
      * @throw Exception If the annotation is not valid for this sequence.
      * @see SequenceWithAnnotation::isValidWith
      */
-    void addAnnotation(SequenceAnnotation* anno) throw (Exception)
+    virtual void addAnnotation(SequenceAnnotation* anno) throw (Exception)
     {
       anno->isValidWith(*this);
       addSymbolListListener(anno);
     }
-    
-    const SequenceAnnotation& getAnnotation(const std::string& type) const
+ 
+    virtual bool hasAnnotation(const std::string& type) const
     {
       for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
-        const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(&getListener(i));
+        const SymbolListListener* listener = &getListener(i);
+        const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(listener);
+        if (anno && anno->getType() == type) return true;
+      }
+      return false;
+    }
+
+   
+    virtual const SequenceAnnotation& getAnnotation(const std::string& type) const
+    {
+      for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
+        const SymbolListListener* listener = &getListener(i);
+        const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(listener);
         if (anno && anno->getType() == type) return *anno;
       }
       throw Exception("SequenceWithAnnotation::getAnnotation. No annotation found with type '" + type + "'.");
     }
     
-    SequenceAnnotation& getAnnotation(const std::string& type)
+    virtual SequenceAnnotation& getAnnotation(const std::string& type)
     {
       for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
-        SequenceAnnotation* anno = dynamic_cast<SequenceAnnotation*>(&getListener(i));
+        SymbolListListener* listener = &getListener(i);
+        SequenceAnnotation* anno = dynamic_cast<SequenceAnnotation*>(listener);
         if (anno && anno->getType() == type) return *anno;
       }
       throw Exception("SequenceWithAnnotation::getAnnotation. No annotation found with type '" + type + "'.");
     }
+
+    /**
+     * @return The list of annotation types contained in this sequence.
+     */
+    virtual std::vector<std::string> getAnnotationTypes() const;
+
+    /**
+     * @brief Merge a sequence with the current one.
+     *
+     * Sequences must have the same name and alphabets.
+     * Only first sequence's commentaries are kept.
+     * Annotations that could not be merged will not be added in the concatenated sequence.
+     * See the documentation of each annotation class for more details.
+     *
+     * @param swa The sequence to merge with.
+     * @throw AlphabetMismatchException If the two alphabets do not match.
+     * @throw Exception If the sequence names do not match.
+     */
+    virtual void merge(const SequenceWithAnnotation& swa)
+        throw (AlphabetMismatchException, Exception);
+
 
 };
 

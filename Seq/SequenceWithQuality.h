@@ -73,8 +73,6 @@ namespace bpp {
 
     public:
       static const std::string QUALITY_SCORE; 
-
-    private:
       static const int DEFAULT_QUALITY_VALUE;
 
     public:
@@ -182,6 +180,16 @@ namespace bpp {
         if (pos + scores.size() > qualScores_.size())
           throw Exception("SequenceQuality::setScores. Vector overflow. Scores number: " + TextTools::toString(qualScores_.size()) + ", but trying to insert " + TextTools::toString(scores.size()) + " scores at position " + TextTools::toString(pos) + ".");
         std::copy(scores.begin(), scores.end(), qualScores_.begin() + pos); 
+      }
+    
+      bool merge(const SequenceAnnotation& anno) {
+        try {
+          const SequenceQuality* qual = & dynamic_cast<const SequenceQuality&>(anno);
+          VectorTools::append(qualScores_, qual->getScores());
+          return true;
+        } catch (std::exception& e) {
+          return false;
+        }
       }
   };
 

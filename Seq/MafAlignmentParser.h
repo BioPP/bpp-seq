@@ -40,89 +40,13 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _MAFALIGNMENTPARSER_H_
 #define _MAFALIGNMENTPARSER_H_
 
-#include "SequenceWithAnnotation.h"
-#include "SequenceTools.h"
-#include "AlphabetTools.h"
-#include "AlignedSequenceContainer.h"
+#include "MafIterator.h"
 #include "CaseMaskedAlphabet.h"
 
 //From the STL:
 #include <iostream>
 
 namespace bpp {
-
-/**
- * @brief A sequence class which is used to store data from MAF files.
- * 
- * It extends the SequenceWithAnnotation class to store MAF-specific features,
- * like the chromosome position.
- * A MAF sequence is necessarily a DNA sequence.
- */
-class MafSequence:
-  public SequenceWithAnnotation
-{
-  private:
-    unsigned int begin_;
-    char         strand_;
-    unsigned int size_;
-    unsigned int srcSize_;
-
-  public:
-    MafSequence(const std::string& name, const std::string& sequence):
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(0), strand_(0), size_(0), srcSize_(0)
-    {
-      size_ = SequenceTools::getNumberOfSites(*this);
-    }
-
-    MafSequence(const std::string& name, const std::string& sequence, unsigned int begin, char strand, unsigned int srcSize) :
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(begin), strand_(strand), size_(0), srcSize_(srcSize)
-    {
-      size_ = SequenceTools::getNumberOfSites(*this);
-    }
-
-    MafSequence* clone() const { return new MafSequence(*this); }
-
-  public:
-    unsigned int start() const { return begin_; }
-    unsigned int stop() const { return begin_ + size_ - 1; }
-    char getStrand() const { return strand_; }
-    unsigned int getGenomicSize() const { return size_; }
-    unsigned int getSrcSize() const { return srcSize_; }
-};
-
-/**
- * @brief A synteny block data structure, the basic unit of a MAF alignement file.
- *
- * This class basically contains a AlignedSequenceContainer made of MafSequence objects.
- */
-class MafBlock
-{
-  private:
-    double score_;
-    unsigned int pass_;
-    AlignedSequenceContainer alignment_;
-
-  public:
-    MafBlock() :
-      score_(0),
-      pass_(0),
-      alignment_(&AlphabetTools::DNA_ALPHABET)
-    {}
-
-  public:
-    void setScore(double score) { score_ = score; }
-    void setPass(unsigned int pass) { pass_ = pass; }
-    
-    double getScore() const { return score_; }
-    unsigned int getPass() const { return pass_; }
-
-    const AlignedSequenceContainer& getAlignment() const { return alignment_; }
-
-    void addSequence(const MafSequence& sequence) { alignment_.addSequence(sequence, false); }
-
-    unsigned int getNumberOfSequences() const { return alignment_.getNumberOfSequences(); }
-
-};
 
 /**
  * @brief MAF file parser.
@@ -134,7 +58,8 @@ class MafBlock
  *
  * @author Julien Dutheil
  */
-class MafAlignmentParser
+class MafAlignmentParser:
+  public MafIterator
 {
   private:
     std::istream* stream_;
@@ -153,6 +78,8 @@ class MafAlignmentParser
   public:
     MafBlock* nextBlock() throw (Exception);
 
+    void writeHeader(std::ostream& out) const;
+    void writeBlock(std::ostream& out, const MafBlock& block) const;
 };
 
 } // end of namespace bpp.
