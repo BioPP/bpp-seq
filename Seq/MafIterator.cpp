@@ -51,26 +51,52 @@ MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
 {
   currentBlock_ = iterator_->nextBlock();
   while (currentBlock_) {
-    for (unsigned int i = currentBlock_->getNumberOfSequences(); i > 0; --i) {
-      string name = currentBlock_->getAlignment().getName(i); 
-      if (!VectorTools::contains(species_, name)) {
+    map<string, unsigned int> counts;
+    for (size_t i = currentBlock_->getNumberOfSequences(); i > 0; --i) {
+      string species = currentBlock_->getSequence(i-1).getSpecies(); 
+      if (!VectorTools::contains(species_, species)) {
         if (logstream_) {
-          (*logstream_ << "SEQUENCE FILTER: remove sequence '" << name << "' from current block.").endLine();
+          (*logstream_ << "SEQUENCE FILTER: remove sequence '" << species << "' from current block.").endLine();
         }
-        currentBlock_->getAlignment().deleteSequence(i);
+        currentBlock_->getAlignment().deleteSequence(i-1);
+      } else {
+        counts[species]++;
       }
     }
     bool test = currentBlock_->getNumberOfSequences() == 0;
     //Avoid a memory leak:
-    if (test)
+    if (test) {
       delete currentBlock_;
-    else
-      return currentBlock_;
-    
-    //Look for the next block:
-    if (logstream_) {
-      (*logstream_ << "SEQUENCE FILTER: block is now empty. Try to get the next one.").endLine();
+      if (logstream_) {
+        (*logstream_ << "SEQUENCE FILTER: block is now empty. Try to get the next one.").endLine();
+      }
+    } else {
+      test = strict_ && (counts.size() != species_.size());
+      if (test) {
+        delete currentBlock_;
+        if (logstream_) {
+          (*logstream_ << "SEQUENCE FILTER: block does not contain all species and will be ignored. Try to get the next one.").endLine();
+        }
+      } else {
+        if (rmDuplicates_) {
+          test = false;
+          map<string, unsigned int>::iterator it;
+          for (it = counts.begin(); it != counts.end() && !(test = it->second > 1); it++) {}
+          if (test) {
+            delete currentBlock_;
+            if (logstream_) {
+              (*logstream_ << "SEQUENCE FILTER: block has two sequences for species '" << it->first << "' and will be ignored. Try to get the next one.").endLine();
+            }
+          } else {
+            return currentBlock_;
+          }
+        } else {
+          return currentBlock_;
+        }
+      }
     }
+
+    //Look for the next block:
     currentBlock_ = iterator_->nextBlock();
   }
   
@@ -122,7 +148,7 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     mergedBlock->setScore((s1 * n1 + s2 * n2) / (n1 + n2));
 
     //Now fill the new block:
-    for (unsigned int i = 0; i < allNames.size(); ++i) {
+    for (size_t i = 0; i < allNames.size(); ++i) {
       auto_ptr<MafSequence> seq;
       try {
         seq.reset(new MafSequence(currentBlock_->getSequence(allNames[i])));

@@ -96,13 +96,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
     {
       StringTokenizer st(line);
       st.nextToken(); //The 's' tag
-      string name = st.nextToken();
-      string chr = "";
-      size_t pos = name.find(".");
-      if (pos != string::npos) {
-        chr = name.substr(pos + 1);
-        name = name.substr(0, pos);
-      }
+      string src = st.nextToken();
       unsigned int start = TextTools::to<unsigned int>(st.nextToken());
       unsigned int size = TextTools::to<unsigned int>(st.nextToken());
       string tmp = st.nextToken();
@@ -117,7 +111,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
         delete currentSequence;
       }
       const string seq = st.nextToken();
-      currentSequence = new MafSequence(name, seq, start, chr, strand, srcSize);
+      currentSequence = new MafSequence(src, seq, start, strand, srcSize);
       if (currentSequence->getGenomicSize() != size)
         throw Exception("MafAlignmentParser::nextBlock. Sequence found does not match specified size: " + TextTools::toString(currentSequence->getGenomicSize()) + ", should be " + TextTools::toString(size) + ".");
       
@@ -137,7 +131,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
       StringTokenizer st(line);
       st.nextToken(); //The 'q' tag
       string name = st.nextToken();
-      if (name != currentSequence->getSrc())
+      if (name != currentSequence->getName())
         throw Exception("MafAlignmentParser::nextBlock(). Quality scores found, but with a different name from the previous sequence: " + name + ", should be " + currentSequence->getName() + ".");
       string qstr = st.nextToken();
       //Now parse the score string:
@@ -181,7 +175,7 @@ void MafAlignmentParser::writeBlock(std::ostream& out, const MafBlock& block) co
   size_t mxcSrc = 0, mxcStart = 0, mxcSize = 0, mxcSrcSize = 0;
   for (unsigned int i = 0; i < block.getNumberOfSequences(); i++) {
     const MafSequence* seq = &block.getSequence(i);
-    mxcSrc     = max(mxcSrc    , seq->getSrc().size());
+    mxcSrc     = max(mxcSrc    , seq->getName().size());
     mxcStart   = max(mxcStart  , TextTools::toString(seq->start()).size());
     mxcSize    = max(mxcSize   , TextTools::toString(seq->getGenomicSize()).size());
     mxcSrcSize = max(mxcSrcSize, TextTools::toString(seq->getSrcSize()).size());
@@ -190,7 +184,7 @@ void MafAlignmentParser::writeBlock(std::ostream& out, const MafBlock& block) co
   for (unsigned int i = 0; i < block.getNumberOfSequences(); i++) {
     const MafSequence* seq = new MafSequence(block.getSequence(i));
     out << "s ";
-    out << TextTools::resizeRight(seq->getSrc(), mxcSrc, ' ') << " ";
+    out << TextTools::resizeRight(seq->getName(), mxcSrc, ' ') << " ";
     out << TextTools::resizeLeft(TextTools::toString(seq->start()), mxcStart, ' ') << " ";
     out << TextTools::resizeLeft(TextTools::toString(seq->getGenomicSize()), mxcSize, ' ') << " ";
     out << seq->getStrand() << " ";
@@ -211,10 +205,10 @@ void MafAlignmentParser::writeBlock(std::ostream& out, const MafBlock& block) co
     if (mask_ && seq->hasAnnotation(SequenceQuality::QUALITY_SCORE)) {
       const SequenceQuality* qual = &dynamic_cast<const SequenceQuality&>(seq->getAnnotation(SequenceQuality::QUALITY_SCORE));
       out << "q ";
-      out << TextTools::resizeRight(seq->getSrc(), mxcSrc + mxcStart + mxcSize + mxcSrcSize + 5, ' ') << " ";
+      out << TextTools::resizeRight(seq->getName(), mxcSrc + mxcStart + mxcSize + mxcSrcSize + 5, ' ') << " ";
       string qualStr;
       for (unsigned int j = 0; j < seq->size(); ++j) {
-        double s = (*qual)[i];
+        double s = (*qual)[j];
         if (s == -1) {
           qualStr += "-";
         } else if (s == -2) {

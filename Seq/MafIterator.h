@@ -67,6 +67,7 @@ class MafSequence:
 {
   private:
     unsigned int begin_;
+    std::string  species_;
     std::string  chromosome_;
     char         strand_;
     unsigned int size_;
@@ -74,21 +75,31 @@ class MafSequence:
 
   public:
     MafSequence():
-      SequenceWithAnnotation(&AlphabetTools::DNA_ALPHABET), begin_(0), chromosome_(), strand_(0), size_(0), srcSize_(0)
+      SequenceWithAnnotation(&AlphabetTools::DNA_ALPHABET), begin_(0), species_(""), chromosome_(""), strand_(0), size_(0), srcSize_(0)
     {
       size_ = 0;
     }
 
     MafSequence(const std::string& name, const std::string& sequence):
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(0), chromosome_(), strand_(0), size_(0), srcSize_(0)
+      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(0), species_(""), chromosome_(""), strand_(0), size_(0), srcSize_(0)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
+      size_t pos = name.find(".");
+      if (pos != std::string::npos) {
+        chromosome_ = name.substr(pos + 1);
+        species_    = name.substr(0, pos);
+      }
     }
 
-    MafSequence(const std::string& name, const std::string& sequence, unsigned int begin, const std::string& chromosome, char strand, unsigned int srcSize) :
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(begin), chromosome_(chromosome), strand_(strand), size_(0), srcSize_(srcSize)
+    MafSequence(const std::string& name, const std::string& sequence, unsigned int begin, char strand, unsigned int srcSize) :
+      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(begin), species_(""), chromosome_(""), strand_(strand), size_(0), srcSize_(srcSize)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
+      size_t pos = name.find(".");
+      if (pos != std::string::npos) {
+        chromosome_ = name.substr(pos + 1);
+        species_    = name.substr(0, pos);
+      }
     }
 
     MafSequence* clone() const { return new MafSequence(*this); }
@@ -98,17 +109,17 @@ class MafSequence:
   public:
     unsigned int start() const { return begin_; }
     unsigned int stop() const { return begin_ + size_ - 1; }
+    const std::string& getSpecies() const { return species_; }
     const std::string& getChromosome() const { return chromosome_; }
     char getStrand() const { return strand_; }
     unsigned int getGenomicSize() const { return size_; }
     unsigned int getSrcSize() const { return srcSize_; }
-    std::string getSrc() const { return getName() + (chromosome_ == "" ? "" : "." + chromosome_); }
     void setStart(unsigned int begin) { begin_ = begin; }
     void setChromosome(const std::string& chr) { chromosome_ = chr; }
     void setStrand(char s) { strand_ = s; }
     void setSrcSize(unsigned int srcSize) { srcSize_ = srcSize; }
   
-    std::string getDescription() const { return getName() + "." + chromosome_ + strand_ + ":" + TextTools::toString(start()) + "-" + TextTools::toString(stop()); }
+    std::string getDescription() const { return getName() + strand_ + ":" + TextTools::toString(start()) + "-" + TextTools::toString(stop()); }
   
   private:
     void beforeSequenceChanged(const SymbolListEditionEvent& event) {}
@@ -135,7 +146,7 @@ class MafBlock
 
   public:
     MafBlock() :
-      score_(0),
+      score_(-1),
       pass_(0),
       alignment_(&AlphabetTools::DNA_ALPHABET)
     {}
@@ -223,12 +234,20 @@ class SequenceFilterMafIterator:
 {
   private:
     std::vector<std::string> species_;
+    bool strict_;
+    bool rmDuplicates_;
     MafBlock* currentBlock_;
 
   public:
-    SequenceFilterMafIterator(MafIterator* iterator, const std::vector<std::string>& species) :
+    /**
+     * @param strict If true, then block that do not contain all species will be discarded.
+     * @param rmDuplicates If true, block that contain more than one instance for at least one species will be discarded.
+     */
+    SequenceFilterMafIterator(MafIterator* iterator, const std::vector<std::string>& species, bool strict = false, bool rmDuplicates = false) :
       AbstractFilterMafIterator(iterator),
       species_(species),
+      strict_(strict),
+      rmDuplicates_(rmDuplicates),
       currentBlock_(0)
     {}
 
@@ -236,12 +255,16 @@ class SequenceFilterMafIterator:
     SequenceFilterMafIterator(const SequenceFilterMafIterator& iterator) :
       AbstractFilterMafIterator(0),
       species_(iterator.species_),
+      strict_(iterator.strict_),
+      rmDuplicates_(iterator.rmDuplicates_),
       currentBlock_(0)
     {}
     
     SequenceFilterMafIterator& operator=(const SequenceFilterMafIterator& iterator)
     {
       species_       = iterator.species_;
+      strict_        = iterator.strict_;
+      rmDuplicates_  = iterator.rmDuplicates_;
       currentBlock_  = 0;
       return *this;
     }
@@ -274,21 +297,24 @@ class BlockMergerMafIterator:
       incomingBlock_(0),
       currentBlock_(0),
       ignoreChrs_()
-    {}
+    {
+      incomingBlock_ = iterator->nextBlock();
+    }
 
   private:
     BlockMergerMafIterator(const BlockMergerMafIterator& iterator) :
       AbstractFilterMafIterator(0),
       species_(iterator.species_),
-      incomingBlock_(0), currentBlock_(0),
+      incomingBlock_(iterator.incomingBlock_),
+      currentBlock_(iterator.currentBlock_),
       ignoreChrs_(iterator.ignoreChrs_)
     {}
     
     BlockMergerMafIterator& operator=(const BlockMergerMafIterator& iterator)
     {
       species_       = iterator.species_;
-      incomingBlock_ = 0;
-      currentBlock_  = 0;
+      incomingBlock_ = iterator.incomingBlock_;
+      currentBlock_  = iterator.currentBlock_;
       ignoreChrs_    = iterator.ignoreChrs_;
       return *this;
     }
