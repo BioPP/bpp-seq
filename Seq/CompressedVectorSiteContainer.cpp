@@ -326,15 +326,16 @@ Site* CompressedVectorSiteContainer::removeSite(unsigned int i) throw (IndexOutO
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::deleteSite(unsigned int i) throw (IndexOutOfBoundsException)
+void CompressedVectorSiteContainer::deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException)
 {
-  if (i >= getNumberOfSites()) throw IndexOutOfBoundsException("CompressedVectorSiteContainer::deleteSite.", i, 0, getNumberOfSites() - 1);
+  if (siteIndex >= getNumberOfSites())
+    throw IndexOutOfBoundsException("CompressedVectorSiteContainer::deleteSite.", siteIndex, 0, getNumberOfSites() - 1);
   //Here we need to check whether the pattern corresponding to this site is unique:
-  unsigned int current = index_[i];
+  unsigned int current = index_[siteIndex];
   bool test = true;
   for (unsigned int j = 0; test && j < index_.size(); ++j)
   {
-    if (j != i && index_[j] == current)
+    if (j != siteIndex && index_[j] == current)
     {
       //There is a nother site, so nothing to...
       test = false;
@@ -351,7 +352,17 @@ void CompressedVectorSiteContainer::deleteSite(unsigned int i) throw (IndexOutOf
       if (index_[j] > current) index_[j]--;
     }
   }
-  index_.erase(index_.begin() + i);
+  index_.erase(index_.begin() + siteIndex);
+}
+
+/******************************************************************************/
+
+void CompressedVectorSiteContainer::deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException)
+{
+  //This may be optimized later:
+  for (unsigned int i = 0; i < length; ++i) {
+    deleteSite(siteIndex + i);
+  }
 }
 
 /******************************************************************************/

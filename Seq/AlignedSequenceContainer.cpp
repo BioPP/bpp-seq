@@ -211,10 +211,8 @@ Site* AlignedSequenceContainer::removeSite(unsigned int pos) throw (IndexOutOfBo
 
 void AlignedSequenceContainer::deleteSite(unsigned int pos) throw (IndexOutOfBoundsException)
 {
-  if(pos >= getNumberOfSites()) throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites() - 1);
-
-  // Initializing
-  string s;
+  if (pos >= getNumberOfSites())
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites() - 1);
 
   // For all sequences
   for (unsigned int j = 0; j < getNumberOfSequences(); j++)
@@ -231,6 +229,29 @@ void AlignedSequenceContainer::deleteSite(unsigned int pos) throw (IndexOutOfBou
   sites_.erase(sites_.begin() + pos);
 }
   
+/******************************************************************************/
+
+void AlignedSequenceContainer::deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException, Exception)
+{
+  if (siteIndex + length >= getNumberOfSites())
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSites", siteIndex + length, 0, getNumberOfSites() - 1);
+
+  // For all sequences
+  for (unsigned int j = 0; j < getNumberOfSequences(); j++)
+  {
+    getSequence_(j).deleteElements(siteIndex, length);
+  }
+
+  // Delete site's siteIndexition
+  positions_.erase(positions_.begin() + siteIndex, positions_.begin() + siteIndex + length);
+  length_-=length;
+
+  //Actualizes the 'sites' vector:
+  for (unsigned int i = siteIndex; i < siteIndex + length; ++i)
+    if (sites_[i]) delete sites_[i];
+  sites_.erase(sites_.begin() + siteIndex, sites_.begin() + siteIndex + length);
+}
+
 /******************************************************************************/
 
 void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions) throw (Exception)

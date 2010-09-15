@@ -79,6 +79,14 @@ class SequenceAnnotation :
      * @return true if the fusion was possible and succesful.
      */
     virtual bool merge(const SequenceAnnotation& anno) = 0;
+
+    /**
+     * @return A new annotation corresponding to a part of the sequence.
+     * The implementation of this highly depends on the annotation type, and might not be supported.
+     * @param pos Starting point of the region.
+     * @param len The length of the region, in number of positions.
+     */
+    virtual SequenceAnnotation* getPartAnnotation(unsigned int pos, unsigned int len) const throw (Exception) = 0;
 };
 
 /**

@@ -311,9 +311,21 @@ Site* VectorSiteContainer::removeSite(unsigned int i) throw (IndexOutOfBoundsExc
 
 void VectorSiteContainer::deleteSite(unsigned int i) throw (IndexOutOfBoundsException)
 {
-  if (i >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::deleteSite.", i, 0, getNumberOfSites() - 1);
+  if (i >= getNumberOfSites())
+    throw IndexOutOfBoundsException("VectorSiteContainer::deleteSite.", i, 0, getNumberOfSites() - 1);
   delete sites_[i];
   sites_.erase(sites_.begin() + i);  
+}
+
+/******************************************************************************/
+
+void VectorSiteContainer::deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException)
+{
+  if (siteIndex + length >= getNumberOfSites())
+    throw IndexOutOfBoundsException("VectorSiteContainer::deleteSites.", siteIndex + length, 0, getNumberOfSites() - 1);
+  for (unsigned int i = siteIndex; i < siteIndex + length; ++i)
+    delete sites_[i];
+  sites_.erase(sites_.begin() + siteIndex, sites_.begin() + siteIndex + length);  
 }
 
 /******************************************************************************/

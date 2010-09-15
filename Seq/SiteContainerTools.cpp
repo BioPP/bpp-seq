@@ -191,10 +191,31 @@ SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites
   for(unsigned int i = 0; i < sites.getNumberOfSites(); i++)
   {
     const Site* site = &sites.getSite(i);
-    if(!SiteTools::isGapOnly(*site))
+    if (!SiteTools::isGapOnly(*site))
       noGapCont->addSite(*site);
   }
   return noGapCont;
+}
+
+/******************************************************************************/
+
+void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
+{
+  unsigned int n = sites.getNumberOfSites();
+  for (unsigned int i = n; i > 0; --i)
+  {
+    ApplicationTools::displayGauge(n-i+1, n, '>');
+    const Site* site = &sites.getSite(i - 1);
+    if (SiteTools::isGapOnly(*site))
+    {
+      unsigned int end = i;
+      while (SiteTools::isGapOnly(*site) && i > 0) {
+        --i;
+        site = &sites.getSite(i - 1);
+      }
+      sites.deleteSites(i, end - i);
+    }
+  }
 }
 
 /******************************************************************************/

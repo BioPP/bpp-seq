@@ -155,6 +155,16 @@ class SiteContainer:
     virtual void deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
 
     /**
+     * @brief Delete a continuous range of sites in the container.
+     *
+     * @param siteIndex The position of the first site in the container.
+     * @param length The length of the region to delete, starting at pposition siteIndex.
+     * @throw IndexOutOfBoundsException If the specified range is not valid.
+     */
+    virtual void deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException, Exception) = 0;
+
+
+    /**
      * @brief Get the number of sites in the container.
      *
      * @return The number of sites in the container.

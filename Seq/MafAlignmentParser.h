@@ -78,8 +78,6 @@ class MafAlignmentParser:
   public:
     MafBlock* nextBlock() throw (Exception);
 
-    void writeHeader(std::ostream& out) const;
-    void writeBlock(std::ostream& out, const MafBlock& block) const;
 };
 
 } // end of namespace bpp.

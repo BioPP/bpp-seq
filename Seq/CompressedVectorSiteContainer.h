@@ -145,6 +145,7 @@ public:
   void        setSite(unsigned int siteIndex, const Site& site, bool checkPosition = false) throw (Exception);
   Site*    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
   void     deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
+  void    deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException);
   void        addSite(const Site& site,                                       bool checkPosition = false) throw (Exception);
   void        addSite(const Site& site,                         int position, bool checkPosition = false) throw (Exception)
   {

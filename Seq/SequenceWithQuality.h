@@ -191,6 +191,10 @@ namespace bpp {
           return false;
         }
       }
+
+      SequenceQuality* getPartAnnotation(unsigned int pos, unsigned int len) const throw (Exception) {
+        return new SequenceQuality(std::vector<int>(qualScores_.begin() + pos, qualScores_.begin() + pos + len), removable_);
+      }
   };
 
 

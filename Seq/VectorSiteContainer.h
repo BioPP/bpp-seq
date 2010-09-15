@@ -142,6 +142,7 @@ class VectorSiteContainer:
     void        setSite(unsigned int siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
     Site*    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
     void     deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
+    void    deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException);
     void        addSite(const Site& site,                                       bool checkPosition = true) throw (Exception);
     void        addSite(const Site& site,                         int position, bool checkPosition = true) throw (Exception);
     void        addSite(const Site& site, unsigned int siteIndex,               bool checkPosition = true) throw (Exception);
@@ -187,12 +188,12 @@ class VectorSiteContainer:
 
     int & valueAt(const std::string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
     {
-      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
       return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
     }
     const int & valueAt(const std::string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
     {
-      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
       return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
     }
     int & operator()(const std::string & sequenceName, unsigned int elementIndex)
@@ -206,14 +207,14 @@ class VectorSiteContainer:
 
     int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException)
     {
-      if(sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);          
-      if(elementIndex  >= getNumberOfSites())     throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      if(sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);          
+      if(elementIndex  >= getNumberOfSites())     throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
       return (* sites_[elementIndex])[sequenceIndex];
     }
     const int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException)
     {
-      if(sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);          
-      if(elementIndex  >= getNumberOfSites())     throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+      if(sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);          
+      if(elementIndex  >= getNumberOfSites())     throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
       return (* sites_[elementIndex])[sequenceIndex];
     }
     int & operator()(unsigned int sequenceIndex, unsigned int elementIndex)

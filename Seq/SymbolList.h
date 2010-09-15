@@ -164,11 +164,20 @@ class SymbolList:
 		virtual void setElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
 
 		/**
-		 * @brief Delete the element at postion 'pos'.
+		 * @brief Delete the element at position 'pos'.
 		 *
 		 * @param pos The position of the element to delete.
 		 */
 		virtual void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException) = 0;
+
+    /**
+		 * @brief Delete the elements at position 'pos'.
+		 *
+		 * @param pos The position of the first element to delete.
+     * @param len The length of the region to delete.
+		 */
+		virtual void deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException) = 0;
+
 
 		/**
 		 * @brief Get the element at position 'pos' as a character.
@@ -357,6 +366,8 @@ class BasicSymbolList:
 		virtual void setElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
 
 		virtual void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException);
+		
+    virtual void deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException);
 
 		virtual std::string getChar(unsigned int pos) const throw (IndexOutOfBoundsException);
 
@@ -606,6 +617,8 @@ class EdSymbolList:
 		virtual void setElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
 
 		virtual void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException);
+		
+    virtual void deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException);
 
 		virtual std::string getChar(unsigned int pos) const throw (IndexOutOfBoundsException);
 

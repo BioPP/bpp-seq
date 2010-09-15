@@ -164,7 +164,16 @@ void BasicSymbolList::deleteElement(unsigned int pos) throw (IndexOutOfBoundsExc
 {
 	if(pos > content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
-	 content_.erase(content_.begin() + pos);
+	content_.erase(content_.begin() + pos);
+}
+
+/****************************************************************************************/
+
+void BasicSymbolList::deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException)
+{
+	if(pos + len > content_.size())
+    throw IndexOutOfBoundsException("BasicSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
+	 content_.erase(content_.begin() + pos, content_.begin() + pos + len);
 }
 
 /****************************************************************************************/
@@ -366,6 +375,19 @@ void EdSymbolList::deleteElement(unsigned int pos) throw (IndexOutOfBoundsExcept
 	content_.erase(content_.begin() + pos);
   fireAfterSequenceDeleted(event);
 }
+
+/****************************************************************************************/
+
+void EdSymbolList::deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException)
+{
+	if(pos + len > content_.size())
+    throw IndexOutOfBoundsException("EdSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
+  SymbolListDeletionEvent event(this, pos, len);
+  fireBeforeSequenceDeleted(event);
+	content_.erase(content_.begin() + pos, content_.begin() + pos + len);
+  fireAfterSequenceDeleted(event);
+}
+
 
 /****************************************************************************************/
 

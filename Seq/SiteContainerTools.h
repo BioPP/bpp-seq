@@ -65,10 +65,18 @@ class SiteContainerTools
 		 * This function build a new SiteContainer instance without sites with only gaps.
 		 * The container passed as input is not modified, all sites are copied.
 		 *
+     * @see removeGapOnlySites(SiteContainer& sites)
 		 * @param sites The container to analyse.
 		 * @return A pointer toward a new SiteContainer.
 		 */
 		static SiteContainer* removeGapOnlySites(const SiteContainer& sites);
+
+    /**
+		 * @brief Remove gap-only sites from a site set.
+		 *
+		 * @param sites The container where the sites have to be removed.
+		 */
+		static void removeGapOnlySites(SiteContainer& sites);
 
 		/**
 		 * @brief Get a site set without gap/unresolved-only sites.

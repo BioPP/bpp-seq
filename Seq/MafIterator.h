@@ -48,6 +48,7 @@ knowledge of the CeCILL license and that you accept its terms.
 //From the STL:
 #include <iostream>
 #include <string>
+#include <deque>
 
 namespace bpp {
 
@@ -66,6 +67,7 @@ class MafSequence:
   public SequenceWithAnnotation
 {
   private:
+    bool         hasCoordinates_;
     unsigned int begin_;
     std::string  species_;
     std::string  chromosome_;
@@ -75,13 +77,13 @@ class MafSequence:
 
   public:
     MafSequence():
-      SequenceWithAnnotation(&AlphabetTools::DNA_ALPHABET), begin_(0), species_(""), chromosome_(""), strand_(0), size_(0), srcSize_(0)
+      SequenceWithAnnotation(&AlphabetTools::DNA_ALPHABET), hasCoordinates_(false), begin_(0), species_(""), chromosome_(""), strand_(0), size_(0), srcSize_(0)
     {
       size_ = 0;
     }
 
     MafSequence(const std::string& name, const std::string& sequence):
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(0), species_(""), chromosome_(""), strand_(0), size_(0), srcSize_(0)
+      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), hasCoordinates_(false), begin_(0), species_(""), chromosome_(""), strand_(0), size_(0), srcSize_(0)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
       size_t pos = name.find(".");
@@ -92,7 +94,7 @@ class MafSequence:
     }
 
     MafSequence(const std::string& name, const std::string& sequence, unsigned int begin, char strand, unsigned int srcSize) :
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), begin_(begin), species_(""), chromosome_(""), strand_(strand), size_(0), srcSize_(srcSize)
+      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), hasCoordinates_(begin > 0), begin_(begin), species_(""), chromosome_(""), strand_(strand), size_(0), srcSize_(srcSize)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
       size_t pos = name.find(".");
@@ -107,20 +109,42 @@ class MafSequence:
     ~MafSequence() {}
 
   public:
-    unsigned int start() const { return begin_; }
-    unsigned int stop() const { return begin_ + size_ - 1; }
+    bool hasCoordinates() const { return hasCoordinates_; }
+
+    void removeCoordinates() { hasCoordinates_ = false; begin_ = 0; }
+
+    unsigned int start() const throw (Exception) { 
+      if (hasCoordinates_) return begin_;
+      else throw Exception("MafSequence::start(). Sequence does not have coordinates.");
+    }
+
+    unsigned int stop() const { 
+      if (hasCoordinates_) return begin_ + size_ - 1;
+      else throw Exception("MafSequence::stop(). Sequence does not have coordinates.");
+    }
+
     const std::string& getSpecies() const { return species_; }
+    
     const std::string& getChromosome() const { return chromosome_; }
+    
     char getStrand() const { return strand_; }
+    
     unsigned int getGenomicSize() const { return size_; }
+    
     unsigned int getSrcSize() const { return srcSize_; }
-    void setStart(unsigned int begin) { begin_ = begin; }
+    
+    void setStart(unsigned int begin) { begin_ = begin; hasCoordinates_ = true; }
+    
     void setChromosome(const std::string& chr) { chromosome_ = chr; }
+    
     void setStrand(char s) { strand_ = s; }
+    
     void setSrcSize(unsigned int srcSize) { srcSize_ = srcSize; }
   
     std::string getDescription() const { return getName() + strand_ + ":" + TextTools::toString(start()) + "-" + TextTools::toString(stop()); }
   
+    MafSequence* subSequence(unsigned int startAt, unsigned int length) const;
+
   private:
     void beforeSequenceChanged(const SymbolListEditionEvent& event) {}
     void afterSequenceChanged(const SymbolListEditionEvent& event) { size_ = SequenceTools::getNumberOfSites(*this); }
@@ -161,6 +185,10 @@ class MafBlock
     AlignedSequenceContainer& getAlignment() { return alignment_; }
     const AlignedSequenceContainer& getAlignment() const { return alignment_; }
 
+    unsigned int getNumberOfSequences() const { return alignment_.getNumberOfSequences(); }
+    
+    unsigned int getNumberOfSites() const { return alignment_.getNumberOfSites(); }
+
     void addSequence(const MafSequence& sequence) { alignment_.addSequence(sequence, false); }
 
     const MafSequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) {
@@ -171,9 +199,23 @@ class MafBlock
       return dynamic_cast<const MafSequence&>(getAlignment().getSequence(i));
     }
 
-    unsigned int getNumberOfSequences() const { return alignment_.getNumberOfSequences(); }
-    
-    unsigned int getNumberOfSites() const { return alignment_.getNumberOfSites(); }
+    //Return the first sequence with the species name.
+    const MafSequence& getSequenceForSpecies(const std::string& species) const throw (SequenceNotFoundException) {
+      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
+        const MafSequence* seq = &getSequence(i);
+        if (seq->getSpecies() == species)
+          return *seq;
+      }
+      throw SequenceNotFoundException("MafBlock::getSequenceForSpecies. No sequence with the given species name in this block.");
+    }
+
+    void removeCoordinatesFromSequence(unsigned int i) throw (IndexOutOfBoundsException) {
+      //This is a bit of a trick, but avoid useless recopies.
+      //It is safe here because the AlignedSequenceContainer is fully encapsulated.
+      //It would not work if a VectorSiteContainer was used.
+      const_cast<MafSequence&>(getSequence(i)).removeCoordinates();
+    }
+
 
 };
 
@@ -331,24 +373,85 @@ class BlockMergerMafIterator:
     }
 };
 
-
 /**
- * @brief Filter maf blocks to remove ambiguously aligned regions.
+ * @brief Filter maf blocks to remove in each block the positions made only of gaps.
  *
- * Regions with a too high proportion of gaps in a set of species will be removed,
- * and blocks adjusted accordingly. 
+ * The subset of species that should be examined is given as input. The coordinates of these
+ * species will not be altered as only gap positions are removed. Other species however may be
+ * altered as they might not have gap in the removed position. The coordinates for these species
+ * will therefore be removed as they do not make sense anymore.
  */
-class GapFilterMafIterator:
+class FullGapFilterMafIterator:
   public AbstractFilterMafIterator
 {
+  private:
+    std::vector<std::string> species_;
+
   public:
-    GapFilterMafIterator(MafIterator* iterator) :
-      AbstractFilterMafIterator(iterator)
+    FullGapFilterMafIterator(MafIterator* iterator, const std::vector<std::string>& species) :
+      AbstractFilterMafIterator(iterator),
+      species_(species)
     {}
 
   public:
     MafBlock* nextBlock() throw (Exception);
 
+};
+
+/**
+ * @brief Filter maf blocks to remove ambiguously aligned or non-informative regions.
+ *
+ * Regions with a too high proportion of gaps or unknown character in a set of species will be removed,
+ * and blocks adjusted accordingly. 
+ */
+class AlignmentFilterMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::vector<std::string> species_;
+    unsigned int windowSize_;
+    unsigned int step_;
+    unsigned int maxGap_;
+    std::deque<MafBlock*> blockBuffer_;
+    std::deque<MafBlock*> trashBuffer_;
+    std::deque< std::vector<bool> > window_;
+    bool keepTrashedBlocks_;
+
+  public:
+    AlignmentFilterMafIterator(MafIterator* iterator, const std::vector<std::string>& species, unsigned int windowSize, unsigned int step, unsigned int maxGap, bool keepTrashedBlocks) :
+      AbstractFilterMafIterator(iterator),
+      species_(species),
+      windowSize_(windowSize),
+      step_(step),
+      maxGap_(maxGap),
+      blockBuffer_(),
+      trashBuffer_(),
+      window_(species.size()),
+      keepTrashedBlocks_(keepTrashedBlocks)
+    {}
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+    MafBlock* nextRemovedBlock() throw (Exception) {
+      if (trashBuffer_.size() == 0) return 0;
+      MafBlock* block = trashBuffer_.front();
+      trashBuffer_.pop_front();
+      return block;
+    }
+
+};
+
+class AlignmentFilterTrashIterator:
+  public AbstractFilterMafIterator
+{
+  public:
+    AlignmentFilterTrashIterator(AlignmentFilterMafIterator* iterator) :
+      AbstractFilterMafIterator(iterator) {}
+
+  public:
+    MafBlock* nextBlock() throw (Exception) {
+      return dynamic_cast<AlignmentFilterMafIterator*>(iterator_)->nextRemovedBlock();
+    }
 };
 
 /**
@@ -370,7 +473,51 @@ class QualityFilterMafIterator:
 
 };
 
+/**
+ * @brief This iterator forward the iterator given as input after having printed its content to a file.
+ */
+class OutputMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::ostream* output_;
+    bool mask_;
 
+  public:
+    OutputMafIterator(MafIterator* iterator, std::ostream* out, bool mask = true) :
+      AbstractFilterMafIterator(iterator), output_(out), mask_(mask)
+    {
+      if (output_)
+        writeHeader(*output_);
+    }
+
+  private:
+    OutputMafIterator(const OutputMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      output_(iterator.output_),
+      mask_(iterator.mask_)
+    {}
+    
+    OutputMafIterator& operator=(const OutputMafIterator& iterator)
+    {
+      output_ = iterator.output_;
+      mask_   = iterator.mask_;
+      return *this;
+    }
+
+
+  public:
+    MafBlock* nextBlock() throw (Exception) {
+      MafBlock* block = iterator_->nextBlock();
+      if (output_ && block)
+        writeBlock(*output_, *block);
+      return block;
+    }
+
+  private:
+    void writeHeader(std::ostream& out) const;
+    void writeBlock(std::ostream& out, const MafBlock& block) const;
+};
 
 } // end of namespace bpp.
 

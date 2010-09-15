@@ -157,10 +157,11 @@ class AlignedSequenceContainer:
      *
      * @{
      */
-    const Site& getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException) ;
-    void        setSite(unsigned int siteIndex, const Site& site, bool checkPosition = true) throw (Exception) ;
-    Site *   removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
-    void     deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException) ;
+    const Site& getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException);
+    void        setSite(unsigned int siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
+    Site *   removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
+    void     deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
+    void    deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException, Exception);
     void addSite(const Site& site, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, int position, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, unsigned int siteIndex, bool checkPosition = true) throw (Exception);

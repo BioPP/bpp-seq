@@ -170,6 +170,9 @@ namespace bpp {
         }
       }
  
+      SequenceAnnotation* getPartAnnotation(unsigned int pos, unsigned int len) const throw (Exception) {
+        return new SequenceMask(std::vector<bool>(mask_.begin() + pos, mask_.begin() + pos + len), removable_);
+      }
   };
   
   /**
