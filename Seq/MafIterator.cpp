@@ -255,8 +255,8 @@ MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
     if (SiteTools::isGapOnly(*site)) {
       unsigned int end = i;
       while (SiteTools::isGapOnly(*site) && i > 0) {
-        --i;
         site = &vsc.getSite(i - 1);
+        --i;
       }
       block->getAlignment().deleteSites(i, end - i);
       count -= (end - i);
