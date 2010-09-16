@@ -265,6 +265,34 @@ class AbstractFilterMafIterator:
 
 };
 
+/**
+ * @brief Filter maf blocks to keep only the ones with a minimum number of sites.
+ */
+class BlockSizeMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    unsigned int minSize_;
+
+  public:
+    BlockSizeMafIterator(MafIterator* iterator, unsigned int minSize) :
+      AbstractFilterMafIterator(iterator),
+      minSize_(minSize)
+    {}
+
+  public:
+    MafBlock* nextBlock() throw (Exception) {
+      MafBlock* block;
+      do {
+        block = iterator_->nextBlock();
+        if (logstream_ && block && block->getNumberOfSites() < minSize_) {
+          (*logstream_ << "BLOCK SIZE FILTER: block with size " << block->getNumberOfSites() << " was discarded.").endLine();
+        }
+      } while (block == 0 || block->getNumberOfSites() < minSize_);
+      return block;
+    }
+
+};
 
 /**
  * @brief Filter maf blocks to keep a subset of sequences, given their name.
@@ -518,6 +546,49 @@ class OutputMafIterator:
     void writeHeader(std::ostream& out) const;
     void writeBlock(std::ostream& out, const MafBlock& block) const;
 };
+
+/**
+ * @brief This special iterator synchronizes two adaptors.
+ *
+ * It takes as input a main iterator and a secondary one. The nextBlock method of the secondary iterator will be
+ * called immediately after the one of the primary one. The resulting block of the main iterator will be forwarded,
+ * while the one of the secondary iterator will be destroyed.
+ */
+class MafIteratorSynchronizer:
+  public AbstractFilterMafIterator
+{
+  private:
+    MafIterator* secondaryIterator_;
+
+  public:
+    MafIteratorSynchronizer(MafIterator* primaryIterator, MafIterator* secondaryIterator) :
+      AbstractFilterMafIterator(primaryIterator), secondaryIterator_(secondaryIterator)
+    {}
+
+  private:
+    MafIteratorSynchronizer(const MafIteratorSynchronizer& iterator) :
+      AbstractFilterMafIterator(0),
+      secondaryIterator_(iterator.secondaryIterator_)
+    {}
+    
+    MafIteratorSynchronizer& operator=(const MafIteratorSynchronizer& iterator)
+    {
+      secondaryIterator_ = iterator.secondaryIterator_;
+      return *this;
+    }
+
+
+  public:
+    MafBlock* nextBlock() throw (Exception) {
+      MafBlock* block = iterator_->nextBlock();
+      MafBlock* secondBlock = secondaryIterator_->nextBlock();
+      if (secondBlock)
+        delete secondBlock;
+      return block;
+    }
+
+};
+
 
 } // end of namespace bpp.
 

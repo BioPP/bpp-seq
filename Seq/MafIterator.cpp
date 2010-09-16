@@ -280,22 +280,20 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
     vector<unsigned int> pos;
     vector<bool> col(nr);
     //Reset window:
-    for (size_t j = 0; j < nr; ++j) {
-      window_[j].clear();
-    }
+    window_.clear();
     //Init window:
-    for (size_t i = 0; i < windowSize_; ++i) {
+    size_t i;
+    for (i = 0; i < windowSize_; ++i) {
       for (size_t j = 0; j < nr; ++j) {
         col[j] = (aln[j][i] == gap|| aln[j][i] == unk);
       }
       window_.push_back(col);
     }
     //Slide window:
-    size_t i = windowSize_;
     ApplicationTools::message->endLine();
     ApplicationTools::displayTask("Sliding window for alignment filter", true);
     while (i < nc) {
-      ApplicationTools::displayGauge(i, nc - 1, '>');
+      ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
       //Evaluate current window:
       unsigned int sum = 0;
       for (size_t u = 0; u < window_.size(); ++u)
@@ -325,6 +323,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
         ++i;
       }
     }
+
     //Evaluate last window:
     unsigned int sum = 0;
     for (size_t u = 0; u < window_.size(); ++u)
@@ -357,7 +356,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
       ApplicationTools::message->endLine();
       ApplicationTools::displayTask("Spliting block", true);
       for (i = 0; i < pos.size(); i+=2) {
-        ApplicationTools::displayGauge(i, pos.size() - 1, '=');
+        ApplicationTools::displayGauge(i, pos.size() - 2, '=');
         if (logstream_) {
           (*logstream_ << "GAP CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block.").endLine();
         }
@@ -367,9 +366,9 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
         for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
           MafSequence* subseq;
           if (i == 0) {
-            subseq = block->getSequence(j).subSequence(0, pos[i] + 1);
+            subseq = block->getSequence(j).subSequence(0, pos[i]);
           } else {
-            subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1] + 1);
+            subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1]);
           }
           newBlock->addSequence(*subseq);
           delete subseq;
