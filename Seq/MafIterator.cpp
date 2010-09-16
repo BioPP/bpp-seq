@@ -130,17 +130,26 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
   currentBlock_  = incomingBlock_;
   incomingBlock_ = iterator_->nextBlock();
   while (incomingBlock_) {
+    unsigned int globalSpace = 0;
     for (unsigned int i = 0; i < species_.size(); ++i) {
       try {
         const MafSequence* seq1 = &currentBlock_->getSequence(species_[i]); 
         const MafSequence* seq2 = &incomingBlock_->getSequence(species_[i]);
         if (!seq1->hasCoordinates() || !seq2->hasCoordinates())
           throw Exception("BlockMergerMafIterator::nextBlock. Species '" + species_[i] + "' is missing coordinates in at least one block.");
+        unsigned int space = seq1->start() - seq2->stop() - 1;
+        if (space > maxDist_)
+          return currentBlock_;
+        if (i == 0)
+          globalSpace = space;
+        else {
+          if (space != globalSpace)
+            return currentBlock_;
+        }
         if (seq1->getChromosome() != seq2->getChromosome()
          || VectorTools::contains(ignoreChrs_, seq1->getChromosome())
          || VectorTools::contains(ignoreChrs_, seq2->getChromosome())
-         || seq1->getStrand()     != seq2->getStrand()
-         || seq1->start()         != seq2->stop() - 1)
+         || seq1->getStrand() != seq2->getStrand())
         {
           //There is a syntheny break in this sequence, so we do not merge the blocks.
           return currentBlock_;
@@ -175,22 +184,27 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
       auto_ptr<MafSequence> seq;
       try {
         seq.reset(new MafSequence(currentBlock_->getSequence(allNames[i])));
-        unsigned int srcSize = seq->getSrcSize();
 
         //Check is there is a second sequence:
         try {
           const MafSequence* tmp = &incomingBlock_->getSequence(allNames[i]);
           string ref1 = seq->getDescription(), ref2 = tmp->getDescription();
+          //Add spacer if needed:
+          if (globalSpace > 0) {
+            if (logstream_) {
+              (*logstream_ << "BLOCK MERGER: a spacer of size " << globalSpace <<" is inserted in sequence " << allNames[i] << ".").endLine();
+            }
+            seq->append(vector<int>(globalSpace, AlphabetTools::DNA_ALPHABET.getUnknownCharacterCode()));
+          }
           seq->merge(*tmp);
-          srcSize += tmp->getSrcSize();
-          seq->setSrcSize(srcSize);
+          seq->setSrcSize(0);
           if (logstream_) {
             (*logstream_ << "BLOCK MERGER: merging " << ref1 << " with " << ref2 << " into " << seq->getDescription()).endLine();
           }
         } catch (SequenceNotFoundException& snfe2) {
           //There was a first sequence, we just extend it:
           string ref1 = seq->getDescription();
-          seq->setToSizeR(incomingBlock_->getNumberOfSites());
+          seq->setToSizeR(incomingBlock_->getNumberOfSites() + globalSpace);
           if (logstream_) {
             (*logstream_ << "BLOCK MERGER: extending " << ref1 << " with " << incomingBlock_->getNumberOfSites() << " gaps on the right.").endLine();
           }
@@ -199,7 +213,7 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
         //There must be a second sequence then:
         seq.reset(new MafSequence(incomingBlock_->getSequence(allNames[i])));
         string ref2 = seq->getDescription();
-        seq->setToSizeL(currentBlock_->getNumberOfSites());
+        seq->setToSizeL(currentBlock_->getNumberOfSites() + globalSpace);
         if (logstream_) {
           (*logstream_ << "BLOCK MERGER: adding " << ref2 << " and extend it with " << currentBlock_->getNumberOfSites() << " gaps on the left.").endLine();
         }
@@ -227,12 +241,16 @@ MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
     vsc.addSequence(block->getSequence(i));
   }
   //Now check the positions that are only made of gaps:
-  ApplicationTools::message->endLine();
-  ApplicationTools::displayTask("Cleaning block for gap sites", true);
+  if (verbose_) {
+    ApplicationTools::message->endLine();
+    ApplicationTools::displayTask("Cleaning block for gap sites", true);
+  }
   unsigned int n = block->getNumberOfSites();
   unsigned int count = n;
-  for (unsigned int i = n; i > 0; --i) {
-    ApplicationTools::displayGauge(n - i, n - 1, '=');
+  unsigned int i = n;
+  while (i > 0) {
+    if (verbose_)
+      ApplicationTools::displayGauge(n - i, n - 1, '=');
     const Site* site = &vsc.getSite(i - 1);
     if (SiteTools::isGapOnly(*site)) {
       unsigned int end = i;
@@ -241,13 +259,17 @@ MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
         site = &vsc.getSite(i - 1);
       }
       block->getAlignment().deleteSites(i, end - i);
-      count += (end - i);
+      count -= (end - i);
+    } else {
+      --i;
     }
   }
+  if (verbose_)
+    ApplicationTools::displayTaskDone();
   
   //Correct coordinates:
   if (count > 0) {
-    for (unsigned int i = 0; i < block->getNumberOfSequences(); ++i) {
+    for (i = 0; i < block->getNumberOfSequences(); ++i) {
       const MafSequence* seq = &block->getSequence(i);
       if (!VectorTools::contains(species_, seq->getSpecies())) {
         block->removeCoordinatesFromSequence(i);
@@ -264,37 +286,71 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
     //Else there is no more block in the buffer, we need parse more:
-    MafBlock* block = iterator_->nextBlock();
-    if (!block) return 0; //No more block.
+    do {
+      MafBlock* block = iterator_->nextBlock();
+      if (!block) return 0; //No more block.
     
-    //Parse block.
-    int gap = AlphabetTools::DNA_ALPHABET.getGapCharacterCode();
-    int unk = AlphabetTools::DNA_ALPHABET.getUnknownCharacterCode();
-    size_t nr = species_.size();
-    vector< vector<int> > aln(nr);
-    for (size_t i = 0; i < nr; ++i) {
-      aln[i] = block->getSequenceForSpecies(species_[i]).getContent();
-    }
-    size_t nc = block->getNumberOfSites();
-    //First we create a mask:
-    vector<unsigned int> pos;
-    vector<bool> col(nr);
-    //Reset window:
-    window_.clear();
-    //Init window:
-    size_t i;
-    for (i = 0; i < windowSize_; ++i) {
-      for (size_t j = 0; j < nr; ++j) {
-        col[j] = (aln[j][i] == gap|| aln[j][i] == unk);
+      //Parse block.
+      int gap = AlphabetTools::DNA_ALPHABET.getGapCharacterCode();
+      int unk = AlphabetTools::DNA_ALPHABET.getUnknownCharacterCode();
+      size_t nr = species_.size();
+      vector< vector<int> > aln(nr);
+      for (size_t i = 0; i < nr; ++i) {
+        aln[i] = block->getSequenceForSpecies(species_[i]).getContent();
       }
-      window_.push_back(col);
-    }
-    //Slide window:
-    ApplicationTools::message->endLine();
-    ApplicationTools::displayTask("Sliding window for alignment filter", true);
-    while (i < nc) {
-      ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
-      //Evaluate current window:
+      size_t nc = block->getNumberOfSites();
+      //First we create a mask:
+      vector<unsigned int> pos;
+      vector<bool> col(nr);
+      //Reset window:
+      window_.clear();
+      //Init window:
+      size_t i;
+      for (i = 0; i < windowSize_; ++i) {
+        for (size_t j = 0; j < nr; ++j) {
+          col[j] = (aln[j][i] == gap|| aln[j][i] == unk);
+        }
+        window_.push_back(col);
+      }
+      //Slide window:
+      if (verbose_) {
+        ApplicationTools::message->endLine();
+        ApplicationTools::displayTask("Sliding window for alignment filter", true);
+      }
+      while (i < nc) {
+        if (verbose_)
+          ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
+        //Evaluate current window:
+        unsigned int sum = 0;
+        for (size_t u = 0; u < window_.size(); ++u)
+          for (size_t v = 0; v < window_[u].size(); ++v)
+            if (window_[u][v]) sum++;
+        if (sum > maxGap_) {
+          if (pos.size() == 0) {
+            pos.push_back(i - windowSize_);
+            pos.push_back(i);
+          } else {
+            if (i - windowSize_ < pos[pos.size() - 1]) {
+              pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
+            } else { //This is a new region
+              pos.push_back(i - windowSize_);
+              pos.push_back(i);
+            }
+          }
+        }
+      
+        //Move forward:
+        for (unsigned int k = 0; k < step_; ++k) {
+          for (size_t j = 0; j < nr; ++j) {
+            col[j] = (aln[j][i] == gap || aln[j][i] == unk);
+          }
+          window_.push_back(col);
+          window_.pop_front();
+          ++i;
+        }
+      }
+
+      //Evaluate last window:
       unsigned int sum = 0;
       for (size_t u = 0; u < window_.size(); ++u)
         for (size_t v = 0; v < window_[u].size(); ++v)
@@ -304,91 +360,260 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
           pos.push_back(i - windowSize_);
           pos.push_back(i);
         } else {
+          if (i - windowSize_ <= pos[pos.size() - 1]) {
+            pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+          } else { //This is a new region
+            pos.push_back(i - windowSize_);
+            pos.push_back(i);
+          }
+        }
+      } 
+      if (verbose_)
+        ApplicationTools::displayTaskDone();
+    
+      //Now we remove regions with two many gaps, using a sliding window:
+      if (pos.size() == 0) {
+        blockBuffer_.push_back(block);
+        if (logstream_) {
+          (*logstream_ << "ALN CLEANER: block is clean and kept as is.").endLine();
+        }
+      } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+        //Everything is removed:
+        if (logstream_) {
+          (*logstream_ << "ALN CLEANER: block was entirely removed. Tried to get the next one.").endLine();
+        }
+      } else {
+        if (logstream_) {
+          (*logstream_ << "ALN CLEANER: block with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
+        }
+        if (verbose_) {
+          ApplicationTools::message->endLine();
+          ApplicationTools::displayTask("Spliting block", true);
+        }
+        for (i = 0; i < pos.size(); i+=2) {
+          if (verbose_)
+            ApplicationTools::displayGauge(i, pos.size() - 2, '=');
+          if (logstream_) {
+            (*logstream_ << "ALN CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block.").endLine();
+          }
+          if (pos[i] > 0) {
+            MafBlock* newBlock = new MafBlock();
+            newBlock->setScore(block->getScore());
+            newBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* subseq;
+              if (i == 0) {
+                subseq = block->getSequence(j).subSequence(0, pos[i]);
+              } else {
+                subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1]);
+              }
+              newBlock->addSequence(*subseq);
+              delete subseq;
+            }
+            blockBuffer_.push_back(newBlock);
+          }
+        
+          if (keepTrashedBlocks_) {
+            MafBlock* outBlock = new MafBlock();
+            outBlock->setScore(block->getScore());
+            outBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* outseq = block->getSequence(j).subSequence(pos[i], pos[i + 1] - pos[i]);
+              outBlock->addSequence(*outseq);
+              delete outseq;
+            } 
+            trashBuffer_.push_back(outBlock);
+          }
+        }
+        //Add last block:
+        if (pos[pos.size() - 1] < block->getNumberOfSites()) {
+          MafBlock* newBlock = new MafBlock();
+          newBlock->setScore(block->getScore());
+          newBlock->setPass(block->getPass());
+          for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+            MafSequence* subseq;
+            subseq = block->getSequence(j).subSequence(pos[pos.size() - 1], block->getNumberOfSites() - pos[pos.size() - 1]);
+            newBlock->addSequence(*subseq);
+            delete subseq;
+          }
+          blockBuffer_.push_back(newBlock);
+        }
+        if (verbose_)
+          ApplicationTools::displayTaskDone();
+
+        delete block;
+      }
+    } while (trashBuffer_.size() == 0);
+  }
+
+  MafBlock* block = blockBuffer_.front();
+  blockBuffer_.pop_front();
+  return block;
+}
+
+MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
+{
+  if (blockBuffer_.size() == 0) {
+    do {
+      //Else there is no more block in the buffer, we need parse more:
+      MafBlock* block = iterator_->nextBlock();
+      if (!block) return 0; //No more block.
+    
+      //Parse block.
+      vector< vector<bool> > aln;
+      for (size_t i = 0; i < species_.size(); ++i) {
+        const MafSequence* seq = &block->getSequenceForSpecies(species_[i]);
+        if (seq->hasAnnotation(SequenceMask::MASK)) {
+          aln.push_back(dynamic_cast<const SequenceMask&>(seq->getAnnotation(SequenceMask::MASK)).getMask());
+        }
+      }
+      size_t nr = aln.size();
+      size_t nc = block->getNumberOfSites();
+      //First we create a mask:
+      vector<unsigned int> pos;
+      vector<bool> col(nr);
+      //Reset window:
+      window_.clear();
+      //Init window:
+      size_t i;
+      for (i = 0; i < windowSize_; ++i) {
+        for (size_t j = 0; j < nr; ++j) {
+          col[j] = aln[j][i];
+        }
+        window_.push_back(col);
+      }
+      //Slide window:
+      if (verbose_) {
+        ApplicationTools::message->endLine();
+        ApplicationTools::displayTask("Sliding window for mask filter", true);
+      }
+      while (i < nc) {
+        if (verbose_)
+          ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
+        //Evaluate current window:
+        unsigned int sum = 0;
+        for (size_t u = 0; u < window_.size(); ++u)
+          for (size_t v = 0; v < window_[u].size(); ++v)
+            if (window_[u][v]) sum++;
+        if (sum > maxMasked_) {
+          if (pos.size() == 0) {
+            pos.push_back(i - windowSize_);
+            pos.push_back(i);
+          } else {
+            if (i - windowSize_ <= pos[pos.size() - 1]) {
+              pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
+            } else { //This is a new region
+              pos.push_back(i - windowSize_);
+              pos.push_back(i);
+            }
+          }
+        }
+      
+        //Move forward:
+        for (unsigned int k = 0; k < step_; ++k) {
+          for (size_t j = 0; j < nr; ++j) {
+            col[j] = aln[j][i];
+          }  
+          window_.push_back(col);
+          window_.pop_front();
+          ++i;
+        }
+      }
+
+      //Evaluate last window:
+      unsigned int sum = 0;
+      for (size_t u = 0; u < window_.size(); ++u)
+        for (size_t v = 0; v < window_[u].size(); ++v)
+          if (window_[u][v]) sum++;
+      if (sum > maxMasked_) {
+        if (pos.size() == 0) {
+          pos.push_back(i - windowSize_);
+          pos.push_back(i);
+        } else {
           if (i - windowSize_ < pos[pos.size() - 1]) {
-            pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
+            pos[pos.size()] = i; //Windows are overlapping and we extend previous region
           } else { //This is a new region
             pos.push_back(i - windowSize_);
             pos.push_back(i);
           }
         }
       }
-      
-      //Move forward:
-      for (unsigned int k = 0; k < step_; ++k) {
-        for (size_t j = 0; j < nr; ++j) {
-          col[j] = (aln[j][i] == gap || aln[j][i] == unk);
-        }
-        window_.push_back(col);
-        window_.pop_front();
-        ++i;
-      }
-    }
-
-    //Evaluate last window:
-    unsigned int sum = 0;
-    for (size_t u = 0; u < window_.size(); ++u)
-      for (size_t v = 0; v < window_[u].size(); ++v)
-        if (window_[u][v]) sum++;
-    if (sum > maxGap_) {
-      if (pos.size() == 0) {
-        pos.push_back(i - windowSize_);
-        pos.push_back(i);
-      } else {
-        if (i - windowSize_ < pos[pos.size() - 1]) {
-          pos[pos.size()] = i; //Windows are overlapping and we extend previous region
-        } else { //This is a new region
-          pos.push_back(i - windowSize_);
-          pos.push_back(i);
-        }
-      }
-    }
+      if (verbose_)
+        ApplicationTools::displayTaskDone();
     
-    //Now we remove regions with two many gaps, using a sliding window:
-    if (pos.size() == 0) {
-      blockBuffer_.push_back(block);
-      if (logstream_) {
-        (*logstream_ << "ALN CLEANER: block is clean and kept as is.").endLine();
-      }
-    } else {
-      if (logstream_) {
-        (*logstream_ << "ALN CLEANER: block will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
-      }
-      ApplicationTools::message->endLine();
-      ApplicationTools::displayTask("Spliting block", true);
-      for (i = 0; i < pos.size(); i+=2) {
-        ApplicationTools::displayGauge(i, pos.size() - 2, '=');
+      //Now we remove regions with two many gaps, using a sliding window:
+      if (pos.size() == 0) {
+        blockBuffer_.push_back(block);
         if (logstream_) {
-          (*logstream_ << "GAP CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block.").endLine();
+          (*logstream_ << "MASK CLEANER: block is clean and kept as is.").endLine();
         }
-        MafBlock* newBlock = new MafBlock();
-        newBlock->setScore(block->getScore());
-        newBlock->setPass(block->getPass());
-        for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
-          MafSequence* subseq;
-          if (i == 0) {
-            subseq = block->getSequence(j).subSequence(0, pos[i]);
-          } else {
-            subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1]);
+      } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+        //Everything is removed:
+        if (logstream_) {
+          (*logstream_ << "MASK CLEANER: block was entirely removed. Tried to get the next one.").endLine();
+        }
+      } else {
+        if (logstream_) {
+          (*logstream_ << "MASK CLEANER: block with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
+        }
+        if (verbose_) {
+          ApplicationTools::message->endLine();
+          ApplicationTools::displayTask("Spliting block", true);
+        }
+        for (i = 0; i < pos.size(); i+=2) {
+          if (verbose_)
+            ApplicationTools::displayGauge(i, pos.size() - 2, '=');
+          if (logstream_) {
+            (*logstream_ << "MASK CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block.").endLine();
           }
-          newBlock->addSequence(*subseq);
-          delete subseq;
+          if (pos[i] > 0) {
+            MafBlock* newBlock = new MafBlock();
+            newBlock->setScore(block->getScore());
+            newBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* subseq;
+              if (i == 0) {
+                subseq = block->getSequence(j).subSequence(0, pos[i]);
+              } else {
+                subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1]);
+              }
+              newBlock->addSequence(*subseq);
+              delete subseq;
+            }
+            blockBuffer_.push_back(newBlock);
+          }
+          
+          if (keepTrashedBlocks_) {
+            MafBlock* outBlock = new MafBlock();
+            outBlock->setScore(block->getScore());
+            outBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* outseq = block->getSequence(j).subSequence(pos[i], pos[i + 1] - pos[i]);
+              outBlock->addSequence(*outseq);
+              delete outseq;
+            } 
+            trashBuffer_.push_back(outBlock);
+          }
         }
-        blockBuffer_.push_back(newBlock);
-        
-        if (keepTrashedBlocks_) {
-          MafBlock* outBlock = new MafBlock();
-          outBlock->setScore(block->getScore());
-          outBlock->setPass(block->getPass());
+        //Add last block:
+        if (pos[pos.size() - 1] < block->getNumberOfSites()) {
+          MafBlock* newBlock = new MafBlock();
+          newBlock->setScore(block->getScore());
+          newBlock->setPass(block->getPass());
           for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
-            MafSequence* outseq = block->getSequence(j).subSequence(pos[i], pos[i + 1] - pos[i]);
-            outBlock->addSequence(*outseq);
-            delete outseq;
-          } 
-          trashBuffer_.push_back(outBlock);
+            MafSequence* subseq;
+            subseq = block->getSequence(j).subSequence(pos[pos.size() - 1], block->getNumberOfSites() - pos[pos.size() - 1]);
+            newBlock->addSequence(*subseq);
+            delete subseq;
+          }
+          blockBuffer_.push_back(newBlock);
         }
-      }
-      delete block;
-    }
+        if (verbose_)
+          ApplicationTools::displayTaskDone();
+
+        delete block;
+      }  
+    } while (trashBuffer_.size() == 0);
   }
 
   MafBlock* block = blockBuffer_.front();
@@ -398,7 +623,186 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
 
 MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
 {
-  return NULL;
+  if (blockBuffer_.size() == 0) {
+    do {
+      //Else there is no more block in the buffer, we need parse more:
+      MafBlock* block = iterator_->nextBlock();
+      if (!block) return 0; //No more block.
+    
+      //Parse block.
+      vector< vector<int> > aln;
+      for (size_t i = 0; i < species_.size(); ++i) {
+        const MafSequence* seq = &block->getSequenceForSpecies(species_[i]);
+        if (seq->hasAnnotation(SequenceQuality::QUALITY_SCORE)) {
+          aln.push_back(dynamic_cast<const SequenceQuality&>(seq->getAnnotation(SequenceQuality::QUALITY_SCORE)).getScores());
+        }
+      }
+      if (aln.size() != species_.size()) {
+        blockBuffer_.push_back(block);
+        if (logstream_) {
+          (*logstream_ << "QUAL CLEANER: block is missing qulaity score for at least one species and will therefore not be filtered.").endLine();
+        }
+        //NB here we could decide to discard the block instead!
+      } else {
+        size_t nr = aln.size();
+        size_t nc = block->getNumberOfSites();
+        //First we create a mask:
+        vector<unsigned int> pos;
+        vector<int> col(nr);
+        //Reset window:
+        window_.clear();
+        //Init window:
+        size_t i;
+        for (i = 0; i < windowSize_; ++i) {
+          for (size_t j = 0; j < nr; ++j) {
+            col[j] = aln[j][i];
+          }
+          window_.push_back(col);
+        }
+        //Slide window:
+        if (verbose_) {
+          ApplicationTools::message->endLine();
+          ApplicationTools::displayTask("Sliding window for quality filter", true);
+        }
+        while (i < nc) {
+          if (verbose_)
+            ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
+          //Evaluate current window:
+          double mean = 0;
+          double n = static_cast<double>(aln.size() * windowSize_);
+          for (size_t u = 0; u < window_.size(); ++u)
+            for (size_t v = 0; v < window_[u].size(); ++v) {
+              mean += (window_[u][v] > 0 ? static_cast<double>(window_[u][v]) : 0.);
+              if (window_[u][v] == -1) n--;
+            }
+          if (n > 0 && (mean / n) < minQual_) {
+            if (pos.size() == 0) {
+              pos.push_back(i - windowSize_);
+              pos.push_back(i);
+            } else {
+              if (i - windowSize_ <= pos[pos.size() - 1]) {
+                pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
+              } else { //This is a new region
+                pos.push_back(i - windowSize_);
+                pos.push_back(i);
+              }
+            }
+          }
+      
+          //Move forward:
+          for (unsigned int k = 0; k < step_; ++k) {
+            for (size_t j = 0; j < nr; ++j) {
+              col[j] = aln[j][i];
+            }  
+            window_.push_back(col);
+            window_.pop_front();
+            ++i;
+          }
+        }
+
+        //Evaluate last window:
+        double mean = 0;
+        double n = static_cast<double>(aln.size() * windowSize_);
+        for (size_t u = 0; u < window_.size(); ++u)
+          for (size_t v = 0; v < window_[u].size(); ++v) {
+            mean += (window_[u][v] > 0 ? static_cast<double>(window_[u][v]) : 0.);
+            if (window_[u][v] == -1) n--;
+          }
+        if (n > 0 && (mean / n) < minQual_) {
+          if (pos.size() == 0) {
+            pos.push_back(i - windowSize_);
+            pos.push_back(i);
+          } else {
+            if (i - windowSize_ < pos[pos.size() - 1]) {
+              pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+            } else { //This is a new region
+              pos.push_back(i - windowSize_);
+              pos.push_back(i);
+            }
+          }
+        }
+        if (verbose_)
+          ApplicationTools::displayTaskDone();
+    
+        //Now we remove regions with two many gaps, using a sliding window:
+        if (pos.size() == 0) {
+          blockBuffer_.push_back(block);
+          if (logstream_) {
+            (*logstream_ << "QUAL CLEANER: block is clean and kept as is.").endLine();
+          }
+        } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+          //Everything is removed:
+          if (logstream_) {
+            (*logstream_ << "QUAL CLEANER: block was entirely removed. Tried to get the next one.").endLine();
+          }
+        } else {
+          if (logstream_) {
+            (*logstream_ << "QUAL CLEANER: block with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
+          }
+          if (verbose_) {
+            ApplicationTools::message->endLine();
+            ApplicationTools::displayTask("Spliting block", true);
+          }
+          for (i = 0; i < pos.size(); i+=2) {
+            if (verbose_)
+              ApplicationTools::displayGauge(i, pos.size() - 2, '=');
+            if (logstream_) {
+              (*logstream_ << "QUAL CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block.").endLine();
+            }
+            if (pos[i] > 0) {
+              MafBlock* newBlock = new MafBlock();
+              newBlock->setScore(block->getScore());
+              newBlock->setPass(block->getPass());
+              for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+                MafSequence* subseq;
+                if (i == 0) {
+                  subseq = block->getSequence(j).subSequence(0, pos[i]);
+                } else {
+                  subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1]);
+                }
+                newBlock->addSequence(*subseq);
+                delete subseq;
+              }
+              blockBuffer_.push_back(newBlock);
+            }
+           
+            if (keepTrashedBlocks_) {
+              MafBlock* outBlock = new MafBlock();
+              outBlock->setScore(block->getScore());
+              outBlock->setPass(block->getPass());
+              for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+                MafSequence* outseq = block->getSequence(j).subSequence(pos[i], pos[i + 1] - pos[i]);
+                outBlock->addSequence(*outseq);
+                delete outseq;
+              } 
+              trashBuffer_.push_back(outBlock);
+            }
+          }
+          //Add last block:
+          if (pos[pos.size() - 1] < block->getNumberOfSites()) {
+            MafBlock* newBlock = new MafBlock();
+            newBlock->setScore(block->getScore());
+            newBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* subseq;
+              subseq = block->getSequence(j).subSequence(pos[pos.size() - 1], block->getNumberOfSites() - pos[pos.size() - 1]);
+              newBlock->addSequence(*subseq);
+              delete subseq;
+            }
+            blockBuffer_.push_back(newBlock);
+          }
+          if (verbose_)
+            ApplicationTools::displayTaskDone();
+
+          delete block;
+        }
+      }
+    } while (trashBuffer_.size() == 0);
+  }
+
+  MafBlock* block = blockBuffer_.front();
+  blockBuffer_.pop_front();
+  return block;
 }
 
 void OutputMafIterator::writeHeader(std::ostream& out) const

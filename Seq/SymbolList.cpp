@@ -171,7 +171,7 @@ void BasicSymbolList::deleteElement(unsigned int pos) throw (IndexOutOfBoundsExc
 
 void BasicSymbolList::deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException)
 {
-	if(pos + len > content_.size())
+	if (pos + len > content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
 	 content_.erase(content_.begin() + pos, content_.begin() + pos + len);
 }

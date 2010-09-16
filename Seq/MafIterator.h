@@ -55,7 +55,7 @@ namespace bpp {
 /**
  * @brief A sequence class which is used to store data from MAF files.
  * 
- * It extends the SequenceWithAnnotation class to store MAF-specific features,
+ z* It extends the SequenceWithAnnotation class to store MAF-specific features,
  * like the chromosome position. The sequence is its own listener,
  * and recomputes its "genomic" site by using the SequenceTools::getNumberOfSites
  * function when a content modification is performed.
@@ -239,6 +239,25 @@ class MafIterator
 };
 
 /**
+ * @brief Interface to loop over removed blocks of a maf alignment.
+ */
+class MafTrashIterator
+{
+  public:
+    virtual ~MafTrashIterator() {}
+
+  public:
+    /**
+     * @brief Get the next available removed alignment block.
+     *
+     * @return A maf alignment block, or a null pointer if no more block is available.
+     */
+    virtual MafBlock* nextRemovedBlock() throw (Exception) = 0;
+    
+};
+
+
+/**
  * @brief Helper class for developping filter for maf blocks.
  */
 class AbstractFilterMafIterator:
@@ -247,21 +266,25 @@ class AbstractFilterMafIterator:
   protected:
     MafIterator* iterator_;
     OutputStream* logstream_;
+    bool verbose_;
 
   public:
     AbstractFilterMafIterator(MafIterator* iterator) :
-      iterator_(iterator), logstream_(ApplicationTools::message) {}
+      iterator_(iterator), logstream_(ApplicationTools::message), verbose_(true) {}
 
   private:
-    AbstractFilterMafIterator(const AbstractFilterMafIterator& it): iterator_(it.iterator_), logstream_(it.logstream_) {}
+    AbstractFilterMafIterator(const AbstractFilterMafIterator& it): iterator_(it.iterator_), logstream_(it.logstream_), verbose_(it.verbose_) {}
     AbstractFilterMafIterator& operator=(const AbstractFilterMafIterator& it) {
       iterator_  = it.iterator_;
       logstream_ = it.logstream_;
+      verbose_   = it.verbose_;
       return *this;
     }
 
   public:
     void setLogStream(OutputStream* logstream) { logstream_ = logstream; }
+    bool verbose() const { return verbose_; }
+    void verbose(bool yn) { verbose_ = yn; }
 
 };
 
@@ -349,7 +372,11 @@ class SequenceFilterMafIterator:
  *
  * The user specifies the focus species. Sequences that are not in this set will
  * be merged without testing, and their genomic coordinates removed.
- * The scores and pass values, if any, will be averaged for the block, weighted by the corresponding block sizes.
+ * The scores, if any, will be averaged for the block, weighted by the corresponding block sizes.
+ * the pass value will be removed if it is different for the two blocks.
+ * It is possible to define a maximum distance for the merging. Setting a distance of zero implies that the blocks
+ * have to be exactly contiguous. Alternatively, the appropriate number of 'N' will be inserted in all species.
+ * All species however have to be distant of the exact same amount.
  */
 class BlockMergerMafIterator:
   public AbstractFilterMafIterator
@@ -359,14 +386,16 @@ class BlockMergerMafIterator:
     MafBlock* incomingBlock_;
     MafBlock* currentBlock_;
     std::vector<std::string> ignoreChrs_; //These chromsomes will never be merged (ex: 'Un').
+    unsigned int maxDist_;
 
   public:
-    BlockMergerMafIterator(MafIterator* iterator, const std::vector<std::string>& species) :
+    BlockMergerMafIterator(MafIterator* iterator, const std::vector<std::string>& species, unsigned int maxDist = 0) :
       AbstractFilterMafIterator(iterator),
       species_(species),
       incomingBlock_(0),
       currentBlock_(0),
-      ignoreChrs_()
+      ignoreChrs_(),
+      maxDist_(maxDist)
     {
       incomingBlock_ = iterator->nextBlock();
     }
@@ -377,7 +406,8 @@ class BlockMergerMafIterator:
       species_(iterator.species_),
       incomingBlock_(iterator.incomingBlock_),
       currentBlock_(iterator.currentBlock_),
-      ignoreChrs_(iterator.ignoreChrs_)
+      ignoreChrs_(iterator.ignoreChrs_),
+      maxDist_(iterator.maxDist_)
     {}
     
     BlockMergerMafIterator& operator=(const BlockMergerMafIterator& iterator)
@@ -386,6 +416,7 @@ class BlockMergerMafIterator:
       incomingBlock_ = iterator.incomingBlock_;
       currentBlock_  = iterator.currentBlock_;
       ignoreChrs_    = iterator.ignoreChrs_;
+      maxDist_       = iterator.maxDist_;
       return *this;
     }
 
@@ -433,7 +464,8 @@ class FullGapFilterMafIterator:
  * and blocks adjusted accordingly. 
  */
 class AlignmentFilterMafIterator:
-  public AbstractFilterMafIterator
+  public AbstractFilterMafIterator,
+  public MafTrashIterator
 {
   private:
     std::vector<std::string> species_;
@@ -460,6 +492,7 @@ class AlignmentFilterMafIterator:
 
   public:
     MafBlock* nextBlock() throw (Exception);
+
     MafBlock* nextRemovedBlock() throw (Exception) {
       if (trashBuffer_.size() == 0) return 0;
       MafBlock* block = trashBuffer_.front();
@@ -469,36 +502,120 @@ class AlignmentFilterMafIterator:
 
 };
 
-class AlignmentFilterTrashIterator:
-  public AbstractFilterMafIterator
-{
-  public:
-    AlignmentFilterTrashIterator(AlignmentFilterMafIterator* iterator) :
-      AbstractFilterMafIterator(iterator) {}
-
-  public:
-    MafBlock* nextBlock() throw (Exception) {
-      return dynamic_cast<AlignmentFilterMafIterator*>(iterator_)->nextRemovedBlock();
-    }
-};
-
 /**
- * @brief Filter maf blocks to remove regions with low quality scores.
+ * @brief Filter maf blocks to remove regions with masked positions.
  *
- * Regions with a too poor quality in a set of species will be removed,
+ * Regions with a too high proportion of masked position in a set of species will be removed,
  * and blocks adjusted accordingly. 
  */
-class QualityFilterMafIterator:
-  public AbstractFilterMafIterator
+class MaskFilterMafIterator:
+  public AbstractFilterMafIterator,
+  public MafTrashIterator
 {
+  private:
+    std::vector<std::string> species_;
+    unsigned int windowSize_;
+    unsigned int step_;
+    unsigned int maxMasked_;
+    std::deque<MafBlock*> blockBuffer_;
+    std::deque<MafBlock*> trashBuffer_;
+    std::deque< std::vector<bool> > window_;
+    bool keepTrashedBlocks_;
+
   public:
-    QualityFilterMafIterator(MafIterator* iterator) :
-      AbstractFilterMafIterator(iterator)
+    MaskFilterMafIterator(MafIterator* iterator, const std::vector<std::string>& species, unsigned int windowSize, unsigned int step, unsigned int maxMasked, bool keepTrashedBlocks) :
+      AbstractFilterMafIterator(iterator),
+      species_(species),
+      windowSize_(windowSize),
+      step_(step),
+      maxMasked_(maxMasked),
+      blockBuffer_(),
+      trashBuffer_(),
+      window_(species.size()),
+      keepTrashedBlocks_(keepTrashedBlocks)
     {}
 
   public:
     MafBlock* nextBlock() throw (Exception);
 
+    MafBlock* nextRemovedBlock() throw (Exception) {
+      if (trashBuffer_.size() == 0) return 0;
+      MafBlock* block = trashBuffer_.front();
+      trashBuffer_.pop_front();
+      return block;
+    }
+
+};
+
+/**
+ * @brief Filter maf blocks to remove regions with low quality.
+ *
+ * Regions with a too low average quality in a set of species will be removed,
+ * and blocks adjusted accordingly. 
+ */
+class QualityFilterMafIterator:
+  public AbstractFilterMafIterator,
+  public MafTrashIterator
+{
+  private:
+    std::vector<std::string> species_;
+    unsigned int windowSize_;
+    unsigned int step_;
+    unsigned int minQual_;
+    std::deque<MafBlock*> blockBuffer_;
+    std::deque<MafBlock*> trashBuffer_;
+    std::deque< std::vector<int> > window_;
+    bool keepTrashedBlocks_;
+
+  public:
+    QualityFilterMafIterator(MafIterator* iterator, const std::vector<std::string>& species, unsigned int windowSize, unsigned int step, unsigned int minQual, bool keepTrashedBlocks) :
+      AbstractFilterMafIterator(iterator),
+      species_(species),
+      windowSize_(windowSize),
+      step_(step),
+      minQual_(minQual),
+      blockBuffer_(),
+      trashBuffer_(),
+      window_(species.size()),
+      keepTrashedBlocks_(keepTrashedBlocks)
+    {}
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+    MafBlock* nextRemovedBlock() throw (Exception) {
+      if (trashBuffer_.size() == 0) return 0;
+      MafBlock* block = trashBuffer_.front();
+      trashBuffer_.pop_front();
+      return block;
+    }
+
+};
+
+
+class TrashIteratorAdapter:
+  public MafIterator
+{
+  private:
+    MafTrashIterator* iterator_;
+
+  public:
+    TrashIteratorAdapter(MafTrashIterator* iterator) :
+      iterator_(iterator) {}
+
+  private:
+    TrashIteratorAdapter(const TrashIteratorAdapter& iterator) :
+      iterator_(iterator.iterator_) {}
+    
+    TrashIteratorAdapter& operator=(const TrashIteratorAdapter& iterator) {
+      iterator_ = iterator.iterator_;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception) {
+      return iterator_->nextRemovedBlock();
+    }
 };
 
 /**

@@ -233,7 +233,7 @@ void AlignedSequenceContainer::deleteSite(unsigned int pos) throw (IndexOutOfBou
 
 void AlignedSequenceContainer::deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException, Exception)
 {
-  if (siteIndex + length >= getNumberOfSites())
+  if (siteIndex + length > getNumberOfSites())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSites", siteIndex + length, 0, getNumberOfSites() - 1);
 
   // For all sequences
