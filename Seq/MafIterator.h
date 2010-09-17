@@ -306,12 +306,18 @@ class BlockSizeMafIterator:
   public:
     MafBlock* nextBlock() throw (Exception) {
       MafBlock* block;
+      bool test;
       do {
         block = iterator_->nextBlock();
-        if (logstream_ && block && block->getNumberOfSites() < minSize_) {
-          (*logstream_ << "BLOCK SIZE FILTER: block with size " << block->getNumberOfSites() << " was discarded.").endLine();
+        if (!block) return 0;
+        test = (block->getNumberOfSites() < minSize_);
+        if (test) {
+          if (logstream_) {
+            (*logstream_ << "BLOCK SIZE FILTER: block with size " << block->getNumberOfSites() << " was discarded.").endLine();
+          }
+          delete block;
         }
-      } while (block == 0 || block->getNumberOfSites() < minSize_);
+      } while (test);
       return block;
     }
 
