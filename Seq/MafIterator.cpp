@@ -834,7 +834,7 @@ void OutputMafIterator::writeBlock(std::ostream& out, const MafBlock& block) con
   }
   //Now print each sequence:
   for (unsigned int i = 0; i < block.getNumberOfSequences(); i++) {
-    const MafSequence* seq = new MafSequence(block.getSequence(i));
+    const MafSequence* seq = &block.getSequence(i);
     out << "s ";
     out << TextTools::resizeRight(seq->getName(), mxcSrc, ' ') << " ";
     unsigned int start = 0; //Maybe we should output sthg else here?
