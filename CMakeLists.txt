@@ -67,11 +67,10 @@ MACRO(IMPROVED_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
 ENDMACRO(IMPROVED_FIND_LIBRARY)
 
 #Find the Bio++ libraries:
-IMPROVED_FIND_LIBRARY(LIBS bpp-numcalc NumCalc/NumTools.h)
-IMPROVED_FIND_LIBRARY(LIBS bpp-utils Utils/Clonable.h)
+IMPROVED_FIND_LIBRARY(LIBS bpp-core Bpp/Clonable.h)
 
 # Subdirectories
-ADD_SUBDIRECTORY(Seq)
+ADD_SUBDIRECTORY(src)
 
 # Doxygen
 FIND_PACKAGE(Doxygen)
@@ -101,8 +100,8 @@ SET(CPACK_SOURCE_IGNORE_FILES
  ".*\\\\.deb"
  ".*\\\\.rpm"
  "\\\\..*\\\\.swp"
- "Seq/\\\\..*"
- "Seq/libbpp*"
+ "src/Bpp/Seq/\\\\..*"
+ "src/libbpp*"
  "debian/libbpp*"
  "debian/tmp"
  "html"

@@ -1,0 +1,5 @@
+#include "GeneticCode/EchinodermMitochondrialGeneticCode.h"
+#include "GeneticCode/GeneticCode.h"
+#include "GeneticCode/VertebrateMitochondrialGeneticCode.h"
+#include "GeneticCode/StandardGeneticCode.h"
+#include "GeneticCode/InvertebrateMitochondrialGeneticCode.h"
