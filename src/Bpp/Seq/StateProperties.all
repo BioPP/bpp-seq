@@ -1,4 +1,3 @@
-#include "StateProperties/SequenceFileIndex.h"
 #include "StateProperties/AAIndex1Entry.h"
 #include "StateProperties/GranthamAAVolumeIndex.h"
 #include "StateProperties/KleinAANetChargeIndex.h"
