@@ -58,6 +58,8 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
     getline(*stream_, line, '\n');
     if (TextTools::isEmpty(line))
     {
+      if (firstBlock_)
+        continue;
       if (currentSequence) {
         //Add previous sequence:
         block->addSequence(*currentSequence); //The sequence is copied in the container.
@@ -77,6 +79,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
       
       //New block.
       block = new MafBlock();
+      firstBlock_ = false;
 
       map<string, string> args;
       if (line.size() > 2)
@@ -111,7 +114,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
       const string seq = st.nextToken();
       currentSequence = new MafSequence(src, seq, start, strand, srcSize);
       if (currentSequence->getGenomicSize() != size)
-        throw Exception("MafAlignmentParser::nextBlock. Sequence found does not match specified size: " + TextTools::toString(currentSequence->getGenomicSize()) + ", should be " + TextTools::toString(size) + ".");
+        throw Exception("MafAlignmentParser::nextBlock. Sequence found (" + src + ") does not match specified size: " + TextTools::toString(currentSequence->getGenomicSize()) + ", should be " + TextTools::toString(size) + ".");
       
       //Add mask:
       if (mask_) {

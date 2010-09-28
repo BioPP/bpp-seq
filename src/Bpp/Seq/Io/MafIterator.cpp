@@ -807,7 +807,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
 
 void OutputMafIterator::writeHeader(std::ostream& out) const
 {
-  out << "##maf version=1 program=Bio++" << endl << endl;
+  out << "##maf version=1 program=Bio++" << endl << "#" << endl;
   //There are more options in the header that we may want to support...
 }
 
