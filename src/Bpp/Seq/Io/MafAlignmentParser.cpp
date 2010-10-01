@@ -55,6 +55,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
   MafSequence* currentSequence = 0;
   while (test)
   {
+    if (stream_->eof()) return 0;
     getline(*stream_, line, '\n');
     if (TextTools::isEmpty(line))
     {

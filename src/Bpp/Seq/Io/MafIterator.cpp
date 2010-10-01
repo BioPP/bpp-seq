@@ -246,30 +246,37 @@ MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
     ApplicationTools::displayTask("Cleaning block for gap sites", true);
   }
   unsigned int n = block->getNumberOfSites();
-  unsigned int count = n;
-  unsigned int i = n;
-  while (i > 0) {
-    if (verbose_)
-      ApplicationTools::displayGauge(n - i, n - 1, '=');
-    const Site* site = &vsc.getSite(i - 1);
+  vector <unsigned int> start;
+  vector <unsigned int> count;
+  bool test = false;
+  for(unsigned int i = 0; i < n; ++i) {
+    const Site* site = &vsc.getSite(i);
     if (SiteTools::isGapOnly(*site)) {
-      unsigned int end = i;
-      while (SiteTools::isGapOnly(*site) && i > 0) {
-        site = &vsc.getSite(i - 1);
-        --i;
+      if (test) {
+        count[count.size() - 1]++;
+      } else {
+        start.push_back(i);
+        count.push_back(1);
+        test = true;
       }
-      block->getAlignment().deleteSites(i, end - i);
-      count -= (end - i);
     } else {
-      --i;
+      test = false;
     }
+  }
+  //Now remove blocks:
+  unsigned int totalRemoved = 0;
+  for(size_t i = start.size(); i > 0; --i) {
+    if (verbose_)
+      ApplicationTools::displayGauge(start.size() - i, start.size() - 1, '=');
+    block->getAlignment().deleteSites(start[i - 1], count[i - 1]);
+    totalRemoved += count[i - 1];
   }
   if (verbose_)
     ApplicationTools::displayTaskDone();
   
   //Correct coordinates:
-  if (count > 0) {
-    for (i = 0; i < block->getNumberOfSequences(); ++i) {
+  if (totalRemoved > 0) {
+    for (unsigned int i = 0; i < block->getNumberOfSequences(); ++i) {
       const MafSequence* seq = &block->getSequence(i);
       if (!VectorTools::contains(species_, seq->getSpecies())) {
         block->removeCoordinatesFromSequence(i);
@@ -277,7 +284,7 @@ MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
     }
   }
   if (logstream_) {
-    (*logstream_ << "FULL GAP CLEANER: " << count << " positions have been removed.").endLine();
+    (*logstream_ << "FULL GAP CLEANER: " << totalRemoved << " positions have been removed.").endLine();
   }
   return block;
 }
@@ -640,7 +647,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
       if (aln.size() != species_.size()) {
         blockBuffer_.push_back(block);
         if (logstream_) {
-          (*logstream_ << "QUAL CLEANER: block is missing qulaity score for at least one species and will therefore not be filtered.").endLine();
+          (*logstream_ << "QUAL CLEANER: block is missing quality score for at least one species and will therefore not be filtered.").endLine();
         }
         //NB here we could decide to discard the block instead!
       } else {
