@@ -36,6 +36,7 @@ set(CPP_FILES
   Bpp/Seq/Alphabet/VertebrateMitochondrialCodonAlphabet.cpp
   Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.cpp
   Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.cpp
+  Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.cpp
   Bpp/Seq/Alphabet/WordAlphabet.cpp
   Bpp/Seq/GeneticCode/GeneticCode.cpp
   Bpp/Seq/GeneticCode/StandardGeneticCode.cpp
@@ -120,6 +121,7 @@ set(H_FILES
   Bpp/Seq/Alphabet/VertebrateMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/WordAlphabet.h
   Bpp/Seq/GeneticCode/GeneticCode.h
   Bpp/Seq/GeneticCode/StandardGeneticCode.h
