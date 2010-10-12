@@ -42,6 +42,7 @@ set(CPP_FILES
   Bpp/Seq/GeneticCode/VertebrateMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/InvertebrateMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/EchinodermMitochondrialGeneticCode.cpp
+  Bpp/Seq/GeneticCode/YeastMitochondrialGeneticCode.cpp
   Bpp/Seq/StateProperties/GranthamAAChemicalDistance.cpp
   Bpp/Seq/StateProperties/MiyataAAChemicalDistance.cpp
   Bpp/Seq/StateProperties/BLOSUM50.cpp
@@ -125,6 +126,7 @@ set(H_FILES
   Bpp/Seq/GeneticCode/VertebrateMitochondrialGeneticCode.h
   Bpp/Seq/GeneticCode/InvertebrateMitochondrialGeneticCode.h
   Bpp/Seq/GeneticCode/EchinodermMitochondrialGeneticCode.h
+  Bpp/Seq/GeneticCode/YeastMitochondrialGeneticCode.h
   Bpp/Seq/Io/AbstractISequence.h
   Bpp/Seq/Io/AbstractISequence2.h
   Bpp/Seq/Io/AbstractOSequence.h
