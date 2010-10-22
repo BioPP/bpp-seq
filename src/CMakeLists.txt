@@ -36,6 +36,7 @@ set(CPP_FILES
   Bpp/Seq/Alphabet/VertebrateMitochondrialCodonAlphabet.cpp
   Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.cpp
   Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.cpp
+  Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.cpp
   Bpp/Seq/Alphabet/WordAlphabet.cpp
   Bpp/Seq/Alphabet/RNY.cpp
   Bpp/Seq/GeneticCode/GeneticCode.cpp
@@ -43,6 +44,7 @@ set(CPP_FILES
   Bpp/Seq/GeneticCode/VertebrateMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/InvertebrateMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/EchinodermMitochondrialGeneticCode.cpp
+  Bpp/Seq/GeneticCode/YeastMitochondrialGeneticCode.cpp
   Bpp/Seq/StateProperties/GranthamAAChemicalDistance.cpp
   Bpp/Seq/StateProperties/MiyataAAChemicalDistance.cpp
   Bpp/Seq/StateProperties/BLOSUM50.cpp
@@ -120,6 +122,7 @@ set(H_FILES
   Bpp/Seq/Alphabet/VertebrateMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/WordAlphabet.h
   Bpp/Seq/Alphabet/RNY.h
   Bpp/Seq/GeneticCode/GeneticCode.h
@@ -127,6 +130,7 @@ set(H_FILES
   Bpp/Seq/GeneticCode/VertebrateMitochondrialGeneticCode.h
   Bpp/Seq/GeneticCode/InvertebrateMitochondrialGeneticCode.h
   Bpp/Seq/GeneticCode/EchinodermMitochondrialGeneticCode.h
+  Bpp/Seq/GeneticCode/YeastMitochondrialGeneticCode.h
   Bpp/Seq/Io/AbstractISequence.h
   Bpp/Seq/Io/AbstractISequence2.h
   Bpp/Seq/Io/AbstractOSequence.h

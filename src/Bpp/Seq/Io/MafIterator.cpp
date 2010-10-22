@@ -137,7 +137,7 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
         const MafSequence* seq2 = &incomingBlock_->getSequence(species_[i]);
         if (!seq1->hasCoordinates() || !seq2->hasCoordinates())
           throw Exception("BlockMergerMafIterator::nextBlock. Species '" + species_[i] + "' is missing coordinates in at least one block.");
-        unsigned int space = seq1->start() - seq2->stop() - 1;
+        unsigned int space = seq2->start() - seq1->stop() - 1;
         if (space > maxDist_)
           return currentBlock_;
         if (i == 0)
