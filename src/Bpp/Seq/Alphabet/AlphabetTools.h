@@ -160,7 +160,13 @@ class AlphabetTools
      * @param alphabet The alphabet to check.
      */
     static bool isWordAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<WordAlphabet>(alphabet); }
-    
+
+  /**
+   * @return True if the alphabet is an instanciation of the RNY class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isRNYAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<RNY>(alphabet); }
+
     /**
      * @return True if the alphabet is an instanciation of the DefaultAlphabet class.
      * @param alphabet The alphabet to check.

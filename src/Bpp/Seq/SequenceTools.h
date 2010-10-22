@@ -45,6 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Alphabet/Alphabet.h"
 #include "Alphabet/DNA.h"
 #include "Alphabet/RNA.h"
+#include "Alphabet/RNY.h"
 #include "Sequence.h"
 #include "SymbolListTools.h"
 #include "NucleicAcidsReplication.h"
@@ -98,6 +99,7 @@ class SequenceTools:
 	private:
 		static DNA _DNA;
 		static RNA _RNA;
+                static RNY _RNY;
 		static NucleicAcidsReplication _DNARep;
 		static NucleicAcidsReplication _RNARep;
 		static NucleicAcidsReplication _transc;
@@ -322,6 +324,22 @@ class SequenceTools:
      */
     static Sequence* subtractHaplotype(const Sequence& s, const Sequence& h, std::string name = "", unsigned int level = 1) throw (SequenceNotAlignedException);
     
+  /**
+   * @brief Get the RNY decomposition of a DNA sequence; with a given
+   * phase between 1 and 3, it gives the decomposition in this phase;
+   * in phase 1, the first triplet is centered on the first character.
+   * Without a phase the function gives the concatenation in phases 1, 2 and 3.
+   *
+   * @return sequence A new sequence object with the transcription sequence.
+   * @param sequence The sequence to transcript.
+   * @throw AlphabetException If the sequence is not a DNA sequence.
+   *
+   * @author Laurent Guéguen
+   */
+
+  static Sequence* RNYslice(const Sequence& sequence, int ph) throw (AlphabetException);
+  static Sequence* RNYslice(const Sequence& sequence) throw (AlphabetException);
+
     /**
      * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.
      *

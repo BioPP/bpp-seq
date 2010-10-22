@@ -58,6 +58,7 @@ using namespace std;
 
 DNA SequenceTools::_DNA;
 RNA SequenceTools::_RNA;
+RNY SequenceTools::_RNY(_DNA);
 NucleicAcidsReplication SequenceTools::_DNARep(& _DNA, & _DNA);
 NucleicAcidsReplication SequenceTools::_RNARep(& _RNA, & _RNA);
 NucleicAcidsReplication SequenceTools::_transc(& _DNA, & _RNA);
@@ -424,6 +425,81 @@ Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h,
 }
 
 /******************************************************************************/
+
+Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetException)
+{
+  // Alphabet type checking
+  if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")
+    {
+      throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
+    }
+  int s = seq.size();
+  int n = (s - ph + 3) / 3;
+
+  vector<int> content(n);
+
+  int tir = seq.getAlphabet()->getGapCharacterCode();
+
+  int j;
+
+  for (int i = 0; i < n; i++)
+    {
+      j = i * 3 + ph - 1;
+
+      if (j == 0)
+        content[i] = _RNY.getRNY(tir,seq[j],seq[j + 1],*seq.getAlphabet());
+      else
+        {
+          if (j == s - 1)
+            content[i] = _RNY.getRNY(seq[j],seq[j + 1],tir, *seq.getAlphabet());
+          else
+            content[i] = _RNY.getRNY(seq[j - 1],seq[j],seq[j + 1],*seq.getAlphabet());
+        }
+    }
+
+  // New sequence creating, and sense reversing
+  Sequence* sq = new BasicSequence(seq.getName(), content,
+                                   seq.getComments(), &_RNY);
+
+  // Send result
+  return sq;
+}
+
+Sequence* SequenceTools::RNYslice(const Sequence& seq) throw (AlphabetException)
+{
+  // Alphabet type checking
+  if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")
+    {
+      throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
+    }
+
+  unsigned int n = seq.size();
+
+  vector<int> content(n);
+
+  int tir = seq.getAlphabet()->getGapCharacterCode();
+
+  content[0] = _RNY.getRNY(tir,seq[0],seq[1], *seq.getAlphabet());
+
+  for (unsigned int i = 1; i < n - 1; i++)
+    {
+      content[i] = _RNY.getRNY(seq[i - 1],seq[i],seq[i + 1],
+                               *seq.getAlphabet());
+    }
+
+
+  content[n - 1] = _RNY.getRNY(seq[n - 2],seq[n - 1],tir, *seq.getAlphabet());
+
+  // New sequence creating, and sense reversing
+  Sequence* s = new BasicSequence(seq.getName(), content,
+                                  seq.getComments(), &_RNY);
+
+  // Send result
+  return s;
+}
+
+/******************************************************************************/
+
 
 void SequenceTools::getCDS(Sequence& sequence, bool checkInit, bool checkStop, bool includeInit, bool includeStop)
 {
