@@ -54,7 +54,7 @@ namespace bpp {
  * This class is a (draft) attempt to parse synteny block from Maf file.
  *
  * The MAF format is documented on the UCSC Genome Browser website:
- * @url http://genome.ucsc.edu/FAQ/FAQformat.html#format5
+ * <a href="http://genome.ucsc.edu/FAQ/FAQformat.html#format5">http://genome.ucsc.edu/FAQ/FAQformat.html#format5</a>
  *
  * @author Julien Dutheil
  */

@@ -70,7 +70,7 @@ namespace bpp {
       /**
        * @brief Get a sub-sequence.
        *
-       * @param SequenceWithQuality The sequence to trunc.
+       * @param sequence The sequence to trunc.
        * @param begin The first position of the subsequence.
        * @param end   The last position of the subsequence.
        * @return A new SequenceWithQuality object with the given subsequence.
