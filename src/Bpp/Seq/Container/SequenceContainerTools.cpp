@@ -134,20 +134,25 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer&
 
 void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, unsigned int pseudoCount) 
 {
-	int n = 0;
-	vector<string> names = sequences.getSequencesNames();
-	for(unsigned int j = 0; j < names.size(); j++) {
-		vector<int> seq = sequences.getContent(names[j]);
-		for(unsigned int i = 0; i < seq.size(); i++) f[seq[i]]++;
-		n += seq.size();
-	}
-	for(map<int, double>::iterator i = f.begin(); i != f.end(); i++)
-          i -> second += pseudoCount;
+  int n = 0;
+  vector<string> names = sequences.getSequencesNames();
+  for(unsigned int j = 0; j < names.size(); j++) {
+    vector<int> seq = sequences.getContent(names[j]);
+    for(unsigned int i = 0; i < seq.size(); i++) f[seq[i]]++;
+    n += seq.size();
+  }
 
-        n += pseudoCount * f.size();
-	for(map<int, double>::iterator i = f.begin(); i != f.end(); i++) {
-          i -> second = i -> second / n;
-	}
+  if (pseudoCount!=0){
+    const Alphabet* pA=sequences.getAlphabet();
+    for (unsigned int i = 0; i < pA->getSize(); i++)
+      f[i]+=pseudoCount;
+  
+    n += pseudoCount * pA->getSize();
+  }
+  
+  for(map<int, double>::iterator i = f.begin(); i != f.end(); i++) {
+    i -> second = i -> second / n;
+  }
 }
 
 /******************************************************************************/
