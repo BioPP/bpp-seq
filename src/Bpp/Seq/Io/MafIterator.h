@@ -339,6 +339,8 @@ class SequenceFilterMafIterator:
 
   public:
     /**
+     * @param iterator The input iterator.
+     * @param species The list of species names to be retained.
      * @param strict If true, then block that do not contain all species will be discarded.
      * @param rmDuplicates If true, block that contain more than one instance for at least one species will be discarded.
      */
