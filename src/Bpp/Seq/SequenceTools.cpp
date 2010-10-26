@@ -439,7 +439,6 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
   vector<int> content(n);
 
   int tir = seq.getAlphabet()->getGapCharacterCode();
-
   int j;
 
   for (int i = 0; i < n; i++)
@@ -467,6 +466,7 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
 
 Sequence* SequenceTools::RNYslice(const Sequence& seq) throw (AlphabetException)
 {
+  
   // Alphabet type checking
   if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")
     {
@@ -479,17 +479,18 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq) throw (AlphabetException)
 
   int tir = seq.getAlphabet()->getGapCharacterCode();
 
-  content[0] = _RNY.getRNY(tir,seq[0],seq[1], *seq.getAlphabet());
+  if (seq.size()>=2){
+    content[0] = _RNY.getRNY(tir,seq[0],seq[1], *seq.getAlphabet());
 
-  for (unsigned int i = 1; i < n - 1; i++)
-    {
-      content[i] = _RNY.getRNY(seq[i - 1],seq[i],seq[i + 1],
-                               *seq.getAlphabet());
-    }
-
-
-  content[n - 1] = _RNY.getRNY(seq[n - 2],seq[n - 1],tir, *seq.getAlphabet());
-
+    for (unsigned int i = 1; i < n - 1; i++)
+      {
+        content[i] = _RNY.getRNY(seq[i - 1],seq[i],seq[i + 1],
+                                 *seq.getAlphabet());
+      }
+    
+    content[n - 1] = _RNY.getRNY(seq[n - 2],seq[n - 1],tir, *seq.getAlphabet());
+  }
+  
   // New sequence creating, and sense reversing
   Sequence* s = new BasicSequence(seq.getName(), content,
                                   seq.getComments(), &_RNY);
