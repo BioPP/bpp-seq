@@ -132,7 +132,7 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer&
 
 /******************************************************************************/
 
-void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f)
+void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, unsigned int pseudoCount) 
 {
 	int n = 0;
 	vector<string> names = sequences.getSequencesNames();
@@ -141,6 +141,10 @@ void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, 
 		for(unsigned int i = 0; i < seq.size(); i++) f[seq[i]]++;
 		n += seq.size();
 	}
+	for(map<int, double>::iterator i = f.begin(); i != f.end(); i++)
+          i -> second += pseudoCount;
+
+        n += pseudoCount * f.size();
 	for(map<int, double>::iterator i = f.begin(); i != f.end(); i++) {
           i -> second = i -> second / n;
 	}
