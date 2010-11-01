@@ -50,3 +50,7 @@ ADD_EXECUTABLE(test_io test_io.cpp)
 TARGET_LINK_LIBRARIES(test_io ${STATIC_LIBS})
 ADD_TEST(test_io "test_io")
 
+ADD_EXECUTABLE(test_containers test_containers.cpp)
+TARGET_LINK_LIBRARIES(test_containers ${STATIC_LIBS})
+ADD_TEST(test_containers "test_containers")
+
