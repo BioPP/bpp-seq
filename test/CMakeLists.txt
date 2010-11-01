@@ -46,3 +46,7 @@ ADD_EXECUTABLE(test_alphabets test_alphabets.cpp)
 TARGET_LINK_LIBRARIES(test_alphabets ${STATIC_LIBS})
 ADD_TEST(test_alphabets "test_alphabets")
 
+ADD_EXECUTABLE(test_io test_io.cpp)
+TARGET_LINK_LIBRARIES(test_io ${STATIC_LIBS})
+ADD_TEST(test_io "test_io")
+

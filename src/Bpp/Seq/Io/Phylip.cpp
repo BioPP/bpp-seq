@@ -82,23 +82,23 @@ void Phylip::readSequential(std::istream& in, SiteContainer& asc) const throw (E
   string name = "";
   string seq  = "";
   
-  while(!in.eof())
+  while (!in.eof())
   {
-     // Read each sequence:
+    // Read each sequence:
     vector<string> v;
     bool hasName = true;
     try
     { 
       v = splitNameAndSequence(temp);
     }
-    catch(Exception & e)
+    catch (Exception & e)
     {
       hasName = false;
     }
-    if(hasName)
+    if (hasName)
     {
       // a new sequence is found:
-      if(!TextTools::isEmpty(name)) //If this is not the first sequence!
+      if (!TextTools::isEmpty(name)) //If this is not the first sequence!
       {
         // Add the previous sequence to the container:
         asc.addSequence(BasicSequence(name, seq, asc.getAlphabet()), checkNames_);
@@ -109,7 +109,8 @@ void Phylip::readSequential(std::istream& in, SiteContainer& asc) const throw (E
     else
     {
       //No sequence name found.
-      if(TextTools::isEmpty(name)) throw Exception("First sequence in file has no name!");
+      if (TextTools::isEmpty(name))
+        throw Exception("First sequence in file has no name!");
       seq += TextTools::removeWhiteSpaces(temp);
     }
     //while(!TextTools::isEmpty(temp))
@@ -120,6 +121,7 @@ void Phylip::readSequential(std::istream& in, SiteContainer& asc) const throw (E
     //}
     //end of this sequence:
     temp = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(in));
+
   }
   // Add last sequence:
   asc.addSequence(BasicSequence(name, seq, asc.getAlphabet()), checkNames_);
@@ -152,9 +154,9 @@ void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const throw (
   temp = FileTools::getNextLine(in);
   while (!in.eof())
   {
-    for(unsigned int i = 0; i < names.size(); i++)
+    for (unsigned int i = 0; i < names.size(); i++)
     {
-      if(TextTools::isEmpty(temp))
+      if (TextTools::isEmpty(temp))
         throw IOException("Phylip::readInterleaved. Bad file,there are not the same number of sequence in each block.");
       seqs[i] += TextTools::removeWhiteSpaces(temp);      
       getline(in, temp, '\n');  // read next line in file.
@@ -229,11 +231,11 @@ void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int
   
   vector<string> seqNames = sc.getSequencesNames();
   vector<string> names = getSizedNames(seqNames);
-  for(unsigned int i = 0; i < seqNames.size(); i++)
+  for (unsigned int i = 0; i < seqNames.size(); i++)
   {
     vector<string> seq = TextTools::split(sc.toString(seqNames[i]), charsByLine);
     out << names[i] << seq[0] << endl;
-    for(unsigned int j = 1; j < seq.size(); j++)
+    for (unsigned int j = 1; j < seq.size(); j++)
     {
       out << string(names[i].size(), ' ') << seq[j] << endl;
     }
@@ -251,20 +253,20 @@ void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, in
   vector<string> names = getSizedNames(seqNames);
   //Split sequences:
   vector< vector<string> > seqs(sc.getNumberOfSequences());
-  for(unsigned int i = 0; i < seqNames.size(); i++)
+  for (unsigned int i = 0; i < seqNames.size(); i++)
   {
     seqs[i] = TextTools::split(sc.toString(seqNames[i]), charsByLine);
   }
   //Write first block:
-  for(unsigned int i = 0; i < names.size(); i++)
+  for (unsigned int i = 0; i < names.size(); i++)
   {
     out << names[i] << seqs[i][0] << endl;
   }
   out << endl;
   //Write other blocks:
-  for(unsigned int j = 1; j < seqs[0].size(); j++)
+  for (unsigned int j = 1; j < seqs[0].size(); j++)
   {
-    for(unsigned int i = 0; i < sc.getNumberOfSequences(); i++)
+    for (unsigned int i = 0; i < sc.getNumberOfSequences(); i++)
     {
       out << seqs[i][j] << endl;
     }
@@ -277,10 +279,10 @@ void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, in
 void Phylip::write(std::ostream& output, const SiteContainer& sc) const throw (Exception)
 {
   //First must check if all sequences are aligned:
-  if(sc.getNumberOfSequences() == 0)
+  if (sc.getNumberOfSequences() == 0)
     throw Exception("Phylip::write. SequenceContainer appear to contain no sequence.");
   
-  if(!SequenceContainerTools::sequencesHaveTheSameLength(sc))
+  if (!SequenceContainerTools::sequencesHaveTheSameLength(sc))
     throw SequenceNotAlignedException("Phylip::write. Sequences have to e of same length.", NULL);
   
   // Checking the existence of specified file, and possibility to open it in write mode
