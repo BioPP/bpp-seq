@@ -3,8 +3,6 @@
 # Created: 30/10/2010
 
 MACRO(IMPROVED_FIND_STATIC_LIBRARY OUTPUT_LIBS lib_name)
-  #start:
-  UNSET(${lib_name}_STATIC_LIBRARY CACHE) #Reset the cache.
 
   SET(${lib_name}_STATIC_NAMES lib${lib_name}.a)
   FIND_LIBRARY(${lib_name}_STATIC_LIBRARY NAMES ${${lib_name}_STATIC_NAMES})
