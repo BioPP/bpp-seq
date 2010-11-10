@@ -22,18 +22,18 @@ MACRO(TEST_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
 ENDMACRO(TEST_FIND_LIBRARY)
 
 #Find the bpp-seq library library:
-TEST_FIND_LIBRARY(STATIC_LIBS bpp-seq Bpp/Seq/Alphabet/Alphabet.h)
+TEST_FIND_LIBRARY(LIBS bpp-seq Bpp/Seq/Alphabet/Alphabet.h)
 
 ADD_EXECUTABLE(test_alphabets test_alphabets.cpp)
-TARGET_LINK_LIBRARIES(test_alphabets ${STATIC_LIBS})
+TARGET_LINK_LIBRARIES(test_alphabets ${LIBS})
 ADD_TEST(test_alphabets "test_alphabets")
 
 ADD_EXECUTABLE(test_io test_io.cpp)
-TARGET_LINK_LIBRARIES(test_io ${STATIC_LIBS})
+TARGET_LINK_LIBRARIES(test_io ${LIBS})
 ADD_TEST(test_io "test_io")
 
 ADD_EXECUTABLE(test_containers test_containers.cpp)
-TARGET_LINK_LIBRARIES(test_containers ${STATIC_LIBS})
+TARGET_LINK_LIBRARIES(test_containers ${LIBS})
 ADD_TEST(test_containers "test_containers")
 
 IF(UNIX)
