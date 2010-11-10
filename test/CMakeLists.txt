@@ -45,6 +45,6 @@ IF(APPLE)
 ENDIF()
 
 IF(WIN32)
-  SET_PROPERTY(TEST test_alphabets test_io test_containers PROPERTY ENVIRONMENT "PATH=$ENV{PATH}:../src")
+  SET(ENV{PATH} "$ENV{PATH}:../src")
 ENDIF()
 
