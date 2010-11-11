@@ -1,14 +1,14 @@
 //
-// File: MafAlignmentParser.h
-// Authors: Julien Dutheil
-// Created: Tue Apr 27 2010
+// File: test_containers.cpp
+// Created by: Julien Dutheil
+// Created on: Mon Nov 01 10:15 2010
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (2010)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+for numerical calculus. This file is part of the Bio++ project.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -37,51 +37,31 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _MAFALIGNMENTPARSER_H_
-#define _MAFALIGNMENTPARSER_H_
-
-#include "MafIterator.h"
-#include "../Alphabet/CaseMaskedAlphabet.h"
-
-//From the STL:
+#include <Bpp/Seq/Alphabet.all>
+#include <Bpp/Seq/Container.all>
 #include <iostream>
 
-namespace bpp {
+using namespace bpp;
+using namespace std;
 
-/**
- * @brief MAF file parser.
- * 
- * This class is a (draft) attempt to parse synteny block from Maf file.
- *
- * The MAF format is documented on the UCSC Genome Browser website:
- * <a href="http://genome.ucsc.edu/FAQ/FAQformat.html#format5">http://genome.ucsc.edu/FAQ/FAQformat.html#format5</a>
- *
- * @author Julien Dutheil
- */
-class MafAlignmentParser:
-  public MafIterator
-{
-  private:
-    std::istream* stream_;
-    bool mask_;
-    CaseMaskedAlphabet cmAlphabet_;
-    bool firstBlock_;
+int main() {
+  //ProteicAlphabet* alpha = new ProteicAlphabet;
+  RNA* alpha = new RNA;
+  SiteContainer* sites = new VectorSiteContainer(alpha);
+  BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
+  BasicSequence seq2("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
+  sites->addSequence(seq1, false);
+  sites->addSequence(seq2, false);
 
-  public:
-    MafAlignmentParser(std::istream* stream, bool parseMask = false) :
-      stream_(stream), mask_(parseMask), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(true) {}
+  cout << sites->getNumberOfSites() << endl;
+  cout << sites->toString("seq1") << endl;
+  cout << sites->toString("seq2") << endl;
+  SiteContainerTools::removeGapOnlySites(*sites);
+  cout << endl;
+  
+  cout << sites->getNumberOfSites() << endl;
+  cout << sites->toString("seq1") << endl;
+  cout << sites->toString("seq2") << endl;
 
-  private:
-    //Recopy is forbidden!
-    MafAlignmentParser(const MafAlignmentParser& maf): stream_(0), mask_(maf.mask_), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(maf.firstBlock_) {}
-    MafAlignmentParser& operator=(const MafAlignmentParser& maf) { stream_ = 0; mask_ = maf.mask_; firstBlock_ = maf.firstBlock_; return *this; }
-
-  public:
-    MafBlock* nextBlock() throw (Exception);
-
-};
-
-} // end of namespace bpp.
-
-#endif //_MAFALIGNMENTPARSER_H_
-
+  return (sites->getNumberOfSites() == 30 ? 0 : 1);
+}

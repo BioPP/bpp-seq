@@ -178,7 +178,8 @@ class SequenceContainerTools
    *
    * States are stored as their int code.
    */
-  static void  getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f);
+  
+  static void  getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, unsigned int pseudoCount = 0);
   
     /**
      * @brief Append all the sequences of a SequenceContainer to the end of another.

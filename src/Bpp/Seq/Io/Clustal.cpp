@@ -71,7 +71,7 @@ void Clustal::appendFromStream(std::istream& input, SiteContainer & sc) const th
     if (c == ' ') {
       count++;
       if (count == nbSpacesBeforeSeq_) {
-        beginSeq = i + nbSpacesBeforeSeq_;
+        beginSeq = i - 1 + nbSpacesBeforeSeq_;
         break;
       }
     }

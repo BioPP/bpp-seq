@@ -1,14 +1,14 @@
 //
-// File: MafAlignmentParser.h
-// Authors: Julien Dutheil
-// Created: Tue Apr 27 2010
+// File: test_alphabets.cpp
+// Created by: Julien Dutheil
+// Created on: Sat Oct 30 17:10 2010
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (2010)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+for numerical calculus. This file is part of the Bio++ project.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -37,51 +37,33 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _MAFALIGNMENTPARSER_H_
-#define _MAFALIGNMENTPARSER_H_
-
-#include "MafIterator.h"
-#include "../Alphabet/CaseMaskedAlphabet.h"
-
-//From the STL:
+#include <Bpp/Seq/Alphabet.all>
 #include <iostream>
 
-namespace bpp {
+using namespace bpp;
+using namespace std;
 
-/**
- * @brief MAF file parser.
- * 
- * This class is a (draft) attempt to parse synteny block from Maf file.
- *
- * The MAF format is documented on the UCSC Genome Browser website:
- * <a href="http://genome.ucsc.edu/FAQ/FAQformat.html#format5">http://genome.ucsc.edu/FAQ/FAQformat.html#format5</a>
- *
- * @author Julien Dutheil
- */
-class MafAlignmentParser:
-  public MafIterator
-{
-  private:
-    std::istream* stream_;
-    bool mask_;
-    CaseMaskedAlphabet cmAlphabet_;
-    bool firstBlock_;
+int main() {
+  //This is a very simple test that instanciate all alpahabet classes.
+  NucleicAlphabet* dna = new DNA;
+  NucleicAlphabet* rna = new RNA;
+  Alphabet* pro = new ProteicAlphabet;
+  Alphabet* def = new DefaultAlphabet;
+  Alphabet* stdCdn = new StandardCodonAlphabet(rna);
+  Alphabet* vmtCdn = new VertebrateMitochondrialCodonAlphabet(rna);
+  Alphabet* imtCdn = new InvertebrateMitochondrialCodonAlphabet(rna);
+  Alphabet* emtCdn = new EchinodermMitochondrialCodonAlphabet(rna);
+  Alphabet* ymtCdn = new YeastMitochondrialCodonAlphabet(rna);
 
-  public:
-    MafAlignmentParser(std::istream* stream, bool parseMask = false) :
-      stream_(stream), mask_(parseMask), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(true) {}
+  delete dna;
+  delete rna;
+  delete pro;
+  delete def;
+  delete stdCdn;
+  delete vmtCdn;
+  delete imtCdn;
+  delete emtCdn;
+  delete ymtCdn;
 
-  private:
-    //Recopy is forbidden!
-    MafAlignmentParser(const MafAlignmentParser& maf): stream_(0), mask_(maf.mask_), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(maf.firstBlock_) {}
-    MafAlignmentParser& operator=(const MafAlignmentParser& maf) { stream_ = 0; mask_ = maf.mask_; firstBlock_ = maf.firstBlock_; return *this; }
-
-  public:
-    MafBlock* nextBlock() throw (Exception);
-
-};
-
-} // end of namespace bpp.
-
-#endif //_MAFALIGNMENTPARSER_H_
-
+  return (0);
+}

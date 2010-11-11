@@ -1,11 +1,11 @@
 //
-// File: MafAlignmentParser.h
-// Authors: Julien Dutheil
-// Created: Tue Apr 27 2010
+// File: YeastbrateMitochondrialGeneticCode.h
+// Created by: Benoit Nabholz
+// Created on: Sun Oct 10 14:33 CET 2010
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (2010)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,51 +37,39 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _MAFALIGNMENTPARSER_H_
-#define _MAFALIGNMENTPARSER_H_
 
-#include "MafIterator.h"
-#include "../Alphabet/CaseMaskedAlphabet.h"
+#ifndef _YEASTMITOCHONDRIALGENETICCODE_H_
+#define _YEASTMITOCHONDRIALGENETICCODE_H_
 
-//From the STL:
-#include <iostream>
+#include "GeneticCode.h"
+#include "../Alphabet/NucleicAlphabet.h"
 
-namespace bpp {
+namespace bpp
+{
 
 /**
- * @brief MAF file parser.
- * 
- * This class is a (draft) attempt to parse synteny block from Maf file.
- *
- * The MAF format is documented on the UCSC Genome Browser website:
- * <a href="http://genome.ucsc.edu/FAQ/FAQformat.html#format5">http://genome.ucsc.edu/FAQ/FAQformat.html#format5</a>
- *
- * @author Julien Dutheil
+ * @brief This class implements the Invertebrate
+ * Mitochondrial genetic code as describe on the NCBI website:
+ * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG3
  */
-class MafAlignmentParser:
-  public MafIterator
+
+class YeastMitochondrialGeneticCode:
+  public GeneticCode
 {
-  private:
-    std::istream* stream_;
-    bool mask_;
-    CaseMaskedAlphabet cmAlphabet_;
-    bool firstBlock_;
-
-  public:
-    MafAlignmentParser(std::istream* stream, bool parseMask = false) :
-      stream_(stream), mask_(parseMask), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(true) {}
-
-  private:
-    //Recopy is forbidden!
-    MafAlignmentParser(const MafAlignmentParser& maf): stream_(0), mask_(maf.mask_), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(maf.firstBlock_) {}
-    MafAlignmentParser& operator=(const MafAlignmentParser& maf) { stream_ = 0; mask_ = maf.mask_; firstBlock_ = maf.firstBlock_; return *this; }
-
-  public:
-    MafBlock* nextBlock() throw (Exception);
-
+	public:
+		YeastMitochondrialGeneticCode(const NucleicAlphabet * alpha);
+		virtual ~YeastMitochondrialGeneticCode();
+	
+	public:
+		int translate(int state) const throw (Exception);
+    std::string translate(const std::string & state) const throw (Exception);
+		Sequence * translate(const Sequence & sequence) const throw (Exception)
+    {
+			return GeneticCode::translate(sequence);	
+		}
 };
 
-} // end of namespace bpp.
+} //end of namespace bpp.
 
-#endif //_MAFALIGNMENTPARSER_H_
+#endif	//_YEASTMITOCHONDRIALGENETICCODE_H_
 

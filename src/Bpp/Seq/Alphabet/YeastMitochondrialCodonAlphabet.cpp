@@ -1,11 +1,11 @@
 //
-// File: MafAlignmentParser.h
-// Authors: Julien Dutheil
-// Created: Tue Apr 27 2010
+// File: YeastbrateMitochondrialCodonAlphabet.cpp
+// Created by: Benoit Nabholz
+// Created on: Sun Oct 10 14:33 CET 2010
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (2010)
+Copyright or © or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,51 +37,36 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _MAFALIGNMENTPARSER_H_
-#define _MAFALIGNMENTPARSER_H_
+#include "YeastMitochondrialCodonAlphabet.h"
 
-#include "MafIterator.h"
-#include "../Alphabet/CaseMaskedAlphabet.h"
+using namespace bpp;
+using namespace std;
 
-//From the STL:
-#include <iostream>
-
-namespace bpp {
-
-/**
- * @brief MAF file parser.
- * 
- * This class is a (draft) attempt to parse synteny block from Maf file.
- *
- * The MAF format is documented on the UCSC Genome Browser website:
- * <a href="http://genome.ucsc.edu/FAQ/FAQformat.html#format5">http://genome.ucsc.edu/FAQ/FAQformat.html#format5</a>
- *
- * @author Julien Dutheil
- */
-class MafAlignmentParser:
-  public MafIterator
+YeastMitochondrialCodonAlphabet::YeastMitochondrialCodonAlphabet(const NucleicAlphabet * alpha) : CodonAlphabet(alpha)
 {
-  private:
-    std::istream* stream_;
-    bool mask_;
-    CaseMaskedAlphabet cmAlphabet_;
-    bool firstBlock_;
+  string A = alpha->intToChar(0);
+  string G = alpha->intToChar(2);
+  string T = alpha->intToChar(3);
+                            
+  vector<string> vstop;
+  
+  vstop.push_back(T + A + A);
+  vstop.push_back(T + A + G);
 
-  public:
-    MafAlignmentParser(std::istream* stream, bool parseMask = false) :
-      stream_(stream), mask_(parseMask), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(true) {}
-
-  private:
-    //Recopy is forbidden!
-    MafAlignmentParser(const MafAlignmentParser& maf): stream_(0), mask_(maf.mask_), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(maf.firstBlock_) {}
-    MafAlignmentParser& operator=(const MafAlignmentParser& maf) { stream_ = 0; mask_ = maf.mask_; firstBlock_ = maf.firstBlock_; return *this; }
-
-  public:
-    MafBlock* nextBlock() throw (Exception);
-
-};
-
-} // end of namespace bpp.
-
-#endif //_MAFALIGNMENTPARSER_H_
+  int istop;
+  unsigned int j;
+  for (unsigned int i = 0 ; i < vstop.size() ; i++) {
+    istop = charToInt(vstop[i]);
+    stopCodons_.push_back(istop);
+          
+    j = 0;
+    while (j < getNumberOfChars()) {
+      if (getStateAt(j).getNum() == istop) {
+        getStateAt(j).setName(STOP);
+        break;
+      }
+      j++;
+    }
+  }
+}
 
