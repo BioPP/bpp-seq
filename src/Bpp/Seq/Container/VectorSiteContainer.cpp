@@ -143,7 +143,7 @@ VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer& vsc):
 /******************************************************************************/
 
 VectorSiteContainer::VectorSiteContainer(const SiteContainer& sc):
-  AbstractSequenceContainer(sc.getAlphabet()),
+  AbstractSequenceContainer(sc),
   sites_(0),
   names_(sc.getSequencesNames()),
   comments_(sc.getNumberOfSequences()),
@@ -160,7 +160,7 @@ VectorSiteContainer::VectorSiteContainer(const SiteContainer& sc):
 /******************************************************************************/
 
 VectorSiteContainer::VectorSiteContainer(const OrderedSequenceContainer& osc):
-  AbstractSequenceContainer(osc.getAlphabet()),
+  AbstractSequenceContainer(osc),
   sites_(0),
   names_(0),
   comments_(0),
@@ -174,7 +174,7 @@ VectorSiteContainer::VectorSiteContainer(const OrderedSequenceContainer& osc):
 /******************************************************************************/
 
 VectorSiteContainer::VectorSiteContainer(const SequenceContainer& sc):
-  AbstractSequenceContainer(sc.getAlphabet()),
+  AbstractSequenceContainer(sc),
   sites_(0),
   names_(0),
   comments_(0),
