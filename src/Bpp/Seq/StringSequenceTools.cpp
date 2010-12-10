@@ -44,7 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Alphabet/RNA.h"
 #include "Alphabet/ProteicAlphabet.h"
 #include <Bpp/Text/TextTools.h>
-#include <Bpp/Numeric/RandomTools.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
 
 using namespace bpp;
 
