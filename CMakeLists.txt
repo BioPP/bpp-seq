@@ -1,4 +1,4 @@
-# CMake script for Bio++ SeqLib
+# CMake script for Bio++ Sequence library
 # Author: Sylvain Gaillard and Julien Dutheil
 # Created: 20/08/2009
 
@@ -128,3 +128,9 @@ ADD_DEPENDENCIES(rpm dist)
 
 ENDIF()
 
+SET(CTEST_UPDATE_TYPE git)
+ENABLE_TESTING()
+INCLUDE(CTest)
+IF (BUILD_TESTING)
+  ADD_SUBDIRECTORY(test)
+ENDIF(BUILD_TESTING)

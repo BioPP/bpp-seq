@@ -68,6 +68,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
   
   reindexSites();
   sites_.resize(length_);
+  setGeneralComments(osc.getGeneralComments());
 }
 
 /***************************************************************************/

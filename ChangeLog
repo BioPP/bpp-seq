@@ -1,3 +1,12 @@
+19/11/10 Julien Dutheil
+* Solved bug 0000016 (General comments not copied in containers).
+* A few more code cleaning.
+
+01/11/10 Julien Dutheil
+* Solved bug 0000005 (Clustal parser).
+* Added unit testing for sequence input format.
+* Solved bug 0000004 (Remove gap sites in SiteContainer).
+
 12/10/10 Benoît Nabholz
 * Added yeast mitochondrial codon alphabet and genetic code.
 

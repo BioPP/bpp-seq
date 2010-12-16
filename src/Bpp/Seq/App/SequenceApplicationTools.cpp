@@ -353,8 +353,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   }
   else
   {
-    ApplicationTools::displayError("Unknown sequence format: " + format);
-    exit(-1);
+    throw Exception("Unknown sequence format: " + format);
   }
   const Alphabet* alpha2;
   if (AlphabetTools::isRNYAlphabet(alpha))
@@ -391,21 +390,15 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
     string siteSet = ApplicationTools::getStringParameter("siteSelection", args, "none", suffix, suffixIsOptional, false);
     if (siteSet != "none")
     {
-   VectorSiteContainer* selectedSites;
-      try
-      {
+      VectorSiteContainer* selectedSites;
+      try {
         selectedSites = dynamic_cast<VectorSiteContainer*>(MaseTools::getSelectedSites(*sites, siteSet));
         if (verbose) ApplicationTools::displayResult("Set found", TextTools::toString(siteSet) + " sites.");
+      } catch (IOException& ioe) {
+        throw ioe;
       }
-      catch (IOException ioe)
-      {
-   ApplicationTools::displayError("Site Set '" + siteSet + "' not found.");
-        exit(-1);
-      }
-      if (selectedSites->getNumberOfSites() == 0)
-      {
-   ApplicationTools::displayError("Site Set '" + siteSet + "' is empty.");
-        exit(-1);
+      if (selectedSites->getNumberOfSites() == 0) {
+        throw Exception("Site set '" + siteSet + "' is empty.");
       }
       delete sites;
       sites = selectedSites;

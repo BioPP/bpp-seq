@@ -49,45 +49,45 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 using namespace bpp;
 
-SiteSelection MaseTools::getSiteSet(const Comments & maseFileHeader, const string & setName) throw (IOException)
+SiteSelection MaseTools::getSiteSet(const Comments& maseFileHeader, const string& setName) throw (IOException)
 {
 	SiteSelection selection;
-	for(unsigned int i = 0; i < maseFileHeader.size(); i++) {
+	for (unsigned int i = 0; i < maseFileHeader.size(); i++) {
 		string current = maseFileHeader[i];
 		
     string::size_type index = current.find("# of");
-		if(index < current.npos) {
+		if (index < current.npos) {
 			StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
 			st.nextToken(); //skip next word: may be 'regions' or 'segments' or else ;-)
 			unsigned int numberOfSegments = TextTools::toInt(st.nextToken());
 			string name;
-			while(st.hasMoreToken()) {
+			while (st.hasMoreToken()) {
 				name += st.nextToken();
 			}
-			if(name == setName) {
+			if (name == setName) {
 				//cout << numberOfSegments << " segments found." << endl;
 				//Then look for the set definition:
 				i++;//next line.
-                unsigned int counter = 0;
+        unsigned int counter = 0;
 				while(i < maseFileHeader.size()) {
 					current = maseFileHeader[i++];
 					StringTokenizer st2(current);
 	 				//st.nextToken(); //Skip ';;'
-					while(st2.hasMoreToken()) {
+					while (st2.hasMoreToken()) {
 						StringTokenizer st3(st2.nextToken(), ",");
 						unsigned int begin = TextTools::toInt(st3.nextToken());
 						unsigned int end   = TextTools::toInt(st3.nextToken());
-                        //WARNING!!! In the mase+ format, sites are numbered from 1 to nbSites,
-                        //Whereas in SiteContainer the index begins at 0.
-						for(unsigned int j = begin; j <= end; j++) selection.push_back(j - 1);//bounds included.
-                        counter++;
-						if(counter == numberOfSegments) return selection;
+            //WARNING!!! In the mase+ format, sites are numbered from 1 to nbSites,
+            //Whereas in SiteContainer the index begins at 0.
+						for (unsigned int j = begin; j <= end; j++) selection.push_back(j - 1);//bounds included.
+              counter++;
+						if (counter == numberOfSegments) return selection;
 					}
 				}
 			}
 		}
 	}
-	if(selection.size() == 0) {
+	if (selection.size() == 0) {
 		throw IOException("Site set " + setName + " has not been found in the sequence file.");
 	}
 	return selection;
@@ -95,7 +95,7 @@ SiteSelection MaseTools::getSiteSet(const Comments & maseFileHeader, const strin
 
 /******************************************************************************/
 
-SequenceSelection MaseTools::getSequenceSet(const Comments & maseFileHeader, const string & setName) throw (IOException)
+SequenceSelection MaseTools::getSequenceSet(const Comments& maseFileHeader, const string& setName) throw (IOException)
 {
 	SequenceSelection selection;
 	for(unsigned int i = 0; i < maseFileHeader.size(); i++) {
@@ -138,9 +138,9 @@ SequenceSelection MaseTools::getSequenceSet(const Comments & maseFileHeader, con
 
 /******************************************************************************/
 
-SiteContainer * MaseTools::getSelectedSites(
-	const SiteContainer & sequences,
-	const string & setName) throw (IOException)
+SiteContainer* MaseTools::getSelectedSites(
+	const SiteContainer& sequences,
+	const string& setName) throw (IOException)
 {
     SiteSelection ss = getSiteSet(sequences.getGeneralComments(), setName);
     return SiteContainerTools::getSelectedSites(sequences, ss);

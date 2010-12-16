@@ -50,7 +50,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SymbolListTools.h"
 #include "NucleicAcidsReplication.h"
 #include <Bpp/Exceptions.h>
-#include <Bpp/Numeric/RandomTools.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
 #include <Bpp/Numeric/Stat/StatTest.h>
 
 // From the STL:

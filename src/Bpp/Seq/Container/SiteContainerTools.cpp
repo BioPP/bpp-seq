@@ -201,14 +201,14 @@ void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
 {
   unsigned int n = sites.getNumberOfSites();
   unsigned int i = n;
-  while (i > 0)
+  while (i > 1)
   {
-    ApplicationTools::displayGauge(n-i+1, n, '>');
+    ApplicationTools::displayGauge(n - i + 1, n);
     const Site* site = &sites.getSite(i - 1);
     if (SiteTools::isGapOnly(*site))
     {
       unsigned int end = i;
-      while (SiteTools::isGapOnly(*site) && i > 0) {
+      while (SiteTools::isGapOnly(*site) && i > 1) {
         --i;
         site = &sites.getSite(i - 1);
       }
@@ -219,6 +219,10 @@ void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
       --i;
     }
   }
+  ApplicationTools::displayGauge(n, n);
+  const Site* site = &sites.getSite(0);
+  if (SiteTools::isGapOnly(*site))
+    sites.deleteSite(0);
 }
 
 /******************************************************************************/
