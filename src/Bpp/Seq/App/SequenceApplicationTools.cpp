@@ -376,9 +376,9 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
       for (unsigned int i = 0; i < sites2->getNumberOfSequences(); i++)
         {
           sites->addSequence(*(ST.RNYslice(sites2->getSequence(i))));
-        }
+          }
       delete sites2;
-    }
+      }
   else
     sites = sites2;
 
