@@ -81,11 +81,10 @@ class DistanceMatrix:
      *
      * @param n The size of the matrix.
      */
-    DistanceMatrix(unsigned int n): RowMatrix<double>(n, n), names_(n)
+    DistanceMatrix(unsigned int n):
+      RowMatrix<double>(n, n), names_(n)
 		{
-			for (unsigned int i = 0; i < n; ++i)
-        names_[i] = "Taxon " + i;
-      reset();
+      resize(n);
 		}
 
 		virtual ~DistanceMatrix() {}
@@ -95,7 +94,7 @@ class DistanceMatrix:
 		DistanceMatrix& operator=(const DistanceMatrix& dist)
 		{
 			unsigned int n = dist.size();
-			resize(n, n);
+			resize(n);
 			for(unsigned int i = 0; i < n; ++i)
       {
 				for(unsigned int j = 0; j < n; ++j)
@@ -180,6 +179,19 @@ class DistanceMatrix:
     unsigned int getNameIndex(const std::string& name) const throw (Exception);
 
     /**
+     * @brief Change the dimension of the matrix.
+     *
+     * @param n the new dimension of the matrix.
+     */
+    void resize(unsigned int n) {
+      RowMatrix<double>::resize(n, n);
+      names_.resize(n);
+			for (unsigned int i = 0; i < n; ++i)
+        names_[i] = "Taxon " + TextTools::toString(i);
+      reset();
+    }
+
+    /**
      * @brief Access by name.
      *
      * @param iName Name 1 (row)
@@ -187,7 +199,7 @@ class DistanceMatrix:
      * @return A reference toward the specified distance.
      * @throw Exception if the matrix has no name of if one of the name do not match existing names.
      */
-    virtual const double & operator()(const std::string& iName, const std::string& jName) const throw (Exception)
+    virtual const double& operator()(const std::string& iName, const std::string& jName) const throw (Exception)
     {
       unsigned int i = getNameIndex(iName);
       unsigned int j = getNameIndex(jName);
@@ -202,26 +214,26 @@ class DistanceMatrix:
      * @return A reference toward the specified distance.
      * @throw Exception if the matrix has no name of if one of the name do not match existing names.
      */
-    virtual double & operator()(const std::string& iName, const std::string& jName) throw (Exception)
+    virtual double& operator()(const std::string& iName, const std::string& jName) throw (Exception)
     {
       unsigned int i = getNameIndex(iName);
       unsigned int j = getNameIndex(jName);
       return operator()(i,j);
     }
 
-    virtual const double & operator()(unsigned int i, unsigned int j) const
+    virtual const double& operator()(unsigned int i, unsigned int j) const
     {
       return RowMatrix<double>::operator()(i, j);
     }
-    virtual double & operator()(unsigned int i, unsigned int j)
+    virtual double& operator()(unsigned int i, unsigned int j)
     {
       return RowMatrix<double>::operator()(i, j);
     }
-    virtual const double & operator()(int i, int j) const
+    virtual const double& operator()(int i, int j) const
     {
       return RowMatrix<double>::operator()(i, j);
     }
-    virtual double & operator()(int i, int j)
+    virtual double& operator()(int i, int j)
     {
       return RowMatrix<double>::operator()(i, j);
     }
