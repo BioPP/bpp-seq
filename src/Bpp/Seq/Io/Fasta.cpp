@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Fasta.h"
 
+#include <fstream>
+
 #include "../StringSequenceTools.h"
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Text/StringTokenizer.h>
@@ -291,6 +293,15 @@ void Fasta::FileIndex::write(const std::string& path) throw (Exception) {
     f_out << it->first << "\t" << bpp::TextTools::toString(it->second) << std::endl;
   }
   f_out.close();
+}
+
+void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, const std::string& path) const {
+  Fasta fs(60);
+  int seq_pos = this->getSequencePosition(seqid);
+  std::ifstream fasta(path.c_str());
+  fasta.seekg(seq_pos);
+  fs.nextSequence(fasta, seq);
+  fasta.close();
 }
 
 /******************************************************************************/

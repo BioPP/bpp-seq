@@ -189,6 +189,10 @@ class Fasta:
          * @brief Write the index to a file
          */
         void write(const std::string& path) throw (Exception);
+        /**
+         * @brief Get a sequence given its ID
+         */
+        void getSequence(const std::string& seqid, Sequence& seq, const std::string& path) const;
       private:
         std::map<std::string, int> index_;
         int fileSize_;
