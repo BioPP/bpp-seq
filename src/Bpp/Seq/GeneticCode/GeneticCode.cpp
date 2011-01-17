@@ -60,7 +60,11 @@ vector<int> GeneticCode::getSynonymous(int aminoacid) const throw (BadIntExcepti
 	vector<int> synonymes;
 	for (unsigned int i = 0; i < codonAlphabet_->getSize(); i++)
   {
-		if (translate(i) == aminoacid) synonymes.push_back(i);
+    try 
+    {
+      if (translate(i) == aminoacid) synonymes.push_back(i);
+    }
+    catch (StopCodonException) { }
 	}
 	return synonymes;	
 }
@@ -75,7 +79,11 @@ std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid
 	vector<string> synonymes;
 	for (unsigned int i = 0; i < codonAlphabet_->getSize(); i++)
   {
-		if (translate(i) == aa) synonymes.push_back(codonAlphabet_->intToChar(i));
+  try 
+    {
+    if (translate(i) == aa) synonymes.push_back(codonAlphabet_->intToChar(i));
+    }
+  catch (StopCodonException) { }
 	}
 	return synonymes;	
 }
