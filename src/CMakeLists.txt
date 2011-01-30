@@ -184,6 +184,16 @@ set(H_FILES
   Bpp/Seq/StateProperties/KleinAANetChargeIndex.h
   Bpp/Seq/StateProperties/AAChargeIndex.h
   Bpp/Seq/StateProperties/SimpleScore.h
+  Bpp/Seq/StateProperties/AAChouFasmanAHelixIndex.h
+  Bpp/Seq/StateProperties/AAChouFasmanBSheetIndex.h
+  Bpp/Seq/StateProperties/AAChouFasmanTurnIndex.h
+  Bpp/Seq/StateProperties/AAVolumeIndex.h
+  Bpp/Seq/StateProperties/AASurfaceIndex.h
+  Bpp/Seq/StateProperties/AAMassIndex.h
+  Bpp/Seq/StateProperties/AAChenGuHuangHydrophobicityIndex.h
+  Bpp/Seq/StateProperties/AASEASup30Index.h
+  Bpp/Seq/StateProperties/AASEAInf10Index.h
+  Bpp/Seq/StateProperties/AASEA1030Index.h
   Bpp/Seq/App/SequenceApplicationTools.h
   )
 
