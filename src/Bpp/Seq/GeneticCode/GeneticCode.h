@@ -5,9 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
+Copyright or © or Copr. Bio++ Development TeamCNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -42,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _GENETICCODE_H_
 #define _GENETICCODE_H_
 
-#include "../Translator.h"
+#include "../Transliterator.h"
 #include "../Alphabet/CodonAlphabet.h"
 #include "../Alphabet/ProteicAlphabet.h"
 #include <Bpp/Exceptions.h>
@@ -71,7 +69,7 @@ class StopCodonException:
 };
 
 /**
- * @brief Partial implementation of the Translator interface for genetic code object.
+ * @brief Partial implementation of the Transliterator interface for genetic code object.
  *
  * A genetic code object if a translator from a codon alphabet to a proteic alphabet.
  * Depending on the codon alphabet used, several genetic code can be implemented.
@@ -79,7 +77,7 @@ class StopCodonException:
  * @see CodonAlphabet, ProteicAlphabet
  */
 class GeneticCode:
-  public AbstractTranslator
+  public AbstractTransliterator
 {
 	protected:
 		const CodonAlphabet* codonAlphabet_;
@@ -87,20 +85,20 @@ class GeneticCode:
 	
 	public:
 		GeneticCode():
-      AbstractTranslator() ,
+      AbstractTransliterator() ,
       codonAlphabet_(0),
       proteicAlphabet_(0)
     {}
 
     GeneticCode(const GeneticCode& gc):
-      AbstractTranslator(gc),
+      AbstractTransliterator(gc),
       codonAlphabet_(gc.codonAlphabet_),
       proteicAlphabet_(gc.proteicAlphabet_)
     {}
 
     GeneticCode& operator=(const GeneticCode& gc)
     {
-      AbstractTranslator::operator=(gc);
+      AbstractTransliterator::operator=(gc);
       codonAlphabet_ = gc.codonAlphabet_;
       proteicAlphabet_ = gc.proteicAlphabet_;
       return *this;
@@ -110,7 +108,7 @@ class GeneticCode:
 	
 	public:
 		/**
-		 * @name Methods form the Translator interface.
+		 * @name Methods form the Transliterator interface.
 		 *
 		 * @{
 		 */
@@ -120,7 +118,7 @@ class GeneticCode:
 		virtual std::string translate(const std::string& state) const throw (BadCharException, Exception) = 0;
 		virtual Sequence* translate(const Sequence& sequence) const throw (Exception)
     {
-			return AbstractTranslator::translate(sequence);	
+			return AbstractTransliterator::translate(sequence);	
 		}
 		/** @} */
 		

@@ -1,3 +1,5 @@
+07/02/11 -*- Version 1.8.0 -*-
+
 19/11/10 Julien Dutheil
 * Solved bug 0000016 (General comments not copied in containers).
 * A few more code cleaning.

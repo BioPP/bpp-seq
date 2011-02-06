@@ -1,5 +1,5 @@
 %define name bpp-seq
-%define version 1.7.0
+%define version 1.8.0
 %define release 1
 %define _prefix /usr
 
@@ -60,6 +60,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Mon Feb 07 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr>
+- Version 1.8.0
 * Thu Mar 25 2010 Julien Dutheil <julien.dutheil@univ-montp2.fr>
 - Version 1.7.0
 * Wed Jun 10 2009 Julien Dutheil <jdutheil@birc.au.dk>
