@@ -1,4 +1,4 @@
-libbpp-seq (1.8.0) unstable; urgency=low
+libbpp-seq (2.0.0) unstable; urgency=low
 
   * New source files organization.
   * More NGS tools: sequence annotations, quality scores, file parsers, etc.
