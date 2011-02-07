@@ -20,7 +20,7 @@ set(CPP_FILES
   Bpp/Seq/StringSequenceTools.cpp
   Bpp/Seq/SymbolList.cpp
   Bpp/Seq/SymbolListTools.cpp
-  Bpp/Seq/Translator.cpp
+  Bpp/Seq/Transliterator.cpp
   Bpp/Seq/DistanceMatrix.cpp
   Bpp/Seq/CodonSiteTools.cpp
   Bpp/Seq/Alphabet/AbstractAlphabet.cpp
@@ -101,7 +101,7 @@ set(H_FILES
   Bpp/Seq/StringSequenceTools.h
   Bpp/Seq/SymbolList.h
   Bpp/Seq/SymbolListTools.h
-  Bpp/Seq/Translator.h
+  Bpp/Seq/Transliterator.h
   Bpp/Seq/DistanceMatrix.h
   Bpp/Seq/Alphabet/AbstractAlphabet.h
   Bpp/Seq/Alphabet/AlphabetExceptions.h

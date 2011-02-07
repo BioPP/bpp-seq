@@ -1,11 +1,11 @@
 //
-// File: Translator.h
+// File: Transliterator.cpp
 // Created by: Julien Dutheil
 // Created on: Sun Oct 12 14:25:25 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,14 +37,14 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "Translator.h"
+#include "Transliterator.h"
 
 using namespace bpp;
 
-Sequence* AbstractTranslator::translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* AbstractTransliterator::translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
 {
 	if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("AbstractTranslator::translate", getSourceAlphabet(), getTargetAlphabet());
+		throw AlphabetMismatchException("AbstractTransliterator::translate", getSourceAlphabet(), getTargetAlphabet());
 	Sequence* tSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
 	for (unsigned int i = 0; i < sequence.size(); ++i)
   {
@@ -53,10 +53,10 @@ Sequence* AbstractTranslator::translate(const Sequence& sequence) const throw (A
 	return tSeq;
 }
 
-Sequence* AbstractReverseTranslator::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* AbstractReverseTransliterator::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
 {
 	if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("AbstractReverseTranslator::reverse", getSourceAlphabet(), getTargetAlphabet());
+		throw AlphabetMismatchException("AbstractReverseTransliterator::reverse", getSourceAlphabet(), getTargetAlphabet());
 	Sequence* rSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
 	for (unsigned int i = 0; i < sequence.size(); ++i)
   {
