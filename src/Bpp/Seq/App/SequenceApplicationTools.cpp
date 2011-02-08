@@ -150,6 +150,8 @@ GeneticCode* SequenceApplicationTools::getGeneticCode(
     geneCode = new StandardGeneticCode(alphabet);
   else if (description.find("VertebrateMitochondrial") != string::npos)
     geneCode = new VertebrateMitochondrialGeneticCode(alphabet);
+  else if (description.find("YeastMitochondrial") != string::npos)
+    geneCode = new YeastMitochondrialGeneticCode(alphabet);
   else
     throw Exception("Unknown GeneticCode: " + description);
   return geneCode;
