@@ -1,3 +1,9 @@
+libbpp-seq (2.0.0-1) unstable; urgency=low
+
+  * Fixed copyright and rules file.
+
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Mon, 28 Feb 2011 09:00:00 +0100
+
 libbpp-seq (2.0.0) unstable; urgency=low
 
   * New source files organization.
