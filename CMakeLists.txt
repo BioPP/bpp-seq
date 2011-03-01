@@ -108,7 +108,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "src/libbpp*"
  "debian/tmp"
  "debian/libbpp.*/"
- "debian/libbpp.*/"
  "debian/libbpp.*\\\\.so.*"
  "debian/libbpp.*\\\\.a"
  "debian/libbpp.*\\\\.substvars"
