@@ -217,4 +217,4 @@ target_link_libraries(bppseq-shared ${LIBS})
 install(TARGETS bppseq-static bppseq-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING ATTERN "*.h" PATTERN "*.all")
+install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h" PATTERN "*.all")
