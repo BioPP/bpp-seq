@@ -56,12 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc AUTHORS.txt COPYING.txt INSTALL.txt ChangeLog
 %{_prefix}/%{_lib}/lib*.so
-%{_prefix}/%[_lib}/lib*.so.*
+%{_prefix}/%{_lib}/lib*.so.*
 
 %files devel
 %defattr(-,root,root)
 %doc AUTHORS.txt COPYING.txt INSTALL.txt ChangeLog
-%{_prefix}/lib/lib*.a
+%{_prefix}/%{_lib}/lib*.a
 %{_prefix}/include/*
 
 %changelog
