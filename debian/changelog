@@ -1,5 +1,6 @@
 libbpp-seq (2.0.1) unstable; urgency=low
 
+  * RFP: Bio++ -- The Bio++ bioinformatics libraries. (Closes: #616373).
   * Fixed copyright and rules file.
 
  -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Mon, 28 Feb 2011 09:00:00 +0100
