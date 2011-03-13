@@ -420,42 +420,50 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   if (option == "all")
   {
     string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional);
-    if (verbose)
-      ApplicationTools::displayTask("Remove sites with gaps", true);
 
     if (maxGapOption[maxGapOption.size() - 1] == '%')
     {
       double gapFreq = TextTools::toDouble(maxGapOption.substr(0, maxGapOption.size() - 1)) / 100.;
-      for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
-      {
+      if (gapFreq < 1) {
         if (verbose)
-          ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
-        map<int, double> freq;
-        SiteTools::getFrequencies(sitesToAnalyse->getSite(i - 1), freq);
-        if (freq[-1] > gapFreq)
-          sitesToAnalyse->deleteSite(i - 1);
+          ApplicationTools::displayTask("Remove sites with gaps", true);
+        for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+        {
+          if (verbose)
+            ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
+          map<int, double> freq;
+          SiteTools::getFrequencies(sitesToAnalyse->getSite(i - 1), freq);
+          if (freq[-1] > gapFreq)
+            sitesToAnalyse->deleteSite(i - 1);
+        }
+        if (verbose)
+          ApplicationTools::displayTaskDone();
       }
     }
     else
     {
       unsigned int gapNum = TextTools::to<unsigned int>(maxGapOption);
-      for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+      if (gapNum < sitesToAnalyse->getNumberOfSequences())
       {
         if (verbose)
-          ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
-        map<int, unsigned int> counts;
-        SiteTools::getCounts(sitesToAnalyse->getSite(i - 1), counts);
-        if (counts[-1] > gapNum)
-          sitesToAnalyse->deleteSite(i - 1);
+          ApplicationTools::displayTask("Remove sites with gaps", true);
+        for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+        {
+          if (verbose)
+            ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
+          map<int, unsigned int> counts;
+          SiteTools::getCounts(sitesToAnalyse->getSite(i - 1), counts);
+          if (counts[-1] > gapNum)
+            sitesToAnalyse->deleteSite(i - 1);
+        }
+        if (verbose)
+          ApplicationTools::displayTaskDone();
       }
     }
     if (gapAsUnknown)
     {
       SiteContainerTools::changeGapsToUnknownCharacters(*sitesToAnalyse);
-    }
-    
-    if (verbose)
-      ApplicationTools::displayTaskDone();
+    }  
   }
   else if (option == "complete")
   {
