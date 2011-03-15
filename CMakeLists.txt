@@ -49,9 +49,9 @@ ENDIF(CMAKE_INSTALL_PREFIX)
 
 MACRO(IMPROVED_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
   #start:
-  FIND_PATH(${lib_name}_INCLUDE_DIR ${include_to_find})
+  FIND_PATH(${lib_name}_INCLUDE_DIR ${include_to_find} )
   SET(${lib_name}_NAMES ${lib_name} ${lib_name}lib ${lib_name}dll)
-  FIND_LIBRARY(${lib_name}_LIBRARY NAMES ${${lib_name}_NAMES})
+  FIND_LIBRARY(${lib_name}_LIBRARY NAMES ${${lib_name}_NAMES} PATH_SUFFIXES lib${LIB_SUFFIX})
 
   IF(${lib_name}_LIBRARY)
     MESSAGE("-- Library ${lib_name} found here:")
@@ -84,10 +84,10 @@ ENDIF (DOXYGEN_FOUND)
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-seq")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
-SET(CPACK_PACKAGE_VERSION "2.0.0")
+SET(CPACK_PACKAGE_VERSION "2.0.1")
 SET(CPACK_PACKAGE_VERSION_MAJOR "2")
 SET(CPACK_PACKAGE_VERSION_MINOR "0")
-SET(CPACK_PACKAGE_VERSION_PATCH "0")
+SET(CPACK_PACKAGE_VERSION_PATCH "1")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Sequence library")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING.txt")
 SET(CPACK_RESOURCE_FILE_AUTHORS "${CMAKE_SOURCE_DIR}/AUTHORS.txt")
@@ -99,17 +99,29 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "_CPack_Packages"
  "CMakeCache.txt"
  ".*\\\\.cmake"
- ".*\\\\.svn"
+ ".*\\\\.git"
  ".*\\\\.gz"
  ".*\\\\.deb"
  ".*\\\\.rpm"
- "\\\\..*\\\\.swp"
+ ".*\\\\.dmg"
+ ".*\\\\.sh"
+ ".*\\\\..*\\\\.swp"
  "src/\\\\..*"
  "src/libbpp*"
- "debian/libbpp*"
  "debian/tmp"
+ "debian/libbpp.*/"
+ "debian/libbpp.*\\\\.so.*"
+ "debian/libbpp.*\\\\.a"
+ "debian/libbpp.*\\\\.substvars"
+ "debian/libbpp.*\\\\.debhelper"
+ "debian/debhelper\\\\.log"
  "html"
  "Seq.tag"
+ "Testing"
+ "build-stamp"
+ "genIncludes.py"
+ "install_manifest.txt"
+ "DartConfiguration.tcl"
  ${CPACK_SOURCE_IGNORE_FILES}
 )
 IF (MACOS)
@@ -125,7 +137,6 @@ ADD_CUSTOM_TARGET(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 IF (UNIX)
 #This creates deb packages:
 ADD_CUSTOM_TARGET(deb dpkg-buildpackage)
-ADD_DEPENDENCIES(deb dist)
 
 #This creates rpm packages:
 ADD_CUSTOM_TARGET(rpm rpmbuild -ta ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)

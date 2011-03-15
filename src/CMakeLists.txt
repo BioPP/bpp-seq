@@ -1,4 +1,4 @@
-# CMake script for Bio++ SeqLib
+# CMake script for Bio++ Sequence Library
 # Author: Sylvain Gaillard and Julien Dutheil
 # Created: 20/08/2009
 
@@ -216,7 +216,7 @@ set_target_properties(bppseq-shared
 target_link_libraries(bppseq-shared ${LIBS})
 
 # Install libs
-install(TARGETS bppseq-static bppseq-shared DESTINATION lib)
+install(TARGETS bppseq-static bppseq-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN ".svn" EXCLUDE PATTERN "*.h" PATTERN "*.all")
+install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h" PATTERN "*.all")
