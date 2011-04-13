@@ -518,9 +518,10 @@ namespace bpp {
        * sequence size
        */
       void setQuality(unsigned int pos, int quality) throw (IndexOutOfBoundsException) {
-        if (pos >= qualScores_->getSize())
-          throw IndexOutOfBoundsException("SequenceWithQuality::setQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
-        qualScores_[pos] = quality;
+        //if (pos >= qualScores_->getSize())
+        //  throw IndexOutOfBoundsException("SequenceWithQuality::setQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
+        //qualScores_[pos] = quality;
+        qualScores_->setScore(pos, quality);
       }
       
       /**
@@ -586,9 +587,10 @@ namespace bpp {
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
+        unsigned int pos = qualScores_->getSize();
         append(content);
         //Update scores:
-        qualScores_->setScores(content.size(), qualities);
+        qualScores_->setScores(pos, qualities);
       }
 
       void append(const std::vector<std::string>& content)
@@ -615,9 +617,10 @@ namespace bpp {
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
+        unsigned int pos = qualScores_->getSize();
         SequenceWithAnnotation::append(content);
         //Update scores:
-        qualScores_->setScores(content.size(), qualities);
+        qualScores_->setScores(pos, qualities);
       }
 
       void append(const std::string& content)
@@ -645,9 +648,10 @@ namespace bpp {
         if (content.size() / this->getAlphabet()->getStateCodingSize()
             != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size() / this->getAlphabet()->getStateCodingSize());
+        unsigned int pos = qualScores_->getSize();
         SequenceWithAnnotation::append(content);
         //Update scores:
-        qualScores_->setScores(content.size() / this->getAlphabet()->getStateCodingSize(), qualities);
+        qualScores_->setScores(pos, qualities);
       }
 
       void addElement(
