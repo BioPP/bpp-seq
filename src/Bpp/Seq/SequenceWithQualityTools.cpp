@@ -184,3 +184,11 @@ SequenceWithQuality* SequenceWithQualityTools::removeGaps(const SequenceWithQual
   return newSeq;
 }
 
+/******************************************************************************/
+
+SequenceWithQuality& SequenceWithQualityTools::trimLeft(SequenceWithQuality& seq) {
+  bool badqual = false;
+  while (badqual) {
+  }
+  return seq;
+}
