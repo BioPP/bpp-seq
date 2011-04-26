@@ -161,6 +161,14 @@ namespace bpp {
        */
       static SequenceWithQuality* removeGaps(const SequenceWithQuality& seq);
 
+      /**
+       * @brief Trim the left part of the sequence according to quality
+       *
+       * @param seq The sequence to analyse.
+       * @return The modified sequence.
+       */
+      static SequenceWithQuality& trimLeft(SequenceWithQuality& seq);
+
   };
 }
 
