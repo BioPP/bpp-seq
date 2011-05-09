@@ -283,13 +283,13 @@ Sequence * SequenceTools::removeGaps(const Sequence & seq)
 
 /******************************************************************************/
 
-BowkerTest* SequenceTools::bowkerTest(const Sequence & seq1, const Sequence & seq2)
+BowkerTest* SequenceTools::bowkerTest(const Sequence& seq1, const Sequence& seq2)
   throw (SequenceNotAlignedException)
 {
   if(seq1.size() != seq2.size())
     throw SequenceNotAlignedException("SequenceTools::bowkerTest.", &seq2);
   unsigned int n = seq1.size();
-  const Alphabet * alpha = seq1.getAlphabet();
+  const Alphabet* alpha = seq1.getAlphabet();
   unsigned int r = alpha->getSize();
 
   //Compute contingency table:
@@ -302,19 +302,19 @@ BowkerTest* SequenceTools::bowkerTest(const Sequence & seq1, const Sequence & se
     if(!alpha->isGap(x) && !alpha->isUnresolved(x)
     && !alpha->isGap(y) && !alpha->isUnresolved(y))
     {
-      array((unsigned int)x, (unsigned int)y)++;
+      array(static_cast<unsigned int>(x), static_cast<unsigned int>(y))++;
     }
   }
   
   //Compute Bowker's statistic:
   double sb2 = 0, nij, nji;
-  for(unsigned int i = 0; i < r; i++)
+  for(unsigned int i = 1; i < r; ++i)
   {
-    for(unsigned int j = 0; j < i; j++)
+    for(unsigned int j = 0; j < i; ++j)
     {
-      nij = array(i,j);
-      nji = array(j,i);
-      if(nij != 0 || nji != 0)
+      nij = array(i, j);
+      nji = array(j, i);
+      if (nij != 0 || nji != 0)
       {
         sb2 += pow(nij - nji, 2) / (nij + nji);
       }
@@ -323,10 +323,10 @@ BowkerTest* SequenceTools::bowkerTest(const Sequence & seq1, const Sequence & se
   }
   
   //Compute p-value:
-  double pvalue = 1. - RandomTools::pChisq(sb2, r - 1);
+  double pvalue = 1. - RandomTools::pChisq(sb2, (r - 1) * r / 2);
 
   //Return results:
-  BowkerTest * test = new BowkerTest();
+  BowkerTest* test = new BowkerTest();
   test->setStatistic(sb2);
   test->setPValue(pvalue);
   return test;
