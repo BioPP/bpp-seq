@@ -292,7 +292,7 @@ MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
 MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
-    //Else there is no more block in the buffer, we need parse more:
+    //Else there is no more block in the buffer, we need to parse more:
     do {
       MafBlock* block = iterator_->nextBlock();
       if (!block) return 0; //No more block.
@@ -315,7 +315,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
       size_t i;
       for (i = 0; i < windowSize_; ++i) {
         for (size_t j = 0; j < nr; ++j) {
-          col[j] = (aln[j][i] == gap|| aln[j][i] == unk);
+          col[j] = (aln[j][i] == gap || aln[j][i] == unk);
         }
         window_.push_back(col);
       }
@@ -450,7 +450,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
 
         delete block;
       }
-    } while (trashBuffer_.size() == 0);
+    } while (blockBuffer_.size() == 0);
   }
 
   MafBlock* block = blockBuffer_.front();
