@@ -620,7 +620,7 @@ MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
 
         delete block;
       }  
-    } while (trashBuffer_.size() == 0);
+    } while (blockBuffer_.size() == 0);
   }
 
   MafBlock* block = blockBuffer_.front();
@@ -804,7 +804,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
           delete block;
         }
       }
-    } while (trashBuffer_.size() == 0);
+    } while (blockBuffer_.size() == 0);
   }
 
   MafBlock* block = blockBuffer_.front();
