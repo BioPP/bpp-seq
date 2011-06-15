@@ -23,6 +23,16 @@ IF(NO_VIRTUAL_COV)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNO_VIRTUAL_COV=1")
 ENDIF(NO_VIRTUAL_COV)
 
+IF(NOT NO_DEP_CHECK)
+  SET(NO_DEP_CHECK FALSE CACHE BOOL
+      "Disable dependencies check for building distribution only."
+      FORCE)
+ENDIF(NOT NO_DEP_CHECK)
+
+IF(NO_DEP_CHECK)
+  MESSAGE("-- Depencies checking disabled. Only distribution can be build.")
+ELSE(NO_DEP_CHECK)
+
 # Libtool-like version number
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R
 # current:  The most recent interface number that this library implements.
@@ -80,6 +90,8 @@ IF (DOXYGEN_FOUND)
     COMMAND echo "HTML_HEADER=header.html" >> Doxyfile-stable
     COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile-stable )
 ENDIF (DOXYGEN_FOUND)
+
+ENDIF(NO_DEP_CHECK)
 
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-seq")
