@@ -124,6 +124,40 @@ MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
   return currentBlock_;
 }
 
+MafBlock* ChromosomeMafIterator::nextBlock() throw (Exception)
+{
+  currentBlock_ = iterator_->nextBlock();
+  while (currentBlock_) {
+    bool foundRef = false;
+    string chr = "";
+    for (size_t i = 0; i < currentBlock_->getNumberOfSequences() && !foundRef; ++i) {
+      string species = currentBlock_->getSequence(i).getSpecies(); 
+      if (species == ref_) {
+        foundRef = true;
+        chr = currentBlock_->getSequence(i).getChromosome();
+      }
+    }
+    if (!foundRef) {
+      if (logstream_) {
+        (*logstream_ << "CHROMOSOME FILTER: block does not contain reference species and was removed.").endLine();
+      }
+      delete currentBlock_;
+    } else if (chr != chr_) {
+      if (logstream_) {
+        (*logstream_ << "CHROMOSOME FILTER: reference species without queried chromosome was removed.").endLine();
+      }
+      delete currentBlock_;
+    } else {
+      return currentBlock_;
+    }
+
+    //Look for the next block:
+    currentBlock_ = iterator_->nextBlock();
+  }
+  
+  return currentBlock_;
+}
+
 MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
 {
   if (!incomingBlock_) return 0;
@@ -292,7 +326,7 @@ MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
 MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
-    //Else there is no more block in the buffer, we need parse more:
+    //Else there is no more block in the buffer, we need to parse more:
     do {
       MafBlock* block = iterator_->nextBlock();
       if (!block) return 0; //No more block.
@@ -315,7 +349,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
       size_t i;
       for (i = 0; i < windowSize_; ++i) {
         for (size_t j = 0; j < nr; ++j) {
-          col[j] = (aln[j][i] == gap|| aln[j][i] == unk);
+          col[j] = (aln[j][i] == gap || aln[j][i] == unk);
         }
         window_.push_back(col);
       }
@@ -450,7 +484,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
 
         delete block;
       }
-    } while (trashBuffer_.size() == 0);
+    } while (blockBuffer_.size() == 0);
   }
 
   MafBlock* block = blockBuffer_.front();
@@ -620,7 +654,7 @@ MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
 
         delete block;
       }  
-    } while (trashBuffer_.size() == 0);
+    } while (blockBuffer_.size() == 0);
   }
 
   MafBlock* block = blockBuffer_.front();
@@ -804,7 +838,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
           delete block;
         }
       }
-    } while (trashBuffer_.size() == 0);
+    } while (blockBuffer_.size() == 0);
   }
 
   MafBlock* block = blockBuffer_.front();

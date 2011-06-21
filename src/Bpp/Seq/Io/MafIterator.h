@@ -376,6 +376,51 @@ class SequenceFilterMafIterator:
 };
 
 /**
+ * @brief Filter maf blocks to keep only the block corresponding to one chromosome (of a reference sequence).
+ */
+class ChromosomeMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::string ref_;
+    std::string chr_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param reference The reference species name.
+     * @param chr the chromosome name to filter.
+     */
+    ChromosomeMafIterator(MafIterator* iterator, const std::string& reference, const std::string& chr) :
+      AbstractFilterMafIterator(iterator),
+      ref_(reference),
+      chr_(chr),
+      currentBlock_(0)
+    {}
+
+  private:
+    ChromosomeMafIterator(const ChromosomeMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      ref_(iterator.ref_),
+      chr_(iterator.chr_),
+      currentBlock_(0)
+    {}
+    
+    ChromosomeMafIterator& operator=(const ChromosomeMafIterator& iterator)
+    {
+      ref_ = iterator.ref_;
+      chr_ = iterator.chr_;
+      currentBlock_  = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+};
+
+/**
  * @brief Merge blocks if some of their sequences are contiguous.
  *
  * The user specifies the focus species. Sequences that are not in this set will

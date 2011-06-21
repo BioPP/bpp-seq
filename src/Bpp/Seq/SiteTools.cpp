@@ -83,7 +83,7 @@ bool SiteTools::isGapOrUnresolvedOnly(const Site& site)
   // Main loop : for all characters in site
   for (unsigned int i = 0; i < site.size(); i++)
   {
-    if (!site.getAlphabet()->isGap(site[i]) || !site.getAlphabet()->isUnresolved(site[i])) return false;
+    if (!site.getAlphabet()->isGap(site[i]) && !site.getAlphabet()->isUnresolved(site[i])) return false;
   }
   return true;
 }

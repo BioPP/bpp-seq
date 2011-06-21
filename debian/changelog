@@ -1,6 +1,13 @@
-libbpp-seq (2.0.1) unstable; urgency=low
+libbpp-seq (2.0.2-1) unstable; urgency=low
 
   * RFP: Bio++ -- The Bio++ bioinformatics libraries. (Closes: #616373).
+  * Packages are now non-native.
+  * Bugs fixed in maf parser.
+
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 09 Jun 2011 11:00:00 +0100
+
+libbpp-seq (2.0.1) unstable; urgency=low
+
   * Fixed copyright and rules file.
 
  -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Mon, 28 Feb 2011 09:00:00 +0100
