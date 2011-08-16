@@ -77,7 +77,7 @@ MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
       string species = currentBlock_->getSequence(i-1).getSpecies(); 
       if (!VectorTools::contains(species_, species)) {
         if (logstream_) {
-          (*logstream_ << "SEQUENCE FILTER: remove sequence '" << species << "' from current block.").endLine();
+          (*logstream_ << "SEQUENCE FILTER: remove sequence '" << species << "' from current block " << currentBlock_->getDescription() << ".").endLine();
         }
         currentBlock_->getAlignment().deleteSequence(i - 1);
       } else {
@@ -87,27 +87,27 @@ MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
     bool test = currentBlock_->getNumberOfSequences() == 0;
     //Avoid a memory leak:
     if (test) {
-      delete currentBlock_;
       if (logstream_) {
-        (*logstream_ << "SEQUENCE FILTER: block is now empty. Try to get the next one.").endLine();
+        (*logstream_ << "SEQUENCE FILTER: block " << currentBlock_->getDescription() << " is now empty. Try to get the next one.").endLine();
       }
+      delete currentBlock_;
     } else {
       test = strict_ && (counts.size() != species_.size());
       if (test) {
-        delete currentBlock_;
         if (logstream_) {
-          (*logstream_ << "SEQUENCE FILTER: block does not contain all species and will be ignored. Try to get the next one.").endLine();
+          (*logstream_ << "SEQUENCE FILTER: block " << currentBlock_->getDescription() << " does not contain all species and will be ignored. Try to get the next one.").endLine();
         }
+        delete currentBlock_;
       } else {
         if (rmDuplicates_) {
           test = false;
           map<string, unsigned int>::iterator it;
           for (it = counts.begin(); it != counts.end() && !(test = it->second > 1); it++) {}
           if (test) {
-            delete currentBlock_;
             if (logstream_) {
-              (*logstream_ << "SEQUENCE FILTER: block has two sequences for species '" << it->first << "' and will be ignored. Try to get the next one.").endLine();
+              (*logstream_ << "SEQUENCE FILTER: block " << currentBlock_->getDescription() << " has two sequences for species '" << it->first << "' and will be ignored. Try to get the next one.").endLine();
             }
+            delete currentBlock_;
           } else {
             return currentBlock_;
           }
@@ -167,10 +167,13 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     unsigned int globalSpace = 0;
     for (unsigned int i = 0; i < species_.size(); ++i) {
       try {
-        const MafSequence* seq1 = &currentBlock_->getSequence(species_[i]); 
-        const MafSequence* seq2 = &incomingBlock_->getSequence(species_[i]);
+        const MafSequence* seq1 = &currentBlock_->getSequenceForSpecies(species_[i]); 
+        const MafSequence* seq2 = &incomingBlock_->getSequenceForSpecies(species_[i]);
         if (!seq1->hasCoordinates() || !seq2->hasCoordinates())
           throw Exception("BlockMergerMafIterator::nextBlock. Species '" + species_[i] + "' is missing coordinates in at least one block.");
+
+        if (seq1->stop() >= seq2->start())
+          return currentBlock_;
         unsigned int space = seq2->start() - seq1->stop() - 1;
         if (space > maxDist_)
           return currentBlock_;
@@ -416,16 +419,16 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
       if (pos.size() == 0) {
         blockBuffer_.push_back(block);
         if (logstream_) {
-          (*logstream_ << "ALN CLEANER: block is clean and kept as is.").endLine();
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " is clean and kept as is.").endLine();
         }
       } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
         //Everything is removed:
         if (logstream_) {
-          (*logstream_ << "ALN CLEANER: block was entirely removed. Tried to get the next one.").endLine();
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " was entirely removed. Tried to get the next one.").endLine();
         }
       } else {
         if (logstream_) {
-          (*logstream_ << "ALN CLEANER: block with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
         }
         if (verbose_) {
           ApplicationTools::message->endLine();
@@ -435,7 +438,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
           if (verbose_)
             ApplicationTools::displayGauge(i, pos.size() - 2, '=');
           if (logstream_) {
-            (*logstream_ << "ALN CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block.").endLine();
+            (*logstream_ << "ALN CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block " << block->getDescription() << ".").endLine();
           }
           if (pos[i] > 0) {
             MafBlock* newBlock = new MafBlock();

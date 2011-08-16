@@ -216,6 +216,12 @@ class MafBlock
       const_cast<MafSequence&>(getSequence(i)).removeCoordinates();
     }
 
+    std::string getDescription() const {
+      std::string desc;
+      desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites()) + "-" + getSequence(0).getName() + "[" + TextTools::toString(getSequence(0).start()) + "," + TextTools::toString(getSequence(0).stop()) + "]";
+      return desc;
+    }
+
 
 };
 
@@ -313,7 +319,7 @@ class BlockSizeMafIterator:
         test = (block->getNumberOfSites() < minSize_);
         if (test) {
           if (logstream_) {
-            (*logstream_ << "BLOCK SIZE FILTER: block with size " << block->getNumberOfSites() << " was discarded.").endLine();
+            (*logstream_ << "BLOCK SIZE FILTER: block " << block->getDescription() << " with size " << block->getNumberOfSites() << " was discarded.").endLine();
           }
           delete block;
         }
