@@ -226,7 +226,7 @@ std::vector<std::string> Phylip::getSizedNames(const std::vector<std::string>& n
 void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int charsByLine) const
 {
   //cout << "Write sequential" << endl;
-  int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size();
+  int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
   out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
   
   vector<string> seqNames = sc.getSequencesNames();
@@ -246,7 +246,7 @@ void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int
 void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, int charsByLine) const
 {
   //cout << "Write interleaved;" << endl;
-  int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size();
+  int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
   out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
   
   vector<string> seqNames = sc.getSequencesNames();
