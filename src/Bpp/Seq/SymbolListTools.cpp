@@ -39,7 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "SymbolListTools.h"
 #include "Alphabet/AlphabetTools.h"
-#include <Bpp/Numeric/RandomTools.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
 
 //From the STL:
 #include <algorithm>

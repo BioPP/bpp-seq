@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _NUCLEICACIDSREPLICATION_H_
 #define _NUCLEICACIDSREPLICATION_H_
 
-#include "Translator.h"
+#include "Transliterator.h"
 #include "Alphabet/NucleicAlphabet.h"
 
 // From the STL:
@@ -63,7 +63,7 @@ namespace bpp
  * using the translate and reverse methods.
  */
 class NucleicAcidsReplication :
-  public ReverseTranslator
+  public ReverseTransliterator
 {
   private:
     const NucleicAlphabet* nuc1_, * nuc2_;
@@ -72,12 +72,12 @@ class NucleicAcidsReplication :
   public:
     NucleicAcidsReplication(const NucleicAlphabet* nuc1, const NucleicAlphabet* nuc2);
     NucleicAcidsReplication(const NucleicAcidsReplication& nar):
-      ReverseTranslator(nar),
+      ReverseTransliterator(nar),
       nuc1_(nar.nuc1_), nuc2_(nar.nuc2_), trans_(nar.trans_)
     {}
     NucleicAcidsReplication& operator=(const NucleicAcidsReplication& nar)
     {
-      ReverseTranslator::operator=(nar);
+      ReverseTransliterator::operator=(nar);
       nuc1_ = nar.nuc1_;
       nuc2_ = nar.nuc2_;
       trans_ = nar.trans_;

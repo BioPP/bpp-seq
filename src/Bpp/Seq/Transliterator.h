@@ -1,11 +1,11 @@
 //
-// File: Translator.h
+// File: Transliterator.h
 // Created by: Julien Dutheil
 // Created on: Sun Oct 12 14:25:25 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _TRANSLATOR_H_
-#define _TRANSLATOR_H_
+#ifndef _TRANSLITERATOR_H_
+#define _TRANSLITERATOR_H_
 
 #include "Alphabet/Alphabet.h"
 #include "Sequence.h"
@@ -49,11 +49,11 @@ namespace bpp
 /**
  * @brief This interface is used when translating a sequence from an alphabet to another: it gives the translation rules, eg: RNA -> DNA.
  */
-class Translator
+class Transliterator
 {
 	public:
-		Translator() {}
-		virtual ~Translator() {}
+		Transliterator() {}
+		virtual ~Transliterator() {}
 	
 	public:
 
@@ -105,12 +105,12 @@ class Translator
 /**
  * @brief The same as previous, but can perform the reverse translation, eg: RNA -> DNA and DNA -> RNA;
  */
-class ReverseTranslator:
-  public virtual Translator
+class ReverseTransliterator:
+  public virtual Transliterator
 {
 	public:
-		ReverseTranslator() {}
-		virtual ~ReverseTranslator() {}
+		ReverseTransliterator() {}
+		virtual ~ReverseTransliterator() {}
 	
 	public:
 		
@@ -146,14 +146,14 @@ class ReverseTranslator:
 };
 
 /**
- * @brief Partial implementation of the Translator interface.
+ * @brief Partial implementation of the Transliterator interface.
  */
-class AbstractTranslator:
-  public virtual Translator
+class AbstractTransliterator:
+  public virtual Transliterator
 {
 	public:
-		AbstractTranslator() {}
-		virtual ~AbstractTranslator() {}
+		AbstractTransliterator() {}
+		virtual ~AbstractTransliterator() {}
 	
 	public:
 		virtual int translate(int state) const throw (BadIntException, Exception) = 0;		
@@ -162,15 +162,15 @@ class AbstractTranslator:
 };
 
 /**
- * @brief Partial implementation of the ReverseTranslator interface.
+ * @brief Partial implementation of the ReverseTransliterator interface.
  */
-class AbstractReverseTranslator:
-  public ReverseTranslator,
-  public AbstractTranslator
+class AbstractReverseTransliterator:
+  public ReverseTransliterator,
+  public AbstractTransliterator
 {
 	public:
-		AbstractReverseTranslator() {}
-		virtual ~AbstractReverseTranslator() {}
+		AbstractReverseTransliterator() {}
+		virtual ~AbstractReverseTransliterator() {}
 	
 	public:
 		//These two redeclarations must be here because of the multiple inheritance.
@@ -183,5 +183,5 @@ class AbstractReverseTranslator:
 
 } //end of namespace bpp.
 
-#endif	//_TRANSLATOR_H_
+#endif	//_TRANSLITERATOR_H_
 

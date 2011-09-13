@@ -94,7 +94,7 @@ class MafSequence:
     }
 
     MafSequence(const std::string& name, const std::string& sequence, unsigned int begin, char strand, unsigned int srcSize) :
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), hasCoordinates_(begin > 0), begin_(begin), species_(""), chromosome_(""), strand_(strand), size_(0), srcSize_(srcSize)
+      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), hasCoordinates_(true), begin_(begin), species_(""), chromosome_(""), strand_(strand), size_(0), srcSize_(srcSize)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
       size_t pos = name.find(".");
@@ -216,6 +216,12 @@ class MafBlock
       const_cast<MafSequence&>(getSequence(i)).removeCoordinates();
     }
 
+    std::string getDescription() const {
+      std::string desc;
+      desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites()) + "-" + getSequence(0).getName() + "[" + TextTools::toString(getSequence(0).start()) + "," + TextTools::toString(getSequence(0).stop()) + "]";
+      return desc;
+    }
+
 
 };
 
@@ -313,7 +319,7 @@ class BlockSizeMafIterator:
         test = (block->getNumberOfSites() < minSize_);
         if (test) {
           if (logstream_) {
-            (*logstream_ << "BLOCK SIZE FILTER: block with size " << block->getNumberOfSites() << " was discarded.").endLine();
+            (*logstream_ << "BLOCK SIZE FILTER: block " << block->getDescription() << " with size " << block->getNumberOfSites() << " was discarded.").endLine();
           }
           delete block;
         }
@@ -366,6 +372,51 @@ class SequenceFilterMafIterator:
       species_       = iterator.species_;
       strict_        = iterator.strict_;
       rmDuplicates_  = iterator.rmDuplicates_;
+      currentBlock_  = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+};
+
+/**
+ * @brief Filter maf blocks to keep only the block corresponding to one chromosome (of a reference sequence).
+ */
+class ChromosomeMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::string ref_;
+    std::string chr_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param reference The reference species name.
+     * @param chr the chromosome name to filter.
+     */
+    ChromosomeMafIterator(MafIterator* iterator, const std::string& reference, const std::string& chr) :
+      AbstractFilterMafIterator(iterator),
+      ref_(reference),
+      chr_(chr),
+      currentBlock_(0)
+    {}
+
+  private:
+    ChromosomeMafIterator(const ChromosomeMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      ref_(iterator.ref_),
+      chr_(iterator.chr_),
+      currentBlock_(0)
+    {}
+    
+    ChromosomeMafIterator& operator=(const ChromosomeMafIterator& iterator)
+    {
+      ref_ = iterator.ref_;
+      chr_ = iterator.chr_;
       currentBlock_  = 0;
       return *this;
     }

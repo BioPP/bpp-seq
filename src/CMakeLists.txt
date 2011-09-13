@@ -1,4 +1,4 @@
-# CMake script for Bio++ SeqLib
+# CMake script for Bio++ Sequence Library
 # Author: Sylvain Gaillard and Julien Dutheil
 # Created: 20/08/2009
 
@@ -20,7 +20,7 @@ set(CPP_FILES
   Bpp/Seq/StringSequenceTools.cpp
   Bpp/Seq/SymbolList.cpp
   Bpp/Seq/SymbolListTools.cpp
-  Bpp/Seq/Translator.cpp
+  Bpp/Seq/Transliterator.cpp
   Bpp/Seq/DistanceMatrix.cpp
   Bpp/Seq/CodonSiteTools.cpp
   Bpp/Seq/Alphabet/AbstractAlphabet.cpp
@@ -101,7 +101,7 @@ set(H_FILES
   Bpp/Seq/StringSequenceTools.h
   Bpp/Seq/SymbolList.h
   Bpp/Seq/SymbolListTools.h
-  Bpp/Seq/Translator.h
+  Bpp/Seq/Transliterator.h
   Bpp/Seq/DistanceMatrix.h
   Bpp/Seq/Alphabet/AbstractAlphabet.h
   Bpp/Seq/Alphabet/AlphabetExceptions.h
@@ -184,6 +184,16 @@ set(H_FILES
   Bpp/Seq/StateProperties/KleinAANetChargeIndex.h
   Bpp/Seq/StateProperties/AAChargeIndex.h
   Bpp/Seq/StateProperties/SimpleScore.h
+  Bpp/Seq/StateProperties/AAChouFasmanAHelixIndex.h
+  Bpp/Seq/StateProperties/AAChouFasmanBSheetIndex.h
+  Bpp/Seq/StateProperties/AAChouFasmanTurnIndex.h
+  Bpp/Seq/StateProperties/AAVolumeIndex.h
+  Bpp/Seq/StateProperties/AASurfaceIndex.h
+  Bpp/Seq/StateProperties/AAMassIndex.h
+  Bpp/Seq/StateProperties/AAChenGuHuangHydrophobicityIndex.h
+  Bpp/Seq/StateProperties/AASEASup30Index.h
+  Bpp/Seq/StateProperties/AASEAInf10Index.h
+  Bpp/Seq/StateProperties/AASEA1030Index.h
   Bpp/Seq/App/SequenceApplicationTools.h
   )
 
@@ -206,7 +216,7 @@ set_target_properties(bppseq-shared
 target_link_libraries(bppseq-shared ${LIBS})
 
 # Install libs
-install(TARGETS bppseq-static bppseq-shared DESTINATION lib)
+install(TARGETS bppseq-static bppseq-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN ".svn" EXCLUDE PATTERN "*.h" PATTERN "*.all")
+install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h" PATTERN "*.all")

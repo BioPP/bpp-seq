@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _DNATORNA_H_
 #define _DNATORNA_H_
 
-#include "Translator.h"
+#include "Transliterator.h"
 #include "Alphabet/DNA.h"
 #include "Alphabet/RNA.h"
 #include "Alphabet/AlphabetTools.h"
@@ -56,19 +56,19 @@ namespace bpp
  * @see NucleicAcidsReplication
  */
 class DNAToRNA:
-  public AbstractReverseTranslator
+  public AbstractReverseTransliterator
 {
 	private:
 		const Alphabet* dna_, * rna_;
 	
 	public:
-		DNAToRNA(): AbstractReverseTranslator(), dna_(&AlphabetTools::DNA_ALPHABET), rna_(&AlphabetTools::RNA_ALPHABET) {}
+		DNAToRNA(): AbstractReverseTransliterator(), dna_(&AlphabetTools::DNA_ALPHABET), rna_(&AlphabetTools::RNA_ALPHABET) {}
 
-    DNAToRNA(const DNAToRNA& d2r): AbstractReverseTranslator(d2r), dna_(d2r.dna_), rna_(d2r.rna_) {}
+    DNAToRNA(const DNAToRNA& d2r): AbstractReverseTransliterator(d2r), dna_(d2r.dna_), rna_(d2r.rna_) {}
     
     DNAToRNA& operator=(const DNAToRNA& d2r)
     {
-      AbstractReverseTranslator::operator=(d2r);
+      AbstractReverseTransliterator::operator=(d2r);
       dna_ = d2r.dna_;
       rna_ = d2r.rna_;
       return *this;
@@ -83,13 +83,13 @@ class DNAToRNA:
     std::string translate(const std::string& state) const throw (BadCharException);		
 		Sequence* translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
     {
-      return AbstractReverseTranslator::translate(sequence);
+      return AbstractReverseTransliterator::translate(sequence);
     }
 		int reverse(int state) const throw (BadIntException);
     std::string reverse(const std::string& state) const throw (BadCharException);
 		Sequence* reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
     {
-      return AbstractReverseTranslator::reverse(sequence);
+      return AbstractReverseTransliterator::reverse(sequence);
     }
 
 };

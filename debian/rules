@@ -27,13 +27,13 @@ else
 endif
 
 # shared library versions
-version=`ls Seq/.libs/lib*.so.* | \
+version=`ls src/lib*.so.* | \
  awk '{if (match($$0,/[0-9]+\.[0-9]+\.[0-9]+$$/)) print substr($$0,RSTART)}'`
-major=`ls Seq/.libs/lib*.so.* | \
+major=`ls src/lib*.so.* | \
  awk '{if (match($$0,/\.so\.[0-9]+$$/)) print substr($$0,RSTART+4)}'`
 
 configure:
-	cmake -DCMAKE_INSTALL_PREFIX=/usr .
+	cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_TESTING=OFF .
 
 config.status: configure
 	dh_testdir
@@ -50,18 +50,30 @@ build-stamp:  config.status
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp 
 
 	# Add here commands to clean up after the build process.
-	[ ! -f Makefile ] || $(MAKE) clean
+	[ ! -f Makefile ] || $(MAKE) clean;
+	[ ! -f Makefile ] || rm Makefile;
+	[ ! -f Makefile ] || rm src/Makefile;
 	rm -f config.sub config.guess
+	rm -f build-stamp
+	rm -f CMakeCache.txt
+	rm -f *.cmake
+	rm -f src/*.cmake
+	rm -f test/*.cmake
+	rm -rf CMakeFiles
+	rm -rf src/CMakeFiles
+	rm -rf test/CMakeFiles
+	rm -rf _CPack_Packages
+	rm -rf Testing
+	rm -f DartConfiguration.tcl
 
 	dh_clean 
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_prep 
 	dh_installdirs
 
 	# Add here commands to install the package into debian/tmp
@@ -79,7 +91,7 @@ binary-arch: build install
 	dh_installchangelogs ChangeLog
 	dh_installdocs
 	dh_installexamples
-#	dh_install
+	dh_install
 #	dh_installmenu
 #	dh_installdebconf	
 #	dh_installlogrotate
@@ -96,15 +108,11 @@ binary-arch: build install
 	dh_fixperms
 #	dh_perl
 #	dh_python
-#	dh_makeshlibs
+	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
-	#have to do that, otherwise nothing is installed!
-	cp -r $(CURDIR)/debian/tmp/usr/lib/lib*.so* $(CURDIR)/debian/libbpp-seq/usr/lib
-	cp -r $(CURDIR)/debian/tmp/usr/lib/lib*.*a $(CURDIR)/debian/libbpp-seq-dev/usr/lib
-	cp -r $(CURDIR)/debian/tmp/usr/include/* $(CURDIR)/debian/libbpp-seq-dev/usr/include
 	dh_builddeb
 
 binary: binary-indep binary-arch

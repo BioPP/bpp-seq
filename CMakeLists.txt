@@ -23,6 +23,16 @@ IF(NO_VIRTUAL_COV)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNO_VIRTUAL_COV=1")
 ENDIF(NO_VIRTUAL_COV)
 
+IF(NOT NO_DEP_CHECK)
+  SET(NO_DEP_CHECK FALSE CACHE BOOL
+      "Disable dependencies check for building distribution only."
+      FORCE)
+ENDIF(NOT NO_DEP_CHECK)
+
+IF(NO_DEP_CHECK)
+  MESSAGE("-- Dependencies checking disabled. Only distribution can be built.")
+ELSE(NO_DEP_CHECK)
+
 # Libtool-like version number
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R
 # current:  The most recent interface number that this library implements.
@@ -31,9 +41,9 @@ ENDIF(NO_VIRTUAL_COV)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(BPPSEQ_VERSION_CURRENT "9")
-SET(BPPSEQ_VERSION_REVISION "0")
-SET(BPPSEQ_VERSION_AGE "0")
+SET(BPPSEQ_VERSION_CURRENT "10")
+SET(BPPSEQ_VERSION_REVISION "1")
+SET(BPPSEQ_VERSION_AGE "1")
 
 # Effective version number computation
 math(EXPR BPPSEQ_VERSION_MAJOR "${BPPSEQ_VERSION_CURRENT} - ${BPPSEQ_VERSION_AGE}")
@@ -49,9 +59,9 @@ ENDIF(CMAKE_INSTALL_PREFIX)
 
 MACRO(IMPROVED_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
   #start:
-  FIND_PATH(${lib_name}_INCLUDE_DIR ${include_to_find})
+  FIND_PATH(${lib_name}_INCLUDE_DIR ${include_to_find} )
   SET(${lib_name}_NAMES ${lib_name} ${lib_name}lib ${lib_name}dll)
-  FIND_LIBRARY(${lib_name}_LIBRARY NAMES ${${lib_name}_NAMES})
+  FIND_LIBRARY(${lib_name}_LIBRARY NAMES ${${lib_name}_NAMES} PATH_SUFFIXES lib${LIB_SUFFIX})
 
   IF(${lib_name}_LIBRARY)
     MESSAGE("-- Library ${lib_name} found here:")
@@ -81,16 +91,19 @@ IF (DOXYGEN_FOUND)
     COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile-stable )
 ENDIF (DOXYGEN_FOUND)
 
+ENDIF(NO_DEP_CHECK)
+
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-seq")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
-SET(CPACK_PACKAGE_VERSION "1.7.0")
-SET(CPACK_PACKAGE_VERSION_MAJOR "1")
-SET(CPACK_PACKAGE_VERSION_MINOR "7")
-SET(CPACK_PACKAGE_VERSION_PATCH "0")
+SET(CPACK_PACKAGE_VERSION "2.0.2")
+SET(CPACK_PACKAGE_VERSION_MAJOR "2")
+SET(CPACK_PACKAGE_VERSION_MINOR "0")
+SET(CPACK_PACKAGE_VERSION_PATCH "2")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Sequence library")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
-SET(CPACK_RESOURCE_FILE_AUTHORS "${CMAKE_SOURCE_DIR}/AUTHORS")
+SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING.txt")
+SET(CPACK_RESOURCE_FILE_AUTHORS "${CMAKE_SOURCE_DIR}/AUTHORS.txt")
+SET(CPACK_RESOURCE_FILE_INSTALL "${CMAKE_SOURCE_DIR}/INSTALL.txt")
 SET(CPACK_SOURCE_GENERATOR "TGZ")
 SET(CPACK_SOURCE_IGNORE_FILES
  "CMakeFiles"
@@ -98,29 +111,49 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "_CPack_Packages"
  "CMakeCache.txt"
  ".*\\\\.cmake"
- ".*\\\\.svn"
+ ".*\\\\.git"
  ".*\\\\.gz"
  ".*\\\\.deb"
  ".*\\\\.rpm"
- "\\\\..*\\\\.swp"
+ ".*\\\\.dmg"
+ ".*\\\\.sh"
+ ".*\\\\..*\\\\.swp"
  "src/\\\\..*"
  "src/libbpp*"
- "debian/libbpp*"
  "debian/tmp"
+ "debian/libbpp.*/"
+ "debian/libbpp.*\\\\.so.*"
+ "debian/libbpp.*\\\\.a"
+ "debian/libbpp.*\\\\.substvars"
+ "debian/libbpp.*\\\\.debhelper"
+ "debian/debhelper\\\\.log"
  "html"
  "Seq.tag"
+ "Testing"
+ "build-stamp"
+ "genIncludes.py"
+ "install_manifest.txt"
+ "DartConfiguration.tcl"
  ${CPACK_SOURCE_IGNORE_FILES}
 )
+IF (MACOS)
+  SET(CPACK_GENERATOR "Bundle")
+ENDIF()
+
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+SET(CPACK_DEBSOURCE_PACKAGE_FILE_NAME "lib${CMAKE_PROJECT_NAME}_${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}.orig")
 INCLUDE(CPack)
 
 #This adds the 'dist' target
 ADD_CUSTOM_TARGET(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
+IF(NOT NO_DEP_CHECK)
 IF (UNIX)
 #This creates deb packages:
-ADD_CUSTOM_TARGET(deb fakeroot debian/rules binary)
-ADD_DEPENDENCIES(deb dist)
+ADD_CUSTOM_TARGET(origdist COMMAND cp ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz ../${CPACK_DEBSOURCE_PACKAGE_FILE_NAME}.tar.gz)
+ADD_DEPENDENCIES(origdist dist)
+ADD_CUSTOM_TARGET(deb dpkg-buildpackage -uc -us -i${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
+ADD_DEPENDENCIES(deb origdist)
 
 #This creates rpm packages:
 ADD_CUSTOM_TARGET(rpm rpmbuild -ta ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
@@ -134,3 +167,5 @@ INCLUDE(CTest)
 IF (BUILD_TESTING)
   ADD_SUBDIRECTORY(test)
 ENDIF(BUILD_TESTING)
+
+ENDIF(NOT NO_DEP_CHECK)

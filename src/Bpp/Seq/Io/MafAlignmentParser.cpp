@@ -91,7 +91,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
           block->setScore(TextTools::toDouble(args["score"]));
     
         if (args.find("pass") != args.end())
-          block->setPass(TextTools::toDouble(args["pass"]));
+          block->setPass(TextTools::to<unsigned int>(args["pass"]));
       }
     }
     else if (line[0] == 's')

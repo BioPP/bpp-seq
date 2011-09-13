@@ -518,7 +518,7 @@ class EdSymbolList:
 		std::vector<int> content_;
 
     /**
-     * @brief Contains the listners.
+     * @brief Contains the listeners.
      */
     std::vector<SymbolListListener*> listeners_;
 

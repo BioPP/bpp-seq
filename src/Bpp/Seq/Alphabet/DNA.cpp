@@ -81,7 +81,7 @@ DNA::DNA()
   setState(17, NucleicAlphabetState(14, "O", 15, "Unresolved base"));
   setState(18, NucleicAlphabetState(14, "0", 15, "Unresolved base"));
   setState(19, NucleicAlphabetState(14, "?", 15, "Unresolved base"));
-		
+  setState(19, NucleicAlphabetState(14, "!", 15, "Unresolved base"));
 }
 
 /******************************************************************************/
@@ -141,3 +141,4 @@ std::string DNA::getGeneric(const std::vector<std::string>& states) const throw 
 }
 
 /******************************************************************************/
+
