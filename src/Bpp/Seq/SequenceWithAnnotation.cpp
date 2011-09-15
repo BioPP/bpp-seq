@@ -270,12 +270,31 @@ void SequenceWithAnnotation::merge(const SequenceWithAnnotation& swa)
   append(swa.getContent());
 	propagateEvents(true);
 
-  // Try to merge annotations:
+  // Try to merge annotations.
+  //First start with annotations in this sequence:
   vector<string> types = getAnnotationTypes();
-  vector<string> newTypes = getAnnotationTypes();
-  vector<string> allTypes = VectorTools::vectorUnion(types, newTypes);
-  for (unsigned int i = 0; i < allTypes.size(); ++i) {
-
+  vector<string> newTypes = swa.getAnnotationTypes();
+  for (unsigned int i = 0; i < types.size(); ++i) {
+    vector<string>::iterator it = find(newTypes.begin(), newTypes.end(), types[i]);
+    if (it != newTypes.end()) {
+      //Merge annotations:
+      getAnnotation(types[i]).merge(swa.getAnnotation(types[i]));
+      //Remove annotation from the list:
+      newTypes.erase(it);
+    } else {
+      //Extend annotation to the right:
+      auto_ptr<SequenceAnnotation> anno(getAnnotation(types[i]).clone());
+      anno->init(swa);
+      getAnnotation(types[i]).merge(*anno);
+    }
+  }
+  //Now look for annotations in the input sequence:
+  for (unsigned int i = 0; i < newTypes.size(); ++i) {
+    //Extend annotation from the left:
+    SequenceAnnotation* anno = swa.getAnnotation(newTypes[i]).clone();
+    anno->init(*this);
+    anno->merge(swa.getAnnotation(newTypes[i]));
+    addAnnotation(anno);
   }
 }
 

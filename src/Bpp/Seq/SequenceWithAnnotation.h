@@ -58,6 +58,15 @@ class SequenceAnnotation :
   public virtual SymbolListListener
 {
   public:
+    virtual SequenceAnnotation* clone() const = 0;
+
+    /**
+     * Creates a defautl annotation according to a given sequence.
+     *
+     * @param seq The template sequence (typically the one with which the annotation will be attached).
+     */
+    virtual void init(const Sequence& seq) = 0;
+
     /**
      * @return The type of the annotation. This is used for querying annotations.
      */

@@ -146,7 +146,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
           seqQual->setScore(i, c - '0');
         } else if (c == 'F' || c == 'f') { //Finished
           seqQual->setScore(i, 10);
-        } else if (c == '?') {
+        } else if (c == '?' || c == '.') {
           seqQual->setScore(i, -2);
         } else {
           throw Exception("MafAlignmentParser::nextBlock(). Unvalid quality score: " + TextTools::toString(c) + ". Should be 0-9, F or '-'.");
