@@ -1,3 +1,6 @@
+15/09/11 Julien Dutheil
+* Merge function of SequenceWithAnnotation now also merges annotations properly.
+
 17/06/11 Julien Dutheil
 * Bug #39 solved.
 

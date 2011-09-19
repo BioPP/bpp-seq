@@ -132,6 +132,12 @@ namespace bpp {
       /** @} */
 
     public:
+      void init(const Sequence& seq)
+      {
+        qualScores_.resize(seq.size());
+        std::fill(qualScores_.begin(), qualScores_.end(), DEFAULT_QUALITY_VALUE);
+      }
+
       const std::string& getType() const { return QUALITY_SCORE; }
 
       bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const
@@ -588,7 +594,7 @@ namespace bpp {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
         unsigned int pos = qualScores_->getSize();
-        append(content);
+        append(content); //This automatically extend scores array with default values through the listener
         //Update scores:
         qualScores_->setScores(pos, qualities);
       }
@@ -618,7 +624,7 @@ namespace bpp {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
         unsigned int pos = qualScores_->getSize();
-        SequenceWithAnnotation::append(content);
+        SequenceWithAnnotation::append(content); //This automatically extend scores array with default values through the listener
         //Update scores:
         qualScores_->setScores(pos, qualities);
       }
@@ -649,7 +655,7 @@ namespace bpp {
             != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size() / this->getAlphabet()->getStateCodingSize());
         unsigned int pos = qualScores_->getSize();
-        SequenceWithAnnotation::append(content);
+        SequenceWithAnnotation::append(content); //This automatically extend scores array with default values through the listener
         //Update scores:
         qualScores_->setScores(pos, qualities);
       }

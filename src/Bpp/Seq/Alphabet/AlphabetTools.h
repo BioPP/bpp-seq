@@ -167,11 +167,18 @@ class AlphabetTools
    */
   static bool isRNYAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<RNY>(alphabet); }
 
-    /**
-     * @return True if the alphabet is an instanciation of the DefaultAlphabet class.
-     * @param alphabet The alphabet to check.
-     */
-    static bool isDefaultAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
+  /**
+   * @return True if the alphabet is an instanciation of the BinaryAlphabet class.
+   * @param alphabet The alphabet to check.
+   */
+  
+  static bool isBinaryAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<BinaryAlphabet>(alphabet); }
+
+  /**
+   * @return True if the alphabet is an instanciation of the DefaultAlphabet class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isDefaultAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
   
     /**
      * @brief Tell if two characters match according to a given alphabet.

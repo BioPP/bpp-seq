@@ -88,6 +88,8 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     }
 
 
+  if (alphabet == "Binary")
+    chars = new BinaryAlphabet();
   if (alphabet == "DNA")
     chars = new DNA();
   else if (alphabet == "RNA")

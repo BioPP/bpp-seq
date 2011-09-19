@@ -112,6 +112,12 @@ namespace bpp {
       /** @} */
 
     public:
+      void init(const Sequence& seq)
+      {
+        mask_.resize(seq.size());
+        std::fill(mask_.begin(), mask_.end(), false);
+      }
+
       const std::string& getType() const { return MASK; }
 
       bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const

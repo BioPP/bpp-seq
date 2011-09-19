@@ -907,7 +907,7 @@ void OutputMafIterator::writeBlock(std::ostream& out, const MafBlock& block) con
       out << TextTools::resizeRight(seq->getName(), mxcSrc + mxcStart + mxcSize + mxcSrcSize + 5, ' ') << " ";
       string qualStr;
       for (unsigned int j = 0; j < seq->size(); ++j) {
-        double s = (*qual)[j];
+        int s = (*qual)[j];
         if (s == -1) {
           qualStr += "-";
         } else if (s == -2) {
