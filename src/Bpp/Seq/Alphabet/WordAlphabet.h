@@ -51,7 +51,7 @@
 namespace bpp
 {
 /**
- * @brief The abstract base class for word alphabets.
+ * @brief The base class for word alphabets.
  *
  * These alphabets are compounds of several alphabets. The only
  * constraint on these alphabets is that their words have length one
