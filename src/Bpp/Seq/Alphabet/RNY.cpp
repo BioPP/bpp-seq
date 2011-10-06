@@ -514,5 +514,5 @@ string RNY::intToChar(int state) const throw (BadIntException)
 
   return "XXX";
 
-  throw BadIntException(state, "AbstractAlphabet::intToChar: Specified base unknown", this);
+  throw BadIntException(state, "RNY::intToChar: Specified base unknown", this);
 }
