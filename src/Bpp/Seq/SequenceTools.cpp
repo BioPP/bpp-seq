@@ -433,6 +433,10 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
     {
       throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
     }
+  
+  if ((ph<1) || (ph>3))
+    throw Exception("Bad phase for RNYSlice: " + TextTools::toString(ph) + ". Should be between 1 and 3.");
+  
   int s = seq.size();
   int n = (s - ph + 3) / 3;
 
@@ -446,11 +450,11 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
       j = i * 3 + ph - 1;
 
       if (j == 0)
-        content[i] = _RNY.getRNY(tir,seq[j],seq[j + 1],*seq.getAlphabet());
+        content[i] = _RNY.getRNY(tir,seq[0],seq[1],*seq.getAlphabet());
       else
         {
           if (j == s - 1)
-            content[i] = _RNY.getRNY(seq[j],seq[j + 1],tir, *seq.getAlphabet());
+            content[i] = _RNY.getRNY(seq[j - 1],seq[j],tir, *seq.getAlphabet());
           else
             content[i] = _RNY.getRNY(seq[j - 1],seq[j],seq[j + 1],*seq.getAlphabet());
         }

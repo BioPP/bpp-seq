@@ -328,7 +328,8 @@ class SequenceTools:
    * @brief Get the RNY decomposition of a DNA sequence; with a given
    * phase between 1 and 3, it gives the decomposition in this phase;
    * in phase 1, the first triplet is centered on the first character.
-   * Without a phase the function gives the concatenation in phases 1, 2 and 3.
+   * Without a phase the function gives the alternative succession in
+   * phases 1, 2 and 3.
    *
    * @return sequence A new sequence object with the transcription sequence.
    * @param sequence The sequence to transcript.
