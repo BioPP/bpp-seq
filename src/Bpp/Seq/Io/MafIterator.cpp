@@ -267,7 +267,7 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
 
         //Check is there is a second sequence:
         try {
-          const MafSequence* tmp = &incomingBlock_->getSequence(allSp[i]);
+          auto_ptr<MafSequence> tmp(new MafSequence(incomingBlock_->getSequenceForSpecies(allSp[i])));
           string ref1 = seq->getDescription(), ref2 = tmp->getDescription();
           //Add spacer if needed:
           if (globalSpace > 0) {
@@ -276,8 +276,6 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
             }
             seq->append(vector<int>(globalSpace, AlphabetTools::DNA_ALPHABET.getUnknownCharacterCode()));
           }
-          seq->merge(*tmp);
-          seq->setSrcSize(0);
           if (seq->getChromosome() != tmp->getChromosome()) {
             seq->setChromosome(seq->getChromosome() + "-" + tmp->getChromosome());
             seq->removeCoordinates();
@@ -286,6 +284,10 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
             seq->setStrand('?');
             seq->removeCoordinates();
           }
+          if (seq->getName() != tmp->getName())
+            tmp->setName(seq->getName()); //force name conversion to prevent exception in 'merge'.
+          seq->merge(*tmp);
+          seq->setSrcSize(0);
           if (logstream_) {
             (*logstream_ << "BLOCK MERGER: merging " << ref1 << " with " << ref2 << " into " << seq->getDescription()).endLine();
           }
