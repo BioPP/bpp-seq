@@ -158,6 +158,49 @@ MafBlock* ChromosomeMafIterator::nextBlock() throw (Exception)
   return currentBlock_;
 }
 
+MafBlock* DuplicateFilterMafIterator::nextBlock() throw (Exception)
+{
+  currentBlock_ = iterator_->nextBlock();
+  while (currentBlock_) {
+    bool foundRef = false;
+    string chr = "";
+    char strand = '+';
+    unsigned int start = 0;
+    unsigned int stop  = 0;
+    for (size_t i = 0; i < currentBlock_->getNumberOfSequences() && !foundRef; ++i) {
+      string species = currentBlock_->getSequence(i).getSpecies(); 
+      if (species == ref_) {
+        foundRef = true;
+        chr    = currentBlock_->getSequence(i).getChromosome();
+        strand = currentBlock_->getSequence(i).getStrand();
+        start  = currentBlock_->getSequence(i).start();
+        stop   = currentBlock_->getSequence(i).stop();
+      }
+    }
+    if (!foundRef) {
+      if (logstream_) {
+        (*logstream_ << "DUPLICATE FILTER: block does not contain reference species and was removed.").endLine();
+      }
+      delete currentBlock_;
+    } else {
+      unsigned int occurrence = blocks_[chr][strand][start][stop]++;
+      if (occurrence > 0) {
+        if (logstream_) {
+          (*logstream_ << "DUPLICATE FILTER: sequence in reference species was found in a previous block. New block was removed.").endLine();
+        }
+        delete currentBlock_;
+      } else {
+        return currentBlock_;
+      }
+    }
+
+    //Look for the next block:
+    currentBlock_ = iterator_->nextBlock();
+  }
+  
+  return currentBlock_;
+}
+
 MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
 {
   if (!incomingBlock_) return 0;
@@ -201,9 +244,9 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     if (logstream_) {
       (*logstream_ << "BLOCK MERGER: merging two consecutive blocks.").endLine();
     }
-    vector<string> names1 = currentBlock_->getAlignment().getSequencesNames();
-    vector<string> names2 = incomingBlock_->getAlignment().getSequencesNames();
-    vector<string> allNames = VectorTools::vectorUnion(names1, names2);
+    vector<string> sp1 = currentBlock_->getSpeciesList();
+    vector<string> sp2 = incomingBlock_->getSpeciesList();
+    vector<string> allSp = VectorTools::unique(VectorTools::vectorUnion(sp1, sp2));
     //We need to create a new MafBlock:
     MafBlock* mergedBlock = new MafBlock();
     //We average the score and pass values:
@@ -217,24 +260,32 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     mergedBlock->setScore((s1 * n1 + s2 * n2) / (n1 + n2));
 
     //Now fill the new block:
-    for (size_t i = 0; i < allNames.size(); ++i) {
+    for (size_t i = 0; i < allSp.size(); ++i) {
       auto_ptr<MafSequence> seq;
       try {
-        seq.reset(new MafSequence(currentBlock_->getSequence(allNames[i])));
+        seq.reset(new MafSequence(currentBlock_->getSequenceForSpecies(allSp[i])));
 
         //Check is there is a second sequence:
         try {
-          const MafSequence* tmp = &incomingBlock_->getSequence(allNames[i]);
+          const MafSequence* tmp = &incomingBlock_->getSequence(allSp[i]);
           string ref1 = seq->getDescription(), ref2 = tmp->getDescription();
           //Add spacer if needed:
           if (globalSpace > 0) {
             if (logstream_) {
-              (*logstream_ << "BLOCK MERGER: a spacer of size " << globalSpace <<" is inserted in sequence " << allNames[i] << ".").endLine();
+              (*logstream_ << "BLOCK MERGER: a spacer of size " << globalSpace <<" is inserted in sequence for species " << allSp[i] << ".").endLine();
             }
             seq->append(vector<int>(globalSpace, AlphabetTools::DNA_ALPHABET.getUnknownCharacterCode()));
           }
           seq->merge(*tmp);
           seq->setSrcSize(0);
+          if (seq->getChromosome() != tmp->getChromosome()) {
+            seq->setChromosome(seq->getChromosome() + "-" + tmp->getChromosome());
+            seq->removeCoordinates();
+          }
+          if (seq->getStrand() != tmp->getStrand()) {
+            seq->setStrand('?');
+            seq->removeCoordinates();
+          }
           if (logstream_) {
             (*logstream_ << "BLOCK MERGER: merging " << ref1 << " with " << ref2 << " into " << seq->getDescription()).endLine();
           }
@@ -248,7 +299,7 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
         }
       } catch (SequenceNotFoundException& snfe1) {
         //There must be a second sequence then:
-        seq.reset(new MafSequence(incomingBlock_->getSequence(allNames[i])));
+        seq.reset(new MafSequence(incomingBlock_->getSequenceForSpecies(allSp[i])));
         string ref2 = seq->getDescription();
         seq->setToSizeL(currentBlock_->getNumberOfSites() + globalSpace);
         if (logstream_) {

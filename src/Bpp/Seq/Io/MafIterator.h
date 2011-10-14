@@ -209,6 +209,17 @@ class MafBlock
       throw SequenceNotFoundException("MafBlock::getSequenceForSpecies. No sequence with the given species name in this block.");
     }
 
+    /**
+     * @return The species names for all sequencies in the container.
+     */
+    std::vector<std::string> getSpeciesList() const {
+      std::vector<std::string> lst;
+      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
+        lst.push_back(getSequence(i).getSpecies());
+      }
+      return lst;
+    }
+
     void removeCoordinatesFromSequence(unsigned int i) throw (IndexOutOfBoundsException) {
       //This is a bit of a trick, but avoid useless recopies.
       //It is safe here because the AlignedSequenceContainer is fully encapsulated.
@@ -427,10 +438,57 @@ class ChromosomeMafIterator:
 };
 
 /**
+ * @brief Filter maf blocks to remove duplicated blocks, according to a reference sequence).
+ */
+class DuplicateFilterMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::string ref_;
+    /**
+     * Contains the list of 'seen' block, as [chr][strand][start][stop]
+     */
+    std::map< std::string, std::map< char, std::map< unsigned int, std::map< unsigned int, unsigned int > > > > blocks_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param reference The reference species name.
+     */
+    DuplicateFilterMafIterator(MafIterator* iterator, const std::string& reference) :
+      AbstractFilterMafIterator(iterator),
+      ref_(reference),
+      blocks_(),
+      currentBlock_(0)
+    {}
+
+  private:
+    DuplicateFilterMafIterator(const DuplicateFilterMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      ref_(iterator.ref_),
+      blocks_(iterator.blocks_),
+      currentBlock_(0)
+    {}
+    
+    DuplicateFilterMafIterator& operator=(const DuplicateFilterMafIterator& iterator)
+    {
+      ref_    = iterator.ref_;
+      blocks_ = iterator.blocks_;
+      currentBlock_ = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+};
+
+/**
  * @brief Merge blocks if some of their sequences are contiguous.
  *
  * The user specifies the focus species. Sequences that are not in this set will
- * be merged without testing, and their genomic coordinates removed.
+ * be automatically merged and their coordinates removed.
  * The scores, if any, will be averaged for the block, weighted by the corresponding block sizes.
  * the pass value will be removed if it is different for the two blocks.
  * It is possible to define a maximum distance for the merging. Setting a distance of zero implies that the blocks
