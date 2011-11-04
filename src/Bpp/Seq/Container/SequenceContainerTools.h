@@ -258,6 +258,16 @@ class SequenceContainerTools
       }
     }
 
+    /**
+     * @brief Extract a certain position (1, 2 or 3) from a container of codon sequences and returns the resulting nucleotide container.
+     *
+     * @param sequences The input sequence container, with codon alphabet.
+     * @param pos       The codon position to retrieve.
+     * @return          A SequenceContainer with a nucleotide alphabet.
+     * @throw AlphabetException If input sequences are not registered with a codon alphabet.
+     */
+    static SequenceContainer* getCodonPosition(const SequenceContainer& sequences, unsigned int pos) throw (AlphabetException);
+
 };
 
 } //end of namespace bpp.

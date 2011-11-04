@@ -3,6 +3,7 @@
 #include "Alphabet/AlphabetExceptions.h"
 #include "Alphabet/AlphabetState.h"
 #include "Alphabet/AlphabetTools.h"
+#include "Alphabet/BinaryAlphabet.h"
 #include "Alphabet/CaseMaskedAlphabet.h"
 #include "Alphabet/CodonAlphabet.h"
 #include "Alphabet/DNA.h"

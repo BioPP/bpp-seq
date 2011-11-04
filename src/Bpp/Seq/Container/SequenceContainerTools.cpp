@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "SequenceContainerTools.h"
 #include "VectorSequenceContainer.h"
+#include "../Alphabet/CodonAlphabet.h"
 
 using namespace bpp;
 
@@ -104,11 +105,11 @@ void SequenceContainerTools::keepOnlySelectedSequences(
   const SequenceSelection& selection)
 {
   vector<string> names = sequences.getSequencesNames();
-	for(unsigned int i = 0; i < names.size(); i++) {
+	for (size_t i = 0; i < names.size(); i++) {
 		// We need to do this because after removal the indices will not be the same!
     // another solution would be to sort decreasingly the indices...
 		bool test = false;
-		for(unsigned int j = 0; j < selection.size() && !test; j++) {
+		for (unsigned int j = 0; j < selection.size() && !test; j++) {
 			test = (selection[j] == i);
 		}
     if(!test) sequences.deleteSequence(names[i]);
@@ -121,11 +122,11 @@ void SequenceContainerTools::keepOnlySelectedSequences(
 bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer& sequences)
 {
 	vector<string> seqNames = sequences.getSequencesNames();
-	if(seqNames.size() <= 1) return true;
+	if (seqNames.size() <= 1) return true;
 	unsigned int length = sequences.getSequence(seqNames[0]).size();
-	for(unsigned int i = 1; i < seqNames.size(); i++)
+	for (size_t i = 1; i < seqNames.size(); i++)
   {
-		if(sequences.getSequence(seqNames[i]).size() != length) return false;
+		if (sequences.getSequence(seqNames[i]).size() != length) return false;
 	}
 	return true;
 }
@@ -136,9 +137,9 @@ void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, 
 {
   int n = 0;
   vector<string> names = sequences.getSequencesNames();
-  for(unsigned int j = 0; j < names.size(); j++) {
+  for (size_t j = 0; j < names.size(); j++) {
     vector<int> seq = sequences.getContent(names[j]);
-    for(unsigned int i = 0; i < seq.size(); i++) f[seq[i]]++;
+    for (unsigned int i = 0; i < seq.size(); i++) f[seq[i]]++;
     n += seq.size();
   }
 
@@ -150,7 +151,7 @@ void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, 
     n += pseudoCount * pA->getSize();
   }
   
-  for(map<int, double>::iterator i = f.begin(); i != f.end(); i++) {
+  for (map<int, double>::iterator i = f.begin(); i != f.end(); i++) {
     i -> second = i -> second / n;
   }
 }
@@ -161,11 +162,32 @@ void  SequenceContainerTools::getCounts(const SequenceContainer& sequences, std:
 {
   int n = 0;
   vector<string> names = sequences.getSequencesNames();
-  for(unsigned int j = 0; j < names.size(); j++) {
+  for (size_t j = 0; j < names.size(); j++) {
     vector<int> seq = sequences.getContent(names[j]);
     for(unsigned int i = 0; i < seq.size(); i++) f[seq[i]]++;
     n += seq.size();
   }
 }
+
+/******************************************************************************/
+
+SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContainer& sequences, unsigned int pos) throw (AlphabetException)
+{
+  const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(sequences.getAlphabet());
+  if (!calpha)
+    throw AlphabetException("SequenceContainerTools::getCodonPosition. Input sequences should be of type codon.");
+  vector<string> names = sequences.getSequencesNames();
+  VectorSequenceContainer* newcont = new VectorSequenceContainer(calpha->getNucleicAlphabet());
+  for (size_t j = 0; j < names.size(); j++) {
+    vector<int> seq = sequences.getContent(names[j]);
+    vector<int> newseq(seq.size());
+    for (unsigned int i = 0; i < seq.size(); i++)
+      newseq[i] = calpha->getNPosition(seq[i], pos);
+    BasicSequence s(names[j], newseq, sequences.getComments(names[j]), calpha->getNucleicAlphabet());
+    newcont->addSequence(s);
+  }
+  return newcont;
+}
+
 /******************************************************************************/
 

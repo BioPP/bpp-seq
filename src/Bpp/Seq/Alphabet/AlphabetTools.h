@@ -161,7 +161,14 @@ class AlphabetTools
      */
     static bool isWordAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<WordAlphabet>(alphabet); }
     
-    /**
+  /**
+   * @return True if the alphabet is an instanciation of the BinaryAlphabet class.
+   * @param alphabet The alphabet to check.
+   */
+  
+  static bool isBinaryAlphabet(const Alphabet * alphabet) { return alphabetInheritsFrom<BinaryAlphabet>(alphabet); }
+
+  /**
      * @return True if the alphabet is an instanciation of the DefaultAlphabet class.
      * @param alphabet The alphabet to check.
      */

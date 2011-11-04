@@ -97,11 +97,7 @@ class MafSequence:
       SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), hasCoordinates_(true), begin_(begin), species_(""), chromosome_(""), strand_(strand), size_(0), srcSize_(srcSize)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
-      size_t pos = name.find(".");
-      if (pos != std::string::npos) {
-        chromosome_ = name.substr(pos + 1);
-        species_    = name.substr(0, pos);
-      }
+      setName(name);
     }
 
     MafSequence* clone() const { return new MafSequence(*this); }
@@ -123,6 +119,15 @@ class MafSequence:
       else throw Exception("MafSequence::stop(). Sequence does not have coordinates.");
     }
 
+    void setName(const std::string& name) {
+      size_t pos = name.find(".");
+      if (pos != std::string::npos) {
+        chromosome_ = name.substr(pos + 1);
+        species_    = name.substr(0, pos);
+      }
+      SequenceWithAnnotation::setName(name);
+    }
+
     const std::string& getSpecies() const { return species_; }
     
     const std::string& getChromosome() const { return chromosome_; }
@@ -135,13 +140,21 @@ class MafSequence:
     
     void setStart(unsigned int begin) { begin_ = begin; hasCoordinates_ = true; }
     
-    void setChromosome(const std::string& chr) { chromosome_ = chr; }
+    void setChromosome(const std::string& chr) {
+      chromosome_ = chr;
+      SequenceWithAnnotation::setName(species_ + "." + chromosome_);
+    }
+    
+    void setSpecies(const std::string& species) {
+      species_ = species;
+      SequenceWithAnnotation::setName(species_ + "." + chromosome_);
+    }
     
     void setStrand(char s) { strand_ = s; }
     
     void setSrcSize(unsigned int srcSize) { srcSize_ = srcSize; }
   
-    std::string getDescription() const { return getName() + strand_ + ":" + TextTools::toString(start()) + "-" + TextTools::toString(stop()); }
+    std::string getDescription() const { return getName() + strand_ + ":" + (hasCoordinates_ ? TextTools::toString(start()) + "-" + TextTools::toString(stop()) : "?-?"); }
   
     MafSequence* subSequence(unsigned int startAt, unsigned int length) const;
 
@@ -209,11 +222,28 @@ class MafBlock
       throw SequenceNotFoundException("MafBlock::getSequenceForSpecies. No sequence with the given species name in this block.");
     }
 
+    /**
+     * @return The species names for all sequencies in the container.
+     */
+    std::vector<std::string> getSpeciesList() const {
+      std::vector<std::string> lst;
+      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
+        lst.push_back(getSequence(i).getSpecies());
+      }
+      return lst;
+    }
+
     void removeCoordinatesFromSequence(unsigned int i) throw (IndexOutOfBoundsException) {
       //This is a bit of a trick, but avoid useless recopies.
       //It is safe here because the AlignedSequenceContainer is fully encapsulated.
       //It would not work if a VectorSiteContainer was used.
       const_cast<MafSequence&>(getSequence(i)).removeCoordinates();
+    }
+
+    std::string getDescription() const {
+      std::string desc;
+      desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites()) + "-" + getSequence(0).getName() + "[" + TextTools::toString(getSequence(0).start()) + "," + TextTools::toString(getSequence(0).stop()) + "]";
+      return desc;
     }
 
 
@@ -313,7 +343,7 @@ class BlockSizeMafIterator:
         test = (block->getNumberOfSites() < minSize_);
         if (test) {
           if (logstream_) {
-            (*logstream_ << "BLOCK SIZE FILTER: block with size " << block->getNumberOfSites() << " was discarded.").endLine();
+            (*logstream_ << "BLOCK SIZE FILTER: block " << block->getDescription() << " with size " << block->getNumberOfSites() << " was discarded.").endLine();
           }
           delete block;
         }
@@ -421,10 +451,57 @@ class ChromosomeMafIterator:
 };
 
 /**
+ * @brief Filter maf blocks to remove duplicated blocks, according to a reference sequence).
+ */
+class DuplicateFilterMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::string ref_;
+    /**
+     * Contains the list of 'seen' block, as [chr][strand][start][stop]
+     */
+    std::map< std::string, std::map< char, std::map< unsigned int, std::map< unsigned int, unsigned int > > > > blocks_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param reference The reference species name.
+     */
+    DuplicateFilterMafIterator(MafIterator* iterator, const std::string& reference) :
+      AbstractFilterMafIterator(iterator),
+      ref_(reference),
+      blocks_(),
+      currentBlock_(0)
+    {}
+
+  private:
+    DuplicateFilterMafIterator(const DuplicateFilterMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      ref_(iterator.ref_),
+      blocks_(iterator.blocks_),
+      currentBlock_(0)
+    {}
+    
+    DuplicateFilterMafIterator& operator=(const DuplicateFilterMafIterator& iterator)
+    {
+      ref_    = iterator.ref_;
+      blocks_ = iterator.blocks_;
+      currentBlock_ = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+};
+
+/**
  * @brief Merge blocks if some of their sequences are contiguous.
  *
  * The user specifies the focus species. Sequences that are not in this set will
- * be merged without testing, and their genomic coordinates removed.
+ * be automatically merged and their coordinates removed.
  * The scores, if any, will be averaged for the block, weighted by the corresponding block sizes.
  * the pass value will be removed if it is different for the two blocks.
  * It is possible to define a maximum distance for the merging. Setting a distance of zero implies that the blocks

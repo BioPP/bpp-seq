@@ -77,7 +77,7 @@ MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
       string species = currentBlock_->getSequence(i-1).getSpecies(); 
       if (!VectorTools::contains(species_, species)) {
         if (logstream_) {
-          (*logstream_ << "SEQUENCE FILTER: remove sequence '" << species << "' from current block.").endLine();
+          (*logstream_ << "SEQUENCE FILTER: remove sequence '" << species << "' from current block " << currentBlock_->getDescription() << ".").endLine();
         }
         currentBlock_->getAlignment().deleteSequence(i - 1);
       } else {
@@ -87,27 +87,27 @@ MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
     bool test = currentBlock_->getNumberOfSequences() == 0;
     //Avoid a memory leak:
     if (test) {
-      delete currentBlock_;
       if (logstream_) {
-        (*logstream_ << "SEQUENCE FILTER: block is now empty. Try to get the next one.").endLine();
+        (*logstream_ << "SEQUENCE FILTER: block " << currentBlock_->getDescription() << " is now empty. Try to get the next one.").endLine();
       }
+      delete currentBlock_;
     } else {
       test = strict_ && (counts.size() != species_.size());
       if (test) {
-        delete currentBlock_;
         if (logstream_) {
-          (*logstream_ << "SEQUENCE FILTER: block does not contain all species and will be ignored. Try to get the next one.").endLine();
+          (*logstream_ << "SEQUENCE FILTER: block " << currentBlock_->getDescription() << " does not contain all species and will be ignored. Try to get the next one.").endLine();
         }
+        delete currentBlock_;
       } else {
         if (rmDuplicates_) {
           test = false;
           map<string, unsigned int>::iterator it;
           for (it = counts.begin(); it != counts.end() && !(test = it->second > 1); it++) {}
           if (test) {
-            delete currentBlock_;
             if (logstream_) {
-              (*logstream_ << "SEQUENCE FILTER: block has two sequences for species '" << it->first << "' and will be ignored. Try to get the next one.").endLine();
+              (*logstream_ << "SEQUENCE FILTER: block " << currentBlock_->getDescription() << " has two sequences for species '" << it->first << "' and will be ignored. Try to get the next one.").endLine();
             }
+            delete currentBlock_;
           } else {
             return currentBlock_;
           }
@@ -158,6 +158,49 @@ MafBlock* ChromosomeMafIterator::nextBlock() throw (Exception)
   return currentBlock_;
 }
 
+MafBlock* DuplicateFilterMafIterator::nextBlock() throw (Exception)
+{
+  currentBlock_ = iterator_->nextBlock();
+  while (currentBlock_) {
+    bool foundRef = false;
+    string chr = "";
+    char strand = '+';
+    unsigned int start = 0;
+    unsigned int stop  = 0;
+    for (size_t i = 0; i < currentBlock_->getNumberOfSequences() && !foundRef; ++i) {
+      string species = currentBlock_->getSequence(i).getSpecies(); 
+      if (species == ref_) {
+        foundRef = true;
+        chr    = currentBlock_->getSequence(i).getChromosome();
+        strand = currentBlock_->getSequence(i).getStrand();
+        start  = currentBlock_->getSequence(i).start();
+        stop   = currentBlock_->getSequence(i).stop();
+      }
+    }
+    if (!foundRef) {
+      if (logstream_) {
+        (*logstream_ << "DUPLICATE FILTER: block does not contain reference species and was removed.").endLine();
+      }
+      delete currentBlock_;
+    } else {
+      unsigned int occurrence = blocks_[chr][strand][start][stop]++;
+      if (occurrence > 0) {
+        if (logstream_) {
+          (*logstream_ << "DUPLICATE FILTER: sequence in reference species was found in a previous block. New block was removed.").endLine();
+        }
+        delete currentBlock_;
+      } else {
+        return currentBlock_;
+      }
+    }
+
+    //Look for the next block:
+    currentBlock_ = iterator_->nextBlock();
+  }
+  
+  return currentBlock_;
+}
+
 MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
 {
   if (!incomingBlock_) return 0;
@@ -167,10 +210,13 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     unsigned int globalSpace = 0;
     for (unsigned int i = 0; i < species_.size(); ++i) {
       try {
-        const MafSequence* seq1 = &currentBlock_->getSequence(species_[i]); 
-        const MafSequence* seq2 = &incomingBlock_->getSequence(species_[i]);
+        const MafSequence* seq1 = &currentBlock_->getSequenceForSpecies(species_[i]); 
+        const MafSequence* seq2 = &incomingBlock_->getSequenceForSpecies(species_[i]);
         if (!seq1->hasCoordinates() || !seq2->hasCoordinates())
           throw Exception("BlockMergerMafIterator::nextBlock. Species '" + species_[i] + "' is missing coordinates in at least one block.");
+
+        if (seq1->stop() >= seq2->start())
+          return currentBlock_;
         unsigned int space = seq2->start() - seq1->stop() - 1;
         if (space > maxDist_)
           return currentBlock_;
@@ -198,9 +244,9 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     if (logstream_) {
       (*logstream_ << "BLOCK MERGER: merging two consecutive blocks.").endLine();
     }
-    vector<string> names1 = currentBlock_->getAlignment().getSequencesNames();
-    vector<string> names2 = incomingBlock_->getAlignment().getSequencesNames();
-    vector<string> allNames = VectorTools::vectorUnion(names1, names2);
+    vector<string> sp1 = currentBlock_->getSpeciesList();
+    vector<string> sp2 = incomingBlock_->getSpeciesList();
+    vector<string> allSp = VectorTools::unique(VectorTools::vectorUnion(sp1, sp2));
     //We need to create a new MafBlock:
     MafBlock* mergedBlock = new MafBlock();
     //We average the score and pass values:
@@ -214,22 +260,32 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     mergedBlock->setScore((s1 * n1 + s2 * n2) / (n1 + n2));
 
     //Now fill the new block:
-    for (size_t i = 0; i < allNames.size(); ++i) {
+    for (size_t i = 0; i < allSp.size(); ++i) {
       auto_ptr<MafSequence> seq;
       try {
-        seq.reset(new MafSequence(currentBlock_->getSequence(allNames[i])));
+        seq.reset(new MafSequence(currentBlock_->getSequenceForSpecies(allSp[i])));
 
         //Check is there is a second sequence:
         try {
-          const MafSequence* tmp = &incomingBlock_->getSequence(allNames[i]);
+          auto_ptr<MafSequence> tmp(new MafSequence(incomingBlock_->getSequenceForSpecies(allSp[i])));
           string ref1 = seq->getDescription(), ref2 = tmp->getDescription();
           //Add spacer if needed:
           if (globalSpace > 0) {
             if (logstream_) {
-              (*logstream_ << "BLOCK MERGER: a spacer of size " << globalSpace <<" is inserted in sequence " << allNames[i] << ".").endLine();
+              (*logstream_ << "BLOCK MERGER: a spacer of size " << globalSpace <<" is inserted in sequence for species " << allSp[i] << ".").endLine();
             }
             seq->append(vector<int>(globalSpace, AlphabetTools::DNA_ALPHABET.getUnknownCharacterCode()));
           }
+          if (seq->getChromosome() != tmp->getChromosome()) {
+            seq->setChromosome(seq->getChromosome() + "-" + tmp->getChromosome());
+            seq->removeCoordinates();
+          }
+          if (seq->getStrand() != tmp->getStrand()) {
+            seq->setStrand('?');
+            seq->removeCoordinates();
+          }
+          if (seq->getName() != tmp->getName())
+            tmp->setName(seq->getName()); //force name conversion to prevent exception in 'merge'.
           seq->merge(*tmp);
           seq->setSrcSize(0);
           if (logstream_) {
@@ -245,7 +301,7 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
         }
       } catch (SequenceNotFoundException& snfe1) {
         //There must be a second sequence then:
-        seq.reset(new MafSequence(incomingBlock_->getSequence(allNames[i])));
+        seq.reset(new MafSequence(incomingBlock_->getSequenceForSpecies(allSp[i])));
         string ref2 = seq->getDescription();
         seq->setToSizeL(currentBlock_->getNumberOfSites() + globalSpace);
         if (logstream_) {
@@ -416,16 +472,16 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
       if (pos.size() == 0) {
         blockBuffer_.push_back(block);
         if (logstream_) {
-          (*logstream_ << "ALN CLEANER: block is clean and kept as is.").endLine();
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " is clean and kept as is.").endLine();
         }
       } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
         //Everything is removed:
         if (logstream_) {
-          (*logstream_ << "ALN CLEANER: block was entirely removed. Tried to get the next one.").endLine();
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " was entirely removed. Tried to get the next one.").endLine();
         }
       } else {
         if (logstream_) {
-          (*logstream_ << "ALN CLEANER: block with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
         }
         if (verbose_) {
           ApplicationTools::message->endLine();
@@ -435,7 +491,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
           if (verbose_)
             ApplicationTools::displayGauge(i, pos.size() - 2, '=');
           if (logstream_) {
-            (*logstream_ << "ALN CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block.").endLine();
+            (*logstream_ << "ALN CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block " << block->getDescription() << ".").endLine();
           }
           if (pos[i] > 0) {
             MafBlock* newBlock = new MafBlock();
@@ -904,7 +960,7 @@ void OutputMafIterator::writeBlock(std::ostream& out, const MafBlock& block) con
       out << TextTools::resizeRight(seq->getName(), mxcSrc + mxcStart + mxcSize + mxcSrcSize + 5, ' ') << " ";
       string qualStr;
       for (unsigned int j = 0; j < seq->size(); ++j) {
-        double s = (*qual)[j];
+        int s = (*qual)[j];
         if (s == -1) {
           qualStr += "-";
         } else if (s == -2) {
