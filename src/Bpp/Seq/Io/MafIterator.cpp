@@ -902,6 +902,44 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
   return block;
 }
 
+MafBlock* SequenceStatisticsMafIterator::nextBlock() throw (Exception)
+{
+  currentBlock_ = iterator_->nextBlock();
+  if (currentBlock_) {
+    for (vector<string>::iterator sp = species_.begin(); sp != species_.end(); ++sp) {
+      if (sp > species_.begin())
+        *output_ << "\t";
+      if (currentBlock_->hasSequenceForSpecies(*sp)) {
+        map<int, double> counts;
+        const Sequence& seq = currentBlock_->getSequenceForSpecies(*sp);
+        SequenceTools::getCounts(seq, counts, false);
+        *output_ << counts[0] << "\t" << counts[1] << "\t" << counts[2] << "\t" << counts[3] << "\t" << counts[currentBlock_->getAlignment().getAlphabet()->getGapCharacterCode()];
+        *output_ << "\t" << SequenceTools::getNumberOfSites(seq);
+        *output_ << "\t" << SequenceTools::getNumberOfCompleteSites(seq);
+        *output_ << "\t" << SequenceTools::getNumberOfUnresolvedSites(seq);
+      } else {
+        *output_ << "NA\tNA\tNA\tNA\tNA\tNA\tNA\tNA";
+      }
+    }
+    output_->endLine();
+  }
+  return currentBlock_;
+}
+
+MafBlock* PairwiseSequenceStatisticsMafIterator::nextBlock() throw (Exception)
+{
+  currentBlock_ = iterator_->nextBlock();
+  if (currentBlock_) {
+    if (currentBlock_->hasSequenceForSpecies(species1_) && currentBlock_->hasSequenceForSpecies(species2_)) {
+      *output_ << SequenceTools::getPercentIdentity(currentBlock_->getSequenceForSpecies(species1_), currentBlock_->getSequenceForSpecies(species2_), true);
+    } else {
+      *output_ << "NA";
+    }
+    output_->endLine();
+  }
+  return currentBlock_;
+}
+
 void OutputMafIterator::writeHeader(std::ostream& out) const
 {
   out << "##maf version=1 program=Bio++" << endl << "#" << endl;

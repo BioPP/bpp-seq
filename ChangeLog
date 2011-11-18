@@ -1,3 +1,7 @@
+18/11/11 Julien Dutheil
+* New MafIterators: SequenceStatistics and PairwiseSequenceStatistics.
+* Function SequenceTools::getPercentIdentity now allows to exclude gaps.
+
 15/09/11 Julien Dutheil
 * Merge function of SequenceWithAnnotation now also merges annotations properly.
 

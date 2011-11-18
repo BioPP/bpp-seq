@@ -204,6 +204,10 @@ class MafBlock
 
     void addSequence(const MafSequence& sequence) { alignment_.addSequence(sequence, false); }
 
+    bool hasSequence(const std::string& name) {
+      return getAlignment().hasSequence(name);
+    }
+
     const MafSequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) {
       return dynamic_cast<const MafSequence&>(getAlignment().getSequence(name));
     }
@@ -212,12 +216,21 @@ class MafBlock
       return dynamic_cast<const MafSequence&>(getAlignment().getSequence(i));
     }
 
+    bool hasSequenceForSpecies(const std::string& species) {
+      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
+        const MafSequence& seq = getSequence(i);
+        if (seq.getSpecies() == species)
+          return true;
+      }
+      return false;
+    }
+
     //Return the first sequence with the species name.
     const MafSequence& getSequenceForSpecies(const std::string& species) const throw (SequenceNotFoundException) {
       for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
-        const MafSequence* seq = &getSequence(i);
-        if (seq->getSpecies() == species)
-          return *seq;
+        const MafSequence& seq = getSequence(i);
+        if (seq.getSpecies() == species)
+          return seq;
       }
       throw SequenceNotFoundException("MafBlock::getSequenceForSpecies. No sequence with the given species name in this block.");
     }
@@ -792,6 +805,124 @@ class OutputMafIterator:
   private:
     void writeHeader(std::ostream& out) const;
     void writeBlock(std::ostream& out, const MafBlock& block) const;
+};
+
+/**
+ * @brief Outputs sequence statistics for each block, for a subset of sequences, given their name.
+ * 
+ * Computed statistics are:
+ * - 4 base frequencies + gap frequencies + unresolved frequencies in each sequence
+ * This is a read only iterator, the blocks are forwarded "as is", without modification.
+ * Statistics are directly output to a file. Later versions may also forward a DataTable for later direct analysis.
+ */
+class SequenceStatisticsMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::vector<std::string> species_;
+    OutputStream* output_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param species The list of species names for which statistics should be computed.
+     * @param output The output stream where to store the results.
+     */
+    SequenceStatisticsMafIterator(MafIterator* iterator, const std::vector<std::string>& species, OutputStream* output) :
+      AbstractFilterMafIterator(iterator),
+      species_(species),
+      output_(output),
+      currentBlock_(0)
+    {
+      for (std::vector<std::string>::iterator sp = species_.begin(); sp != species_.end(); ++sp) {
+        (*output_ << *sp << ".A\t"
+                  << *sp << ".C\t"
+                  << *sp << ".G\t"
+                  << *sp << ".T\t"
+                  << *sp << ".gap\t"
+                  << *sp << ".NbSites\t"
+                  << *sp << ".NbComplete\t"
+                  << *sp << ".NbUnresolved").endLine();
+      }
+    }
+
+  private:
+    SequenceStatisticsMafIterator(const SequenceStatisticsMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      species_(iterator.species_),
+      output_(iterator.output_),
+      currentBlock_(0)
+    {}
+    
+    SequenceStatisticsMafIterator& operator=(const SequenceStatisticsMafIterator& iterator)
+    {
+      species_       = iterator.species_;
+      output_        = iterator.output_;
+      currentBlock_  = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+};
+
+/**
+ * @brief Outputs sequence statistics for a pair of species, for each block.
+ * 
+ * Computed statistics are:
+ * - Percent identity
+ * This is a read only iterator, the blocks are forwarded "as is", without modification.
+ * Statistics are directly output to a file. Later versions may also forward a DataTable for later direct analysis.
+ */
+class PairwiseSequenceStatisticsMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::string species1_;
+    std::string species2_;
+    OutputStream* output_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param species1 The first species to compare.
+     * @param species2 The second species to compare.
+     * @param output The output stream where to store the results.
+     */
+    PairwiseSequenceStatisticsMafIterator(MafIterator* iterator, const std::string& species1, const std::string& species2, OutputStream* output) :
+      AbstractFilterMafIterator(iterator),
+      species1_(species1),
+      species2_(species2),
+      output_(output),
+      currentBlock_(0)
+    {
+      (*output_ << "PercentId").endLine();
+    }
+
+  private:
+    PairwiseSequenceStatisticsMafIterator(const PairwiseSequenceStatisticsMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      species1_(iterator.species1_),
+      species2_(iterator.species2_),
+      output_(iterator.output_),
+      currentBlock_(0)
+    {}
+    
+    PairwiseSequenceStatisticsMafIterator& operator=(const PairwiseSequenceStatisticsMafIterator& iterator)
+    {
+      species1_     = iterator.species1_;
+      species2_     = iterator.species2_;
+      output_       = iterator.output_;
+      currentBlock_ = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
 };
 
 /**
