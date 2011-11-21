@@ -220,10 +220,11 @@ class SequenceTools:
 		 * One match is counted if the two sequences have identical states.
 		 * @param seq1 The first sequence.
 		 * @param seq2 The second sequence.
+     * @param ignoreGaps If true, only positions without gaps will be used for the counting.
 		 * @throw AlphabetMismatchException If the two sequences do not have the same alphabet.
 		 * @throw SequenceNotAlignedException If the two sequences do not have the same length.
 		 */
-		static double getPercentIdentity(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, SequenceNotAlignedException);
+		static double getPercentIdentity(const Sequence& seq1, const Sequence& seq2, bool ignoreGaps = false) throw (AlphabetMismatchException, SequenceNotAlignedException);
 
 		/**
 		 * @return The number of sites in the sequences, <i>i.e.</i> all positions without gaps.
