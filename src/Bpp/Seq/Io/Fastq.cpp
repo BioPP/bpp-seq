@@ -37,4 +37,13 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
+#include "Fastq.h"
+#include "../SequenceWithQuality.h"
 
+void bpp::Fastq::appendFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception) {
+  SequenceWithQuality s("", "", sc.getAlphabet());
+  while (!input.eof()) {
+    nextSequence(input, s);
+    sc.addSequence(dynamic_cast<Sequence &>(s), false);
+  }
+}
