@@ -1,3 +1,6 @@
+21/11/11 Sylvain Gaillard
+* Bug #35 solved.
+
 18/11/11 Julien Dutheil
 * New MafIterators: SequenceStatistics and PairwiseSequenceStatistics.
 * Function SequenceTools::getPercentIdentity now allows to exclude gaps.
