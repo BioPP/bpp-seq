@@ -80,6 +80,8 @@ set(CPP_FILES
   Bpp/Seq/Io/Stockholm.cpp
   Bpp/Seq/Io/MafAlignmentParser.cpp
   Bpp/Seq/Io/MafIterator.cpp
+  Bpp/Seq/Feature/SequenceFeature.cpp
+  Bpp/Seq/Feature/Gff/GffFeatureReader.cpp
   Bpp/Seq/App/SequenceApplicationTools.cpp
   )
 
@@ -194,6 +196,8 @@ set(H_FILES
   Bpp/Seq/StateProperties/AASEASup30Index.h
   Bpp/Seq/StateProperties/AASEAInf10Index.h
   Bpp/Seq/StateProperties/AASEA1030Index.h
+  Bpp/Seq/Feature/SequenceFeature.h
+  Bpp/Seq/Feature/Gff/GffFeatureReader.h
   Bpp/Seq/App/SequenceApplicationTools.h
   )
 

@@ -47,7 +47,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From the STL:
 #include <string>
-#include <istream>
+#include <vector>
 
 namespace bpp {
 
@@ -93,6 +93,11 @@ class GffFeatureReader
   public:
     bool hasMoreFeature() const { return nextLine_ != ""; }
     const BasicSequenceFeature nextFeature() throw (Exception);
+    void getAllFeatures(std::vector<BasicSequenceFeature>& features) {
+      while (hasMoreFeature()) {
+        features.push_back(nextFeature());
+      }
+    }
 
   private:
     void getNextLine_();
