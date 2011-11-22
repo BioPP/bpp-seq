@@ -39,8 +39,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _FASTA_H_
-#define _FASTA_H_
+#ifndef _BPP_SEQ_IO_FASTA_H_
+#define _BPP_SEQ_IO_FASTA_H_
 
 #include "AbstractISequence.h"
 #include "AbstractOSequence.h"
@@ -201,5 +201,5 @@ class Fasta:
 
 } //end of namespace bpp.
 
-#endif // _FASTA_H_
+#endif // _BPP_SEQ_IO_FASTA_H_
 
