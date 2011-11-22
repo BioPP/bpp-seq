@@ -49,51 +49,56 @@ using namespace bpp;
 
 /******************************************************************************/
 
-void PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exception) {
+bool PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exception) {
   if (!input) {
     throw IOException ("PhredPhd::read: fail to open stream");
   }
 
   std::string temp, name, sequence = "";  // Initialization
   std::vector<int> q, p;
+  bool flag = false;
 
-  parseFile_(input, name, sequence, q, p);
+  flag = parseFile_(input, name, sequence, q, p);
   // Sequence creation
   if(name == "")
     throw Exception("PhredPhd::read: sequence without name!");
   seq.setName(name);
   seq.setContent(sequence);
+  return flag;
 }
 
 /******************************************************************************/
 
-void PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq) const throw (Exception) {
+bool PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq) const throw (Exception) {
   std::vector<int> pos;
-  nextSequence(input, seq, pos);
+  return nextSequence(input, seq, pos);
 }
 
 /******************************************************************************/
 
-void PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq, std::vector<int>& pos) const throw (Exception) {
+bool PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq, std::vector<int>& pos) const throw (Exception) {
   if (!input) {
     throw IOException ("PhredPhd::read: fail to open stream");
   }
 
+  bool flag = false;
   std::string name, sequence = "";  // Initialization
   std::vector<int> q, p;
 
-  parseFile_(input, name, sequence, q, p);
+  flag = parseFile_(input, name, sequence, q, p);
   // Sequence creation
   if(name == "")
     throw Exception("PhredPhd::read: sequence without name!");
   seq.setName(name);
   seq.setContent(sequence);
   seq.setQualities(q);
+  return flag;
 }
 
 /******************************************************************************/
 
-void PhredPhd::parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const {
+bool PhredPhd::parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const {
+  bool readSeqFlag = false;
   std::string temp;
   // Read sequence info
   // Main loop : for all lines
@@ -112,17 +117,19 @@ void PhredPhd::parseFile_(std::istream& input, std::string& name, std::string& s
           flag = st2.getToken(0);
         }
         if (flag == "BEGIN_DNA") {
-          parseDNA_(input, sequence, qual, pos);
+          readSeqFlag = parseDNA_(input, sequence, qual, pos);
           break; // End the whole loop after parsing DNA
         }
       }
     }
   }
+  return readSeqFlag;
 }
 
 /******************************************************************************/
 
-void PhredPhd::parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const {
+bool PhredPhd::parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const {
+  bool readSeqFlag = false;
   std::string line_buffer;
   std::string flag;
   sequence.clear();
@@ -137,9 +144,11 @@ void PhredPhd::parseDNA_(std::istream& input, std::string& sequence, std::vector
         sequence += flag;
         qual.push_back(TextTools::toInt(st.getToken(1)));
         pos.push_back(TextTools::toInt(st.getToken(2)));
+        readSeqFlag = true;
       }
     }
   }
+  return readSeqFlag;
 }
 
 /******************************************************************************/

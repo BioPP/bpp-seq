@@ -69,9 +69,10 @@ class ISequenceStream: public virtual IOSequenceStream
      *
      * @param input The stream to read.
      * @param seq The sequence to fill.
+     * @return true if a sequence was read or false if not.
      * @throw Exception IOExecption and Sequence related Exceptions.
      */
-    virtual void nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
+    virtual bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
 
 };
 

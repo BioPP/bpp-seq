@@ -91,7 +91,7 @@ namespace bpp {
        *
        * @{
        */
-      void nextSequence(
+      bool nextSequence(
           std::istream& input,
           Sequence& seq
           ) const throw (Exception);
@@ -101,7 +101,7 @@ namespace bpp {
        * @brief Read a SequenceWithQuality from stream
        *
        */
-      void nextSequence(
+      bool nextSequence(
           std::istream& input,
           SequenceWithQuality& seq
           ) const throw (Exception);
@@ -118,7 +118,7 @@ namespace bpp {
        * @param pos The vector of positions to fill.
        * @throw Exception IOException and Sequence related exceptions.
        */
-      void nextSequence(
+      bool nextSequence(
           std::istream& input,
           SequenceWithQuality& seq,
           std::vector<int>& pos
@@ -146,7 +146,7 @@ namespace bpp {
        * @param qual The vector to store qualities
        * @param pos The vector to store positions
        */
-      void parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const;
+      bool parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const;
 
       /**
        * @brief Parse the DNA part of the file
@@ -158,7 +158,7 @@ namespace bpp {
        * @param qual The vector to store qualities
        * @param pos The vector to store positions
        */
-      void parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const;
+      bool parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const;
   };
 } //end of namespace bpp
 

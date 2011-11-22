@@ -141,7 +141,7 @@ class Fasta:
      * @copydoc ISequenceStream::nextSequence(std::istream& input, Sequence& seq) const
      * @author Sylvain Gaillard
      */
-    void nextSequence(std::istream& input, Sequence& seq) const throw (Exception);
+    bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception);
     /** @} */
 
     /**
