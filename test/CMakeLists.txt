@@ -40,12 +40,16 @@ ADD_EXECUTABLE(test_bowker test_bowker.cpp)
 TARGET_LINK_LIBRARIES(test_bowker ${LIBS})
 ADD_TEST(test_bowker "test_bowker")
 
+ADD_EXECUTABLE(test_gff test_gff.cpp)
+TARGET_LINK_LIBRARIES(test_gff ${LIBS})
+ADD_TEST(test_gff "test_gff")
+
 IF(UNIX)
-  SET_PROPERTY(TEST test_alphabets test_io test_containers test_bowker PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_alphabets test_io test_containers test_bowker test_gff PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(APPLE)
-  SET_PROPERTY(TEST test_alphabets test_io test_containers test_bowker PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_alphabets test_io test_containers test_bowker test_gff PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(WIN32)
