@@ -49,6 +49,8 @@ namespace bpp
 {
   /**
    * @brief The fastq sequence file format.
+   *
+   * @author Sylvain Gaillard
    */
   class Fastq:
     public virtual ISequenceStream
@@ -59,6 +61,9 @@ namespace bpp
     public:
       /**
        * @brief Build a new Fastq object.
+       *
+       * @param checkSequenceNames Tell if the names in the file should be
+       * checked for unicity.
        */
       Fastq(bool checkSequenceNames = true): checkNames_(checkSequenceNames) {}
 
@@ -66,15 +71,53 @@ namespace bpp
       virtual ~Fastq() {}
 
     public:
+      /**
+       * @name The IOSequence interface.
+       *
+       * @{
+       */
       const std::string getFormatName() const { return "FASTQ file"; }
       const std::string getFormatDescription() const {
         return "Sequence with quality";
       }
       const std::string getDataType() const { return "Sequence with quality"; }
+      /** @} */
       bool checkNames() const { return checkNames_; }
       void checkNames(bool yn) { checkNames_ = yn; }
 
+      /**
+       * @name The ISequenceStream interface.
+       *
+       * @{
+       */
+      /**
+       * @copydoc ISequenceStream::nextSequence(std::istream& input, Sequence& seq) const
+       * @author Sylvain Gaillard
+       *
+       * @par Usage
+       *
+       * @code
+       * // Creating a SequenceWithQuality object
+       * DNA alpha;
+       * SequenceWithQuality seq(&alpha);
+       * 
+       * // Create a FastQ parser
+       * Fastq fq;
+       *
+       * // Opening the file
+       * std::ifstream in("reads.fastq");
+       *
+       * // Read the sequences
+       * while (fq.nextSequence(in, seq)) {
+       *   // ... do something with the sequence ...
+       * }
+       *
+       * // Close the file
+       * in.close();
+       * @endcode
+       */
       bool nextSequence(std::istream& input, bpp::Sequence& seq) const throw (Exception);
+      /** @} */
   };
 }
 
