@@ -50,33 +50,13 @@ using namespace bpp;
 /******************************************************************************/
 
 bool PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exception) {
-  if (!input) {
-    throw IOException ("PhredPhd::read: fail to open stream");
-  }
-
-  std::string temp, name, sequence = "";  // Initialization
-  std::vector<int> q, p;
-  bool flag = false;
-
-  flag = parseFile_(input, name, sequence, q, p);
-  // Sequence creation
-  if(name == "")
-    throw Exception("PhredPhd::read: sequence without name!");
-  seq.setName(name);
-  seq.setContent(sequence);
-  return flag;
-}
-
-/******************************************************************************/
-
-bool PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq) const throw (Exception) {
   std::vector<int> pos;
   return nextSequence(input, seq, pos);
 }
 
 /******************************************************************************/
 
-bool PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq, std::vector<int>& pos) const throw (Exception) {
+bool PhredPhd::nextSequence(std::istream& input, Sequence& seq, std::vector<int>& pos) const throw (Exception) {
   if (!input) {
     throw IOException ("PhredPhd::read: fail to open stream");
   }
@@ -91,7 +71,11 @@ bool PhredPhd::nextSequence(std::istream& input, SequenceWithQuality& seq, std::
     throw Exception("PhredPhd::read: sequence without name!");
   seq.setName(name);
   seq.setContent(sequence);
-  seq.setQualities(q);
+  try {
+    SequenceWithQuality& sq = dynamic_cast<SequenceWithQuality&>(seq);
+    sq.setQualities(q);
+  } catch (...) {
+  }
   return flag;
 }
 

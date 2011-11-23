@@ -98,15 +98,6 @@ namespace bpp {
       /** @} */
 
       /**
-       * @brief Read a SequenceWithQuality from stream
-       *
-       */
-      bool nextSequence(
-          std::istream& input,
-          SequenceWithQuality& seq
-          ) const throw (Exception);
-      
-      /**
        * @brief Read a SequenceWithQuality from stream and store chromatographic positions
        *
        * A more complete parser that read a SequenceWithQuality and store
@@ -120,7 +111,7 @@ namespace bpp {
        */
       bool nextSequence(
           std::istream& input,
-          SequenceWithQuality& seq,
+          Sequence& seq,
           std::vector<int>& pos
           ) const throw (Exception);
 
