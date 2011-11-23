@@ -40,6 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Fastq.h"
 #include "../SequenceWithQuality.h"
 
+#include <typeinfo>
+
 using namespace bpp;
 
 bool Fastq::nextSequence(std::istream& input, Sequence& seq) const throw (Exception) {
@@ -61,6 +63,12 @@ bool Fastq::nextSequence(std::istream& input, Sequence& seq) const throw (Except
     seq.setContent(buffer);
     // third line: seq name (again)
     getline(input, buffer);
+    if (repeatName()) {
+      std::string secName = std::string(buffer.begin() + 1, buffer.end());
+      if (secName != seq.getName()) {
+        throw Exception("Names are not equivalent for sequence(@ line) and quality (+ line)");
+      }
+    }
     // fourth line: quality
     getline(input, buffer);
     try {
@@ -73,4 +81,30 @@ bool Fastq::nextSequence(std::istream& input, Sequence& seq) const throw (Except
     return true;
   }
   return false;
+}
+
+/******************************************************************************/
+
+void Fastq::writeSequence(std::ostream& output, const bpp::Sequence& seq) const throw (Exception) {
+  std::string qual(seq.size(), static_cast<char>(33));
+  try {
+    const SequenceWithQuality& sq = dynamic_cast<const SequenceWithQuality&>(seq);
+    for (size_t i = 0 ; i < sq.size() ; i++) {
+      int q = sq.getQuality(i);
+      if (q < 33 || q > 126) {
+        throw BadIntegerException("Quality must lie between 33 and 126", q);
+      }
+      qual[i] = q;
+    }
+  } catch (const std::bad_cast& e) {
+    throw Exception("seq must be a SequenceWithQuality object");
+  }
+  output << "@" << seq.getName() << std::endl;
+  output << seq.toString() << std::endl;
+  output << "+";
+  if (repeatName()) {
+    output << seq.getName();
+  }
+  output << std::endl;
+  output << qual << std::endl;
 }

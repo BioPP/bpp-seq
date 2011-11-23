@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <string>
 #include "ISequenceStream.h"
+#include "OSequenceStream.h"
 #include "../Sequence.h"
 #include "../SequenceWithQuality.h"
 
@@ -53,19 +54,20 @@ namespace bpp
    * @author Sylvain Gaillard
    */
   class Fastq:
-    public virtual ISequenceStream
+    public virtual ISequenceStream,
+    public virtual OSequenceStream
   {
     private:
-      bool checkNames_;
+      bool repeatName_;
 
     public:
       /**
        * @brief Build a new Fastq object.
        *
-       * @param checkSequenceNames Tell if the names in the file should be
-       * checked for unicity.
+       * @param repName Tell if the names in the file is repeated (tested
+       * on input) or must be repeated (for output).
        */
-      Fastq(bool checkSequenceNames = true): checkNames_(checkSequenceNames) {}
+      Fastq(bool repName = false): repeatName_(repName) {}
 
       // Class destructor
       virtual ~Fastq() {}
@@ -82,8 +84,8 @@ namespace bpp
       }
       const std::string getDataType() const { return "Sequence with quality"; }
       /** @} */
-      bool checkNames() const { return checkNames_; }
-      void checkNames(bool yn) { checkNames_ = yn; }
+      bool repeatName() const { return repeatName_; }
+      void repeatName(bool yn) { repeatName_ = yn; }
 
       /**
        * @name The ISequenceStream interface.
@@ -117,6 +119,18 @@ namespace bpp
        * @endcode
        */
       bool nextSequence(std::istream& input, bpp::Sequence& seq) const throw (Exception);
+      /** @} */
+
+      /**
+       * @name The OSequenceStream interface.
+       *
+       * @{
+       */
+      /**
+       * @copydoc ISequenceStream::nextSequence(std::istream& input, Sequence& seq) const
+       * @author Sylvain Gaillard
+       */
+      void writeSequence(std::ostream& output, const bpp::Sequence& seq) const throw (Exception);
       /** @} */
   };
 }

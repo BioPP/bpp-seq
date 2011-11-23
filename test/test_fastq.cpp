@@ -63,6 +63,9 @@ int main () {
       std::cout << " " << VectorTools::min(seq.getQualities()) - 33;
       std::cout << " " << VectorTools::max(seq.getQualities()) - 33;
       std::cout << std::endl;
+      fq.repeatName(true);
+      fq.writeSequence(std::cout, seq);
+      fq.repeatName(false);
     }
     return 0;
   } catch (std::exception& ex) {
