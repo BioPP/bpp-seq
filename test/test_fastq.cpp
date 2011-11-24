@@ -1,14 +1,14 @@
-//
-// File ISequenceStream.h
-// Author: Sylvain Gaillard
-// Created: 18/08/2009
-//
+// 
+// File:    test_fastq.cpp
+// Author:  Sylvain Gaillard
+// Created: 22/11/2011 11:29:16
+// 
 
 /*
-Copyright or © or Copr. CNRS, (August 18, 2009)
+Copyright or © or Copr. Bio++ Development Team, (November 22, 2011)
 
 This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+for numerical calculus. This file is part of the Bio++ project.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -37,46 +37,39 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ISEQUENCESTREAM_H_
-#define _ISEQUENCESTREAM_H_
+#include <Bpp/Numeric/VectorTools.h>
+#include <Bpp/Seq/Io/Fastq.h>
+#include <Bpp/Seq/SequenceWithQuality.h>
+#include <Bpp/Seq/Alphabet/DNA.h>
 
-#include "IoSequenceStream.h"
-#include "../Sequence.h"
-#include "../Alphabet/Alphabet.h"
-#include <Bpp/Exceptions.h>
+#include <iostream>
+#include <fstream>
 
-namespace bpp
-{
+using namespace bpp;
 
-/**
- * @brief The ISequenceStream interface.
- *
- * Interface for streaming sequences input.
- *
- * @author Sylvain Gaillard
- */
-class ISequenceStream: public virtual IOSequenceStream
-{
-	public:
-		ISequenceStream() {}
-		virtual ~ISequenceStream() {}
-
-	public:
-    /**
-     * @brief Read sequence from stream.
-     *
-     * Read one sequence from a stream.
-     *
-     * @param input The stream to read.
-     * @param seq The sequence to fill.
-     * @return true if a sequence was read or false if not.
-     * @throw Exception IOExecption and Sequence related Exceptions.
-     */
-    virtual bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
-
-};
-
-} //end of namespace bpp.
-
-#endif	// _ISEQUENCESTREAM_H_
-
+int main () {
+  try {
+    std::string filename = "example.fastq";
+    std::ifstream input(filename.c_str(), std::ios::in);
+    if (!input) {
+      std::cerr << "Could not open " << filename << std::endl;
+      return 1;
+    }
+    Fastq fq;
+    const Alphabet* alpha = new DNA();
+    SequenceWithQuality seq("", "", alpha);
+    while (fq.nextSequence(input, seq)) {
+      std::cout << seq.getName() << " " << seq.size();
+      std::cout << " " << VectorTools::min(seq.getQualities()) - 33;
+      std::cout << " " << VectorTools::max(seq.getQualities()) - 33;
+      std::cout << std::endl;
+      fq.repeatName(true);
+      fq.writeSequence(std::cout, seq);
+      fq.repeatName(false);
+    }
+    return 0;
+  } catch (std::exception& ex) {
+    std::cerr << ex.what() << std::endl;
+    return 1;
+  }
+}

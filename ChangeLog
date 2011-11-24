@@ -1,6 +1,9 @@
 24/11/11 Julien Dutheil
 * Added SequenceWalker class and test.
 
+22/11/11 Sylvain Gaillard
+* Added support for FastQ
+
 21/11/11 Julien Dutheil
 * Added support for GFF3.
 

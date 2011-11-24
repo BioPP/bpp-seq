@@ -51,10 +51,11 @@ PhredPoly::PhredPoly(double ratio) : ratio_(ratio) {}
 
 /******************************************************************************/
 
-void PhredPoly::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
+bool PhredPoly::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
   if (!input) { throw IOException ("PhredPoly::read: fail to open stream"); }
 
   string temp, name, sequence = "";  // Initialization
+  bool flag = false;
 
   // Read first line
   if (!input.eof()) {
@@ -83,9 +84,14 @@ void PhredPoly::nextSequence(istream& input, Sequence& seq) const throw (Excepti
       sequence += alpha->getGeneric(v);
     }
   }
-  if(name == "") throw Exception("PhredPoly::read: sequence without name!");
-  seq.setName(name);
-  seq.setContent(sequence);
+  if(name == "") {
+    throw Exception("PhredPoly::read: sequence without name!");
+  } else {
+    seq.setName(name);
+    seq.setContent(sequence);
+    flag = true;
+  }
+  return flag;
 }
 
 /******************************************************************************/

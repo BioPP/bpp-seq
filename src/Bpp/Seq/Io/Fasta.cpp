@@ -55,7 +55,7 @@ using namespace std;
 
 /******************************************************************************/
 
-void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
+bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
   if (!input)
     throw IOException("Fasta::nextSequence: can't read from istream input");
   string seqname = "";
@@ -116,6 +116,9 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       }
     }
   }
+  if (input.eof()) {
+    return false;
+  }
   // Sequence name and comments isolation
   if (extended_) {
     StringTokenizer * st = new StringTokenizer(seqname, " \\", true, false);
@@ -127,6 +130,7 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
     seq.setComments(seqcmts);
   }
   seq.setName(seqname);
+  return true;
 }
 
 /******************************************************************************/
