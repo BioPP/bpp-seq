@@ -97,7 +97,7 @@ const BasicSequenceFeature GffFeatureReader::nextFeature() throw (Exception)
   string phase       = st.nextToken();
   string attrDesc    = st.nextToken();
   map<string, string> attributes;
-  KeyvalTools::multipleKeyvals(attrDesc, attributes, ";");
+  KeyvalTools::multipleKeyvals(attrDesc, attributes, ";", false);
   string id = attributes["ID"];
   BasicSequenceFeature feature(id, seqId, source, type, start, end, score);
   

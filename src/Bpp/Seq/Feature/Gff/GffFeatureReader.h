@@ -93,11 +93,27 @@ class GffFeatureReader
   public:
     bool hasMoreFeature() const { return nextLine_ != ""; }
     const BasicSequenceFeature nextFeature() throw (Exception);
-    void getAllFeatures(std::vector<BasicSequenceFeature>& features) {
+
+    void getAllFeatures(SequenceFeatureSet& features) {
       while (hasMoreFeature()) {
-        features.push_back(nextFeature());
+        features.addFeature(nextFeature());
       }
     }
+    void getFeaturesOfType(const std::string& type, SequenceFeatureSet& features) {
+      while (hasMoreFeature()) {
+        BasicSequenceFeature feature = nextFeature();
+        if (feature.getType() == type)
+          features.addFeature(feature);
+      }
+    }
+    void getFeaturesOfSequence(const std::string& seqId, SequenceFeatureSet& features) {
+      while (hasMoreFeature()) {
+        BasicSequenceFeature feature = nextFeature();
+        if (feature.getSequenceId() == seqId)
+          features.addFeature(feature);
+      }
+    }
+
 
   private:
     void getNextLine_();

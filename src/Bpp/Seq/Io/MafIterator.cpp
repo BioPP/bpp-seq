@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "MafIterator.h"
 #include "../SequenceWithQuality.h"
 #include "../SequenceWithAnnotationTools.h"
+#include "../SequenceWalker.h"
 #include "../Alphabet/AlphabetTools.h"
 #include "../Container/VectorSiteContainer.h"
 #include "../SiteTools.h"
@@ -474,7 +475,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
         if (logstream_) {
           (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " is clean and kept as is.").endLine();
         }
-      } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+      } else if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
         //Everything is removed:
         if (logstream_) {
           (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " was entirely removed. Tried to get the next one.").endLine();
@@ -644,7 +645,7 @@ MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
         if (logstream_) {
           (*logstream_ << "MASK CLEANER: block is clean and kept as is.").endLine();
         }
-      } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+      } else if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
         //Everything is removed:
         if (logstream_) {
           (*logstream_ << "MASK CLEANER: block was entirely removed. Tried to get the next one.").endLine();
@@ -827,7 +828,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
           if (logstream_) {
             (*logstream_ << "QUAL CLEANER: block is clean and kept as is.").endLine();
           }
-        } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+        } else if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
           //Everything is removed:
           if (logstream_) {
             (*logstream_ << "QUAL CLEANER: block was entirely removed. Tried to get the next one.").endLine();
@@ -939,6 +940,209 @@ MafBlock* PairwiseSequenceStatisticsMafIterator::nextBlock() throw (Exception)
   }
   return currentBlock_;
 }
+
+MafBlock* FeatureFilterMafIterator::nextBlock() throw (Exception)
+{
+  if (blockBuffer_.size() == 0) {
+    //Unless there is no more block in the buffer, we need to parse more:
+    do {
+      MafBlock* block = iterator_->nextBlock();
+      if (!block) return 0; //No more block.
+
+      //Check if the block contains the reference species:
+      if (!block->hasSequenceForSpecies(refSpecies_)) {
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " does not contain the reference species and was kept as is.").endLine(); 
+        }
+        return block;
+      }
+
+      //Get the feature ranges for this block:
+      const MafSequence& refSeq = block->getSequenceForSpecies(refSpecies_);
+      //first check if there is one (for now we assume that features refer to the chromosome or contig name, with implicit species):
+      std::map<std::string, MultiRange<unsigned int> >::iterator mr = ranges_.find(refSeq.getChromosome());
+      if (mr == ranges_.end()) {
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " does not contain any feature and was kept as is.").endLine(); 
+        }
+        return block;
+      }
+      //else
+      MultiRange<unsigned int> mRange = mr->second;
+      mRange.restrictTo(Range<unsigned int>(refSeq.start(), refSeq.stop()));
+      if (mRange.isEmpty()) {
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " does not contain any feature and was kept as is.").endLine(); 
+        }
+        return block;
+      }
+      std::vector<unsigned int> tmp = mRange.getBounds(); 
+      std::deque<unsigned int> refBounds(tmp.begin(), tmp.end()); 
+
+      //Now extract corresponding alignments. We use the range to split the original block.
+      //Only thing to watch out is the coordinates, refering to the ref species...
+      //A good idea is then to convert those with respect to the given block:
+
+      int gap = refSeq.getAlphabet()->getGapCharacterCode();
+      long int refPos = refSeq.start() - 1;
+      std::vector<size_t> pos;
+      for (size_t alnPos = 0; alnPos < refSeq.size() && refBounds.size() > 0; ++alnPos) {
+        if (refSeq[alnPos] != gap) {
+          refPos++;
+          //check if this position is a bound:
+          if (refBounds.front() == static_cast<unsigned int>(refPos)) {
+            pos.push_back(alnPos);
+            refBounds.pop_front();
+          }
+        }
+      }
+      if (refBounds.size() > 0)
+        throw Exception("FeatureFilterMafIterator::nextBlock(). An error occurred here, some coordinates are left... this is most likely a bug, please report!");
+
+      //Next step is simply to split the black according to the translated coordinates:
+      if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
+        //Everything is removed:
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " was entirely removed. Tried to get the next one.").endLine();
+        }
+      } else {
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
+        }
+        if (verbose_) {
+          ApplicationTools::message->endLine();
+          ApplicationTools::displayTask("Spliting block", true);
+        }
+        for (size_t i = 0; i < pos.size(); i+=2) {
+          if (verbose_)
+            ApplicationTools::displayGauge(i, pos.size() - 2, '=');
+          if (logstream_) {
+            (*logstream_ << "FEATURE FILTER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block " << block->getDescription() << ".").endLine();
+          }
+          if (pos[i] > 0) {
+            MafBlock* newBlock = new MafBlock();
+            newBlock->setScore(block->getScore());
+            newBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* subseq;
+              if (i == 0) {
+                subseq = block->getSequence(j).subSequence(0, pos[i]);
+              } else {
+                subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1]);
+              }
+              newBlock->addSequence(*subseq);
+              delete subseq;
+            }
+            blockBuffer_.push_back(newBlock);
+          }
+        
+          if (keepTrashedBlocks_) {
+            MafBlock* outBlock = new MafBlock();
+            outBlock->setScore(block->getScore());
+            outBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* outseq = block->getSequence(j).subSequence(pos[i], pos[i + 1] - pos[i]);
+              outBlock->addSequence(*outseq);
+              delete outseq;
+            } 
+            trashBuffer_.push_back(outBlock);
+          }
+        }
+        //Add last block:
+        if (pos.back() < block->getNumberOfSites()) {
+          MafBlock* newBlock = new MafBlock();
+          newBlock->setScore(block->getScore());
+          newBlock->setPass(block->getPass());
+          for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+            MafSequence* subseq;
+            subseq = block->getSequence(j).subSequence(pos[pos.size() - 1], block->getNumberOfSites() - pos[pos.size() - 1]);
+            newBlock->addSequence(*subseq);
+            delete subseq;
+          }
+          blockBuffer_.push_back(newBlock);
+        }
+        if (verbose_)
+          ApplicationTools::displayTaskDone();
+
+        delete block;
+      }
+    } while (blockBuffer_.size() == 0);
+  }
+
+  MafBlock* nxtBlock = blockBuffer_.front();
+  blockBuffer_.pop_front();
+  return nxtBlock;
+}
+
+MafBlock* FeatureExtractor::nextBlock() throw (Exception)
+{
+  if (blockBuffer_.size() == 0) {
+    //Unless there is no more block in the buffer, we need to parse more:
+    START:
+    MafBlock* block = iterator_->nextBlock();
+    if (!block) return 0; //No more block.
+
+    //Check if the block contains the reference species:
+    if (!block->hasSequenceForSpecies(refSpecies_))
+      goto START;
+
+    //Get the feature ranges for this block:
+    const MafSequence& refSeq = block->getSequenceForSpecies(refSpecies_);
+    //first check if there is one (for now we assume that features refer to the chromosome or contig name, with implicit species):
+    std::map<std::string, RangeSet<unsigned int> >::iterator mr = ranges_.find(refSeq.getChromosome());
+    if (mr == ranges_.end())
+      goto START;
+        
+    RangeSet<unsigned int> ranges = mr->second;
+    ranges.restrictTo(Range<unsigned int>(refSeq.start(), refSeq.stop()));
+    if (ranges.isEmpty())
+      goto START;
+
+    //We will need to convert to alignment positions, using a sequence walker:
+    SequenceWalker walker(refSeq);
+
+    //Now creates all blocks for all ranges:
+    if (verbose_) {
+      ApplicationTools::message->endLine();
+      ApplicationTools::displayTask("Extracting annotations", true);
+    }
+    if (logstream_) {
+      (*logstream_ << "FEATURE EXTRACTOR: extracting " << ranges.getSet().size() << " features from block " << block->getDescription() << ".").endLine();
+    }
+
+    unsigned int i = 0;
+    for (set< Range<unsigned int> >::iterator it = ranges.getSet().begin();
+        it !=  ranges.getSet().end();
+        ++it)
+    {
+      if (verbose_) {
+        ApplicationTools::displayGauge(i++, ranges.getSet().size() - 1, '=');
+      }
+      MafBlock* newBlock = new MafBlock();
+      newBlock->setScore(block->getScore());
+      newBlock->setPass(block->getPass());
+      for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+        MafSequence* subseq;
+        unsigned int a = walker.getAlignmentPosition(it->begin());
+        unsigned int b = walker.getAlignmentPosition(it->end() - 1);
+        subseq = block->getSequence(j).subSequence(a, b - a + 1);
+        newBlock->addSequence(*subseq);
+        delete subseq;
+      }
+      blockBuffer_.push_back(newBlock);
+    }
+        
+    if (verbose_)
+      ApplicationTools::displayTaskDone();
+
+    delete block;
+  }
+
+  MafBlock* nxtBlock = blockBuffer_.front();
+  blockBuffer_.pop_front();
+  return nxtBlock;
+}
+
 
 void OutputMafIterator::writeHeader(std::ostream& out) const
 {

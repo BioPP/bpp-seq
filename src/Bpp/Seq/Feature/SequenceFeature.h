@@ -46,6 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From bpp-core:
 #include <Bpp/Clonable.h>
+#include <Bpp/Numeric/Range.h>
 
 namespace bpp
 {
@@ -104,6 +105,11 @@ class SequenceFeature:
      */
     virtual const unsigned int& getEnd() const = 0;
 
+    /**
+     * @return Coordiantes as a Range object.
+     */
+    virtual Range<unsigned int> getRange() const = 0;
+    
     /**
      * @return The score associated to the feature (eg, an E-value or a P-value).
      */
@@ -188,6 +194,118 @@ class BasicSequenceFeature:
     
     void setAttribute(const std::string& attribute, const std::string& value) {
       attributes_[attribute] = value;
+    }
+
+    Range<unsigned int> getRange() const {
+      return Range<unsigned int>(start_, end_);
+    }
+
+};
+
+/**
+ * @brief A simple ensemble of sequence features.
+ *
+ * This class is at a draft stage, and further improvements are expected, notably
+ * to allow proper indexation, nested features, etc.
+ *
+ * For now, it is mostly a vector of feature object, stored as pointers.
+ * A few functions are provided for convenience.
+ *
+ * @author Julien Dutheil
+ */
+class SequenceFeatureSet
+{
+  private:
+    std::vector<SequenceFeature*> features_;
+
+  public:
+    SequenceFeatureSet(): features_() {};
+
+    virtual ~SequenceFeatureSet() { clear(); }
+
+    SequenceFeatureSet(const SequenceFeatureSet& sfs):
+      features_()
+    {
+      for (std::vector<SequenceFeature*>::const_iterator it = sfs.features_.begin();
+          it != sfs.features_.end();
+          ++it) {
+        features_.push_back((**it).clone());
+      }
+    }
+    SequenceFeatureSet& operator=(const SequenceFeatureSet& sfs)
+    {
+      clear();
+      for (std::vector<SequenceFeature*>::const_iterator it = sfs.features_.begin();
+          it != sfs.features_.end();
+          ++it) {
+        features_.push_back((**it).clone());
+      }
+      return *this;
+    }
+
+  public:
+    /**
+     * @brief Delete all features in this set.
+     */
+    void clear()
+    {
+      for (std::vector<SequenceFeature*>::iterator it = features_.begin();
+          it != features_.end();
+          ++it) {
+        delete *it;
+      }
+      features_.clear();
+    }
+
+    /**
+     * @param The index of the feature.
+     * @return A reference toward the feature.
+     */
+    const SequenceFeature& getFeature(unsigned int i) const {
+      return *features_[i];
+    }
+
+    /**
+     * @return The number of features in this set.
+     */
+    unsigned int getNumberOfFeatures() const { return features_.size(); }
+
+    /**
+     * @brief Add a feature to the container. The feature will be copied and the copy owned by the container.
+     *
+     * @param feature The feature to add to the container.
+     */
+    void addFeature(const SequenceFeature& feature) {
+      features_.push_back(feature.clone());
+    }
+
+    /**
+     * @return A set containing all sequences ids in this set.
+     */
+    std::set<std::string> getSequences() const {
+      std::set<std::string> seqIds;
+      for (std::vector<SequenceFeature*>::const_iterator it = features_.begin();
+          it != features_.end();
+          ++it) {
+        seqIds.insert((**it).getSequenceId());
+      }
+      return seqIds;
+    }
+
+    /**
+     * @brief Get all coordinates of features for a given source.
+     * All ranges are added to a RangeCollection container.
+     * @param seqId The name of the sequence id to consider.
+     * @param coords [out] a container where to add the coordinates of each feature.
+     */
+    void fillRangeCollectionForSequence(const std::string& seqId, RangeCollection<unsigned int>& coords) const {
+      for (std::vector<SequenceFeature*>::const_iterator it = features_.begin();
+          it != features_.end();
+          ++it) {
+        if ((**it).getSequenceId() == seqId) {
+          coords.addRange((**it).getRange());
+        }
+      }
     }
 
 };
