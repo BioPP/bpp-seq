@@ -14,6 +14,7 @@ set(CPP_FILES
   Bpp/Seq/SequencePositionIterators.cpp
   Bpp/Seq/SequenceTools.cpp
   Bpp/Seq/SequenceWithQualityTools.cpp
+  Bpp/Seq/SequenceWalker.cpp
   Bpp/Seq/Site.cpp
   Bpp/Seq/SiteExceptions.cpp
   Bpp/Seq/SiteTools.cpp
@@ -97,6 +98,7 @@ set(H_FILES
   Bpp/Seq/SequenceWithQuality.h
   Bpp/Seq/SequenceTools.h
   Bpp/Seq/SequenceWithQualityTools.h
+  Bpp/Seq/SequenceWalker.h
   Bpp/Seq/SiteExceptions.h
   Bpp/Seq/Site.h
   Bpp/Seq/SiteTools.h
