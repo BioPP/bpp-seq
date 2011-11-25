@@ -50,11 +50,12 @@ unsigned int SequenceWalker::getAlignmentPosition(unsigned int seqPos) throw (Ex
 {
   if (seqPos == seqPos_) return alnPos_;
   if (seqPos > seqPos_) {
-    if (alnPos_ == seq_->size() - 1)
-      throw Exception("SequenceWalker::getAlignmentPosition(). Forward1. Position out of bound.");
     //Move forward
     while (alnPos_ < seq_->size() && seqPos_ < seqPos) {
+      if (alnPos_ == seq_->size() - 1)
+        throw Exception("SequenceWalker::getAlignmentPosition(). Forward1. Position out of bound.");
       ++alnPos_;
+
       if ((*seq_)[alnPos_] != gap_) {
         ++seqPos_;
       }

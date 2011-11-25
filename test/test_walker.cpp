@@ -48,6 +48,10 @@ using namespace bpp;
 using namespace std;
 
 bool testSeq(SequenceWalker& walker, unsigned int pos, unsigned int truth) {
+  cout << 0 << endl;
+  cout << walker.getSequencePosition(0) << endl;
+  cout << 46 << endl;
+  cout << walker.getSequencePosition(46) << endl;;
   for (unsigned int i = 0; i < 1000; ++i) {
     ApplicationTools::displayGauge(i, 999, '=');
     unsigned int r = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(47);
@@ -64,6 +68,10 @@ bool testSeq(SequenceWalker& walker, unsigned int pos, unsigned int truth) {
 }
 
 bool testAln(SequenceWalker& walker, unsigned int pos, unsigned int truth) {
+  cout << 0 << endl;
+  cout << walker.getAlignmentPosition(0) << endl;
+  cout << 26 << endl;
+  cout << walker.getAlignmentPosition(26) << endl;
   for (unsigned int i = 0; i < 1000; ++i) {
     ApplicationTools::displayGauge(i, 999, '=');
     unsigned int r = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(27);
