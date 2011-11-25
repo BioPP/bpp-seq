@@ -149,13 +149,13 @@ class SequenceFeature:
     virtual const double& getScore() const = 0;
 
     /**
-     * @param  Name of the attribute to retrieve.
+     * @param  attribute The name of the attribute to retrieve.
      * @return The attribute with specified name (read only).
      */
     virtual const std::string& getAttribute(const std::string& attribute) const = 0;
     
     /**
-     * @param  Name of the attribute to retrieve.
+     * @param  attribute The name of the attribute to retrieve.
      * @return The attribute with specified name.
      */
     virtual std::string& getAttribute(const std::string& attribute) = 0;
@@ -294,7 +294,7 @@ class SequenceFeatureSet
     }
 
     /**
-     * @param The index of the feature.
+     * @param i The index of the feature.
      * @return A reference toward the feature.
      */
     const SequenceFeature& getFeature(unsigned int i) const {
