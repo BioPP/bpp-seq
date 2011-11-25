@@ -52,6 +52,34 @@ namespace bpp
 {
 
 /**
+ * @brief a coordinate range on a sequence.
+ * Stores coordiantes as a Range<unsigned int> object,
+ * but also keep the strand information.
+ */
+class SeqRange:
+  public Range<unsigned int>
+{
+  private:
+    bool negativeStrand_;
+
+  public:
+    /**
+     * @param a First position
+     * @param b Second position
+     * @param strand The strand information. If not explicitely '-', will be considered as '+'.
+     */
+    SeqRange(unsigned int a, unsigned int b, char strand = '+'):
+      Range<unsigned int>(a, b), negativeStrand_(strand == '-')
+    {}
+
+  public:
+    char getStrand() const { return negativeStrand_ ? '-' : '+'; }
+
+    bool isNegativeStrand() const { return negativeStrand_; }
+
+};
+
+/**
  * @brief The base interface for sequence features.
  *
  * This interface provides the most generic information common to all features, that is:
@@ -106,9 +134,14 @@ class SequenceFeature:
     virtual const unsigned int& getEnd() const = 0;
 
     /**
+     * @return True if the sequence is coded on the negative strand. False if it is on the positive one.
+     */
+    virtual bool isNegativeStrand() const = 0;
+
+    /**
      * @return Coordiantes as a Range object.
      */
-    virtual Range<unsigned int> getRange() const = 0;
+    virtual SeqRange getRange() const = 0;
     
     /**
      * @return The score associated to the feature (eg, an E-value or a P-value).
@@ -152,6 +185,7 @@ class BasicSequenceFeature:
     std::string type_;
     unsigned int start_;
     unsigned int end_;
+    bool negStrand_;
     double score_;
     mutable std::map<std::string, std::string> attributes_;
 
@@ -163,9 +197,10 @@ class BasicSequenceFeature:
         const std::string& type,
         unsigned int start,
         unsigned int end,
+        bool negStrand,
         double score = -1):
       id_(id), sequenceId_(seqId), source_(source),
-      type_(type), start_(start), end_(end), score_(score),
+      type_(type), start_(start), end_(end), negStrand_(negStrand), score_(score),
       attributes_()
     {}
 
@@ -178,6 +213,7 @@ class BasicSequenceFeature:
     const std::string& getType() const { return type_; }
     const unsigned int& getStart() const { return start_; }
     const unsigned int& getEnd() const { return end_; }
+    bool isNegativeStrand() const { return negStrand_; }
     const double& getScore() const { return score_; }
 
     const std::string& getAttribute(const std::string& attribute) const {
@@ -196,8 +232,8 @@ class BasicSequenceFeature:
       attributes_[attribute] = value;
     }
 
-    Range<unsigned int> getRange() const {
-      return Range<unsigned int>(start_, end_);
+    SeqRange getRange() const {
+      return SeqRange(start_, end_, (negStrand_ ? '-' : '+'));
     }
 
 };

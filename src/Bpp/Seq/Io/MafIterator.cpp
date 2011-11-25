@@ -984,7 +984,7 @@ MafBlock* FeatureFilterMafIterator::nextBlock() throw (Exception)
       //A good idea is then to convert those with respect to the given block:
 
       int gap = refSeq.getAlphabet()->getGapCharacterCode();
-      long int refPos = refSeq.start() - 1;
+      long int refPos = static_cast<long int>(refSeq.start()) - 1;
       std::vector<size_t> pos;
       for (size_t alnPos = 0; alnPos < refSeq.size() && refBounds.size() > 0; ++alnPos) {
         if (refSeq[alnPos] != gap) {
