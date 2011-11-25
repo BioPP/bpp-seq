@@ -1123,8 +1123,8 @@ MafBlock* FeatureExtractor::nextBlock() throw (Exception)
       newBlock->setPass(block->getPass());
       for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
         MafSequence* subseq;
-        unsigned int a = walker.getAlignmentPosition(it->begin());
-        unsigned int b = walker.getAlignmentPosition(it->end() - 1);
+        unsigned int a = walker.getAlignmentPosition(it->begin() - refSeq.start());
+        unsigned int b = walker.getAlignmentPosition(it->end() - refSeq.start() - 1);
         subseq = block->getSequence(j).subSequence(a, b - a + 1);
         newBlock->addSequence(*subseq);
         delete subseq;

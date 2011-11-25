@@ -90,7 +90,7 @@ const BasicSequenceFeature GffFeatureReader::nextFeature() throw (Exception)
   string seqId       = st.nextToken();
   string source      = st.nextToken();
   string type        = st.nextToken();
-  unsigned int start = TextTools::to<unsigned int>(st.nextToken());
+  unsigned int start = TextTools::to<unsigned int>(st.nextToken()) - 1;
   unsigned int end   = TextTools::to<unsigned int>(st.nextToken());
   double score       = TextTools::to<double>(st.nextToken());
   string strand      = st.nextToken();

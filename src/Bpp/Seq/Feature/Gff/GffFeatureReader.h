@@ -57,6 +57,9 @@ namespace bpp {
  * The reference norm in use is the one of GFF3 http://www.sequenceontology.org/gff3.shtml .
  * This class is a "beta" class, and may undeavour interface changes in the future.
  *
+ * Note that in GFF, coordinates are [a, b] 1-based. They will therefore be converted to [a, b[ 0-based,
+ * as specified for the SequenceFeature object.
+ *
  * @author Julien Dutheil
  */
 class GffFeatureReader

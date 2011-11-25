@@ -42,6 +42,8 @@ using namespace std;
 
 #include "SequenceWalker.h"
 
+#include <Bpp/Text/TextTools.h>
+
 using namespace bpp;
 
 unsigned int SequenceWalker::getAlignmentPosition(unsigned int seqPos) throw (Exception)
@@ -49,7 +51,7 @@ unsigned int SequenceWalker::getAlignmentPosition(unsigned int seqPos) throw (Ex
   if (seqPos == seqPos_) return alnPos_;
   if (seqPos > seqPos_) {
     if (alnPos_ == seq_->size() - 1)
-      throw Exception("SequenceWalker::getAlignmentPosition(). Position out of bound.");
+      throw Exception("SequenceWalker::getAlignmentPosition(). Forward1. Position out of bound.");
     //Move forward
     while (alnPos_ < seq_->size() && seqPos_ < seqPos) {
       ++alnPos_;
@@ -58,11 +60,11 @@ unsigned int SequenceWalker::getAlignmentPosition(unsigned int seqPos) throw (Ex
       }
     }
     if (seqPos_ != seqPos)
-      throw Exception("SequenceWalker::getAlignmentPosition(). Position out of bound.");
+      throw Exception("SequenceWalker::getAlignmentPosition(). Forward2. Position out of bound (" + TextTools::toString(alnPos_) + ")");
   } else {
     //Move backward
     if (alnPos_ == 0)
-      throw Exception("SequenceWalker::getAlignmentPosition(). Position out of bound.");
+      throw Exception("SequenceWalker::getAlignmentPosition(). Backward. Position out of bound.");
     while (alnPos_ > 0 && seqPos_ > seqPos) {
       --alnPos_;
       if ((*seq_)[alnPos_] != gap_) {
