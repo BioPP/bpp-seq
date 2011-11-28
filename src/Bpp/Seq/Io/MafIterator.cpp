@@ -1111,7 +1111,7 @@ MafBlock* FeatureExtractor::nextBlock() throw (Exception)
     }
 
     unsigned int i = 0;
-    for (set< Range<unsigned int> >::iterator it = ranges.getSet().begin();
+    for (set<Range<unsigned int>*>::iterator it = ranges.getSet().begin();
         it !=  ranges.getSet().end();
         ++it)
     {
@@ -1122,12 +1122,16 @@ MafBlock* FeatureExtractor::nextBlock() throw (Exception)
       newBlock->setScore(block->getScore());
       newBlock->setPass(block->getPass());
       for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
-        MafSequence* subseq;
-        unsigned int a = walker.getAlignmentPosition(it->begin() - refSeq.start());
-        unsigned int b = walker.getAlignmentPosition(it->end() - refSeq.start() - 1);
-        subseq = block->getSequence(j).subSequence(a, b - a + 1);
+        auto_ptr<MafSequence> subseq;
+        unsigned int a = walker.getAlignmentPosition((**it).begin() - refSeq.start());
+        unsigned int b = walker.getAlignmentPosition((**it).end() - refSeq.start() - 1);
+        subseq.reset(block->getSequence(j).subSequence(a, b - a + 1));
+        if (!ignoreStrand_) {
+          if (dynamic_cast<SeqRange*>(*it)->isNegativeStrand()) {
+            SequenceTools::invertComplement(*subseq);
+          }
+        }
         newBlock->addSequence(*subseq);
-        delete subseq;
       }
       blockBuffer_.push_back(newBlock);
     }

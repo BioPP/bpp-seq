@@ -43,6 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 //From the STL:
 #include <string>
 #include <map>
+#include <algorithm>
 
 //From bpp-core:
 #include <Bpp/Clonable.h>
@@ -71,6 +72,8 @@ class SeqRange:
     SeqRange(unsigned int a, unsigned int b, char strand = '+'):
       Range<unsigned int>(a, b), negativeStrand_(strand == '-')
     {}
+
+    SeqRange* clone() const { return new SeqRange(*this); }
 
   public:
     char getStrand() const { return negativeStrand_ ? '-' : '+'; }
@@ -134,7 +137,7 @@ class SequenceFeature:
     virtual const unsigned int& getEnd() const = 0;
 
     /**
-     * @return True if the sequence is coded on the negative strand. False if it is on the positive one.
+     * @return True if the sequence is coded on the negative strand. False if it is on the positive one or unknown.
      */
     virtual bool isNegativeStrand() const = 0;
 
@@ -329,8 +332,21 @@ class SequenceFeatureSet
     }
 
     /**
+     * @return A set containing all feature type in this set.
+     */
+    std::set<std::string> getTypes() const {
+      std::set<std::string> types;
+      for (std::vector<SequenceFeature*>::const_iterator it = features_.begin();
+          it != features_.end();
+          ++it) {
+        types.insert((**it).getType());
+      }
+      return types;
+    }
+
+    /**
      * @brief Get all coordinates of features for a given source.
-     * All ranges are added to a RangeCollection container.
+     * All ranges are added to a RangeCollection container, as SeqRange objects.
      * @param seqId The name of the sequence id to consider.
      * @param coords [out] a container where to add the coordinates of each feature.
      */
@@ -342,6 +358,22 @@ class SequenceFeatureSet
           coords.addRange((**it).getRange());
         }
       }
+    }
+
+    /**
+     * @param type The feature type.
+     * @return A new set with all features of a given type.
+     */
+    SequenceFeatureSet* getSubsetForType(const std::vector<std::string>& types) const {
+      SequenceFeatureSet* subset = new SequenceFeatureSet();
+      for (std::vector<SequenceFeature*>::const_iterator it = features_.begin();
+          it != features_.end();
+          ++it) {
+        if (std::find(types.begin(), types.end(), (**it).getType()) != types.end()) {
+          subset->addFeature(**it);
+        }
+      }
+      return subset;
     }
 
 };

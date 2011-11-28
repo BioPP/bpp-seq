@@ -162,8 +162,15 @@ class MafSequence:
   
     std::string getDescription() const { return getName() + strand_ + ":" + (hasCoordinates_ ? TextTools::toString(start()) + "-" + TextTools::toString(stop()) : "?-?"); }
   
+    /**
+     * @brief Extract a sub-sequence.
+     *
+     * @return A subsequence.
+     * @param startAt Begining of sub-sequence.
+     * @param length  the length of the sub-sequence.
+     */
     MafSequence* subSequence(unsigned int startAt, unsigned int length) const;
-
+    
   private:
     void beforeSequenceChanged(const SymbolListEditionEvent& event) {}
     void afterSequenceChanged(const SymbolListEditionEvent& event) { size_ = SequenceTools::getNumberOfSites(*this); }
@@ -802,13 +809,23 @@ class FeatureExtractor:
 {
   private:
     std::string refSpecies_;
+    bool ignoreStrand_;
     std::deque<MafBlock*> blockBuffer_;
     std::map<std::string, RangeSet<unsigned int> > ranges_;
 
   public:
-    FeatureExtractor(MafIterator* iterator, const std::string& refSpecies, const SequenceFeatureSet& features) :
+    /**
+     * @brief Build a new FeatureExtractor iterator.
+     *
+     * @param iterator The input iterator
+     * @param refSpecies The reference species for feature coordinates
+     * @param features The set of features to extract
+     * @param ignoreStrand If true, features will be extracted 'as is', without being reversed in case they ar eon the negative strand.
+     */
+    FeatureExtractor(MafIterator* iterator, const std::string& refSpecies, const SequenceFeatureSet& features, bool ignoreStrand = false) :
       AbstractFilterMafIterator(iterator),
       refSpecies_(refSpecies),
+      ignoreStrand_(ignoreStrand),
       blockBuffer_(),
       ranges_()
     {

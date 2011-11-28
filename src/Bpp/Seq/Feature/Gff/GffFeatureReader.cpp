@@ -51,7 +51,6 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-const std::string GffFeatureReader::GFF_STRAND;
 const std::string GffFeatureReader::GFF_PHASE;
 const std::string GffFeatureReader::GFF_NAME;
 const std::string GffFeatureReader::GFF_ALIAS;
@@ -99,10 +98,9 @@ const BasicSequenceFeature GffFeatureReader::nextFeature() throw (Exception)
   map<string, string> attributes;
   KeyvalTools::multipleKeyvals(attrDesc, attributes, ";", false);
   string id = attributes["ID"];
-  BasicSequenceFeature feature(id, seqId, source, type, start, end, score);
+  BasicSequenceFeature feature(id, seqId, source, type, start, end, (strand == "-"), score);
   
-  //Set strand and phase attributes:
-  if (strand != ".") feature.setAttribute("GFF_STRAND", strand);
+  //Set phase attributes:
   if (phase != ".") feature.setAttribute("GFF_PHASE", phase);
 
   //now check additional attributes:

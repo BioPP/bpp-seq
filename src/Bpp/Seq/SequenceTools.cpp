@@ -195,13 +195,13 @@ Sequence& SequenceTools::invertComplement(Sequence& seq) {
 	} else {
 		throw AlphabetException("SequenceTools::complement: Sequence must be nucleic.", seq.getAlphabet());
 	}
-  for (unsigned int i = 0 ; i < seq.size() ; i++) {
-    seq.setElement(i, NAR->translate(seq.getValue(i)));
-  }
-  unsigned int seq_size = seq.size(); // store seq size for efficiency
-  unsigned int tmp_state = 0; // to store one state when swapping positions
-  unsigned int j = seq_size; // symetric position iterator from sequence end
-  for (unsigned int i = 0 ; i < seq_size / 2 ; i++) {
+  //for (size_t i = 0 ; i < seq.size() ; i++) {
+  //  seq.setElement(i, NAR->translate(seq.getValue(i)));
+  //}
+  size_t seq_size = seq.size(); // store seq size for efficiency
+  int tmp_state = 0; // to store one state when swapping positions
+  size_t j = seq_size; // symetric position iterator from sequence end
+  for (size_t i = 0 ; i < seq_size / 2 ; i++) {
     j = seq_size - 1 - i;
     tmp_state = seq.getValue(i);
     seq.setElement(i, NAR->translate(seq.getValue(j)));

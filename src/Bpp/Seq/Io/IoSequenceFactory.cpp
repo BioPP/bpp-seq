@@ -88,12 +88,12 @@ OSequence* IOSequenceFactory::createWriter(const string& format) throw (Exceptio
 
 OAlignment* IOSequenceFactory::createAlignmentWriter(const string& format) throw (Exception)
 {
-       if(format == FASTA_FORMAT) return new Fasta();
-  else if(format == MASE_FORMAT) return new Mase();
-  else if(format == PHYLIP_FORMAT_INTERLEAVED) return new Phylip(false, false);
-  else if(format == PHYLIP_FORMAT_SEQUENTIAL) return new Phylip(false, true);
-  else if(format == PAML_FORMAT_INTERLEAVED) return new Phylip(true, false);
-  else if(format == PAML_FORMAT_SEQUENTIAL) return new Phylip(true, true);
+       if (format == FASTA_FORMAT) return new Fasta();
+  else if (format == MASE_FORMAT) return new Mase();
+  else if (format == PHYLIP_FORMAT_INTERLEAVED) return new Phylip(false, false);
+  else if (format == PHYLIP_FORMAT_SEQUENTIAL) return new Phylip(false, true);
+  else if (format == PAML_FORMAT_INTERLEAVED) return new Phylip(true, false);
+  else if (format == PAML_FORMAT_SEQUENTIAL) return new Phylip(true, true);
   else throw Exception("Format " + format + " is not supported for output.");
 }
 
