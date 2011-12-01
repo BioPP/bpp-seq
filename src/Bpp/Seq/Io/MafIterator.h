@@ -659,6 +659,54 @@ class AlignmentFilterMafIterator:
 };
 
 /**
+ * @brief Filter maf blocks to remove ambiguously aligned or non-informative regions.
+ *
+ * This iterators offers a different algorithm than AlignmentFilterMafIterator.
+ * It takes two parameters: g=maxGap and n=maxPos. windows with at more than n positions containing each of them more than g=maxPos gaps will be discarded.
+ * In addition, consecutives patterns are only counted once.
+ */
+class AlignmentFilter2MafIterator:
+  public AbstractFilterMafIterator,
+  public MafTrashIterator
+{
+  private:
+    std::vector<std::string> species_;
+    unsigned int windowSize_;
+    unsigned int step_;
+    unsigned int maxGap_;
+    unsigned int maxPos_;
+    std::deque<MafBlock*> blockBuffer_;
+    std::deque<MafBlock*> trashBuffer_;
+    std::deque< std::vector<bool> > window_;
+    bool keepTrashedBlocks_;
+
+  public:
+    AlignmentFilter2MafIterator(MafIterator* iterator, const std::vector<std::string>& species, unsigned int windowSize, unsigned int step, unsigned int maxGap, unsigned int maxPos, bool keepTrashedBlocks) :
+      AbstractFilterMafIterator(iterator),
+      species_(species),
+      windowSize_(windowSize),
+      step_(step),
+      maxGap_(maxGap),
+      maxPos_(maxPos),
+      blockBuffer_(),
+      trashBuffer_(),
+      window_(species.size()),
+      keepTrashedBlocks_(keepTrashedBlocks)
+    {}
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+    MafBlock* nextRemovedBlock() throw (Exception) {
+      if (trashBuffer_.size() == 0) return 0;
+      MafBlock* block = trashBuffer_.front();
+      trashBuffer_.pop_front();
+      return block;
+    }
+
+};
+
+/**
  * @brief Filter maf blocks to remove regions with masked positions.
  *
  * Regions with a too high proportion of masked position in a set of species will be removed,
