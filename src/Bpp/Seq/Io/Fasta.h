@@ -70,11 +70,10 @@ class Fasta:
     /**
      * @brief The maximum number of chars to be written on a line.
      */
-    unsigned int charsByLine_;
-
-    bool checkNames_;
-
-    bool extended_;
+    unsigned int charsByLine_; // Number of char by line (output only)
+    bool checkNames_;          // If names must be checked in container
+    bool extended_;            // If using HUPO-PSI extensions
+    bool strictNames_;         // If name is between '>' and first space
 
   public:
   
@@ -82,10 +81,11 @@ class Fasta:
      * @brief Build a new Fasta object.
      *
      * @param charsByLine Number of character per line when writing files.
-     * @param checkSequenceNames  Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
-     * @param extended Tell if we should read general comments and sequence comments in HUPO-PSI format.
+     * @param checkSequenceNames  Tells if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+     * @param extended Tells if we should read general comments and sequence comments in HUPO-PSI format.
+     * @param strictSequenceNames Tells if the sequence names should be restricted to the characters between '>' and the first blank one.
      */
-    Fasta(unsigned int charsByLine = 100, bool checkSequenceNames = true, bool extended = false): charsByLine_(charsByLine), checkNames_(checkSequenceNames), extended_(extended) {}
+    Fasta(unsigned int charsByLine = 100, bool checkSequenceNames = true, bool extended = false, bool strictSequenceNames = false): charsByLine_(charsByLine), checkNames_(checkSequenceNames), extended_(extended), strictNames_(strictSequenceNames) {}
 
     // Class destructor
     virtual ~Fasta() {}
@@ -167,6 +167,18 @@ class Fasta:
      * @param yn whether the sequence names should be checked when reading from files.
      */
     void checkNames(bool yn) { checkNames_ = yn; }
+
+    /**
+     * @return true if the sequence name is restricted to be between '>' and the first space character.
+     */
+    bool strictNames() const { return strictNames_; }
+
+    /**
+     * @brief Tell wethed the sequence name should be restrected to the first non blank characters.
+     *
+     * @param yn whether the sequence names should be restrected.
+     */
+    void strictNames(bool yn) { strictNames_ = yn; }
 
     /**
      * @brief The SequenceFileIndex class for Fasta format
