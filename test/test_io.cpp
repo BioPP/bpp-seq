@@ -50,6 +50,12 @@ int main() {
   ProteicAlphabet* alpha = new ProteicAlphabet;
   Fasta fasta;
   const SequenceContainer* seqcont1 = fasta.read("example.fasta", alpha);
+  //test number of seq
+  cout << "example.fasta contains " << seqcont1->getNumberOfSequences() << " sequences" << endl;
+  if (seqcont1->getNumberOfSequences() != 100) {
+    return 1;
+  }
+
   Mase mase;
   const SequenceContainer* seqcont2 = mase.read("example.mase", alpha);
   Clustal clustal;

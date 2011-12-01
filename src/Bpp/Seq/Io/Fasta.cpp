@@ -178,9 +178,10 @@ void Fasta::appendFromStream(istream& input, SequenceContainer& vsc) const throw
   char c = '\n';
   char last_c;
   bool header = false;
+  bool hasSeq = true;
   string line = "";
   Comments cmts;
-  while (!input.eof())
+  while (!input.eof() && hasSeq)
   {
     last_c = c;
     input.get(c);
@@ -216,7 +217,7 @@ void Fasta::appendFromStream(istream& input, SequenceContainer& vsc) const throw
       input.putback(c);
       c = last_c;
       BasicSequence tmpseq("", "", vsc.getAlphabet());
-      nextSequence(input, tmpseq);
+      hasSeq = nextSequence(input, tmpseq);
       vsc.addSequence(tmpseq, checkNames_);
     }
   }
