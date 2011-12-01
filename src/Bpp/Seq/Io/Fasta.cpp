@@ -120,13 +120,19 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
     return false;
   }
   // Sequence name and comments isolation
-  if (extended_) {
-    StringTokenizer * st = new StringTokenizer(seqname, " \\", true, false);
-    seqname = st->nextToken();
-    while (st->hasMoreToken()) {
-      seqcmts.push_back(st->nextToken());
+  if (strictNames_ || extended_) {
+    size_t pos = seqname.find_first_of(" \t\n");
+    string seqcmt;
+    if (pos != string::npos) {
+      seqcmt = seqname.substr(pos + 1);
+      seqname = seqname.substr(0, pos);
     }
-    delete st;
+    if (extended_) {
+      StringTokenizer st(seqcmt, " \\", true, false);
+      while (st.hasMoreToken()) {
+        seqcmts.push_back(st.nextToken());
+      }
+    }
     seq.setComments(seqcmts);
   }
   seq.setName(seqname);
