@@ -1,11 +1,11 @@
 //
-// File ISequenceStream.h
-// Author: Sylvain Gaillard
-// Created: 18/08/2009
+// File: SequenceFeature.cpp
+// Created by: Julien Dutheil
+// Created on: Mon Nov 21 2011
 //
 
 /*
-Copyright or © or Copr. CNRS, (August 18, 2009)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,46 +37,9 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ISEQUENCESTREAM_H_
-#define _ISEQUENCESTREAM_H_
+#include "SequenceFeature.h"
 
-#include "IoSequenceStream.h"
-#include "../Sequence.h"
-#include "../Alphabet/Alphabet.h"
-#include <Bpp/Exceptions.h>
+using namespace bpp;
 
-namespace bpp
-{
-
-/**
- * @brief The ISequenceStream interface.
- *
- * Interface for streaming sequences input.
- *
- * @author Sylvain Gaillard
- */
-class ISequenceStream: public virtual IOSequenceStream
-{
-	public:
-		ISequenceStream() {}
-		virtual ~ISequenceStream() {}
-
-	public:
-    /**
-     * @brief Read sequence from stream.
-     *
-     * Read one sequence from a stream.
-     *
-     * @param input The stream to read.
-     * @param seq The sequence to fill.
-     * @return true if a sequence was read or false if not.
-     * @throw Exception IOExecption and Sequence related Exceptions.
-     */
-    virtual bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
-
-};
-
-} //end of namespace bpp.
-
-#endif	// _ISEQUENCESTREAM_H_
+const std::string SequenceFeature::NO_ATTRIBUTE_SET = "";
 

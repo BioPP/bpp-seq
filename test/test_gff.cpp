@@ -1,14 +1,14 @@
 //
-// File ISequenceStream.h
-// Author: Sylvain Gaillard
-// Created: 18/08/2009
+// File: test_gff.cpp
+// Created by: Julien Dutheil
+// Created on: Mon Nov 21 14:31 2011
 //
 
 /*
-Copyright or © or Copr. CNRS, (August 18, 2009)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+for numerical calculus. This file is part of the Bio++ project.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -37,46 +37,25 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ISEQUENCESTREAM_H_
-#define _ISEQUENCESTREAM_H_
+#include <Bpp/Seq/Feature/Gff/GffFeatureReader.h>
 
-#include "IoSequenceStream.h"
-#include "../Sequence.h"
-#include "../Alphabet/Alphabet.h"
-#include <Bpp/Exceptions.h>
+#include <iostream>
+#include <fstream>
 
-namespace bpp
-{
+using namespace bpp;
+using namespace std;
 
-/**
- * @brief The ISequenceStream interface.
- *
- * Interface for streaming sequences input.
- *
- * @author Sylvain Gaillard
- */
-class ISequenceStream: public virtual IOSequenceStream
-{
-	public:
-		ISequenceStream() {}
-		virtual ~ISequenceStream() {}
-
-	public:
-    /**
-     * @brief Read sequence from stream.
-     *
-     * Read one sequence from a stream.
-     *
-     * @param input The stream to read.
-     * @param seq The sequence to fill.
-     * @return true if a sequence was read or false if not.
-     * @throw Exception IOExecption and Sequence related Exceptions.
-     */
-    virtual bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
-
-};
-
-} //end of namespace bpp.
-
-#endif	// _ISEQUENCESTREAM_H_
-
+int main() {
+  try {
+  ifstream input("example.gff", ios::in);
+  GffFeatureReader reader(input);
+  while (reader.hasMoreFeature()) {
+    BasicSequenceFeature feature = reader.nextFeature();
+    cout << "Found feature " << feature.getId() << " of type " << feature.getType() << ", starting at " << feature.getStart() << " and ending at " << feature.getEnd() << endl;
+  }
+  return 0;
+  } catch (exception& ex) {
+    cerr << ex.what() << endl;
+    return 1;
+  }
+}

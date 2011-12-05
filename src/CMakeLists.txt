@@ -14,6 +14,7 @@ set(CPP_FILES
   Bpp/Seq/SequencePositionIterators.cpp
   Bpp/Seq/SequenceTools.cpp
   Bpp/Seq/SequenceWithQualityTools.cpp
+  Bpp/Seq/SequenceWalker.cpp
   Bpp/Seq/Site.cpp
   Bpp/Seq/SiteExceptions.cpp
   Bpp/Seq/SiteTools.cpp
@@ -69,6 +70,7 @@ set(CPP_FILES
   Bpp/Seq/Io/Clustal.cpp
   Bpp/Seq/Io/Dcse.cpp
   Bpp/Seq/Io/Fasta.cpp
+  Bpp/Seq/Io/Fastq.cpp
   Bpp/Seq/Io/Mase.cpp
   Bpp/Seq/Io/MaseTools.cpp
   Bpp/Seq/Io/Phylip.cpp
@@ -81,6 +83,8 @@ set(CPP_FILES
   Bpp/Seq/Io/Stockholm.cpp
   Bpp/Seq/Io/MafAlignmentParser.cpp
   Bpp/Seq/Io/MafIterator.cpp
+  Bpp/Seq/Feature/SequenceFeature.cpp
+  Bpp/Seq/Feature/Gff/GffFeatureReader.cpp
   Bpp/Seq/App/SequenceApplicationTools.cpp
   )
 
@@ -96,6 +100,7 @@ set(H_FILES
   Bpp/Seq/SequenceWithQuality.h
   Bpp/Seq/SequenceTools.h
   Bpp/Seq/SequenceWithQualityTools.h
+  Bpp/Seq/SequenceWalker.h
   Bpp/Seq/SiteExceptions.h
   Bpp/Seq/Site.h
   Bpp/Seq/SiteTools.h
@@ -139,6 +144,7 @@ set(H_FILES
   Bpp/Seq/Io/Clustal.h
   Bpp/Seq/Io/Dcse.h
   Bpp/Seq/Io/Fasta.h
+  Bpp/Seq/Io/Fastq.h
   Bpp/Seq/Io/IOSequence.h
   Bpp/Seq/Io/ISequence.h
   Bpp/Seq/Io/ISequenceStream.h
@@ -196,6 +202,8 @@ set(H_FILES
   Bpp/Seq/StateProperties/AASEASup30Index.h
   Bpp/Seq/StateProperties/AASEAInf10Index.h
   Bpp/Seq/StateProperties/AASEA1030Index.h
+  Bpp/Seq/Feature/SequenceFeature.h
+  Bpp/Seq/Feature/Gff/GffFeatureReader.h
   Bpp/Seq/App/SequenceApplicationTools.h
   )
 

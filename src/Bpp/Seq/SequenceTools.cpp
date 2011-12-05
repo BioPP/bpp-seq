@@ -196,13 +196,13 @@ Sequence& SequenceTools::invertComplement(Sequence& seq) {
 	} else {
 		throw AlphabetException("SequenceTools::complement: Sequence must be nucleic.", seq.getAlphabet());
 	}
-  for (unsigned int i = 0 ; i < seq.size() ; i++) {
-    seq.setElement(i, NAR->translate(seq.getValue(i)));
-  }
-  unsigned int seq_size = seq.size(); // store seq size for efficiency
-  unsigned int tmp_state = 0; // to store one state when swapping positions
-  unsigned int j = seq_size; // symetric position iterator from sequence end
-  for (unsigned int i = 0 ; i < seq_size / 2 ; i++) {
+  //for (size_t i = 0 ; i < seq.size() ; i++) {
+  //  seq.setElement(i, NAR->translate(seq.getValue(i)));
+  //}
+  size_t seq_size = seq.size(); // store seq size for efficiency
+  int tmp_state = 0; // to store one state when swapping positions
+  size_t j = seq_size; // symetric position iterator from sequence end
+  for (size_t i = 0 ; i < seq_size / 2 ; i++) {
     j = seq_size - 1 - i;
     tmp_state = seq.getValue(i);
     seq.setElement(i, NAR->translate(seq.getValue(j)));
@@ -216,16 +216,29 @@ Sequence& SequenceTools::invertComplement(Sequence& seq) {
 
 /******************************************************************************/
 
-double SequenceTools::getPercentIdentity(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, SequenceNotAlignedException)
+double SequenceTools::getPercentIdentity(const Sequence& seq1, const Sequence& seq2, bool ignoreGaps) throw (AlphabetMismatchException, SequenceNotAlignedException)
 {
-	if(seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+	if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
 		throw AlphabetMismatchException("SequenceTools::getPercentIdentity", seq1.getAlphabet(), seq2.getAlphabet());
-	if(seq1.size() != seq2.size())
+	if (seq1.size() != seq2.size())
 		throw SequenceNotAlignedException("SequenceTools::getPercentIdentity", &seq2);
-	int id = 0;
-	for(unsigned int i = 0; i < seq1.size(); i++)
-		if(seq1.getValue(i) == seq2.getValue(i)) id++;
-	return (double)id / (double)seq1.size() * 100.; 			
+  int gap = seq1.getAlphabet()->getGapCharacterCode();
+	unsigned int id = 0;
+	unsigned int tot = 0;
+	for (unsigned int i = 0; i < seq1.size(); i++) {
+    int x = seq1.getValue(i);
+    int y = seq2.getValue(i);
+    if (ignoreGaps) {
+      if (x != gap && y != gap) {
+        tot++;
+		    if (x == y) id++;
+      }
+    } else {
+      tot++;
+		  if (x == y) id++;
+    }
+  }
+	return static_cast<double>(id) / static_cast<double>(tot) * 100.; 			
 }
 
 /******************************************************************************/

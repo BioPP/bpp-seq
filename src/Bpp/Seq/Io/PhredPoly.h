@@ -71,7 +71,7 @@ namespace bpp {
        *
        * @{
        */
-      void nextSequence(std::istream& input, Sequence& seq) const throw (Exception);
+      bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception);
       /** @} */
 
       /**

@@ -36,16 +36,28 @@ ADD_EXECUTABLE(test_containers test_containers.cpp)
 TARGET_LINK_LIBRARIES(test_containers ${LIBS})
 ADD_TEST(test_containers "test_containers")
 
+ADD_EXECUTABLE(test_walker test_walker.cpp)
+TARGET_LINK_LIBRARIES(test_walker ${LIBS})
+ADD_TEST(test_walker "test_walker")
+
 ADD_EXECUTABLE(test_bowker test_bowker.cpp)
 TARGET_LINK_LIBRARIES(test_bowker ${LIBS})
 ADD_TEST(test_bowker "test_bowker")
 
+ADD_EXECUTABLE(test_gff test_gff.cpp)
+TARGET_LINK_LIBRARIES(test_gff ${LIBS})
+ADD_TEST(test_gff "test_gff")
+
+ADD_EXECUTABLE(test_fastq test_fastq.cpp)
+TARGET_LINK_LIBRARIES(test_fastq ${LIBS})
+ADD_TEST(test_fastq "test_fastq")
+
 IF(UNIX)
-  SET_PROPERTY(TEST test_alphabets test_io test_containers test_bowker PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_alphabets test_io test_containers test_bowker test_gff test_fastq PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(APPLE)
-  SET_PROPERTY(TEST test_alphabets test_io test_containers test_bowker PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_alphabets test_io test_containers test_bowker test_gff test_fastq PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(WIN32)

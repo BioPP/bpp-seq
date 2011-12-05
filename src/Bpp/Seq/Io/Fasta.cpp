@@ -7,9 +7,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -55,7 +53,7 @@ using namespace std;
 
 /******************************************************************************/
 
-void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
+bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
   if (!input)
     throw IOException("Fasta::nextSequence: can't read from istream input");
   string seqname = "";
@@ -116,17 +114,26 @@ void Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       }
     }
   }
+  bool res = (!input.eof());
+  
   // Sequence name and comments isolation
-  if (extended_) {
-    StringTokenizer * st = new StringTokenizer(seqname, " \\", true, false);
-    seqname = st->nextToken();
-    while (st->hasMoreToken()) {
-      seqcmts.push_back(st->nextToken());
+  if (strictNames_ || extended_) {
+    size_t pos = seqname.find_first_of(" \t\n");
+    string seqcmt;
+    if (pos != string::npos) {
+      seqcmt = seqname.substr(pos + 1);
+      seqname = seqname.substr(0, pos);
     }
-    delete st;
+    if (extended_) {
+      StringTokenizer st(seqcmt, " \\", true, false);
+      while (st.hasMoreToken()) {
+        seqcmts.push_back(st.nextToken());
+      }
+    }
     seq.setComments(seqcmts);
   }
   seq.setName(seqname);
+  return res;
 }
 
 /******************************************************************************/
@@ -168,9 +175,10 @@ void Fasta::appendFromStream(istream& input, SequenceContainer& vsc) const throw
   char c = '\n';
   char last_c;
   bool header = false;
+  bool hasSeq = true;
   string line = "";
   Comments cmts;
-  while (!input.eof())
+  while (!input.eof() && hasSeq)
   {
     last_c = c;
     input.get(c);
@@ -206,7 +214,7 @@ void Fasta::appendFromStream(istream& input, SequenceContainer& vsc) const throw
       input.putback(c);
       c = last_c;
       BasicSequence tmpseq("", "", vsc.getAlphabet());
-      nextSequence(input, tmpseq);
+      hasSeq = nextSequence(input, tmpseq);
       vsc.addSequence(tmpseq, checkNames_);
     }
   }
@@ -242,7 +250,7 @@ void Fasta::write(ostream& output, const SequenceContainer& sc) const throw (Exc
 
 /******************************************************************************/
 
-// FaileIndex class
+// FileIndex class
 
 void Fasta::FileIndex::build(const std::string& path) throw (Exception) {
   // open the file

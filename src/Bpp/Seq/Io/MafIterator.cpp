@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "MafIterator.h"
 #include "../SequenceWithQuality.h"
 #include "../SequenceWithAnnotationTools.h"
+#include "../SequenceWalker.h"
 #include "../Alphabet/AlphabetTools.h"
 #include "../Container/VectorSiteContainer.h"
 #include "../SiteTools.h"
@@ -61,6 +62,8 @@ MafSequence* MafSequence::subSequence(unsigned int startAt, unsigned int length)
     }
   }
   MafSequence* newSeq = new MafSequence(getName(), subseq, begin, strand_, srcSize_);
+  if (!hasCoordinates_)
+    newSeq->removeCoordinates();
   vector<string> anno = getAnnotationTypes();
   for (size_t i = 0; i < anno.size(); ++i) {
     newSeq->addAnnotation(getAnnotation(anno[i]).getPartAnnotation(startAt, length));
@@ -158,6 +161,49 @@ MafBlock* ChromosomeMafIterator::nextBlock() throw (Exception)
   return currentBlock_;
 }
 
+MafBlock* DuplicateFilterMafIterator::nextBlock() throw (Exception)
+{
+  currentBlock_ = iterator_->nextBlock();
+  while (currentBlock_) {
+    bool foundRef = false;
+    string chr = "";
+    char strand = '+';
+    unsigned int start = 0;
+    unsigned int stop  = 0;
+    for (size_t i = 0; i < currentBlock_->getNumberOfSequences() && !foundRef; ++i) {
+      string species = currentBlock_->getSequence(i).getSpecies(); 
+      if (species == ref_) {
+        foundRef = true;
+        chr    = currentBlock_->getSequence(i).getChromosome();
+        strand = currentBlock_->getSequence(i).getStrand();
+        start  = currentBlock_->getSequence(i).start();
+        stop   = currentBlock_->getSequence(i).stop();
+      }
+    }
+    if (!foundRef) {
+      if (logstream_) {
+        (*logstream_ << "DUPLICATE FILTER: block does not contain reference species and was removed.").endLine();
+      }
+      delete currentBlock_;
+    } else {
+      unsigned int occurrence = blocks_[chr][strand][start][stop]++;
+      if (occurrence > 0) {
+        if (logstream_) {
+          (*logstream_ << "DUPLICATE FILTER: sequence in reference species was found in a previous block. New block was removed.").endLine();
+        }
+        delete currentBlock_;
+      } else {
+        return currentBlock_;
+      }
+    }
+
+    //Look for the next block:
+    currentBlock_ = iterator_->nextBlock();
+  }
+  
+  return currentBlock_;
+}
+
 MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
 {
   if (!incomingBlock_) return 0;
@@ -201,9 +247,9 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     if (logstream_) {
       (*logstream_ << "BLOCK MERGER: merging two consecutive blocks.").endLine();
     }
-    vector<string> names1 = currentBlock_->getAlignment().getSequencesNames();
-    vector<string> names2 = incomingBlock_->getAlignment().getSequencesNames();
-    vector<string> allNames = VectorTools::vectorUnion(names1, names2);
+    vector<string> sp1 = currentBlock_->getSpeciesList();
+    vector<string> sp2 = incomingBlock_->getSpeciesList();
+    vector<string> allSp = VectorTools::unique(VectorTools::vectorUnion(sp1, sp2));
     //We need to create a new MafBlock:
     MafBlock* mergedBlock = new MafBlock();
     //We average the score and pass values:
@@ -217,22 +263,32 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
     mergedBlock->setScore((s1 * n1 + s2 * n2) / (n1 + n2));
 
     //Now fill the new block:
-    for (size_t i = 0; i < allNames.size(); ++i) {
+    for (size_t i = 0; i < allSp.size(); ++i) {
       auto_ptr<MafSequence> seq;
       try {
-        seq.reset(new MafSequence(currentBlock_->getSequence(allNames[i])));
+        seq.reset(new MafSequence(currentBlock_->getSequenceForSpecies(allSp[i])));
 
         //Check is there is a second sequence:
         try {
-          const MafSequence* tmp = &incomingBlock_->getSequence(allNames[i]);
+          auto_ptr<MafSequence> tmp(new MafSequence(incomingBlock_->getSequenceForSpecies(allSp[i])));
           string ref1 = seq->getDescription(), ref2 = tmp->getDescription();
           //Add spacer if needed:
           if (globalSpace > 0) {
             if (logstream_) {
-              (*logstream_ << "BLOCK MERGER: a spacer of size " << globalSpace <<" is inserted in sequence " << allNames[i] << ".").endLine();
+              (*logstream_ << "BLOCK MERGER: a spacer of size " << globalSpace <<" is inserted in sequence for species " << allSp[i] << ".").endLine();
             }
             seq->append(vector<int>(globalSpace, AlphabetTools::DNA_ALPHABET.getUnknownCharacterCode()));
           }
+          if (seq->getChromosome() != tmp->getChromosome()) {
+            seq->setChromosome(seq->getChromosome() + "-" + tmp->getChromosome());
+            seq->removeCoordinates();
+          }
+          if (seq->getStrand() != tmp->getStrand()) {
+            seq->setStrand('?');
+            seq->removeCoordinates();
+          }
+          if (seq->getName() != tmp->getName())
+            tmp->setName(seq->getName()); //force name conversion to prevent exception in 'merge'.
           seq->merge(*tmp);
           seq->setSrcSize(0);
           if (logstream_) {
@@ -248,7 +304,7 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
         }
       } catch (SequenceNotFoundException& snfe1) {
         //There must be a second sequence then:
-        seq.reset(new MafSequence(incomingBlock_->getSequence(allNames[i])));
+        seq.reset(new MafSequence(incomingBlock_->getSequenceForSpecies(allSp[i])));
         string ref2 = seq->getDescription();
         seq->setToSizeL(currentBlock_->getNumberOfSites() + globalSpace);
         if (logstream_) {
@@ -361,7 +417,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
         ApplicationTools::message->endLine();
         ApplicationTools::displayTask("Sliding window for alignment filter", true);
       }
-      while (i < nc) {
+      while (i + step_ < nc) {
         if (verbose_)
           ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
         //Evaluate current window:
@@ -393,7 +449,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
           ++i;
         }
       }
-
+      
       //Evaluate last window:
       unsigned int sum = 0;
       for (size_t u = 0; u < window_.size(); ++u)
@@ -405,7 +461,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
           pos.push_back(i);
         } else {
           if (i - windowSize_ <= pos[pos.size() - 1]) {
-            pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+            pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
           } else { //This is a new region
             pos.push_back(i - windowSize_);
             pos.push_back(i);
@@ -421,7 +477,188 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
         if (logstream_) {
           (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " is clean and kept as is.").endLine();
         }
-      } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+      } else if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
+        //Everything is removed:
+        if (logstream_) {
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " was entirely removed. Tried to get the next one.").endLine();
+        }
+      } else {
+        if (logstream_) {
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
+        }
+        if (verbose_) {
+          ApplicationTools::message->endLine();
+          ApplicationTools::displayTask("Spliting block", true);
+        }
+        for (i = 0; i < pos.size(); i+=2) {
+          if (verbose_)
+            ApplicationTools::displayGauge(i, pos.size() - 2, '=');
+          if (logstream_) {
+            (*logstream_ << "ALN CLEANER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block " << block->getDescription() << ".").endLine();
+          }
+          if (pos[i] > 0) {
+            MafBlock* newBlock = new MafBlock();
+            newBlock->setScore(block->getScore());
+            newBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* subseq;
+              if (i == 0) {
+                subseq = block->getSequence(j).subSequence(0, pos[i]);
+              } else {
+                subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1]);
+              }
+              newBlock->addSequence(*subseq);
+              delete subseq;
+            }
+            blockBuffer_.push_back(newBlock);
+          }
+        
+          if (keepTrashedBlocks_) {
+            MafBlock* outBlock = new MafBlock();
+            outBlock->setScore(block->getScore());
+            outBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* outseq = block->getSequence(j).subSequence(pos[i], pos[i + 1] - pos[i]);
+              outBlock->addSequence(*outseq);
+              delete outseq;
+            } 
+            trashBuffer_.push_back(outBlock);
+          }
+        }
+        //Add last block:
+        if (pos[pos.size() - 1] < block->getNumberOfSites()) {
+          MafBlock* newBlock = new MafBlock();
+          newBlock->setScore(block->getScore());
+          newBlock->setPass(block->getPass());
+          for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+            MafSequence* subseq;
+            subseq = block->getSequence(j).subSequence(pos[pos.size() - 1], block->getNumberOfSites() - pos[pos.size() - 1]);
+            newBlock->addSequence(*subseq);
+            delete subseq;
+          }
+          blockBuffer_.push_back(newBlock);
+        }
+        if (verbose_)
+          ApplicationTools::displayTaskDone();
+
+        delete block;
+      }
+    } while (blockBuffer_.size() == 0);
+  }
+
+  MafBlock* block = blockBuffer_.front();
+  blockBuffer_.pop_front();
+  return block;
+}
+
+MafBlock* AlignmentFilter2MafIterator::nextBlock() throw (Exception)
+{
+  if (blockBuffer_.size() == 0) {
+    //Else there is no more block in the buffer, we need to parse more:
+    do {
+      MafBlock* block = iterator_->nextBlock();
+      if (!block) return 0; //No more block.
+    
+      //Parse block.
+      int gap = AlphabetTools::DNA_ALPHABET.getGapCharacterCode();
+      int unk = AlphabetTools::DNA_ALPHABET.getUnknownCharacterCode();
+      size_t nr = species_.size();
+      vector< vector<int> > aln(nr);
+      for (size_t i = 0; i < nr; ++i) {
+        aln[i] = block->getSequenceForSpecies(species_[i]).getContent();
+      }
+      size_t nc = block->getNumberOfSites();
+      //First we create a mask:
+      vector<unsigned int> pos;
+      vector<bool> col(nr);
+      //Reset window:
+      window_.clear();
+      //Init window:
+      size_t i;
+      for (i = 0; i < windowSize_; ++i) {
+        for (size_t j = 0; j < nr; ++j) {
+          col[j] = (aln[j][i] == gap || aln[j][i] == unk);
+        }
+        window_.push_back(col);
+      }
+      //Slide window:
+      if (verbose_) {
+        ApplicationTools::message->endLine();
+        ApplicationTools::displayTask("Sliding window for alignment filter", true);
+      }
+      while (i + step_ < nc) {
+        if (verbose_)
+          ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
+        //Evaluate current window:
+        unsigned int count = 0;
+        for (size_t u = 0; u < window_.size(); ++u) {
+          unsigned int partialCount = 0;
+          if (u > 0 && window_[u] != window_[u - 1]) {
+            for (size_t v = 0; v < window_[u].size(); ++v)
+              if (window_[u][v]) partialCount++;
+            if (partialCount > maxGap_)
+              count++;
+          }
+        }
+        if (count > maxPos_) {
+          if (pos.size() == 0) {
+            pos.push_back(i - windowSize_);
+            pos.push_back(i);
+          } else {
+            if (i - windowSize_ < pos[pos.size() - 1]) {
+              pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
+            } else { //This is a new region
+              pos.push_back(i - windowSize_);
+              pos.push_back(i);
+            }
+          }
+        }
+      
+        //Move forward:
+        for (unsigned int k = 0; k < step_; ++k) {
+          for (size_t j = 0; j < nr; ++j) {
+            col[j] = (aln[j][i] == gap || aln[j][i] == unk);
+          }
+          window_.push_back(col);
+          window_.pop_front();
+          ++i;
+        }
+      }
+
+      //Evaluate last window:
+      unsigned int count = 0;
+      for (size_t u = 0; u < window_.size(); ++u) {
+        unsigned int partialCount = 0;
+        if (u > 0 && window_[u] != window_[u - 1]) {
+          for (size_t v = 0; v < window_[u].size(); ++v)
+            if (window_[u][v]) partialCount++;
+          if (partialCount > maxGap_)
+            count++;
+        }
+      }
+      if (count > maxPos_) {
+        if (pos.size() == 0) {
+          pos.push_back(i - windowSize_);
+          pos.push_back(i);
+        } else {
+          if (i - windowSize_ <= pos[pos.size() - 1]) {
+            pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
+          } else { //This is a new region
+            pos.push_back(i - windowSize_);
+            pos.push_back(i);
+          }
+        }
+      } 
+      if (verbose_)
+        ApplicationTools::displayTaskDone();
+    
+      //Now we remove regions with two many gaps, using a sliding window:
+      if (pos.size() == 0) {
+        blockBuffer_.push_back(block);
+        if (logstream_) {
+          (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " is clean and kept as is.").endLine();
+        }
+      } else if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
         //Everything is removed:
         if (logstream_) {
           (*logstream_ << "ALN CLEANER: block " << block->getDescription() << " was entirely removed. Tried to get the next one.").endLine();
@@ -531,7 +768,7 @@ MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
         ApplicationTools::message->endLine();
         ApplicationTools::displayTask("Sliding window for mask filter", true);
       }
-      while (i < nc) {
+      while (i + step_ < nc) {
         if (verbose_)
           ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
         //Evaluate current window:
@@ -575,7 +812,7 @@ MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
           pos.push_back(i);
         } else {
           if (i - windowSize_ < pos[pos.size() - 1]) {
-            pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+            pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
           } else { //This is a new region
             pos.push_back(i - windowSize_);
             pos.push_back(i);
@@ -591,7 +828,7 @@ MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
         if (logstream_) {
           (*logstream_ << "MASK CLEANER: block is clean and kept as is.").endLine();
         }
-      } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+      } else if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
         //Everything is removed:
         if (logstream_) {
           (*logstream_ << "MASK CLEANER: block was entirely removed. Tried to get the next one.").endLine();
@@ -708,7 +945,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
           ApplicationTools::message->endLine();
           ApplicationTools::displayTask("Sliding window for quality filter", true);
         }
-        while (i < nc) {
+        while (i + step_ < nc) {
           if (verbose_)
             ApplicationTools::displayGauge(i - windowSize_, nc - windowSize_ - 1, '>');
           //Evaluate current window:
@@ -758,7 +995,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
             pos.push_back(i);
           } else {
             if (i - windowSize_ < pos[pos.size() - 1]) {
-              pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+              pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
             } else { //This is a new region
               pos.push_back(i - windowSize_);
               pos.push_back(i);
@@ -774,7 +1011,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
           if (logstream_) {
             (*logstream_ << "QUAL CLEANER: block is clean and kept as is.").endLine();
           }
-        } else if (pos.size() == 2 && pos[0] == 0 && pos[pos.size() - 1] == block->getNumberOfSites()) {
+        } else if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
           //Everything is removed:
           if (logstream_) {
             (*logstream_ << "QUAL CLEANER: block was entirely removed. Tried to get the next one.").endLine();
@@ -848,6 +1085,259 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
   blockBuffer_.pop_front();
   return block;
 }
+
+MafBlock* SequenceStatisticsMafIterator::nextBlock() throw (Exception)
+{
+  currentBlock_ = iterator_->nextBlock();
+  if (currentBlock_) {
+    for (vector<string>::iterator sp = species_.begin(); sp != species_.end(); ++sp) {
+      if (sp > species_.begin())
+        *output_ << "\t";
+      if (currentBlock_->hasSequenceForSpecies(*sp)) {
+        map<int, double> counts;
+        const Sequence& seq = currentBlock_->getSequenceForSpecies(*sp);
+        SequenceTools::getCounts(seq, counts, false);
+        *output_ << counts[0] << "\t" << counts[1] << "\t" << counts[2] << "\t" << counts[3] << "\t" << counts[currentBlock_->getAlignment().getAlphabet()->getGapCharacterCode()];
+        *output_ << "\t" << SequenceTools::getNumberOfSites(seq);
+        *output_ << "\t" << SequenceTools::getNumberOfCompleteSites(seq);
+        *output_ << "\t" << SequenceTools::getNumberOfUnresolvedSites(seq);
+      } else {
+        *output_ << "NA\tNA\tNA\tNA\tNA\tNA\tNA\tNA";
+      }
+    }
+    output_->endLine();
+  }
+  return currentBlock_;
+}
+
+MafBlock* PairwiseSequenceStatisticsMafIterator::nextBlock() throw (Exception)
+{
+  currentBlock_ = iterator_->nextBlock();
+  if (currentBlock_) {
+    if (currentBlock_->hasSequenceForSpecies(species1_) && currentBlock_->hasSequenceForSpecies(species2_)) {
+      *output_ << SequenceTools::getPercentIdentity(currentBlock_->getSequenceForSpecies(species1_), currentBlock_->getSequenceForSpecies(species2_), true);
+    } else {
+      *output_ << "NA";
+    }
+    output_->endLine();
+  }
+  return currentBlock_;
+}
+
+MafBlock* FeatureFilterMafIterator::nextBlock() throw (Exception)
+{
+  if (blockBuffer_.size() == 0) {
+    //Unless there is no more block in the buffer, we need to parse more:
+    do {
+      MafBlock* block = iterator_->nextBlock();
+      if (!block) return 0; //No more block.
+
+      //Check if the block contains the reference species:
+      if (!block->hasSequenceForSpecies(refSpecies_)) {
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " does not contain the reference species and was kept as is.").endLine(); 
+        }
+        return block;
+      }
+
+      //Get the feature ranges for this block:
+      const MafSequence& refSeq = block->getSequenceForSpecies(refSpecies_);
+      //first check if there is one (for now we assume that features refer to the chromosome or contig name, with implicit species):
+      std::map<std::string, MultiRange<unsigned int> >::iterator mr = ranges_.find(refSeq.getChromosome());
+      if (mr == ranges_.end()) {
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " does not contain any feature and was kept as is.").endLine(); 
+        }
+        return block;
+      }
+      //else
+      MultiRange<unsigned int> mRange = mr->second;
+      mRange.restrictTo(Range<unsigned int>(refSeq.start(), refSeq.stop() + 1));
+      if (mRange.isEmpty()) {
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " does not contain any feature and was kept as is.").endLine(); 
+        }
+        return block;
+      }
+      std::vector<unsigned int> tmp = mRange.getBounds(); 
+      std::deque<unsigned int> refBounds(tmp.begin(), tmp.end()); 
+
+      //Now extract corresponding alignments. We use the range to split the original block.
+      //Only thing to watch out is the coordinates, refering to the ref species...
+      //A good idea is then to convert those with respect to the given block:
+
+      int gap = refSeq.getAlphabet()->getGapCharacterCode();
+      long int refPos = static_cast<long int>(refSeq.start()) - 1;
+      std::vector<size_t> pos;
+      for (size_t alnPos = 0; alnPos < refSeq.size() && refBounds.size() > 0; ++alnPos) {
+        if (refSeq[alnPos] != gap) {
+          refPos++;
+          //check if this position is a bound:
+          if (refBounds.front() == static_cast<unsigned int>(refPos)) {
+            pos.push_back(alnPos);
+            refBounds.pop_front();
+          }
+        }
+      }
+      //Check if the last bound matches the end of the alignment:
+      if (refBounds.size() > 0 && refBounds.front() == refSeq.stop() + 1) {
+        pos.push_back(refSeq.size());
+        refBounds.pop_front();
+      }
+
+      if (refBounds.size() > 0) {
+        VectorTools::print(vector<unsigned int>(refBounds.begin(), refBounds.end()));
+        throw Exception("FeatureFilterMafIterator::nextBlock(). An error occurred here, " + TextTools::toString(refBounds.size()) + " coordinates are left... this is most likely a bug, please report!");
+      }
+
+      //Next step is simply to split the black according to the translated coordinates:
+      if (pos.size() == 2 && pos.front() == 0 && pos.back() == block->getNumberOfSites()) {
+        //Everything is removed:
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " was entirely removed. Tried to get the next one.").endLine();
+        }
+      } else {
+        if (logstream_) {
+          (*logstream_ << "FEATURE FILTER: block " << block->getDescription() << " with size "<< block->getNumberOfSites() << " will be split into " << (pos.size() / 2 + 1) << " blocks.").endLine();
+        }
+        if (verbose_) {
+          ApplicationTools::message->endLine();
+          ApplicationTools::displayTask("Spliting block", true);
+        }
+        for (size_t i = 0; i < pos.size(); i+=2) {
+          if (verbose_)
+            ApplicationTools::displayGauge(i, pos.size() - 2, '=');
+          if (logstream_) {
+            (*logstream_ << "FEATURE FILTER: removing region (" << pos[i] << ", " << pos[i+1] << ") from block " << block->getDescription() << ".").endLine();
+          }
+          if (pos[i] > 0) {
+            MafBlock* newBlock = new MafBlock();
+            newBlock->setScore(block->getScore());
+            newBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* subseq;
+              if (i == 0) {
+                subseq = block->getSequence(j).subSequence(0, pos[i]);
+              } else {
+                subseq = block->getSequence(j).subSequence(pos[i - 1], pos[i] - pos[i - 1]);
+              }
+              newBlock->addSequence(*subseq);
+              delete subseq;
+            }
+            blockBuffer_.push_back(newBlock);
+          }
+        
+          if (keepTrashedBlocks_) {
+            MafBlock* outBlock = new MafBlock();
+            outBlock->setScore(block->getScore());
+            outBlock->setPass(block->getPass());
+            for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+              MafSequence* outseq = block->getSequence(j).subSequence(pos[i], pos[i + 1] - pos[i]);
+              outBlock->addSequence(*outseq);
+              delete outseq;
+            } 
+            trashBuffer_.push_back(outBlock);
+          }
+        }
+        //Add last block:
+        if (pos.back() < block->getNumberOfSites()) {
+          MafBlock* newBlock = new MafBlock();
+          newBlock->setScore(block->getScore());
+          newBlock->setPass(block->getPass());
+          for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+            MafSequence* subseq;
+            subseq = block->getSequence(j).subSequence(pos[pos.size() - 1], block->getNumberOfSites() - pos[pos.size() - 1]);
+            newBlock->addSequence(*subseq);
+            delete subseq;
+          }
+          blockBuffer_.push_back(newBlock);
+        }
+        if (verbose_)
+          ApplicationTools::displayTaskDone();
+
+        delete block;
+      }
+    } while (blockBuffer_.size() == 0);
+  }
+
+  MafBlock* nxtBlock = blockBuffer_.front();
+  blockBuffer_.pop_front();
+  return nxtBlock;
+}
+
+MafBlock* FeatureExtractor::nextBlock() throw (Exception)
+{
+  if (blockBuffer_.size() == 0) {
+    //Unless there is no more block in the buffer, we need to parse more:
+    START:
+    MafBlock* block = iterator_->nextBlock();
+    if (!block) return 0; //No more block.
+
+    //Check if the block contains the reference species:
+    if (!block->hasSequenceForSpecies(refSpecies_))
+      goto START;
+
+    //Get the feature ranges for this block:
+    const MafSequence& refSeq = block->getSequenceForSpecies(refSpecies_);
+    //first check if there is one (for now we assume that features refer to the chromosome or contig name, with implicit species):
+    std::map<std::string, RangeSet<unsigned int> >::iterator mr = ranges_.find(refSeq.getChromosome());
+    if (mr == ranges_.end())
+      goto START;
+        
+    RangeSet<unsigned int> ranges = mr->second;
+    ranges.restrictTo(Range<unsigned int>(refSeq.start(), refSeq.stop()));
+    if (ranges.isEmpty())
+      goto START;
+
+    //We will need to convert to alignment positions, using a sequence walker:
+    SequenceWalker walker(refSeq);
+
+    //Now creates all blocks for all ranges:
+    if (verbose_) {
+      ApplicationTools::message->endLine();
+      ApplicationTools::displayTask("Extracting annotations", true);
+    }
+    if (logstream_) {
+      (*logstream_ << "FEATURE EXTRACTOR: extracting " << ranges.getSet().size() << " features from block " << block->getDescription() << ".").endLine();
+    }
+
+    unsigned int i = 0;
+    for (set<Range<unsigned int>*>::iterator it = ranges.getSet().begin();
+        it !=  ranges.getSet().end();
+        ++it)
+    {
+      if (verbose_) {
+        ApplicationTools::displayGauge(i++, ranges.getSet().size() - 1, '=');
+      }
+      MafBlock* newBlock = new MafBlock();
+      newBlock->setScore(block->getScore());
+      newBlock->setPass(block->getPass());
+      for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+        auto_ptr<MafSequence> subseq;
+        unsigned int a = walker.getAlignmentPosition((**it).begin() - refSeq.start());
+        unsigned int b = walker.getAlignmentPosition((**it).end() - refSeq.start() - 1);
+        subseq.reset(block->getSequence(j).subSequence(a, b - a + 1));
+        if (!ignoreStrand_) {
+          if (dynamic_cast<SeqRange*>(*it)->isNegativeStrand()) {
+            SequenceTools::invertComplement(*subseq);
+          }
+        }
+        newBlock->addSequence(*subseq);
+      }
+      blockBuffer_.push_back(newBlock);
+    }
+        
+    if (verbose_)
+      ApplicationTools::displayTaskDone();
+
+    delete block;
+  }
+
+  MafBlock* nxtBlock = blockBuffer_.front();
+  blockBuffer_.pop_front();
+  return nxtBlock;
+}
+
 
 void OutputMafIterator::writeHeader(std::ostream& out) const
 {

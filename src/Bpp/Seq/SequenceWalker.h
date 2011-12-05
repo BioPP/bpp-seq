@@ -1,11 +1,11 @@
 //
-// File ISequenceStream.h
-// Author: Sylvain Gaillard
-// Created: 18/08/2009
+// File: SequenceWalker.h
+// Created by: Julien Dutheil
+// Created on: Thu Nov 24 2011
 //
 
 /*
-Copyright or © or Copr. CNRS, (August 18, 2009)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2011)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,46 +37,52 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ISEQUENCESTREAM_H_
-#define _ISEQUENCESTREAM_H_
+#ifndef _SEQUENCEWALKER_H_
+#define _SEQUENCEWALKER_H_
 
-#include "IoSequenceStream.h"
-#include "../Sequence.h"
-#include "../Alphabet/Alphabet.h"
-#include <Bpp/Exceptions.h>
+#include "Sequence.h"
 
 namespace bpp
 {
 
 /**
- * @brief The ISequenceStream interface.
+ * @brief A helper class to easily convert coordinates between sequence and alignments.
  *
- * Interface for streaming sequences input.
- *
- * @author Sylvain Gaillard
+ * Coordinates are 0-based.
+ * The walker will be more efficient if coordinates are called in pre-ordered way.
  */
-class ISequenceStream: public virtual IOSequenceStream
+class SequenceWalker
 {
-	public:
-		ISequenceStream() {}
-		virtual ~ISequenceStream() {}
+  private:
+    const Sequence* seq_;
+    unsigned int seqPos_, alnPos_;
+    int gap_;
 
-	public:
-    /**
-     * @brief Read sequence from stream.
-     *
-     * Read one sequence from a stream.
-     *
-     * @param input The stream to read.
-     * @param seq The sequence to fill.
-     * @return true if a sequence was read or false if not.
-     * @throw Exception IOExecption and Sequence related Exceptions.
-     */
-    virtual bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
+  public:
+    SequenceWalker(const Sequence& seq):
+      seq_(&seq), seqPos_(0), alnPos_(0), gap_(seq.getAlphabet()->getGapCharacterCode()) {
+      if (seq_->size() > 0) {
+        while ((*seq_)[alnPos_] == gap_)
+          ++alnPos_;
+      }
+    }
+    SequenceWalker(const SequenceWalker& walker):
+      seq_(walker.seq_), seqPos_(walker.seqPos_), alnPos_(walker.alnPos_), gap_(walker.gap_) {}
+    SequenceWalker& operator=(const SequenceWalker& walker) {
+      seq_    = walker.seq_;
+      seqPos_ = walker.seqPos_;
+      alnPos_ = walker.alnPos_;
+      gap_    = walker.gap_;
+      return *this;
+    }
+    virtual ~SequenceWalker() {}
 
+  public:
+    unsigned int getAlignmentPosition(unsigned int seqPos) throw (Exception);
+    unsigned int getSequencePosition(unsigned int alnPos) throw (Exception);
 };
 
 } //end of namespace bpp.
 
-#endif	// _ISEQUENCESTREAM_H_
+#endif //_SEQUENCEWALKER_H_
 

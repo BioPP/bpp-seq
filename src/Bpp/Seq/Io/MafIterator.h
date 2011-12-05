@@ -44,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../SequenceTools.h"
 #include "../Alphabet/AlphabetTools.h"
 #include "../Container/AlignedSequenceContainer.h"
+#include "../Feature/SequenceFeature.h"
 
 //From the STL:
 #include <iostream>
@@ -97,11 +98,7 @@ class MafSequence:
       SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), hasCoordinates_(true), begin_(begin), species_(""), chromosome_(""), strand_(strand), size_(0), srcSize_(srcSize)
     {
       size_ = SequenceTools::getNumberOfSites(*this);
-      size_t pos = name.find(".");
-      if (pos != std::string::npos) {
-        chromosome_ = name.substr(pos + 1);
-        species_    = name.substr(0, pos);
-      }
+      setName(name);
     }
 
     MafSequence* clone() const { return new MafSequence(*this); }
@@ -115,12 +112,26 @@ class MafSequence:
 
     unsigned int start() const throw (Exception) { 
       if (hasCoordinates_) return begin_;
-      else throw Exception("MafSequence::start(). Sequence does not have coordinates.");
+      else throw Exception("MafSequence::start(). Sequence " + getName() + " does not have coordinates.");
     }
 
     unsigned int stop() const { 
       if (hasCoordinates_) return begin_ + size_ - 1;
-      else throw Exception("MafSequence::stop(). Sequence does not have coordinates.");
+      else throw Exception("MafSequence::stop(). Sequence " + getName() + " does not have coordinates.");
+    }
+
+    Range<unsigned int> getRange() const {
+      if (hasCoordinates_) return Range<unsigned int>(start(), stop());
+      else throw Exception("MafSequence::getRange(). Sequence " + getName() + " does not have coordinates.");
+    }
+
+    void setName(const std::string& name) {
+      size_t pos = name.find(".");
+      if (pos != std::string::npos) {
+        chromosome_ = name.substr(pos + 1);
+        species_    = name.substr(0, pos);
+      }
+      SequenceWithAnnotation::setName(name);
     }
 
     const std::string& getSpecies() const { return species_; }
@@ -135,16 +146,31 @@ class MafSequence:
     
     void setStart(unsigned int begin) { begin_ = begin; hasCoordinates_ = true; }
     
-    void setChromosome(const std::string& chr) { chromosome_ = chr; }
+    void setChromosome(const std::string& chr) {
+      chromosome_ = chr;
+      SequenceWithAnnotation::setName(species_ + "." + chromosome_);
+    }
+    
+    void setSpecies(const std::string& species) {
+      species_ = species;
+      SequenceWithAnnotation::setName(species_ + "." + chromosome_);
+    }
     
     void setStrand(char s) { strand_ = s; }
     
     void setSrcSize(unsigned int srcSize) { srcSize_ = srcSize; }
   
-    std::string getDescription() const { return getName() + strand_ + ":" + TextTools::toString(start()) + "-" + TextTools::toString(stop()); }
+    std::string getDescription() const { return getName() + strand_ + ":" + (hasCoordinates_ ? TextTools::toString(start()) + "-" + TextTools::toString(stop()) : "?-?"); }
   
+    /**
+     * @brief Extract a sub-sequence.
+     *
+     * @return A subsequence.
+     * @param startAt Begining of sub-sequence.
+     * @param length  the length of the sub-sequence.
+     */
     MafSequence* subSequence(unsigned int startAt, unsigned int length) const;
-
+    
   private:
     void beforeSequenceChanged(const SymbolListEditionEvent& event) {}
     void afterSequenceChanged(const SymbolListEditionEvent& event) { size_ = SequenceTools::getNumberOfSites(*this); }
@@ -191,6 +217,10 @@ class MafBlock
 
     void addSequence(const MafSequence& sequence) { alignment_.addSequence(sequence, false); }
 
+    bool hasSequence(const std::string& name) {
+      return getAlignment().hasSequence(name);
+    }
+
     const MafSequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) {
       return dynamic_cast<const MafSequence&>(getAlignment().getSequence(name));
     }
@@ -199,14 +229,34 @@ class MafBlock
       return dynamic_cast<const MafSequence&>(getAlignment().getSequence(i));
     }
 
+    bool hasSequenceForSpecies(const std::string& species) {
+      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
+        const MafSequence& seq = getSequence(i);
+        if (seq.getSpecies() == species)
+          return true;
+      }
+      return false;
+    }
+
     //Return the first sequence with the species name.
     const MafSequence& getSequenceForSpecies(const std::string& species) const throw (SequenceNotFoundException) {
       for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
-        const MafSequence* seq = &getSequence(i);
-        if (seq->getSpecies() == species)
-          return *seq;
+        const MafSequence& seq = getSequence(i);
+        if (seq.getSpecies() == species)
+          return seq;
       }
-      throw SequenceNotFoundException("MafBlock::getSequenceForSpecies. No sequence with the given species name in this block.");
+      throw SequenceNotFoundException("MafBlock::getSequenceForSpecies. No sequence with the given species name in this block.", species);
+    }
+
+    /**
+     * @return The species names for all sequencies in the container.
+     */
+    std::vector<std::string> getSpeciesList() const {
+      std::vector<std::string> lst;
+      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
+        lst.push_back(getSequence(i).getSpecies());
+      }
+      return lst;
     }
 
     void removeCoordinatesFromSequence(unsigned int i) throw (IndexOutOfBoundsException) {
@@ -218,7 +268,7 @@ class MafBlock
 
     std::string getDescription() const {
       std::string desc;
-      desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites()) + "-" + getSequence(0).getName() + "[" + TextTools::toString(getSequence(0).start()) + "," + TextTools::toString(getSequence(0).stop()) + "]";
+      desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites());
       return desc;
     }
 
@@ -427,10 +477,57 @@ class ChromosomeMafIterator:
 };
 
 /**
+ * @brief Filter maf blocks to remove duplicated blocks, according to a reference sequence).
+ */
+class DuplicateFilterMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::string ref_;
+    /**
+     * Contains the list of 'seen' block, as [chr][strand][start][stop]
+     */
+    std::map< std::string, std::map< char, std::map< unsigned int, std::map< unsigned int, unsigned int > > > > blocks_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param reference The reference species name.
+     */
+    DuplicateFilterMafIterator(MafIterator* iterator, const std::string& reference) :
+      AbstractFilterMafIterator(iterator),
+      ref_(reference),
+      blocks_(),
+      currentBlock_(0)
+    {}
+
+  private:
+    DuplicateFilterMafIterator(const DuplicateFilterMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      ref_(iterator.ref_),
+      blocks_(iterator.blocks_),
+      currentBlock_(0)
+    {}
+    
+    DuplicateFilterMafIterator& operator=(const DuplicateFilterMafIterator& iterator)
+    {
+      ref_    = iterator.ref_;
+      blocks_ = iterator.blocks_;
+      currentBlock_ = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+};
+
+/**
  * @brief Merge blocks if some of their sequences are contiguous.
  *
  * The user specifies the focus species. Sequences that are not in this set will
- * be merged without testing, and their genomic coordinates removed.
+ * be automatically merged and their coordinates removed.
  * The scores, if any, will be averaged for the block, weighted by the corresponding block sizes.
  * the pass value will be removed if it is different for the two blocks.
  * It is possible to define a maximum distance for the merging. Setting a distance of zero implies that the blocks
@@ -562,6 +659,54 @@ class AlignmentFilterMafIterator:
 };
 
 /**
+ * @brief Filter maf blocks to remove ambiguously aligned or non-informative regions.
+ *
+ * This iterators offers a different algorithm than AlignmentFilterMafIterator.
+ * It takes two parameters: g=maxGap and n=maxPos. windows with at more than n positions containing each of them more than g=maxPos gaps will be discarded.
+ * In addition, consecutives patterns are only counted once.
+ */
+class AlignmentFilter2MafIterator:
+  public AbstractFilterMafIterator,
+  public MafTrashIterator
+{
+  private:
+    std::vector<std::string> species_;
+    unsigned int windowSize_;
+    unsigned int step_;
+    unsigned int maxGap_;
+    unsigned int maxPos_;
+    std::deque<MafBlock*> blockBuffer_;
+    std::deque<MafBlock*> trashBuffer_;
+    std::deque< std::vector<bool> > window_;
+    bool keepTrashedBlocks_;
+
+  public:
+    AlignmentFilter2MafIterator(MafIterator* iterator, const std::vector<std::string>& species, unsigned int windowSize, unsigned int step, unsigned int maxGap, unsigned int maxPos, bool keepTrashedBlocks) :
+      AbstractFilterMafIterator(iterator),
+      species_(species),
+      windowSize_(windowSize),
+      step_(step),
+      maxGap_(maxGap),
+      maxPos_(maxPos),
+      blockBuffer_(),
+      trashBuffer_(),
+      window_(species.size()),
+      keepTrashedBlocks_(keepTrashedBlocks)
+    {}
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+    MafBlock* nextRemovedBlock() throw (Exception) {
+      if (trashBuffer_.size() == 0) return 0;
+      MafBlock* block = trashBuffer_.front();
+      trashBuffer_.pop_front();
+      return block;
+    }
+
+};
+
+/**
  * @brief Filter maf blocks to remove regions with masked positions.
  *
  * Regions with a too high proportion of masked position in a set of species will be removed,
@@ -651,6 +796,102 @@ class QualityFilterMafIterator:
 
 };
 
+/**
+ * @brief Remove from alignment all positions that fall within any feature from a list given as a SequenceFeatureSet object.
+ *
+ * Removed regions are outputed as a trash iterator.
+ */
+class FeatureFilterMafIterator:
+  public AbstractFilterMafIterator,
+  public MafTrashIterator
+{
+  private:
+    std::string refSpecies_;
+    std::deque<MafBlock*> blockBuffer_;
+    std::deque<MafBlock*> trashBuffer_;
+    bool keepTrashedBlocks_;
+    std::map<std::string, MultiRange<unsigned int> > ranges_;
+
+  public:
+    FeatureFilterMafIterator(MafIterator* iterator, const std::string& refSpecies, const SequenceFeatureSet& features, bool keepTrashedBlocks) :
+      AbstractFilterMafIterator(iterator),
+      refSpecies_(refSpecies),
+      blockBuffer_(),
+      trashBuffer_(),
+      keepTrashedBlocks_(keepTrashedBlocks),
+      ranges_()
+    {
+      //Build ranges:
+      std::set<std::string> seqIds = features.getSequences();
+      for (std::set<std::string>::iterator it = seqIds.begin();
+          it != seqIds.end();
+          ++it) {
+        {
+          features.fillRangeCollectionForSequence(*it, ranges_[*it]);
+        }
+      }
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+    MafBlock* nextRemovedBlock() throw (Exception) {
+      if (trashBuffer_.size() == 0) return 0;
+      MafBlock* block = trashBuffer_.front();
+      trashBuffer_.pop_front();
+      return block;
+    }
+
+};
+
+/**
+ * @brief Extract alignments corresponding to sequence features given as a vector of SequenceFeature objects.
+ *
+ * The resulting blocks will contain the specified annotated regions.
+ * Note that this iterator is not the opposite of FeatureFilterMafIterator,
+ * as overlapping features will all be extracted. This iterator may therefore results
+ * in duplication of original data.
+ */
+class FeatureExtractor:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::string refSpecies_;
+    bool ignoreStrand_;
+    std::deque<MafBlock*> blockBuffer_;
+    std::map<std::string, RangeSet<unsigned int> > ranges_;
+
+  public:
+    /**
+     * @brief Build a new FeatureExtractor iterator.
+     *
+     * @param iterator The input iterator
+     * @param refSpecies The reference species for feature coordinates
+     * @param features The set of features to extract
+     * @param ignoreStrand If true, features will be extracted 'as is', without being reversed in case they ar eon the negative strand.
+     */
+    FeatureExtractor(MafIterator* iterator, const std::string& refSpecies, const SequenceFeatureSet& features, bool ignoreStrand = false) :
+      AbstractFilterMafIterator(iterator),
+      refSpecies_(refSpecies),
+      ignoreStrand_(ignoreStrand),
+      blockBuffer_(),
+      ranges_()
+    {
+      //Build ranges:
+      std::set<std::string> seqIds = features.getSequences();
+      for (std::set<std::string>::iterator it = seqIds.begin();
+          it != seqIds.end();
+          ++it) {
+        {
+          features.fillRangeCollectionForSequence(*it, ranges_[*it]);
+        }
+      }
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+};
 
 class TrashIteratorAdapter:
   public MafIterator
@@ -721,6 +962,127 @@ class OutputMafIterator:
   private:
     void writeHeader(std::ostream& out) const;
     void writeBlock(std::ostream& out, const MafBlock& block) const;
+};
+
+/**
+ * @brief Outputs sequence statistics for each block, for a subset of sequences, given their name.
+ * 
+ * Computed statistics are:
+ * - 4 base frequencies + gap frequencies + unresolved frequencies in each sequence
+ * This is a read only iterator, the blocks are forwarded "as is", without modification.
+ * Statistics are directly output to a file. Later versions may also forward a DataTable for later direct analysis.
+ */
+class SequenceStatisticsMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::vector<std::string> species_;
+    OutputStream* output_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param species The list of species names for which statistics should be computed.
+     * @param output The output stream where to store the results.
+     */
+    SequenceStatisticsMafIterator(MafIterator* iterator, const std::vector<std::string>& species, OutputStream* output) :
+      AbstractFilterMafIterator(iterator),
+      species_(species),
+      output_(output),
+      currentBlock_(0)
+    {
+      for (std::vector<std::string>::iterator sp = species_.begin(); sp != species_.end(); ++sp) {
+        if (sp > species_.begin())
+          *output_ << "\t";
+        (*output_ << *sp << ".A\t"
+                  << *sp << ".C\t"
+                  << *sp << ".G\t"
+                  << *sp << ".T\t"
+                  << *sp << ".gap\t"
+                  << *sp << ".NbSites\t"
+                  << *sp << ".NbComplete\t"
+                  << *sp << ".NbUnresolved");
+      }
+      output_->endLine();
+    }
+
+  private:
+    SequenceStatisticsMafIterator(const SequenceStatisticsMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      species_(iterator.species_),
+      output_(iterator.output_),
+      currentBlock_(0)
+    {}
+    
+    SequenceStatisticsMafIterator& operator=(const SequenceStatisticsMafIterator& iterator)
+    {
+      species_       = iterator.species_;
+      output_        = iterator.output_;
+      currentBlock_  = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
+};
+
+/**
+ * @brief Outputs sequence statistics for a pair of species, for each block.
+ * 
+ * Computed statistics are:
+ * - Percent identity
+ * This is a read only iterator, the blocks are forwarded "as is", without modification.
+ * Statistics are directly output to a file. Later versions may also forward a DataTable for later direct analysis.
+ */
+class PairwiseSequenceStatisticsMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::string species1_;
+    std::string species2_;
+    OutputStream* output_;
+    MafBlock* currentBlock_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param species1 The first species to compare.
+     * @param species2 The second species to compare.
+     * @param output The output stream where to store the results.
+     */
+    PairwiseSequenceStatisticsMafIterator(MafIterator* iterator, const std::string& species1, const std::string& species2, OutputStream* output) :
+      AbstractFilterMafIterator(iterator),
+      species1_(species1),
+      species2_(species2),
+      output_(output),
+      currentBlock_(0)
+    {
+      (*output_ << "PercentId").endLine();
+    }
+
+  private:
+    PairwiseSequenceStatisticsMafIterator(const PairwiseSequenceStatisticsMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      species1_(iterator.species1_),
+      species2_(iterator.species2_),
+      output_(iterator.output_),
+      currentBlock_(0)
+    {}
+    
+    PairwiseSequenceStatisticsMafIterator& operator=(const PairwiseSequenceStatisticsMafIterator& iterator)
+    {
+      species1_     = iterator.species1_;
+      species2_     = iterator.species2_;
+      output_       = iterator.output_;
+      currentBlock_ = 0;
+      return *this;
+    }
+
+  public:
+    MafBlock* nextBlock() throw (Exception);
+
 };
 
 /**
