@@ -62,6 +62,8 @@ MafSequence* MafSequence::subSequence(unsigned int startAt, unsigned int length)
     }
   }
   MafSequence* newSeq = new MafSequence(getName(), subseq, begin, strand_, srcSize_);
+  if (!hasCoordinates_)
+    newSeq->removeCoordinates();
   vector<string> anno = getAnnotationTypes();
   for (size_t i = 0; i < anno.size(); ++i) {
     newSeq->addAnnotation(getAnnotation(anno[i]).getPartAnnotation(startAt, length));
@@ -447,7 +449,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
           ++i;
         }
       }
-
+      
       //Evaluate last window:
       unsigned int sum = 0;
       for (size_t u = 0; u < window_.size(); ++u)
@@ -459,7 +461,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
           pos.push_back(i);
         } else {
           if (i - windowSize_ <= pos[pos.size() - 1]) {
-            pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+            pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
           } else { //This is a new region
             pos.push_back(i - windowSize_);
             pos.push_back(i);
@@ -640,7 +642,7 @@ MafBlock* AlignmentFilter2MafIterator::nextBlock() throw (Exception)
           pos.push_back(i);
         } else {
           if (i - windowSize_ <= pos[pos.size() - 1]) {
-            pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+            pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
           } else { //This is a new region
             pos.push_back(i - windowSize_);
             pos.push_back(i);
@@ -810,7 +812,7 @@ MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
           pos.push_back(i);
         } else {
           if (i - windowSize_ < pos[pos.size() - 1]) {
-            pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+            pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
           } else { //This is a new region
             pos.push_back(i - windowSize_);
             pos.push_back(i);
@@ -993,7 +995,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
             pos.push_back(i);
           } else {
             if (i - windowSize_ < pos[pos.size() - 1]) {
-              pos[pos.size()] = i; //Windows are overlapping and we extend previous region
+              pos[pos.size() - 1] = i; //Windows are overlapping and we extend previous region
             } else { //This is a new region
               pos.push_back(i - windowSize_);
               pos.push_back(i);

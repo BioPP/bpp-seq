@@ -112,17 +112,17 @@ class MafSequence:
 
     unsigned int start() const throw (Exception) { 
       if (hasCoordinates_) return begin_;
-      else throw Exception("MafSequence::start(). Sequence does not have coordinates.");
+      else throw Exception("MafSequence::start(). Sequence " + getName() + " does not have coordinates.");
     }
 
     unsigned int stop() const { 
       if (hasCoordinates_) return begin_ + size_ - 1;
-      else throw Exception("MafSequence::stop(). Sequence does not have coordinates.");
+      else throw Exception("MafSequence::stop(). Sequence " + getName() + " does not have coordinates.");
     }
 
     Range<unsigned int> getRange() const {
       if (hasCoordinates_) return Range<unsigned int>(start(), stop());
-      else throw Exception("MafSequence::getRange(). Sequence does not have coordinates.");
+      else throw Exception("MafSequence::getRange(). Sequence " + getName() + " does not have coordinates.");
     }
 
     void setName(const std::string& name) {
@@ -268,7 +268,7 @@ class MafBlock
 
     std::string getDescription() const {
       std::string desc;
-      desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites()) + "-" + getSequence(0).getName() + "[" + TextTools::toString(getSequence(0).start()) + "," + TextTools::toString(getSequence(0).stop()) + "]";
+      desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites());
       return desc;
     }
 
