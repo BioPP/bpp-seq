@@ -895,7 +895,7 @@ void SiteContainerTools::getSequencePositions(const SiteContainer& sites, Matrix
 
 /******************************************************************************/
 
-vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2)
+vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, int na)
 {
   if (positions1.getNumberOfRows() != positions2.getNumberOfRows())
     throw Exception("SiteContainerTools::getColumnScores. The two input alignments must have the same number of sequences!");
@@ -912,8 +912,8 @@ vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& posi
       }
     }
     if (whichPos == 0) {
-      //No anchor found, this alignment column is only made of gaps. We assign a score of 0 and move to the next column.
-      scores[i] = 0;
+      //No anchor found, this alignment column is only made of gaps. We assign a score of 'na' and move to the next column.
+      scores[i] = na;
       continue;
     }
     //We look for the anchor in the reference alignment:
@@ -940,9 +940,52 @@ vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& posi
 
 /******************************************************************************/
 
-//vector<int> SiteContainerTools::getSumOfPairsScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2)
-//{
-//
-//}
+vector<double> SiteContainerTools::getSumOfPairsScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, double na)
+{
+  if (positions1.getNumberOfRows() != positions2.getNumberOfRows())
+    throw Exception("SiteContainerTools::getColumnScores. The two input alignments must have the same number of sequences!");
+  vector<double> scores(positions1.getNumberOfColumns());
+  for (unsigned int i = 0; i < positions1.getNumberOfColumns(); ++i) {
+    //For all positions in alignment 1...
+    unsigned int countAlignable = 0;
+    unsigned int countAligned   = 0;
+    for (unsigned int j = 0; j < positions1.getNumberOfRows(); ++j) {
+      //Get the corresponding column in alignment 2:
+      unsigned int whichPos = positions1(j, i);
+      if (whichPos == 0) {
+        //No position for this sequence here.
+        continue;
+      }
+      //We look for the position in the second alignment:
+      unsigned int i2 = 0;
+      bool found = false;
+      for (unsigned int k = 0; !found && k < positions2.getNumberOfColumns(); ++k) {
+        if (positions2(j, k) == whichPos) {
+          i2 = k;
+          found = true;
+        }
+      }
+      if (!found) {
+        throw Exception("SiteContainerTools::getColumnScores(). Position " + TextTools::toString(whichPos) + " of sequence " + TextTools::toString(j) + " not found in reference alignment. Please make sure the two indexes are built from the same data!");
+      }
+
+      //Now we check all other positions and see if they are aligned with this one:
+      for (unsigned int k = j + 1; k < positions1.getNumberOfRows(); ++k) {
+        unsigned int whichPos2 = positions1(k, i);
+        if (whichPos2 == 0) {
+          //Empty position
+          continue;
+        }
+        countAlignable++;
+        //check position in alignment 2:
+        if (positions2(k, i2) == whichPos2)
+          countAligned++;
+      }
+    }
+    scores[i] = countAlignable == 0 ? na : static_cast<double>(countAligned) / static_cast<double>(countAlignable);
+  }
+  return scores;
+}
 
 /******************************************************************************/
+

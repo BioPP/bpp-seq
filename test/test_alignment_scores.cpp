@@ -91,5 +91,11 @@ int main() {
 
   if (scores21.size() != index2.getNumberOfColumns()) return 1;
   
+  vector<double> sp12 = SiteContainerTools::getSumOfPairsScores(index1, index2);
+  VectorTools::print(sp12);
+
+  vector<double> sp21 = SiteContainerTools::getSumOfPairsScores(index2, index1);
+  VectorTools::print(sp21);
+
   return 0;
 }

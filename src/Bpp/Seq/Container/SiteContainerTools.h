@@ -412,12 +412,26 @@ class SiteContainerTools
      *
      * @param positions1 Alignment index for the test alignment.
      * @param positions1 Alignment index for the reference alignment.
+     * @param na         The score to use if the tested column is full of gap.
      * @return A vector of score, as 0 or 1.
      * @see getSequencePositions for creating the alignment indexes.
      * @warning The indexes for the two alignments must have the sequences in the exact same order!
      */
-    static std::vector<int> getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2);
+    static std::vector<int> getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, int na = 0);
    
+    /**
+     * @brief Compare an alignment to a reference alignment, and compute the sum-of-pairs scores.
+     *
+     * Calculations are made according to formula for the "SPS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682–2690.
+     *
+     * @param positions1 Alignment index for the test alignment.
+     * @param positions1 Alignment index for the reference alignment.
+     * @param na         The score to use if the tested column is not testable, that is not containing at least to residues.
+     * @return A vector of score, between 0 and 1 (+ na value).
+     * @see getSequencePositions for creating the alignment indexes.
+     * @warning The indexes for the two alignments must have the sequences in the exact same order!
+     */
+    static std::vector<double> getSumOfPairsScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, double na = 0);
 };
 
 } //end of namespace bpp.
