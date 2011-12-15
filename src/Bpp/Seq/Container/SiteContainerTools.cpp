@@ -6,7 +6,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -872,5 +872,77 @@ throw (AlphabetMismatchException, Exception)
   if (del)
     delete seqCont2bis;
 }
+
+/******************************************************************************/
+
+void SiteContainerTools::getSequencePositions(const SiteContainer& sites, Matrix<unsigned int>& positions)
+{
+  positions.resize(sites.getNumberOfSequences(), sites.getNumberOfSites());
+  int gap = sites.getAlphabet()->getGapCharacterCode();
+  for (unsigned int i = 0; i < sites.getNumberOfSequences(); ++i) {
+    const Sequence& seq = sites.getSequence(i);
+    unsigned int pos = 0;
+    for (unsigned int j = 0; j < sites.getNumberOfSites(); ++j) {
+      if (seq[j] != gap) {
+        ++pos;
+        positions(i, j) = pos;
+      } else {
+        positions(i, j) = 0;
+      }
+    }
+  }
+}
+
+/******************************************************************************/
+
+vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2)
+{
+  if (positions1.getNumberOfRows() != positions2.getNumberOfRows())
+    throw Exception("SiteContainerTools::getColumnScores. The two input alignments must have the same number of sequences!");
+  vector<int> scores(positions1.getNumberOfColumns());
+  for (unsigned int i = 0; i < positions1.getNumberOfColumns(); ++i) {
+    //Find an anchor point:
+    unsigned int whichSeq = 0;
+    unsigned int whichPos = 0;
+    for (unsigned int j = 0; j < positions1.getNumberOfRows(); ++j) {
+      if (positions1(j, i) > 0) {
+        whichSeq = j;
+        whichPos = positions1(j, i);
+        break;
+      }
+    }
+    if (whichPos == 0) {
+      //No anchor found, this alignment column is only made of gaps. We assign a score of 0 and move to the next column.
+      scores[i] = 0;
+      continue;
+    }
+    //We look for the anchor in the reference alignment:
+    unsigned int i2 = 0;
+    bool found = false;
+    for (unsigned int j = 0; !found && j < positions2.getNumberOfColumns(); ++j) {
+      if (positions2(whichSeq, j) == whichPos) {
+        i2 = j;
+        found = true;
+      }
+    }
+    if (!found) {
+      throw Exception("SiteContainerTools::getColumnScores(). Position " + TextTools::toString(whichPos) + " of sequence " + TextTools::toString(whichSeq) + " not found in reference alignment. Please make sure the two indexes are built from the same data!");
+    }
+    //Now we compare all pairs of sequences between the two positions:
+    bool test = true;
+    for (unsigned int j = 0; test && j < positions1.getNumberOfRows(); ++j) {
+      test = (positions1(j, i) == positions2(j, i2));
+    }
+    scores[i] = test ? 1 : 0;
+  }
+  return scores;
+}
+
+/******************************************************************************/
+
+//vector<int> SiteContainerTools::getSumOfPairsScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2)
+//{
+//
+//}
 
 /******************************************************************************/

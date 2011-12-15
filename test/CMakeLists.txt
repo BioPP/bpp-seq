@@ -36,6 +36,10 @@ ADD_EXECUTABLE(test_containers test_containers.cpp)
 TARGET_LINK_LIBRARIES(test_containers ${LIBS})
 ADD_TEST(test_containers "test_containers")
 
+ADD_EXECUTABLE(test_alignment_scores test_alignment_scores.cpp)
+TARGET_LINK_LIBRARIES(test_alignment_scores ${LIBS})
+ADD_TEST(test_alignment_scores "test_alignment_scores")
+
 ADD_EXECUTABLE(test_walker test_walker.cpp)
 TARGET_LINK_LIBRARIES(test_walker ${LIBS})
 ADD_TEST(test_walker "test_walker")

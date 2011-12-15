@@ -7,6 +7,39 @@
 #ifndef _SITECONTAINERTOOLS_H_
 #define _SITECONTAINERTOOLS_H_
 
+/*
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
+
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
+
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
+
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
+
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
+
 #include "SiteContainer.h"
 #include "VectorSiteContainer.h"
 #include "AlignedSequenceContainer.h"
@@ -361,6 +394,30 @@ class SiteContainerTools
      */
     static void merge(SiteContainer& seqCont1, const SiteContainer& seqCont2, bool leavePositionAsIs = false) throw (AlphabetMismatchException, Exception);
 
+    /**
+     * @brief Fill a numeric matrix with the size of the alignment, containing the each sequence position.
+     *
+     * Positions start at 1, gaps have "position" 0.
+     *
+     * @param sites The input alignment.
+     * @param positions A matrix object which is going to be resized and filled with the corresponding positions.
+     * @author Julien Dutheil
+     */
+    static void getSequencePositions(const SiteContainer& sites, Matrix<unsigned int>& positions);
+
+    /**
+     * @brief Compare an alignment to a reference alignment, and compute the column scores.
+     *
+     * Calculations are made according to formula for the "CS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682–2690.
+     *
+     * @param positions1 Alignment index for the test alignment.
+     * @param positions1 Alignment index for the reference alignment.
+     * @return A vector of score, as 0 or 1.
+     * @see getSequencePositions for creating the alignment indexes.
+     * @warning The indexes for the two alignments must have the sequences in the exact same order!
+     */
+    static std::vector<int> getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2);
+   
 };
 
 } //end of namespace bpp.
