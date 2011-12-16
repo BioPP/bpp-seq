@@ -56,10 +56,10 @@ namespace bpp
  * - DNA -> DNA: DNA Replication
  * - RNA -> RNA: RNA Replication
  * - DNA -> RNA: Transcription
- * - RNA -> DNA: Reverse transcriptio
+ * - RNA -> DNA: Reverse transcription
  *
  * Since this is an instance of the ReverseIterator interface, transcription and
- * reverse transcription may be achieved from the some instance of the object by
+ * reverse transcription may be achieved from the same instance of the object by
  * using the translate and reverse methods.
  */
 class NucleicAcidsReplication :
