@@ -28,6 +28,10 @@ ADD_EXECUTABLE(test_alphabets test_alphabets.cpp)
 TARGET_LINK_LIBRARIES(test_alphabets ${LIBS})
 ADD_TEST(test_alphabets "test_alphabets")
 
+ADD_EXECUTABLE(test_sequences test_sequences.cpp)
+TARGET_LINK_LIBRARIES(test_sequences ${LIBS})
+ADD_TEST(test_sequences "test_sequences")
+
 ADD_EXECUTABLE(test_io test_io.cpp)
 TARGET_LINK_LIBRARIES(test_io ${LIBS})
 ADD_TEST(test_io "test_io")

@@ -7,7 +7,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -455,6 +455,27 @@ void SequenceTools::getCDS(Sequence& sequence, bool checkInit, bool checkStop, b
     for (unsigned int j = includeStop ? i + 1 : i; j < sequence.size(); ++j)
       sequence.deleteElement(j);
   }
+}
+
+/******************************************************************************/
+
+unsigned int SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif)
+{
+  if (motif.size() > seq.size())
+    return seq.size();
+  vector<int> tmp = motif.getContent();
+  deque<int> mint(tmp.begin(), tmp.end());
+  deque<int> window;
+  for (unsigned int i = 0; i < motif.size(); ++i)
+    window.push_back(seq[i]);
+  for (unsigned int i = 0; i <= seq.size() - motif.size(); ++i) {
+    if (window == mint)
+      return i;
+    //Move window:
+    window.push_back(seq[motif.size() + i]);
+    window.pop_front();
+  }
+  return seq.size();
 }
 
 /******************************************************************************/
