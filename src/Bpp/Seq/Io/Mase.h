@@ -66,6 +66,8 @@ class MaseHeader
 
   public:
     MaseHeader(): trees_(), siteSelections_(), sequenceSelections_() {}
+    virtual ~MaseHeader() {}
+
   public:
     unsigned int getNumberOfTrees() const { return trees_.size(); }
     unsigned int getNumberOfSiteSelections() const { return siteSelections_.size(); }
@@ -76,21 +78,21 @@ class MaseHeader
     std::vector<std::string> getSequenceSelectionNames() const { return MapTools::getKeys(sequenceSelections_); }
 
     const std::string& getTree(const std::string& name) const throw (Exception) {
-      if (trees_.find(name) == trees_.end()) {
+      if (trees_.find(name) != trees_.end()) {
         return trees_[name];
       } else {
         throw Exception("MaseHeader::getTree. No tree with name " + name);
       }
     }
     const MultiRange<unsigned int>& getSiteSelection(const std::string& name) const throw (Exception) {
-      if (siteSelections_.find(name) == siteSelections_.end()) {
+      if (siteSelections_.find(name) != siteSelections_.end()) {
         return siteSelections_[name];
       } else {
         throw Exception("MaseHeader::getSiteSelection. No site selection with name " + name);
       }
     }
     const std::vector<unsigned int>& getSequenceSelection(const std::string& name) const throw (Exception) {
-      if (sequenceSelections_.find(name) == sequenceSelections_.end()) {
+      if (sequenceSelections_.find(name) != sequenceSelections_.end()) {
         return sequenceSelections_[name];
       } else {
         throw Exception("MaseHeader::getSequenceSelection. No sequence selection with name " + name);
@@ -147,33 +149,19 @@ class Mase:
   public:
 
     /**
-     * @name The ISequence interface.
-     *
-     * @{
-     */
-    VectorSequenceContainer* read(std::istream& input, const Alphabet* alpha) const throw (Exception)
-    {
-      return AbstractISequence::read(input, alpha);
-    }
-    VectorSequenceContainer* read(std::string& path, const Alphabet* alpha) const throw (Exception)
-    {
-      return AbstractISequence::read(path, alpha);
-    }
-    /** @} */
-    /**
      * @name Reading method including header:
      *
      * @{
      */
-    VectorSequenceContainer* read(std::istream& input, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
+    VectorSequenceContainer* readMeta(std::istream& input, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
     {
       readHeader_(input, header);
       return AbstractISequence::read(input, alpha);
     }
-    VectorSequenceContainer* read(std::string& path, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
+    VectorSequenceContainer* readMeta(std::string& path, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
     {
       std::ifstream input(path.c_str(), std::ios::in);
-      VectorSequenceContainer* sc = read(input, alpha, header);
+      VectorSequenceContainer* sc = readMeta(input, alpha, header);
       input.close();
       return sc;
     }
@@ -204,12 +192,12 @@ class Mase:
      *
      * @{
      */
-    void write(std::ostream& output, const SequenceContainer& sc, const MaseHeader& header) const throw (Exception)
+    void writeMeta(std::ostream& output, const SequenceContainer& sc, const MaseHeader& header) const throw (Exception)
     {
       writeHeader_(output, header);
       write(output, sc);
     }
-    void write(const std::string& path, const SequenceContainer& sc, const MaseHeader& header, bool overwrite = true) const throw (Exception)
+    void writeMeta(const std::string& path, const SequenceContainer& sc, const MaseHeader& header, bool overwrite = true) const throw (Exception)
     {
 			// Open file in specified mode
       std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));

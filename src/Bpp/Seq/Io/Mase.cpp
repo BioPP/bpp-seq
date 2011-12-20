@@ -275,6 +275,7 @@ void Mase::writeHeader_(std::ostream& output, const MaseHeader& header) const
   for (size_t i = 0; i < treeNames.size(); ++i) {
     output << ";;$ " + treeNames[i] << endl;
     output << ";;" + header.getTree(treeNames[i]);
+    output << endl;
   }
 
   //Write site selections:
@@ -284,8 +285,9 @@ void Mase::writeHeader_(std::ostream& output, const MaseHeader& header) const
     output << ";;# of segments=" << ranges.size() << " " << siteSelectionNames[i] << endl;
     output << ";;";
     for (unsigned int j = 0; j < ranges.size(); ++j) {
-      output << " " << ranges.getRange(j).begin() << "," << (ranges.getRange(j).end() - 1);
+      output << " " << (ranges.getRange(j).begin() + 1) << "," << ranges.getRange(j).end();
     }
+    output << endl;
   }
 
   //Write sequence selections:
@@ -297,6 +299,7 @@ void Mase::writeHeader_(std::ostream& output, const MaseHeader& header) const
     for (unsigned int j = 0; j < set.size(); ++j) {
       output << " " << set[j];
     }
+    output << endl;
   }
 }
 
