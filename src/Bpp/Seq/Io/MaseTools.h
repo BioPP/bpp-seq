@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -71,7 +71,7 @@ class MaseTools
      * @param setName        The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-		static SiteSelection getSiteSet(const Comments & maseFileHeader, const std::string & setName) throw (IOException);
+		static SiteSelection getSiteSet(const Comments& maseFileHeader, const std::string& setName) throw (IOException);
 
     /**
      * @brief Get a sequence selection from a Mase+ header file.
@@ -80,7 +80,7 @@ class MaseTools
      * @param setName        The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SequenceSelection getSequenceSet(const Comments & maseFileHeader, const std::string & setName) throw (IOException);
+    static SequenceSelection getSequenceSet(const Comments& maseFileHeader, const std::string& setName) throw (IOException);
 
     /**
      * @brief Create a new container corresponding to a site set given in the mase+ format.
@@ -94,7 +94,7 @@ class MaseTools
      * @param setName   The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SiteContainer * getSelectedSites(const SiteContainer & sequences, const std::string & setName) throw (IOException);
+    static SiteContainer* getSelectedSites(const SiteContainer& sequences, const std::string& setName) throw (IOException);
 
     /**
      * @brief Create a new container corresponding to a site set given in the mase+ format.
@@ -108,7 +108,7 @@ class MaseTools
      * @param setName   The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SequenceContainer * getSelectedSequences(const OrderedSequenceContainer & sequences, const std::string & setName) throw (IOException);
+    static SequenceContainer* getSelectedSequences(const OrderedSequenceContainer& sequences, const std::string & setName) throw (IOException);
 
     /**
      * @brief Get a list of all available site selections.

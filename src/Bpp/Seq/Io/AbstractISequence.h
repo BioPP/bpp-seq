@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -186,7 +186,7 @@ class AbstractISequence:
 #else
     VectorSequenceContainer*
 #endif
-    readFromFile(const std::string & path , const Alphabet * alpha) const throw (Exception)
+    readFromFile(const std::string& path , const Alphabet* alpha) const throw (Exception)
     {
       VectorSequenceContainer* vsc = new VectorSequenceContainer(alpha);
       appendFromFile(path, *vsc);

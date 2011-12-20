@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -46,12 +46,78 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../Sequence.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/VectorSequenceContainer.h"
+#include <Bpp/Numeric/Range.h>
+#include <Bpp/Utils/MapTools.h>
 
 namespace bpp
 {
 
 /**
+ * @brief A class to store information from the header of Mase files.
+ *
+ * @author Julien Dutheil
+ */
+class MaseHeader
+{
+  private:
+    mutable std::map<std::string, std::string> trees_;
+    mutable std::map<std::string, MultiRange<unsigned int> > siteSelections_;
+    mutable std::map<std::string, std::vector<unsigned int> > sequenceSelections_;
+
+  public:
+    MaseHeader(): trees_(), siteSelections_(), sequenceSelections_() {}
+  public:
+    unsigned int getNumberOfTrees() const { return trees_.size(); }
+    unsigned int getNumberOfSiteSelections() const { return siteSelections_.size(); }
+    unsigned int getNumberOfSequenceSelections() const { return sequenceSelections_.size(); }
+
+    std::vector<std::string> getTreeNames() const { return MapTools::getKeys(trees_); }
+    std::vector<std::string> getSiteSelectionNames() const { return MapTools::getKeys(siteSelections_); }
+    std::vector<std::string> getSequenceSelectionNames() const { return MapTools::getKeys(sequenceSelections_); }
+
+    const std::string& getTree(const std::string& name) const throw (Exception) {
+      if (trees_.find(name) == trees_.end()) {
+        return trees_[name];
+      } else {
+        throw Exception("MaseHeader::getTree. No tree with name " + name);
+      }
+    }
+    const MultiRange<unsigned int>& getSiteSelection(const std::string& name) const throw (Exception) {
+      if (siteSelections_.find(name) == siteSelections_.end()) {
+        return siteSelections_[name];
+      } else {
+        throw Exception("MaseHeader::getSiteSelection. No site selection with name " + name);
+      }
+    }
+    const std::vector<unsigned int>& getSequenceSelection(const std::string& name) const throw (Exception) {
+      if (sequenceSelections_.find(name) == sequenceSelections_.end()) {
+        return sequenceSelections_[name];
+      } else {
+        throw Exception("MaseHeader::getSequenceSelection. No sequence selection with name " + name);
+      }
+    }
+
+    void setTree(const std::string& name, const std::string& tree) {
+      trees_[name] = tree;
+    }
+    void setSiteSelection(const std::string& name, const MultiRange<unsigned int>& ranges) {
+      siteSelections_[name] = ranges;
+    }
+    void setSequenceSelection(const std::string& name, const std::vector<unsigned int>& set) {
+      sequenceSelections_[name] = set;
+    }
+
+};
+
+/**
  * @brief The mase sequence file format.
+ *
+ * In addition to traditional read and write method, this class offers overloaded method
+ * with MaseHeader objects, dedicated to header information storage. If used, then the header
+ * of the mase file will be parsed accordingly. Otherwise, the header lines will be stored
+ * as general comments.
+ *
+ * @see MaseTools for alternative way of parsing headers.
  */
 class Mase:
   public AbstractISequence,
@@ -81,6 +147,39 @@ class Mase:
   public:
 
     /**
+     * @name The ISequence interface.
+     *
+     * @{
+     */
+    VectorSequenceContainer* read(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    {
+      return AbstractISequence::read(input, alpha);
+    }
+    VectorSequenceContainer* read(std::string& path, const Alphabet* alpha) const throw (Exception)
+    {
+      return AbstractISequence::read(path, alpha);
+    }
+    /** @} */
+    /**
+     * @name Reading method including header:
+     *
+     * @{
+     */
+    VectorSequenceContainer* read(std::istream& input, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
+    {
+      readHeader_(input, header);
+      return AbstractISequence::read(input, alpha);
+    }
+    VectorSequenceContainer* read(std::string& path, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
+    {
+      std::ifstream input(path.c_str(), std::ios::in);
+      VectorSequenceContainer* sc = read(input, alpha, header);
+      input.close();
+      return sc;
+    }
+    /** @} */
+    
+    /**
      * @name The AbstractISequence interface.
      *
      * @{
@@ -97,6 +196,26 @@ class Mase:
     void write(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const throw (Exception)
     {
       AbstractOSequence::write(path, sc, overwrite);
+    }
+    /** @} */
+
+    /**
+     * @name Writing methods including header:
+     *
+     * @{
+     */
+    void write(std::ostream& output, const SequenceContainer& sc, const MaseHeader& header) const throw (Exception)
+    {
+      writeHeader_(output, header);
+      write(output, sc);
+    }
+    void write(const std::string& path, const SequenceContainer& sc, const MaseHeader& header, bool overwrite = true) const throw (Exception)
+    {
+			// Open file in specified mode
+      std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
+      writeHeader_(output, header);
+			write(output, sc);
+			output.close();
     }
     /** @} */
 
@@ -124,6 +243,10 @@ class Mase:
      * @param yn whether the sequence names should be checked when reading from files.
      */
     void checkNames(bool yn) { checkNames_ = yn; }
+
+  private:
+    void readHeader_(std::istream& input, MaseHeader& header) const throw (Exception);
+    void writeHeader_(std::ostream& output, const MaseHeader& header) const;
 };
 
 } //end of namespace bpp.
