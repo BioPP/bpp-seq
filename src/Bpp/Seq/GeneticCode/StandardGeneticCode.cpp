@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -62,17 +62,17 @@ StandardGeneticCode::~StandardGeneticCode()
 
 int StandardGeneticCode::translate(int state) const throw (Exception)
 {
-	if(state == codonAlphabet_->getUnknownCharacterCode()) return proteicAlphabet_->getUnknownCharacterCode();
+	if (state == codonAlphabet_->getUnknownCharacterCode()) return proteicAlphabet_->getUnknownCharacterCode();
   vector<int> positions = codonAlphabet_->getPositions(state);
-	switch(positions[0])
+	switch (positions[0])
   {
 		//First position:
 		case 0 : //A
-		switch(positions[1])
+		switch (positions[1])
     {
 			//Second position:
 			case 0 : //AA
-			switch(positions[2])
+			switch (positions[2])
       {
 				//Third position:
 				case 0 : case 2 :          return proteicAlphabet_->charToInt("K"); //Lysine
@@ -81,14 +81,14 @@ int StandardGeneticCode::translate(int state) const throw (Exception)
 			case 1 : //AC
 			                             return proteicAlphabet_->charToInt("T"); //Threonine
 			case 2 : //AG
-			switch(positions[2])
+			switch (positions[2])
       {
 				//Third position:
 				case 0 : case 2 :          return proteicAlphabet_->charToInt("R"); //Arginine
 				case 1 : case 3 :          return proteicAlphabet_->charToInt("S"); //Serine
 			}
 			case 3 : //AT
-			switch(positions[2])
+			switch (positions[2])
       {
 				//Third position:
 				case 2:                    return proteicAlphabet_->charToInt("M"); //Methionine
@@ -96,11 +96,11 @@ int StandardGeneticCode::translate(int state) const throw (Exception)
 			}
 		}
 		case 1 : //C
-		switch(positions[1])
+		switch (positions[1])
     {
 			//Second position:
 			case 0 : //CA
-			switch(positions[2])
+			switch (positions[2])
       {
 				//Third position:
 				case 0 : case 2 :          return proteicAlphabet_->charToInt("Q"); //Glutamine
@@ -114,11 +114,11 @@ int StandardGeneticCode::translate(int state) const throw (Exception)
 			                             return proteicAlphabet_->charToInt("L"); //Leucine
 		}
 		case 2 : //G
-		switch(positions[1])
+		switch (positions[1])
     {
 			//Second position:
 			case 0 : //GA
-			switch(positions[2])
+			switch (positions[2])
       {
 				//Third position:
 				case 0 : case 2 :          return proteicAlphabet_->charToInt("E"); //Glutamic acid
@@ -132,11 +132,11 @@ int StandardGeneticCode::translate(int state) const throw (Exception)
 			                             return proteicAlphabet_->charToInt("V"); //Valine
 		}
 		case 3 : //T(U)
-		switch(positions[1])
+		switch (positions[1])
     {
 			//Second position:
 			case 0 : //TA
-			switch(positions[2])
+			switch (positions[2])
       {
 				//Third position:
 				case 0 :                   throw StopCodonException("", "TAA"); //Stop codon
@@ -146,7 +146,7 @@ int StandardGeneticCode::translate(int state) const throw (Exception)
 			case 1 : //TC
 			                             return proteicAlphabet_->charToInt("S"); //Serine
 			case 2 : //TG
-			switch(positions[2])
+			switch (positions[2])
       {
 				//Third position:
 				case 0 :                   throw StopCodonException("", "TGA"); //Stop codon
@@ -154,7 +154,7 @@ int StandardGeneticCode::translate(int state) const throw (Exception)
 				case 1 : case 3 :          return proteicAlphabet_->charToInt("C"); //Cysteine
 			}
 			case 3 : //TT
-			switch(positions[2])
+			switch (positions[2])
       {
 				//Third position:
 				case 0 : case 2 :          return proteicAlphabet_->charToInt("L"); //Leucine
@@ -165,7 +165,7 @@ int StandardGeneticCode::translate(int state) const throw (Exception)
 	throw BadIntException(state, "StandardGeneticCode::translate", codonAlphabet_);
 }
 
-string StandardGeneticCode::translate(const string & state) const throw (Exception)
+string StandardGeneticCode::translate(const string& state) const throw (Exception)
 {
 	return proteicAlphabet_->intToChar(translate(codonAlphabet_->charToInt(state)));
 }

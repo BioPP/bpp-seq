@@ -46,9 +46,14 @@ Sequence* AbstractTransliterator::translate(const Sequence& sequence) const thro
 	if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
 		throw AlphabetMismatchException("AbstractTransliterator::translate", getSourceAlphabet(), getTargetAlphabet());
 	Sequence* tSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
-	for (unsigned int i = 0; i < sequence.size(); ++i)
+	int gap = sequence.getAlphabet()->getGapCharacterCode();
+  for (unsigned int i = 0; i < sequence.size(); ++i)
   {
-		tSeq->addElement(translate(sequence.getValue(i)));
+    int state = sequence.getValue(i);
+    if (state == gap)
+      tSeq->addElement(gap);
+    else
+		  tSeq->addElement(translate(state));
 	}
 	return tSeq;
 }
