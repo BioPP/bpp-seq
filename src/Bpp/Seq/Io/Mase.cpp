@@ -286,6 +286,8 @@ void Mase::writeHeader_(std::ostream& output, const MaseHeader& header) const
     output << ";;";
     for (unsigned int j = 0; j < ranges.size(); ++j) {
       output << " " << (ranges.getRange(j).begin() + 1) << "," << ranges.getRange(j).end();
+      if ((j + 1) % 10 == 0)
+        output << endl << ";;";
     }
     output << endl;
   }
@@ -298,6 +300,8 @@ void Mase::writeHeader_(std::ostream& output, const MaseHeader& header) const
     output << ";;";
     for (unsigned int j = 0; j < set.size(); ++j) {
       output << " " << set[j];
+      if ((j + 1) % 10 == 0)
+        output << endl << ";;";
     }
     output << endl;
   }
