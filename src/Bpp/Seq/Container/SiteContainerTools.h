@@ -136,7 +136,7 @@ class SiteContainerTools
 		 *
 		 * A new VectorSiteContainer is created with specified sites.
 		 * The destruction of the container is up to the user.
-		 * Sequences are specified by their indice, beginning at 0.
+		 * Sites are specified by their indice, beginning at 0.
 		 * No position verification is performed, based on the assumption that
 		 * the container passed as an argument is a correct one.
 		 * Redundant selection is not checked, so be careful with what you're doing!

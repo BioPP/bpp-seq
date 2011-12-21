@@ -54,7 +54,6 @@ SiteSelection MaseTools::getSiteSet(const Comments& maseFileHeader, const string
   SiteSelection selection;
   for (unsigned int i = 0; i < maseFileHeader.size(); i++) {
     string current = maseFileHeader[i];
-    
     string::size_type index = current.find("# of");
     if (index < current.npos) {
       StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t=;");
@@ -66,7 +65,7 @@ SiteSelection MaseTools::getSiteSet(const Comments& maseFileHeader, const string
         //Then look for the set definition:
         i++;//next line.
         unsigned int counter = 0;
-        while(i < maseFileHeader.size()) {
+        while (i < maseFileHeader.size()) {
           current = maseFileHeader[i++];
           StringTokenizer st2(current);
            //st.nextToken(); //Skip ';;'
@@ -138,7 +137,24 @@ SiteContainer* MaseTools::getSelectedSites(
   const string& setName) throw (IOException)
 {
     SiteSelection ss = getSiteSet(sequences.getGeneralComments(), setName);
-    return SiteContainerTools::getSelectedSites(sequences, ss);
+    //We need to convert positions in case of word alphabet:
+    unsigned int wsize = sequences.getAlphabet()->getStateCodingSize();
+    if (wsize > 1) {
+      if (ss.size() % wsize != 0)
+        throw IOException("MaseTools::getSelectedSites: Site selection is not compatible with the alphabet in use in the container.");
+      SiteSelection ss2;
+      for (unsigned int i = 0; i < ss.size(); i += wsize) {
+        if (ss[i] % wsize != 0)
+          throw IOException("MaseTools::getSelectedSites: Site selection is not compatible with the alphabet in use in the container.");
+        for (unsigned int j = 1; j < wsize; ++j)
+          if (ss[i + j] != (ss[i + j - 1] + 1))
+            throw IOException("MaseTools::getSelectedSites: Site selection is not compatible with the alphabet in use in the container.");
+        ss2.push_back(ss[i] / wsize);
+      }
+      return SiteContainerTools::getSelectedSites(sequences, ss2);
+    } else {
+      return SiteContainerTools::getSelectedSites(sequences, ss);
+    }
 }
 
 /******************************************************************************/
