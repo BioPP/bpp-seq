@@ -1,14 +1,14 @@
 //
-// File: Transliterator.cpp
+// File: test_sequences.cpp
 // Created by: Julien Dutheil
-// Created on: Sun Oct 12 14:25:25 2003
+// Created on: Mon Dec 130 17:10 2010
 //
 
 /*
 Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+for numerical calculus. This file is part of the Bio++ project.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -37,36 +37,37 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "Transliterator.h"
+#include <Bpp/Seq/Alphabet.all>
+#include <Bpp/Seq/SequenceTools.h>
+#include <iostream>
 
 using namespace bpp;
+using namespace std;
 
-Sequence* AbstractTransliterator::translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
-{
-	if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("AbstractTransliterator::translate", getSourceAlphabet(), getTargetAlphabet());
-	Sequence* tSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
-	int gap = sequence.getAlphabet()->getGapCharacterCode();
-  for (unsigned int i = 0; i < sequence.size(); ++i)
-  {
-    int state = sequence.getValue(i);
-    if (state == gap)
-      tSeq->addElement(gap);
-    else
-		  tSeq->addElement(translate(state));
-	}
-	return tSeq;
+int main() {
+  //This is a very simple test that instanciate all alpahabet classes.
+  BasicSequence seq1("test DNA", "ATTTCG---TCGTT-AAAGCACATGCATCGATC", &AlphabetTools::DNA_ALPHABET);
+  BasicSequence motif1("motif", "ATTT", &AlphabetTools::DNA_ALPHABET);
+  BasicSequence motif2("motif", "TCG", &AlphabetTools::DNA_ALPHABET);
+  BasicSequence motif3("motif", "GATC", &AlphabetTools::DNA_ALPHABET);
+  BasicSequence motif4("motif", "CGTC", &AlphabetTools::DNA_ALPHABET);
+  unsigned int pos;
+
+  pos = SequenceTools::findFirstOf(seq1, motif1);
+  if (pos != 0) return 1;
+  cout << motif1.toString() << ": " << pos << endl;
+  
+  pos = SequenceTools::findFirstOf(seq1, motif2);
+  if (pos != 3) return 1;
+  cout << motif2.toString() << ": " << pos << endl;
+
+  pos = SequenceTools::findFirstOf(seq1, motif3);
+  if (pos != 29) return 1;
+  cout << motif3.toString() << ": " << pos << endl;
+
+  pos = SequenceTools::findFirstOf(seq1, motif4);
+  if (pos != 33) return 1;
+  cout << motif4.toString() << ": " << pos << endl;
+
+  return (0);
 }
-
-Sequence* AbstractReverseTransliterator::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
-{
-	if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("AbstractReverseTransliterator::reverse", getSourceAlphabet(), getTargetAlphabet());
-	Sequence* rSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
-	for (unsigned int i = 0; i < sequence.size(); ++i)
-  {
-		rSeq->addElement(reverse(sequence.getValue(i)));
-	}
-	return rSeq;
-}
-

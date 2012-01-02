@@ -7,7 +7,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -269,7 +269,7 @@ unsigned int SequenceTools::getNumberOfCompleteSites(const Sequence & seq)
 
 /******************************************************************************/
 
-unsigned int SequenceTools::getNumberOfUnresolvedSites(const Sequence & seq)
+unsigned int SequenceTools::getNumberOfUnresolvedSites(const Sequence& seq)
 {
   unsigned int count = 0;
   const Alphabet * alpha = seq.getAlphabet();
@@ -282,17 +282,72 @@ unsigned int SequenceTools::getNumberOfUnresolvedSites(const Sequence & seq)
 
 /******************************************************************************/
 
-Sequence * SequenceTools::removeGaps(const Sequence & seq)
+Sequence* SequenceTools::getSequenceWithoutGaps(const Sequence& seq)
 {
+  const Alphabet* alpha = seq.getAlphabet();
 	vector<int> content;
-  const Alphabet * alpha = seq.getAlphabet();
-  for(unsigned int i = 0; i < seq.size(); i++)
+  for (unsigned int i = 0; i < seq.size(); i++)
   {
-		if(! alpha->isGap(seq[i])) content.push_back(seq[i]);
+		if (! alpha->isGap(seq[i])) content.push_back(seq[i]);
 	}
-  Sequence * newSeq = dynamic_cast<Sequence *>(seq.clone());
+  Sequence* newSeq = dynamic_cast<Sequence *>(seq.clone());
   newSeq->setContent(content);
 	return newSeq;
+}
+
+/******************************************************************************/
+
+void SequenceTools::removeGaps(Sequence& seq)
+{
+  const Alphabet* alpha = seq.getAlphabet();
+  for (unsigned int i = seq.size(); i > 0; --i)
+  {
+		if (alpha->isGap(seq[i - 1])) seq.deleteElement(i - 1);
+	}
+}
+
+/******************************************************************************/
+
+Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq) throw (Exception)
+{
+  const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
+  if (!calpha)
+    throw Exception("SequenceTools::getSequenceWithoutStops. Input sequence should have a codon alphabet.");
+	vector<int> content;
+  for (unsigned int i = 0; i < seq.size(); i++)
+  {
+		if (!calpha->isStop(seq[i])) content.push_back(seq[i]);
+	}
+  Sequence* newSeq = dynamic_cast<Sequence*>(seq.clone());
+  newSeq->setContent(content);
+	return newSeq;
+}
+
+/******************************************************************************/
+
+void SequenceTools::removeStops(Sequence& seq) throw (Exception)
+{
+  const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
+  if (!calpha)
+    throw Exception("SequenceTools::removeStops. Input sequence should have a codon alphabet.");
+  for (unsigned int i = seq.size(); i > 0; --i)
+  {
+		if (calpha->isStop(seq[i - 1])) seq.deleteElement(i - 1);
+	}
+}
+
+/******************************************************************************/
+
+void SequenceTools::replaceStopsWithGaps(Sequence& seq) throw (Exception)
+{
+  const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
+  if (!calpha)
+    throw Exception("SequenceTools::replaceStopsWithGaps. Input sequence should have a codon alphabet.");
+  int gap = calpha->getGapCharacterCode();
+  for (unsigned int i = 0; i < seq.size(); ++i)
+  {
+		if (calpha->isStop(seq[i])) seq.setElement(i, gap);
+	}
 }
 
 /******************************************************************************/
@@ -536,6 +591,27 @@ void SequenceTools::getCDS(Sequence& sequence, bool checkInit, bool checkStop, b
     for (unsigned int j = includeStop ? i + 1 : i; j < sequence.size(); ++j)
       sequence.deleteElement(j);
   }
+}
+
+/******************************************************************************/
+
+unsigned int SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif)
+{
+  if (motif.size() > seq.size())
+    return seq.size();
+  vector<int> tmp = motif.getContent();
+  deque<int> mint(tmp.begin(), tmp.end());
+  deque<int> window;
+  for (unsigned int i = 0; i < motif.size(); ++i)
+    window.push_back(seq[i]);
+  for (unsigned int i = 0; i <= seq.size() - motif.size(); ++i) {
+    if (window == mint)
+      return i;
+    //Move window:
+    window.push_back(seq[motif.size() + i]);
+    window.pop_front();
+  }
+  return seq.size();
 }
 
 /******************************************************************************/

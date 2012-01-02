@@ -7,7 +7,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -254,10 +254,51 @@ class SequenceTools:
     /**
      * @brief Remove gaps from a sequence.
      *
+     * The deleteElement method of the Sequence object will be used where appropriate.
+		 * @param seq The sequence to analyse.
+     */
+    static void removeGaps(Sequence& seq);
+
+    /**
+     * @brief Get a copy of the sequence without gaps.
+     *
+     * A whole new sequence will be created by adding all non-gap positions.
+     * The original sequence will be cloned to serve as a template.
+     *
 		 * @param seq The sequence to analyse.
      * @return A new sequence object without gaps.
      */
-    static Sequence* removeGaps(const Sequence& seq);
+    static Sequence* getSequenceWithoutGaps(const Sequence& seq);
+
+    /**
+     * @brief Remove stops from a codon sequence.
+     *
+     * The deleteElement method of the Sequence object will be used where appropriate.
+		 * @param seq The sequence to analyse.
+     * @throw Exception if the input sequence does not have a codon alphabet.
+     */
+    static void removeStops(Sequence& seq) throw (Exception);
+
+    /**
+     * @brief Get a copy of the codon sequence without stops.
+     *
+     * A whole new sequence will be created by adding all non-stop positions.
+     * The original sequence will be cloned to serve as a template.
+     *
+		 * @param seq The sequence to analyse.
+     * @return A new sequence object without stops.
+     * @throw Exception if the input sequence does not have a codon alphabet.
+     */
+    static Sequence* getSequenceWithoutStops(const Sequence& seq) throw (Exception);
+    
+    /**
+     * @brief Replace stop codons by gaps.
+     *
+     * The setElement method of the Sequence object will be used where appropriate.
+		 * @param seq The sequence to analyse.
+     * @throw Exception if the input sequence does not have a codon alphabet.
+     */
+    static void replaceStopsWithGaps(Sequence& seq) throw (Exception);
 
     /**
      * @brief Bowker's test for homogeneity.
@@ -352,6 +393,8 @@ class SequenceTools:
      * @param includeStop Tell if stop codon should be kept or removed. No effect if checkStop is false.
      */
     static void getCDS(Sequence& sequence, bool checkInit, bool checkStop, bool includeInit=true, bool includeStop=true);
+
+    static unsigned int findFirstOf(const Sequence& seq, const Sequence& motif);
 };
 
 } //end of namespace bpp.

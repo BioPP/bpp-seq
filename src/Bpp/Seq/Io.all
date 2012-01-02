@@ -4,6 +4,7 @@
 #include "Io/Clustal.h"
 #include "Io/Dcse.h"
 #include "Io/Fasta.h"
+#include "Io/Fastq.h"
 #include "Io/GenBank.h"
 #include "Io/ISequence.h"
 #include "Io/ISequenceStream.h"

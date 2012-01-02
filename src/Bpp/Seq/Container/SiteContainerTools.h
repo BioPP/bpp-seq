@@ -136,7 +136,7 @@ class SiteContainerTools
 		 *
 		 * A new VectorSiteContainer is created with specified sites.
 		 * The destruction of the container is up to the user.
-		 * Sequences are specified by their indice, beginning at 0.
+		 * Sites are specified by their indice, beginning at 0.
 		 * No position verification is performed, based on the assumption that
 		 * the container passed as an argument is a correct one.
 		 * Redundant selection is not checked, so be careful with what you're doing!
@@ -210,6 +210,13 @@ class SiteContainerTools
     static SiteContainer* resolveDottedAlignment(const SiteContainer& dottedAln, const Alphabet* resolvedAlphabet) throw (AlphabetException, Exception);
 
     /**
+     * @name Sequences coordinates.
+     *
+     * @see SequenceWalker For an alternative approach.
+     * @{
+     */
+
+    /**
      * @brief Get the index of each sequence position in an aligned sequence.
      *
      * If the sequence contains no gap, the translated and the original positions are the same.
@@ -230,6 +237,18 @@ class SiteContainerTools
      * @return A map with original alignement positions as keys, and translated positions as values.
      */
     static std::map<unsigned int, unsigned int> getAlignmentPositions(const Sequence& seq);
+
+    /**
+     * @brief Fill a numeric matrix with the size of the alignment, containing the each sequence position.
+     *
+     * Positions start at 1, gaps have "position" 0.
+     *
+     * @param sites The input alignment.
+     * @param positions A matrix object which is going to be resized and filled with the corresponding positions.
+     * @author Julien Dutheil
+     */
+    static void getSequencePositions(const SiteContainer& sites, Matrix<unsigned int>& positions);
+    /** @} */
 
     /**
      * @brief Translate alignement positions from an aligned sequence to the same sequence in a different alignment.
@@ -395,17 +414,6 @@ class SiteContainerTools
     static void merge(SiteContainer& seqCont1, const SiteContainer& seqCont2, bool leavePositionAsIs = false) throw (AlphabetMismatchException, Exception);
 
     /**
-     * @brief Fill a numeric matrix with the size of the alignment, containing the each sequence position.
-     *
-     * Positions start at 1, gaps have "position" 0.
-     *
-     * @param sites The input alignment.
-     * @param positions A matrix object which is going to be resized and filled with the corresponding positions.
-     * @author Julien Dutheil
-     */
-    static void getSequencePositions(const SiteContainer& sites, Matrix<unsigned int>& positions);
-
-    /**
      * @brief Compare an alignment to a reference alignment, and compute the column scores.
      *
      * Calculations are made according to formula for the "CS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682–2690.
@@ -416,6 +424,7 @@ class SiteContainerTools
      * @return A vector of score, as 0 or 1.
      * @see getSequencePositions for creating the alignment indexes.
      * @warning The indexes for the two alignments must have the sequences in the exact same order!
+     * @author Julien Dutheil
      */
     static std::vector<int> getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, int na = 0);
    
@@ -430,6 +439,7 @@ class SiteContainerTools
      * @return A vector of score, between 0 and 1 (+ na value).
      * @see getSequencePositions for creating the alignment indexes.
      * @warning The indexes for the two alignments must have the sequences in the exact same order!
+     * @author Julien Dutheil
      */
     static std::vector<double> getSumOfPairsScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, double na = 0);
 };

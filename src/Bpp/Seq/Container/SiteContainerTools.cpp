@@ -476,8 +476,10 @@ throw (AlphabetMismatchException)
   if (seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
   // Check that sequences have no gap!
-  Sequence* s1 = SequenceTools::removeGaps(seq1);
-  Sequence* s2 = SequenceTools::removeGaps(seq2);
+  auto_ptr<Sequence> s1(seq1.clone());
+  SequenceTools::removeGaps(*s1);
+  auto_ptr<Sequence> s2(seq2.clone());
+  SequenceTools::removeGaps(*s2);
 
   // 1) Initialize matrix:
   RowMatrix<double> m(s1->size() + 1, s2->size() + 1);
@@ -557,8 +559,6 @@ throw (AlphabetMismatchException)
   AlignedSequenceContainer* asc = new AlignedSequenceContainer(s1->getAlphabet());
   asc->addSequence(*s1, false);
   asc->addSequence(*s2, false); // Do not check for sequence names.
-  delete s1; // Sequence are recopied in the container, we can delete these...
-  delete s2;
   return asc;
 }
 
@@ -577,8 +577,10 @@ throw (AlphabetMismatchException)
   if (seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
   // Check that sequences have no gap!
-  Sequence* s1 = SequenceTools::removeGaps(seq1);
-  Sequence* s2 = SequenceTools::removeGaps(seq2);
+  auto_ptr<Sequence> s1(seq1.clone());
+  SequenceTools::removeGaps(*s1);
+  auto_ptr<Sequence> s2(seq2.clone());
+  SequenceTools::removeGaps(*s2);
 
   // 1) Initialize matrix:
   RowMatrix<double> m(s1->size() + 1, s2->size() + 1);
@@ -695,8 +697,6 @@ throw (AlphabetMismatchException)
   AlignedSequenceContainer* asc = new AlignedSequenceContainer(s1->getAlphabet());
   asc->addSequence(*s1, false);
   asc->addSequence(*s2, false); // Do not check for sequence names.
-  delete s1; // Sequence are recopied in the container, we can delete these...
-  delete s2;
   return asc;
 }
 

@@ -6,6 +6,7 @@
 #include "Seq/SequenceExceptions.h"
 #include "Seq/SequencePositionIterators.h"
 #include "Seq/SequenceTools.h"
+#include "Seq/SequenceWalker.h"
 #include "Seq/SequenceWithAnnotation.h"
 #include "Seq/SequenceWithAnnotationTools.h"
 #include "Seq/SequenceWithQuality.h"
@@ -16,4 +17,4 @@
 #include "Seq/StringSequenceTools.h"
 #include "Seq/SymbolList.h"
 #include "Seq/SymbolListTools.h"
-#include "Seq/Translator.h"
+#include "Seq/Transliterator.h"
