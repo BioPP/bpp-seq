@@ -7,36 +7,36 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. CNRS, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _ABSTRACTALPHABET_H_
@@ -54,24 +54,24 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief A partial implementation of the Alphabet interface.
- *
- * It contains a vector of AlphabetState.
- * All methods are based uppon this vector
- * but do not provide any method to initialize it.
- * This is up to each constructor of the derived classes.
- *
- * @see Alphabet
- */
-class AbstractAlphabet:
-  public Alphabet
-{
-	private:
+  /**
+   * @brief A partial implementation of the Alphabet interface.
+   *
+   * It contains a vector of AlphabetState.
+   * All methods are based uppon this vector
+   * but do not provide any method to initialize it.
+   * This is up to each constructor of the derived classes.
+   *
+   * @see Alphabet
+   */
+  class AbstractAlphabet:
+    public Alphabet
+  {
+  private:
 		
-		/**
-		 * @brief Alphabet: vector of AlphabetState.
-		 */
+    /**
+     * @brief Alphabet: vector of AlphabetState.
+     */
     std::vector<AlphabetState*> alphabet_;
     /**
      * @name maps used to quick search for letter and num.
@@ -100,29 +100,29 @@ class AbstractAlphabet:
     mutable std::vector<int> intList_;
     /** @} */
 
-	public:
+  public:
 		
-		AbstractAlphabet(): alphabet_(), letters_(), nums_(), charList_(), intList_() {}
+    AbstractAlphabet(): alphabet_(), letters_(), nums_(), charList_(), intList_() {}
 
-		virtual ~AbstractAlphabet()
+    virtual ~AbstractAlphabet()
     {
       for (unsigned int i = 0 ; i < alphabet_.size() ; i++)
         delete alphabet_[i];
     }
 	
-	public:
+  public:
     /**
-		 * @name Implement these methods from the Alphabet interface.
-		 *
-		 * @{
-		 */
-		unsigned int getNumberOfChars() const { return alphabet_.size(); }
+     * @name Implement these methods from the Alphabet interface.
+     *
+     * @{
+     */
+    unsigned int getNumberOfChars() const { return alphabet_.size(); }
     std::string getName(const std::string& state) const throw (BadCharException);
     std::string getName(int state) const throw (BadIntException);
-		int charToInt(const std::string& state) const throw (BadCharException);
+    int charToInt(const std::string& state) const throw (BadCharException);
     std::string intToChar(int state) const throw (BadIntException);
-		bool isIntInAlphabet(int state) const;
-		bool isCharInAlphabet(const std::string& state) const;
+    bool isIntInAlphabet(int state) const;
+    bool isCharInAlphabet(const std::string& state) const;
     std::vector<int> getAlias(int state) const throw (BadIntException);
     std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
     int getGeneric(const std::vector<int>& states) const throw (BadIntException);
@@ -132,7 +132,7 @@ class AbstractAlphabet:
     int getGapCharacterCode() const { return -1; }
     bool isGap(int state) const { return state == -1; }
     bool isGap(const std::string& state) const { return charToInt(state) == -1; }
-		/** @} */
+    /** @} */
 
     /**
      * @name Specific methods to access AlphabetState
@@ -212,7 +212,7 @@ class AbstractAlphabet:
 
     unsigned int getStateCodingSize() const { return 1; }
 
-};
+  };
 
 } //end of namespace bpp.
 
