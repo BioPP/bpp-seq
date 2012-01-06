@@ -8,7 +8,7 @@
 
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -54,10 +54,10 @@ using namespace std;
 
 /******************************************************************************/
 
-DNA::DNA()
+DNA::DNA(bool exclamationMarkCountsAsGap)
 {
 	// Alphabet size definition
-	resize(20);
+	resize(21);
 
 	// Alphabet content definition
 	// all unresolved bases use n°14
@@ -81,14 +81,18 @@ DNA::DNA()
   setState(17, NucleicAlphabetState(14, "O", 15, "Unresolved base"));
   setState(18, NucleicAlphabetState(14, "0", 15, "Unresolved base"));
   setState(19, NucleicAlphabetState(14, "?", 15, "Unresolved base"));
-  setState(19, NucleicAlphabetState(14, "!", 15, "Unresolved base"));
+  if (exclamationMarkCountsAsGap)
+    setState(20, NucleicAlphabetState(-1, "!", 0, "Unresolved base"));
+  else
+    setState(20, NucleicAlphabetState(14, "!", 15, "Unresolved base"));
 }
 
 /******************************************************************************/
 
 std::vector<int> DNA::getAlias(int state) const throw (BadIntException) 
 {
-	if(!isIntInAlphabet(state)) throw BadIntException(state, "DNA::getAlias(int): Specified base unknown.");
+	if (!isIntInAlphabet(state))
+    throw BadIntException(state, "DNA::getAlias(int): Specified base unknown.");
 	vector<int> v;
   const NucleicAlphabetState& st = getState(state);
   if (st.getBinaryCode() & 1)

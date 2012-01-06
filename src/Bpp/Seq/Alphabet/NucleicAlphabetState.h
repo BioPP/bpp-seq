@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (July 29, 2009)
+Copyright or © or Copr. Bio++ Development Team, (July 29, 2009)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -87,7 +87,8 @@ namespace bpp {
       unsigned char binCode_;
 
     public:
-      NucleicAlphabetState(int num, const std::string & letter, unsigned char code, const std::string & name): AlphabetState(num, letter, name), binCode_(code) {}
+      NucleicAlphabetState(int num, const std::string& letter, unsigned char code, const std::string& name):
+        AlphabetState(num, letter, name), binCode_(code) {}
 
       // Class destructor
       virtual ~NucleicAlphabetState() {}

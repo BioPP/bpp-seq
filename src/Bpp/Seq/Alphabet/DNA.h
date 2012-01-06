@@ -61,7 +61,11 @@ class DNA:
   public NucleicAlphabet
 {
 	public:
-		DNA();
+    /**
+     * @param exclamationMarkCountsAsGap If yes, '!' characters are replaced by gaps.
+     * Otherwise, they are counted as unknown characters.
+     */
+		DNA(bool exclamationMarkCountsAsGap = false);
 		virtual ~DNA() {}
 	
 	public:

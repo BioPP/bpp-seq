@@ -5,9 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -61,10 +59,12 @@ class RNA:
   public NucleicAlphabet
 {
 	public:
-		// Class constructor
-		RNA();
-		// Class destructor
-		~RNA() {}
+    /**
+     * @param exclamationMarkCountsAsGap If yes, '!' characters are replaced by gaps.
+     * Otherwise, they are counted as unknown characters.
+     */
+		RNA(bool exclamationMarkCountsAsGap = false);
+		virtual ~RNA() {}
 
 	public:
     std::vector<int> getAlias(int state) const throw (BadIntException);
