@@ -87,7 +87,7 @@ bool testAln(SequenceWalker& walker, unsigned int pos, unsigned int truth) {
 }
 
 int main() {
-  RNA* alpha = new RNA;
+  RNA* alpha = new RNA();
   BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
   SequenceWalker walker(seq1);
 
