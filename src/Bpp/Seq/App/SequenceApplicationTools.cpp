@@ -254,7 +254,9 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   }
   else if (format == "Fasta")
   {
-    iSeq.reset(new Fasta());
+    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", args, false, "", true, false);
+    bool extended    = ApplicationTools::getBooleanParameter("extended", args, false, "", true, false);
+    iSeq.reset(new Fasta(100, true, extended, strictNames));
   }
   else if (format == "Clustal")
   {
@@ -352,7 +354,9 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   }
   else if (format == "Fasta")
   {
-    iSeq.reset(new Fasta());
+    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", args, false, "", true, false);
+    bool extended    = ApplicationTools::getBooleanParameter("extended", args, false, "", true, false);
+    iSeq.reset(new Fasta(100, true, extended, strictNames));
   }
   else if (format == "Clustal")
   {

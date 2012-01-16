@@ -1,5 +1,8 @@
+16/01/12 Julien Dutheil
+* Bug #42 solved, new support for extended fasta parser in application tools.
+
 06/01/12 Julien Dutheil
-* Added support for "!" state in nucleixc alphabet, which can be either a gap or an unknown character.
+* Added support for "!" state in nucleic alphabet, which can be either a gap or an unknown character.
 
 24/11/11 Julien Dutheil
 * Added SequenceWalker class and test.
