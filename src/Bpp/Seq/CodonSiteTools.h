@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -308,6 +308,16 @@ class CodonSiteTools:
 		 */
 		static std::vector<unsigned int> fixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const GeneticCode & gc)
 			  throw (AlphabetException, AlphabetMismatchException, EmptySiteException);
+
+    
+    /**
+     * @return True if all sequences have a fourfold degenerated codon in the site
+     * (that is, if a mutation in the fourth position does not change the aminoacid).
+     * @author Benoit Nabholz, Annabelle Haudry
+     * @param site The site to analyze.
+     * @param gc The genetic code to use.
+     */
+    static bool isFourFoldDegenerated(const Site& site, const GeneticCode& gc);
 
 };
 

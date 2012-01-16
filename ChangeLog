@@ -1,5 +1,6 @@
 16/01/12 Julien Dutheil
 * Bug #42 solved, new support for extended fasta parser in application tools.
+* Added contribution from Benoit Nabholz and Annabelle Haudry on 4-fold degenerated sites.
 
 06/01/12 Julien Dutheil
 * Added support for "!" state in nucleic alphabet, which can be either a gap or an unknown character.

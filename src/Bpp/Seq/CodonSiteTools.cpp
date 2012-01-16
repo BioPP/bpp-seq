@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -655,6 +655,33 @@ vector<unsigned int> CodonSiteTools::fixedDifferences(const Site & siteIn, const
   v[0]=Ns;
   v[1]=Na;
   return v;
+}
+
+/******************************************************************************/
+
+bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode & gc)
+{
+  if(!SiteTools::isConstant(site, true)){
+
+    /** If non-synonymous mutation **/
+    if(!(CodonSiteTools::isSynonymousPolymorphic(site, gc)))
+      return false;
+
+    for(unsigned int i = 0; i < site.size(); i++){
+      if(!(gc.isFourFoldDegenerated(site.getValue(i)))){
+        return false;
+      }
+    }
+
+	}else{
+    for(unsigned int i = 0; i < site.size(); i++){
+      if(!(gc.isFourFoldDegenerated(site.getValue(i)))){
+        return false;
+      }
+    }
+	}
+	return true;
+
 }
 
 /******************************************************************************/
