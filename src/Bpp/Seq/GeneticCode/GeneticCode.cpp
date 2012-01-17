@@ -94,6 +94,34 @@ std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid
 
 /**********************************************************************************************/
 
+bool GeneticCode::isFourFoldDegenerated(int val) const
+{
+  if (codonAlphabet_->isStop(val))
+    return false;
+
+  vector<int> codon = codonAlphabet_->getPositions(val);
+  int acid = translate(val);
+
+  // test all the substitution on third codon position
+  for (int an = 0; an < 4; an++)
+  {
+    if (an == codon[2])
+      continue;
+    vector<int> mutcodon = codon;
+    mutcodon[2] = an;
+    int intcodon = codonAlphabet_->getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
+    if (codonAlphabet_->isStop(intcodon))
+      return false;
+    ;
+    int altacid = translate(intcodon);
+    if (altacid != acid)   // if non-synonymous
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 /**********************************************************************************************/
 
