@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development TeamCNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -138,6 +138,15 @@ class GeneticCode:
     }
     std::vector<int> getSynonymous(int aminoacid) const throw (BadIntException);
     std::vector<std::string> getSynonymous(const std::string & aminoacid) const throw (BadCharException);
+
+    /**
+     * @return True if the specified codon is fourfold degenerated
+     * (that is, if a mutation in the fourth position does not change the aminoacid).
+     * @author Benoit Nabholz, Annabelle Haudry
+     * @param codon The codon to test.
+     */
+    bool isFourFoldDegenerated(int codon) const;
+
     /**
      * @brief Get the subsequence corresponding to the coding part of a given sequence.
      *
@@ -155,7 +164,7 @@ class GeneticCode:
      * @param includeInitCodon (if lookForInitCodon is true) tell if the init codon must be included in the subsequence.
      * @return A nucleotide/codon subsequence.
      */
-    Sequence * getCodingSequence(const Sequence & sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const throw (Exception);
+    Sequence* getCodingSequence(const Sequence& sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const throw (Exception);
 		/** @} */
 };
 

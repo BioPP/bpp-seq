@@ -5,37 +5,37 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include "GeneticCode.h"
 #include "../SequenceTools.h"
@@ -47,45 +47,80 @@ using namespace std;
 /**********************************************************************************************/
 
 StopCodonException::StopCodonException(const std::string& text, const std::string& codon) :
-	Exception("StopCodonException: " + text + "(" + codon + ")"),
-	codon_(codon) {};
+  Exception("StopCodonException: " + text + "(" + codon + ")"),
+  codon_(codon) {}
 
 /**********************************************************************************************/
 
 vector<int> GeneticCode::getSynonymous(int aminoacid) const throw (BadIntException)
 {
-	//test:
-	proteicAlphabet_->intToChar(aminoacid);
-	
-	vector<int> synonymes;
-	for (unsigned int i = 0; i < codonAlphabet_->getSize(); i++)
+  // test:
+  proteicAlphabet_->intToChar(aminoacid);
+
+  vector<int> synonymes;
+  for (unsigned int i = 0; i < codonAlphabet_->getSize(); ++i)
   {
-    try 
+    try
     {
-      if (translate(i) == aminoacid) synonymes.push_back(i);
+      if (translate(i) == aminoacid)
+        synonymes.push_back(i);
     }
-    catch (StopCodonException) { }
-	}
-	return synonymes;	
+    catch (StopCodonException)
+    { }
+  }
+  return synonymes;
 }
 
 /**********************************************************************************************/
 
 std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid) const throw (BadCharException)
 {
-	//test:
-	int aa = proteicAlphabet_->charToInt(aminoacid);
-	
-	vector<string> synonymes;
-	for (unsigned int i = 0; i < codonAlphabet_->getSize(); i++)
+  // test:
+  int aa = proteicAlphabet_->charToInt(aminoacid);
+
+  vector<string> synonymes;
+  for (unsigned int i = 0; i < codonAlphabet_->getSize(); ++i)
   {
-  try 
+    try
     {
-    if (translate(i) == aa) synonymes.push_back(codonAlphabet_->intToChar(i));
+      if (translate(i) == aa)
+        synonymes.push_back(codonAlphabet_->intToChar(i));
     }
-  catch (StopCodonException) { }
-	}
-	return synonymes;	
+    catch (StopCodonException)
+    { }
+  }
+  return synonymes;
+}
+
+/**********************************************************************************************/
+
+bool GeneticCode::isFourFoldDegenerated(int val) const
+{
+  if (codonAlphabet_->isStop(val))
+    return false;
+
+  vector<int> codon = codonAlphabet_->getPositions(val);
+  int acid = translate(val);
+
+  // test all the substitution on third codon position
+  for (int an = 0; an < 4; an++)
+  {
+    if (an == codon[2])
+      continue;
+    vector<int> mutcodon = codon;
+    mutcodon[2] = an;
+    int intcodon = codonAlphabet_->getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
+    if (codonAlphabet_->isStop(intcodon))
+      return false;
+    ;
+    int altacid = translate(intcodon);
+    if (altacid != acid)   // if non-synonymous
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**********************************************************************************************/
@@ -104,7 +139,7 @@ Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForI
         vector<int> pos = codonAlphabet_->getPositions(sequence[i]);
         if (pos[0] == 0 && pos[1] == 3 && pos[2] == 2)
         {
-          initPos = includeInitCodon ? i : i+1;
+          initPos = includeInitCodon ? i : i + 1;
           break;
         }
       }
@@ -126,20 +161,20 @@ Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForI
     {
       for (unsigned int i = 0; i < sequence.size() - 2; i++)
       {
-        if (sequence[i] == 0 && sequence[i+1] == 3 && sequence[i+2] == 2)
+        if (sequence[i] == 0 && sequence[i + 1] == 3 && sequence[i + 2] == 2)
         {
-          initPos = includeInitCodon ? i : i+3;
+          initPos = includeInitCodon ? i : i + 3;
           break;
         }
       }
     }
     // Look for stop codon:
     const NucleicAlphabet* nucAlpha = codonAlphabet_->getNucleicAlphabet();
-    for (unsigned int i = initPos; i < sequence.size() - 2; i+=3)
+    for (unsigned int i = initPos; i < sequence.size() - 2; i += 3)
     {
       string codon = nucAlpha->intToChar(sequence[i])
-                   + nucAlpha->intToChar(sequence[i+1])
-                   + nucAlpha->intToChar(sequence[i+2]);
+                     + nucAlpha->intToChar(sequence[i + 1])
+                     + nucAlpha->intToChar(sequence[i + 2]);
       if (codonAlphabet_->isStop(codon))
       {
         stopPos = i;
@@ -147,10 +182,11 @@ Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForI
       }
     }
   }
-  else throw AlphabetMismatchException("Sequence must have alphabet of type nucleic or codon in GeneticCode::getCodingSequence.", 0, sequence.getAlphabet());
-  
+  else
+    throw AlphabetMismatchException("Sequence must have alphabet of type nucleic or codon in GeneticCode::getCodingSequence.", 0, sequence.getAlphabet());
+
   return SequenceTools::subseq(sequence, initPos, stopPos - 1);
 }
-	
+
 /**********************************************************************************************/
 

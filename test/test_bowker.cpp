@@ -86,7 +86,7 @@ int test(const Alphabet* alphabet, unsigned int size, unsigned int rep) {
 
 int main() {
   //ProteicAlphabet* alpha = new ProteicAlphabet;
-  RNA* alpha = new RNA;
+  RNA* alpha = new RNA();
   BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
   BasicSequence seq2("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
   auto_ptr<BowkerTest> btest(SequenceTools::bowkerTest(seq1, seq2));

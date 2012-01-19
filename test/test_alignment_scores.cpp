@@ -46,7 +46,7 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  RNA* alpha = new RNA;
+  RNA* alpha = new RNA();
   SiteContainer* sites = new VectorSiteContainer(alpha);
   BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
   BasicSequence seq2("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);

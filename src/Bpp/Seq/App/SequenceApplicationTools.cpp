@@ -6,7 +6,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -90,11 +90,13 @@ Alphabet* SequenceApplicationTools::getAlphabet(
 
   if (alphabet == "Binary")
     chars = new BinaryAlphabet();
-  else if (alphabet == "DNA")
-    chars = new DNA();
-  else if (alphabet == "RNA")
-    chars = new RNA();
-  else if (alphabet == "Protein")
+  else if (alphabet == "DNA") {
+    bool mark = ApplicationTools::getBooleanParameter("bangAsGap", args, false, "", true, false);
+    chars = new DNA(mark);
+  } else if (alphabet == "RNA") {
+    bool mark = ApplicationTools::getBooleanParameter("bangAsGap", args, false, "", true, false);
+    chars = new RNA(mark);
+  } else if (alphabet == "Protein")
     chars = new ProteicAlphabet();
   else if (allowGeneric && alphabet == "Generic")
     chars = new DefaultAlphabet();
@@ -103,14 +105,19 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     if (args.find("letter") == args.end())
       throw Exception("Missing alphabet in Codon : " + alphabet);
 
-    string alphn = ApplicationTools::getStringParameter("letter", args, "RNA");
+    string alphnDesc = ApplicationTools::getStringParameter("letter", args, "RNA");
+    string alphn;
+    map<string, string> alphnArgs;
+    KeyvalTools::parseProcedure(alphnDesc, alphn, alphnArgs);
 
     NucleicAlphabet* pnalph;
-    if (alphn == "RNA")
-      pnalph = new RNA();
-    else if (alphn == "DNA")
-      pnalph = new DNA();
-    else
+    if (alphn == "RNA") {
+      bool mark = ApplicationTools::getBooleanParameter("bangAsGap", alphnArgs, false, "", true, false);
+      pnalph = new RNA(mark);
+    } else if (alphn == "DNA") {
+      bool mark = ApplicationTools::getBooleanParameter("bangAsGap", alphnArgs, false, "", true, false);
+      pnalph = new DNA(mark);
+    } else
       throw Exception("Alphabet not known in Codon : " + alphn);
 
     string type = ApplicationTools::getStringParameter("type", args, "Standard");
@@ -266,7 +273,9 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   }
   else if (format == "Fasta")
   {
-    iSeq.reset(new Fasta());
+    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", args, false, "", true, false);
+    bool extended    = ApplicationTools::getBooleanParameter("extended", args, false, "", true, false);
+    iSeq.reset(new Fasta(100, true, extended, strictNames));
   }
   else if (format == "Clustal")
   {
@@ -364,7 +373,9 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   }
   else if (format == "Fasta")
   {
-    iSeq.reset(new Fasta());
+    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", args, false, "", true, false);
+    bool extended    = ApplicationTools::getBooleanParameter("extended", args, false, "", true, false);
+    iSeq.reset(new Fasta(100, true, extended, strictNames));
   }
   else if (format == "Clustal")
   {

@@ -45,8 +45,8 @@ using namespace std;
 
 int main() {
   //This is a very simple test that instanciate all alpahabet classes.
-  NucleicAlphabet* dna = new DNA;
-  NucleicAlphabet* rna = new RNA;
+  NucleicAlphabet* dna = new DNA();
+  NucleicAlphabet* rna = new RNA();
   Alphabet* pro = new ProteicAlphabet;
   Alphabet* def = new DefaultAlphabet;
   Alphabet* stdCdn = new StandardCodonAlphabet(rna);
