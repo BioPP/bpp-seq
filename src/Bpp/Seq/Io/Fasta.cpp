@@ -81,7 +81,7 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       // Get the sequence name line
       seqname = string(linebuffer.begin() + 1, linebuffer.end());
     }
-    if (c != '>' && !TextTools::isWhiteSpaceCharacter(c) && !input.eof()) {
+    if (c != '>' && !TextTools::isWhiteSpaceCharacter(c) ) {
       // Sequence content
       if (wordsize == 1)
       {
