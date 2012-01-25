@@ -68,6 +68,9 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
   while (!input.eof())
   {
     c = input.peek();
+    if (input.eof())
+      c = '\n';
+
     // Sequence begining detection
     if (c == '>')
     {
@@ -81,7 +84,7 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       // Get the sequence name line
       seqname = string(linebuffer.begin() + 1, linebuffer.end());
     }
-    if (c != '>' && !TextTools::isWhiteSpaceCharacter(c) ) {
+    if (c != '>' && !TextTools::isWhiteSpaceCharacter(c)) {
       // Sequence content
       if (wordsize == 1)
       {
@@ -95,6 +98,7 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       {
         // Remove white spaces
         linebuffer = TextTools::removeWhiteSpaces(linebuffer);
+        
         if (!bufferleft.empty()) {
           linebuffer = bufferleft + linebuffer;
           bufferleft.clear();
@@ -114,8 +118,8 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       }
     }
   }
+
   bool res = (!input.eof());
-  
   // Sequence name and comments isolation
   if (strictNames_ || extended_) {
     size_t pos = seqname.find_first_of(" \t\n");
