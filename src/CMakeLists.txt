@@ -85,6 +85,7 @@ set(CPP_FILES
   Bpp/Seq/Io/MafIterator.cpp
   Bpp/Seq/Feature/SequenceFeature.cpp
   Bpp/Seq/Feature/Gff/GffFeatureReader.cpp
+  Bpp/Seq/Feature/Gtf/GtfFeatureReader.cpp
   Bpp/Seq/App/SequenceApplicationTools.cpp
   )
 
@@ -204,6 +205,7 @@ set(H_FILES
   Bpp/Seq/StateProperties/AASEA1030Index.h
   Bpp/Seq/Feature/SequenceFeature.h
   Bpp/Seq/Feature/Gff/GffFeatureReader.h
+  Bpp/Seq/Feature/Gtf/GtfFeatureReader.h
   Bpp/Seq/App/SequenceApplicationTools.h
   )
 
