@@ -61,24 +61,27 @@ class SeqRange:
   public Range<unsigned int>
 {
   private:
-    bool negativeStrand_;
+    char strand_;
 
   public:
     /**
      * @param a First position
      * @param b Second position
-     * @param strand The strand information. If not explicitely '-', will be considered as '+'.
+     * @param strand The strand information. Can take one of the four values: '+' for positive strand, '-' for negative, '.' if not stranded or '?' if strandedness is relevant but unknown.
      */
-    SeqRange(unsigned int a, unsigned int b, char strand = '+'):
-      Range<unsigned int>(a, b), negativeStrand_(strand == '-')
-    {}
+    SeqRange(unsigned int a, unsigned int b, char strand = '.'):
+      Range<unsigned int>(a, b), strand_(strand) {
+        if (strand != '+' && strand != '-' && strand != '?' && strand != '.')
+          strand_ = '.';
+    }
 
     SeqRange* clone() const { return new SeqRange(*this); }
 
   public:
-    char getStrand() const { return negativeStrand_ ? '-' : '+'; }
+    virtual char getStrand() const { return strand_; }
 
-    bool isNegativeStrand() const { return negativeStrand_; }
+    virtual bool isNegativeStrand() const { return strand_ == '-'; }
+    virtual bool isStranded() const { return strand_ == '+' || strand_ == '-'; }
 
 };
 
@@ -129,12 +132,17 @@ class SequenceFeature:
     /**
      * @return The starting position of the feature, 0-based, included.
      */
-    virtual const unsigned int& getStart() const = 0;
+    virtual const unsigned int getStart() const = 0;
 
     /**
      * @return The ending position of the feature, 0-based, excluded.
      */
-    virtual const unsigned int& getEnd() const = 0;
+    virtual const unsigned int getEnd() const = 0;
+
+    /**
+     * @return True if the feature is stranded.
+     */
+    virtual bool isStranded() const = 0;
 
     /**
      * @return True if the sequence is coded on the negative strand. False if it is on the positive one or unknown.
@@ -186,9 +194,7 @@ class BasicSequenceFeature:
     std::string sequenceId_;
     std::string source_;
     std::string type_;
-    unsigned int start_;
-    unsigned int end_;
-    bool negStrand_;
+    SeqRange range_;
     double score_;
     mutable std::map<std::string, std::string> attributes_;
 
@@ -200,10 +206,10 @@ class BasicSequenceFeature:
         const std::string& type,
         unsigned int start,
         unsigned int end,
-        bool negStrand,
+        char strand,
         double score = -1):
       id_(id), sequenceId_(seqId), source_(source),
-      type_(type), start_(start), end_(end), negStrand_(negStrand), score_(score),
+      type_(type), range_(start, end, strand), score_(score),
       attributes_()
     {}
 
@@ -214,9 +220,10 @@ class BasicSequenceFeature:
     const std::string& getSequenceId() const { return sequenceId_; }
     const std::string& getSource() const { return source_; }
     const std::string& getType() const { return type_; }
-    const unsigned int& getStart() const { return start_; }
-    const unsigned int& getEnd() const { return end_; }
-    bool isNegativeStrand() const { return negStrand_; }
+    const unsigned int getStart() const { return range_.begin(); }
+    const unsigned int getEnd() const { return range_.end(); }
+    bool isStranded() const { return range_.isStranded(); }
+    bool isNegativeStrand() const { return range_.isNegativeStrand(); }
     const double& getScore() const { return score_; }
 
     const std::string& getAttribute(const std::string& attribute) const {
@@ -236,7 +243,7 @@ class BasicSequenceFeature:
     }
 
     SeqRange getRange() const {
-      return SeqRange(start_, end_, (negStrand_ ? '-' : '+'));
+      return SeqRange(range_);
     }
 
 };
