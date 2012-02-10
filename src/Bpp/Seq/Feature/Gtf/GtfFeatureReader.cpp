@@ -89,7 +89,7 @@ const BasicSequenceFeature GtfFeatureReader::nextFeature() throw (Exception)
   map<string, string> attributes;
   KeyvalTools::multipleKeyvals(attrDesc, attributes, ";", false);
   string id = attributes["ID"];
-  BasicSequenceFeature feature(id, seqId, source, type, start, end, (strand == "-"), score);
+  BasicSequenceFeature feature(id, seqId, source, type, start, end, strand[0], score);
   
   //Set phase attributes:
   if (phase != ".") feature.setAttribute("GFF_PHASE", phase);
