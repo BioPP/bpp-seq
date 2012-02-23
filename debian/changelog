@@ -1,3 +1,12 @@
+libbpp-seq (2.0.3-1) unstable; urgency=low
+
+  * Bugs fixed in maf parser + new iterators
+  * Added support for GFF
+  * Added support for FastQ
+  * Several bugs fixed
+
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 09 Feb 2012 14:00:00 +0100
+
 libbpp-seq (2.0.2-1) unstable; urgency=low
 
   * RFP: Bio++ -- The Bio++ bioinformatics libraries. (Closes: #616373).
