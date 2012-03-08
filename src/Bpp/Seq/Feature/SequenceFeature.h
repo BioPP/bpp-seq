@@ -142,7 +142,7 @@ class SequenceFeature:
     virtual bool isNegativeStrand() const = 0;
 
     /**
-     * @return Coordiantes as a Range object.
+     * @return Coordinates as a Range object.
      */
     virtual SeqRange getRange() const = 0;
     
