@@ -7,7 +7,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -55,7 +55,7 @@ using namespace std;
 ProteicAlphabet::ProteicAlphabet()
 {
 	// Alphabet size definition
-	resize(27);
+	resize(28);
 
 	// Alphabet content definition
   setState( 0, ProteicAlphabetState(-1, "-", "GAP", "Gap"));
@@ -85,11 +85,12 @@ ProteicAlphabet::ProteicAlphabet()
   setState(24, ProteicAlphabetState(22, "O", "O", "Unresolved amino acid"));
   setState(25, ProteicAlphabetState(22, "0", "0", "Unresolved amino acid"));
   setState(26, ProteicAlphabetState(22, "?", "?", "Unresolved amino acid"));
+  setState(27, ProteicAlphabetState(-2, "*", "STOP", "Stop"));
 }
 
 /******************************************************************************/
 
-string ProteicAlphabet::getAbbr(const string & aa) const throw (AlphabetException)
+string ProteicAlphabet::getAbbr(const string& aa) const throw (AlphabetException)
 {
 	string AA = TextTools::toUpper(aa);
   return (getState(aa).getAbbreviation());
