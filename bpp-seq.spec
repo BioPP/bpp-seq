@@ -44,7 +44,7 @@ Requires: libbpp-core2 = %{_version}
 Requires: libbpp-core-devel = %{_version}
 
 %description -n libbpp-seq-devel
-The %{name}-devel package contains the header files and static libraries for
+The libbpp-seq-devel package contains the header files and static libraries for
 building applications which use %{_basename}.
 
 %prep
