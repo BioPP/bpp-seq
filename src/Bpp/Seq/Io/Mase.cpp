@@ -123,9 +123,11 @@ void Mase::write(ostream& output, const SequenceContainer& sc) const throw (Exce
 
   Comments comments = sc.getGeneralComments();
 
-  // Writing all general commentaries in file
-  for (unsigned int i = 0 ; i < comments.size() ; i++)
-  {
+  // Writing all general comments in file
+  if (comments.size() == 0) {
+    output << ";;" << endl;
+  }
+  for (unsigned int i = 0 ; i < comments.size() ; i++) {
     output << ";;" << comments[i] << endl;
   }
 

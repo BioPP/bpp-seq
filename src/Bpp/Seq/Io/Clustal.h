@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -41,7 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _CLUSTAL_H_
 
 #include "AbstractISequence2.h"
-#include "../Container/AlignedSequenceContainer.h"
+#include "AbstractOSequence.h"
+#include "../Container/SiteContainer.h"
 
 // From the STL:
 #include <iostream>
@@ -55,11 +56,13 @@ namespace bpp
  * An AlignedSequenceContainer object is used instead of a VectorSequenceContainer.
  */
 class Clustal:
-  public AbstractIAlignment
+  public AbstractIAlignment,
+  public AbstractOAlignment
 {
-  public:
+  private:
     bool checkNames_;
     unsigned int nbSpacesBeforeSeq_;
+    unsigned int charsByLine_;
 
   public:
     /**
@@ -68,8 +71,8 @@ class Clustal:
      * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      * @param nbExtraSpacesBeforeSeq Specify the number of extra space characters separating the sequence name form content. The default is 5 (hence 6 spaces in total) for backward compatibility, using 0 will not allow for any space in the sequence names.
      */
-    Clustal(bool checkSequenceNames = true, unsigned int nbExtraSpacesBeforeSeq = 5) throw (Exception) :
-      checkNames_(checkSequenceNames), nbSpacesBeforeSeq_(nbExtraSpacesBeforeSeq + 1)
+    Clustal(bool checkSequenceNames = true, unsigned int nbExtraSpacesBeforeSeq = 5, unsigned int charsByLine = 100) throw (Exception) :
+      checkNames_(checkSequenceNames), nbSpacesBeforeSeq_(nbExtraSpacesBeforeSeq + 1), charsByLine_(charsByLine)
     {};
 
     virtual ~Clustal() {};
@@ -77,11 +80,23 @@ class Clustal:
   public:
 
     /**
-     * @name The AbstractISequence2 interface.
+     * @name The AbstractIAlignment interface.
      *
      * @{
      */  
     void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    /** @} */
+
+    /**
+     * @name The AbstractOAlignment interface.
+     *
+     * @{
+     */
+    void write(std::ostream & output, const SiteContainer& sc) const throw (Exception);
+    void write(const std::string & path, const SiteContainer& sc, bool overwrite = true) const throw (Exception)
+    {
+      AbstractOAlignment::write(path, sc, overwrite);
+    }
     /** @} */
 
     /**

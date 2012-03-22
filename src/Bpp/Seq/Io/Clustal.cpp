@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -109,5 +109,30 @@ void Clustal::appendFromStream(std::istream& input, SiteContainer & sc) const th
   for (unsigned int i = 0; i < countSequences; ++i)
     sc.addSequence(sequences[i], checkNames_);
   sc.setGeneralComments(comments);
+}
+
+void Clustal::write(std::ostream& output, const SiteContainer& sc) const throw (Exception)
+{
+  output << "CLUSTAL W (1.81) multiple sequence alignment" << endl;
+  output << endl;
+  if (sc.getNumberOfSequences() == 0)
+    return;
+
+  vector<string> text;
+  unsigned int length = 0;
+  for (unsigned int i = 0; i < sc.getNumberOfSequences(); ++i ) {
+    const Sequence& seq = sc.getSequence(i);
+    if (seq.getName().size() > length)
+      length = seq.getName().size();
+    text.push_back(sc.getSequence(i).toString());
+  }
+  length += nbSpacesBeforeSeq_;
+  for (unsigned int j = 0; j < text[0].size(); j += charsByLine_) {
+    for (unsigned int i = 0; i < sc.getNumberOfSequences(); ++i ) {
+      output << TextTools::resizeRight(sc.getSequence(i).getName(), length);
+      output << text[i].substr(j, charsByLine_) << endl;
+    }
+    output << endl;
+  }
 }
 

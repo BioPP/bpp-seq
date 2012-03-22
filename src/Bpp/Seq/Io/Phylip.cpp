@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -281,9 +281,6 @@ void Phylip::write(std::ostream& output, const SiteContainer& sc) const throw (E
   //First must check if all sequences are aligned:
   if (sc.getNumberOfSequences() == 0)
     throw Exception("Phylip::write. SequenceContainer appear to contain no sequence.");
-  
-  if (!SequenceContainerTools::sequencesHaveTheSameLength(sc))
-    throw SequenceNotAlignedException("Phylip::write. Sequences have to e of same length.", NULL);
   
   // Checking the existence of specified file, and possibility to open it in write mode
   if (!output) { throw IOException ("Phylip::write : failed to open file"); }
