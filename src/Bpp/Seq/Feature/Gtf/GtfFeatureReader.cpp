@@ -37,7 +37,7 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "GffFeatureReader.h"
+#include "GtfFeatureReader.h"
 
 //From bpp-core:
 #include <Bpp/Text/StringTokenizer.h>
@@ -51,21 +51,12 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-const std::string GffFeatureReader::GFF_PHASE;
-const std::string GffFeatureReader::GFF_NAME;
-const std::string GffFeatureReader::GFF_ALIAS;
-const std::string GffFeatureReader::GFF_PARENT;
-const std::string GffFeatureReader::GFF_TARGET;
-const std::string GffFeatureReader::GFF_GAP;
-const std::string GffFeatureReader::GFF_DERIVES_FROM;
-const std::string GffFeatureReader::GFF_NOTE;
-const std::string GffFeatureReader::GFF_DBXREF;
-const std::string GffFeatureReader::GFF_ONTOLOGY_TERM;
-const std::string GffFeatureReader::GFF_IS_CIRCULAR;
-
-
-void GffFeatureReader::getNextLine_() {
+void GtfFeatureReader::getNextLine_() {
   nextLine_ = "";
+  // Remove comments
+  /*
+    todo: remove characters between # and end-of-line taking care of double quotes
+  */
   while (TextTools::isEmpty(nextLine_) || nextLine_.size() < 2 || nextLine_[0] == '#') {
     if (input_->eof()) {
       nextLine_ = "";
@@ -75,15 +66,15 @@ void GffFeatureReader::getNextLine_() {
   }
 }
 
-const BasicSequenceFeature GffFeatureReader::nextFeature() throw (Exception)
+const BasicSequenceFeature GtfFeatureReader::nextFeature() throw (Exception)
 {
   if (!hasMoreFeature())
-    throw Exception("GffFeatureReader::nextFeature(). No more feature in file.");
+    throw Exception("GtfFeatureReader::nextFeature(). No more feature in file.");
   
   //Parse current line:
   StringTokenizer st(nextLine_, "\t");
   if (st.numberOfRemainingTokens() != 9)
-    throw Exception("GffFeatureReader::nextFeature(). Wrong GFF3 file format: should have 9 tab delimited columns.");
+    throw Exception("GtfFeatureReader::nextFeature(). Wrong GTF file format: should have 9 tab delimited columns.");
   
   //if ok, we can parse each column:
   string seqId       = st.nextToken();

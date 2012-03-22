@@ -133,6 +133,8 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
       while (st.hasMoreToken()) {
         seqcmts.push_back(st.nextToken());
       }
+    } else {
+      seqcmts.push_back(seqcmt);
     }
     seq.setComments(seqcmts);
   }
