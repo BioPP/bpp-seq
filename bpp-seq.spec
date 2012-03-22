@@ -30,7 +30,6 @@ It is part of the Bio++ project.
 %package -n libbpp-seq9
 Summary: Bio++ Sequence library
 Group: Development/Libraries/C and C++
-Requires: libbpp-core2 = %{_version}
 
 %description -n libbpp-seq9
 This library contains utilitary and classes for bio-sequence analysis.
