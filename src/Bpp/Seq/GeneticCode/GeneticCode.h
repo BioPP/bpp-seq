@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _GENETICCODE_H_
@@ -48,43 +48,43 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief Exception thrown when a stop codon is found.
- */
-class StopCodonException:
-  public Exception
-{
-	private:
+  /**
+   * @brief Exception thrown when a stop codon is found.
+   */
+  class StopCodonException:
+    public Exception
+  {
+  private:
     std::string codon_;
 			
-	public:
-		// Class constructor
-		StopCodonException(const std::string& text, const std::string& codon);
+  public:
+    // Class constructor
+    StopCodonException(const std::string& text, const std::string& codon);
 	
-		// Class destructor
-		virtual ~StopCodonException() throw () {}
+    // Class destructor
+    virtual ~StopCodonException() throw () {}
 		
-	public:
-		virtual const std::string& getCodon() const { return codon_; }
-};
+  public:
+    virtual const std::string& getCodon() const { return codon_; }
+  };
 
-/**
- * @brief Partial implementation of the Transliterator interface for genetic code object.
- *
- * A genetic code object if a translator from a codon alphabet to a proteic alphabet.
- * Depending on the codon alphabet used, several genetic code can be implemented.
- *
- * @see CodonAlphabet, ProteicAlphabet
- */
-class GeneticCode:
-  public AbstractTransliterator
-{
-	protected:
-		const CodonAlphabet* codonAlphabet_;
-		const ProteicAlphabet* proteicAlphabet_;
+  /**
+   * @brief Partial implementation of the Transliterator interface for genetic code object.
+   *
+   * A genetic code object if a translator from a codon alphabet to a proteic alphabet.
+   * Depending on the codon alphabet used, several genetic code can be implemented.
+   *
+   * @see CodonAlphabet, ProteicAlphabet
+   */
+  class GeneticCode:
+    public AbstractTransliterator
+  {
+  protected:
+    const CodonAlphabet* codonAlphabet_;
+    const ProteicAlphabet* proteicAlphabet_;
 	
-	public:
-		GeneticCode():
+  public:
+    GeneticCode():
       AbstractTransliterator() ,
       codonAlphabet_(0),
       proteicAlphabet_(0)
@@ -104,35 +104,35 @@ class GeneticCode:
       return *this;
     }
 
-		virtual ~GeneticCode() {}
+    virtual ~GeneticCode() {}
 	
-	public:
-		/**
-		 * @name Methods form the Transliterator interface.
-		 *
-		 * @{
-		 */
-		const Alphabet* getSourceAlphabet() const { return codonAlphabet_; }
-		const Alphabet* getTargetAlphabet() const { return proteicAlphabet_; }
-		virtual int translate(int state) const throw (BadIntException, Exception)  = 0;		
-		virtual std::string translate(const std::string& state) const throw (BadCharException, Exception) = 0;
-		virtual Sequence* translate(const Sequence& sequence) const throw (Exception)
+  public:
+    /**
+     * @name Methods form the Transliterator interface.
+     *
+     * @{
+     */
+    const Alphabet* getSourceAlphabet() const { return codonAlphabet_; }
+    const Alphabet* getTargetAlphabet() const { return proteicAlphabet_; }
+    virtual int translate(int state) const throw (BadIntException, Exception)  = 0;		
+    virtual std::string translate(const std::string& state) const throw (BadCharException, Exception) = 0;
+    virtual Sequence* translate(const Sequence& sequence) const throw (Exception)
     {
-			return AbstractTransliterator::translate(sequence);	
-		}
-		/** @} */
-		
-	public:
-		/**
-		 * @name Specific methods.
-		 *
-		 * @{
-		 */
-		bool areSynonymous(int i, int j) const throw (BadIntException)
-    {
-    	return (translate(i) == translate(j));
+      return AbstractTransliterator::translate(sequence);	
     }
-		bool areSynonymous(const std::string & i, const std::string & j) const throw (BadCharException)
+    /** @} */
+		
+  public:
+    /**
+     * @name Specific methods.
+     *
+     * @{
+     */
+    bool areSynonymous(int i, int j) const throw (BadIntException)
+    {
+      return (translate(i) == translate(j));
+    }
+    bool areSynonymous(const std::string & i, const std::string & j) const throw (BadCharException)
     {
       return (translate(i) == translate(j));
     }
@@ -165,8 +165,8 @@ class GeneticCode:
      * @return A nucleotide/codon subsequence.
      */
     Sequence* getCodingSequence(const Sequence& sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const throw (Exception);
-		/** @} */
-};
+    /** @} */
+  };
 
 } //end of namespace bpp.
 
