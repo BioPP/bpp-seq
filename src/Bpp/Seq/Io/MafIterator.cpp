@@ -232,7 +232,8 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
         if (seq1->getChromosome() != seq2->getChromosome()
          || VectorTools::contains(ignoreChrs_, seq1->getChromosome())
          || VectorTools::contains(ignoreChrs_, seq2->getChromosome())
-         || seq1->getStrand() != seq2->getStrand())
+         || seq1->getStrand() != seq2->getStrand()
+         || seq1->getSrcSize() != seq2->getSrcSize())
         {
           //There is a syntheny break in this sequence, so we do not merge the blocks.
           return currentBlock_;
@@ -290,7 +291,6 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
           if (seq->getName() != tmp->getName())
             tmp->setName(seq->getName()); //force name conversion to prevent exception in 'merge'.
           seq->merge(*tmp);
-          seq->setSrcSize(0);
           if (logstream_) {
             (*logstream_ << "BLOCK MERGER: merging " << ref1 << " with " << ref2 << " into " << seq->getDescription()).endLine();
           }
