@@ -599,21 +599,6 @@ unsigned int SequenceTools::findFirstOf(const Sequence& seq, const Sequence& mot
 {
   if (motif.size() > seq.size())
     return seq.size();
-  // new implementation by Sylvain Gaillard
-  /*
-  vector<int> tmp = motif.getContent();
-  deque<int> mint(tmp.begin(), tmp.end());
-  deque<int> window;
-  for (unsigned int i = 0; i < motif.size(); ++i)
-    window.push_back(seq[i]);
-  for (unsigned int i = 0; i <= seq.size() - motif.size(); ++i) {
-    if (window == mint)
-      return i;
-    //Move window:
-    window.push_back(seq[motif.size() + i]);
-    window.pop_front();
-  }
-  */
   for (size_t seqi = 0 ; seqi < seq.size() - motif.size() + 1 ; seqi++) {
     bool match = false;
     for (size_t moti = 0 ; moti < motif.size() ; moti++) {
