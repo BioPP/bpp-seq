@@ -368,7 +368,7 @@ class SequenceFeatureSet
     }
 
     /**
-     * @param type The feature type.
+     * @param types The feature type.
      * @return A new set with all features of a given type.
      */
     SequenceFeatureSet* getSubsetForType(const std::vector<std::string>& types) const {
