@@ -70,6 +70,7 @@ class Clustal:
      *
      * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
      * @param nbExtraSpacesBeforeSeq Specify the number of extra space characters separating the sequence name form content. The default is 5 (hence 6 spaces in total) for backward compatibility, using 0 will not allow for any space in the sequence names.
+     * @param charsByLine Number of character per line when writing file.
      */
     Clustal(bool checkSequenceNames = true, unsigned int nbExtraSpacesBeforeSeq = 5, unsigned int charsByLine = 100) throw (Exception) :
       checkNames_(checkSequenceNames), nbSpacesBeforeSeq_(nbExtraSpacesBeforeSeq + 1), charsByLine_(charsByLine)
