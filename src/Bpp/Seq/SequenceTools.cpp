@@ -595,10 +595,12 @@ void SequenceTools::getCDS(Sequence& sequence, bool checkInit, bool checkStop, b
 
 /******************************************************************************/
 
-unsigned int SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif)
+unsigned int SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif, bool strict)
 {
   if (motif.size() > seq.size())
     return seq.size();
+  // new implementation by Sylvain Gaillard
+  /*
   vector<int> tmp = motif.getContent();
   deque<int> mint(tmp.begin(), tmp.end());
   deque<int> window;
@@ -610,6 +612,23 @@ unsigned int SequenceTools::findFirstOf(const Sequence& seq, const Sequence& mot
     //Move window:
     window.push_back(seq[motif.size() + i]);
     window.pop_front();
+  }
+  */
+  for (size_t seqi = 0 ; seqi < seq.size() - motif.size() + 1 ; seqi++) {
+    bool match = false;
+    for (size_t moti = 0 ; moti < motif.size() ; moti++) {
+      if (strict) {
+        match = seq.getValue(seqi + moti) == motif.getValue(moti);
+      } else {
+        match = AlphabetTools::match(seq.getAlphabet(), seq.getValue(seqi + moti), motif.getValue(moti));
+      }
+      if (!match) {
+        break;
+      }
+    }
+    if (match) {
+      return seqi;
+    }
   }
   return seq.size();
 }

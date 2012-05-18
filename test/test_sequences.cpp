@@ -45,13 +45,17 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  //This is a very simple test that instanciate all alpahabet classes.
-  BasicSequence seq1("test DNA", "ATTTCG---TCGTT-AAAGCACATGCATCGATC", &AlphabetTools::DNA_ALPHABET);
+  BasicSequence seq1("test DNA", "ATTTCG---TCGTT-AAAGCWCATGCATCGATC", &AlphabetTools::DNA_ALPHABET);
   BasicSequence motif1("motif", "ATTT", &AlphabetTools::DNA_ALPHABET);
   BasicSequence motif2("motif", "TCG", &AlphabetTools::DNA_ALPHABET);
   BasicSequence motif3("motif", "GATC", &AlphabetTools::DNA_ALPHABET);
   BasicSequence motif4("motif", "CGTC", &AlphabetTools::DNA_ALPHABET);
+  BasicSequence motif5("motif", "CWCAT", &AlphabetTools::DNA_ALPHABET);
+  BasicSequence motif6("motif", "CTCAT", &AlphabetTools::DNA_ALPHABET);
+  BasicSequence motif7("motif", "AAGCA", &AlphabetTools::DNA_ALPHABET);
   unsigned int pos;
+
+  cout << "--- Strict match ---" << endl;
 
   pos = SequenceTools::findFirstOf(seq1, motif1);
   if (pos != 0) return 1;
@@ -68,6 +72,20 @@ int main() {
   pos = SequenceTools::findFirstOf(seq1, motif4);
   if (pos != 33) return 1;
   cout << motif4.toString() << ": " << pos << endl;
+
+  pos = SequenceTools::findFirstOf(seq1, motif5);
+  if (pos != 19) return 1;
+  cout << motif5.toString() << ": " << pos << endl;
+
+  cout << "--- Degenerated match ---" << endl;
+
+  pos = SequenceTools::findFirstOf(seq1, motif6, false);
+  if (pos != 19) return 1;
+  cout << motif6.toString() << ": " << pos << endl;
+
+  pos = SequenceTools::findFirstOf(seq1, motif7, false);
+  if (pos != 16) return 1;
+  cout << motif7.toString() << ": " << pos << endl;
 
   return (0);
 }

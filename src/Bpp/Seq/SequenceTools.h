@@ -394,7 +394,17 @@ class SequenceTools:
      */
     static void getCDS(Sequence& sequence, bool checkInit, bool checkStop, bool includeInit=true, bool includeStop=true);
 
-    static unsigned int findFirstOf(const Sequence& seq, const Sequence& motif);
+    /**
+     * @brief Find the position of a motif in a sequence
+     *
+     * @param seq The reference sequence
+     * @param motif The motif to find
+     * @param strict If true (default) find exactly the motif
+     *               If false find compatible match
+     * @return The position of the first occurence of the motif or the seq
+     * length.
+     */
+    static unsigned int findFirstOf(const Sequence& seq, const Sequence& motif, bool strict=true);
 };
 
 } //end of namespace bpp.
