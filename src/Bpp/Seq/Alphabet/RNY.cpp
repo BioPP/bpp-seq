@@ -394,23 +394,22 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const throw (BadCharE
 /****************************************************************************************/
 bool RNY::isGap(int state) const
 {
-  return false;
+  return state==350;
 }
-
 
 bool RNY::containsGap(const string& state) const throw (BadCharException)
 {
-  return false;
+  return (state.find("-")!=string::npos);
 }
 
 bool RNY::isUnresolved(const string& state) const
 {
-  return false;
+  return containsGap(state);
 }
 
 bool RNY::isUnresolved(int state) const
 {
-  return false;
+  return (state>=50 && state!=350);
 }
 
 /****************************************************************************************/
@@ -418,8 +417,8 @@ bool RNY::isUnresolved(int state) const
 int RNY::charToInt(const string& state) const throw (BadCharException)
 {
   if (state.size() != 3) throw BadCharException(state, "RNY::charToInt", this);
-  //  if(containsUnresolved(state)) return getSize(); // Generic characters are coded by n° >= alphabet size.
-  return AbstractAlphabet::charToInt(state);
+  else 
+    return AbstractAlphabet::charToInt(state);
 }
 
 
@@ -512,7 +511,6 @@ string RNY::intToChar(int state) const throw (BadIntException)
   if (getState(l).getNum() == state)
     return getState(l).getLetter();
 
-  return "XXX";
-
   throw BadIntException(state, "RNY::intToChar: Specified base unknown", this);
+  return "XXX";
 }
