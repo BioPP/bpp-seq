@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -420,7 +420,7 @@ void AlignedSequenceContainer::reindexSites()
 void AlignedSequenceContainer::setSequence(unsigned int i, const Sequence& sequence, bool checkName) throw (Exception)
 {
   if(i >= getNumberOfSequences())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::setaddSequence", i, 0, getNumberOfSequences() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::setSequence", i, 0, getNumberOfSequences() - 1);
   // if container has only one sequence
   if (getNumberOfSequences() == 1)
     length_ = sequence.size();
@@ -464,7 +464,7 @@ void AlignedSequenceContainer::addSequence(const Sequence& sequence, bool checkN
 
 void AlignedSequenceContainer::addSequence(const Sequence& sequence, unsigned int i, bool checkName) throw (Exception)
 {
-  if(i >= getNumberOfSequences())
+  if (i >= getNumberOfSequences())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences() - 1);
   // if container has only one sequence
   if (length_ == 0)
