@@ -77,27 +77,56 @@ const BasicSequenceFeature GtfFeatureReader::nextFeature() throw (Exception)
     throw Exception("GtfFeatureReader::nextFeature(). Wrong GTF file format: should have 9 tab delimited columns.");
   
   //if ok, we can parse each column:
-  string seqId       = st.nextToken();
-  string source      = st.nextToken();
-  string type        = st.nextToken();
-  unsigned int start = TextTools::to<unsigned int>(st.nextToken()) - 1;
-  unsigned int end   = TextTools::to<unsigned int>(st.nextToken());
-  double score       = TextTools::to<double>(st.nextToken());
-  string strand      = st.nextToken();
-  string phase       = st.nextToken();
-  string attrDesc    = st.nextToken();
-  map<string, string> attributes;
-  KeyvalTools::multipleKeyvals(attrDesc, attributes, ";", false);
-  string id = attributes["ID"];
+  std::string seqId       = st.nextToken();
+  std::string source      = st.nextToken();
+  std::string type        = st.nextToken();
+  unsigned int start      = TextTools::to<unsigned int>(st.nextToken()) - 1;
+  unsigned int end        = TextTools::to<unsigned int>(st.nextToken());
+  double score            = TextTools::to<double>(st.nextToken());
+  std::string strand      = st.nextToken();
+  std::string phase       = st.nextToken();
+  std::string attrDesc    = st.nextToken();
+  std::map<string, string> attributes;
+  bpp::StringTokenizer st1(attrDesc, ";");
+  while (st1.hasMoreToken()) {
+    std::string item(bpp::TextTools::removeSurroundingWhiteSpaces(st1.nextToken()));
+    std::string::size_type idx = item.find_first_of(' ');
+    std::string key(item.substr(0, idx));
+    std::string value(item.substr(idx));
+    // remove first "
+    while (
+        value.size() > 0 
+        && (
+          value[0] == '"' 
+          || bpp::TextTools::isWhiteSpaceCharacter(value[0])
+          )
+        ) {
+      value.erase(value.begin());
+    }
+    // remove last "
+    while (
+        value.size() > 0 
+        && (
+          value[value.size() - 1] == '"' 
+          || bpp::TextTools::isWhiteSpaceCharacter(value[value.size() - 1])
+          )
+        ) {
+      value.erase(value.end() - 1);
+    }
+    attributes[key] = value;
+    //std::cout << "[" << key << "] = [" << value << "]" << std::endl;
+  }
+  //KeyvalTools::multipleKeyvals(attrDesc, attributes, ";", false);
+  //std::string id = attributes["ID"];
+  std::string id = "";
   BasicSequenceFeature feature(id, seqId, source, type, start, end, strand[0], score);
   
   //Set phase attributes:
-  if (phase != ".") feature.setAttribute("GFF_PHASE", phase);
+  if (phase != ".") feature.setAttribute("GTF_PHASE", phase);
 
   //now check additional attributes:
-  for (map<string, string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
-    if (it->first != "ID")
-      feature.setAttribute(it->first, it->second); //We accept all attributes, even if they are not standard.
+  for (std::map<std::string, std::string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
+    feature.setAttribute(it->first, it->second); //We accept all attributes, even if they are not standard.
   }
   
   //Read the next line:
