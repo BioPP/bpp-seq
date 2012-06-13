@@ -43,6 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 //From the STL:
 #include <string>
 #include <map>
+#include <set>
 #include <algorithm>
 
 //From bpp-core:
@@ -170,6 +171,11 @@ class SequenceFeature:
      * @return The attribute with specified name.
      */
     virtual std::string& getAttribute(const std::string& attribute) = 0;
+
+    /**
+     * @return The list of all attributes available.
+     */
+    virtual std::set< std::string > getAttributeList() const = 0;
     
     /**
      * @brief Set the value of an attribute.
@@ -240,6 +246,14 @@ class BasicSequenceFeature:
     
     void setAttribute(const std::string& attribute, const std::string& value) {
       attributes_[attribute] = value;
+    }
+
+    std::set< std::string > getAttributeList() const {
+      std::set< std::string > d;
+      for (std::map<std::string, std::string>::iterator it = attributes_.begin() ; it != attributes_.end() ; it++) {
+        d.insert(it->first);
+      }
+      return d;
     }
 
     SeqRange getRange() const {
