@@ -47,7 +47,16 @@
 #include <string>
 
 /**
- * @brief This alphabet is used to deal triplet RNY + "---"
+ * @brief This alphabet is used to deal quotiented triplet RNY +
+ * combinations with "-".
+ *
+ * More explicitly, a quotiented triplet RNY is defined on the alphabet
+ * 
+ * @f\{C,T,R\} x \{A,C,G,T\} x \{ A,G,Y\}@f.
+ *
+ * Triplet "---" is the only triplet defined as gap. Other triplets
+ * with "-" are defined as unresolved.
+ *
  * @author Laurent Guéguen
  */
 
@@ -70,7 +79,7 @@ public:
 
   unsigned int getSize() const { return 36; }
   unsigned int getNumberOfTypes() const { return 80; }
-  int getUnknownCharacterCode() const { return -1; }
+  int getUnknownCharacterCode() const { return 350; }
   bool isGap(int state) const;
   std::vector<int   > getAlias(      int state) const throw (BadIntException);
   std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);

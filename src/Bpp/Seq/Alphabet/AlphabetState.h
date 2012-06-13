@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (July 29, 2009)
+Copyright or © or Copr. Bio++ Development Team, (July 29, 2009)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.

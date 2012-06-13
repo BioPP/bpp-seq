@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -233,8 +233,7 @@ class Alphabet
      */
     
     /**
-     * @brief Give the string description of a state given its int description.
-     *Genericion in this alphabet,
+     * @brief Get the number of supported characters in this alphabet,
      * including generic characters (e.g. return 20 for DNA alphabet).
      *
      * @return The total number of supported character descriptions.
@@ -256,6 +255,7 @@ class Alphabet
      * @return The number of resolved states.
      */
     virtual unsigned int getSize() const = 0;
+    
     /** @} */
         
     /**
