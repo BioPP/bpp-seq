@@ -122,11 +122,14 @@ const BasicSequenceFeature GtfFeatureReader::nextFeature() throw (Exception)
   BasicSequenceFeature feature(id, seqId, source, type, start, end, strand[0], score);
   
   //Set phase attributes:
+  phase = bpp::TextTools::removeSurroundingWhiteSpaces(phase);
   if (phase != ".") feature.setAttribute("GTF_PHASE", phase);
 
   //now check additional attributes:
   for (std::map<std::string, std::string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
     feature.setAttribute(it->first, it->second); //We accept all attributes, even if they are not standard.
+    //std::cout << "[" << it->first << "] = [" << it->second << "]" << std::endl;
+    //std::cout << "phase: " << phase << std::endl;
   }
   
   //Read the next line:
