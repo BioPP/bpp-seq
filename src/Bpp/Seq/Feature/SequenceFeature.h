@@ -223,14 +223,19 @@ class BasicSequenceFeature:
 
   public:
     const std::string& getId() const { return id_; }
+    void setId(const std::string& id) { id_ = id; }
     const std::string& getSequenceId() const { return sequenceId_; }
+    void setSequenceId(const std::string& sid) { sequenceId_ = sid; }
     const std::string& getSource() const { return source_; }
+    void setSource(const std::string& s) { source_ = s; }
     const std::string& getType() const { return type_; }
+    void setType(const std::string& t) { type_ = t; }
     const unsigned int getStart() const { return range_.begin(); }
     const unsigned int getEnd() const { return range_.end(); }
     bool isStranded() const { return range_.isStranded(); }
     bool isNegativeStrand() const { return range_.isNegativeStrand(); }
     const double& getScore() const { return score_; }
+    void setScore(double s) { score_ = s; }
 
     const std::string& getAttribute(const std::string& attribute) const {
       std::map<std::string, std::string>::iterator it = attributes_.find(attribute);
