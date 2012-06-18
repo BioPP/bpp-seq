@@ -43,6 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 //From the STL:
 #include <string>
 #include <map>
+#include <set>
 #include <algorithm>
 
 //From bpp-core:
@@ -170,6 +171,11 @@ class SequenceFeature:
      * @return The attribute with specified name.
      */
     virtual std::string& getAttribute(const std::string& attribute) = 0;
+
+    /**
+     * @return The list of all attributes available.
+     */
+    virtual std::set< std::string > getAttributeList() const = 0;
     
     /**
      * @brief Set the value of an attribute.
@@ -217,14 +223,19 @@ class BasicSequenceFeature:
 
   public:
     const std::string& getId() const { return id_; }
+    void setId(const std::string& id) { id_ = id; }
     const std::string& getSequenceId() const { return sequenceId_; }
+    void setSequenceId(const std::string& sid) { sequenceId_ = sid; }
     const std::string& getSource() const { return source_; }
+    void setSource(const std::string& s) { source_ = s; }
     const std::string& getType() const { return type_; }
+    void setType(const std::string& t) { type_ = t; }
     const unsigned int getStart() const { return range_.begin(); }
     const unsigned int getEnd() const { return range_.end(); }
     bool isStranded() const { return range_.isStranded(); }
     bool isNegativeStrand() const { return range_.isNegativeStrand(); }
     const double& getScore() const { return score_; }
+    void setScore(double s) { score_ = s; }
 
     const std::string& getAttribute(const std::string& attribute) const {
       std::map<std::string, std::string>::iterator it = attributes_.find(attribute);
@@ -240,6 +251,14 @@ class BasicSequenceFeature:
     
     void setAttribute(const std::string& attribute, const std::string& value) {
       attributes_[attribute] = value;
+    }
+
+    std::set< std::string > getAttributeList() const {
+      std::set< std::string > d;
+      for (std::map<std::string, std::string>::iterator it = attributes_.begin() ; it != attributes_.end() ; it++) {
+        d.insert(it->first);
+      }
+      return d;
     }
 
     SeqRange getRange() const {

@@ -533,7 +533,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   }
   else
   {
-    ApplicationTools::displayError("Option '" + option + "' unknown in parameter 'sequence.sitestouse'.");
+    ApplicationTools::displayError("Option '" + option + "' unknown in parameter 'sequence.sites_to_use'.");
     exit(-1);
   }
 

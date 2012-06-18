@@ -117,6 +117,7 @@ class GffFeatureReader
       }
     }
 
+    static std::string toString(const bpp::SequenceFeature& f);
 
   private:
     void getNextLine_();
