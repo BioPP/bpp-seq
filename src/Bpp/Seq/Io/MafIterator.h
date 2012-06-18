@@ -196,7 +196,7 @@ class MafBlock
 
   public:
     MafBlock() :
-      score_(-1),
+      score_(log(0)),
       pass_(0),
       alignment_(&AlphabetTools::DNA_ALPHABET)
     {}

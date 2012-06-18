@@ -1348,7 +1348,7 @@ void OutputMafIterator::writeHeader(std::ostream& out) const
 void OutputMafIterator::writeBlock(std::ostream& out, const MafBlock& block) const
 {
   out << "a";
-  if (block.getScore() > -1.)
+  if (! isinf(block.getScore()))
     out << " score=" << block.getScore();
   if (block.getPass() > 0)
     out << " pass=" << block.getPass();
