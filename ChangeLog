@@ -1,3 +1,6 @@
+18/06/12 Julien dutheil
+* Fixed bug in Maf parser: scores are now parsed correctly.
+
 08/03/12 Julien Dutheil
 * Added support for '*' character in proteins (stop codon)
 
