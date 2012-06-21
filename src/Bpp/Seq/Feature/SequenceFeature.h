@@ -114,21 +114,37 @@ class SequenceFeature:
      * @return The id of this feature.
      */
     virtual const std::string& getId() const = 0;
+    /**
+     * @param id A std::string representing the id.
+     */
+    virtual void setId(const std::string& id) = 0;
 
     /**
      * @return The id of the sequence on which this feature is based.
      */
     virtual const std::string& getSequenceId() const = 0;
+    /**
+     * @param id A std::string representing the id of the reference.
+     */
+    virtual void setSequenceId(const std::string& id) = 0;
 
     /**
      * @return A text intended to describe the algorithm or procedure used to generate the feature.
      */
     virtual const std::string& getSource() const = 0;
+    /**
+     * @param source A std::string representing the source of the feature.
+     */
+    virtual void setSource(const std::string& source) = 0;
 
     /**
      * @return A text describing the type of feature. Depending on the format, it can be restricted (for example, mRNA), or any text can be supplied (for example TFXX binding site).
      */
     virtual const std::string& getType() const = 0;
+    /**
+     * @param type A std::string representing the type of this feature.
+     */
+    virtual void setType(const std::string& type) = 0;
 
     /**
      * @return The starting position of the feature, 0-based, included.
@@ -159,6 +175,10 @@ class SequenceFeature:
      * @return The score associated to the feature (eg, an E-value or a P-value).
      */
     virtual const double& getScore() const = 0;
+    /**
+     * @param score A double representing the score of this feature.
+     */
+    virtual void setScore(double score) = 0;
 
     /**
      * @param  attribute The name of the attribute to retrieve.
@@ -184,6 +204,11 @@ class SequenceFeature:
      * @param value     The value of the attribute to set.
      */
     virtual void setAttribute(const std::string& attribute, const std::string& value) = 0;
+
+    /**
+     * @param attribute The name of the attribute to be removed.
+     */
+    virtual void removeAttribute(const std::string& attribute) = 0;
 
 };
 
@@ -227,15 +252,15 @@ class BasicSequenceFeature:
     const std::string& getSequenceId() const { return sequenceId_; }
     void setSequenceId(const std::string& sid) { sequenceId_ = sid; }
     const std::string& getSource() const { return source_; }
-    void setSource(const std::string& s) { source_ = s; }
+    void setSource(const std::string& source) { source_ = source; }
     const std::string& getType() const { return type_; }
-    void setType(const std::string& t) { type_ = t; }
+    void setType(const std::string& type) { type_ = type; }
     const unsigned int getStart() const { return range_.begin(); }
     const unsigned int getEnd() const { return range_.end(); }
     bool isStranded() const { return range_.isStranded(); }
     bool isNegativeStrand() const { return range_.isNegativeStrand(); }
     const double& getScore() const { return score_; }
-    void setScore(double s) { score_ = s; }
+    void setScore(double score) { score_ = score; }
 
     const std::string& getAttribute(const std::string& attribute) const {
       std::map<std::string, std::string>::iterator it = attributes_.find(attribute);
@@ -259,6 +284,13 @@ class BasicSequenceFeature:
         d.insert(it->first);
       }
       return d;
+    }
+
+    void removeAttribute(const std::string& attribute) {
+      std::map<std::string, std::string>::iterator it = attributes_.find(attribute);
+      if (it != attributes_.end()) {
+        attributes_.erase(it);
+      }
     }
 
     SeqRange getRange() const {
