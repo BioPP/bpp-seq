@@ -84,6 +84,19 @@ Sequence* SequenceTools::subseq(const Sequence& sequence, unsigned int begin, un
 	
 /******************************************************************************/
 
+Sequence* SequenceTools::extract(const Sequence& seq, const SeqRange& range)
+{
+  if (range.end() > seq.size())
+    throw IndexOutOfBoundsException ("SequenceTools::extract: Invalid upper bound", range.end(), 0, seq.size());
+  Sequence* sout = subseq(seq, range.begin(), range.end() - 1);
+  if (range.isNegativeStrand()) {
+    invertComplement(*sout);
+  }
+  return sout;
+}
+
+/******************************************************************************/
+
 Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception)
 {
   // Sequence's alphabets matching verification
