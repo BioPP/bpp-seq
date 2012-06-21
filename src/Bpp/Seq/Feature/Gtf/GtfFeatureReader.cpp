@@ -1,7 +1,7 @@
 //
-// File: GffFeatureReader.cpp
-// Created by: Julien Dutheil
-// Created on: Mon Nov 21 2011
+// File: GtfFeatureReader.cpp
+// Created by: Sylvain Gaillard
+// Created on: Fry Jan 27 2012
 //
 
 /*
@@ -50,6 +50,10 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 using namespace std;
+
+const std::string GtfFeatureReader::GTF_PHASE = "GTF_PHASE";
+const std::string GtfFeatureReader::GTF_GENE_ID = "gene_id";
+const std::string GtfFeatureReader::GTF_TRANSCRIPT_ID = "transcript_id";
 
 void GtfFeatureReader::getNextLine_() {
   nextLine_ = "";
@@ -123,7 +127,7 @@ const BasicSequenceFeature GtfFeatureReader::nextFeature() throw (Exception)
   
   //Set phase attributes:
   phase = bpp::TextTools::removeSurroundingWhiteSpaces(phase);
-  if (phase != ".") feature.setAttribute("GTF_PHASE", phase);
+  if (phase != ".") feature.setAttribute(GTF_PHASE, phase);
 
   //now check additional attributes:
   for (std::map<std::string, std::string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {

@@ -64,6 +64,11 @@ namespace bpp {
  */
 class GtfFeatureReader
 {
+  public:
+    static const std::string GTF_PHASE;
+    static const std::string GTF_GENE_ID;
+    static const std::string GTF_TRANSCRIPT_ID;
+
   private:
     std::istream* input_;
     std::string nextLine_;
@@ -102,7 +107,6 @@ class GtfFeatureReader
           features.addFeature(feature);
       }
     }
-
 
   private:
     void getNextLine_();
