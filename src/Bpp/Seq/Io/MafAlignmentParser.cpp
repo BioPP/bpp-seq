@@ -85,7 +85,7 @@ MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
       map<string, string> args;
       if (line.size() > 2)
       {
-        KeyvalTools::multipleKeyvals(line.substr(3), args, " ");
+        KeyvalTools::multipleKeyvals(line.substr(2), args, " ");
 
         if (args.find("score") != args.end())
           block->setScore(TextTools::toDouble(args["score"]));

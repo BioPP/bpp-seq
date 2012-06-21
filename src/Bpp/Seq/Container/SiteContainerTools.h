@@ -119,19 +119,26 @@ class SiteContainerTools
 		 * @return A pointer toward a new SiteContainer.
 		 */
 		static SiteContainer* removeGapOrUnresolvedOnlySites(const SiteContainer& sites);
+		
+    /**
+		 * @brief Remove gap/unresolved-only sites from a site set.
+		 *
+		 * @param sites The container where the sites have to be removed.
+		 */
+    static void removeGapOrUnresolvedOnlySites(SiteContainer& sites);
 
-               /**
-                * @brief Get a site set without stop codons, if the alphabet is a CodonAlphabet, otherwise throws an Exception.
-                *
-                * This function build a new SiteContainer instance without sites that have at least a stop codon.
-                * The container passed as input is not modified, all sites are copied.
-                *
-                * @param sites The container to analyse.
-                * @return A pointer toward a new SiteContainer.
-                */
-               static SiteContainer* removeStopCodonSites(const SiteContainer& sites) throw (AlphabetException);
+    /**
+     * @brief Get a site set without stop codons, if the alphabet is a CodonAlphabet, otherwise throws an Exception.
+     *
+     * This function build a new SiteContainer instance without sites that have at least a stop codon.
+     * The container passed as input is not modified, all sites are copied.
+     *
+     * @param sites The container to analyse.
+     * @return A pointer toward a new SiteContainer.
+     */
+    static SiteContainer* removeStopCodonSites(const SiteContainer& sites) throw (AlphabetException);
 
-                /**
+    /**
 		 * @brief Create a new container with a specified set of sites.
 		 *
 		 * A new VectorSiteContainer is created with specified sites.
