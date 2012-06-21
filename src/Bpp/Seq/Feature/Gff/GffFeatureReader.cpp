@@ -53,16 +53,16 @@ using namespace bpp;
 using namespace std;
 
 const std::string GffFeatureReader::GFF_PHASE = "GFF_PHASE";
-const std::string GffFeatureReader::GFF_NAME = "GFF_NAME";
+const std::string GffFeatureReader::GFF_NAME = "Name";
 const std::string GffFeatureReader::GFF_ALIAS = "GFF_ALIAS";
-const std::string GffFeatureReader::GFF_PARENT = "GFF_PARENT";
-const std::string GffFeatureReader::GFF_TARGET = "GFF_TARGET";
-const std::string GffFeatureReader::GFF_GAP = "GFF_GAP";
+const std::string GffFeatureReader::GFF_PARENT = "Parent";
+const std::string GffFeatureReader::GFF_TARGET = "Target";
+const std::string GffFeatureReader::GFF_GAP = "Gap";
 const std::string GffFeatureReader::GFF_DERIVES_FROM = "GFF_DERIVES_FROM";
-const std::string GffFeatureReader::GFF_NOTE = "GFF_NOTE";
-const std::string GffFeatureReader::GFF_DBXREF = "GFF_DBXREF";
-const std::string GffFeatureReader::GFF_ONTOLOGY_TERM = "GFF_ONTOLOGY_TERM";
-const std::string GffFeatureReader::GFF_IS_CIRCULAR = "GFF_IS_CIRCULAR";
+const std::string GffFeatureReader::GFF_NOTE = "Note";
+const std::string GffFeatureReader::GFF_DBXREF = "Dbxref";
+const std::string GffFeatureReader::GFF_ONTOLOGY_TERM = "Ontology_term";
+const std::string GffFeatureReader::GFF_IS_CIRCULAR = "Is_circular";
 
 
 void GffFeatureReader::getNextLine_() {
@@ -141,6 +141,9 @@ std::string GffFeatureReader::toString(const bpp::SequenceFeature& f) {
     v.push_back(f.getAttribute(GFF_PHASE));
   }
   
+  if (f.getId() != "") {
+    attr.push_back("ID=" + f.getId());
+  }
   for (std::set< std::string >::iterator it = attrNames.begin() ; it != attrNames.end() ; it++) {
     attr.push_back(*it + "=" + f.getAttribute(*it));
   }
