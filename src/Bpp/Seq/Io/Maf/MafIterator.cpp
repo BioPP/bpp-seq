@@ -38,12 +38,12 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "MafIterator.h"
-#include "../SequenceWithQuality.h"
-#include "../SequenceWithAnnotationTools.h"
-#include "../SequenceWalker.h"
-#include "../Alphabet/AlphabetTools.h"
-#include "../Container/VectorSiteContainer.h"
-#include "../SiteTools.h"
+#include "../../SequenceWithQuality.h"
+#include "../../SequenceWithAnnotationTools.h"
+#include "../../SequenceWalker.h"
+#include "../../Alphabet/AlphabetTools.h"
+#include "../../Container/VectorSiteContainer.h"
+#include "../../SiteTools.h"
 
 using namespace bpp;
 
@@ -51,25 +51,6 @@ using namespace bpp;
 #include <string>
 
 using namespace std;
-
-MafSequence* MafSequence::subSequence(unsigned int startAt, unsigned int length) const
-{
-  string subseq = toString().substr(startAt, length);
-  unsigned int begin = begin_;
-  if (hasCoordinates_) {
-    for (unsigned int i = 0; i < startAt; ++i) {
-      if (! getAlphabet()->isGap(operator[](i))) begin++;
-    }
-  }
-  MafSequence* newSeq = new MafSequence(getName(), subseq, begin, strand_, srcSize_);
-  if (!hasCoordinates_)
-    newSeq->removeCoordinates();
-  vector<string> anno = getAnnotationTypes();
-  for (size_t i = 0; i < anno.size(); ++i) {
-    newSeq->addAnnotation(getAnnotation(anno[i]).getPartAnnotation(startAt, length));
-  }
-  return newSeq;
-}
 
 MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
 {
@@ -1414,5 +1395,18 @@ void OutputMafIterator::writeBlock(std::ostream& out, const MafBlock& block) con
     }
   }
   out << endl;
+}
+
+void OutputAlignmentMafIterator::writeBlock(std::ostream& out, const MafBlock& block) const {
+  //First get alignment:
+  AlignedSequenceContainer aln(block.getAlignment());
+  //Format sequence names:
+  vector<string> names(aln.getNumberOfSequences());
+  for (unsigned int i = 0; i < aln.getNumberOfSequences(); ++i) {
+    const MafSequence& mafseq = block.getSequence(i);
+    names[i] = mafseq.getSpecies() + "-" + mafseq.getChromosome() + "(" + mafseq.getStrand() + ")/" + TextTools::toString(mafseq.start() + 1) + "-" + TextTools::toString(mafseq.stop() + 1);
+  }
+  aln.setSequencesNames(names);
+  writer_.write(out, aln);
 }
 

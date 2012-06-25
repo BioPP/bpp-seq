@@ -1,4 +1,9 @@
-18/06/12 Julien dutheil
+25/06/12 Julien Dutheil
+* Extended maf tools and reorganization of the code.
+* Extended GFF output.
+* New [] operator in SequenceFeatureSet.
+
+18/06/12 Julien Dutheil
 * Fixed bug in Maf parser: scores are now parsed correctly.
 
 08/03/12 Julien Dutheil

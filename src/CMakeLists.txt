@@ -81,8 +81,9 @@ set(CPP_FILES
   Bpp/Seq/Io/NexusIoSequence.cpp
   Bpp/Seq/Io/NexusTools.cpp
   Bpp/Seq/Io/Stockholm.cpp
-  Bpp/Seq/Io/MafAlignmentParser.cpp
-  Bpp/Seq/Io/MafIterator.cpp
+  Bpp/Seq/Io/Maf/MafAlignmentParser.cpp
+  Bpp/Seq/Io/Maf/MafIterator.cpp
+  Bpp/Seq/Io/Maf/MafSequence.cpp
   Bpp/Seq/Feature/SequenceFeature.cpp
   Bpp/Seq/Feature/Gff/GffFeatureReader.cpp
   Bpp/Seq/Feature/Gtf/GtfFeatureReader.cpp
@@ -161,8 +162,9 @@ set(H_FILES
   Bpp/Seq/Io/NexusIOSequence.h
   Bpp/Seq/Io/NexusTools.h
   Bpp/Seq/Io/Stockholm.h
-  Bpp/Seq/Io/MafAlignmentParser.h
-  Bpp/Seq/Io/MafIterator.h
+  Bpp/Seq/Io/Maf/MafSequence.h
+  Bpp/Seq/Io/Maf/MafAlignmentParser.h
+  Bpp/Seq/Io/Maf/MafIterator.h
   Bpp/Seq/Io/IoSequenceFactory.h
   Bpp/Seq/Io/SequenceFileIndex.h
   Bpp/Seq/Container/VectorSequenceContainer.h

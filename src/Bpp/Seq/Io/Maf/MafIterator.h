@@ -40,11 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _MAFITERATOR_H_
 #define _MAFITERATOR_H_
 
-#include "../SequenceWithAnnotation.h"
-#include "../SequenceTools.h"
-#include "../Alphabet/AlphabetTools.h"
-#include "../Container/AlignedSequenceContainer.h"
-#include "../Feature/SequenceFeature.h"
+#include "MafBlock.h"
+#include "../Clustal.h"
 
 //From the STL:
 #include <iostream>
@@ -52,228 +49,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <deque>
 
 namespace bpp {
-
-/**
- * @brief A sequence class which is used to store data from MAF files.
- * 
- * It extends the SequenceWithAnnotation class to store MAF-specific features,
- * like the chromosome position. The sequence is its own listener,
- * and recomputes its "genomic" site by using the SequenceTools::getNumberOfSites
- * function when a content modification is performed.
- * Tags like begin and stop, hovever, have to be set by hand.
- *
- * A MAF sequence is necessarily a DNA sequence.
- */
-class MafSequence:
-  public SequenceWithAnnotation
-{
-  private:
-    bool         hasCoordinates_;
-    unsigned int begin_;
-    std::string  species_;
-    std::string  chromosome_;
-    char         strand_;
-    unsigned int size_;
-    unsigned int srcSize_;
-
-  public:
-    MafSequence():
-      SequenceWithAnnotation(&AlphabetTools::DNA_ALPHABET), hasCoordinates_(false), begin_(0), species_(""), chromosome_(""), strand_(0), size_(0), srcSize_(0)
-    {
-      size_ = 0;
-    }
-
-    MafSequence(const std::string& name, const std::string& sequence):
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), hasCoordinates_(false), begin_(0), species_(""), chromosome_(""), strand_(0), size_(0), srcSize_(0)
-    {
-      size_ = SequenceTools::getNumberOfSites(*this);
-      size_t pos = name.find(".");
-      if (pos != std::string::npos) {
-        chromosome_ = name.substr(pos + 1);
-        species_    = name.substr(0, pos);
-      }
-    }
-
-    MafSequence(const std::string& name, const std::string& sequence, unsigned int begin, char strand, unsigned int srcSize) :
-      SequenceWithAnnotation(name, sequence, &AlphabetTools::DNA_ALPHABET), hasCoordinates_(true), begin_(begin), species_(""), chromosome_(""), strand_(strand), size_(0), srcSize_(srcSize)
-    {
-      size_ = SequenceTools::getNumberOfSites(*this);
-      setName(name);
-    }
-
-    MafSequence* clone() const { return new MafSequence(*this); }
-
-    ~MafSequence() {}
-
-  public:
-    bool hasCoordinates() const { return hasCoordinates_; }
-
-    void removeCoordinates() { hasCoordinates_ = false; begin_ = 0; }
-
-    unsigned int start() const throw (Exception) { 
-      if (hasCoordinates_) return begin_;
-      else throw Exception("MafSequence::start(). Sequence " + getName() + " does not have coordinates.");
-    }
-
-    unsigned int stop() const { 
-      if (hasCoordinates_) return begin_ + size_ - 1;
-      else throw Exception("MafSequence::stop(). Sequence " + getName() + " does not have coordinates.");
-    }
-
-    Range<unsigned int> getRange() const {
-      if (hasCoordinates_) return Range<unsigned int>(start(), stop());
-      else throw Exception("MafSequence::getRange(). Sequence " + getName() + " does not have coordinates.");
-    }
-
-    void setName(const std::string& name) {
-      size_t pos = name.find(".");
-      if (pos != std::string::npos) {
-        chromosome_ = name.substr(pos + 1);
-        species_    = name.substr(0, pos);
-      }
-      SequenceWithAnnotation::setName(name);
-    }
-
-    const std::string& getSpecies() const { return species_; }
-    
-    const std::string& getChromosome() const { return chromosome_; }
-    
-    char getStrand() const { return strand_; }
-    
-    unsigned int getGenomicSize() const { return size_; }
-    
-    unsigned int getSrcSize() const { return srcSize_; }
-    
-    void setStart(unsigned int begin) { begin_ = begin; hasCoordinates_ = true; }
-    
-    void setChromosome(const std::string& chr) {
-      chromosome_ = chr;
-      SequenceWithAnnotation::setName(species_ + "." + chromosome_);
-    }
-    
-    void setSpecies(const std::string& species) {
-      species_ = species;
-      SequenceWithAnnotation::setName(species_ + "." + chromosome_);
-    }
-    
-    void setStrand(char s) { strand_ = s; }
-    
-    void setSrcSize(unsigned int srcSize) { srcSize_ = srcSize; }
-  
-    std::string getDescription() const { return getName() + strand_ + ":" + (hasCoordinates_ ? TextTools::toString(start()) + "-" + TextTools::toString(stop()) : "?-?"); }
-  
-    /**
-     * @brief Extract a sub-sequence.
-     *
-     * @return A subsequence.
-     * @param startAt Begining of sub-sequence.
-     * @param length  the length of the sub-sequence.
-     */
-    MafSequence* subSequence(unsigned int startAt, unsigned int length) const;
-    
-  private:
-    void beforeSequenceChanged(const SymbolListEditionEvent& event) {}
-    void afterSequenceChanged(const SymbolListEditionEvent& event) { size_ = SequenceTools::getNumberOfSites(*this); }
-    void beforeSequenceInserted(const SymbolListInsertionEvent& event) {}
-    void afterSequenceInserted(const SymbolListInsertionEvent& event) { size_ = SequenceTools::getNumberOfSites(*this); }
-    void beforeSequenceDeleted(const SymbolListDeletionEvent& event) {}
-    void afterSequenceDeleted(const SymbolListDeletionEvent& event) { size_ = SequenceTools::getNumberOfSites(*this); }
-    void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
-    void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
-};
-
-/**
- * @brief A synteny block data structure, the basic unit of a MAF alignement file.
- *
- * This class basically contains a AlignedSequenceContainer made of MafSequence objects.
- */
-class MafBlock
-{
-  private:
-    double score_;
-    unsigned int pass_;
-    AlignedSequenceContainer alignment_;
-
-  public:
-    MafBlock() :
-      score_(log(0)),
-      pass_(0),
-      alignment_(&AlphabetTools::DNA_ALPHABET)
-    {}
-
-  public:
-    void setScore(double score) { score_ = score; }
-    void setPass(unsigned int pass) { pass_ = pass; }
-    
-    double getScore() const { return score_; }
-    unsigned int getPass() const { return pass_; }
-
-    AlignedSequenceContainer& getAlignment() { return alignment_; }
-    const AlignedSequenceContainer& getAlignment() const { return alignment_; }
-
-    unsigned int getNumberOfSequences() const { return alignment_.getNumberOfSequences(); }
-    
-    unsigned int getNumberOfSites() const { return alignment_.getNumberOfSites(); }
-
-    void addSequence(const MafSequence& sequence) { alignment_.addSequence(sequence, false); }
-
-    bool hasSequence(const std::string& name) {
-      return getAlignment().hasSequence(name);
-    }
-
-    const MafSequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) {
-      return dynamic_cast<const MafSequence&>(getAlignment().getSequence(name));
-    }
-
-    const MafSequence& getSequence(unsigned int i) const throw (IndexOutOfBoundsException) {
-      return dynamic_cast<const MafSequence&>(getAlignment().getSequence(i));
-    }
-
-    bool hasSequenceForSpecies(const std::string& species) {
-      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
-        const MafSequence& seq = getSequence(i);
-        if (seq.getSpecies() == species)
-          return true;
-      }
-      return false;
-    }
-
-    //Return the first sequence with the species name.
-    const MafSequence& getSequenceForSpecies(const std::string& species) const throw (SequenceNotFoundException) {
-      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
-        const MafSequence& seq = getSequence(i);
-        if (seq.getSpecies() == species)
-          return seq;
-      }
-      throw SequenceNotFoundException("MafBlock::getSequenceForSpecies. No sequence with the given species name in this block.", species);
-    }
-
-    /**
-     * @return The species names for all sequencies in the container.
-     */
-    std::vector<std::string> getSpeciesList() const {
-      std::vector<std::string> lst;
-      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
-        lst.push_back(getSequence(i).getSpecies());
-      }
-      return lst;
-    }
-
-    void removeCoordinatesFromSequence(unsigned int i) throw (IndexOutOfBoundsException) {
-      //This is a bit of a trick, but avoid useless recopies.
-      //It is safe here because the AlignedSequenceContainer is fully encapsulated.
-      //It would not work if a VectorSiteContainer was used.
-      const_cast<MafSequence&>(getSequence(i)).removeCoordinates();
-    }
-
-    std::string getDescription() const {
-      std::string desc;
-      desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites());
-      return desc;
-    }
-
-
-};
 
 
 /**
@@ -961,6 +736,51 @@ class OutputMafIterator:
 
   private:
     void writeHeader(std::ostream& out) const;
+    void writeBlock(std::ostream& out, const MafBlock& block) const;
+};
+
+/**
+ * @brief This iterator forward the iterator given as input after having printed its content to an alignment file.
+ * The syntax for ENSMBL meta data is used. For now the output format is clustal.
+ */
+class OutputAlignmentMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::ostream* output_;
+    bool mask_;
+    Clustal writer_;
+
+  public:
+    OutputAlignmentMafIterator(MafIterator* iterator, std::ostream* out, bool mask = true) :
+      AbstractFilterMafIterator(iterator), output_(out), mask_(mask), writer_()
+    {}
+
+  private:
+    OutputAlignmentMafIterator(const OutputAlignmentMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      output_(iterator.output_),
+      mask_(iterator.mask_),
+      writer_(iterator.writer_)
+    {}
+    
+    OutputAlignmentMafIterator& operator=(const OutputAlignmentMafIterator& iterator)
+    {
+      output_ = iterator.output_;
+      mask_   = iterator.mask_;
+      writer_ = iterator.writer_;
+      return *this;
+    }
+
+
+  public:
+    MafBlock* nextBlock() throw (Exception) {
+      MafBlock* block = iterator_->nextBlock();
+      if (output_ && block)
+        writeBlock(*output_, *block);
+      return block;
+    }
+
     void writeBlock(std::ostream& out, const MafBlock& block) const;
 };
 

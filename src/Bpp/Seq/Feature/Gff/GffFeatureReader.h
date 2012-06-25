@@ -60,7 +60,7 @@ namespace bpp {
  * Note that in GFF, coordinates are [a, b] 1-based. They will therefore be converted to [a, b[ 0-based,
  * as specified for the SequenceFeature object.
  *
- * @author Julien Dutheil
+ * @author Julien Dutheil, Sylvain Gaillard
  */
 class GffFeatureReader
 {
@@ -117,7 +117,29 @@ class GffFeatureReader
       }
     }
 
+    /**
+     * @param f A sequence feature.
+     * @return A string describing the feature, in GFF format.
+     */
     static std::string toString(const bpp::SequenceFeature& f);
+    
+    /**
+     * @brief Out put a string description of a feature to a stream.
+     *
+     * A end of line character will be appended after the description.
+     *
+     * @param f A sequence feature.
+     * @param out An output stream.
+     */
+    static void toString(const bpp::SequenceFeature& f, std::ostream& out) {
+      out << toString(f) << std::endl;
+    }
+
+    static void toString(const bpp::SequenceFeatureSet& fs, std::ostream& out) {
+      for (unsigned int i = 0; i < fs.getNumberOfFeatures(); ++i) {
+        toString(fs[i], out);
+      }
+    }
 
   private:
     void getNextLine_();

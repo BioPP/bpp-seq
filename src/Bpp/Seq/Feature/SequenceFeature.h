@@ -363,6 +363,15 @@ class SequenceFeatureSet
     }
 
     /**
+     * @param i The index of the feature.
+     * @return A reference toward the feature.
+     * @see getFeature(unsigned int i)
+     */
+    const SequenceFeature& operator[](unsigned int i) const {
+      return *features_[i];
+    }
+
+    /**
      * @return The number of features in this set.
      */
     unsigned int getNumberOfFeatures() const { return features_.size(); }

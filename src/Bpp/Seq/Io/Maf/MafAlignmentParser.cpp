@@ -38,8 +38,8 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "MafAlignmentParser.h"
-#include "../SequenceWithQuality.h"
-#include "../SequenceWithAnnotationTools.h"
+#include "../../SequenceWithQuality.h"
+#include "../../SequenceWithAnnotationTools.h"
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Text/KeyvalTools.h>
 
