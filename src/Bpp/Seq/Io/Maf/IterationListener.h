@@ -40,8 +40,13 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _ITERATIONLISTENER_H_
 #define _ITERATIONLISTENER_H_
 
+#include "MafIterator.h"
+
 namespace bpp {
 
+/**
+ * @brief Listneer which enable to catch events when parsing a Maf file.
+ */
 class IterationListener
 {
   public:
@@ -53,6 +58,68 @@ class IterationListener
     virtual void iterationStops() = 0;
 };
 
+/**
+ * @brief Iteration listener that works with a SequenceStatisticsMafIterator,
+ * enabling output of results in a file (partial implementation, format-independent)
+ */
+class AbstractStatisticsOutputIterationListener:
+  public virtual IterationListener
+{
+  protected:
+    SequenceStatisticsMafIterator* statsIterator_;
+
+
+  public:
+    AbstractStatisticsOutputIterationListener(SequenceStatisticsMafIterator* iterator):
+      statsIterator_(iterator) {}
+    
+    AbstractStatisticsOutputIterationListener(const AbstractStatisticsOutputIterationListener& listener):
+      statsIterator_(listener.statsIterator_) {}
+    
+    AbstractStatisticsOutputIterationListener& operator=(const AbstractStatisticsOutputIterationListener& listener)
+    {
+      statsIterator_ = listener.statsIterator_;
+      return *this;
+    }
+
+    virtual ~AbstractStatisticsOutputIterationListener() {}
+
+};
+
+/**
+ * @brief Iteration listener that works with a SequenceStatisticsMafIterator,
+ * enabling output of results in a file in CSv format
+ */
+class CsvStatisticsOutputIterationListener:
+  public AbstractStatisticsOutputIterationListener
+{
+  private:
+    OutputStream* output_;
+    std::string sep_;
+
+  public:
+    CsvStatisticsOutputIterationListener(SequenceStatisticsMafIterator* iterator, OutputStream* output, const std::string& sep = "\t"):
+      AbstractStatisticsOutputIterationListener(iterator), output_(output), sep_(sep) {}
+    
+    CsvStatisticsOutputIterationListener(const CsvStatisticsOutputIterationListener& listener):
+      AbstractStatisticsOutputIterationListener(listener), output_(listener.output_), sep_(listener.sep_) {}
+    
+    CsvStatisticsOutputIterationListener& operator=(const CsvStatisticsOutputIterationListener& listener)
+    {
+      AbstractStatisticsOutputIterationListener::operator=(listener);
+      output_ = listener.output_;
+      sep_ = listener.sep_;
+      return *this;
+    }
+
+    virtual ~CsvStatisticsOutputIterationListener() {}
+
+  public:
+    virtual void iterationStarts();
+    virtual void iterationMoves();
+    virtual void iterationStops() {}
+  
+};
 
 } //end of namespace bpp.
 

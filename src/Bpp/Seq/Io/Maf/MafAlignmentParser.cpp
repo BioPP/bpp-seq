@@ -46,7 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 using namespace bpp;
 
-MafBlock* MafAlignmentParser::nextBlock() throw (Exception)
+MafBlock* MafAlignmentParser::analyseCurrentBlock_() throw (Exception)
 {
   MafBlock* block = 0;
 

@@ -85,6 +85,7 @@ set(CPP_FILES
   Bpp/Seq/Io/Maf/MafIterator.cpp
   Bpp/Seq/Io/Maf/MafSequence.cpp
   Bpp/Seq/Io/Maf/MafStatistics.cpp
+  Bpp/Seq/Io/Maf/IterationListener.cpp
   Bpp/Seq/Feature/SequenceFeature.cpp
   Bpp/Seq/Feature/Gff/GffFeatureReader.cpp
   Bpp/Seq/Feature/Gtf/GtfFeatureReader.cpp

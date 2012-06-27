@@ -1127,9 +1127,8 @@ MafBlock* QualityFilterMafIterator::analyseCurrentBlock_() throw (Exception)
 SequenceStatisticsMafIterator::SequenceStatisticsMafIterator(MafIterator* iterator, const std::vector<MafStatistics*> statistics) :
   AbstractFilterMafIterator(iterator),
   statistics_(statistics),
-  results_(0, statistics.size()),
-  names_(0),
-  tmpData_(0)
+  results_(),
+  names_()
 {
   string name;
   for (size_t i = 0; i < statistics_.size(); ++i) {
@@ -1139,7 +1138,7 @@ SequenceStatisticsMafIterator::SequenceStatisticsMafIterator(MafIterator* iterat
       names_.push_back(name + "." + tags[j]);
     }
   }
-  tmpData_.resize(names_.size());
+  results_.resize(names_.size());
 }
 
 MafBlock* SequenceStatisticsMafIterator::analyseCurrentBlock_() throw (Exception)
@@ -1154,14 +1153,13 @@ MafBlock* SequenceStatisticsMafIterator::analyseCurrentBlock_() throw (Exception
       tags = statistics_[i]->getSupportedTags();
       for (size_t j = 0; j < tags.size(); ++j) {
         if (result.hasValue(tags[j])) {
-          tmpData_[k] = result.getValue(tags[j]);
+          results_[k] = result.getValue(tags[j]);
         } else {
-          tmpData_[k] = NumConstants::NaN;
+          results_[k] = NumConstants::NaN;
         }
         k++;
       }
     }
-    results_.addRow(tmpData_);
   }
   return currentBlock_;
 }

@@ -1,11 +1,11 @@
 //
-// File: MafAlignmentParser.h
+// File: IterationListener.cpp
 // Authors: Julien Dutheil
-// Created: Tue Apr 27 2010
+// Created: Wed Jun 27 2012
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (2010)
+Copyright or © or Copr. Bio++ Development Team, (2012)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,51 +37,31 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _MAFALIGNMENTPARSER_H_
-#define _MAFALIGNMENTPARSER_H_
+#include "IterationListener.h"
 
-#include "MafIterator.h"
-#include "../../Alphabet/CaseMaskedAlphabet.h"
+// From the STL:
+#include <vector>
 
-//From the STL:
-#include <iostream>
+using namespace std;
+using namespace bpp;
 
-namespace bpp {
-
-/**
- * @brief MAF file parser.
- * 
- * This class parses synteny blocks from Maf file.
- *
- * The MAF format is documented on the UCSC Genome Browser website:
- * <a href="http://genome.ucsc.edu/FAQ/FAQformat.html#format5">http://genome.ucsc.edu/FAQ/FAQformat.html#format5</a>
- *
- * @author Julien Dutheil
- */
-class MafAlignmentParser:
-  public AbstractMafIterator
+void CsvStatisticsOutputIterationListener::iterationStarts()
 {
-  private:
-    std::istream* stream_;
-    bool mask_;
-    CaseMaskedAlphabet cmAlphabet_;
-    bool firstBlock_;
+  const vector<string>& header = statsIterator_->getResultsColumnNames();
+  *output_ << header[0];
+  for (size_t i = 1; i < header.size(); ++i) {
+    *output_ << sep_ << header[i];
+  }
+  output_->endLine();
+}
 
-  public:
-    MafAlignmentParser(std::istream* stream, bool parseMask = false) :
-      stream_(stream), mask_(parseMask), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(true) {}
-
-  private:
-    //Recopy is forbidden!
-    MafAlignmentParser(const MafAlignmentParser& maf): stream_(0), mask_(maf.mask_), cmAlphabet_(&AlphabetTools::DNA_ALPHABET), firstBlock_(maf.firstBlock_) {}
-    MafAlignmentParser& operator=(const MafAlignmentParser& maf) { stream_ = 0; mask_ = maf.mask_; firstBlock_ = maf.firstBlock_; return *this; }
-
-  private:
-    MafBlock* analyseCurrentBlock_() throw (Exception);
-
-};
-
-} // end of namespace bpp.
-
-#endif //_MAFALIGNMENTPARSER_H_
+void CsvStatisticsOutputIterationListener::iterationMoves()
+{
+  const vector<double>& values = statsIterator_->getResults();
+  *output_ << values[0];
+  for (size_t i = 1; i < values.size(); ++i) {
+    *output_ << sep_ << values[i];
+  }
+  output_->endLine();
+}
 

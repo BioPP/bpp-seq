@@ -79,7 +79,8 @@ class MafIterator
  *
  * This implements the listener parts.
  */
-class AbstractMafIterator
+class AbstractMafIterator:
+  public virtual MafIterator
 {
   protected:
     std::vector<IterationListener*> iterationListeners_;
@@ -709,7 +710,7 @@ class FeatureExtractor:
 };
 
 class TrashIteratorAdapter:
-  public MafIterator
+  public AbstractMafIterator
 {
   private:
     MafTrashIterator* iterator_;
@@ -727,8 +728,8 @@ class TrashIteratorAdapter:
       return *this;
     }
 
-  public:
-    MafBlock* nextBlock() throw (Exception) {
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception) {
       return iterator_->nextRemovedBlock();
     }
 };
@@ -813,8 +814,8 @@ class OutputAlignmentMafIterator:
     }
 
 
-  public:
-    MafBlock* nextBlock() throw (Exception) {
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception) {
       MafBlock* block = iterator_->nextBlock();
       if (output_ && block)
         writeBlock(*output_, *block);
@@ -879,18 +880,22 @@ class SequenceStatisticsMafIterator:
 /**
  * @brief Compute a series of sequence statistics for each block.
  *
- * Computed statistics are stored into a matrix of double, which can be retrieved as well as statistics names,
- * which can be retrieved using appropriate function.
- * Listeners can be set up to automatically analyse the output after iterations are over.
+ * Computed statistics are stored into a vector of double, which can be retrieved as well as statistics names.
+ * Listeners can be set up to automatically analyse or write the output after iterations are over.
+ *
+ * The current implementation focuses on speed and memory efificiency, as it only stores in memory the current results of the statistics.
+ * The only drawback of this, is that disk access might be high when writing the results,
+ * although appropriate buffering should most likely circumvent the issue.
+ * The code is easily extensible, however, to enable storage of all results into a matrix,
+ * with writing only once at the end of iterations.
  */
 class SequenceStatisticsMafIterator:
   public AbstractFilterMafIterator
 {
   private:
     std::vector<MafStatistics*> statistics_;
-    RowMatrix<double> results_;
+    std::vector<double> results_;
     std::vector<std::string> names_;
-    std::vector<double> tmpData_;
 
   public:
     /**
@@ -905,8 +910,7 @@ class SequenceStatisticsMafIterator:
       AbstractFilterMafIterator(0),
       statistics_(iterator.statistics_),
       results_(iterator.results_),
-      names_(iterator.names_),
-      tmpData_(iterator.tmpData_)
+      names_(iterator.names_)
     {}
     
     SequenceStatisticsMafIterator& operator=(const SequenceStatisticsMafIterator& iterator)
@@ -914,9 +918,12 @@ class SequenceStatisticsMafIterator:
       statistics_ = iterator.statistics_;
       results_ = iterator.results_;
       names_ = iterator.names_;
-      tmpData_ = iterator.tmpData_;
       return *this;
     }
+
+  public:
+    const std::vector<double>& getResults() const { return results_; }
+    const std::vector<std::string>& getResultsColumnNames() const { return names_; }
 
   private:
     MafBlock* analyseCurrentBlock_() throw (Exception);
