@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "MafIterator.h"
+#include "IterationListener.h"
 #include "../../SequenceWithQuality.h"
 #include "../../SequenceWithAnnotationTools.h"
 #include "../../SequenceWalker.h"
@@ -52,7 +53,25 @@ using namespace bpp;
 
 using namespace std;
 
-MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
+void AbstractMafIterator::fireIterationStartSignal_() {
+  for (std::vector<IterationListener*>::iterator it = iterationListeners_.begin(); it != iterationListeners_.end(); ++it) {
+    (*it)->iterationStarts();
+  }
+}
+
+void AbstractMafIterator::fireIterationMoveSignal_() {
+  for (std::vector<IterationListener*>::iterator it = iterationListeners_.begin(); it != iterationListeners_.end(); ++it) {
+    (*it)->iterationMoves();
+  }
+}
+
+void AbstractMafIterator::fireIterationStopSignal_() {
+  for (std::vector<IterationListener*>::iterator it = iterationListeners_.begin(); it != iterationListeners_.end(); ++it) {
+    (*it)->iterationStops();
+  }
+}
+
+MafBlock* SequenceFilterMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   currentBlock_ = iterator_->nextBlock();
   while (currentBlock_) {
@@ -108,7 +127,7 @@ MafBlock* SequenceFilterMafIterator::nextBlock() throw (Exception)
   return currentBlock_;
 }
 
-MafBlock* ChromosomeMafIterator::nextBlock() throw (Exception)
+MafBlock* ChromosomeMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   currentBlock_ = iterator_->nextBlock();
   while (currentBlock_) {
@@ -142,7 +161,7 @@ MafBlock* ChromosomeMafIterator::nextBlock() throw (Exception)
   return currentBlock_;
 }
 
-MafBlock* DuplicateFilterMafIterator::nextBlock() throw (Exception)
+MafBlock* DuplicateFilterMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   currentBlock_ = iterator_->nextBlock();
   while (currentBlock_) {
@@ -185,7 +204,7 @@ MafBlock* DuplicateFilterMafIterator::nextBlock() throw (Exception)
   return currentBlock_;
 }
 
-MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
+MafBlock* BlockMergerMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   if (!incomingBlock_) return 0;
   currentBlock_  = incomingBlock_;
@@ -304,7 +323,7 @@ MafBlock* BlockMergerMafIterator::nextBlock() throw (Exception)
   return currentBlock_;
 }
 
-MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
+MafBlock* FullGapFilterMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   MafBlock* block = iterator_->nextBlock();
   if (!block) return 0;
@@ -363,7 +382,7 @@ MafBlock* FullGapFilterMafIterator::nextBlock() throw (Exception)
   return block;
 }
 
-MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
+MafBlock* AlignmentFilterMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
     //Else there is no more block in the buffer, we need to parse more:
@@ -532,7 +551,7 @@ MafBlock* AlignmentFilterMafIterator::nextBlock() throw (Exception)
   return block;
 }
 
-MafBlock* AlignmentFilter2MafIterator::nextBlock() throw (Exception)
+MafBlock* AlignmentFilter2MafIterator::analyseCurrentBlock_() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
     //Else there is no more block in the buffer, we need to parse more:
@@ -713,7 +732,7 @@ MafBlock* AlignmentFilter2MafIterator::nextBlock() throw (Exception)
   return block;
 }
 
-MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
+MafBlock* MaskFilterMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
     do {
@@ -883,7 +902,7 @@ MafBlock* MaskFilterMafIterator::nextBlock() throw (Exception)
   return block;
 }
 
-MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
+MafBlock* QualityFilterMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
     do {
@@ -1067,7 +1086,7 @@ MafBlock* QualityFilterMafIterator::nextBlock() throw (Exception)
   return block;
 }
 
-MafBlock* SequenceStatisticsMafIterator::nextBlock() throw (Exception)
+/*MafBlock* SequenceStatisticsMafIterator::nextBlock() throw (Exception)
 {
   currentBlock_ = iterator_->nextBlock();
   if (currentBlock_) {
@@ -1089,9 +1108,9 @@ MafBlock* SequenceStatisticsMafIterator::nextBlock() throw (Exception)
     output_->endLine();
   }
   return currentBlock_;
-}
+}*/
 
-MafBlock* PairwiseSequenceStatisticsMafIterator::nextBlock() throw (Exception)
+/*MafBlock* PairwiseSequenceStatisticsMafIterator::nextBlock() throw (Exception)
 {
   currentBlock_ = iterator_->nextBlock();
   if (currentBlock_) {
@@ -1103,9 +1122,51 @@ MafBlock* PairwiseSequenceStatisticsMafIterator::nextBlock() throw (Exception)
     output_->endLine();
   }
   return currentBlock_;
+}*/
+
+SequenceStatisticsMafIterator::SequenceStatisticsMafIterator(MafIterator* iterator, const std::vector<MafStatistics*> statistics) :
+  AbstractFilterMafIterator(iterator),
+  statistics_(statistics),
+  results_(0, statistics.size()),
+  names_(0),
+  tmpData_(0)
+{
+  string name;
+  for (size_t i = 0; i < statistics_.size(); ++i) {
+    name = statistics_[i]->getShortName();
+    vector<string> tags = statistics_[i]->getSupportedTags();
+    for (size_t j = 0; j < tags.size(); ++j) {
+      names_.push_back(name + "." + tags[j]);
+    }
+  }
+  tmpData_.resize(names_.size());
 }
 
-MafBlock* FeatureFilterMafIterator::nextBlock() throw (Exception)
+MafBlock* SequenceStatisticsMafIterator::analyseCurrentBlock_() throw (Exception)
+{
+  vector<string> tags;
+  currentBlock_ = iterator_->nextBlock();
+  if (currentBlock_) {
+    size_t k = 0;
+    for (size_t i = 0; i < statistics_.size(); ++i) {
+      statistics_[i]->compute(*currentBlock_);
+      const MafStatisticsResult& result = statistics_[i]->getResult();
+      tags = statistics_[i]->getSupportedTags();
+      for (size_t j = 0; j < tags.size(); ++j) {
+        if (result.hasValue(tags[j])) {
+          tmpData_[k] = result.getValue(tags[j]);
+        } else {
+          tmpData_[k] = NumConstants::NaN;
+        }
+        k++;
+      }
+    }
+    results_.addRow(tmpData_);
+  }
+  return currentBlock_;
+}
+
+MafBlock* FeatureFilterMafIterator::analyseCurrentBlock_() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
     //Unless there is no more block in the buffer, we need to parse more:
@@ -1246,7 +1307,7 @@ MafBlock* FeatureFilterMafIterator::nextBlock() throw (Exception)
   return nxtBlock;
 }
 
-MafBlock* FeatureExtractor::nextBlock() throw (Exception)
+MafBlock* FeatureExtractor::analyseCurrentBlock_() throw (Exception)
 {
   if (blockBuffer_.size() == 0) {
     //Unless there is no more block in the buffer, we need to parse more:

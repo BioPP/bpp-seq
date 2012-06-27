@@ -80,7 +80,7 @@ class MafBlock
 
     void addSequence(const MafSequence& sequence) { alignment_.addSequence(sequence, false); }
 
-    bool hasSequence(const std::string& name) {
+    bool hasSequence(const std::string& name) const {
       return getAlignment().hasSequence(name);
     }
 
@@ -92,7 +92,7 @@ class MafBlock
       return dynamic_cast<const MafSequence&>(getAlignment().getSequence(i));
     }
 
-    bool hasSequenceForSpecies(const std::string& species) {
+    bool hasSequenceForSpecies(const std::string& species) const {
       for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
         const MafSequence& seq = getSequence(i);
         if (seq.getSpecies() == species)

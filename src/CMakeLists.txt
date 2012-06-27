@@ -84,6 +84,7 @@ set(CPP_FILES
   Bpp/Seq/Io/Maf/MafAlignmentParser.cpp
   Bpp/Seq/Io/Maf/MafIterator.cpp
   Bpp/Seq/Io/Maf/MafSequence.cpp
+  Bpp/Seq/Io/Maf/MafStatistics.cpp
   Bpp/Seq/Feature/SequenceFeature.cpp
   Bpp/Seq/Feature/Gff/GffFeatureReader.cpp
   Bpp/Seq/Feature/Gtf/GtfFeatureReader.cpp
@@ -165,6 +166,8 @@ set(H_FILES
   Bpp/Seq/Io/Maf/MafSequence.h
   Bpp/Seq/Io/Maf/MafAlignmentParser.h
   Bpp/Seq/Io/Maf/MafIterator.h
+  Bpp/Seq/Io/Maf/MafStatistics.h
+  Bpp/Seq/Io/Maf/IterationListener.h
   Bpp/Seq/Io/IoSequenceFactory.h
   Bpp/Seq/Io/SequenceFileIndex.h
   Bpp/Seq/Container/VectorSequenceContainer.h

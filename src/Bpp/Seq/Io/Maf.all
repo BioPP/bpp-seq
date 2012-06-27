@@ -1,0 +1,4 @@
+#include "Maf/MafAlignmentParser.h"
+#include "Maf/MafBlock.h"
+#include "Maf/MafIterator.h"
+#include "Maf/MafSequence.h"

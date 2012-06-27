@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _MAFITERATOR_H_
 
 #include "MafBlock.h"
+#include "MafStatistics.h"
 #include "../Clustal.h"
 
 //From the STL:
@@ -50,6 +51,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp {
 
+//Forward declaration:
+class IterationListener;
 
 /**
  * @brief Interface to loop over maf alignment blocks.
@@ -66,7 +69,45 @@ class MafIterator
      * @return A maf alignment block, or a null pointer if no more block is available.
      */
     virtual MafBlock* nextBlock() throw (Exception) = 0;
+
+    virtual void addIterationListener(IterationListener* listener) = 0;
     
+};
+
+/**
+ * @brief Partial implementation of the MafIterator interface.
+ *
+ * This implements the listener parts.
+ */
+class AbstractMafIterator
+{
+  protected:
+    std::vector<IterationListener*> iterationListeners_;
+
+  public:
+    AbstractMafIterator(): iterationListeners_() {}
+    virtual ~AbstractMafIterator() {}
+
+  public:
+    void addIterationListener(IterationListener* listener) {
+      iterationListeners_.push_back(listener);
+    }
+
+    MafBlock* nextBlock() throw (Exception) {
+      MafBlock* block = analyseCurrentBlock_();
+      if (block)
+        fireIterationMoveSignal_();
+      else
+        fireIterationStopSignal_();
+      return block;
+    }
+
+  protected:
+    virtual MafBlock* analyseCurrentBlock_() = 0;
+    virtual void fireIterationStartSignal_();
+    virtual void fireIterationMoveSignal_();
+    virtual void fireIterationStopSignal_();
+
 };
 
 /**
@@ -92,20 +133,29 @@ class MafTrashIterator
  * @brief Helper class for developping filter for maf blocks.
  */
 class AbstractFilterMafIterator:
-  public MafIterator
+  public AbstractMafIterator
 {
   protected:
     MafIterator* iterator_;
+    MafBlock* currentBlock_;
     OutputStream* logstream_;
     bool verbose_;
 
   public:
     AbstractFilterMafIterator(MafIterator* iterator) :
-      iterator_(iterator), logstream_(ApplicationTools::message), verbose_(true) {}
+      AbstractMafIterator(),
+      iterator_(iterator), currentBlock_(0),
+      logstream_(ApplicationTools::message), verbose_(true) {}
 
   private:
-    AbstractFilterMafIterator(const AbstractFilterMafIterator& it): iterator_(it.iterator_), logstream_(it.logstream_), verbose_(it.verbose_) {}
+    AbstractFilterMafIterator(const AbstractFilterMafIterator& it):
+      AbstractMafIterator(it), 
+      iterator_(it.iterator_), currentBlock_(0),
+      logstream_(it.logstream_), verbose_(it.verbose_) {}
+
     AbstractFilterMafIterator& operator=(const AbstractFilterMafIterator& it) {
+      AbstractMafIterator::operator=(it);
+      currentBlock_ = 0;
       iterator_  = it.iterator_;
       logstream_ = it.logstream_;
       verbose_   = it.verbose_;
@@ -134,22 +184,22 @@ class BlockSizeMafIterator:
       minSize_(minSize)
     {}
 
-  public:
-    MafBlock* nextBlock() throw (Exception) {
-      MafBlock* block;
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception) {
       bool test;
       do {
-        block = iterator_->nextBlock();
-        if (!block) return 0;
-        test = (block->getNumberOfSites() < minSize_);
+        currentBlock_ = iterator_->nextBlock();
+        if (!currentBlock_) break;
+        test = (currentBlock_->getNumberOfSites() < minSize_);
         if (test) {
           if (logstream_) {
-            (*logstream_ << "BLOCK SIZE FILTER: block " << block->getDescription() << " with size " << block->getNumberOfSites() << " was discarded.").endLine();
+            (*logstream_ << "BLOCK SIZE FILTER: block " << currentBlock_->getDescription() << " with size " << currentBlock_->getNumberOfSites() << " was discarded.").endLine();
           }
-          delete block;
+          delete currentBlock_;
+          currentBlock_ = 0;
         }
       } while (test);
-      return block;
+      return currentBlock_;
     }
 
 };
@@ -166,7 +216,6 @@ class SequenceFilterMafIterator:
     std::vector<std::string> species_;
     bool strict_;
     bool rmDuplicates_;
-    MafBlock* currentBlock_;
 
   public:
     /**
@@ -179,8 +228,7 @@ class SequenceFilterMafIterator:
       AbstractFilterMafIterator(iterator),
       species_(species),
       strict_(strict),
-      rmDuplicates_(rmDuplicates),
-      currentBlock_(0)
+      rmDuplicates_(rmDuplicates)
     {}
 
   private:
@@ -188,8 +236,7 @@ class SequenceFilterMafIterator:
       AbstractFilterMafIterator(0),
       species_(iterator.species_),
       strict_(iterator.strict_),
-      rmDuplicates_(iterator.rmDuplicates_),
-      currentBlock_(0)
+      rmDuplicates_(iterator.rmDuplicates_)
     {}
     
     SequenceFilterMafIterator& operator=(const SequenceFilterMafIterator& iterator)
@@ -197,12 +244,11 @@ class SequenceFilterMafIterator:
       species_       = iterator.species_;
       strict_        = iterator.strict_;
       rmDuplicates_  = iterator.rmDuplicates_;
-      currentBlock_  = 0;
       return *this;
     }
 
-  public:
-    MafBlock* nextBlock() throw (Exception);
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -215,7 +261,6 @@ class ChromosomeMafIterator:
   private:
     std::string ref_;
     std::string chr_;
-    MafBlock* currentBlock_;
 
   public:
     /**
@@ -226,28 +271,25 @@ class ChromosomeMafIterator:
     ChromosomeMafIterator(MafIterator* iterator, const std::string& reference, const std::string& chr) :
       AbstractFilterMafIterator(iterator),
       ref_(reference),
-      chr_(chr),
-      currentBlock_(0)
+      chr_(chr)
     {}
 
   private:
     ChromosomeMafIterator(const ChromosomeMafIterator& iterator) :
       AbstractFilterMafIterator(0),
       ref_(iterator.ref_),
-      chr_(iterator.chr_),
-      currentBlock_(0)
+      chr_(iterator.chr_)
     {}
     
     ChromosomeMafIterator& operator=(const ChromosomeMafIterator& iterator)
     {
       ref_ = iterator.ref_;
       chr_ = iterator.chr_;
-      currentBlock_  = 0;
       return *this;
     }
 
-  public:
-    MafBlock* nextBlock() throw (Exception);
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -263,7 +305,6 @@ class DuplicateFilterMafIterator:
      * Contains the list of 'seen' block, as [chr][strand][start][stop]
      */
     std::map< std::string, std::map< char, std::map< unsigned int, std::map< unsigned int, unsigned int > > > > blocks_;
-    MafBlock* currentBlock_;
 
   public:
     /**
@@ -273,28 +314,25 @@ class DuplicateFilterMafIterator:
     DuplicateFilterMafIterator(MafIterator* iterator, const std::string& reference) :
       AbstractFilterMafIterator(iterator),
       ref_(reference),
-      blocks_(),
-      currentBlock_(0)
+      blocks_()
     {}
 
   private:
     DuplicateFilterMafIterator(const DuplicateFilterMafIterator& iterator) :
       AbstractFilterMafIterator(0),
       ref_(iterator.ref_),
-      blocks_(iterator.blocks_),
-      currentBlock_(0)
+      blocks_(iterator.blocks_)
     {}
     
     DuplicateFilterMafIterator& operator=(const DuplicateFilterMafIterator& iterator)
     {
       ref_    = iterator.ref_;
       blocks_ = iterator.blocks_;
-      currentBlock_ = 0;
       return *this;
     }
 
-  public:
-    MafBlock* nextBlock() throw (Exception);
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -315,7 +353,6 @@ class BlockMergerMafIterator:
   private:
     std::vector<std::string> species_;
     MafBlock* incomingBlock_;
-    MafBlock* currentBlock_;
     std::vector<std::string> ignoreChrs_; //These chromsomes will never be merged (ex: 'Un').
     unsigned int maxDist_;
 
@@ -324,7 +361,6 @@ class BlockMergerMafIterator:
       AbstractFilterMafIterator(iterator),
       species_(species),
       incomingBlock_(0),
-      currentBlock_(0),
       ignoreChrs_(),
       maxDist_(maxDist)
     {
@@ -336,7 +372,6 @@ class BlockMergerMafIterator:
       AbstractFilterMafIterator(0),
       species_(iterator.species_),
       incomingBlock_(iterator.incomingBlock_),
-      currentBlock_(iterator.currentBlock_),
       ignoreChrs_(iterator.ignoreChrs_),
       maxDist_(iterator.maxDist_)
     {}
@@ -345,15 +380,12 @@ class BlockMergerMafIterator:
     {
       species_       = iterator.species_;
       incomingBlock_ = iterator.incomingBlock_;
-      currentBlock_  = iterator.currentBlock_;
       ignoreChrs_    = iterator.ignoreChrs_;
       maxDist_       = iterator.maxDist_;
       return *this;
     }
 
   public:
-    MafBlock* nextBlock() throw (Exception);
-
     /**
      * brief Add a chromosome that should be ignored to the list.
      * @param chr The name of the chromosome to be ignored.
@@ -361,6 +393,10 @@ class BlockMergerMafIterator:
     void ignoreChromosome(const std::string& chr) {
       ignoreChrs_.push_back(chr);
     }
+  
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
+
 };
 
 /**
@@ -383,8 +419,8 @@ class FullGapFilterMafIterator:
       species_(species)
     {}
 
-  public:
-    MafBlock* nextBlock() throw (Exception);
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -422,8 +458,6 @@ class AlignmentFilterMafIterator:
     {}
 
   public:
-    MafBlock* nextBlock() throw (Exception);
-
     MafBlock* nextRemovedBlock() throw (Exception) {
       if (trashBuffer_.size() == 0) return 0;
       MafBlock* block = trashBuffer_.front();
@@ -431,6 +465,8 @@ class AlignmentFilterMafIterator:
       return block;
     }
 
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 };
 
 /**
@@ -470,14 +506,15 @@ class AlignmentFilter2MafIterator:
     {}
 
   public:
-    MafBlock* nextBlock() throw (Exception);
-
     MafBlock* nextRemovedBlock() throw (Exception) {
       if (trashBuffer_.size() == 0) return 0;
       MafBlock* block = trashBuffer_.front();
       trashBuffer_.pop_front();
       return block;
     }
+
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -515,14 +552,15 @@ class MaskFilterMafIterator:
     {}
 
   public:
-    MafBlock* nextBlock() throw (Exception);
-
     MafBlock* nextRemovedBlock() throw (Exception) {
       if (trashBuffer_.size() == 0) return 0;
       MafBlock* block = trashBuffer_.front();
       trashBuffer_.pop_front();
       return block;
     }
+
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -560,14 +598,15 @@ class QualityFilterMafIterator:
     {}
 
   public:
-    MafBlock* nextBlock() throw (Exception);
-
     MafBlock* nextRemovedBlock() throw (Exception) {
       if (trashBuffer_.size() == 0) return 0;
       MafBlock* block = trashBuffer_.front();
       trashBuffer_.pop_front();
       return block;
     }
+
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -608,14 +647,15 @@ class FeatureFilterMafIterator:
     }
 
   public:
-    MafBlock* nextBlock() throw (Exception);
-
     MafBlock* nextRemovedBlock() throw (Exception) {
       if (trashBuffer_.size() == 0) return 0;
       MafBlock* block = trashBuffer_.front();
       trashBuffer_.pop_front();
       return block;
     }
+
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -663,8 +703,8 @@ class FeatureExtractor:
       }
     }
 
-  public:
-    MafBlock* nextBlock() throw (Exception);
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
 
@@ -727,11 +767,11 @@ class OutputMafIterator:
 
 
   public:
-    MafBlock* nextBlock() throw (Exception) {
-      MafBlock* block = iterator_->nextBlock();
-      if (output_ && block)
-        writeBlock(*output_, *block);
-      return block;
+    MafBlock* analyseCurrentBlock_() throw (Exception) {
+      currentBlock_ = iterator_->nextBlock();
+      if (output_ && currentBlock_)
+        writeBlock(*output_, *currentBlock_);
+      return currentBlock_;
     }
 
   private:
@@ -784,14 +824,7 @@ class OutputAlignmentMafIterator:
     void writeBlock(std::ostream& out, const MafBlock& block) const;
 };
 
-/**
- * @brief Outputs sequence statistics for each block, for a subset of sequences, given their name.
- * 
- * Computed statistics are:
- * - 4 base frequencies + gap frequencies + unresolved frequencies in each sequence
- * This is a read only iterator, the blocks are forwarded "as is", without modification.
- * Statistics are directly output to a file. Later versions may also forward a DataTable for later direct analysis.
- */
+/*
 class SequenceStatisticsMafIterator:
   public AbstractFilterMafIterator
 {
@@ -801,11 +834,6 @@ class SequenceStatisticsMafIterator:
     MafBlock* currentBlock_;
 
   public:
-    /**
-     * @param iterator The input iterator.
-     * @param species The list of species names for which statistics should be computed.
-     * @param output The output stream where to store the results.
-     */
     SequenceStatisticsMafIterator(MafIterator* iterator, const std::vector<std::string>& species, OutputStream* output) :
       AbstractFilterMafIterator(iterator),
       species_(species),
@@ -846,17 +874,57 @@ class SequenceStatisticsMafIterator:
   public:
     MafBlock* nextBlock() throw (Exception);
 
-};
+};*/
 
 /**
- * @brief Outputs sequence statistics for a pair of species, for each block.
- * 
- * Computed statistics are:
- * - Percent identity
- * This is a read only iterator, the blocks are forwarded "as is", without modification.
- * Statistics are directly output to a file. Later versions may also forward a DataTable for later direct analysis.
+ * @brief Compute a series of sequence statistics for each block.
+ *
+ * Computed statistics are stored into a matrix of double, which can be retrieved as well as statistics names,
+ * which can be retrieved using appropriate function.
+ * Listeners can be set up to automatically analyse the output after iterations are over.
  */
-class PairwiseSequenceStatisticsMafIterator:
+class SequenceStatisticsMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    std::vector<MafStatistics*> statistics_;
+    RowMatrix<double> results_;
+    std::vector<std::string> names_;
+    std::vector<double> tmpData_;
+
+  public:
+    /**
+     * @param iterator The input iterator.
+     * @param species The list of species names for which statistics should be computed.
+     * @param output The output stream where to store the results.
+     */
+    SequenceStatisticsMafIterator(MafIterator* iterator, const std::vector<MafStatistics*> statistics);
+
+  private:
+    SequenceStatisticsMafIterator(const SequenceStatisticsMafIterator& iterator) :
+      AbstractFilterMafIterator(0),
+      statistics_(iterator.statistics_),
+      results_(iterator.results_),
+      names_(iterator.names_),
+      tmpData_(iterator.tmpData_)
+    {}
+    
+    SequenceStatisticsMafIterator& operator=(const SequenceStatisticsMafIterator& iterator)
+    {
+      statistics_ = iterator.statistics_;
+      results_ = iterator.results_;
+      names_ = iterator.names_;
+      tmpData_ = iterator.tmpData_;
+      return *this;
+    }
+
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
+
+};
+
+
+/*class PairwiseSequenceStatisticsMafIterator:
   public AbstractFilterMafIterator
 {
   private:
@@ -866,12 +934,6 @@ class PairwiseSequenceStatisticsMafIterator:
     MafBlock* currentBlock_;
 
   public:
-    /**
-     * @param iterator The input iterator.
-     * @param species1 The first species to compare.
-     * @param species2 The second species to compare.
-     * @param output The output stream where to store the results.
-     */
     PairwiseSequenceStatisticsMafIterator(MafIterator* iterator, const std::string& species1, const std::string& species2, OutputStream* output) :
       AbstractFilterMafIterator(iterator),
       species1_(species1),
@@ -904,6 +966,7 @@ class PairwiseSequenceStatisticsMafIterator:
     MafBlock* nextBlock() throw (Exception);
 
 };
+*/
 
 /**
  * @brief This special iterator synchronizes two adaptors.
@@ -936,13 +999,13 @@ class MafIteratorSynchronizer:
     }
 
 
-  public:
-    MafBlock* nextBlock() throw (Exception) {
-      MafBlock* block = iterator_->nextBlock();
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception) {
+      currentBlock_ = iterator_->nextBlock();
       MafBlock* secondBlock = secondaryIterator_->nextBlock();
       if (secondBlock)
         delete secondBlock;
-      return block;
+      return currentBlock_;
     }
 
 };
