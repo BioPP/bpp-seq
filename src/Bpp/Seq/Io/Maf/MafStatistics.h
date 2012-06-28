@@ -161,6 +161,24 @@ class MafStatistics
 /**
  * @brief Partial implementation of MafStatistics, for convenience.
  */
+class AbstractMafStatistics:
+  public MafStatistics
+{
+  protected:
+    MafStatisticsResult result_;
+
+  public:
+    AbstractMafStatistics(): result_() {}
+    virtual ~AbstractMafStatistics() {}
+
+  public:
+    const MafStatisticsResult& getResult() const { return result_; }
+    std::vector<std::string> getSupportedTags() const { return result_.getAvailableTags(); }
+};
+
+/**
+ * @brief Partial implementation of MafStatistics, for convenience.
+ */
 class AbstractMafStatisticsSimple:
   public MafStatistics
 {
@@ -210,7 +228,7 @@ class BlockSizeMafStatistics:
     ~BlockSizeMafStatistics() {}
 
   public:
-    std::string getShortName() const { return "NbSequences"; }
+    std::string getShortName() const { return "BlockSize"; }
     std::string getFullName() const { return "Number of sequences."; }
     void compute(const MafBlock& block) {
       result_.setValue(static_cast<double>(block.getNumberOfSequences()));
@@ -228,11 +246,54 @@ class BlockLengthMafStatistics:
     ~BlockLengthMafStatistics() {}
 
   public:
-    std::string getShortName() const { return "NbSites"; }
+    std::string getShortName() const { return "BlockLength"; }
     std::string getFullName() const { return "Number of sites."; }
     void compute(const MafBlock& block) {
       result_.setValue(static_cast<double>(block.getNumberOfSites()));
     }
+};
+
+/**
+ * @brief Retrieves the alignment score of a maf block.
+ */
+class AlignmentScoreMafStatistics:
+  public AbstractMafStatisticsSimple
+{
+  public:
+    AlignmentScoreMafStatistics(): AbstractMafStatisticsSimple("AlnScore") {}
+    ~AlignmentScoreMafStatistics() {}
+
+  public:
+    std::string getShortName() const { return "AlnScore"; }
+    std::string getFullName() const { return "Alignment score."; }
+    void compute(const MafBlock& block) {
+      result_.setValue(block.getScore());
+    }
+};
+
+/**
+ * @brief Compute the base frequencies of a maf block.
+ *
+ * For each block, provides the following numbers (with their corresponding tags):
+ * - A: total counts of A
+ * - C: total counts of C
+ * - G: total counts of G
+ * - T [or U]: total counts of T/U
+ * - Gap: total counts of gaps
+ * - Unresolved: total counts of unresolved characters
+ * The sum of all characters should equal BlockSize x BlockLength 
+ */
+class FrequencesMafStatistics:
+  public AbstractMafStatistics
+{
+  public:
+    FrequencesMafStatistics(): AbstractMafStatistics() {}
+    ~FrequencesMafStatistics() {}
+
+  public:
+    std::string getShortName() const { return "Freq"; }
+    std::string getFullName() const { return "Character frequencies."; }
+    void compute(const MafBlock& block);
 };
 
 } // end of namespace bpp

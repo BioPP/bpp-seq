@@ -59,9 +59,9 @@ void AbstractMafIterator::fireIterationStartSignal_() {
   }
 }
 
-void AbstractMafIterator::fireIterationMoveSignal_() {
+void AbstractMafIterator::fireIterationMoveSignal_(const MafBlock& currentBlock) {
   for (std::vector<IterationListener*>::iterator it = iterationListeners_.begin(); it != iterationListeners_.end(); ++it) {
-    (*it)->iterationMoves();
+    (*it)->iterationMoves(currentBlock);
   }
 }
 
@@ -1134,8 +1134,12 @@ SequenceStatisticsMafIterator::SequenceStatisticsMafIterator(MafIterator* iterat
   for (size_t i = 0; i < statistics_.size(); ++i) {
     name = statistics_[i]->getShortName();
     vector<string> tags = statistics_[i]->getSupportedTags();
-    for (size_t j = 0; j < tags.size(); ++j) {
-      names_.push_back(name + "." + tags[j]);
+    if (tags.size() > 1) {
+      for (size_t j = 0; j < tags.size(); ++j) {
+        names_.push_back(name + "." + tags[j]);
+      }
+    } else {
+      names_.push_back(name);
     }
   }
   results_.resize(names_.size());

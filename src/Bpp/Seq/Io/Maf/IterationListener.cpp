@@ -48,18 +48,23 @@ using namespace bpp;
 void CsvStatisticsOutputIterationListener::iterationStarts()
 {
   const vector<string>& header = statsIterator_->getResultsColumnNames();
-  *output_ << header[0];
-  for (size_t i = 1; i < header.size(); ++i) {
+  *output_ << "Chr" << sep_ << "Start" << sep_ << "Stop";
+  for (size_t i = 0; i < header.size(); ++i) {
     *output_ << sep_ << header[i];
   }
   output_->endLine();
 }
 
-void CsvStatisticsOutputIterationListener::iterationMoves()
+void CsvStatisticsOutputIterationListener::iterationMoves(const MafBlock& currentBlock)
 {
   const vector<double>& values = statsIterator_->getResults();
-  *output_ << values[0];
-  for (size_t i = 1; i < values.size(); ++i) {
+  if (currentBlock.hasSequenceForSpecies(refSpecies_)) {
+    const MafSequence& refSeq = currentBlock.getSequenceForSpecies(refSpecies_);
+    *output_ << refSeq.getChromosome() << sep_ << refSeq.start() << sep_ << refSeq.stop();
+  } else {
+    *output_ << "NA" << sep_ << "NA" << sep_ << "NA";
+  }
+  for (size_t i = 0; i < values.size(); ++i) {
     *output_ << sep_ << values[i];
   }
   output_->endLine();

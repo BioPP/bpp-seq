@@ -38,12 +38,14 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "MafStatistics.h"
+#include "../../Container/SequenceContainerTools.h"
 
 //From bpp-core:
 #include <Bpp/Numeric/NumConstants.h>
 
 //From the STL:
 #include <cmath>
+#include <map>
 
 using namespace bpp;
 using namespace std;
@@ -55,6 +57,21 @@ void PairwiseDivergenceMafStatistics::compute(const MafBlock& block)
   } else {
     result_.setValue(NumConstants::NaN);
   }
+}
+
+void FrequencesMafStatistics::compute(const MafBlock& block) {
+  std::map<int, int> counts;
+  SequenceContainerTools::getCounts(block.getAlignment(), counts); 
+  for (int i = 0; i < static_cast<int>(block.getAlignment().getAlphabet()->getSize()); ++i) {
+    result_.setValue(block.getAlignment().getAlphabet()->intToChar(i), counts[i]);
+  }
+  result_.setValue("Gap", counts[block.getAlignment().getAlphabet()->getGapCharacterCode()]);
+  double countUnres = 0;
+  for (map<int, int>::iterator it = counts.begin(); it != counts.end(); ++it) {
+    if (block.getAlignment().getAlphabet()->isUnresolved(it->first))
+      countUnres += it->second;
+  }
+  result_.setValue("Unresolved", countUnres);
 }
 
 

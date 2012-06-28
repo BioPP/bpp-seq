@@ -70,8 +70,13 @@ class MafIterator
      */
     virtual MafBlock* nextBlock() throw (Exception) = 0;
 
+    virtual bool verbose() const = 0;
+    
+    virtual void verbose(bool yn) = 0;
+    
     virtual void addIterationListener(IterationListener* listener) = 0;
     
+
 };
 
 /**
@@ -84,9 +89,12 @@ class AbstractMafIterator:
 {
   protected:
     std::vector<IterationListener*> iterationListeners_;
+    bool started_;
+    bool verbose_;
 
   public:
-    AbstractMafIterator(): iterationListeners_() {}
+    AbstractMafIterator(): iterationListeners_(), started_(false), verbose_(true) {}
+    
     virtual ~AbstractMafIterator() {}
 
   public:
@@ -95,18 +103,25 @@ class AbstractMafIterator:
     }
 
     MafBlock* nextBlock() throw (Exception) {
+      if (!started_) {
+        fireIterationStartSignal_();
+        started_ = true;
+      }
       MafBlock* block = analyseCurrentBlock_();
       if (block)
-        fireIterationMoveSignal_();
+        fireIterationMoveSignal_(*block);
       else
         fireIterationStopSignal_();
       return block;
     }
+    
+    bool verbose() const { return verbose_; }
+    void verbose(bool yn) { verbose_ = yn; }
 
   protected:
     virtual MafBlock* analyseCurrentBlock_() = 0;
     virtual void fireIterationStartSignal_();
-    virtual void fireIterationMoveSignal_();
+    virtual void fireIterationMoveSignal_(const MafBlock& currentBlock);
     virtual void fireIterationStopSignal_();
 
 };
@@ -140,33 +155,29 @@ class AbstractFilterMafIterator:
     MafIterator* iterator_;
     MafBlock* currentBlock_;
     OutputStream* logstream_;
-    bool verbose_;
 
   public:
     AbstractFilterMafIterator(MafIterator* iterator) :
       AbstractMafIterator(),
       iterator_(iterator), currentBlock_(0),
-      logstream_(ApplicationTools::message), verbose_(true) {}
+      logstream_(ApplicationTools::message) {}
 
   private:
     AbstractFilterMafIterator(const AbstractFilterMafIterator& it):
       AbstractMafIterator(it), 
       iterator_(it.iterator_), currentBlock_(0),
-      logstream_(it.logstream_), verbose_(it.verbose_) {}
+      logstream_(it.logstream_) {}
 
     AbstractFilterMafIterator& operator=(const AbstractFilterMafIterator& it) {
       AbstractMafIterator::operator=(it);
       currentBlock_ = 0;
       iterator_  = it.iterator_;
       logstream_ = it.logstream_;
-      verbose_   = it.verbose_;
       return *this;
     }
 
   public:
     void setLogStream(OutputStream* logstream) { logstream_ = logstream; }
-    bool verbose() const { return verbose_; }
-    void verbose(bool yn) { verbose_ = yn; }
 
 };
 
@@ -433,7 +444,7 @@ class FullGapFilterMafIterator:
  */
 class AlignmentFilterMafIterator:
   public AbstractFilterMafIterator,
-  public MafTrashIterator
+  public virtual MafTrashIterator
 {
   private:
     std::vector<std::string> species_;
@@ -479,7 +490,7 @@ class AlignmentFilterMafIterator:
  */
 class AlignmentFilter2MafIterator:
   public AbstractFilterMafIterator,
-  public MafTrashIterator
+  public virtual MafTrashIterator
 {
   private:
     std::vector<std::string> species_;

@@ -54,7 +54,7 @@ class IterationListener
 
   public:
     virtual void iterationStarts() = 0;
-    virtual void iterationMoves() = 0;
+    virtual void iterationMoves(const MafBlock& currentBlock) = 0;
     virtual void iterationStops() = 0;
 };
 
@@ -96,19 +96,21 @@ class CsvStatisticsOutputIterationListener:
   private:
     OutputStream* output_;
     std::string sep_;
+    std::string refSpecies_;
 
   public:
-    CsvStatisticsOutputIterationListener(SequenceStatisticsMafIterator* iterator, OutputStream* output, const std::string& sep = "\t"):
-      AbstractStatisticsOutputIterationListener(iterator), output_(output), sep_(sep) {}
+    CsvStatisticsOutputIterationListener(SequenceStatisticsMafIterator* iterator, const std::string& refSpecies, OutputStream* output, const std::string& sep = "\t"):
+      AbstractStatisticsOutputIterationListener(iterator), output_(output), sep_(sep), refSpecies_(refSpecies) {}
     
     CsvStatisticsOutputIterationListener(const CsvStatisticsOutputIterationListener& listener):
-      AbstractStatisticsOutputIterationListener(listener), output_(listener.output_), sep_(listener.sep_) {}
+      AbstractStatisticsOutputIterationListener(listener), output_(listener.output_), sep_(listener.sep_), refSpecies_(listener.refSpecies_) {}
     
     CsvStatisticsOutputIterationListener& operator=(const CsvStatisticsOutputIterationListener& listener)
     {
       AbstractStatisticsOutputIterationListener::operator=(listener);
       output_ = listener.output_;
       sep_ = listener.sep_;
+      refSpecies_ = listener.refSpecies_;
       return *this;
     }
 
@@ -116,7 +118,7 @@ class CsvStatisticsOutputIterationListener:
 
   public:
     virtual void iterationStarts();
-    virtual void iterationMoves();
+    virtual void iterationMoves(const MafBlock& currentBlock);
     virtual void iterationStops() {}
   
 };
