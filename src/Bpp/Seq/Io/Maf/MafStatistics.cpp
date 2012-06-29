@@ -59,16 +59,29 @@ void PairwiseDivergenceMafStatistics::compute(const MafBlock& block)
   }
 }
 
-void FrequencesMafStatistics::compute(const MafBlock& block) {
+vector<string> CharacterCountsMafStatistics::getSupportedTags() const
+{
+  vector<string> tags;
+  for (int i = 0; i < static_cast<int>(alphabet_->getSize()); ++i) {
+    tags.push_back(alphabet_->intToChar(i));
+  }
+  tags.push_back("Gap");
+  tags.push_back("Unresolved");
+
+  return tags;
+}
+
+void CharacterCountsMafStatistics::compute(const MafBlock& block)
+{
   std::map<int, int> counts;
   SequenceContainerTools::getCounts(block.getAlignment(), counts); 
-  for (int i = 0; i < static_cast<int>(block.getAlignment().getAlphabet()->getSize()); ++i) {
-    result_.setValue(block.getAlignment().getAlphabet()->intToChar(i), counts[i]);
+  for (int i = 0; i < static_cast<int>(alphabet_->getSize()); ++i) {
+    result_.setValue(alphabet_->intToChar(i), counts[i]);
   }
-  result_.setValue("Gap", counts[block.getAlignment().getAlphabet()->getGapCharacterCode()]);
+  result_.setValue("Gap", counts[alphabet_->getGapCharacterCode()]);
   double countUnres = 0;
   for (map<int, int>::iterator it = counts.begin(); it != counts.end(); ++it) {
-    if (block.getAlignment().getAlphabet()->isUnresolved(it->first))
+    if (alphabet_->isUnresolved(it->first))
       countUnres += it->second;
   }
   result_.setValue("Unresolved", countUnres);

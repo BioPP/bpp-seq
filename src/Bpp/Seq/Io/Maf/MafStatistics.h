@@ -173,7 +173,6 @@ class AbstractMafStatistics:
 
   public:
     const MafStatisticsResult& getResult() const { return result_; }
-    std::vector<std::string> getSupportedTags() const { return result_.getAvailableTags(); }
 };
 
 /**
@@ -283,17 +282,29 @@ class AlignmentScoreMafStatistics:
  * - Unresolved: total counts of unresolved characters
  * The sum of all characters should equal BlockSize x BlockLength 
  */
-class FrequencesMafStatistics:
+class CharacterCountsMafStatistics:
   public AbstractMafStatistics
 {
-  public:
-    FrequencesMafStatistics(): AbstractMafStatistics() {}
-    ~FrequencesMafStatistics() {}
+  private:
+    const Alphabet* alphabet_;
 
   public:
-    std::string getShortName() const { return "Freq"; }
-    std::string getFullName() const { return "Character frequencies."; }
+    CharacterCountsMafStatistics(const Alphabet* alphabet): AbstractMafStatistics(), alphabet_(alphabet) {}
+    CharacterCountsMafStatistics(const CharacterCountsMafStatistics& stats):
+      AbstractMafStatistics(stats), alphabet_(stats.alphabet_) {}
+    CharacterCountsMafStatistics& operator=(const CharacterCountsMafStatistics& stats) {
+      AbstractMafStatistics::operator=(stats);
+      alphabet_ = stats.alphabet_;
+      return *this;
+    }
+
+    virtual ~CharacterCountsMafStatistics() {}
+
+  public:
+    std::string getShortName() const { return "Count"; }
+    std::string getFullName() const { return "Character counts."; }
     void compute(const MafBlock& block);
+    std::vector<std::string> getSupportedTags() const;
 };
 
 } // end of namespace bpp

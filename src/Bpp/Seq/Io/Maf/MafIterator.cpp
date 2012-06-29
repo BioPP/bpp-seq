@@ -1110,20 +1110,6 @@ MafBlock* QualityFilterMafIterator::analyseCurrentBlock_() throw (Exception)
   return currentBlock_;
 }*/
 
-/*MafBlock* PairwiseSequenceStatisticsMafIterator::nextBlock() throw (Exception)
-{
-  currentBlock_ = iterator_->nextBlock();
-  if (currentBlock_) {
-    if (currentBlock_->hasSequenceForSpecies(species1_) && currentBlock_->hasSequenceForSpecies(species2_)) {
-      *output_ << SequenceTools::getPercentIdentity(currentBlock_->getSequenceForSpecies(species1_), currentBlock_->getSequenceForSpecies(species2_), true);
-    } else {
-      *output_ << "NA";
-    }
-    output_->endLine();
-  }
-  return currentBlock_;
-}*/
-
 SequenceStatisticsMafIterator::SequenceStatisticsMafIterator(MafIterator* iterator, const std::vector<MafStatistics*> statistics) :
   AbstractFilterMafIterator(iterator),
   statistics_(statistics),
