@@ -987,6 +987,38 @@ class SequenceStatisticsMafIterator:
 */
 
 /**
+ * @brief Splits block into windows of given sizes.
+ */
+class WindowSplitMafIterator:
+  public AbstractFilterMafIterator
+{
+  private:
+    unsigned int windowSize_;
+    short align_;
+    std::deque<MafBlock*> blockBuffer_;
+
+  public:
+    static const short RAGGED_LEFT;
+    static const short RAGGED_RIGHT;
+    static const short CENTER;
+    static const short ADJUST;
+
+  public:
+    WindowSplitMafIterator(MafIterator* iterator, unsigned int windowSize, short splitOption = CENTER) throw (Exception):
+      AbstractFilterMafIterator(iterator),
+      windowSize_(windowSize), align_(splitOption), blockBuffer_()
+    {
+      if (splitOption != RAGGED_LEFT && splitOption != RAGGED_RIGHT
+          && splitOption != CENTER && splitOption != ADJUST)
+        throw Exception("WindowSplitMafIterator: unvalid split option: " + splitOption);
+    }
+
+  private:
+    MafBlock* analyseCurrentBlock_() throw (Exception);
+
+};
+
+/**
  * @brief This special iterator synchronizes two adaptors.
  *
  * It takes as input a main iterator and a secondary one. The nextBlock method of the secondary iterator will be
