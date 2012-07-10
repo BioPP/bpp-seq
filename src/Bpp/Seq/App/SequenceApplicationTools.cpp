@@ -103,7 +103,7 @@ Alphabet* SequenceApplicationTools::getAlphabet(
   else if (alphabet == "Codon")
   {
     if (args.find("letter") == args.end())
-      throw Exception("Missing alphabet in Codon : " + alphabet);
+      throw Exception("Missing 'letter' argument in Codon :" + alphabet);
 
     string alphnDesc = ApplicationTools::getStringParameter("letter", args, "RNA");
     string alphn;
