@@ -1459,3 +1459,56 @@ void OutputAlignmentMafIterator::writeBlock(std::ostream& out, const MafBlock& b
   writer_.write(out, aln);
 }
 
+const short WindowSplitMafIterator::RAGGED_LEFT = 0;
+const short WindowSplitMafIterator::RAGGED_RIGHT = 1;
+const short WindowSplitMafIterator::CENTER = 2;
+const short WindowSplitMafIterator::ADJUST= 3;
+
+MafBlock* WindowSplitMafIterator::analyseCurrentBlock_() throw (Exception)
+{
+  while (blockBuffer_.size() == 0) {
+    //Build a new series of windows:
+    MafBlock* block = iterator_->nextBlock();
+    if (!block) return 0; //No more block.
+
+    unsigned int pos = 0;
+    unsigned int size = windowSize_;
+    unsigned int bSize = block->getNumberOfSites();
+
+    switch (align_) {
+      case (RAGGED_RIGHT) : { pos = bSize % windowSize_; break; }
+      case (CENTER)       : { pos = (bSize % windowSize_) / 2; break; }
+      case (ADJUST)       : {
+          unsigned int x = bSize / windowSize_;
+          if (x == 0) size = bSize;
+          else        size = bSize / x;
+          break;
+        }               
+      default             : { }
+    }
+    //cout << "Effective size: " << size << endl;
+    for(unsigned int i = pos; i < bSize; i += size) {
+      MafBlock* newBlock = new MafBlock();
+      newBlock->setScore(block->getScore());
+      newBlock->setPass(block->getPass());
+      if (align_ == ADJUST) {
+        if (bSize - (i + size) > 0 && bSize - (i + size) < size) {
+          //cout << "Old size: " << size;
+          size = bSize - i; //Adjust for last block because of rounding.
+                            //this should not increase size by more than 1!
+          //cout << " => new size: " << size << endl;
+        }
+      }
+      for (unsigned int j = 0; j < block->getNumberOfSequences(); ++j) {
+        auto_ptr<MafSequence> subseq(block->getSequence(j).subSequence(i, size));
+        newBlock->addSequence(*subseq);
+      }
+      blockBuffer_.push_back(newBlock);
+    }
+  }
+  
+  MafBlock* nxtBlock = blockBuffer_.front();
+  blockBuffer_.pop_front();
+  return nxtBlock;
+}
+

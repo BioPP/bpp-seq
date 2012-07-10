@@ -87,4 +87,3 @@ void CharacterCountsMafStatistics::compute(const MafBlock& block)
   result_.setValue("Unresolved", countUnres);
 }
 
-
