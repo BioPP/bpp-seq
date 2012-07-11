@@ -307,6 +307,74 @@ class CharacterCountsMafStatistics:
     std::vector<std::string> getSupportedTags() const;
 };
 
+/**
+ * @brief Compute the Site Frequency Spectrum of a maf block.
+ *
+ * The ancestral states are considered as unknown, so that 10000 and 11110 sites are treated equally.
+ */
+class SiteFrequencySpectrumMafStatistics:
+  public AbstractMafStatistics
+{
+  private:
+    class Categorizer {
+      private:
+        std::vector<double> bounds_;
+
+      public:
+        Categorizer(const std::vector<double>& bounds): bounds_(bounds) {
+          std::sort(bounds_.begin(), bounds_.end());
+        }
+
+      public:
+        unsigned int getNumberOfCategories() const { return (bounds_.size() - 1); }
+
+        //Category numbers start at 1!
+        unsigned int getCategory(double value) const throw (OutOfRangeException) {
+          if (value < bounds_[0])
+            throw OutOfRangeException("SiteFrequencySpectrumMafStatistics::Categorizer::getCategory.", value, *bounds_.begin(), *bounds_.rbegin());
+          for (size_t i = 1; i < bounds_.size(); ++i) {
+            if (value < bounds_[i])
+              return i;
+          }
+          throw OutOfRangeException("SiteFrequencySpectrumMafStatistics::Categorizer::getCategory.", value, *bounds_.begin(), *bounds_.rbegin());
+        }
+    };
+
+  private:
+    const Alphabet* alphabet_;
+    Categorizer categorizer_;
+    std::vector<unsigned int> counts_;
+
+  public:
+    SiteFrequencySpectrumMafStatistics(const Alphabet* alphabet, const std::vector<double>& bounds):
+      AbstractMafStatistics(),
+      alphabet_(alphabet),
+      categorizer_(bounds),
+      counts_(bounds.size() - 1) {}
+
+    SiteFrequencySpectrumMafStatistics(const SiteFrequencySpectrumMafStatistics& stats):
+      AbstractMafStatistics(stats),
+      alphabet_(stats.alphabet_),
+      categorizer_(stats.categorizer_),
+      counts_(stats.counts_) {}
+
+    SiteFrequencySpectrumMafStatistics& operator=(const SiteFrequencySpectrumMafStatistics& stats) {
+      AbstractMafStatistics::operator=(stats);
+      alphabet_    = stats.alphabet_;
+      categorizer_ = stats.categorizer_;
+      counts_      = stats.counts_;
+      return *this;
+    }
+
+    virtual ~SiteFrequencySpectrumMafStatistics() {}
+
+  public:
+    std::string getShortName() const { return "SiteFrequencySpectrum"; }
+    std::string getFullName() const { return "Site frequency spectrum."; }
+    void compute(const MafBlock& block);
+    std::vector<std::string> getSupportedTags() const;
+};
+
 } // end of namespace bpp
 
 #endif //_MAFSTATISTICS_H_

@@ -87,3 +87,66 @@ void CharacterCountsMafStatistics::compute(const MafBlock& block)
   result_.setValue("Unresolved", countUnres);
 }
 
+vector<string> SiteFrequencySpectrumMafStatistics::getSupportedTags() const
+{
+  vector<string> tags;
+  for (size_t i = 0; i < categorizer_.getNumberOfCategories(); ++i) {
+    tags.push_back("Bin" + TextTools::toString(i + 1)); 
+  }
+  tags.push_back("Unresolved");
+  tags.push_back("Saturated");
+  tags.push_back("Ignored");
+  return tags;
+}
+
+void SiteFrequencySpectrumMafStatistics::compute(const MafBlock& block)
+{
+  unsigned int nbUnresolved = 0;
+  unsigned int nbSaturated = 0;
+  unsigned int nbIgnored = 0;
+  counts_.assign(categorizer_.getNumberOfCategories(), 0);
+  int state;
+  for (unsigned int i = 0; i < block.getNumberOfSites(); ++i) {
+    //Note: we do not rely on SiteTool::getCounts as it would be unefficient to count everything.
+    const Site& site = block.getAlignment().getSite(i);
+    map<int, unsigned int> counts;
+    for (unsigned int j = 0; j < site.size(); ++j) {
+      state = site[j];
+      if (alphabet_->isGap(state) || alphabet_->isUnresolved(state)) {
+        nbIgnored++;
+        break;
+      } else {
+        counts[state]++;
+        if (counts.size() > 2) {
+          nbSaturated++;
+          break;
+        }
+      }
+    }
+    if (counts.size() > 0) {
+      //Determine frequency class:
+      double count;
+      if (counts.size() == 1) {
+        count = 0;
+      } else {
+        map<int, unsigned int>::iterator it = counts.begin();
+        unsigned int count1 = it->second;
+        it++;
+        unsigned int count2 = it->second;
+        count = min(count1, count2);
+      }
+      try {
+        counts_[categorizer_.getCategory(count) - 1]++;
+      } catch (OutOfRangeException& oof) {
+        nbIgnored++;
+      }
+    }
+  }
+  result_.setValue("Unresolved", nbUnresolved);
+  result_.setValue("Saturated", nbSaturated);
+  result_.setValue("Ignored", nbIgnored);
+  for (size_t i = 0; i < counts_.size(); ++i) {
+    result_.setValue("Bin" + TextTools::toString(i + 1), counts_[i]);
+  }
+}
+
