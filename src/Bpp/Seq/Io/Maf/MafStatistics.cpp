@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "MafStatistics.h"
 #include "../../Container/SequenceContainerTools.h"
+#include "../../Container/VectorSiteContainer.h"
 
 //From bpp-core:
 #include <Bpp/Numeric/NumConstants.h>
@@ -106,9 +107,11 @@ void SiteFrequencySpectrumMafStatistics::compute(const MafBlock& block)
   unsigned int nbIgnored = 0;
   counts_.assign(categorizer_.getNumberOfCategories(), 0);
   int state;
+  VectorSiteContainer alignment(alphabet_);
+  SequenceContainerTools::getSelectedSequences(block.getAlignment(), ingroup_, alignment);
   for (unsigned int i = 0; i < block.getNumberOfSites(); ++i) {
     //Note: we do not rely on SiteTool::getCounts as it would be unefficient to count everything.
-    const Site& site = block.getAlignment().getSite(i);
+    const Site& site = alignment.getSite(i);
     map<int, unsigned int> counts;
     for (unsigned int j = 0; j < site.size(); ++j) {
       state = site[j];

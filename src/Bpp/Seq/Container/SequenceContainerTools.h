@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -99,7 +99,7 @@ class SequenceContainerTools
      * @brief Add a specified set of sequences from a container to another.
      *
      * Sequences are specified by their position, beginning at 0.
-     * Name verification will be performed, only if the output contianer is not empty,
+     * Name verification will be performed, only if the output container is not empty,
      * based on the assumption that the container passed as argument is a correct one.
      * Redundant selection is not checked, so be careful with what you're doing!
      *
@@ -116,14 +116,14 @@ class SequenceContainerTools
      * @brief Add a specified set of sequences from a container to another.
      *
      * Sequences are specified by their names.
-     * Name verification will be performed, only if the output contianer is not empty,
+     * Name verification will be performed, only if the output container is not empty,
      * based on the assumption that the container passed as argument is a correct one.
      * Redundant selection is not checked, so be careful with what you're doing!
      *
      * @author Julien Dutheil
      *
      * @param sequences The container from wich sequences are to be taken.
-     * @param selection The positions of all sequences to retrieve.
+     * @param selection The names of all sequences to retrieve.
      * @param outputCont A container where the selection should be added.
      * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
      */

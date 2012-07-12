@@ -344,25 +344,31 @@ class SiteFrequencySpectrumMafStatistics:
     const Alphabet* alphabet_;
     Categorizer categorizer_;
     std::vector<unsigned int> counts_;
+    std::vector<std::string> ingroup_;
 
   public:
-    SiteFrequencySpectrumMafStatistics(const Alphabet* alphabet, const std::vector<double>& bounds):
+    SiteFrequencySpectrumMafStatistics(const Alphabet* alphabet, const std::vector<double>& bounds, const std::vector<std::string>& ingroup):
       AbstractMafStatistics(),
       alphabet_(alphabet),
       categorizer_(bounds),
-      counts_(bounds.size() - 1) {}
+      counts_(bounds.size() - 1),
+      ingroup_(ingroup)
+    {}
 
     SiteFrequencySpectrumMafStatistics(const SiteFrequencySpectrumMafStatistics& stats):
       AbstractMafStatistics(stats),
       alphabet_(stats.alphabet_),
       categorizer_(stats.categorizer_),
-      counts_(stats.counts_) {}
+      counts_(stats.counts_),
+      ingroup_(stats.ingroup_)
+    {}
 
     SiteFrequencySpectrumMafStatistics& operator=(const SiteFrequencySpectrumMafStatistics& stats) {
       AbstractMafStatistics::operator=(stats);
       alphabet_    = stats.alphabet_;
       categorizer_ = stats.categorizer_;
       counts_      = stats.counts_;
+      ingroup_     = stats.ingroup_;
       return *this;
     }
 
