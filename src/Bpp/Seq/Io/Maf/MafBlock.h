@@ -111,6 +111,17 @@ class MafBlock
       throw SequenceNotFoundException("MafBlock::getSequenceForSpecies. No sequence with the given species name in this block.", species);
     }
 
+    //Return all sequences with the species name.
+    std::vector<const MafSequence*> getSequencesForSpecies(const std::string& species) const throw (SequenceNotFoundException) {
+      std::vector<const MafSequence*> selection;
+      for (unsigned int i = 0; i < getNumberOfSequences(); ++i) {
+        const MafSequence* seq = &getSequence(i);
+        if (seq->getSpecies() == species)
+          selection.push_back(seq);
+      }
+      return selection;
+    }
+
     /**
      * @return The species names for all sequencies in the container.
      */

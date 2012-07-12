@@ -108,40 +108,49 @@ void SiteFrequencySpectrumMafStatistics::compute(const MafBlock& block)
   counts_.assign(categorizer_.getNumberOfCategories(), 0);
   int state;
   VectorSiteContainer alignment(alphabet_);
-  SequenceContainerTools::getSelectedSequences(block.getAlignment(), ingroup_, alignment, false);
-  for (unsigned int i = 0; i < block.getNumberOfSites(); ++i) {
-    //Note: we do not rely on SiteTool::getCounts as it would be unefficient to count everything.
-    const Site& site = alignment.getSite(i);
-    map<int, unsigned int> counts;
-    for (unsigned int j = 0; j < site.size(); ++j) {
-      state = site[j];
-      if (alphabet_->isGap(state) || alphabet_->isUnresolved(state)) {
-        nbIgnored++;
-        break;
-      } else {
-        counts[state]++;
-        if (counts.size() > 2) {
-          nbSaturated++;
-          break;
-        }
+  for (size_t i = 0; i < ingroup_.size(); ++i) {
+    if (block.hasSequenceForSpecies(ingroup_[i])) {
+      vector<const MafSequence*> selection = block.getSequencesForSpecies(ingroup_[i]);
+      for (size_t j = 0; j < selection.size(); ++j) {
+        alignment.addSequence(*selection[j]);
       }
     }
-    if (counts.size() > 0) {
-      //Determine frequency class:
-      double count;
-      if (counts.size() == 1) {
-        count = 0;
-      } else {
-        map<int, unsigned int>::iterator it = counts.begin();
-        unsigned int count1 = it->second;
-        it++;
-        unsigned int count2 = it->second;
-        count = min(count1, count2);
+  }
+  if (alignment.getNumberOfSequences() > 0) {
+    for (unsigned int i = 0; i < block.getNumberOfSites(); ++i) {
+      //Note: we do not rely on SiteTool::getCounts as it would be unefficient to count everything.
+      const Site& site = alignment.getSite(i);
+      map<int, unsigned int> counts;
+      for (unsigned int j = 0; j < site.size(); ++j) {
+        state = site[j];
+        if (alphabet_->isGap(state) || alphabet_->isUnresolved(state)) {
+          nbIgnored++;
+          break;
+        } else {
+          counts[state]++;
+          if (counts.size() > 2) {
+            nbSaturated++;
+            break;
+          }
+        }
       }
-      try {
-        counts_[categorizer_.getCategory(count) - 1]++;
-      } catch (OutOfRangeException& oof) {
-        nbIgnored++;
+      if (counts.size() > 0) {
+        //Determine frequency class:
+        double count;
+        if (counts.size() == 1) {
+          count = 0;
+        } else {
+          map<int, unsigned int>::iterator it = counts.begin();
+          unsigned int count1 = it->second;
+          it++;
+          unsigned int count2 = it->second;
+          count = min(count1, count2);
+        }
+        try {
+          counts_[categorizer_.getCategory(count) - 1]++;
+        } catch (OutOfRangeException& oof) {
+          nbIgnored++;
+        }
       }
     }
   }
