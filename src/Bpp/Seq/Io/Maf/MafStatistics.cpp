@@ -108,7 +108,7 @@ void SiteFrequencySpectrumMafStatistics::compute(const MafBlock& block)
   counts_.assign(categorizer_.getNumberOfCategories(), 0);
   int state;
   VectorSiteContainer alignment(alphabet_);
-  SequenceContainerTools::getSelectedSequences(block.getAlignment(), ingroup_, alignment);
+  SequenceContainerTools::getSelectedSequences(block.getAlignment(), ingroup_, alignment, false);
   for (unsigned int i = 0; i < block.getNumberOfSites(); ++i) {
     //Note: we do not rely on SiteTool::getCounts as it would be unefficient to count everything.
     const Site& site = alignment.getSite(i);

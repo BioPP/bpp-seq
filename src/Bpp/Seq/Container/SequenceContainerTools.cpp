@@ -50,7 +50,7 @@ using namespace std;
 
 /******************************************************************************/	
 	
-SequenceContainer * SequenceContainerTools::createContainerOfSpecifiedSize(const Alphabet* alphabet, unsigned int size)
+SequenceContainer* SequenceContainerTools::createContainerOfSpecifiedSize(const Alphabet* alphabet, unsigned int size)
 {
 	VectorSequenceContainer* vsc = new VectorSequenceContainer(alphabet);
 	for (unsigned int i = 0; i < size; ++i)
@@ -89,12 +89,17 @@ void SequenceContainerTools::getSelectedSequences(
 void SequenceContainerTools::getSelectedSequences(
   const SequenceContainer& sequences,
   const std::vector<std::string>& selection,
-  SequenceContainer& outputCont) throw (Exception)
+  SequenceContainer& outputCont, bool strict) throw (Exception)
 {
   bool checkNames = outputCont.getNumberOfSequences() > 0;
-  for (unsigned int i = 0; i < selection.size(); i++)
+  for (size_t i = 0; i < selection.size(); i++)
   {
-    outputCont.addSequence(sequences.getSequence(selection[i]), checkNames);
+    if (strict) {
+      outputCont.addSequence(sequences.getSequence(selection[i]), checkNames);
+    } else {
+      if (sequences.hasSequence(selection[i]))
+        outputCont.addSequence(sequences.getSequence(selection[i]), checkNames);
+    }
   }
 }
 

@@ -125,9 +125,11 @@ class SequenceContainerTools
      * @param sequences The container from wich sequences are to be taken.
      * @param selection The names of all sequences to retrieve.
      * @param outputCont A container where the selection should be added.
+     * @param strict If yes, trying to select a sequence that is not present
+     * will raise an exception. If no, only available sequence will be added.
      * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
      */
-    static void getSelectedSequences(const SequenceContainer& sequences, const std::vector<std::string>& selection, SequenceContainer& outputCont) throw (Exception);
+    static void getSelectedSequences(const SequenceContainer& sequences, const std::vector<std::string>& selection, SequenceContainer& outputCont, bool strict = true) throw (Exception);
 
     /**
      * @brief Remove all sequences that are not in a given selection from a given container.
