@@ -124,7 +124,7 @@ void SiteFrequencySpectrumMafStatistics::compute(const MafBlock& block)
       for (unsigned int j = 0; j < site.size(); ++j) {
         state = site[j];
         if (alphabet_->isGap(state) || alphabet_->isUnresolved(state)) {
-          nbIgnored++;
+          nbUnresolved++;
           break;
         } else {
           counts[state]++;

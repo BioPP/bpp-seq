@@ -297,7 +297,7 @@ MafBlock* BlockMergerMafIterator::analyseCurrentBlock_() throw (Exception)
         } catch (SequenceNotFoundException& snfe2) {
           //There was a first sequence, we just extend it:
           string ref1 = seq->getDescription();
-          seq->setToSizeR(incomingBlock_->getNumberOfSites() + globalSpace);
+          seq->setToSizeR(seq->size() + incomingBlock_->getNumberOfSites() + globalSpace);
           if (logstream_) {
             (*logstream_ << "BLOCK MERGER: extending " << ref1 << " with " << incomingBlock_->getNumberOfSites() << " gaps on the right.").endLine();
           }
@@ -306,7 +306,7 @@ MafBlock* BlockMergerMafIterator::analyseCurrentBlock_() throw (Exception)
         //There must be a second sequence then:
         seq.reset(new MafSequence(incomingBlock_->getSequenceForSpecies(allSp[i])));
         string ref2 = seq->getDescription();
-        seq->setToSizeL(currentBlock_->getNumberOfSites() + globalSpace);
+        seq->setToSizeL(seq->size() + currentBlock_->getNumberOfSites() + globalSpace);
         if (logstream_) {
           (*logstream_ << "BLOCK MERGER: adding " << ref2 << " and extend it with " << currentBlock_->getNumberOfSites() << " gaps on the left.").endLine();
         }
