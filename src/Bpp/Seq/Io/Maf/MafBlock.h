@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "MafSequence.h"
 #include "../../Container/AlignedSequenceContainer.h"
 
+#include <Bpp/Clonable.h>
+
 namespace bpp {
 
 /**
@@ -50,19 +52,51 @@ namespace bpp {
  *
  * This class basically contains a AlignedSequenceContainer made of MafSequence objects.
  */
-class MafBlock
+class MafBlock:
+  public virtual Clonable
 {
   private:
     double score_;
     unsigned int pass_;
     AlignedSequenceContainer alignment_;
+    std::map<std::string, Clonable*> properties_;
 
   public:
     MafBlock() :
       score_(log(0)),
       pass_(0),
-      alignment_(&AlphabetTools::DNA_ALPHABET)
+      alignment_(&AlphabetTools::DNA_ALPHABET),
+      properties_()
     {}
+
+    MafBlock(const MafBlock& block):
+      score_(block.score_),
+      pass_(block.pass_),
+      alignment_(block.alignment_),
+      properties_()
+    {
+      std::map<std::string, Clonable*>::const_iterator it;
+      for (it = block.properties_.begin(); it != block.properties_.end(); ++it) {
+        properties_[it->first] = it->second->clone();
+      }
+    }
+
+    MafBlock& operator=(const MafBlock& block)
+    {
+      score_     = block.score_;
+      pass_      = block.pass_;
+      alignment_ = block.alignment_;
+      deleteProperties_();
+      std::map<std::string, Clonable*>::const_iterator it;
+      for (it = block.properties_.begin(); it != block.properties_.end(); ++it) {
+        properties_[it->first] = it->second->clone();
+      }
+      return *this;
+    }
+
+    MafBlock* clone() const { return new MafBlock(*this); }
+
+    ~MafBlock() { deleteProperties_(); }
 
   public:
     void setScore(double score) { score_ = score; }
@@ -144,6 +178,72 @@ class MafBlock
       std::string desc;
       desc += TextTools::toString(getNumberOfSequences()) + "x" + TextTools::toString(getNumberOfSites());
       return desc;
+    }
+
+    /**
+     * @return True or False, if data are associated to the given property.
+     * @param property The name of the property to look for.
+     */
+    bool hasProperty(const std::string& property) const
+    {
+      std::map<std::string, Clonable*>::const_iterator it = properties_.find(property);
+      return it != properties_.end();
+    }
+
+    /**
+     * @brief Get the data associated to a query property.
+     *
+     * @param property The property to look for.
+     * @return The data associated to the given property.
+     * @throw Exception if no data is associated to the given property.
+     */
+    const Clonable& getProperty(const std::string& property) const throw (Exception)
+    {
+      std::map<std::string, Clonable*>::const_iterator it = properties_.find(property);
+      if (it == properties_.end())
+        throw Exception("MafBlock::getProperty. No data for property: " + property + " in block.");
+      return *it->second;
+    }
+
+    /**
+     * @brief Delete the data associated to a query property.
+     *
+     * @param property The property to look for.
+     * @throw Exception if no data is associated to the given property.
+     */
+    void deleteProperty(const std::string& property) throw (Exception)
+    {
+      std::map<std::string, Clonable*>::iterator it = properties_.find(property);
+      if (it == properties_.end())
+        throw Exception("MafBlock::deleteProperty. No data for property: " + property + " in block.");
+      delete it->second;
+      properties_.erase(it);
+    }
+
+    /**
+     * @brief Set the data associated to a query property.
+     *
+     * An existing data associated to this property will be deleted and replaced by the new one.
+     * @param property The property to look for.
+     * @throw Exception if the pointer toward the input data is NULL.
+     */
+    void setProperty(const std::string& property, Clonable* data) throw (Exception) 
+    {
+      if (!data)
+        throw Exception("MafBlock::setProperty. Pointer to data is NULL.");
+      if (hasProperty(property))
+        deleteProperty(property);
+      properties_[property] = data;
+    }
+
+  private:
+    void deleteProperties_()
+    {
+      std::map<std::string, Clonable*>::const_iterator it;
+      for (it = properties_.begin(); it != properties_.end(); ++it) {
+        delete it->second;
+      }
+      properties_.clear();
     }
 };
 
