@@ -836,58 +836,6 @@ class OutputAlignmentMafIterator:
     void writeBlock(std::ostream& out, const MafBlock& block) const;
 };
 
-/*
-class SequenceStatisticsMafIterator:
-  public AbstractFilterMafIterator
-{
-  private:
-    std::vector<std::string> species_;
-    OutputStream* output_;
-    MafBlock* currentBlock_;
-
-  public:
-    SequenceStatisticsMafIterator(MafIterator* iterator, const std::vector<std::string>& species, OutputStream* output) :
-      AbstractFilterMafIterator(iterator),
-      species_(species),
-      output_(output),
-      currentBlock_(0)
-    {
-      for (std::vector<std::string>::iterator sp = species_.begin(); sp != species_.end(); ++sp) {
-        if (sp > species_.begin())
-          *output_ << "\t";
-        (*output_ << *sp << ".A\t"
-                  << *sp << ".C\t"
-                  << *sp << ".G\t"
-                  << *sp << ".T\t"
-                  << *sp << ".gap\t"
-                  << *sp << ".NbSites\t"
-                  << *sp << ".NbComplete\t"
-                  << *sp << ".NbUnresolved");
-      }
-      output_->endLine();
-    }
-
-  private:
-    SequenceStatisticsMafIterator(const SequenceStatisticsMafIterator& iterator) :
-      AbstractFilterMafIterator(0),
-      species_(iterator.species_),
-      output_(iterator.output_),
-      currentBlock_(0)
-    {}
-    
-    SequenceStatisticsMafIterator& operator=(const SequenceStatisticsMafIterator& iterator)
-    {
-      species_       = iterator.species_;
-      output_        = iterator.output_;
-      currentBlock_  = 0;
-      return *this;
-    }
-
-  public:
-    MafBlock* nextBlock() throw (Exception);
-
-};*/
-
 /**
  * @brief Compute a series of sequence statistics for each block.
  *
@@ -942,49 +890,6 @@ class SequenceStatisticsMafIterator:
 };
 
 
-/*class PairwiseSequenceStatisticsMafIterator:
-  public AbstractFilterMafIterator
-{
-  private:
-    std::string species1_;
-    std::string species2_;
-    OutputStream* output_;
-    MafBlock* currentBlock_;
-
-  public:
-    PairwiseSequenceStatisticsMafIterator(MafIterator* iterator, const std::string& species1, const std::string& species2, OutputStream* output) :
-      AbstractFilterMafIterator(iterator),
-      species1_(species1),
-      species2_(species2),
-      output_(output),
-      currentBlock_(0)
-    {
-      (*output_ << "PercentId").endLine();
-    }
-
-  private:
-    PairwiseSequenceStatisticsMafIterator(const PairwiseSequenceStatisticsMafIterator& iterator) :
-      AbstractFilterMafIterator(0),
-      species1_(iterator.species1_),
-      species2_(iterator.species2_),
-      output_(iterator.output_),
-      currentBlock_(0)
-    {}
-    
-    PairwiseSequenceStatisticsMafIterator& operator=(const PairwiseSequenceStatisticsMafIterator& iterator)
-    {
-      species1_     = iterator.species1_;
-      species2_     = iterator.species2_;
-      output_       = iterator.output_;
-      currentBlock_ = 0;
-      return *this;
-    }
-
-  public:
-    MafBlock* nextBlock() throw (Exception);
-
-};
-*/
 
 /**
  * @brief Splits block into windows of given sizes.
@@ -1017,6 +922,8 @@ class WindowSplitMafIterator:
     MafBlock* analyseCurrentBlock_() throw (Exception);
 
 };
+
+
 
 /**
  * @brief This special iterator synchronizes two adaptors.
