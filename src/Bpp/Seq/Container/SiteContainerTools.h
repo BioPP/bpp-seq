@@ -391,7 +391,7 @@ class SiteContainerTools
      * If set to yes, the gap option will also apply to unresolved characters.
      * @return All pairwise similarity measures.
      */
-    static DistanceMatrix* computeSimilarityMatrix(const SiteContainer& sites, bool dist = false, const std::string & gapOption = SIMILARITY_NOFULLGAP, bool unresolvedAsGap = true);
+    static DistanceMatrix* computeSimilarityMatrix(const SiteContainer& sites, bool dist = false, const std::string& gapOption = SIMILARITY_NOFULLGAP, bool unresolvedAsGap = true);
 
     static const std::string SIMILARITY_ALL;
     static const std::string SIMILARITY_NOFULLGAP;
