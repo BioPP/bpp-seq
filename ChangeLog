@@ -1,3 +1,6 @@
+30/07/12 Julien Dutheil
+* Moved features, fastq and maf to new bpp-seq-omics library.
+
 18/07/12 Julien Dutheil
 * Bug fixed in merge maf iterator, in case a sequence is missing in one of the two blocks.
 

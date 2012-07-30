@@ -1,4 +1,0 @@
-#include "Feature/GenBank.all"
-#include "Feature/Gff.all"
-#include "Feature/Gtf.all"
-#include "Feature/SequenceFeature.h"

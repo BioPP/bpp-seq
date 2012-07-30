@@ -49,7 +49,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Sequence.h"
 #include "SymbolListTools.h"
 #include "NucleicAcidsReplication.h"
-#include "Feature/SequenceFeature.h"
 #include <Bpp/Exceptions.h>
 #include <Bpp/Numeric/Random/RandomTools.h>
 #include <Bpp/Numeric/Stat/StatTest.h>
@@ -122,19 +121,6 @@ class SequenceTools:
 		 * @throw IndexOutOfBoundsException, Exception In case of bad indices.
 		 */
 		static Sequence* subseq(const Sequence& sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception) ;
-
-    /**
-     * @brief Extract a sub-sequence given a SeqRange.
-     *
-     * The sub-sequence is revese-complemented if SeqRange is in negative
-     * strand.
-     *
-     * @param seq The Sequence to trunc.
-     * @param range The SeqRange to extract.
-     * @return A new Sequence object with the given subsequence oriented
-     * according to the SeqRange.
-     */
-    static Sequence* extract(const Sequence& seq, const SeqRange& range);
 
 		/**
 		 * @brief Concatenate two sequences.
