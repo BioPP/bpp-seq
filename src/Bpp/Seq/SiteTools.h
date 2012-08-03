@@ -103,10 +103,11 @@ public:
    * @param site A site.
    * @param ignoreUnknown If true, positions with unknown positions will be ignored.
    * Otherwise, a site with one single state + any uncertain state will not be considered as constant.
+   * @param unresolvedRaisesException In case of ambiguous case (gap only site for instance), throw an exception. Otherwise returns false.
    * @return True if the site is made of only one state.
-   * @throw EmptySiteException If the site has size 0.
+   * @throw EmptySiteException If the site has size 0 or if the site cannot be resolved (for instance is made of gaps only) and unresolvedRaisesException is set to true.
    */
-  static bool isConstant(const Site& site, bool ignoreUnknown = false) throw (EmptySiteException);
+  static bool isConstant(const Site& site, bool ignoreUnknown = false, bool unresolvedRaisesException = true) throw (EmptySiteException);
 
   /**
    * @param site1 The first site.

@@ -146,7 +146,7 @@ bool SiteTools::areSitesIdentical(const Site& site1, const Site& site2)
 
 /******************************************************************************/
 
-bool SiteTools::isConstant(const Site& site, bool ignoreUnknown) throw (EmptySiteException)
+bool SiteTools::isConstant(const Site& site, bool ignoreUnknown, bool unresolvedRaisesException) throw (EmptySiteException)
 {
   // Empty site checking
   if (site.size() == 0) throw EmptySiteException("SiteTools::isConstant: Incorrect specified site, size must be > 0", &site);
@@ -163,7 +163,12 @@ bool SiteTools::isConstant(const Site& site, bool ignoreUnknown) throw (EmptySit
       s = site[i];
       i++;
     }
-    if (s == unknown || s == gap) throw EmptySiteException("SiteTools::isConstant: Site is only made of gaps or generic characters.");
+    if (s == unknown || s == gap) {
+      if (unresolvedRaisesException)
+        throw EmptySiteException("SiteTools::isConstant: Site is only made of gaps or generic characters.");
+      else
+        return false;
+    }
     while (i < site.size())
     {
       if (site[i] != s && site[i] != gap && site[i] != unknown) return false;
@@ -350,7 +355,7 @@ bool SiteTools::isParsimonyInformativeSite(const Site& site) throw (EmptySiteExc
   // Empty site checking
   if (site.size() == 0) throw EmptySiteException("SiteTools::isParsimonyInformativeSite: Incorrect specified site, size must be > 0", &site);
   // For all site's characters
-  if (SiteTools::isConstant(site)) return false;
+  if (SiteTools::isConstant(site, false, false)) return false;
   map<int,unsigned int> counts;
   SymbolListTools::getCounts(site, counts);
   unsigned int npars = 0;
