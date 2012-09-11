@@ -1,3 +1,6 @@
+11/09/12 Julien Dutheil
+* Added generic container converter function.
+
 30/07/12 Julien Dutheil
 * Moved features, fastq and maf to new bpp-seq-omics library.
 

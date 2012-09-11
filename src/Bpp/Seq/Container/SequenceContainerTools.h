@@ -45,6 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 
 #include "SequenceContainer.h"
 #include "OrderedSequenceContainer.h"
@@ -94,7 +95,27 @@ class SequenceContainerTools
       const Alphabet* alphabet,
       const std::vector<std::string>& seqNames)
       throw (Exception);
-      
+ 
+    /**
+     * @brief Generic function which creates a new container from another one,
+     * by specifying the class of sequence to be stored.
+     *
+     * Compared to several copy constructors, this function allows to change the class of
+     * the inner sequence class used for storing sequences.
+     * The function used the addSequence method, so that it can also be used to
+     * concatenate containers.
+     *
+     * @param input The container to copy.
+     * @param output The container where new sequences will be appended.
+     */
+    template<class ContFrom, class ContTo, class Seq>
+    static void convertContainer(const ContFrom& input, ContTo& output) {
+      for (unsigned int i = 0; i < input.getNumberOfSequences(); ++i) {
+        std::auto_ptr<Seq> seq(new Seq(input.getSequence(i)));
+        output.addSequence(*seq);
+      }
+    }
+
     /**
      * @brief Add a specified set of sequences from a container to another.
      *
