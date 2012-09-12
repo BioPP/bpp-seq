@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -69,7 +69,7 @@ namespace bpp
        * @param sc        The container to write.
        * @throw Exception If the file is not in the specified format.
        */
-      virtual void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception) = 0;
+      virtual void write(std::ostream& output, const SequenceContainer & sc) const throw (Exception) = 0;
 
       /**
        * @brief Write a container to a file.
@@ -80,7 +80,7 @@ namespace bpp
        *                  Any previous content will be lost.
        * @throw Exception If the file is not in the specified format.
        */
-      virtual void write(const std::string & path, const SequenceContainer & sc, bool overwrite) const throw (Exception) = 0;
+      virtual void write(const std::string& path, const SequenceContainer & sc, bool overwrite) const throw (Exception) = 0;
 
   };
 

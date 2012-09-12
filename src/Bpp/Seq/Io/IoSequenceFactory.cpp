@@ -42,18 +42,18 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-const string IOSequenceFactory::FASTA_FORMAT              = "Fasta";
-const string IOSequenceFactory::MASE_FORMAT               = "Mase";  
-const string IOSequenceFactory::CLUSTAL_FORMAT            = "Clustal";
-const string IOSequenceFactory::DCSE_FORMAT               = "DCSE";  
-const string IOSequenceFactory::PHYLIP_FORMAT_INTERLEAVED = "Phylip I";  
-const string IOSequenceFactory::PHYLIP_FORMAT_SEQUENTIAL  = "Phylip S";  
-const string IOSequenceFactory::PAML_FORMAT_INTERLEAVED   = "PAML I";  
-const string IOSequenceFactory::PAML_FORMAT_SEQUENTIAL    = "PAML S";  
-const string IOSequenceFactory::GENBANK_FORMAT            = "GenBank";  
-const string IOSequenceFactory::NEXUS_FORMAT              = "Nexus";  
+const string IoSequenceFactory::FASTA_FORMAT              = "Fasta";
+const string IoSequenceFactory::MASE_FORMAT               = "Mase";  
+const string IoSequenceFactory::CLUSTAL_FORMAT            = "Clustal";
+const string IoSequenceFactory::DCSE_FORMAT               = "DCSE";  
+const string IoSequenceFactory::PHYLIP_FORMAT_INTERLEAVED = "Phylip I";  
+const string IoSequenceFactory::PHYLIP_FORMAT_SEQUENTIAL  = "Phylip S";  
+const string IoSequenceFactory::PAML_FORMAT_INTERLEAVED   = "PAML I";  
+const string IoSequenceFactory::PAML_FORMAT_SEQUENTIAL    = "PAML S";  
+const string IoSequenceFactory::GENBANK_FORMAT            = "GenBank";  
+const string IoSequenceFactory::NEXUS_FORMAT              = "Nexus";  
 
-ISequence* IOSequenceFactory::createReader(const string& format) throw (Exception)
+ISequence* IoSequenceFactory::createReader(const string& format) throw (Exception)
 {
        if(format == FASTA_FORMAT) return new Fasta();
   else if(format == MASE_FORMAT) return new Mase();
@@ -67,7 +67,7 @@ ISequence* IOSequenceFactory::createReader(const string& format) throw (Exceptio
   else throw Exception("Format " + format + " is not supported for input.");
 }
   
-IAlignment* IOSequenceFactory::createAlignmentReader(const string& format) throw (Exception)
+IAlignment* IoSequenceFactory::createAlignmentReader(const string& format) throw (Exception)
 {
        if(format == CLUSTAL_FORMAT) return new Clustal();
   else if(format == DCSE_FORMAT) return new DCSE();
@@ -79,14 +79,14 @@ IAlignment* IOSequenceFactory::createAlignmentReader(const string& format) throw
   else throw Exception("Format " + format + " is not supported for alignment input.");
 }
   
-OSequence* IOSequenceFactory::createWriter(const string& format) throw (Exception)
+OSequence* IoSequenceFactory::createWriter(const string& format) throw (Exception)
 {
        if(format == FASTA_FORMAT) return new Fasta();
   else if(format == MASE_FORMAT) return new Mase();
   else throw Exception("Format " + format + " is not supported for output.");
 }
 
-OAlignment* IOSequenceFactory::createAlignmentWriter(const string& format) throw (Exception)
+OAlignment* IoSequenceFactory::createAlignmentWriter(const string& format) throw (Exception)
 {
        if (format == FASTA_FORMAT) return new Fasta();
   else if (format == MASE_FORMAT) return new Mase();

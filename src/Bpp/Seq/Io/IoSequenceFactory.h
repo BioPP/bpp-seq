@@ -1,11 +1,11 @@
 //
-// File IOSequenceFactory.h
+// File IoSequenceFactory.h
 // Created by: Julien Dutheil
 // Created on: Tue 18/04/06 10:24
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -49,7 +49,7 @@ namespace bpp
 /**
  * @brief Utilitary class for creating sequence readers and writers.
  */
-class IOSequenceFactory
+class IoSequenceFactory
 {
   public:
     static const std::string FASTA_FORMAT;  
@@ -71,13 +71,13 @@ class IOSequenceFactory
      * Example:
      * @code
      * Alphabet* alphabet = new DNA();
-     * ISequence* seqReader = IOSequenceFactory().createReader(IOSequenceFactory::FASTA_FORMAT);
+     * ISequence* seqReader = IoSequenceFactory().createReader(IoSequenceFactory::FASTA_FORMAT);
      * SequenceContainer* sequences = seqReader->read("file.fasta", alphabet);
      * delete seqReader;
      * @endcode
      */
-    IOSequenceFactory() {}
-    virtual ~IOSequenceFactory() {}
+    IoSequenceFactory() {}
+    virtual ~IoSequenceFactory() {}
   
     /**
      * @brief Get a new dynamically created ISequence object.

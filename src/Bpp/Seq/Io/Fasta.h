@@ -62,6 +62,7 @@ namespace bpp
 class Fasta:
   public AbstractISequence,
   public AbstractOSequence,
+  public virtual OAlignment,
   public virtual ISequenceStream,
   public virtual OSequenceStream
 {
@@ -113,8 +114,8 @@ class Fasta:
      * @copydoc OSequence::write(std::ostream& output, const SequenceContainer& sc) const
      * @author Sylvain Gaillard
      */
-    void write(std::ostream & output, const SequenceContainer & sc) const throw (Exception);
-    void write(const std::string & path, const SequenceContainer & sc, bool overwrite=true) const throw (Exception)
+    void write(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
+    void write(const std::string& path, const SequenceContainer& sc, bool overwrite=true) const throw (Exception)
     {
       AbstractOSequence::write(path, sc, overwrite);
     }
