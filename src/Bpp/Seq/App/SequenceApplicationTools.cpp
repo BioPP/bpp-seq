@@ -219,90 +219,13 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional);
-  string format = "";
-  map<string, string> args;
-  KeyvalTools::parseProcedure(sequenceFormat, format, args);
-  if (verbose)
-    ApplicationTools::displayResult("Sequence format " + suffix, format);
-  auto_ptr<ISequence> iSeq;
-  if (format == "Mase")
-  {
-    iSeq.reset(new Mase());
-  }
-  else if (format == "Phylip")
-  {
-    bool sequential = true, extended = true;
-    string split = "  ";
-    if (args.find("order") != args.end())
-    {
-      if (args["order"] == "sequential")
-        sequential = true;
-      else if (args["order"] == "interleaved")
-        sequential = false;
-      else
-        ApplicationTools::displayWarning("Argument '" +
-                                         args["order"] +
-                                         "' for argument 'Phylip#order' is unknown. " +
-                                         "Default used instead: sequential.");
-    }
-    else
-      ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
-    if (args.find("type") != args.end())
-    {
-      if (args["type"] == "extended")
-      {
-        extended = true;
-        split = ApplicationTools::getStringParameter("split", args, "spaces", "", true, false);
-        if (split == "spaces")
-          split = "  ";
-        else if (split == "tab")
-          split = "\t";
-        else
-          throw Exception("Unknown option for Phylip#split: " + split);
-      }
-      else if (args["type"] == "classic")
-        extended = false;
-      else
-        ApplicationTools::displayWarning("Argument '" +
-                                         args["type"] + "' for parameter 'Phylip#type' is unknown. " +
-                                         "Default used instead: extended.");
-    }
-    else
-      ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
-    iSeq.reset(new Phylip(extended, sequential, 100, true, split));
-  }
-  else if (format == "Fasta")
-  {
-    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", args, false, "", true, false);
-    bool extended    = ApplicationTools::getBooleanParameter("extended", args, false, "", true, false);
-    iSeq.reset(new Fasta(100, true, extended, strictNames));
-  }
-  else if (format == "Clustal")
-  {
-    unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", args, 0, "", true, false);
-    iSeq.reset(new Clustal(true, extraSpaces));
-  }
-  else if (format == "Dcse")
-  {
-    iSeq.reset(new DCSE());
-  }
-  else if (format == "GenBank")
-  {
-    iSeq.reset(reinterpret_cast<ISequence*>(new GenBank())); // This is required to remove a strict-aliasing warning in gcc 4.4
-  }
-  else if (format == "Nexus")
-  {
-    iSeq.reset(new NexusIOSequence());
-  }
-  else
-  {
-    ApplicationTools::displayError("Unknown sequence format.");
-    exit(-1);
+  BppOSequenceReaderFormat bppoReader;
+  auto_ptr<ISequence> iSeq(bppoReader.read(sequenceFormat, verbose));
+  if (verbose) {
+    ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
+    ApplicationTools::displayResult("Sequence format " + suffix, iSeq->getFormatName());
   }
   SequenceContainer* sequences = iSeq->read(sequenceFilePath, alpha);
-
-  if (verbose)
-    ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
 
   return sequences;
 }

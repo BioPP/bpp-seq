@@ -1,6 +1,7 @@
 #include "Io/AbstractISequence.h"
 #include "Io/AbstractISequence2.h"
 #include "Io/AbstractOSequence.h"
+#include "Io/BppOSequenceReaderFormat.h"
 #include "Io/Clustal.h"
 #include "Io/Dcse.h"
 #include "Io/Fasta.h"
