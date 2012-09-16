@@ -49,7 +49,7 @@ using namespace bpp;
 #include <iomanip>
 using namespace std;
 
-void Clustal::appendFromStream(std::istream& input, SiteContainer & sc) const throw (Exception)
+void Clustal::appendAlignmentFromStream(std::istream& input, SiteContainer & sc) const throw (Exception)
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("Clustal::read : fail to open file"); }
@@ -111,7 +111,7 @@ void Clustal::appendFromStream(std::istream& input, SiteContainer & sc) const th
   sc.setGeneralComments(comments);
 }
 
-void Clustal::write(std::ostream& output, const SiteContainer& sc) const throw (Exception)
+void Clustal::writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception)
 {
   output << "CLUSTAL W (1.81) multiple sequence alignment" << endl;
   output << endl;

@@ -4,7 +4,6 @@
 #include "Seq/Container.all"
 #include "Seq/DNAToRNA.h"
 #include "Seq/DistanceMatrix.h"
-#include "Seq/Feature.all"
 #include "Seq/GeneticCode.all"
 #include "Seq/Io.all"
 #include "Seq/NucleicAcidsReplication.h"

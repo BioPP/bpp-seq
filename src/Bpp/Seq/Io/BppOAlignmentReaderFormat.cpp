@@ -1,7 +1,7 @@
 //
-// File: BppOSequenceReaderFormat.cpp
+// File: BppOAlignmentReaderFormat.cpp
 // Created by: Julien Dutheil
-// Created on: Friday September 14th, 14:08
+// Created on: Friday September 15th, 22:06
 //
 
 /*
@@ -37,7 +37,7 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "BppOSequenceReaderFormat.h"
+#include "BppOAlignmentReaderFormat.h"
 
 #include <Bpp/Text/KeyvalTools.h>
 
@@ -47,14 +47,14 @@
 using namespace bpp;
 using namespace std;
 
-ISequence* BppOSequenceReaderFormat::read(const std::string& description, map<string, string>& param, bool verbose) throw (Exception)
+IAlignment* BppOAlignmentReaderFormat::read(const std::string& description, map<string, string>& param, bool verbose) throw (Exception)
 {
   string format = "";
   KeyvalTools::parseProcedure(description, format, param);
-  auto_ptr<ISequence> iSeq;
+  auto_ptr<IAlignment> iAln;
   if (format == "Mase")
   {
-    iSeq.reset(new Mase());
+    iAln.reset(new Mase());
   }
   else if (format == "Phylip")
   {
@@ -96,36 +96,32 @@ ISequence* BppOSequenceReaderFormat::read(const std::string& description, map<st
     }
     else
       ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
-    iSeq.reset(new Phylip(extended, sequential, 100, true, split));
+    iAln.reset(new Phylip(extended, sequential, 100, true, split));
   }
   else if (format == "Fasta")
   {
     bool strictNames = ApplicationTools::getBooleanParameter("strict_names", param, false, "", true, false);
     bool extended    = ApplicationTools::getBooleanParameter("extended", param, false, "", true, false);
-    iSeq.reset(new Fasta(100, true, extended, strictNames));
+    iAln.reset(new Fasta(100, true, extended, strictNames));
   }
   else if (format == "Clustal")
   {
     unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", param, 0, "", true, false);
-    iSeq.reset(new Clustal(true, extraSpaces));
+    iAln.reset(new Clustal(true, extraSpaces));
   }
   else if (format == "Dcse")
   {
-    iSeq.reset(new DCSE());
-  }
-  else if (format == "GenBank")
-  {
-    iSeq.reset(reinterpret_cast<ISequence*>(new GenBank())); // This is required to remove a strict-aliasing warning in gcc 4.4
+    iAln.reset(new DCSE());
   }
   else if (format == "Nexus")
   {
-    iSeq.reset(new NexusIOSequence());
+    iAln.reset(new NexusIOSequence());
   }
   else
   {
     throw Exception("Sequence format '" + format + "' unknown.");
   }
 
-  return iSeq.release();
+  return iAln.release();
 }
 

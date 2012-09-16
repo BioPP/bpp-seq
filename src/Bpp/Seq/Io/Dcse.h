@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _DCSE_H_
 #define _DCSE_H_
 
-#include "AbstractISequence2.h"
+#include "AbstractIAlignment.h"
 #include "../Sequence.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/AlignedSequenceContainer.h"
@@ -58,7 +58,8 @@ namespace bpp
  * http://www.psb.ugent.be/rRNA/help/formats/aliformat.html
  */
 class DCSE :
-  public AbstractIAlignment
+  public AbstractIAlignment,
+  public virtual ISequence
 {
     
   public: 
@@ -68,11 +69,27 @@ class DCSE :
   public:
   
     /**
-     * @name The AbstractISequence2 interface.
+     * @name The AbstractIAlignment interface.
      *
      * @{
      */
-    void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    /** @} */
+
+    /**
+     * @name The ISequence interface.
+     *
+     * As a SiteContainer is a subclass of SequenceContainer, we hereby implement the ISequence
+     * interface by downcasting the interface.
+     *
+     * @{
+     */
+    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const throw (Exception) {
+      return readAlignment(input, alpha);
+    }
+    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const throw (Exception) {
+      return readAlignment(path, alpha);
+    }
     /** @} */
 
     

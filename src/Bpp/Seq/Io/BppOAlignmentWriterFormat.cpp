@@ -1,7 +1,7 @@
 //
-// File: BppOSequenceReaderFormat.cpp
+// File: BppOAlignmentWriterFormat.cpp
 // Created by: Julien Dutheil
-// Created on: Friday September 14th, 14:08
+// Created on: Friday September 15th, 22:12
 //
 
 /*
@@ -37,7 +37,7 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "BppOSequenceReaderFormat.h"
+#include "BppOAlignmentWriterFormat.h"
 
 #include <Bpp/Text/KeyvalTools.h>
 
@@ -47,14 +47,19 @@
 using namespace bpp;
 using namespace std;
 
-ISequence* BppOSequenceReaderFormat::read(const std::string& description, map<string, string>& param, bool verbose) throw (Exception)
+OAlignment* BppOAlignmentWriterFormat::read(const std::string& description, map<string, string>& param, bool verbose) throw (Exception)
 {
   string format = "";
   KeyvalTools::parseProcedure(description, format, param);
-  auto_ptr<ISequence> iSeq;
-  if (format == "Mase")
+  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", param, 100, "", true, false);
+  auto_ptr<OAlignment> oAln;
+  if (format == "Fasta")
   {
-    iSeq.reset(new Mase());
+    oAln.reset(new Fasta(ncol));
+  }
+  else if (format == "Mase")
+  {
+    oAln.reset(new Mase(ncol));
   }
   else if (format == "Phylip")
   {
@@ -96,36 +101,17 @@ ISequence* BppOSequenceReaderFormat::read(const std::string& description, map<st
     }
     else
       ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
-    iSeq.reset(new Phylip(extended, sequential, 100, true, split));
+    oAln.reset(new Phylip(extended, sequential, ncol, true, split));
   }
-  else if (format == "Fasta")
+  else if (format == "Stockholm")
   {
-    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", param, false, "", true, false);
-    bool extended    = ApplicationTools::getBooleanParameter("extended", param, false, "", true, false);
-    iSeq.reset(new Fasta(100, true, extended, strictNames));
-  }
-  else if (format == "Clustal")
-  {
-    unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", param, 0, "", true, false);
-    iSeq.reset(new Clustal(true, extraSpaces));
-  }
-  else if (format == "Dcse")
-  {
-    iSeq.reset(new DCSE());
-  }
-  else if (format == "GenBank")
-  {
-    iSeq.reset(reinterpret_cast<ISequence*>(new GenBank())); // This is required to remove a strict-aliasing warning in gcc 4.4
-  }
-  else if (format == "Nexus")
-  {
-    iSeq.reset(new NexusIOSequence());
+    oAln.reset(reinterpret_cast<OAlignment*>(new Stockholm()));
   }
   else
   {
     throw Exception("Sequence format '" + format + "' unknown.");
   }
 
-  return iSeq.release();
+  return oAln.release();
 }
 

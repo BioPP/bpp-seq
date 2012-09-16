@@ -174,7 +174,7 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exc
 
 /******************************************************************************/
 
-void Fasta::appendFromStream(istream& input, SequenceContainer& vsc) const throw (Exception)
+void Fasta::appendSequencesFromStream(istream& input, SequenceContainer& vsc) const throw (Exception)
 {
   if (!input)
     throw IOException("Fasta::appendFromStream: can't read from istream input");
@@ -231,7 +231,7 @@ void Fasta::appendFromStream(istream& input, SequenceContainer& vsc) const throw
 
 /******************************************************************************/
 
-void Fasta::write(ostream& output, const SequenceContainer& sc) const throw (Exception)
+void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const throw (Exception)
 {
 	if (!output)
     throw IOException("Fasta::write: can't write to ostream output");

@@ -81,6 +81,9 @@ set(CPP_FILES
   Bpp/Seq/Io/NexusTools.cpp
   Bpp/Seq/Io/Stockholm.cpp
   Bpp/Seq/Io/BppOSequenceReaderFormat.cpp
+  Bpp/Seq/Io/BppOSequenceWriterFormat.cpp
+  Bpp/Seq/Io/BppOAlignmentReaderFormat.cpp
+  Bpp/Seq/Io/BppOAlignmentWriterFormat.cpp
   Bpp/Seq/App/SequenceApplicationTools.cpp
   )
 
@@ -135,8 +138,9 @@ set(H_FILES
   Bpp/Seq/GeneticCode/EchinodermMitochondrialGeneticCode.h
   Bpp/Seq/GeneticCode/YeastMitochondrialGeneticCode.h
   Bpp/Seq/Io/AbstractISequence.h
-  Bpp/Seq/Io/AbstractISequence2.h
+  Bpp/Seq/Io/AbstractIAlignment.h
   Bpp/Seq/Io/AbstractOSequence.h
+  Bpp/Seq/Io/AbstractOAlignment.h
   Bpp/Seq/Io/Clustal.h
   Bpp/Seq/Io/Dcse.h
   Bpp/Seq/Io/Fasta.h
@@ -158,6 +162,9 @@ set(H_FILES
   Bpp/Seq/Io/IoSequenceFactory.h
   Bpp/Seq/Io/SequenceFileIndex.h
   Bpp/Seq/Io/BppOSequenceReaderFormat.h
+  Bpp/Seq/Io/BppOSequenceWriterFormat.h
+  Bpp/Seq/Io/BppOAlignmentReaderFormat.h
+  Bpp/Seq/Io/BppOAlignmentWriterFormat.h
   Bpp/Seq/Container/VectorSequenceContainer.h
   Bpp/Seq/Container/VectorSiteContainer.h
   Bpp/Seq/Container/CompressedVectorSiteContainer.h

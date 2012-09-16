@@ -40,12 +40,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _STOCKHOLM_H_
 #define _STOCKHOLM_H_
 
-#include "AbstractISequence.h"
-#include "AbstractOSequence.h"
+#include "AbstractOAlignment.h"
 #include "../Sequence.h"
 #include "../Container/SequenceContainer.h"
-#include "ISequenceStream.h"
-#include "OSequenceStream.h"
 #include "../Container/AlignedSequenceContainer.h"
 
 namespace bpp
@@ -84,12 +81,12 @@ class Stockholm:
      * @{
      */
     /**
-     * @copydoc OAlignment::write(std::ostream& output, const SiteContainer& sc) const
+     * @copydoc OAlignment::writeAlignment(std::ostream& output, const SiteContainer& sc) const
      */
-    void write(std::ostream& output, const SiteContainer& sc) const throw (Exception);
-    void write(const std::string& path, const SiteContainer& sc, bool overwrite=true) const throw (Exception)
+    void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception);
+    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite=true) const throw (Exception)
     {
-      AbstractOAlignment::write(path, sc, overwrite);
+      AbstractOAlignment::writeAlignment(path, sc, overwrite);
     }
     /** @} */
   

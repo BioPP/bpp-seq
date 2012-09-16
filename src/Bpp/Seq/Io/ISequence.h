@@ -78,7 +78,7 @@ class ISequence :
      * @return A new SequenceContainer object.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual SequenceContainer* read(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
+    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
     /**
      * @brief Create a new container from a file.
      *
@@ -87,7 +87,7 @@ class ISequence :
      * @return A new SequenceContainer object.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual SequenceContainer* read(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
+    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
 
 };
 
@@ -97,7 +97,7 @@ class ISequence :
  * This interface defines the basic methods for reading aligned sequences from a file.
  */
 class IAlignment:
-  public virtual ISequence
+  public virtual IOSequence
 {
   public:
     IAlignment() {}
@@ -113,13 +113,7 @@ class IAlignment:
      * @return A new SiteContainer object.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual
-#if defined(NO_VIRTUAL_COV)
-    SequenceContainer*
-#else
-    SiteContainer*
-#endif
-    read(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
+    virtual SiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
     /**
      * @brief Create a new container from a file.
      *
@@ -128,13 +122,7 @@ class IAlignment:
      * @return A new SiteContainer object.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual
-#if defined(NO_VIRTUAL_COV)
-    SequenceContainer*
-#else
-    SiteContainer*
-#endif
-    read(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
+    virtual SiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
 
 };
 

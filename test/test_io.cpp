@@ -49,28 +49,21 @@ int main() {
   //[http://www.uhnresearch.ca/labs/tillier/simprotWEB/] in various file formats
   ProteicAlphabet* alpha = new ProteicAlphabet;
   Fasta fasta;
-  const SequenceContainer* seqcont1 = fasta.read("example.fasta", alpha);
+  const SiteContainer* sites1 = fasta.readAlignment("example.fasta", alpha);
   //test number of seq
-  cout << "example.fasta contains " << seqcont1->getNumberOfSequences() << " sequences" << endl;
-  if (seqcont1->getNumberOfSequences() != 100) {
+  cout << "example.fasta contains " << sites1->getNumberOfSequences() << " sequences" << endl;
+  if (sites1->getNumberOfSequences() != 100) {
     return 1;
   }
 
   Mase mase;
-  const SequenceContainer* seqcont2 = mase.read("example.mase", alpha);
+  const SiteContainer* sites2 = mase.readAlignment("example.mase", alpha);
   Clustal clustal;
-  const SequenceContainer* seqcont3 = clustal.read("example.aln", alpha);
+  const SiteContainer* sites3 = clustal.readAlignment("example.aln", alpha);
   Phylip phylip(true, false);
-  const SequenceContainer* seqcont4 = phylip.read("example.ph", alpha);
+  const SiteContainer* sites4 = phylip.readAlignment("example.ph", alpha);
   Phylip phylip3(true, true);
-  const SequenceContainer* seqcont5 = phylip3.read("example.ph3", alpha);
-
-  //Convert to alignments:
-  const SiteContainer* sites1 = new VectorSiteContainer(*seqcont1);
-  const SiteContainer* sites2 = new VectorSiteContainer(*seqcont2);
-  const SiteContainer* sites3 = new VectorSiteContainer(*seqcont3);
-  const SiteContainer* sites4 = new VectorSiteContainer(*seqcont4);
-  const SiteContainer* sites5 = new VectorSiteContainer(*seqcont5);
+  const SiteContainer* sites5 = phylip3.readAlignment("example.ph3", alpha);
 
   cout << sites1->getNumberOfSequences() << "\t" << sites1->getNumberOfSites() << endl;
   cout << sites2->getNumberOfSequences() << "\t" << sites2->getNumberOfSites() << endl;
@@ -88,11 +81,6 @@ int main() {
            && sites1->getNumberOfSites()     == sites4->getNumberOfSites()
            && sites1->getNumberOfSites()     == sites5->getNumberOfSites();
 
-  delete seqcont1;
-  delete seqcont2;
-  delete seqcont3;
-  delete seqcont4;
-  delete seqcont5;
   delete sites1;
   delete sites2;
   delete sites3;

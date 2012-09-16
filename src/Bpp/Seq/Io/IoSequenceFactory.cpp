@@ -57,6 +57,7 @@ ISequence* IoSequenceFactory::createReader(const string& format) throw (Exceptio
 {
        if(format == FASTA_FORMAT) return new Fasta();
   else if(format == MASE_FORMAT) return new Mase();
+  else if(format == CLUSTAL_FORMAT) return new Clustal();
   else if(format == DCSE_FORMAT) return new DCSE();
   else if(format == PHYLIP_FORMAT_INTERLEAVED) return new Phylip(false, false);
   else if(format == PHYLIP_FORMAT_SEQUENTIAL) return new Phylip(false, true);
@@ -64,12 +65,14 @@ ISequence* IoSequenceFactory::createReader(const string& format) throw (Exceptio
   else if(format == PAML_FORMAT_SEQUENTIAL) return new Phylip(true, true);
   else if(format == GENBANK_FORMAT) return new GenBank();
   else if(format == NEXUS_FORMAT) return new NexusIOSequence();
-  else throw Exception("Format " + format + " is not supported for input.");
+  else throw Exception("Format " + format + " is not supported for sequences input.");
 }
   
 IAlignment* IoSequenceFactory::createAlignmentReader(const string& format) throw (Exception)
 {
-       if(format == CLUSTAL_FORMAT) return new Clustal();
+       if(format == FASTA_FORMAT) return new Fasta();
+  else if(format == MASE_FORMAT) return new Mase();
+  else if(format == CLUSTAL_FORMAT) return new Clustal();
   else if(format == DCSE_FORMAT) return new DCSE();
   else if(format == PHYLIP_FORMAT_INTERLEAVED) return new Phylip(false, false);
   else if(format == PHYLIP_FORMAT_SEQUENTIAL) return new Phylip(false, true);

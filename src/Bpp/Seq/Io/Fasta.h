@@ -43,6 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _BPP_SEQ_IO_FASTA_H_
 
 #include "AbstractISequence.h"
+#include "AbstractIAlignment.h"
 #include "AbstractOSequence.h"
 #include "../Sequence.h"
 #include "../Container/SequenceContainer.h"
@@ -61,8 +62,8 @@ namespace bpp
  */
 class Fasta:
   public AbstractISequence,
+  public AbstractIAlignment,
   public AbstractOSequence,
-  public virtual OAlignment,
   public virtual ISequenceStream,
   public virtual OSequenceStream
 {
@@ -98,11 +99,22 @@ class Fasta:
      *
      * @{
      */
+
     /**
-     * @copydoc AbstractISequence::appendFromStream(std::istream& input, SequenceContainer& sc) const
+     * @copydoc AbstractISequence::appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const
      * @author Sylvain Gaillard
      */
-    void appendFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
+    void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
+    /** @} */
+
+    /**
+     * @name The AbstractIAlignment interface.
+     *
+     * @{
+     */
+    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception) {
+      appendSequencesFromStream(input, sc); //This may raise an exception if sequences are not aligned!
+    }
     /** @} */
 
     /**
@@ -114,10 +126,10 @@ class Fasta:
      * @copydoc OSequence::write(std::ostream& output, const SequenceContainer& sc) const
      * @author Sylvain Gaillard
      */
-    void write(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
-    void write(const std::string& path, const SequenceContainer& sc, bool overwrite=true) const throw (Exception)
+    void writeSequences(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
+    void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite=true) const throw (Exception)
     {
-      AbstractOSequence::write(path, sc, overwrite);
+      AbstractOSequence::writeSequences(path, sc, overwrite);
     }
     /** @} */
   

@@ -67,7 +67,7 @@ const std::vector<std::string> NexusIOSequence::splitNameAndSequence_(const std:
   
 /******************************************************************************/
 
-void NexusIOSequence::appendFromStream(std::istream& input, SiteContainer& vsc) const throw (Exception)
+void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) const throw (Exception)
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("NexusIOSequence::read(). Fail to open file"); }

@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -92,8 +92,7 @@ class SequenceApplicationTools
    * @param allowGeneric Tell if generic alphabets can be used.
    * @return A new Alphabet object according to options specified.
    */
-  
-    static Alphabet * getAlphabet(
+    static Alphabet* getAlphabet(
         std::map<std::string, std::string> & params,
         const std::string & suffix = "",
         bool suffixIsOptional = true,
@@ -113,7 +112,7 @@ class SequenceApplicationTools
    * @return A new GeneticCode object
    * @throw Exception in case of bad description.
    */
-  static GeneticCode * getGeneticCode(const NucleicAlphabet* alphabet, const std::string& description) throw (Exception);
+  static GeneticCode* getGeneticCode(const NucleicAlphabet* alphabet, const std::string& description) throw (Exception);
 
 
   
@@ -147,7 +146,7 @@ class SequenceApplicationTools
                  * @see getSiteContainer to read an alignment.
 		 */
   
-  static SequenceContainer * getSequenceContainer(
+  static SequenceContainer* getSequenceContainer(
 			const Alphabet * alpha,
 			std::map<std::string, std::string> & params,
 			const std::string & suffix = "",
@@ -171,7 +170,7 @@ class SequenceApplicationTools
 		 */
 		static VectorSiteContainer* getSiteContainer(
 			const Alphabet * alpha,
-			std::map<std::string, std::string> & params,
+			std::map<std::string, std::string>& params,
 			const std::string & suffix = "",
 			bool suffixIsOptional = true,
 			bool verbose = true);

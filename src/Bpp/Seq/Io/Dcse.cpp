@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "Dcse.h"
-#include "AbstractISequence2.h"
+#include "AbstractIAlignment.h"
 #include "../Sequence.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/VectorSequenceContainer.h"
@@ -49,7 +49,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-void DCSE::appendFromStream(istream& input, SiteContainer& sc) const throw (Exception)
+void DCSE::appendAlignmentFromStream(istream& input, SiteContainer& sc) const throw (Exception)
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("DCSE::read : fail to open file"); }

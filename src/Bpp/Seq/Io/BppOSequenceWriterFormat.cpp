@@ -1,7 +1,7 @@
 //
-// File: BppOSequenceReaderFormat.h
+// File: BppOSequenceWriterFormat.cpp
 // Created by: Julien Dutheil
-// Created on: Friday September 14th, 14:08
+// Created on: Friday September 15th, 21:20
 //
 
 /*
@@ -37,50 +37,35 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _BPPOSEQUENCEREADERFORMAT_H_
-#define _BPPOSEQUENCEREADERFORMAT_H_
+#include "BppOSequenceWriterFormat.h"
 
-#include "IoSequenceFactory.h"
+#include <Bpp/Text/KeyvalTools.h>
 
-namespace bpp
+#include <string>
+#include <memory>
+
+using namespace bpp;
+using namespace std;
+
+OSequence* BppOSequenceWriterFormat::read(const std::string& description, map<string, string>& param, bool verbose) throw (Exception)
 {
-
-  /**
-   * @brief Sequence I/O in BppO format.
-   *
-   * Creates a new ISequence object according to
-   * distribution description syntax (see the Bio++ Program Suite
-   * manual for a detailed description of this syntax).
-   *
-   */
-  class BppOSequenceReaderFormat:
-    public virtual IOFormat
+  string format = "";
+  KeyvalTools::parseProcedure(description, format, param);
+  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", param, 100, "", true, false);
+  auto_ptr<OSequence> oSeq;
+  if (format == "Fasta")
   {
-  public:
-    BppOSequenceReaderFormat() {}
-    virtual ~BppOSequenceReaderFormat() {}
+    oSeq.reset(new Fasta(ncol));
+  }
+  else if (format == "Mase")
+  {
+    oSeq.reset(new Mase(ncol));
+  }
+  else
+  {
+    throw Exception("Sequence format '" + format + "' unknown.");
+  }
 
-  public:
-    const std::string getFormatName() const { return "BppO"; }
-
-    const std::string getFormatDescription() const { return "Bpp Options format."; }
-
-		const std::string getDataType() const { return "Sequence reader"; }
-
-    /**
-     * @brief Read a ISequence object from a string.
-     *
-     * @param description A string describing the reader in the keyval syntax.
-     * @param param Additional parsed arguments.
-     * @param verbose Print some info to the 'message' output stream.
-     * @return A new ISequence object according to options specified.
-     * @throw Exception if an error occured.
-     */
-    ISequence* read(const std::string& description, std::map<std::string, std::string>& param, bool verbose) throw (Exception);
-
-  };
-
-} //end of namespace bpp.
-
-#endif //_BPPOSEQUENCEREADERFORMAT_H_
+  return oSeq.release();
+}
 

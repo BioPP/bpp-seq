@@ -1,5 +1,5 @@
 //
-// File: AbstractISequence2.h
+// File: AbstractIAlignment.h
 // Created by: Julien Dutheil
 // Created on: mon 27 jun 16:30 2005
 //
@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ABSTRACTISEQUENCE2_H_
-#define _ABSTRACTISEQUENCE2_H_
+#ifndef _ABSTRACTIALIGNMENT_H_
+#define _ABSTRACTIALIGNMENT_H_
 
 #include "../Container/AlignedSequenceContainer.h"
 #include "../Alphabet/Alphabet.h"
@@ -53,7 +53,7 @@ namespace bpp
 {
 
 /**
- * @brief Partial implementation of the IAlignment interface, dedicated to alignement readers.
+ * @brief Partial implementation of the IAlignment interface, dedicated to alignment readers.
  */
 class AbstractIAlignment:
   public virtual IAlignment
@@ -70,7 +70,7 @@ class AbstractIAlignment:
      *
      * @{
      */ 
-    
+ 
     /**
      * @brief Add sequences to a container from a stream.
      *
@@ -78,11 +78,49 @@ class AbstractIAlignment:
      * @param sc     The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual void read(std::istream& input, SiteContainer& sc) const throw (Exception)
+    virtual void readAlignment(std::istream& input, SiteContainer& sc) const throw (Exception)
     {
-      appendFromStream(input, sc);
+      appendAlignmentFromStream(input, sc);
     }
-    
+ 
+    /**
+     * @brief Add sequences to a container from a file.
+     *
+     * @param path  The path to the file to read.
+     * @param sc    The sequence container to update.
+     * @throw Exception If the file is not in the specified format.
+     */
+    virtual void readAlignment(const std::string& path, SiteContainer& sc) const throw (Exception)
+    {
+      appendAlignmentFromFile(path, sc);
+    }
+ 
+    virtual
+#if defined(NO_VIRTUAL_COV)
+    SiteContainer*
+#else
+    AlignedSequenceContainer*
+#endif
+    readAlignment(const std::string& path , const Alphabet* alpha) const throw (Exception)
+    {
+      return readAlignmentFromFile(path, alpha);
+    }
+ 
+    virtual
+#if defined(NO_VIRTUAL_COV)
+    SiteContainer*
+#else
+    AlignedSequenceContainer*
+#endif
+    readAlignment(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    {
+      return readAlignmentFromStream(input, alpha);
+    }
+    /** @} */
+
+
+
+   
   protected:
     /**
      * @brief Append sequences to a container from a stream.
@@ -93,22 +131,8 @@ class AbstractIAlignment:
      * @param sc     The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception) = 0;
+    virtual void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception) = 0;
   
-  public:
-    /**
-     * @brief Add sequences to a container from a file.
-     *
-     * @param path  The path to the file to read.
-     * @param sc    The sequence container to update.
-     * @throw Exception If the file is not in the specified format.
-     */
-    virtual void read(const std::string& path, SiteContainer& sc) const throw (Exception)
-    {
-      appendFromFile(path, sc);
-    }
-    
-  protected:
     /**
      * @brief Append sequences to a container from a file.
      *
@@ -116,26 +140,13 @@ class AbstractIAlignment:
      * @param sc    The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual void appendFromFile(const std::string& path , SiteContainer& sc) const throw (Exception)
+    virtual void appendAlignmentFromFile(const std::string& path, SiteContainer& sc) const throw (Exception)
     {
       std::ifstream input(path.c_str(), std::ios::in);
-      read(input, sc);
+      appendAlignmentFromStream(input, sc);
       input.close();
     }
 
-  public:
-    virtual
-#if defined(NO_VIRTUAL_COV)
-    SequenceContainer*
-#else
-    AlignedSequenceContainer*
-#endif
-    read(std::istream& input, const Alphabet* alpha) const throw (Exception)
-    {
-      return readFromStream(input, alpha);
-    }
-
-  protected:
     /**
      * @brief Read sequences from a stream.
      * 
@@ -144,34 +155,13 @@ class AbstractIAlignment:
      * @return A sequence container.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual
-#if defined(NO_VIRTUAL_COV)
-    SequenceContainer*
-#else
-    AlignedSequenceContainer*
-#endif
-    readFromStream(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    virtual AlignedSequenceContainer* readAlignmentFromStream(std::istream& input, const Alphabet* alpha) const throw (Exception)
     {
       AlignedSequenceContainer* asc = new AlignedSequenceContainer(alpha);
-      appendFromStream(input, *asc);
+      appendAlignmentFromStream(input, *asc);
       return asc;
     }
 
-  public:
-    virtual
-#if defined(NO_VIRTUAL_COV)
-    SequenceContainer*
-#else
-    AlignedSequenceContainer*
-#endif
-    read(const std::string& path , const Alphabet* alpha) const throw (Exception)
-    {
-      AlignedSequenceContainer* asc = new AlignedSequenceContainer(alpha);
-      read(path, *asc);
-      return asc;
-    }
-  
-  protected:
     /**
      * @brief Read sequences from a file.
      *
@@ -180,22 +170,16 @@ class AbstractIAlignment:
      * @return A sequence container.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual
-#if defined(NO_VIRTUAL_COV)
-    SequenceContainer*
-#else
-    AlignedSequenceContainer*
-#endif
-    readFromFile(const std::string& path , const Alphabet* alpha) const throw (Exception)
+    virtual AlignedSequenceContainer* readAlignmentFromFile(const std::string& path, const Alphabet* alpha) const throw (Exception)
     {
       AlignedSequenceContainer* asc = new AlignedSequenceContainer(alpha);
-      appendFromFile(path, *asc);
+      appendAlignmentFromFile(path, *asc);
       return asc;
     }
-    /** @} */
+
 };
 
 } //end of namespace bpp.
 
-#endif // _ABSTRACTISEQUENCE2_H_
+#endif // _ABSTRACTIALIGNMENT_H_
 

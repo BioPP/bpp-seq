@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _MASE_H_
 
 #include "AbstractISequence.h"
+#include "AbstractIAlignment.h"
 #include "AbstractOSequence.h"
 #include "../Sequence.h"
 #include "../Container/SequenceContainer.h"
@@ -123,6 +124,7 @@ class MaseHeader
  */
 class Mase:
   public AbstractISequence,
+  public AbstractIAlignment,
   public AbstractOSequence
 {
 
@@ -156,7 +158,7 @@ class Mase:
     VectorSequenceContainer* readMeta(std::istream& input, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
     {
       readHeader_(input, header);
-      return AbstractISequence::read(input, alpha);
+      return AbstractISequence::readSequences(input, alpha);
     }
     VectorSequenceContainer* readMeta(std::string& path, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
     {
@@ -172,18 +174,29 @@ class Mase:
      *
      * @{
      */
-    void appendFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
+    void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
     /** @} */
+
+    /**
+     * @name The AbstractIAlignment interface.
+     *
+     * @{
+     */
+    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception) {
+      appendSequencesFromStream(input, sc); //This might cast an exception if sequences are not aligned! 
+    }
+    /** @} */
+
 
     /**
      * @name The OSequence interface.
      *
      * @{
      */
-    void write(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
-    void write(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const throw (Exception)
+    void writeSequences(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
+    void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const throw (Exception)
     {
-      AbstractOSequence::write(path, sc, overwrite);
+      AbstractOSequence::writeSequences(path, sc, overwrite);
     }
     /** @} */
 
@@ -195,14 +208,14 @@ class Mase:
     void writeMeta(std::ostream& output, const SequenceContainer& sc, const MaseHeader& header) const throw (Exception)
     {
       writeHeader_(output, header);
-      write(output, sc);
+      writeSequences(output, sc);
     }
     void writeMeta(const std::string& path, const SequenceContainer& sc, const MaseHeader& header, bool overwrite = true) const throw (Exception)
     {
 			// Open file in specified mode
       std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
       writeHeader_(output, header);
-			write(output, sc);
+			writeSequences(output, sc);
 			output.close();
     }
     /** @} */

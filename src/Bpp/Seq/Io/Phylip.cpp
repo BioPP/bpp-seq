@@ -171,7 +171,7 @@ void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const throw (
   
 /******************************************************************************/
 
-void Phylip::appendFromStream(std::istream& input, SiteContainer& vsc) const throw (Exception)
+void Phylip::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) const throw (Exception)
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("Phylip::read: fail to open file"); }
@@ -276,7 +276,7 @@ void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, in
 
 /******************************************************************************/
 
-void Phylip::write(std::ostream& output, const SiteContainer& sc) const throw (Exception)
+void Phylip::writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception)
 {
   //First must check if all sequences are aligned:
   if (sc.getNumberOfSequences() == 0)

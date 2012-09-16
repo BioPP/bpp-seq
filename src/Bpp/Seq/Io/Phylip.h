@@ -40,8 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _PHYLIP_H_
 #define _PHYLIP_H_
 
-#include "AbstractISequence2.h"
-#include "AbstractOSequence.h"
+#include "AbstractIAlignment.h"
+#include "AbstractOAlignment.h"
 #include "../Sequence.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/VectorSequenceContainer.h"
@@ -63,11 +63,12 @@ namespace bpp
  */
 class Phylip :
   public AbstractIAlignment,
-  public AbstractOAlignment
+  public AbstractOAlignment,
+  public virtual ISequence
 {
   private:
 
-    /* this class allows two kind of Phylip format:
+    /* this class allows two kinds of Phylip format:
      * traditional, with names limited to 10 chars,
      * and 'extended', defined by PAML, with names separated from sequences by at least 6 white spaces.
      */
@@ -103,11 +104,27 @@ class Phylip :
   public:
 
     /**
-     * @name The AbstractISequence2 interface.
+     * @name The AbstractIAlignment interface.
      *
      * @{
      */
-    void appendFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    /** @} */
+
+    /**
+     * @name The ISequence interface.
+     *
+     * As a SiteContainer is a subclass of SequenceContainer, we hereby implement the ISequence
+     * interface by downcasting the interface.
+     *
+     * @{
+     */
+    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const throw (Exception) {
+      return readAlignment(input, alpha);
+    }
+    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const throw (Exception) {
+      return readAlignment(path, alpha);
+    }
     /** @} */
 
     /**
@@ -123,10 +140,10 @@ class Phylip :
      *
      * @{
      */
-    void write(std::ostream& output, const SiteContainer& sc) const throw (Exception);
-    void write(const std::string& path, const SiteContainer& sc, bool overwrite) const throw (Exception)
+    void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception);
+    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite) const throw (Exception)
     {
-      AbstractOAlignment::write(path, sc, overwrite);
+      AbstractOAlignment::writeAlignment(path, sc, overwrite);
     }
     /** @} */
 

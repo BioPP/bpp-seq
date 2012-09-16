@@ -46,7 +46,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-void Mase::appendFromStream(std::istream& input, SequenceContainer& vsc) const throw (Exception)
+void Mase::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc) const throw (Exception)
 {
   if (!input) { throw IOException ("Mase::read : fail to open file"); }
   
@@ -116,7 +116,7 @@ void Mase::appendFromStream(std::istream& input, SequenceContainer& vsc) const t
 
 /****************************************************************************************/
 
-void Mase::write(ostream& output, const SequenceContainer& sc) const throw (Exception)
+void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const throw (Exception)
 {
   // Checking the existence of specified file, and possibility to open it in write mode
   if (!output) { throw IOException ("Mase::write : failed to open file"); }

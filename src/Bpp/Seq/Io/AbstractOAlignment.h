@@ -1,5 +1,5 @@
 //
-// File: AbstractOSequence.h
+// File: AbstractOAlignment.h
 // Created by: Julien Dutheil
 // Created on: ?
 //
@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ABSTRACTOSEQUENCE_H_
-#define _ABSTRACTOSEQUENCE_H_
+#ifndef _ABSTRACTOALIGNMENT_H_
+#define _ABSTRACTOALIGNMENT_H_
 
 #include "OSequence.h"
 #include "../Alphabet/Alphabet.h"
@@ -52,56 +52,35 @@ namespace bpp
 {
 
 /**
- * @brief Partial implementation of the OSequence and OAlignment interfaces.
+ * @brief Partial implementation of the OAlignment interface.
  */
-class AbstractOSequence:
-  public virtual OSequence,
+class AbstractOAlignment:
   public virtual OAlignment
 {
 
 	public: 
-		AbstractOSequence() {}
-		virtual ~AbstractOSequence() {}
+		AbstractOAlignment() {}
+		virtual ~AbstractOAlignment() {}
 
 	public:
 
 		/**
-		 * @name OSequence methods:
+		 * @name OAlignment methods:
 		 *
 		 * @{
 		 */ 
-		void writeSequences(std::ostream& output, const SequenceContainer& sc) const throw (Exception) = 0;
-		void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite=true) const throw (Exception)
+		void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception) = 0;
+		void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const throw (Exception)
 		{
 			// Open file in specified mode
       std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
-			writeSequences(output, sc);
+			writeAlignment(output, sc);
 			output.close();
 		}
 		/** @} */
-    
-    /**
-		 * @name OAlignment methods:
-		 *
-     * As a SiteContainer is a specialization of SequenceContainer, it is assumed that a OSequence
-     * object can write aligned sequence just like a OAlignment object.
-     * Therefore it implements the OAlignment interface by down-casting the SiteContainer
-     * to a SequenceContainer. 
-		 * @{
-		 */ 
-		void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception)
-    {
-      writeSequences(output, dynamic_cast<const SequenceContainer&>(sc));
-    }
-		void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite=true) const throw (Exception)
-		{
-      writeSequences(path, dynamic_cast<const SequenceContainer&>(sc), overwrite);
-		}
-		/** @} */
-
 };
 
 } //end of namespace bpp.
 
-#endif //_ABSTRACTOSEQUENCE_H_
+#endif //_ABSTRACTOALIGNMENT_H_
 

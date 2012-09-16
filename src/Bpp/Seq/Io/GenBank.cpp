@@ -5,9 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -49,7 +47,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-void GenBank::appendFromStream(std::istream& input, SequenceContainer& vsc) const throw (Exception)
+void GenBank::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc) const throw (Exception)
 {
   if (!input) { throw IOException ("GenBank::read: fail to open file"); }
 

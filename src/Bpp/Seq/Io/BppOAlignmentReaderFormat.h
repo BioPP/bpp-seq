@@ -1,7 +1,7 @@
 //
-// File: BppOSequenceReaderFormat.h
+// File: BppOAlignmentReaderFormat.h
 // Created by: Julien Dutheil
-// Created on: Friday September 14th, 14:08
+// Created on: Friday September 15th, 22:04
 //
 
 /*
@@ -37,8 +37,8 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _BPPOSEQUENCEREADERFORMAT_H_
-#define _BPPOSEQUENCEREADERFORMAT_H_
+#ifndef _BPPOALIGNMENTREADERFORMAT_H_
+#define _BPPOALIGNMENTREADERFORMAT_H_
 
 #include "IoSequenceFactory.h"
 
@@ -48,39 +48,39 @@ namespace bpp
   /**
    * @brief Sequence I/O in BppO format.
    *
-   * Creates a new ISequence object according to
+   * Creates a new IAlignment object according to
    * distribution description syntax (see the Bio++ Program Suite
    * manual for a detailed description of this syntax).
    *
    */
-  class BppOSequenceReaderFormat:
+  class BppOAlignmentReaderFormat:
     public virtual IOFormat
   {
   public:
-    BppOSequenceReaderFormat() {}
-    virtual ~BppOSequenceReaderFormat() {}
+    BppOAlignmentReaderFormat() {}
+    virtual ~BppOAlignmentReaderFormat() {}
 
   public:
     const std::string getFormatName() const { return "BppO"; }
 
     const std::string getFormatDescription() const { return "Bpp Options format."; }
 
-		const std::string getDataType() const { return "Sequence reader"; }
+		const std::string getDataType() const { return "Alignment reader"; }
 
     /**
-     * @brief Read a ISequence object from a string.
+     * @brief Read a IAlignment object from a string.
      *
      * @param description A string describing the reader in the keyval syntax.
      * @param param Additional parsed arguments.
      * @param verbose Print some info to the 'message' output stream.
-     * @return A new ISequence object according to options specified.
+     * @return A new IAlignment object according to options specified.
      * @throw Exception if an error occured.
      */
-    ISequence* read(const std::string& description, std::map<std::string, std::string>& param, bool verbose) throw (Exception);
+    IAlignment* read(const std::string& description, std::map<std::string, std::string>& param, bool verbose) throw (Exception);
 
   };
 
 } //end of namespace bpp.
 
-#endif //_BPPOSEQUENCEREADERFORMAT_H_
+#endif //_BPPOALIGNMENTREADERFORMAT_H_
 

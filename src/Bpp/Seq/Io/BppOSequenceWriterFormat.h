@@ -1,7 +1,7 @@
 //
-// File: BppOSequenceReaderFormat.h
+// File: BppOSequenceWriterFormat.h
 // Created by: Julien Dutheil
-// Created on: Friday September 14th, 14:08
+// Created on: Saturday September 15th, 21:06
 //
 
 /*
@@ -37,8 +37,8 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _BPPOSEQUENCEREADERFORMAT_H_
-#define _BPPOSEQUENCEREADERFORMAT_H_
+#ifndef _BPPOSEQUENCEWRITERFORMAT_H_
+#define _BPPOSEQUENCEWRITERFORMAT_H_
 
 #include "IoSequenceFactory.h"
 
@@ -48,17 +48,17 @@ namespace bpp
   /**
    * @brief Sequence I/O in BppO format.
    *
-   * Creates a new ISequence object according to
+   * Creates a new OSequence object according to
    * distribution description syntax (see the Bio++ Program Suite
    * manual for a detailed description of this syntax).
    *
    */
-  class BppOSequenceReaderFormat:
+  class BppOSequenceWriterFormat:
     public virtual IOFormat
   {
   public:
-    BppOSequenceReaderFormat() {}
-    virtual ~BppOSequenceReaderFormat() {}
+    BppOSequenceWriterFormat() {}
+    virtual ~BppOSequenceWriterFormat() {}
 
   public:
     const std::string getFormatName() const { return "BppO"; }
@@ -68,19 +68,19 @@ namespace bpp
 		const std::string getDataType() const { return "Sequence reader"; }
 
     /**
-     * @brief Read a ISequence object from a string.
+     * @brief Read a OSequence object from a string.
      *
      * @param description A string describing the reader in the keyval syntax.
      * @param param Additional parsed arguments.
      * @param verbose Print some info to the 'message' output stream.
-     * @return A new ISequence object according to options specified.
+     * @return A new OSequence object according to options specified.
      * @throw Exception if an error occured.
      */
-    ISequence* read(const std::string& description, std::map<std::string, std::string>& param, bool verbose) throw (Exception);
+    OSequence* read(const std::string& description, std::map<std::string, std::string>& param, bool verbose) throw (Exception);
 
   };
 
 } //end of namespace bpp.
 
-#endif //_BPPOSEQUENCEREADERFORMAT_H_
+#endif //_BPPOSEQUENCEWRITERFORMAT_H_
 

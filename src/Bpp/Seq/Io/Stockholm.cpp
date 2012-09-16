@@ -51,10 +51,10 @@ using namespace std;
 
 /******************************************************************************/
 
-void Stockholm::write(ostream& output, const SiteContainer& sc) const throw (Exception)
+void Stockholm::writeAlignment(ostream& output, const SiteContainer& sc) const throw (Exception)
 {
 	if (!output)
-    throw IOException("Stockholm::write: can't write to ostream output");
+    throw IOException("Stockholm::writeAlignment: can't write to ostream output");
 
   output << "# STOCKHOLM 1.0" << endl; 
   // Loop for all general comments
