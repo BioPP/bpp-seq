@@ -95,6 +95,8 @@ std::vector<int> DNA::getAlias(int state) const throw (BadIntException)
     throw BadIntException(state, "DNA::getAlias(int): Specified base unknown.");
 	vector<int> v;
   const NucleicAlphabetState& st = getState(state);
+  if (state == -1)
+    v.push_back(-1);
   if (st.getBinaryCode() & 1)
     v.push_back(0);
   if (st.getBinaryCode() & 2)

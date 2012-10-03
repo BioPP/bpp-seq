@@ -89,33 +89,20 @@ RNA::RNA(bool exclamationMarkCountsAsGap)
 
 std::vector<int> RNA::getAlias(int state) const throw (BadIntException) 
 {
-	if(!isIntInAlphabet(state)) throw BadIntException(state, "RNA::getAlias(int): Specified base unknown.");
+	if (!isIntInAlphabet(state))
+    throw BadIntException(state, "DNA::getAlias(int): Specified base unknown.");
 	vector<int> v;
-	if(state == 4) {// A or C
-		v.resize(2); v[0] = 0; v[1] = 1;
-	} else if(state == 5) {// A or G
-		v.resize(2); v[0] = 0; v[1] = 2;
-	} else if(state == 6) {// A or U
-		v.resize(2); v[0] = 0; v[1] = 3;
-	} else if(state == 7) {// C or G
-		v.resize(2); v[0] = 1; v[1] = 2;
-	} else if(state == 8) {// C or U
-		v.resize(2); v[0] = 1; v[1] = 3;
-	} else if(state == 9) {// G or U
-		v.resize(2); v[0] = 2; v[1] = 3;
-	} else if(state == 10) {// A, C or G
-		v.resize(3); v[0] = 0; v[1] = 1; v[2] = 2;
-	} else if(state == 11) {// A, C or U
-		v.resize(3); v[0] = 0; v[1] = 1; v[2] = 3;
-	} else if(state == 12) {// A, G or U
-		v.resize(3); v[0] = 0; v[1] = 2; v[2] = 3;
-	} else if(state == 13) {// C, G or U
-		v.resize(3); v[0] = 1, v[1] = 2; v[2] = 3;
-	} else if(state == 14) {// A, C, G or U
-		v.resize(4); v[0] = 0; v[1] = 1; v[2] = 2; v[3] = 3;
-	} else {
-		v.resize(1); v[0] = state;
-	}		
+  const NucleicAlphabetState& st = getState(state);
+  if (state == -1)
+    v.push_back(-1);
+  if (st.getBinaryCode() & 1)
+    v.push_back(0);
+  if (st.getBinaryCode() & 2)
+    v.push_back(1);
+  if (st.getBinaryCode() & 4)
+    v.push_back(2);
+  if (st.getBinaryCode() & 8)
+    v.push_back(3);
 	return v;
 }
 
@@ -126,36 +113,10 @@ std::vector<std::string> RNA::getAlias(const std::string & state) const throw (B
 {
   string locstate = TextTools::toUpper(state);
 	if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "RNA::getAlias(int): Specified base unknown.");
+  vector<int> vi = this->getAlias(this->charToInt(state));
 	vector<string> v;
-	if(locstate == "M") {// A or C
-		v.resize(2); v[0] = "A"; v[1] = "C";
-	} else if(locstate == "R") {// A or G
-		v.resize(2); v[0] = "A"; v[1] = "G";
-	} else if(locstate == "W") {// A or U
-		v.resize(2); v[0] = "A"; v[1] = "U";
-	} else if(locstate == "S") {// C or G
-		v.resize(2); v[0] = "C"; v[1] = "G";
-	} else if(locstate == "Y") {// C or U
-		v.resize(2); v[0] = "C"; v[1] = "U";
-	} else if(locstate == "K") {// G or T
-		v.resize(2); v[0] = "G"; v[1] = "U";
-	} else if(locstate == "V") {// A, C or G
-		v.resize(3); v[0] = "A"; v[1] = "C"; v[2] = "G";
-	} else if(locstate == "H") {// A, C or U
-		v.resize(3); v[0] = "A"; v[1] = "C"; v[2] = "U";
-	} else if(locstate == "D") {// A, G or U
-		v.resize(3); v[0] = "A"; v[1] = "G"; v[2] = "U";
-	} else if(locstate == "B") {// C, G or U
-		v.resize(3); v[0] = "C", v[1] = "G"; v[2] = "U";
-	} else if(locstate == "N"
-         || locstate == "X"
-	       || locstate == "O"
-	       || locstate == "0"
-	       || locstate == "?") {// A, C, G or U
-		v.resize(4); v[0] = "A"; v[1] = "C"; v[2] = "G"; v[3] = "U";
-	} else {
-		v.resize(1); v[0] = locstate;
-	}		
+  for (unsigned int i = 0 ; i < vi.size() ; i++)
+    v.push_back(this->intToChar(vi[i]));
 	return v;
 }
 
@@ -163,82 +124,24 @@ std::vector<std::string> RNA::getAlias(const std::string & state) const throw (B
 
 int RNA::getGeneric(const std::vector<int> & states) const throw (BadIntException)
 {
-  map<int, int> m;
+  char v = 0;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
-    vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
-    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
-      m[tmp_s[j]] ++; // add each state to the list
-    }
+    if (!isIntInAlphabet(states[i])) throw BadIntException(states[i], "RNA::getGeneric(const vector<int>& states): Specified base unknown.");
+    v |= getState(states[i]).getBinaryCode();
   }
-  vector<int> ve = MapTools::getKeys(m);
-
-  string key;
-  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
-    if (!isIntInAlphabet(ve[i])) throw BadIntException(ve[i], "RNA::getGeneric(const vector<int>): Specified base unknown.");
-    key += "_" + TextTools::toString(ve[i]);
-  }
-  map<string, int> g;
-  g["_0_1"] = 4;
-  g["_0_2"] = 5;
-  g["_0_3"] = 6;
-  g["_1_2"] = 7;
-  g["_1_3"] = 8;
-  g["_2_3"] = 9;
-  g["_0_1_2"] = 10;
-  g["_0_1_3"] = 11;
-  g["_0_2_3"] = 12;
-  g["_1_2_3"] = 13;
-  int v;
-  map<string, int>::iterator it = g.find(key);
-  if (ve.size() == 1) {
-    v = ve[0];
-  } else if (it != g.end()) {
-    v = it->second;
-  } else {
-    v = 14;
-  }
-  return v;
+  return getStateByBinCode(v).getNum();
 }
 
 /******************************************************************************/
 
 std::string RNA::getGeneric(const std::vector<std::string> & states) const throw (BadCharException)
 {
-  map <string, int> m;
+  vector<int> vi;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {
-    vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
-    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
-       m[tmp_s[j]] ++; // add each state to the list
-    }
+    if (!isCharInAlphabet(states[i])) throw BadCharException(states[i], "DNA::getGeneric(const vector<string>& states): Specified base unknown.");
+    vi.push_back(this->charToInt(states[i]));
   }
-  vector<string> ve = MapTools::getKeys(m);
-
-  string key;
-  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
-    if (!isCharInAlphabet(ve[i])) throw BadCharException(ve[i], "RNA::getAlias(const vector<string>): Specified base unknown.");
-    key += TextTools::toString(ve[i]);
-  }
-  map<string, string> g;
-  g["AC"] = "M";
-  g["AG"] = "R";
-  g["AU"] = "W";
-  g["CG"] = "S";
-  g["CU"] = "Y";
-  g["GU"] = "K";
-  g["ACG"] = "V";
-  g["ACU"] = "H";
-  g["AGU"] = "D";
-  g["CGU"] = "B";
-  string v;
-  map<string, string>::iterator it = g.find(key);
-  if (ve.size() == 1) {
-    v = ve[0];
-  } else if (it != g.end()) {
-    v = it->second;
-  } else {
-    v = "N";
-  }
-  return v;
+  return intToChar(getGeneric(vi));
 }
 
 /******************************************************************************/
