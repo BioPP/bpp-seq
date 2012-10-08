@@ -59,7 +59,7 @@ namespace bpp
  * @brief The ISequence interface.
  *
  * This interface defines the basic methods for reading sequences from a file.
- * NB: This interfqce is effective only if the VIRTUAL_COV option is enabled (default behavior).
+ * NB: This interface is effective only if the VIRTUAL_COV option is enabled (default behavior).
  */
 class ISequence :
   public virtual IOSequence
