@@ -377,18 +377,72 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
           ApplicationTools::displayTaskDone();
       }
     }
+    
+    string maxUnresolvedOption = ApplicationTools::getStringParameter("input.sequence.max_unresolved_allowed", params, "100%", suffix, suffixIsOptional);
+
+    unsigned int sAlph=sitesToAnalyse->getAlphabet()->getSize();
+    
+    if (maxUnresolvedOption[maxUnresolvedOption.size() - 1] == '%')
+      {
+        double unresolvedFreq = TextTools::toDouble(maxUnresolvedOption.substr(0, maxUnresolvedOption.size() - 1)) / 100.;
+        if (unresolvedFreq < 1)
+          {
+            if (verbose)
+              ApplicationTools::displayTask("Keep Resolved sites", true);
+            for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+              {
+                if (verbose)
+                  ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
+                map<int, double> freq;
+                SiteTools::getFrequencies(sitesToAnalyse->getSite(i - 1), freq);
+                double x=0;
+                for (unsigned int l=0;l<sAlph;l++)
+                  x+=freq[l];
+                if (1-x > unresolvedFreq)
+                  sitesToAnalyse->deleteSite(i - 1);
+              }
+            if (verbose)
+              ApplicationTools::displayTaskDone();
+          }
+      }
+    else
+      {
+        unsigned int nbSeq=sitesToAnalyse->getNumberOfSequences();
+        unsigned int unresolvedNum = TextTools::to<unsigned int>(maxUnresolvedOption);
+        if (unresolvedNum < nbSeq)
+          {
+            if (verbose)
+              ApplicationTools::displayTask("Remove sites with gaps", true);
+            for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+              {
+                if (verbose)
+                  ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
+                map<int, unsigned int> counts;
+                SiteTools::getCounts(sitesToAnalyse->getSite(i - 1), counts);
+                unsigned int x=0;
+                for (unsigned int l=0;l<sAlph;l++)
+                  x+=counts[l];
+                
+                if (nbSeq - x > unresolvedNum)
+                  sitesToAnalyse->deleteSite(i - 1);
+              }
+            if (verbose)
+              ApplicationTools::displayTaskDone();
+          }
+      }
+  
     if (gapAsUnknown)
-    {
-      SiteContainerTools::changeGapsToUnknownCharacters(*sitesToAnalyse);
+      {
+        SiteContainerTools::changeGapsToUnknownCharacters(*sitesToAnalyse);
     }
   }
   else if (option == "complete")
-  {
-    sitesToAnalyse = SiteContainerTools::getCompleteSites(allSites);
-    int nbSites = sitesToAnalyse->getNumberOfSites();
-    if (verbose)
-      ApplicationTools::displayResult("Complete sites", TextTools::toString(nbSites));
-  }
+    {
+      sitesToAnalyse = SiteContainerTools::getCompleteSites(allSites);
+      int nbSites = sitesToAnalyse->getNumberOfSites();
+      if (verbose)
+        ApplicationTools::displayResult("Complete sites", TextTools::toString(nbSites));
+    }
   else if (option == "nogap")
   {
     sitesToAnalyse = SiteContainerTools::getSitesWithoutGaps(allSites);
