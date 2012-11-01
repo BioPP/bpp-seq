@@ -57,14 +57,11 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
   if (!input)
     throw IOException("Fasta::nextSequence: can't read from istream input");
   string seqname = "";
+  string content = "";
   Comments seqcmts;
-  seq.setContent("");
-  char c;
   short seqcpt = 0;
   string linebuffer = "";
-  string bufferleft = "";
-  vector<string> splitline;
-  unsigned int wordsize = seq.getAlphabet()->getStateCodingSize();
+  char c;
   while (!input.eof())
   {
     c = input.peek();
@@ -86,36 +83,7 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
     }
     if (c != '>' && !TextTools::isWhiteSpaceCharacter(c)) {
       // Sequence content
-      if (wordsize == 1)
-      {
-        for (unsigned int i = 0 ; i < linebuffer.size() ; i++)
-        {
-          if (! TextTools::isWhiteSpaceCharacter(linebuffer[i]))
-            seq.addElement(string(1, toupper(linebuffer[i])));
-        }
-      }
-      else
-      {
-        // Remove white spaces
-        linebuffer = TextTools::removeWhiteSpaces(linebuffer);
-        
-        if (!bufferleft.empty()) {
-          linebuffer = bufferleft + linebuffer;
-          bufferleft.clear();
-        }
-        splitline = TextTools::split(linebuffer, wordsize);
-        for (unsigned int j = 0 ; j < splitline.size() ; j++)
-        {
-          if (splitline[j].size() == wordsize)
-          {
-            seq.addElement(splitline[j]);
-          }
-          else
-          {
-            bufferleft += splitline[j];
-          }
-        }
-      }
+      content += TextTools::toUpper(TextTools::removeWhiteSpaces(linebuffer));
     }
   }
 
@@ -139,6 +107,7 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
     seq.setComments(seqcmts);
   }
   seq.setName(seqname);
+  seq.setContent(content);
   return res;
 }
 
