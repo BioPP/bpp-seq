@@ -198,6 +198,8 @@ class CodonSiteTools:
 		 * A site is consider as x% synonymous if x% of the possible mutations are synonymous
 		 * Transition/transversion ratio can be taken into account (use the variable ratio)
 		 *
+     * Unresolved codons and stop codon will return a value of 0.
+     *
 		 * @param i a int
 		 * @param gc a GeneticCode
 		 * @param ratio a double set by default to 1
@@ -211,6 +213,8 @@ class CodonSiteTools:
 		 * Transition/transversion ratio can be taken into account (use the variable ratio)
 		 * The mean is computed over the VectorSite.
 		 *
+     * Unresolved and stop codons are counted as 0.
+     *
 		 * @param site a Site
 		 * @param gc a GeneticCode
 		 * @param ratio a double 			Set by default to 1

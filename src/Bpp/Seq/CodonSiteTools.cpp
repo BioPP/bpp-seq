@@ -526,7 +526,9 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gc,
   try
   {
     const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gc.getSourceAlphabet());
-    if (ca->getName(ca->intToChar(i)) == "Stop")
+    if (ca->isStop(i))
+      return 0;
+    if (ca->isUnresolved(i))
       return 0;
     double nbsynpos = 0.0;
     vector<int> codon = ca->getPositions(i);
@@ -540,7 +542,7 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gc,
         vector<int> mutcodon = codon;
         mutcodon[pos] = an;
         int intcodon = ca->getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
-        if (ca->getName(ca->intToChar(intcodon)) == "Stop")
+        if (ca->isStop(intcodon))
           continue;
         int altacid = gc.translate(intcodon);
         if (altacid == acid)   // if synonymous
