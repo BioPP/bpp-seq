@@ -128,6 +128,23 @@ class SiteContainerTools
     static void removeGapOrUnresolvedOnlySites(SiteContainer& sites);
 
     /**
+		 * @brief Get a siteset with sites with less than a given amount of gaps.
+		 *
+		 * @param sites The container from which the sites have to be removed.
+     * @param maxPropGaps The maximum frequency of gaps in each site.
+		 * @return A pointer toward a new SiteContainer.
+		 */
+     static SiteContainer* removeGapSites(const SiteContainer& sites, double maxFreqGaps);
+
+    /**
+		 * @brief Remove sites with a given amount of gaps.
+		 *
+		 * @param sites The container from which the sites have to be removed.
+     * @param maxPropGaps The maximum frequency of gaps in each site.
+		 */
+     static void removeGapSites(SiteContainer& sites, double maxFreqGaps);
+
+    /**
      * @brief Get a site set without stop codons, if the alphabet is a CodonAlphabet, otherwise throws an Exception.
      *
      * This function build a new SiteContainer instance without sites that have at least a stop codon.

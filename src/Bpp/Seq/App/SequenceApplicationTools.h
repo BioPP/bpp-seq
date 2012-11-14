@@ -6,37 +6,37 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #ifndef _SEQUENCEAPPLICATIONTOOLS_H_
 #define _SEQUENCEAPPLICATIONTOOLS_H_
@@ -48,13 +48,12 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp
 {
-
 /**
  * @brief This class provides some common tools for applications.
  *
  * The functions parse some option file, create corresponding objects and send
  * a pointer toward it.
- * 
+ *
  * The option files are supposed to follow this simple format:
  * @code
  * parameterName = parameterContent
@@ -65,12 +64,11 @@ namespace bpp
  */
 class SequenceApplicationTools
 {
-	public:
-		SequenceApplicationTools() {}
-		virtual ~SequenceApplicationTools() {}
-		
-	public:
-    
+public:
+  SequenceApplicationTools() {}
+  virtual ~SequenceApplicationTools() {}
+
+public:
   /**
    * @brief Build an Alphabet object according to options.
    *
@@ -83,7 +81,7 @@ class SequenceApplicationTools
    *                   | InvertebrateMitochondrialCodonAlphabet
    *                   | StandardCodonAlphabet
    *                   | VertebrateMitochondrialCodonAlphabet]([alphn=NA|RNA])
-   *                  a codon-alphabet 
+   *                  a codon-alphabet
    *
    * @param params  The attribute map where options may be found.
    * @param suffix  A suffix to be applied to each attribute name.
@@ -92,13 +90,13 @@ class SequenceApplicationTools
    * @param allowGeneric Tell if generic alphabets can be used.
    * @return A new Alphabet object according to options specified.
    */
-    static Alphabet* getAlphabet(
-        std::map<std::string, std::string> & params,
-        const std::string & suffix = "",
-        bool suffixIsOptional = true,
-        bool verbose = true,
-        bool allowGeneric = false) throw (Exception);
-		
+  static Alphabet* getAlphabet(
+    std::map<std::string, std::string>& params,
+    const std::string& suffix = "",
+    bool suffixIsOptional = true,
+    bool verbose = true,
+    bool allowGeneric = false) throw (Exception);
+
   /**
    * @brief Build a Geneticcode object according to options.
    *
@@ -115,7 +113,6 @@ class SequenceApplicationTools
   static GeneticCode* getGeneticCode(const NucleicAlphabet* alphabet, const std::string& description) throw (Exception);
 
 
-  
   /**
    * @brief Build a AlphabetIndex2<double> object for amino acid
    * distance according to options.
@@ -126,131 +123,129 @@ class SequenceApplicationTools
    *      | MiyataAAChemicalDistance]
    * @return A new AlphabetIndex2<double> object.
    * @throw Exception in case of bad description.
-   */  
+   */
   static AlphabetIndex2<double>* getAADistance(const std::string& description) throw (Exception);
 
   /**
-		 * @brief Build a SequenceContainer object according to options.
-		 *
-                 * The sequences do not have to be aligned.
-                 * The supported sequence formats are Fasta, DCSE, Clustal, Mase, Phylip and GenBank.
-                 *
-                 * See the Bio++ program suite manual for a full description of the syntax.
-		 *
-		 * @param alpha   The alphabet to use in the container.
-		 * @param params  The attribute map where options may be found.
-		 * @param suffix  A suffix to be applied to each attribute name.
-		 * @param suffixIsOptional Tell if the suffix is absolutely required.
-		 * @param verbose Print some info to the 'message' output stream.
-		 * @return A new VectorSequenceContainer object according to options specified.
-                 * @see getSiteContainer to read an alignment.
-		 */
-  
+   * @brief Build a SequenceContainer object according to options.
+   *
+   * The sequences do not have to be aligned.
+   * The supported sequence formats are Fasta, DCSE, Clustal, Mase, Phylip and GenBank.
+   *
+   * See the Bio++ program suite manual for a full description of the syntax.
+   *
+   * @param alpha   The alphabet to use in the container.
+   * @param params  The attribute map where options may be found.
+   * @param suffix  A suffix to be applied to each attribute name.
+   * @param suffixIsOptional Tell if the suffix is absolutely required.
+   * @param verbose Print some info to the 'message' output stream.
+   * @return A new VectorSequenceContainer object according to options specified.
+   * @see getSiteContainer to read an alignment.
+   */
+
   static SequenceContainer* getSequenceContainer(
-			const Alphabet * alpha,
-			std::map<std::string, std::string> & params,
-			const std::string & suffix = "",
-			bool suffixIsOptional = true,
-			bool verbose = true);
+    const Alphabet* alpha,
+    std::map<std::string, std::string>& params,
+    const std::string& suffix = "",
+    bool suffixIsOptional = true,
+    bool verbose = true);
 
-    /**
-		 * @brief Build a SiteContainer object according to options.
-		 *
-     * Sequences in file must be aligned.
-     * The supported sequence formats are Fasta, DCSE, Clustal, Mase and Phylip.
-     *
-     * See the Bio++ program suite manual for a full description of the syntax.
-		 *
-		 * @param alpha   The alphabet to use in the container.
-		 * @param params  The attribute map where options may be found.
-		 * @param suffix  A suffix to be applied to each attribute name.
-		 * @param suffixIsOptional Tell if the suffix is absolutely required.
-		 * @param verbose Print some info to the 'message' output stream.
-		 * @return A new VectorSiteContainer object according to options specified.
-		 */
-		static VectorSiteContainer* getSiteContainer(
-			const Alphabet * alpha,
-			std::map<std::string, std::string>& params,
-			const std::string & suffix = "",
-			bool suffixIsOptional = true,
-			bool verbose = true);
-			
-		/**
-		 * @brief Retrieves sites suitable for the analysis.
-		 *
-		 * Options used are:
-		 * - sequence.sites_to_use = [all|complete|nogap].
-		 *
-		 * If the 'complete' option is used, only fully resolve site will be taken
-		 * into account.
-		 * If the 'nogap' option is used, only sites without gap will be taken into
-		 * account.
-     * If 'gapAsUnknown' is set to true and the all option is selected, gaps will
-     * be changed to 'unknown' character is sequences.
-     *
-     * - sequence.max_gap_allowed = [57%|30]
-     * If a % sign fallow the number, it is taken to be a frequence (in percent).
-     * This specify the maximum amount of gaps allowed for each site.
-     * Sites not satisfying this amount will be removed.
-     * A value of 100% will remove all gap-only sites, a value >100% will keep all sites.
-		 *
-		 * @param allSites The site container from which sites must be retrieved.
-		 * @param params   The attribute map where options may be found.
-		 * @param suffix   A suffix to be applied to each attribute name.
-		 * @param suffixIsOptional Tell if the suffix is absolutely required.
-     * @param gapAsUnknown Convert gaps to unknown characters.
-		 * @param verbose Print some info to the 'message' output stream.
-		 * @return A new VectorSiteContainer object containing sites of interest.
-		 */
-		static VectorSiteContainer* getSitesToAnalyse(
-			const SiteContainer & allSites,
-			std::map<std::string, std::string> & params,
-			std::string suffix = "",
-			bool suffixIsOptional = true,
-      bool gapAsUnknown = true,
-			bool verbose = true);
+  /**
+   * @brief Build a SiteContainer object according to options.
+   *
+   * Sequences in file must be aligned.
+   * The supported sequence formats are Fasta, DCSE, Clustal, Mase and Phylip.
+   *
+   * See the Bio++ program suite manual for a full description of the syntax.
+   *
+   * @param alpha   The alphabet to use in the container.
+   * @param params  The attribute map where options may be found.
+   * @param suffix  A suffix to be applied to each attribute name.
+   * @param suffixIsOptional Tell if the suffix is absolutely required.
+   * @param verbose Print some info to the 'message' output stream.
+   * @return A new VectorSiteContainer object according to options specified.
+   */
+  static VectorSiteContainer* getSiteContainer(
+    const Alphabet* alpha,
+    std::map<std::string, std::string>& params,
+    const std::string& suffix = "",
+    bool suffixIsOptional = true,
+    bool verbose = true);
 
-		/**
-		 * @brief Write a sequence file according to options.
-		 *
-     * The supported sequence formats are Fasta and Mase.
-     *
-     * See the Bio++ program suite manual for a full description of the syntax.
-		 *
-     * @see writeSequenceFile(SiteContainer) for writing alignments, with more output formats.
-     *
-		 * @param sequences The sequences to write.
-		 * @param params  The attribute map where options may be found.
-		 * @param suffix  A suffix to be applied to each attribute name.
-		 * @param verbose Print some info to the 'message' output stream.
-		 */
-		static void writeSequenceFile(
-			const SequenceContainer& sequences,
-			std::map<std::string, std::string>& params,
-			const std::string & suffix = "",
-      bool verbose = true);
+  /**
+   * @brief Retrieves sites suitable for the analysis.
+   *
+   * Options used are:
+   * - sequence.sites_to_use = [all|complete|nogap].
+   *
+   * If the 'complete' option is used, only fully resolve site will be taken
+   * into account.
+   * If the 'nogap' option is used, only sites without gap will be taken into
+   * account.
+   * If 'gapAsUnknown' is set to true and the all option is selected, gaps will
+   * be changed to 'unknown' character is sequences.
+   *
+   * - sequence.max_gap_allowed = [57%|30]
+   * If a % sign fallow the number, it is taken to be a frequence (in percent).
+   * This specify the maximum amount of gaps allowed for each site.
+   * Sites not satisfying this amount will be removed.
+   * A value of 100% will remove all gap-only sites, a value >100% will keep all sites.
+   *
+   * @param allSites The site container from which sites must be retrieved.
+   * @param params   The attribute map where options may be found.
+   * @param suffix   A suffix to be applied to each attribute name.
+   * @param suffixIsOptional Tell if the suffix is absolutely required.
+   * @param gapAsUnknown Convert gaps to unknown characters.
+   * @param verbose Print some info to the 'message' output stream.
+   * @return A new VectorSiteContainer object containing sites of interest.
+   */
+  static VectorSiteContainer* getSitesToAnalyse(
+    const SiteContainer& allSites,
+    std::map<std::string, std::string>& params,
+    std::string suffix = "",
+    bool suffixIsOptional = true,
+    bool gapAsUnknown = true,
+    bool verbose = true);
 
-		/**
-		 * @brief Write a sequence alignment file according to options.
-		 *
-     * The supported sequence formats are Fasta, Mase and Phylip.
-     *
-     * See the Bio++ program suite manual for a full description of the syntax.
-		 *
-		 * @param sequences The aligned sequences to write.
-		 * @param params  The attribute map where options may be found.
-		 * @param suffix  A suffix to be applied to each attribute name.
-		 * @param verbose Print some info to the 'message' output stream.
-		 */
-		static void writeAlignmentFile(
-			const SiteContainer& sequences,
-			std::map<std::string, std::string>& params,
-			const std::string & suffix = "",
-      bool verbose = true);
+  /**
+   * @brief Write a sequence file according to options.
+   *
+   * The supported sequence formats are Fasta and Mase.
+   *
+   * See the Bio++ program suite manual for a full description of the syntax.
+   *
+   * @see writeSequenceFile(SiteContainer) for writing alignments, with more output formats.
+   *
+   * @param sequences The sequences to write.
+   * @param params  The attribute map where options may be found.
+   * @param suffix  A suffix to be applied to each attribute name.
+   * @param verbose Print some info to the 'message' output stream.
+   */
+  static void writeSequenceFile(
+    const SequenceContainer& sequences,
+    std::map<std::string, std::string>& params,
+    const std::string& suffix = "",
+    bool verbose = true);
 
+  /**
+   * @brief Write a sequence alignment file according to options.
+   *
+   * The supported sequence formats are Fasta, Mase and Phylip.
+   *
+   * See the Bio++ program suite manual for a full description of the syntax.
+   *
+   * @param sequences The aligned sequences to write.
+   * @param params  The attribute map where options may be found.
+   * @param suffix  A suffix to be applied to each attribute name.
+   * @param verbose Print some info to the 'message' output stream.
+   */
+  static void writeAlignmentFile(
+    const SiteContainer& sequences,
+    std::map<std::string, std::string>& params,
+    const std::string& suffix = "",
+    bool verbose = true);
 };
+} // end of namespace bpp.
 
-} //end of namespace bpp.
-
-#endif //_SEQUENCEAPPLICATIONTOOLS_H_
+#endif // _SEQUENCEAPPLICATIONTOOLS_H_
 

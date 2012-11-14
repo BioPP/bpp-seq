@@ -277,6 +277,33 @@ void SiteContainerTools::removeGapOrUnresolvedOnlySites(SiteContainer& sites)
 
 /******************************************************************************/
 
+SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, double maxFreqGaps)
+{
+  vector<string> seqNames = sites.getSequencesNames();
+  VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+  for (unsigned int i = 0; i < sites.getNumberOfSites(); ++i) {
+    map<int, double> freq;
+    SiteTools::getFrequencies(sites.getSite(i), freq);
+    if (freq[-1] <= maxFreqGaps)
+      noGapCont->addSite(sites.getSite(i), false);
+  }
+  return noGapCont;
+}
+
+/******************************************************************************/
+
+void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps)
+{
+  for (unsigned int i = sites.getNumberOfSites(); i > 0; i--) {
+    map<int, double> freq;
+    SiteTools::getFrequencies(sites.getSite(i - 1), freq);
+    if (freq[-1] > maxFreqGaps)
+      sites.deleteSite(i - 1);
+  }
+}
+
+/******************************************************************************/
+
 SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sites)  throw (AlphabetException)
 {
   const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
