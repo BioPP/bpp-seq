@@ -281,6 +281,7 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
 {
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+  noGapCont->setSequencesNames(seqNames, false);
   for (unsigned int i = 0; i < sites.getNumberOfSites(); ++i) {
     map<int, double> freq;
     SiteTools::getFrequencies(sites.getSite(i), freq);
