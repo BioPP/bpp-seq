@@ -47,10 +47,11 @@
 using namespace bpp;
 using namespace std;
 
-ISequence* BppOSequenceReaderFormat::read(const std::string& description, map<string, string>& param, bool verbose) throw (Exception)
+ISequence* BppOSequenceReaderFormat::read(const std::string& description) throw (Exception)
 {
+  unparsedArguments_.clear();
   string format = "";
-  KeyvalTools::parseProcedure(description, format, param);
+  KeyvalTools::parseProcedure(description, format, unparsedArguments_);
   auto_ptr<ISequence> iSeq;
   if (format == "Mase")
   {
@@ -60,26 +61,26 @@ ISequence* BppOSequenceReaderFormat::read(const std::string& description, map<st
   {
     bool sequential = true, extended = true;
     string split = "  ";
-    if (param.find("order") != param.end())
+    if (unparsedArguments_.find("order") != unparsedArguments_.end())
     {
-      if (param["order"] == "sequential")
+      if (unparsedArguments_["order"] == "sequential")
         sequential = true;
-      else if (param["order"] == "interleaved")
+      else if (unparsedArguments_["order"] == "interleaved")
         sequential = false;
       else
         ApplicationTools::displayWarning("Argument '" +
-                                         param["order"] +
+                                         unparsedArguments_["order"] +
                                          "' for argument 'Phylip#order' is unknown. " +
                                          "Default used instead: sequential.");
     }
     else
       ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
-    if (param.find("type") != param.end())
+    if (unparsedArguments_.find("type") != unparsedArguments_.end())
     {
-      if (param["type"] == "extended")
+      if (unparsedArguments_["type"] == "extended")
       {
         extended = true;
-        split = ApplicationTools::getStringParameter("split", param, "spaces", "", true, false);
+        split = ApplicationTools::getStringParameter("split", unparsedArguments_, "spaces", "", true, false);
         if (split == "spaces")
           split = "  ";
         else if (split == "tab")
@@ -87,11 +88,11 @@ ISequence* BppOSequenceReaderFormat::read(const std::string& description, map<st
         else
           throw Exception("Unknown option for Phylip#split: " + split);
       }
-      else if (param["type"] == "classic")
+      else if (unparsedArguments_["type"] == "classic")
         extended = false;
       else
         ApplicationTools::displayWarning("Argument '" +
-                                         param["type"] + "' for parameter 'Phylip#type' is unknown. " +
+                                         unparsedArguments_["type"] + "' for parameter 'Phylip#type' is unknown. " +
                                          "Default used instead: extended.");
     }
     else
@@ -100,13 +101,13 @@ ISequence* BppOSequenceReaderFormat::read(const std::string& description, map<st
   }
   else if (format == "Fasta")
   {
-    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", param, false, "", true, false);
-    bool extended    = ApplicationTools::getBooleanParameter("extended", param, false, "", true, false);
+    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", unparsedArguments_, false, "", true, false);
+    bool extended    = ApplicationTools::getBooleanParameter("extended", unparsedArguments_, false, "", true, false);
     iSeq.reset(new Fasta(100, true, extended, strictNames));
   }
   else if (format == "Clustal")
   {
-    unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", param, 0, "", true, false);
+    unsigned int extraSpaces = ApplicationTools::getParameter<unsigned int>("extraSpaces", unparsedArguments_, 0, "", true, false);
     iSeq.reset(new Clustal(true, extraSpaces));
   }
   else if (format == "Dcse")

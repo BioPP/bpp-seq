@@ -84,6 +84,7 @@ set(CPP_FILES
   Bpp/Seq/Io/BppOSequenceWriterFormat.cpp
   Bpp/Seq/Io/BppOAlignmentReaderFormat.cpp
   Bpp/Seq/Io/BppOAlignmentWriterFormat.cpp
+  Bpp/Seq/Io/BppOSequenceStreamReaderFormat.cpp
   Bpp/Seq/App/SequenceApplicationTools.cpp
   )
 
@@ -165,6 +166,7 @@ set(H_FILES
   Bpp/Seq/Io/BppOSequenceWriterFormat.h
   Bpp/Seq/Io/BppOAlignmentReaderFormat.h
   Bpp/Seq/Io/BppOAlignmentWriterFormat.h
+  Bpp/Seq/Io/BppOSequenceStreamReaderFormat.h
   Bpp/Seq/Container/VectorSequenceContainer.h
   Bpp/Seq/Container/VectorSiteContainer.h
   Bpp/Seq/Container/CompressedVectorSiteContainer.h

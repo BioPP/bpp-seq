@@ -56,9 +56,15 @@ namespace bpp
   class BppOSequenceWriterFormat:
     public virtual IOFormat
   {
+  private:
+    bool verbose_;
+    std::map<std::string, std::string> unparsedArguments_;
+
   public:
-    BppOSequenceWriterFormat() {}
-    virtual ~BppOSequenceWriterFormat() {}
+    BppOSequenceWriterFormat(bool verbose = true):
+      verbose_(verbose),
+      unparsedArguments_() {}
+     virtual ~BppOSequenceWriterFormat() {}
 
   public:
     const std::string getFormatName() const { return "BppO"; }
@@ -71,12 +77,15 @@ namespace bpp
      * @brief Read a OSequence object from a string.
      *
      * @param description A string describing the reader in the keyval syntax.
-     * @param param Additional parsed arguments.
-     * @param verbose Print some info to the 'message' output stream.
      * @return A new OSequence object according to options specified.
      * @throw Exception if an error occured.
      */
-    OSequence* read(const std::string& description, std::map<std::string, std::string>& param, bool verbose) throw (Exception);
+    OSequence* read(const std::string& description) throw (Exception);
+
+    /**
+     * @return The arguments and their unparsed values from the last call of the read function, if there are any.
+     */
+    virtual const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 
   };
 

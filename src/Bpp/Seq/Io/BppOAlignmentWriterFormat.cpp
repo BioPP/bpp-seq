@@ -47,11 +47,12 @@
 using namespace bpp;
 using namespace std;
 
-OAlignment* BppOAlignmentWriterFormat::read(const std::string& description, map<string, string>& param, bool verbose) throw (Exception)
+OAlignment* BppOAlignmentWriterFormat::read(const std::string& description) throw (Exception)
 {
+  unparsedArguments_.clear();
   string format = "";
-  KeyvalTools::parseProcedure(description, format, param);
-  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", param, 100, "", true, false);
+  KeyvalTools::parseProcedure(description, format, unparsedArguments_);
+  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", unparsedArguments_, 100, "", true, false);
   auto_ptr<OAlignment> oAln;
   if (format == "Fasta")
   {
@@ -65,26 +66,26 @@ OAlignment* BppOAlignmentWriterFormat::read(const std::string& description, map<
   {
     bool sequential = true, extended = true;
     string split = "  ";
-    if (param.find("order") != param.end())
+    if (unparsedArguments_.find("order") != unparsedArguments_.end())
     {
-      if (param["order"] == "sequential")
+      if (unparsedArguments_["order"] == "sequential")
         sequential = true;
-      else if (param["order"] == "interleaved")
+      else if (unparsedArguments_["order"] == "interleaved")
         sequential = false;
       else
         ApplicationTools::displayWarning("Argument '" +
-                                         param["order"] +
+                                         unparsedArguments_["order"] +
                                          "' for argument 'Phylip#order' is unknown. " +
                                          "Default used instead: sequential.");
     }
     else
       ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
-    if (param.find("type") != param.end())
+    if (unparsedArguments_.find("type") != unparsedArguments_.end())
     {
-      if (param["type"] == "extended")
+      if (unparsedArguments_["type"] == "extended")
       {
         extended = true;
-        split = ApplicationTools::getStringParameter("split", param, "spaces", "", true, false);
+        split = ApplicationTools::getStringParameter("split", unparsedArguments_, "spaces", "", true, false);
         if (split == "spaces")
           split = "  ";
         else if (split == "tab")
@@ -92,11 +93,11 @@ OAlignment* BppOAlignmentWriterFormat::read(const std::string& description, map<
         else
           throw Exception("Unknown option for Phylip#split: " + split);
       }
-      else if (param["type"] == "classic")
+      else if (unparsedArguments_["type"] == "classic")
         extended = false;
       else
         ApplicationTools::displayWarning("Argument '" +
-                                         param["type"] + "' for parameter 'Phylip#type' is unknown. " +
+                                         unparsedArguments_["type"] + "' for parameter 'Phylip#type' is unknown. " +
                                          "Default used instead: extended.");
     }
     else

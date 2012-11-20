@@ -47,11 +47,12 @@
 using namespace bpp;
 using namespace std;
 
-OSequence* BppOSequenceWriterFormat::read(const std::string& description, map<string, string>& param, bool verbose) throw (Exception)
+OSequence* BppOSequenceWriterFormat::read(const std::string& description) throw (Exception)
 {
+  unparsedArguments_.clear();
   string format = "";
-  KeyvalTools::parseProcedure(description, format, param);
-  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", param, 100, "", true, false);
+  KeyvalTools::parseProcedure(description, format, unparsedArguments_);
+  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", unparsedArguments_, 100, "", true, false);
   auto_ptr<OSequence> oSeq;
   if (format == "Fasta")
   {
