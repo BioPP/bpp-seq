@@ -62,6 +62,10 @@ OAlignment* BppOAlignmentWriterFormat::read(const std::string& description) thro
   {
     oAln.reset(new Mase(ncol));
   }
+  else if (format == "Clustal")
+  {
+    oAln.reset(new Clustal(ncol));
+  }
   else if (format == "Phylip")
   {
     bool sequential = true, extended = true;
