@@ -1,3 +1,6 @@
+09/01/13 Julien Dutheil
+* Use size_t instead of unsigned int for indexes in containers.
+
 17/09/12 Julien Dutheil
 * Reorganized IO classes.
 

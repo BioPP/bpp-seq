@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Tools, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -175,7 +175,7 @@ class SequenceContainer:
 		 *
 		 * @return The number of sequences in the container.
 		 */
-		virtual unsigned int getNumberOfSequences() const = 0;
+		virtual size_t getNumberOfSequences() const = 0;
 
 		/**
 		 * @brief Get all the names of the sequences in the container.
@@ -270,7 +270,7 @@ class SequenceContainer:
      * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
      * @throw IndexOutOfBoundsException If the element position is not valid.
      */
-    virtual int& valueAt(const std::string& sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+    virtual int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Element access function.
@@ -282,7 +282,7 @@ class SequenceContainer:
      * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
      * @throw IndexOutOfBoundsException If the element position is not valid.
      */
-    virtual const int& valueAt(const std::string& sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+    virtual const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Element access operator.
@@ -294,7 +294,7 @@ class SequenceContainer:
      * @param sequenceName The sequence name.
      * @param elementIndex The element position within the sequence.
      */
-    virtual int& operator()(const std::string& sequenceName, unsigned int elementIndex) = 0;
+    virtual int& operator()(const std::string& sequenceName, size_t elementIndex) = 0;
 
     /**
      * @brief Element access operator.
@@ -306,7 +306,7 @@ class SequenceContainer:
      * @param sequenceName The sequence name.
      * @param elementIndex The element position within the sequence.
      */
-    virtual const int& operator()(const std::string& sequenceName, unsigned int elementIndex) const = 0;
+    virtual const int& operator()(const std::string& sequenceName, size_t elementIndex) const = 0;
     /** @} */
 };
 

@@ -91,7 +91,7 @@ MapSequenceContainer::~MapSequenceContainer()
 
 /******************************************************************************/
 
-const Sequence& MapSequenceContainer::getSequence(unsigned int i) const throw (IndexOutOfBoundsException)
+const Sequence& MapSequenceContainer::getSequence(size_t i) const throw (IndexOutOfBoundsException)
 {
   // Specified sequence existence verification
   if (i < sequences_.size())
@@ -127,12 +127,12 @@ bool MapSequenceContainer::hasSequence(const string& name) const
 
 /******************************************************************************/
 
-Sequence& MapSequenceContainer::getSequence_(unsigned int i) throw (IndexOutOfBoundsException)
+Sequence& MapSequenceContainer::getSequence_(size_t i) throw (IndexOutOfBoundsException)
 {
   if (i >= sequences_.size())
     throw IndexOutOfBoundsException("MapSequenceContainer::getSequence", i, 0, sequences_.size() - 1);
   map<string, Sequence*>::iterator it = sequences_.begin();
-  for (unsigned int j = 0; j < i; j++) it++;
+  for (size_t j = 0; j < i; j++) it++;
   return *it->second;
 }
 
@@ -160,7 +160,7 @@ const Sequence& MapSequenceContainer::getSequenceByKey(const string& key) const
 
 /******************************************************************************/
 
-unsigned int MapSequenceContainer::getSequencePosition(const string& name)
+size_t MapSequenceContainer::getSequencePosition(const string& name)
   const throw (SequenceNotFoundException)
 {
   // Specified sequence name research into all sequences
@@ -176,13 +176,13 @@ unsigned int MapSequenceContainer::getSequencePosition(const string& name)
 
 /******************************************************************************/
 
-void MapSequenceContainer::setSequence(unsigned int i, const Sequence& sequence, bool checkNames)
+void MapSequenceContainer::setSequence(size_t i, const Sequence& sequence, bool checkNames)
     throw (IndexOutOfBoundsException)
 {
   // Sequence's name existence checking
   if (checkNames)
   {
-    unsigned int j = 0;
+    size_t j = 0;
     // For all names in map : throw exception if name already exists
     for (map<string, Sequence*>::const_iterator it = sequences_.begin(); it != sequences_.end(); it++)
     {
@@ -262,12 +262,12 @@ void MapSequenceContainer::setSequenceByKey(const string& key, const Sequence& s
 
 /******************************************************************************/
 
-Sequence* MapSequenceContainer::removeSequence(unsigned int i) throw (IndexOutOfBoundsException)
+Sequence* MapSequenceContainer::removeSequence(size_t i) throw (IndexOutOfBoundsException)
 {
   if (i >= sequences_.size())
     throw IndexOutOfBoundsException("MapSequenceContainer::removeSequence", i, 0, sequences_.size() - 1);
   map<string, Sequence*>::iterator it = sequences_.begin();
-  for (unsigned int j = 0; j < i; j++) it++;
+  for (size_t j = 0; j < i; j++) it++;
   Sequence* old = it->second;
   sequences_.erase(it);  
   return old;
@@ -277,13 +277,14 @@ Sequence* MapSequenceContainer::removeSequence(unsigned int i) throw (IndexOutOf
 
 Sequence* MapSequenceContainer::removeSequence(const string& name) throw (SequenceNotFoundException)
 {
-  for (map<string, Sequence*>::iterator it = sequences_.begin(); it != sequences_.end(); it++)
+  for (map<string, Sequence*>::iterator it = sequences_.begin(); it != sequences_.end(); it++) {
     if (it->second->getName() == name)
     {
       Sequence* old = it->second;
       sequences_.erase(it);
       return old;
     }
+  }
   throw SequenceNotFoundException("MapSequenceContainer::removeSequence", name);
 }
 
@@ -302,12 +303,12 @@ Sequence* MapSequenceContainer::removeSequenceByKey(const string& key)throw (Seq
 
 /******************************************************************************/
 
-void MapSequenceContainer::deleteSequence(unsigned int i) throw (IndexOutOfBoundsException)
+void MapSequenceContainer::deleteSequence(size_t i) throw (IndexOutOfBoundsException)
 {
   if (i >= sequences_.size())
     throw IndexOutOfBoundsException("MapSequenceContainer::deleteSequence", i, 0, sequences_.size() - 1);
   map<string, Sequence*>::iterator it = sequences_.begin();
-  for (unsigned int j = 0; j < i; j++) it++;
+  for (size_t j = 0; j < i; j++) it++;
   delete it->second;
   sequences_.erase(it);
 }
@@ -316,13 +317,14 @@ void MapSequenceContainer::deleteSequence(unsigned int i) throw (IndexOutOfBound
 
 void MapSequenceContainer::deleteSequence(const string& name) throw (SequenceNotFoundException)
 {
-  for (map<string, Sequence*>::iterator it = sequences_.begin(); it != sequences_.end(); it++)
+  for (map<string, Sequence*>::iterator it = sequences_.begin(); it != sequences_.end(); it++) {
     if (it->second->getName() == name)
     {
       delete it->second;
       sequences_.erase(it);
       return;
     }
+  }
   throw SequenceNotFoundException("MapSequenceContainer::deleteSequence", name);
 }
 
@@ -375,12 +377,12 @@ vector<string> MapSequenceContainer::getKeys() const
 
 /******************************************************************************/
 
-string MapSequenceContainer::getKey(unsigned int pos) const throw (IndexOutOfBoundsException)
+string MapSequenceContainer::getKey(size_t pos) const throw (IndexOutOfBoundsException)
 {
   if (pos >= getNumberOfSequences())
     throw IndexOutOfBoundsException("MapSequenceContainer::getKey", pos, 0, sequences_.size() - 1);
   map<string, Sequence*>::const_iterator it = sequences_.begin();
-  for (unsigned int i = 0; i < pos; i++) it++;
+  for (size_t i = 0; i < pos; i++) it++;
   return it->first;
 }
 
@@ -400,12 +402,12 @@ string MapSequenceContainer::getKey(const string& name) const throw (SequenceNot
   
 /******************************************************************************/
 
-void MapSequenceContainer::setComments(unsigned int pos, const Comments& comments) throw (IndexOutOfBoundsException)
+void MapSequenceContainer::setComments(size_t pos, const Comments& comments) throw (IndexOutOfBoundsException)
 {
   if (pos >= getNumberOfSequences())
     throw IndexOutOfBoundsException("MapSequenceContainer::setComments", pos, 0, sequences_.size() - 1);
   map<string, Sequence*>::iterator it = sequences_.begin();
-  for (unsigned int i = 0 ; i < pos ; i++) it++;
+  for (size_t i = 0 ; i < pos ; i++) it++;
   it->second->setComments(comments);
 }
 
@@ -423,17 +425,17 @@ vector<string> MapSequenceContainer::getSequencesNames() const
 
 void MapSequenceContainer::setSequencesNames(const vector<string>& names, bool checkNames) throw (Exception)
 {
-  if(names.size() != getNumberOfSequences())
+  if (names.size() != getNumberOfSequences())
     throw BadIntegerException("MapSequenceContainer::setSequenceNames : bad number of names", names.size());
-  if(checkNames) {
+  if (checkNames) {
     // check if there is no repeat names in teh vector
-    for (unsigned int i = 0 ; i < names.size() ; i++)
+    for (size_t i = 0 ; i < names.size() ; i++)
       for (unsigned int j = 0 ; j < i ; j++)
         if (names[j] == names[i])
           throw Exception("MapSequenceContainer::setSequencesNames: Sequence's name already exists in container");
   }
   map<string, Sequence*>::iterator it = sequences_.begin();
-  for (unsigned int i = 0 ; i < names.size() ; i++)
+  for (size_t i = 0 ; i < names.size() ; i++)
   {
     it->second->setName(names[i]);
     it++;

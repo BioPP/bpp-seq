@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -68,7 +68,7 @@ class OrderedSequenceContainer:
 		 * @return The content of the sequence as a vector of integers.
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
 		 */
-		virtual const std::vector<int>& getContent(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const std::vector<int>& getContent(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 		
 		/**
 		 * @brief Convert a particular sequence to a string.
@@ -77,7 +77,7 @@ class OrderedSequenceContainer:
 		 * @return A string describing the content of the sequence.
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
 		 */
-		virtual std::string toString(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual std::string toString(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Retrieve a sequence object from the container.
@@ -87,7 +87,7 @@ class OrderedSequenceContainer:
 		 * @return A reference toward the Sequence object with corresponding name.
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
 		 */
-		virtual const Sequence& getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Replace a sequence in the container.
@@ -99,7 +99,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
 		 * @throw Exception Any other kind of exception.
 		 */
-		virtual void setSequence(unsigned int sequenceIndex, const Sequence & sequence, bool checkName) throw (Exception) = 0;
+		virtual void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception) = 0;
 
 		/**
 		 * @brief Extract (and remove) a sequence from the container.
@@ -108,7 +108,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the name does not match any sequence in
 		 * the container.
 		 */
-		virtual Sequence* removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException, Exception) = 0;
+		virtual Sequence* removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException, Exception) = 0;
 
 		/**
 		 * @brief Delete a sequence of the container.
@@ -117,7 +117,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in
 		 * the container.
 		 */
-		virtual void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException, Exception) = 0;
+		virtual void deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException, Exception) = 0;
 
 		/**
 		 * @brief Get the name of a particular sequence.
@@ -127,7 +127,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in
 		 * the container.
 		 */
-		virtual const std::string& getName(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const std::string& getName(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Get comments of a particular sequence.
@@ -137,7 +137,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in
 		 * the container.
 		 */
-		virtual const Comments& getComments(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+		virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
 		/**
 		 * @brief Set the comments of a particular sequence.
@@ -147,7 +147,7 @@ class OrderedSequenceContainer:
 		 * @throw IndexOutOfBoundsException If the position does not match any sequence in
 		 * the container.
 		 */
-		virtual void setComments(unsigned int sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) = 0;
+		virtual void setComments(size_t sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) = 0;
 		
 		/**
 		 * @brief Get the position of a sequence in sequence container from its name.
@@ -156,7 +156,7 @@ class OrderedSequenceContainer:
 		 * @return The position of the sequence with name 'name', if it exists.
 		 * @throw SequenceNotFoundException If no sequence with name 'name' could be found.
 		 */
-		virtual unsigned int getSequencePosition(const std::string & name) const throw (SequenceNotFoundException) = 0;
+		virtual size_t getSequencePosition(const std::string & name) const throw (SequenceNotFoundException) = 0;
 
     /**
      * @name Provide direct access to sequences content.
@@ -177,7 +177,7 @@ class OrderedSequenceContainer:
      * @param elementIndex The element position within the sequence.
      * @throw IndexOutOfBoundsException If a position is not valid.
      */
-    virtual int& valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException) = 0;
+    virtual int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException) = 0;
     
     /**
      * @brief Element access operator.
@@ -188,7 +188,7 @@ class OrderedSequenceContainer:
      * @param elementIndex The element position within the sequence.
      * @throw IndexOutOfBoundsException If a position is not valid.
      */
-    virtual const int& valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Element access operator.
@@ -200,7 +200,7 @@ class OrderedSequenceContainer:
      * @param sequenceIndex The sequence position.
      * @param elementIndex The element position within the sequence.
      */
-    virtual int& operator()(unsigned int sequenceIndex, unsigned int elementIndex) = 0;
+    virtual int& operator()(size_t sequenceIndex, size_t elementIndex) = 0;
     
     /**
      * @brief Element access operator.
@@ -212,7 +212,7 @@ class OrderedSequenceContainer:
      * @param sequenceIndex The sequence position.
      * @param elementIndex The element position within the sequence.
      */
-    virtual const int& operator()(unsigned int sequenceIndex, unsigned int elementIndex) const = 0;
+    virtual const int& operator()(size_t sequenceIndex, size_t elementIndex) const = 0;
     /** @} */
 	
   public:
@@ -228,7 +228,7 @@ class OrderedSequenceContainer:
 		virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;
 		virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
 		virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
-		virtual unsigned int getNumberOfSequences() const = 0;
+		virtual size_t getNumberOfSequences() const = 0;
 		virtual std::vector<std::string> getSequencesNames() const = 0;
 		virtual void setSequencesNames(const std::vector<std::string> & names, bool checkNames) throw (Exception) = 0;
 		virtual const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException) = 0;

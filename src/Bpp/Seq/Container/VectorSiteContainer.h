@@ -5,37 +5,37 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. CNRS, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #ifndef _VECTORSITECONTAINER_H_
 #define _VECTORSITECONTAINER_H_
@@ -54,7 +54,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp
 {
-
 /**
  * @brief The VectorSiteContainer class.
  *
@@ -63,181 +62,179 @@ namespace bpp
  * \f$l\f$ is the number of sites in the container.
  *
  * See AlignedSequenceContainer for an alternative implementation.
- * 
+ *
  * @see Sequence, Site, AlignedSequenceContainer
  */
-class VectorSiteContainer: 
-  public AbstractSequenceContainer,   //This container implements the SequenceContainer interface
-                                      //and use the AbstractSequenceContainer adapter.
-  public virtual SiteContainer        //This container is a SiteContainer.
+class VectorSiteContainer :
+  public AbstractSequenceContainer,
+  // This container implements the SequenceContainer interface
+  // and use the AbstractSequenceContainer adapter.
+  public virtual SiteContainer        // This container is a SiteContainer.
 {
-  protected:
-    std::vector<Site*> sites_;
-    std::vector<std::string> names_;
-    std::vector<Comments*> comments_; //Sequences comments.
-    mutable std::vector<Sequence*> sequences_; //To store pointer toward sequences retrieves (cf. AlignedSequenceContainer).
-  
-  public:
-    /**
-     * @brief Build a new container from a set of sites.
-     *
-     * @param vs A std::vector of sites.
-     * @param alpha The common alphabet for all sites.
-     * @param checkPositions Check for the redundancy of site position tag. This may turn to be very time consuming!
-     * @throw Exception If sites differ in size or in alphabet.
-     */
-    VectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
-    /**
-     * @brief Build a new empty container with specified size.
-     *
-     * @param size Number of sequences in the container.
-     * @param alpha The alphabet for this container.
-     */
-    VectorSiteContainer(unsigned int size, const Alphabet* alpha);
-    /**
-     * @brief Build a new empty container with specified sequence names.
-     *
-     * @param names Sequence names. This will set the number of sequences in the container.
-     * @param alpha The alphabet for this container.
-     */
-    VectorSiteContainer(const std::vector<std::string>& names, const Alphabet* alpha);
+protected:
+  std::vector<Site*> sites_;
+  std::vector<std::string> names_;
+  std::vector<Comments*> comments_; // Sequences comments.
+  mutable std::vector<Sequence*> sequences_; // To store pointer toward sequences retrieves (cf. AlignedSequenceContainer).
 
-    /**
-     * @brief Build a new empty container.
-     *
-     * @param alpha The alphabet for this container.
-     */
-    VectorSiteContainer(const Alphabet* alpha);
+public:
+  /**
+   * @brief Build a new container from a set of sites.
+   *
+   * @param vs A std::vector of sites.
+   * @param alpha The common alphabet for all sites.
+   * @param checkPositions Check for the redundancy of site position tag. This may turn to be very time consuming!
+   * @throw Exception If sites differ in size or in alphabet.
+   */
+  VectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
+  /**
+   * @brief Build a new empty container with specified size.
+   *
+   * @param size Number of sequences in the container.
+   * @param alpha The alphabet for this container.
+   */
+  VectorSiteContainer(size_t size, const Alphabet* alpha);
+  /**
+   * @brief Build a new empty container with specified sequence names.
+   *
+   * @param names Sequence names. This will set the number of sequences in the container.
+   * @param alpha The alphabet for this container.
+   */
+  VectorSiteContainer(const std::vector<std::string>& names, const Alphabet* alpha);
 
-    VectorSiteContainer(const      VectorSiteContainer& vsc);
-    VectorSiteContainer(const            SiteContainer&  sc);
-    VectorSiteContainer(const OrderedSequenceContainer& osc);
-    VectorSiteContainer(const        SequenceContainer&  sc);
+  /**
+   * @brief Build a new empty container.
+   *
+   * @param alpha The alphabet for this container.
+   */
+  VectorSiteContainer(const Alphabet* alpha);
 
-    VectorSiteContainer& operator=(const      VectorSiteContainer& vsc);
-    VectorSiteContainer& operator=(const            SiteContainer&  sc);
-    VectorSiteContainer& operator=(const OrderedSequenceContainer& osc);
-    VectorSiteContainer& operator=(const        SequenceContainer&  sc);
+  VectorSiteContainer(const VectorSiteContainer& vsc);
+  VectorSiteContainer(const SiteContainer&  sc);
+  VectorSiteContainer(const OrderedSequenceContainer& osc);
+  VectorSiteContainer(const SequenceContainer&  sc);
 
-    virtual ~VectorSiteContainer() { clear(); }
+  VectorSiteContainer& operator=(const VectorSiteContainer& vsc);
+  VectorSiteContainer& operator=(const SiteContainer&  sc);
+  VectorSiteContainer& operator=(const OrderedSequenceContainer& osc);
+  VectorSiteContainer& operator=(const SequenceContainer&  sc);
 
-  public:
+  virtual ~VectorSiteContainer() { clear(); }
 
-    /**
-     * @name The Clonable interface.
-     *
-     * @{
-     */
-    VectorSiteContainer* clone() const { return new VectorSiteContainer(*this); }
-    /** @} */
+public:
+  /**
+   * @name The Clonable interface.
+   *
+   * @{
+   */
+  VectorSiteContainer* clone() const { return new VectorSiteContainer(*this); }
+  /** @} */
 
-    /**
-     * @name The SiteContainer interface implementation:
-     *
-     * @{
-     */
-    const Site& getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException);
-    void        setSite(unsigned int siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
-    Site*    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
-    void     deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
-    void    deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException);
-    void        addSite(const Site& site,                                       bool checkPosition = true) throw (Exception);
-    void        addSite(const Site& site,                         int position, bool checkPosition = true) throw (Exception);
-    void        addSite(const Site& site, unsigned int siteIndex,               bool checkPosition = true) throw (Exception);
-    void        addSite(const Site& site, unsigned int siteIndex, int position, bool checkPosition = true) throw (Exception);
-    unsigned int getNumberOfSites() const;
-    void reindexSites();
-    Vint getSitePositions() const;
-    /** @} */
+  /**
+   * @name The SiteContainer interface implementation:
+   *
+   * @{
+   */
+  const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException);
+  void        setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
+  Site*    removeSite(size_t siteIndex) throw (IndexOutOfBoundsException);
+  void     deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
+  void    deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException);
+  void        addSite(const Site& site,                                 bool checkPosition = true) throw (Exception);
+  void        addSite(const Site& site,                   int position, bool checkPosition = true) throw (Exception);
+  void        addSite(const Site& site, size_t siteIndex,               bool checkPosition = true) throw (Exception);
+  void        addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true) throw (Exception);
+  size_t getNumberOfSites() const;
+  void reindexSites();
+  Vint getSitePositions() const;
+  /** @} */
 
-    //Theses methods are implemented for this class:
-    
-    /**
-     * @name The SequenceContainer interface.
-     *
-     * @{
-     */
-    void setComments(unsigned int sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
+  // Theses methods are implemented for this class:
 
-    // Method to get a sequence object from sequence container
-    const Sequence& getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
-    const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
-    bool hasSequence(const std::string& name) const;
+  /**
+   * @name The SequenceContainer interface.
+   *
+   * @{
+   */
+  void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
 
-    // Methods to get position of a sequence in sequence container from his name
-    // This method is used by delete and remove methods
-    unsigned int getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
+  // Method to get a sequence object from sequence container
+  const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException);
+  const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
+  bool hasSequence(const std::string& name) const;
 
-    Sequence* removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
-    Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException);
+  // Methods to get position of a sequence in sequence container from his name
+  // This method is used by delete and remove methods
+  size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
 
-    void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException);
-    void deleteSequence(const std::string& name) throw (SequenceNotFoundException);
-    
-    unsigned int getNumberOfSequences() const { return names_.size(); }
+  Sequence* removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
+  Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException);
 
-    std::vector<std::string> getSequencesNames() const;
+  void deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
+  void deleteSequence(const std::string& name) throw (SequenceNotFoundException);
 
-    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception);
+  size_t getNumberOfSequences() const { return names_.size(); }
 
-    void clear();  
-    
-    VectorSiteContainer* createEmptyContainer() const;
+  std::vector<std::string> getSequencesNames() const;
 
-    int & valueAt(const std::string & sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
-    {
-      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
-      return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
-    }
-    const int & valueAt(const std::string & sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
-    {
-      if(elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
-      return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
-    }
-    int & operator()(const std::string & sequenceName, unsigned int elementIndex)
-    {
-      return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
-    }
-    const int & operator()(const std::string & sequenceName, unsigned int elementIndex) const
-    {
-      return (* sites_[elementIndex])[getSequencePosition(sequenceName)];
-    }
+  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception);
 
-    int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException)
-    {
-      if(sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);          
-      if(elementIndex  >= getNumberOfSites())     throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
-      return (* sites_[elementIndex])[sequenceIndex];
-    }
-    const int & valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException)
-    {
-      if(sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);          
-      if(elementIndex  >= getNumberOfSites())     throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
-      return (* sites_[elementIndex])[sequenceIndex];
-    }
-    int & operator()(unsigned int sequenceIndex, unsigned int elementIndex)
-    {
-      return (* sites_[elementIndex])[sequenceIndex];
-    }
-    const int & operator()(unsigned int sequenceIndex, unsigned int elementIndex) const
-    {
-      return (* sites_[elementIndex])[sequenceIndex];
-    }
-     /** @} */
+  void clear();
 
-    void addSequence(const Sequence& sequence,                             bool checkName = true) throw (Exception);
-    void addSequence(const Sequence& sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception);
-    
-    void setSequence(const std::string& name,    const Sequence& sequence, bool checkName) throw (Exception);
-    void setSequence(unsigned int sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception);
+  VectorSiteContainer* createEmptyContainer() const;
 
+  int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+  {
+    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
+    return (*sites_[elementIndex])[getSequencePosition(sequenceName)];
+  }
+  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+  {
+    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
+    return (*sites_[elementIndex])[getSequencePosition(sequenceName)];
+  }
+  int& operator()(const std::string& sequenceName, size_t elementIndex)
+  {
+    return (*sites_[elementIndex])[getSequencePosition(sequenceName)];
+  }
+  const int& operator()(const std::string& sequenceName, size_t elementIndex) const
+  {
+    return (*sites_[elementIndex])[getSequencePosition(sequenceName)];
+  }
 
-  protected:
-    // Create n void sites:
-    void realloc(unsigned int n);
+  int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException)
+  {
+    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
+    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
+    return (*sites_[elementIndex])[sequenceIndex];
+  }
+  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException)
+  {
+    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
+    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
+    return (*sites_[elementIndex])[sequenceIndex];
+  }
+  int& operator()(size_t sequenceIndex, size_t elementIndex)
+  {
+    return (*sites_[elementIndex])[sequenceIndex];
+  }
+  const int& operator()(size_t sequenceIndex, size_t elementIndex) const
+  {
+    return (*sites_[elementIndex])[sequenceIndex];
+  }
+  /** @} */
+
+  void addSequence(const Sequence& sequence,                             bool checkName = true) throw (Exception);
+  void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true) throw (Exception);
+
+  void setSequence(const std::string& name,    const Sequence& sequence, bool checkName) throw (Exception);
+  void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception);
+
+protected:
+  // Create n void sites:
+  void realloc(size_t n);
 };
+} // end of namespace bpp.
 
-} //end of namespace bpp.
-
-#endif  //_VECTORSITECONTAINER_H_
+#endif  // _VECTORSITECONTAINER_H_
 

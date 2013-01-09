@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -81,7 +81,7 @@ class CompressedVectorSiteContainer :
 {
 protected:
   std::vector<Site*> sites_; //A set of unique sites.
-  std::vector<unsigned int> index_; //For all sites, give the actual position in the set.
+  std::vector<size_t> index_; //For all sites, give the actual position in the set.
   std::vector<std::string> names_;
   std::vector<Comments*> comments_; // Sequences comments.
   mutable std::vector<Sequence*> sequences_; // To store pointer toward sequences retrieved (cf. AlignedSequenceContainer).
@@ -101,7 +101,7 @@ public:
    * @param size Number of sequences in the container.
    * @param alpha The alphabet for this container.
    */
-  CompressedVectorSiteContainer(unsigned int size, const Alphabet* alpha);
+  CompressedVectorSiteContainer(size_t size, const Alphabet* alpha);
   /**
    * @brief Build a new empty container with specified sequence names.
    *
@@ -139,22 +139,22 @@ public:
    *
    * @{
    */
-  const Site& getSite(unsigned int siteIndex) const throw (IndexOutOfBoundsException);
-  void        setSite(unsigned int siteIndex, const Site& site, bool checkPosition = false) throw (Exception);
-  Site*    removeSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
-  void     deleteSite(unsigned int siteIndex) throw (IndexOutOfBoundsException);
-  void    deleteSites(unsigned int siteIndex, unsigned int length) throw (IndexOutOfBoundsException);
+  const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException);
+  void        setSite(size_t siteIndex, const Site& site, bool checkPosition = false) throw (Exception);
+  Site*    removeSite(size_t siteIndex) throw (IndexOutOfBoundsException);
+  void     deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
+  void    deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException);
   void        addSite(const Site& site,                                       bool checkPosition = false) throw (Exception);
   void        addSite(const Site& site,                         int position, bool checkPosition = false) throw (Exception)
   {
     addSite(site, checkPosition);
   }
-  void        addSite(const Site& site, unsigned int siteIndex,               bool checkPosition = false) throw (Exception);
-  void        addSite(const Site& site, unsigned int siteIndex, int position, bool checkPosition = false) throw (Exception)
+  void        addSite(const Site& site, size_t siteIndex,               bool checkPosition = false) throw (Exception);
+  void        addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = false) throw (Exception)
   {
     addSite(site, siteIndex, checkPosition);
   }
-  unsigned int getNumberOfSites() const { return index_.size(); }
+  size_t getNumberOfSites() const { return index_.size(); }
   void reindexSites();
   Vint getSitePositions() const;
   /** @} */
@@ -166,18 +166,18 @@ public:
    *
    * @{
    */
-  void setComments(unsigned int sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
+  void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
 
   // Method to get a sequence object from sequence container
-  const Sequence& getSequence(unsigned int sequenceIndex) const throw (IndexOutOfBoundsException);
+  const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException);
   const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
   bool hasSequence(const std::string& name) const;
 
   // Methods to get position of a sequence in sequence container from his name
   // This method is used by delete and remove methods
-  unsigned int getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
+  size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
 
-  Sequence* removeSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException, NotImplementedException)
+  Sequence* removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException, NotImplementedException)
   {
     //Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::removeSequence.");
@@ -189,7 +189,7 @@ public:
     throw NotImplementedException("CompressedVectorSiteContainer::removeSequence.");
   }
 
-  void deleteSequence(unsigned int sequenceIndex) throw (IndexOutOfBoundsException, NotImplementedException)
+  void deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException, NotImplementedException)
   {
     //Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::deleteSequence.");
@@ -201,7 +201,7 @@ public:
     throw NotImplementedException("CompressedVectorSiteContainer::deleteSequence.");
   }
 
-  unsigned int getNumberOfSequences() const { return names_.size(); }
+  size_t getNumberOfSequences() const { return names_.size(); }
 
   std::vector<std::string> getSequencesNames() const;
 
@@ -211,42 +211,42 @@ public:
 
   CompressedVectorSiteContainer* createEmptyContainer() const;
 
-  int& valueAt(const std::string& sequenceName, unsigned int elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+  int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
   {
-    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*sites_[index_[elementIndex]])[getSequencePosition(sequenceName)];
   }
-  const int& valueAt(const std::string& sequenceName, unsigned int elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
   {
-    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*sites_[index_[elementIndex]])[getSequencePosition(sequenceName)];
   }
-  int& operator()(const std::string& sequenceName, unsigned int elementIndex)
+  int& operator()(const std::string& sequenceName, size_t elementIndex)
   {
     return (*sites_[index_[elementIndex]])[getSequencePosition(sequenceName)];
   }
-  const int& operator()(const std::string& sequenceName, unsigned int elementIndex) const
+  const int& operator()(const std::string& sequenceName, size_t elementIndex) const
   {
     return (*sites_[index_[elementIndex]])[getSequencePosition(sequenceName)];
   }
 
-  int& valueAt(unsigned int sequenceIndex, unsigned int elementIndex) throw (IndexOutOfBoundsException)
+  int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException)
   {
-    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);
-    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
+    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*sites_[index_[elementIndex]])[sequenceIndex];
   }
-  const int& valueAt(unsigned int sequenceIndex, unsigned int elementIndex) const throw (IndexOutOfBoundsException)
+  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException)
   {
-    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", sequenceIndex, 0, getNumberOfSequences() - 1);
-    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(unsigned int, unsigned int).", elementIndex, 0, getNumberOfSites() - 1);
+    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
+    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*sites_[index_[elementIndex]])[sequenceIndex];
   }
-  int& operator()(unsigned int sequenceIndex, unsigned int elementIndex)
+  int& operator()(size_t sequenceIndex, size_t elementIndex)
   {
     return (*sites_[index_[elementIndex]])[sequenceIndex];
   }
-  const int& operator()(unsigned int sequenceIndex, unsigned int elementIndex) const
+  const int& operator()(size_t sequenceIndex, size_t elementIndex) const
   {
     return (*sites_[index_[elementIndex]])[sequenceIndex];
   }
@@ -258,7 +258,7 @@ public:
     throw NotImplementedException("CompressedVectorSiteContainer::addSequence.");
   }
   
-  void addSequence(const Sequence& sequence, unsigned int sequenceIndex, bool checkName = true) throw (Exception, NotImplementedException)
+  void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true) throw (Exception, NotImplementedException)
   {
     //Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::addSequence.");
@@ -270,7 +270,7 @@ public:
     throw NotImplementedException("CompressedVectorSiteContainer::setSequence.");
   }
 
-  void setSequence(unsigned int sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception, NotImplementedException)
+  void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception, NotImplementedException)
   {
     //Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::setSequence.");
@@ -281,7 +281,7 @@ protected:
    * @return The position of the site in the compressed set. If the site is not found,
    * this will return the number of sites in the compressed set.
    */
-  unsigned int getSiteIndex_(const Site& site);
+  size_t getSiteIndex_(const Site& site);
 };
 
 } // end of namespace bpp.
