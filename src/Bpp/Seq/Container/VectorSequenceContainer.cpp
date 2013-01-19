@@ -66,8 +66,8 @@ VectorSequenceContainer::VectorSequenceContainer(
   AbstractSequenceContainer(vsc),
   sequences_()
 {
-  unsigned int max = vsc.getNumberOfSequences();
-  for (unsigned int i = 0; i < max; i++)
+  size_t max = vsc.getNumberOfSequences();
+  for (size_t i = 0; i < max; i++)
   {
     addSequence(vsc.getSequence(i), false);
   }
@@ -109,8 +109,8 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
   AbstractSequenceContainer::operator=(vsc);
 
   // Sequences insertion
-  unsigned int max = vsc.getNumberOfSequences();
-  for (unsigned int i = 0; i < max; i++)
+  size_t max = vsc.getNumberOfSequences();
+  for (size_t i = 0; i < max; i++)
   {
     addSequence(vsc.getSequence(i), false);
   }
@@ -125,7 +125,7 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
   AbstractSequenceContainer::operator=(osc);
 
   // Sequences insertion
-  unsigned int max = osc.getNumberOfSequences();
+  size_t max = osc.getNumberOfSequences();
   for (unsigned int i = 0; i < max; i++)
   {
     addSequence(osc.getSequence(i), false);
@@ -347,7 +347,7 @@ void VectorSequenceContainer::setSequencesNames(
 throw (Exception)
 {
   if (names.size() != getNumberOfSequences())
-    throw BadIntegerException("VectorSequenceContainer::setSequenceNames : bad number of names", names.size());
+    throw IndexOutOfBoundsException("VectorSequenceContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences(), getNumberOfSequences());
   if (checkNames)
   {
     for (size_t i = 0; i < names.size(); i++)

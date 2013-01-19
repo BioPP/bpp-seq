@@ -53,7 +53,7 @@ const string CodonAlphabet::STOP = "Stop";
 
 unsigned int CodonAlphabet::numberOfStopCodons() const
 {
-  return stopCodons_.size();
+  return static_cast<unsigned int>(stopCodons_.size());
 }
 
 int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const

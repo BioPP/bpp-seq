@@ -61,7 +61,7 @@ class NucleicAlphabet :
   public LetterAlphabet
 {
   private:
-    std::map<unsigned char, unsigned int> binCodes_;
+    std::map<int, unsigned int> binCodes_;
     void updateMaps_(int pos, const NucleicAlphabetState& st) {
       if (binCodes_.find(st.getBinaryCode()) == binCodes_.end())
         binCodes_[st.getBinaryCode()] = pos;
@@ -131,9 +131,9 @@ class NucleicAlphabet :
      * @throw BadIntException If the code is not a valide state.
      * @author Sylvain Gaillard
      */
-    const NucleicAlphabetState& getStateByBinCode(unsigned char code) const
+    const NucleicAlphabetState& getStateByBinCode(int code) const
       throw (BadIntException) {
-        std::map<unsigned char, unsigned int>::const_iterator it = binCodes_.find(code);
+        std::map<int, unsigned int>::const_iterator it = binCodes_.find(code);
       if (it == binCodes_.end())
         throw BadIntException(code, "NucleicAlphabet::getState(unsigned char): Binary code not in alphabet", this);
       return getStateAt(it->second);

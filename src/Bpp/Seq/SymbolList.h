@@ -5,38 +5,6 @@
 //
 
 /*
-<<<<<<< HEAD
-  Copyright or © or Copr. CNRS, (November 17, 2004)
-
-  This software is a computer program whose purpose is to provide classes
-  for sequences analysis.
-
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
-
-  As a counterpart to the access to the source code and  rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
-
-  In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
-
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-=======
 Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
@@ -122,7 +90,7 @@ namespace bpp
      *
      * @return The number of sites in the list.
      */
-    virtual unsigned int size() const = 0;
+    virtual size_t size() const = 0;
 
     /**
      * @name Acting on the content of the list.
@@ -183,7 +151,7 @@ namespace bpp
      * @param pos The postion where to insert the element.
      * @param c   The character to add, given as a string.
      */
-    virtual void addElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
+    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Set the element at position 'pos' to character 'c'.
@@ -191,14 +159,14 @@ namespace bpp
      * @param pos The position of the character to set.
      * @param c   The value of the element, given as a string.
      */
-    virtual void setElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
+    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Delete the element at position 'pos'.
      *
      * @param pos The position of the element to delete.
      */
-    virtual void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException) = 0;
+    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Delete the elements at position 'pos'.
@@ -206,7 +174,7 @@ namespace bpp
      * @param pos The position of the first element to delete.
      * @param len The length of the region to delete.
      */
-    virtual void deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException) = 0;
+    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException) = 0;
 
 
     /**
@@ -214,7 +182,7 @@ namespace bpp
      *
      * @param pos The position of the character to retrieve.
      */
-    virtual std::string getChar(unsigned int pos) const throw (IndexOutOfBoundsException) = 0;
+    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Add a character to the end of the list.
@@ -229,7 +197,7 @@ namespace bpp
      * @param pos The postion where to insert the element.
      * @param v   The character to add, given as an int.
      */
-    virtual void addElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException) = 0;
+    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Set the element at position 'pos' to character 'v'.
@@ -237,14 +205,14 @@ namespace bpp
      * @param pos The position of the character to set.
      * @param v   The value of the element, given as an int.
      */
-    virtual void setElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException) = 0;
+    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException) = 0;
 
     /**
      * @brief Get the element at position 'pos' as an int.
      *
      * @param pos The position of the character to retrieve.
      */
-    virtual int getValue(unsigned int pos) const throw (IndexOutOfBoundsException) = 0;
+    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException) = 0;
 
     /** @} */
 
@@ -264,14 +232,14 @@ namespace bpp
      * @param i The position to retrieve.
      * @return The integer value of character at position i.
      */
-    virtual const int& operator[](unsigned int i) const = 0;
+    virtual const int& operator[](size_t i) const = 0;
     /**
      * @brief Operator [] overloaded for quick access to a character in list.
      *
      * @param i The position to retrieve.
      * @return The integer value of character at position i.
      */
-    virtual int& operator[](unsigned int i) = 0;
+    virtual int& operator[](size_t i) = 0;
 
     /**
      * @brief Randomly shuffle the content of the list, with linear complexity.
@@ -379,7 +347,7 @@ namespace bpp
 
     virtual const Alphabet* getAlphabet() const { return alphabet_; }
 
-    virtual unsigned int size() const { return content_.size(); }
+    virtual size_t size() const { return static_cast<size_t>(content_.size()); }
 
     virtual const std::vector<int>& getContent() const { return content_; }
 		
@@ -391,27 +359,27 @@ namespace bpp
 
     virtual void addElement(const std::string& c) throw (BadCharException);
 
-    virtual void addElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
+    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
 
-    virtual void setElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
+    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
 
-    virtual void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException);
+    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException);
 		
-    virtual void deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException);
+    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException);
 
-    virtual std::string getChar(unsigned int pos) const throw (IndexOutOfBoundsException);
+    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException);
 
     virtual void addElement(int v) throw (BadIntException);
 
-    virtual void addElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
 
-    virtual void setElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
 
-    virtual int getValue(unsigned int pos) const throw (IndexOutOfBoundsException);
+    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException);
 
-    virtual const int& operator[](unsigned int i) const { return content_[i]; }
+    virtual const int& operator[](size_t i) const { return content_[i]; }
 		
-    virtual int& operator[](unsigned int i) { return content_[i]; }
+    virtual int& operator[](size_t i) { return content_[i]; }
 
     virtual void shuffle()
     {
@@ -447,16 +415,16 @@ namespace bpp
     public SymbolListEditionEvent
   {
   private:
-    unsigned int pos_;
-    unsigned int len_;
+    size_t pos_;
+    size_t len_;
 
   public:
-    SymbolListInsertionEvent(SymbolList* list, unsigned int pos, unsigned int len):
+    SymbolListInsertionEvent(SymbolList* list, size_t pos, size_t len):
       SymbolListEditionEvent(list), pos_(pos), len_(len) {}
 
   public:
-    virtual unsigned int getPosition() const { return pos_; }
-    virtual unsigned int getLength() const { return len_; }
+    virtual size_t getPosition() const { return pos_; }
+    virtual size_t getLength() const { return len_; }
   };
 
 
@@ -464,16 +432,16 @@ namespace bpp
     public SymbolListEditionEvent
   {
   private:
-    unsigned int pos_;
-    unsigned int len_;
+    size_t pos_;
+    size_t len_;
 
   public:
-    SymbolListDeletionEvent(SymbolList* list, unsigned int pos, unsigned int len):
+    SymbolListDeletionEvent(SymbolList* list, size_t pos, size_t len):
       SymbolListEditionEvent(list), pos_(pos), len_(len) {}
 
   public:
-    virtual unsigned int getPosition() const { return pos_; }
-    virtual unsigned int getLength() const { return len_; }
+    virtual size_t getPosition() const { return pos_; }
+    virtual size_t getLength() const { return len_; }
   };
 
 
@@ -481,16 +449,16 @@ namespace bpp
     public SymbolListEditionEvent
   {
   private:
-    unsigned int begin_;
-    unsigned int end_;
+    size_t begin_;
+    size_t end_;
 
   public:
-    SymbolListSubstitutionEvent(SymbolList* list, unsigned int begin, unsigned int end) :
+    SymbolListSubstitutionEvent(SymbolList* list, size_t begin, size_t end) :
       SymbolListEditionEvent(list), begin_(begin), end_(end) {}
 
   public:
-    virtual unsigned int getBegin() const { return begin_; }
-    virtual unsigned int getEnd() const { return end_; }
+    virtual size_t getBegin() const { return begin_; }
+    virtual size_t getEnd() const { return end_; }
   };
 
   class SymbolListListener :
@@ -619,7 +587,7 @@ namespace bpp
     // Class destructor
     virtual ~EdSymbolList()
     {
-      for (unsigned int i = 0; i < listeners_.size(); ++i) {
+      for (size_t i = 0; i < listeners_.size(); ++i) {
         if (listeners_[i] && !listeners_[i]->isShared()) {
           delete listeners_[i];
         }
@@ -630,7 +598,7 @@ namespace bpp
 
     virtual const Alphabet* getAlphabet() const { return alphabet_; }
 
-    virtual unsigned int size() const { return content_.size(); }
+    virtual size_t size() const { return static_cast<size_t>(content_.size()); }
 
     virtual const std::vector<int>& getContent() const { return content_; }
 		
@@ -642,27 +610,27 @@ namespace bpp
 
     virtual void addElement(const std::string& c) throw (BadCharException);
 
-    virtual void addElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
+    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
 
-    virtual void setElement(unsigned int pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
+    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
 
-    virtual void deleteElement(unsigned int pos) throw (IndexOutOfBoundsException);
+    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException);
 		
-    virtual void deleteElements(unsigned int pos, unsigned int len) throw (IndexOutOfBoundsException);
+    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException);
 
-    virtual std::string getChar(unsigned int pos) const throw (IndexOutOfBoundsException);
+    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException);
 
     virtual void addElement(int v) throw (BadIntException);
 
-    virtual void addElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
 
-    virtual void setElement(unsigned int pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
 
-    virtual int getValue(unsigned int pos) const throw (IndexOutOfBoundsException);
+    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException);
 
-    virtual const int& operator[](unsigned int i) const { return content_[i]; }
+    virtual const int& operator[](size_t i) const { return content_[i]; }
 		
-    virtual int& operator[](unsigned int i) { return content_[i]; }
+    virtual int& operator[](size_t i) { return content_[i]; }
 
     virtual void shuffle()
     {
@@ -674,14 +642,14 @@ namespace bpp
      *
      * @{
      */
-    virtual unsigned int getNumberOfListeners() const { return listeners_.size(); }
+    virtual size_t getNumberOfListeners() const { return listeners_.size(); }
 
-    virtual const SymbolListListener& getListener(unsigned int i) const {
+    virtual const SymbolListListener& getListener(size_t i) const {
       if (listeners_[i] == 0) std::cout << "aie!!!" << std::endl;
       return *listeners_[i];
     }
     
-    virtual SymbolListListener& getListener(unsigned int i) { 
+    virtual SymbolListListener& getListener(size_t i) { 
       if (listeners_[i] == 0) std::cout << "aie!!!" << std::endl;
       return *listeners_[i];
     }
@@ -710,56 +678,56 @@ namespace bpp
     void fireBeforeSequenceChanged(const SymbolListEditionEvent& event) {
       beforeSequenceChanged(event);
       if (propagateEvents_)
-        for (unsigned int i = 0; i < listeners_.size(); ++i)
+        for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->beforeSequenceChanged(event);
     }
 
     void fireAfterSequenceChanged(const SymbolListEditionEvent& event) {
       afterSequenceChanged(event);
       if (propagateEvents_)
-        for (unsigned int i = 0; i < listeners_.size(); ++i)
+        for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->afterSequenceChanged(event);
     }
    
     void fireBeforeSequenceInserted(const SymbolListInsertionEvent& event) {
       beforeSequenceInserted(event);
       if (propagateEvents_)
-        for (unsigned int i = 0; i < listeners_.size(); ++i)
+        for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->beforeSequenceInserted(event);
     }
 
     void fireAfterSequenceInserted(const SymbolListInsertionEvent& event) {
       afterSequenceInserted(event);
       if (propagateEvents_)
-        for (unsigned int i = 0; i < listeners_.size(); ++i)
+        for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->afterSequenceInserted(event);
     }
 
     void fireBeforeSequenceDeleted(const SymbolListDeletionEvent& event) {
       beforeSequenceDeleted(event);
       if (propagateEvents_)
-        for (unsigned int i = 0; i < listeners_.size(); ++i)
+        for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->beforeSequenceDeleted(event);
     }
 
     void fireAfterSequenceDeleted(const SymbolListDeletionEvent& event) {
       afterSequenceDeleted(event);
       if (propagateEvents_)
-        for (unsigned int i = 0; i < listeners_.size(); ++i)
+        for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->afterSequenceDeleted(event);
     }
 
     void fireBeforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {
       beforeSequenceSubstituted(event);
       if (propagateEvents_)
-        for (unsigned int i = 0; i < listeners_.size(); ++i)
+        for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->beforeSequenceSubstituted(event);
     }
 
     void fireAfterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {
       afterSequenceSubstituted(event);
       if (propagateEvents_)
-        for (unsigned int i = 0; i < listeners_.size(); ++i)
+        for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->afterSequenceSubstituted(event);
     }
     /** @} */

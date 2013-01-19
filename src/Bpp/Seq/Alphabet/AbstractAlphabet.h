@@ -7,7 +7,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -77,8 +77,8 @@ namespace bpp
      * @name maps used to quick search for letter and num.
      * @{
      */
-    std::map<std::string, unsigned int> letters_;
-    std::map<int, unsigned int> nums_;
+    std::map<std::string, size_t> letters_;
+    std::map<int, size_t> nums_;
     /** @} */
     /**
      * @brief Update the private maps letters_ and nums_ when adding a state.
@@ -86,7 +86,7 @@ namespace bpp
      * @param pos The index of the state in the alphabet_ vector.
      * @param st The state that have been added or modified
      */
-    void updateMaps_(unsigned int pos, const AlphabetState& st);
+    void updateMaps_(size_t pos, const AlphabetState& st);
 
   protected:
     /**
@@ -116,7 +116,7 @@ namespace bpp
      *
      * @{
      */
-    unsigned int getNumberOfChars() const { return alphabet_.size(); }
+    unsigned int getNumberOfChars() const { return static_cast<unsigned int>(alphabet_.size()); }
     std::string getName(const std::string& state) const throw (BadCharException);
     std::string getName(int state) const throw (BadIntException);
     int charToInt(const std::string& state) const throw (BadCharException);
@@ -173,13 +173,13 @@ namespace bpp
      * @param pos The index of the state in the alphabet_ vector.
      * @param st The new state to put in the Alphabet.
      */
-    virtual void setState(unsigned int pos, const AlphabetState& st) throw (IndexOutOfBoundsException);
+    virtual void setState(size_t pos, const AlphabetState& st) throw (IndexOutOfBoundsException);
     /**
      * @brief Resize the private alphabet_ vector.
      *
      * @param size The new size of the Alphabet.
      */
-    void resize(int size) { alphabet_.resize(size); }
+    void resize(unsigned int size) { alphabet_.resize(size); }
     /**
      * @brief Get a state at a position in the alphabet_ vector.
      *
@@ -189,7 +189,7 @@ namespace bpp
      * @param pos The index of the state in the alphabet_ vector.
      * @throw IndexOutOfBoundsException If pos is out of the vector.
      */
-    virtual AlphabetState& getStateAt(unsigned int pos) throw (IndexOutOfBoundsException);
+    virtual AlphabetState& getStateAt(size_t pos) throw (IndexOutOfBoundsException);
     /**
      * @brief Get a state at a position in the alphabet_ vector.
      *
@@ -199,13 +199,13 @@ namespace bpp
      * @param pos The index of the state in the alphabet_ vector.
      * @throw IndexOutOfBoundsException If pos is out of the vector.
      */
-    virtual const AlphabetState& getStateAt(unsigned int pos) const throw (IndexOutOfBoundsException);
+    virtual const AlphabetState& getStateAt(size_t pos) const throw (IndexOutOfBoundsException);
 
     /**
      * @brief Re-update the maps using the alphabet_ vector content.
      */
     void remap() {
-      for (unsigned int i = 0 ; i < alphabet_.size() ; i++) {
+      for (size_t i = 0 ; i < alphabet_.size() ; i++) {
         updateMaps_(i, * alphabet_[i]);
       }
     }

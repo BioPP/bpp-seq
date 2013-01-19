@@ -126,8 +126,8 @@ std::vector<std::string> DNA::getAlias(const std::string& state) const throw (Ba
 
 int DNA::getGeneric(const std::vector<int>& states) const throw (BadIntException)
 {
-  char v = 0;
-  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+  int v = 0;
+  for (size_t i = 0 ; i < states.size() ; ++i) {
     if (!isIntInAlphabet(states[i])) throw BadIntException(states[i], "DNA::getGeneric(const vector<int>& states): Specified base unknown.");
     v |= getState(states[i]).getBinaryCode();
   }

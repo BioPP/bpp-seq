@@ -56,12 +56,12 @@ int main() {
   sites->addSequence(seq3, false);
 
   //Create alignment indexes:
-  RowMatrix<unsigned int> index1;
+  RowMatrix<size_t> index1;
   SiteContainerTools::getSequencePositions(*sites, index1);
 
   vector<int> scores = SiteContainerTools::getColumnScores(index1, index1);
   VectorTools::print(scores);
-  for (unsigned int i = 0; i < sites->getNumberOfSites(); ++i) {
+  for (size_t i = 0; i < sites->getNumberOfSites(); ++i) {
     if (SiteTools::isGapOnly(sites->getSite(i))) {
       if (scores[i] != 0) return 1;
     } else {
@@ -77,7 +77,7 @@ int main() {
   sites2->addSequence(seq22, false);
   sites2->addSequence(seq23, false);
 
-  RowMatrix<unsigned int> index2;
+  RowMatrix<size_t> index2;
   SiteContainerTools::getSequencePositions(*sites2, index2);
 
   vector<int> scores12 = SiteContainerTools::getColumnScores(index1, index2);

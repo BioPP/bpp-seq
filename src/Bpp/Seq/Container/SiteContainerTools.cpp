@@ -201,15 +201,15 @@ SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites
 
 void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
 {
-  unsigned int n = sites.getNumberOfSites();
-  unsigned int i = n;
+  size_t n = sites.getNumberOfSites();
+  size_t i = n;
   while (i > 1)
   {
     ApplicationTools::displayGauge(n - i + 1, n);
     const Site* site = &sites.getSite(i - 1);
     if (SiteTools::isGapOnly(*site))
     {
-      unsigned int end = i;
+      size_t end = i;
       while (SiteTools::isGapOnly(*site) && i > 1)
       {
         --i;
@@ -248,15 +248,15 @@ SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCont
 
 void SiteContainerTools::removeGapOrUnresolvedOnlySites(SiteContainer& sites)
 {
-  unsigned int n = sites.getNumberOfSites();
-  unsigned int i = n;
+  size_t n = sites.getNumberOfSites();
+  size_t i = n;
   while (i > 1)
   {
     ApplicationTools::displayGauge(n - i + 1, n);
     const Site* site = &sites.getSite(i - 1);
     if (SiteTools::isGapOnly(*site))
     {
-      unsigned int end = i;
+      size_t end = i;
       while (SiteTools::isGapOrUnresolvedOnly(*site) && i > 1)
       {
         --i;
@@ -295,7 +295,7 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
 
 void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps)
 {
-  for (unsigned int i = sites.getNumberOfSites(); i > 0; i--) {
+  for (size_t i = sites.getNumberOfSites(); i > 0; i--) {
     map<int, double> freq;
     SiteTools::getFrequencies(sites.getSite(i - 1), freq);
     if (freq[-1] > maxFreqGaps)
@@ -332,12 +332,12 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
     throw AlphabetException("SiteContainerTools::resolveDottedAlignment. Alignment alphabet should of class 'DefaultAlphabet'.", dottedAln.getAlphabet());
 
   // First we look for the reference sequence:
-  unsigned int n = dottedAln.getNumberOfSequences();
+  size_t n = dottedAln.getNumberOfSequences();
   if (n == 0)
     throw Exception("SiteContainerTools::resolveDottedAlignment. Input alignment contains no sequence.");
 
   const Sequence* refSeq = 0;
-  for (unsigned int i = 0; i < n; ++i) // Test each sequence
+  for (size_t i = 0; i < n; ++i) // Test each sequence
   {
     const Sequence* seq = &dottedAln.getSequence(i);
     bool isRef = true;
@@ -358,7 +358,7 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
   VectorSiteContainer* sites = new VectorSiteContainer(n, resolvedAlphabet);
 
   // We add each site one by one:
-  unsigned int m = dottedAln.getNumberOfSites();
+  size_t m = dottedAln.getNumberOfSites();
   string state;
   for (unsigned int i = 0; i < m; ++i)
   {
@@ -390,13 +390,13 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
 
 /******************************************************************************/
 
-std::map<unsigned int, unsigned int> SiteContainerTools::getSequencePositions(const Sequence& seq)
+std::map<size_t, size_t> SiteContainerTools::getSequencePositions(const Sequence& seq)
 {
-  map<unsigned int, unsigned int> tln;
+  map<size_t, size_t> tln;
   if (seq.size() == 0)
     return tln;
   unsigned int count = 0;
-  for (unsigned int i = 0; i < seq.size(); i++)
+  for (size_t i = 0; i < seq.size(); i++)
   {
     if (seq[i] != -1)
     {
@@ -409,13 +409,13 @@ std::map<unsigned int, unsigned int> SiteContainerTools::getSequencePositions(co
 
 /******************************************************************************/
 
-std::map<unsigned int, unsigned int> SiteContainerTools::getAlignmentPositions(const Sequence& seq)
+std::map<size_t, size_t> SiteContainerTools::getAlignmentPositions(const Sequence& seq)
 {
-  map<unsigned int, unsigned int> tln;
+  map<size_t, size_t> tln;
   if (seq.size() == 0)
     return tln;
   unsigned int count = 0;
-  for (unsigned int i = 0; i < seq.size(); i++)
+  for (size_t i = 0; i < seq.size(); i++)
   {
     if (seq[i] != -1)
     {
@@ -428,12 +428,12 @@ std::map<unsigned int, unsigned int> SiteContainerTools::getAlignmentPositions(c
 
 /******************************************************************************/
 
-std::map<unsigned int, unsigned int> SiteContainerTools::translateAlignment(const Sequence& seq1, const Sequence& seq2)
+std::map<size_t, size_t> SiteContainerTools::translateAlignment(const Sequence& seq1, const Sequence& seq2)
 throw (AlphabetMismatchException, Exception)
 {
   if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::translateAlignment", seq1.getAlphabet(), seq2.getAlphabet());
-  map<unsigned int, unsigned int> tln;
+  map<size_t, size_t> tln;
   if (seq1.size() == 0)
     return tln;
   unsigned int count1 = 0;
@@ -496,16 +496,16 @@ throw (AlphabetMismatchException, Exception)
 
 /******************************************************************************/
 
-std::map<unsigned int, unsigned int> SiteContainerTools::translateSequence(const SiteContainer& sequences, unsigned int i1, unsigned int i2)
+std::map<size_t, size_t> SiteContainerTools::translateSequence(const SiteContainer& sequences, size_t i1, size_t i2)
 {
   const Sequence* seq1 = &sequences.getSequence(i1);
   const Sequence* seq2 = &sequences.getSequence(i2);
-  map<unsigned int, unsigned int> tln;
-  unsigned int count1 = 0; // Sequence 1 counter
-  unsigned int count2 = 0; // Sequence 2 counter
+  map<size_t, size_t> tln;
+  size_t count1 = 0; // Sequence 1 counter
+  size_t count2 = 0; // Sequence 2 counter
   int state1;
   int state2;
-  for (unsigned int i = 0; i <  sequences.getNumberOfSites(); i++)
+  for (size_t i = 0; i <  sequences.getNumberOfSites(); i++)
   {
     state1 = (*seq1)[i];
     if (state1 != -1)
@@ -545,19 +545,19 @@ throw (AlphabetMismatchException)
   RowMatrix<char>   p(s1->size(), s2->size());
   double choice1, choice2, choice3, mx;
   char px;
-  for (unsigned int i = 0; i <= s1->size(); i++)
+  for (size_t i = 0; i <= s1->size(); i++)
   {
-    m(i, 0) = i * gap;
+    m(i, 0) = static_cast<double>(i) * gap;
   }
-  for (unsigned int j = 0; j <= s2->size(); j++)
+  for (size_t j = 0; j <= s2->size(); j++)
   {
-    m(0, j) = j * gap;
+    m(0, j) = static_cast<double>(j) * gap;
   }
-  for (unsigned int i = 1; i <= s1->size(); i++)
+  for (size_t i = 1; i <= s1->size(); i++)
   {
-    for (unsigned int j = 1; j <= s2->size(); j++)
+    for (size_t j = 1; j <= s2->size(); j++)
     {
-      choice1 = m(i - 1, j - 1) + s.getIndex((*s1)[i - 1], (*s2)[j - 1]);
+      choice1 = m(i - 1, j - 1) + static_cast<double>(s.getIndex((*s1)[i - 1], (*s2)[j - 1]));
       choice2 = m(i - 1, j) + gap;
       choice3 = m(i, j - 1) + gap;
       mx = choice1; px = 'd'; // Default in case of equality of scores.
@@ -576,7 +576,7 @@ throw (AlphabetMismatchException)
 
   // 2) Get alignment:
   deque<int> a1, a2;
-  unsigned int i = s1->size(), j = s2->size();
+  size_t i = s1->size(), j = s2->size();
   char c;
   while (i > 0 && j > 0)
   {
@@ -650,26 +650,26 @@ throw (AlphabetMismatchException)
   double choice1, choice2, choice3, mx;
   char px;
   m(0, 0) = 0.;
-  for (unsigned int i = 0; i <= s1->size(); i++)
+  for (size_t i = 0; i <= s1->size(); i++)
   {
     v(i, 0) = log(0.);
   }
-  for (unsigned int j = 0; j <= s2->size(); j++)
+  for (size_t j = 0; j <= s2->size(); j++)
   {
     h(0, j) = log(0.);
   }
-  for (unsigned int i = 1; i <= s1->size(); i++)
+  for (size_t i = 1; i <= s1->size(); i++)
   {
-    m(i, 0) = h(i, 0) = opening + i * extending;
+    m(i, 0) = h(i, 0) = opening + static_cast<double>(i) * extending;
   }
-  for (unsigned int j = 1; j <= s2->size(); j++)
+  for (size_t j = 1; j <= s2->size(); j++)
   {
-    m(0, j) = v(0, j) = opening + j * extending;
+    m(0, j) = v(0, j) = opening + static_cast<double>(j) * extending;
   }
 
-  for (unsigned int i = 1; i <= s1->size(); i++)
+  for (size_t i = 1; i <= s1->size(); i++)
   {
-    for (unsigned int j = 1; j <= s2->size(); j++)
+    for (size_t j = 1; j <= s2->size(); j++)
     {
       choice1 = m(i - 1, j - 1) + s.getIndex((*s1)[i - 1], (*s2)[j - 1]);
       choice2 = h(i - 1, j - 1) + opening + extending;
@@ -714,7 +714,7 @@ throw (AlphabetMismatchException)
 
   // 2) Get alignment:
   deque<int> a1, a2;
-  unsigned int i = s1->size(), j = s2->size();
+  size_t i = s1->size(), j = s2->size();
   char c;
   while (i > 0 && j > 0)
   {
@@ -761,12 +761,12 @@ throw (AlphabetMismatchException)
 
 /******************************************************************************/
 
-VectorSiteContainer* SiteContainerTools::sampleSites(const SiteContainer& sites, unsigned int nbSites, vector<unsigned int>* index)
+VectorSiteContainer* SiteContainerTools::sampleSites(const SiteContainer& sites, size_t nbSites, vector<size_t>* index)
 {
   VectorSiteContainer* sample = new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet());
-  for (unsigned int i = 0; i < nbSites; i++)
+  for (size_t i = 0; i < nbSites; i++)
   {
-    unsigned int pos = (unsigned int)RandomTools::giveIntRandomNumberBetweenZeroAndEntry(sites.getNumberOfSites());
+    size_t pos = static_cast<size_t>(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(static_cast<int>(sites.getNumberOfSites())));
     sample->addSite(sites.getSite(pos), false);
     if (index)
       index->push_back(pos);
@@ -800,7 +800,7 @@ double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequenc
   const Alphabet* alpha = seq1.getAlphabet();
   unsigned int s = 0;
   unsigned int t = 0;
-  for (unsigned int i = 0; i < seq1.size(); i++)
+  for (size_t i = 0; i < seq1.size(); i++)
   {
     int x = seq1[i];
     int y = seq2[i];
@@ -847,7 +847,7 @@ double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequenc
 
 DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer& sites, bool dist, const std::string& gapOption, bool unresolvedAsGap)
 {
-  unsigned int n = sites.getNumberOfSequences();
+  size_t n = sites.getNumberOfSequences();
   DistanceMatrix* mat = new DistanceMatrix(sites.getSequencesNames());
   string pairwiseGapOption = gapOption;
   SiteContainer* sites2;
@@ -872,11 +872,11 @@ DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer&
     sites2 = new AlignedSequenceContainer(sites);
   }
 
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
   {
     (*mat)(i, i) = dist ? 0. : 1.;
     const Sequence* seq1 = &sites2->getSequence(i);
-    for (unsigned int j = i + 1; j < n; j++)
+    for (size_t j = i + 1; j < n; j++)
     {
       const Sequence* seq2 = &sites2->getSequence(j);
       (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(*seq1, *seq2, dist, pairwiseGapOption, unresolvedAsGap);
@@ -914,7 +914,7 @@ throw (AlphabetMismatchException, Exception)
 
   if (leavePositionAsIs)
   {
-    for (unsigned int i = 0; i < seqCont2bis->getNumberOfSites(); i++)
+    for (size_t i = 0; i < seqCont2bis->getNumberOfSites(); i++)
     {
       seqCont1.addSite(seqCont2bis->getSite(i), false);
     }
@@ -922,7 +922,7 @@ throw (AlphabetMismatchException, Exception)
   else
   {
     int offset = static_cast<int>(seqCont1.getNumberOfSites());
-    for (unsigned int i = 0; i < seqCont2bis->getNumberOfSites(); i++)
+    for (size_t i = 0; i < seqCont2bis->getNumberOfSites(); i++)
     {
       seqCont1.addSite(seqCont2bis->getSite(i), offset + seqCont2bis->getSite(i).getPosition(), false);
     }
@@ -934,14 +934,14 @@ throw (AlphabetMismatchException, Exception)
 
 /******************************************************************************/
 
-void SiteContainerTools::getSequencePositions(const SiteContainer& sites, Matrix<unsigned int>& positions)
+void SiteContainerTools::getSequencePositions(const SiteContainer& sites, Matrix<size_t>& positions)
 {
   positions.resize(sites.getNumberOfSequences(), sites.getNumberOfSites());
   int gap = sites.getAlphabet()->getGapCharacterCode();
-  for (unsigned int i = 0; i < sites.getNumberOfSequences(); ++i) {
+  for (size_t i = 0; i < sites.getNumberOfSequences(); ++i) {
     const Sequence& seq = sites.getSequence(i);
     unsigned int pos = 0;
-    for (unsigned int j = 0; j < sites.getNumberOfSites(); ++j) {
+    for (size_t j = 0; j < sites.getNumberOfSites(); ++j) {
       if (seq[j] != gap) {
         ++pos;
         positions(i, j) = pos;
@@ -954,16 +954,16 @@ void SiteContainerTools::getSequencePositions(const SiteContainer& sites, Matrix
 
 /******************************************************************************/
 
-vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, int na)
+vector<int> SiteContainerTools::getColumnScores(const Matrix<size_t>& positions1, const Matrix<size_t>& positions2, int na)
 {
   if (positions1.getNumberOfRows() != positions2.getNumberOfRows())
     throw Exception("SiteContainerTools::getColumnScores. The two input alignments must have the same number of sequences!");
   vector<int> scores(positions1.getNumberOfColumns());
-  for (unsigned int i = 0; i < positions1.getNumberOfColumns(); ++i) {
+  for (size_t i = 0; i < positions1.getNumberOfColumns(); ++i) {
     //Find an anchor point:
-    unsigned int whichSeq = 0;
-    unsigned int whichPos = 0;
-    for (unsigned int j = 0; j < positions1.getNumberOfRows(); ++j) {
+    size_t whichSeq = 0;
+    size_t whichPos = 0;
+    for (size_t j = 0; j < positions1.getNumberOfRows(); ++j) {
       if (positions1(j, i) > 0) {
         whichSeq = j;
         whichPos = positions1(j, i);
@@ -976,9 +976,9 @@ vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& posi
       continue;
     }
     //We look for the anchor in the reference alignment:
-    unsigned int i2 = 0;
+    size_t i2 = 0;
     bool found = false;
-    for (unsigned int j = 0; !found && j < positions2.getNumberOfColumns(); ++j) {
+    for (size_t j = 0; !found && j < positions2.getNumberOfColumns(); ++j) {
       if (positions2(whichSeq, j) == whichPos) {
         i2 = j;
         found = true;
@@ -989,7 +989,7 @@ vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& posi
     }
     //Now we compare all pairs of sequences between the two positions:
     bool test = true;
-    for (unsigned int j = 0; test && j < positions1.getNumberOfRows(); ++j) {
+    for (size_t j = 0; test && j < positions1.getNumberOfRows(); ++j) {
       test = (positions1(j, i) == positions2(j, i2));
     }
     scores[i] = test ? 1 : 0;
@@ -999,26 +999,26 @@ vector<int> SiteContainerTools::getColumnScores(const Matrix<unsigned int>& posi
 
 /******************************************************************************/
 
-vector<double> SiteContainerTools::getSumOfPairsScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, double na)
+vector<double> SiteContainerTools::getSumOfPairsScores(const Matrix<size_t>& positions1, const Matrix<size_t>& positions2, double na)
 {
   if (positions1.getNumberOfRows() != positions2.getNumberOfRows())
     throw Exception("SiteContainerTools::getColumnScores. The two input alignments must have the same number of sequences!");
   vector<double> scores(positions1.getNumberOfColumns());
-  for (unsigned int i = 0; i < positions1.getNumberOfColumns(); ++i) {
+  for (size_t i = 0; i < positions1.getNumberOfColumns(); ++i) {
     //For all positions in alignment 1...
-    unsigned int countAlignable = 0;
-    unsigned int countAligned   = 0;
-    for (unsigned int j = 0; j < positions1.getNumberOfRows(); ++j) {
+    size_t countAlignable = 0;
+    size_t countAligned   = 0;
+    for (size_t j = 0; j < positions1.getNumberOfRows(); ++j) {
       //Get the corresponding column in alignment 2:
-      unsigned int whichPos = positions1(j, i);
+      size_t whichPos = positions1(j, i);
       if (whichPos == 0) {
         //No position for this sequence here.
         continue;
       }
       //We look for the position in the second alignment:
-      unsigned int i2 = 0;
+      size_t i2 = 0;
       bool found = false;
-      for (unsigned int k = 0; !found && k < positions2.getNumberOfColumns(); ++k) {
+      for (size_t k = 0; !found && k < positions2.getNumberOfColumns(); ++k) {
         if (positions2(j, k) == whichPos) {
           i2 = k;
           found = true;
@@ -1029,8 +1029,8 @@ vector<double> SiteContainerTools::getSumOfPairsScores(const Matrix<unsigned int
       }
 
       //Now we check all other positions and see if they are aligned with this one:
-      for (unsigned int k = j + 1; k < positions1.getNumberOfRows(); ++k) {
-        unsigned int whichPos2 = positions1(k, i);
+      for (size_t k = j + 1; k < positions1.getNumberOfRows(); ++k) {
+        size_t whichPos2 = positions1(k, i);
         if (whichPos2 == 0) {
           //Empty position
           continue;

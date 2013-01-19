@@ -84,7 +84,7 @@ namespace bpp {
    */
   class NucleicAlphabetState: public AlphabetState {
     private:
-      unsigned char binCode_;
+      int binCode_;
 
     public:
       NucleicAlphabetState(int num, const std::string& letter, unsigned char code, const std::string& name):
@@ -102,13 +102,13 @@ namespace bpp {
        *
        * @return The state's binary representation.
        */
-      unsigned char getBinaryCode() const { return binCode_; }
+      int getBinaryCode() const { return binCode_; }
       /**
        * @brief Set the state's binary representation.
        *
        * @param code The state's binary representation.
        */
-      void setBinaryCode(unsigned char code) { binCode_ = code; }
+      void setBinaryCode(int code) { binCode_ = code; }
   };
 }
 

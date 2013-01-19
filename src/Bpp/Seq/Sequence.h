@@ -150,7 +150,7 @@ class Sequence:
      *
      * @param newSize The new size of the sequence.
      */
-    virtual void setToSizeR(unsigned int newSize) = 0;
+    virtual void setToSizeR(size_t newSize) = 0;
     
     /**
      * @brief Set up the size of a sequence from the left side.
@@ -160,7 +160,7 @@ class Sequence:
      *
      * @param newSize The new size of the sequence.
      */
-    virtual void setToSizeL(unsigned int newSize) = 0;
+    virtual void setToSizeL(size_t newSize) = 0;
 
     /**
      * @brief Append the specified content to the sequence.
@@ -419,7 +419,7 @@ class BasicSequence :
      *
      * @param newSize The new size of the sequence.
      */
-    virtual void setToSizeR(unsigned int newSize);
+    virtual void setToSizeR(size_t newSize);
     
     /**
      * @brief Set up the size of a sequence from the left side.
@@ -429,7 +429,7 @@ class BasicSequence :
      *
      * @param newSize The new size of the sequence.
      */
-    virtual void setToSizeL(unsigned int newSize);
+    virtual void setToSizeL(size_t newSize);
 
     /**
      * @brief Append the specified content to the sequence.

@@ -54,7 +54,7 @@
 namespace bpp
 {
 
-typedef std::vector<unsigned int> SiteSelection;
+typedef std::vector<size_t> SiteSelection;
 
 /**
  * @brief Some utililitary methods to deal with site containers.
@@ -249,7 +249,7 @@ class SiteContainerTools
      * @param seq The sequence to translate.
      * @return A map with original sequence positions as keys, and translated positions as values.
      */
-    static std::map<unsigned int, unsigned int> getSequencePositions(const Sequence& seq);
+    static std::map<size_t, size_t> getSequencePositions(const Sequence& seq);
 
     /**
      * @brief Get the index of each alignment position in an aligned sequence.
@@ -260,7 +260,7 @@ class SiteContainerTools
      * @param seq The sequence to translate.
      * @return A map with original alignement positions as keys, and translated positions as values.
      */
-    static std::map<unsigned int, unsigned int> getAlignmentPositions(const Sequence& seq);
+    static std::map<size_t, size_t> getAlignmentPositions(const Sequence& seq);
 
     /**
      * @brief Fill a numeric matrix with the size of the alignment, containing the each sequence position.
@@ -271,7 +271,7 @@ class SiteContainerTools
      * @param positions A matrix object which is going to be resized and filled with the corresponding positions.
      * @author Julien Dutheil
      */
-    static void getSequencePositions(const SiteContainer& sites, Matrix<unsigned int>& positions);
+    static void getSequencePositions(const SiteContainer& sites, Matrix<size_t>& positions);
     /** @} */
 
     /**
@@ -287,7 +287,7 @@ class SiteContainerTools
      * @throw AlphabetMismatchException If the sequences do not share the same alphabet.
      * @throw Exception If the sequence do not match.
      */
-    static std::map<unsigned int, unsigned int> translateAlignment(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception);
+    static std::map<size_t, size_t> translateAlignment(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception);
 
     /**
      * @brief Translate sequence positions from a sequence to another in the same alignment.
@@ -300,7 +300,7 @@ class SiteContainerTools
      * @param i2 The index of the reference sequence.
      * @return A map with original sequence positions as keys, and translated positions as values.
      */
-    static std::map<unsigned int, unsigned int> translateSequence(const SiteContainer& sequences, unsigned int i1, unsigned int i2);
+    static std::map<size_t, size_t> translateSequence(const SiteContainer& sequences, size_t i1, size_t i2);
 
     /**
      * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -348,7 +348,7 @@ class SiteContainerTools
      * @param index [out] If non-null the underlying vector will be appended with the original site indices.
      * @return A sampled alignment with nbSites sites taken from the input one.
      */
-    static VectorSiteContainer* sampleSites(const SiteContainer& sites, unsigned int nbSites, std::vector<unsigned int>* index = 0);
+    static VectorSiteContainer* sampleSites(const SiteContainer& sites, size_t nbSites, std::vector<size_t>* index = 0);
 
     /**
      * @brief Bootstrap sites in an alignment.
@@ -450,7 +450,7 @@ class SiteContainerTools
      * @warning The indexes for the two alignments must have the sequences in the exact same order!
      * @author Julien Dutheil
      */
-    static std::vector<int> getColumnScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, int na = 0);
+    static std::vector<int> getColumnScores(const Matrix<size_t>& positions1, const Matrix<size_t>& positions2, int na = 0);
    
     /**
      * @brief Compare an alignment to a reference alignment, and compute the sum-of-pairs scores.
@@ -465,7 +465,7 @@ class SiteContainerTools
      * @warning The indexes for the two alignments must have the sequences in the exact same order!
      * @author Julien Dutheil
      */
-    static std::vector<double> getSumOfPairsScores(const Matrix<unsigned int>& positions1, const Matrix<unsigned int>& positions2, double na = 0);
+    static std::vector<double> getSumOfPairsScores(const Matrix<size_t>& positions1, const Matrix<size_t>& positions2, double na = 0);
 };
 
 } //end of namespace bpp.

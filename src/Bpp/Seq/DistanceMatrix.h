@@ -81,7 +81,7 @@ class DistanceMatrix:
      *
      * @param n The size of the matrix.
      */
-    DistanceMatrix(unsigned int n):
+    DistanceMatrix(size_t n):
       RowMatrix<double>(n, n), names_(n)
 		{
       resize(n);
@@ -93,11 +93,11 @@ class DistanceMatrix:
 
 		DistanceMatrix& operator=(const DistanceMatrix& dist)
 		{
-			unsigned int n = dist.size();
+			size_t n = dist.size();
 			resize(n);
-			for(unsigned int i = 0; i < n; ++i)
+			for(size_t i = 0; i < n; ++i)
       {
-				for(unsigned int j = 0; j < n; ++j)
+				for(size_t j = 0; j < n; ++j)
         {
 					operator()(i, j) = dist(i, j);
 				}
@@ -113,10 +113,10 @@ class DistanceMatrix:
      */
 		void reset()
 		{
-			unsigned int n = size();
-			for (unsigned int i = 0; i < n; i++)
+			size_t n = size();
+			for (size_t i = 0; i < n; i++)
       {
-				for (unsigned int j = 0; j < n; j++)
+				for (size_t j = 0; j < n; j++)
         {
 					operator()(i, j) = 0;
 				}
@@ -126,7 +126,7 @@ class DistanceMatrix:
     /**
      * @return The dimension of the matrix.
      */
-		unsigned int size() const { return names_.size(); }
+		size_t size() const { return names_.size(); }
 
     /**
      * @return The names associated to the matrix.
@@ -138,7 +138,7 @@ class DistanceMatrix:
      * @param i Name index.
      * @throw IndexOutOfBoundsException If i is not a valid index.
      */
-    const std::string& getName(unsigned int i) const throw (IndexOutOfBoundsException)
+    const std::string& getName(size_t i) const throw (IndexOutOfBoundsException)
     { 
       if (i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::getName. Invalid indice.", i, 0, size());
       return names_[i];
@@ -151,7 +151,7 @@ class DistanceMatrix:
      * @param name The new name.
      * @throw IndexOutOfBoundsException If i is not a valid index.
      */
-		void setName(unsigned int i, const std::string& name) throw (IndexOutOfBoundsException)
+		void setName(size_t i, const std::string& name) throw (IndexOutOfBoundsException)
 		{
 			if (i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::setName. Invalid indice.", i, 0, size());
 			names_[i] = name;
@@ -176,17 +176,17 @@ class DistanceMatrix:
      * @return The position of the name.
      * @throw Exception If no names are attached to this matrix, or if the name was not found.
      */
-    unsigned int getNameIndex(const std::string& name) const throw (Exception);
+    size_t getNameIndex(const std::string& name) const throw (Exception);
 
     /**
      * @brief Change the dimension of the matrix.
      *
      * @param n the new dimension of the matrix.
      */
-    void resize(unsigned int n) {
+    void resize(size_t n) {
       RowMatrix<double>::resize(n, n);
       names_.resize(n);
-			for (unsigned int i = 0; i < n; ++i)
+			for (size_t i = 0; i < n; ++i)
         names_[i] = "Taxon " + TextTools::toString(i);
       reset();
     }
@@ -201,8 +201,8 @@ class DistanceMatrix:
      */
     virtual const double& operator()(const std::string& iName, const std::string& jName) const throw (Exception)
     {
-      unsigned int i = getNameIndex(iName);
-      unsigned int j = getNameIndex(jName);
+      size_t i = getNameIndex(iName);
+      size_t j = getNameIndex(jName);
       return operator()(i,j);
     }
 
@@ -216,24 +216,16 @@ class DistanceMatrix:
      */
     virtual double& operator()(const std::string& iName, const std::string& jName) throw (Exception)
     {
-      unsigned int i = getNameIndex(iName);
-      unsigned int j = getNameIndex(jName);
+      size_t i = getNameIndex(iName);
+      size_t j = getNameIndex(jName);
       return operator()(i,j);
     }
 
-    virtual const double& operator()(unsigned int i, unsigned int j) const
+    virtual const double& operator()(size_t i, size_t j) const
     {
       return RowMatrix<double>::operator()(i, j);
     }
-    virtual double& operator()(unsigned int i, unsigned int j)
-    {
-      return RowMatrix<double>::operator()(i, j);
-    }
-    virtual const double& operator()(int i, int j) const
-    {
-      return RowMatrix<double>::operator()(i, j);
-    }
-    virtual double& operator()(int i, int j)
+    virtual double& operator()(size_t i, size_t j)
     {
       return RowMatrix<double>::operator()(i, j);
     }

@@ -157,7 +157,7 @@ class StringSequenceTools
      * @throw BadIntException If the sequence is not of type DNA or RNA.
      * @throw Exception       Error in calculus (if the sequence contain gaps for instance).
      */
-		static double getGCcontent(const std::string& sequence, unsigned int pos, unsigned int window) throw (BadIntegerException, Exception);
+		static double getGCcontent(const std::string& sequence, size_t pos, size_t window) throw (BadIntegerException, Exception);
 
     /**
      * @brief Convert a string sequence to a vector of int.

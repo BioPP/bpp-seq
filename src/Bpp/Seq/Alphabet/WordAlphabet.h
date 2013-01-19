@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -141,7 +141,7 @@ public:
    */
   unsigned int getLength() const
   {
-    return vAbsAlph_.size();
+    return static_cast<unsigned int>(vAbsAlph_.size());
   }
 
 
@@ -192,10 +192,10 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The pointer to the Alphabet of the n-position.
    */
-  const Alphabet* getNAlphabet(unsigned int n) const
+  const Alphabet* getNAlphabet(size_t n) const
   {
     if (n >= vAbsAlph_.size())
-      throw BadIntException(n, "WordAlphabet::getNPosition", this);
+      throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
 
     return vAbsAlph_[n];
   }
@@ -207,8 +207,9 @@ public:
    * @param vint description for all the positions.
    * @param pos the start position to match in the vector.
    * @return The int code of the word.
+   * @throw IndexOutOfBoundsException In case of wrong position.
    */
-  virtual int getWord(const std::vector<int>& vint, unsigned int pos = 0) const throw (BadIntException);
+  virtual int getWord(const std::vector<int>& vint, size_t pos = 0) const throw (IndexOutOfBoundsException);
 
   /**
    * @brief Get the char code for a word given the char code of the
@@ -218,8 +219,9 @@ public:
    * @param vpos vector description for all the positions.
    * @param pos the start position to match in the vector.
    * @return The string of the word.
+   * @throw IndexOutOfBoundsException In case of wrong position.
    */
-  virtual std::string getWord(const std::vector<std::string>& vpos, unsigned int pos = 0) const throw (BadIntException, BadCharException);
+  virtual std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const throw (IndexOutOfBoundsException, BadCharException);
 
   /**
    * @brief Get the int code of the n-position of a word given its int description.
@@ -228,13 +230,13 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The int description of the n-position of the word.
    */
-  int getNPosition (int word, unsigned int n) const throw (BadIntException)
+  int getNPosition(int word, size_t n) const throw (BadIntException)
   {
     if (n >= vAbsAlph_.size())
-      throw BadIntException(n, "WordAlphabet::getNPosition", this);
+      throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
 
     std::string s = intToChar(word);
-    return vAbsAlph_[n]->charToInt(s.substr(n,1));
+    return vAbsAlph_[n]->charToInt(s.substr(n, 1));
   }
 
   /**
@@ -246,11 +248,11 @@ public:
 
   std::vector<int> getPositions(int word) const throw (BadIntException)
   {
-   std::string s = intToChar(word);
-   std::vector<int> positions;
-    for (unsigned int i = 0; i < s.size(); i++)
+    std::string s = intToChar(word);
+    std::vector<int> positions;
+    for (size_t i = 0; i < s.size(); i++)
     {
-   positions.push_back(vAbsAlph_[i]->charToInt(s.substr(i, 1)));
+      positions.push_back(vAbsAlph_[i]->charToInt(s.substr(i, 1)));
     }
 
     return positions;
@@ -262,7 +264,7 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The char description of the n-position of the word.
    */
-  std::string getNPosition (const std::string& word, unsigned int n) const throw (BadCharException)
+  std::string getNPosition (const std::string& word, size_t n) const throw (BadCharException)
   {
     if (n > vAbsAlph_.size())
       throw BadCharException("", "WordAlphabet::getNPosition", this);
@@ -284,9 +286,9 @@ public:
   {
     charToInt(word);
     std::vector<std::string> positions;
-    for (unsigned int i = 0; i < word.size(); i++)
+    for (size_t i = 0; i < word.size(); i++)
     {
-   positions.push_back(word.substr(i, 1));
+      positions.push_back(word.substr(i, 1));
     }
 
     return positions;
@@ -301,7 +303,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence* translate(const Sequence& sequence, int pos = 0) const throw (AlphabetMismatchException, Exception);
+  Sequence* translate(const Sequence &sequence, size_t = 0) const throw (AlphabetMismatchException, Exception);
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -319,7 +321,7 @@ public:
    * @name Overloaded AbstractAlphabet methods.
    * @{
    */
-  unsigned int getStateCodingSize() const { return vAbsAlph_.size(); }
+  unsigned int getStateCodingSize() const { return static_cast<unsigned int>(vAbsAlph_.size()); }
   /** @} */
 };
 } // end of namespace bpp.

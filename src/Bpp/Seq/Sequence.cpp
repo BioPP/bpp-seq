@@ -150,10 +150,10 @@ void BasicSequence::setContent(const std::string& sequence) throw (BadCharExcept
 
 /******************************************************************************/
 
-void BasicSequence::setToSizeR(unsigned int newSize)
+void BasicSequence::setToSizeR(size_t newSize)
 {
 	// Size verification
-	unsigned int seqSize = content_.size();
+	size_t seqSize = content_.size();
 	if (newSize == seqSize) return;
 
 	if (newSize < seqSize)
@@ -169,10 +169,10 @@ void BasicSequence::setToSizeR(unsigned int newSize)
 
 /******************************************************************************/
 
-void BasicSequence::setToSizeL(unsigned int newSize)
+void BasicSequence::setToSizeL(size_t newSize)
 {
 	// Size verification
-	unsigned int seqSize = content_.size();
+	size_t seqSize = content_.size();
 	if (newSize == seqSize) return;
 
 	if (newSize < seqSize)
@@ -193,23 +193,23 @@ void BasicSequence::setToSizeL(unsigned int newSize)
 void BasicSequence::append(const std::vector<int>& content) throw (BadIntException)
 {
 	// Check list for incorrect characters
-	for (unsigned int i = 0; i < content.size(); i++)
+	for (size_t i = 0; i < content.size(); i++)
 		if(!getAlphabet()->isIntInAlphabet(content[i]))
       throw BadIntException(content[i], "BasicSequence::append", getAlphabet());
 	//BasicSequence is valid:
-	for (unsigned int i = 0; i < content.size(); i++)
+	for (size_t i = 0; i < content.size(); i++)
 		content_.push_back(content[i]);
 }
 
 void BasicSequence::append(const std::vector<std::string>& content) throw (BadCharException)
 {
 	// Check list for incorrect characters
-	for (unsigned int i = 0; i < content.size(); i++)
+	for (size_t i = 0; i < content.size(); i++)
 		if(!getAlphabet()->isCharInAlphabet(content[i]))
       throw BadCharException(content[i], "BasicSequence::append", getAlphabet());
 	
 	//BasicSequence is valid:
-	for (unsigned int i = 0; i < content.size(); i++)
+	for (size_t i = 0; i < content.size(); i++)
 		content_.push_back(getAlphabet()->charToInt(content[i]));
 }
 

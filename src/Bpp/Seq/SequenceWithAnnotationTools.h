@@ -71,7 +71,7 @@ namespace bpp {
        * @param size The size of the sequence. 
        * @param removable Tell if this listener can be removed by the user.
        */
-      SequenceMask(unsigned int size = 0, bool removable = true) :
+      SequenceMask(size_t size = 0, bool removable = true) :
         removable_(removable),
         mask_(size, false)
       {}
@@ -137,9 +137,9 @@ namespace bpp {
       void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
       void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
 
-      unsigned int getSize() const { return mask_.size(); }
+      size_t getSize() const { return mask_.size(); }
 
-      const bool operator[](unsigned int i) const { return mask_[i]; }
+      const bool operator[](size_t i) const { return mask_[i]; }
 
       void setMask(const std::vector<bool>& mask) {
         if (mask.size() != mask_.size())
@@ -152,13 +152,13 @@ namespace bpp {
        */
       const std::vector<bool>& getMask() const { return mask_; }
 
-      void setMask(unsigned int pos, bool mask) {
+      void setMask(size_t pos, bool mask) {
         if (pos >= mask_.size())
           throw Exception("SequenceMask::setMask. Vector overflow. Scores number: " + TextTools::toString(mask_.size()) + ", but trying to insert mask at position " + TextTools::toString(pos) + ".");
         mask_[pos] = mask;
       }
       
-      void setMask(unsigned int pos, const std::vector<bool>& mask) {
+      void setMask(size_t pos, const std::vector<bool>& mask) {
         if (pos + mask.size() > mask_.size())
           throw Exception("SequenceMask::setMask. Vector overflow. Scores number: " + TextTools::toString(mask_.size()) + ", but trying to insert " + TextTools::toString(mask.size()) + " scores at position " + TextTools::toString(pos) + ".");
         std::copy(mask.begin(), mask.end(), mask_.begin() + pos); 
@@ -174,7 +174,7 @@ namespace bpp {
         }
       }
  
-      SequenceAnnotation* getPartAnnotation(unsigned int pos, unsigned int len) const throw (Exception) {
+      SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const throw (Exception) {
         return new SequenceMask(std::vector<bool>(mask_.begin() + pos, mask_.begin() + pos + len), removable_);
       }
   };

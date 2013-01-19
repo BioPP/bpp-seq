@@ -77,7 +77,7 @@ class SequenceContainerTools
      * @param size     The number of sequences in the container.
      * @return A pointer toward a newly created container.
      */
-    static SequenceContainer* createContainerOfSpecifiedSize(const Alphabet* alphabet, unsigned int size);
+    static SequenceContainer* createContainerOfSpecifiedSize(const Alphabet* alphabet, size_t size);
 
     /**
      * @brief Create a container with specified names.

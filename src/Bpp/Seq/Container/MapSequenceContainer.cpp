@@ -426,7 +426,7 @@ vector<string> MapSequenceContainer::getSequencesNames() const
 void MapSequenceContainer::setSequencesNames(const vector<string>& names, bool checkNames) throw (Exception)
 {
   if (names.size() != getNumberOfSequences())
-    throw BadIntegerException("MapSequenceContainer::setSequenceNames : bad number of names", names.size());
+    throw IndexOutOfBoundsException("MapSequenceContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences(), getNumberOfSequences());
   if (checkNames) {
     // check if there is no repeat names in teh vector
     for (size_t i = 0 ; i < names.size() ; i++)

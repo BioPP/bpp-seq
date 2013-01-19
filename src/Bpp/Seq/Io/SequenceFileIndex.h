@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -63,12 +63,12 @@ namespace bpp {
       /**
        * @brief Get the position of a Sequence given its ID.
        */
-      virtual int getSequencePosition(const std::string& id) const throw (Exception) = 0;
+      virtual std::streampos getSequencePosition(const std::string& id) const throw (Exception) = 0;
 
       /**
        * @brief Get the number of sequences
        */
-      virtual unsigned int getNumberOfSequences() const throw (Exception) = 0;
+      virtual size_t getNumberOfSequences() const throw (Exception) = 0;
   };
 }
 

@@ -202,8 +202,8 @@ class Fasta:
         FileIndex(): index_(), fileSize_(0) {}
         ~FileIndex() {}
         void build(const std::string& path) throw (Exception);
-        int getSequencePosition(const std::string& id) const throw (Exception);
-        unsigned int getNumberOfSequences() const throw (Exception) {
+        std::streampos getSequencePosition(const std::string& id) const throw (Exception);
+        size_t getNumberOfSequences() const throw (Exception) {
           return index_.size();
         }
         /**
@@ -219,8 +219,8 @@ class Fasta:
          */
         void getSequence(const std::string& seqid, Sequence& seq, const std::string& path) const;
       private:
-        std::map<std::string, int> index_;
-        int fileSize_;
+        std::map<std::string, std::streampos> index_;
+        std::streampos fileSize_;
     };
 };
 

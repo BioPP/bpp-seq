@@ -582,7 +582,7 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
 throw (Exception)
 {
   if (pos >= getNumberOfSequences())
-    throw BadIntegerException("VectorSiteContainer::setSequence", pos);
+    throw IndexOutOfBoundsException("VectorSiteContainer::setSequence", pos, 0, getNumberOfSequences() - 1);
 
   // New sequence's alphabet and site container's alphabet matching verification
   if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
@@ -823,7 +823,7 @@ void VectorSiteContainer::setSequencesNames(
 throw (Exception)
 {
   if (names.size() != getNumberOfSequences())
-    throw BadIntegerException("VectorSiteContainer::setSequenceNames: bad number of names.", names.size());
+    throw IndexOutOfBoundsException("VectorSiteContainer::setSequenceNames: bad number of names.", names.size(), getNumberOfSequences(), getNumberOfSequences());
   if (checkNames)
   {
     for (size_t i = 0; i < names.size(); i++)

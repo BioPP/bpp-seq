@@ -88,7 +88,7 @@ namespace bpp {
        * @param size The size of the sequence. 
        * @param removable Tell if this listener can be removed by the user.
        */
-      SequenceQuality(unsigned int size = 0, bool removable = true) :
+      SequenceQuality(size_t size = 0, bool removable = true) :
         removable_(removable),
         qualScores_(size, DEFAULT_QUALITY_VALUE) {}
 
@@ -157,10 +157,10 @@ namespace bpp {
       void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
       void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
 
-      unsigned int getSize() const { return qualScores_.size(); }
+      size_t getSize() const { return qualScores_.size(); }
 
-      const int& operator[](unsigned int i) const { return qualScores_[i]; }
-      int& operator[](unsigned int i) { return qualScores_[i]; }
+      const int& operator[](size_t i) const { return qualScores_[i]; }
+      int& operator[](size_t i) { return qualScores_[i]; }
 
       void setScores(const std::vector<int>& scores) {
         if (scores.size() != qualScores_.size())
@@ -173,13 +173,13 @@ namespace bpp {
        */
       const std::vector<int>& getScores() const { return qualScores_; }
 
-      void setScore(unsigned int pos, int score) {
+      void setScore(size_t pos, int score) {
         if (pos >= qualScores_.size())
           throw Exception("SequenceQuality::setScore. Vector overflow. Scores number: " + TextTools::toString(qualScores_.size()) + ", but trying to insert score at position " + TextTools::toString(pos) + ".");
         qualScores_[pos] = score;
       }
       
-      void setScores(unsigned int pos, const std::vector<int>& scores) {
+      void setScores(size_t pos, const std::vector<int>& scores) {
         if (pos + scores.size() > qualScores_.size())
           throw Exception("SequenceQuality::setScores. Vector overflow. Scores number: " + TextTools::toString(qualScores_.size()) + ", but trying to insert " + TextTools::toString(scores.size()) + " scores at position " + TextTools::toString(pos) + ".");
         std::copy(scores.begin(), scores.end(), qualScores_.begin() + pos); 
@@ -195,7 +195,7 @@ namespace bpp {
         }
       }
 
-      SequenceQuality* getPartAnnotation(unsigned int pos, unsigned int len) const throw (Exception) {
+      SequenceQuality* getPartAnnotation(size_t pos, size_t len) const throw (Exception) {
         return new SequenceQuality(std::vector<int>(qualScores_.begin() + pos, qualScores_.begin() + pos + len), removable_);
       }
   };
@@ -523,7 +523,7 @@ namespace bpp {
        * @throw IndexOutOfBoundsException if pos is greater than the
        * sequence size
        */
-      void setQuality(unsigned int pos, int quality) throw (IndexOutOfBoundsException) {
+      void setQuality(size_t pos, int quality) throw (IndexOutOfBoundsException) {
         //if (pos >= qualScores_->getSize())
         //  throw IndexOutOfBoundsException("SequenceWithQuality::setQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
         //qualScores_[pos] = quality;
@@ -540,7 +540,7 @@ namespace bpp {
        * @throw IndexOutOfBoundsException if pos is greater than the
        * sequence size
        */
-      int getQuality(unsigned int pos) const throw (IndexOutOfBoundsException) {
+      int getQuality(size_t pos) const throw (IndexOutOfBoundsException) {
         if (pos >= qualScores_->getSize())
           throw IndexOutOfBoundsException("SequenceWithQuality::getQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
         return (*qualScores_)[pos];
@@ -593,7 +593,7 @@ namespace bpp {
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
-        unsigned int pos = qualScores_->getSize();
+        size_t pos = qualScores_->getSize();
         append(content); //This automatically extend scores array with default values through the listener
         //Update scores:
         qualScores_->setScores(pos, qualities);
@@ -623,7 +623,7 @@ namespace bpp {
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
-        unsigned int pos = qualScores_->getSize();
+        size_t pos = qualScores_->getSize();
         SequenceWithAnnotation::append(content); //This automatically extend scores array with default values through the listener
         //Update scores:
         qualScores_->setScores(pos, qualities);
@@ -654,7 +654,7 @@ namespace bpp {
         if (content.size() / this->getAlphabet()->getStateCodingSize()
             != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size() / this->getAlphabet()->getStateCodingSize());
-        unsigned int pos = qualScores_->getSize();
+        size_t pos = qualScores_->getSize();
         SequenceWithAnnotation::append(content); //This automatically extend scores array with default values through the listener
         //Update scores:
         qualScores_->setScores(pos, qualities);
@@ -684,7 +684,7 @@ namespace bpp {
         qualScores_->setScore(size() - 1, q);
       }
 
-      void addElement(unsigned int pos, const std::string& c)
+      void addElement(size_t pos, const std::string& c)
         throw (BadCharException, IndexOutOfBoundsException)
       {
         SequenceWithAnnotation::addElement(pos, c);
@@ -703,7 +703,7 @@ namespace bpp {
        * size
        */
       void addElement(
-          unsigned int pos, const std::string& c, int q)
+          size_t pos, const std::string& c, int q)
         throw (BadCharException, IndexOutOfBoundsException)
       {
         SequenceWithAnnotation::addElement(pos, c);
@@ -731,7 +731,7 @@ namespace bpp {
         qualScores_->setScore(size() - 1, q);
       }
 
-      void addElement(unsigned int pos, int v)
+      void addElement(size_t pos, int v)
         throw (BadIntException, IndexOutOfBoundsException)
       {
         SequenceWithAnnotation::addElement(pos, v);
@@ -748,7 +748,7 @@ namespace bpp {
        * @throw IndexOutOfBoundsException if pos is greater than the sequence
        * size
        */
-      void addElement(unsigned int pos, int v, int q)
+      void addElement(size_t pos, int v, int q)
         throw (BadCharException, IndexOutOfBoundsException)
       {
         SequenceWithAnnotation::addElement(pos, v);

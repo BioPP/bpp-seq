@@ -7,37 +7,37 @@
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-  This software is a computer program whose purpose is to provide classes
-  for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-  As a counterpart to the access to the source code and  rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-  In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include "SequenceTools.h"
 
@@ -59,17 +59,19 @@ using namespace std;
 DNA SequenceTools::_DNA;
 RNA SequenceTools::_RNA;
 RNY SequenceTools::_RNY(_DNA);
-NucleicAcidsReplication SequenceTools::_DNARep(& _DNA, & _DNA);
-NucleicAcidsReplication SequenceTools::_RNARep(& _RNA, & _RNA);
-NucleicAcidsReplication SequenceTools::_transc(& _DNA, & _RNA);
+NucleicAcidsReplication SequenceTools::_DNARep(&_DNA, &_DNA);
+NucleicAcidsReplication SequenceTools::_RNARep(&_RNA, &_RNA);
+NucleicAcidsReplication SequenceTools::_transc(&_DNA, &_RNA);
 
 /******************************************************************************/
 
-Sequence* SequenceTools::subseq(const Sequence& sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception)
+Sequence* SequenceTools::subseq(const Sequence& sequence, size_t begin, size_t end) throw (IndexOutOfBoundsException, Exception)
 {
   // Checking interval
-  if (end >= sequence.size()) throw IndexOutOfBoundsException ("SequenceTools::subseq : Invalid upper bound", end, 0, sequence.size());
-  if (end < begin) throw Exception ("SequenceTools::subseq : Invalid interval");
+  if (end >= sequence.size())
+    throw IndexOutOfBoundsException ("SequenceTools::subseq : Invalid upper bound", end, 0, sequence.size());
+  if (end < begin)
+    throw Exception ("SequenceTools::subseq : Invalid interval");
 
   // Copy sequence
   vector<int> temp(sequence.getContent());
@@ -81,15 +83,15 @@ Sequence* SequenceTools::subseq(const Sequence& sequence, unsigned int begin, un
   // New sequence creation
   return new BasicSequence(sequence.getName(), temp, sequence.getComments(), sequence.getAlphabet());
 }
-	
+
 /******************************************************************************/
 
 Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception)
 {
   // Sequence's alphabets matching verification
-  if ((seq1.getAlphabet()->getAlphabetType()) != (seq2.getAlphabet()->getAlphabetType())) 
+  if ((seq1.getAlphabet()->getAlphabetType()) != (seq2.getAlphabet()->getAlphabetType()))
     throw AlphabetMismatchException("SequenceTools::concatenate : Sequence's alphabets don't match ", seq1.getAlphabet(), seq2.getAlphabet());
-	
+
   // Sequence's names matching verification
   if (seq1.getName() != seq2.getName())
     throw Exception ("SequenceTools::concatenate : Sequence's names don't match");
@@ -100,38 +102,51 @@ Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2)
   sequence.insert(sequence.end(), sequence2.begin(), sequence2.end());
   return new BasicSequence(seq1.getName(), sequence, seq1.getComments(), seq1.getAlphabet());
 }
-		
+
 /******************************************************************************/
 
-Sequence& SequenceTools::complement(Sequence& seq) throw (AlphabetException) {
+Sequence& SequenceTools::complement(Sequence& seq) throw (AlphabetException)
+{
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet") {
+  if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet")
+  {
     NAR = &_DNARep;
-  } else if (seq.getAlphabet()->getAlphabetType() == "RNA alphabet") {
+  }
+  else if (seq.getAlphabet()->getAlphabetType() == "RNA alphabet")
+  {
     NAR = &_RNARep;
-  } else {
+  }
+  else
+  {
     throw AlphabetException("SequenceTools::complement: Sequence must be nucleic.", seq.getAlphabet());
   }
-  for (unsigned int i = 0 ; i < seq.size() ; i++) {
+  for (size_t i = 0; i < seq.size(); i++)
+  {
     seq.setElement(i, NAR->translate(seq.getValue(i)));
   }
   return seq;
 }
-		
+
 /******************************************************************************/
 
-Sequence* SequenceTools::getComplement(const Sequence& sequence) throw (AlphabetException) {
+Sequence* SequenceTools::getComplement(const Sequence& sequence) throw (AlphabetException)
+{
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (sequence.getAlphabet()->getAlphabetType() == "DNA alphabet") {
+  if (sequence.getAlphabet()->getAlphabetType() == "DNA alphabet")
+  {
     NAR = &_DNARep;
-  } else if (sequence.getAlphabet()->getAlphabetType() == "RNA alphabet") {
+  }
+  else if (sequence.getAlphabet()->getAlphabetType() == "RNA alphabet")
+  {
     NAR = &_RNARep;
-  } else {
+  }
+  else
+  {
     throw AlphabetException ("SequenceTools::getComplement: Sequence must be nucleic.", sequence.getAlphabet());
   }
-	
+
   return NAR->translate(sequence);
 }
 
@@ -141,9 +156,9 @@ Sequence* SequenceTools::transcript(const Sequence& sequence) throw (AlphabetExc
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "DNA alphabet")
-    {
-      throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
-    }
+  {
+    throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
+  }
 
   return _transc.translate(sequence);
 }
@@ -154,20 +169,22 @@ Sequence* SequenceTools::reverseTranscript(const Sequence& sequence) throw (Alph
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "RNA alphabet")
-    {
-      throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
-    }
+  {
+    throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
+  }
 
   return _transc.reverse(sequence);
 }
 
 /******************************************************************************/
 
-Sequence& SequenceTools::invert(Sequence& seq) {
-  unsigned int seq_size = seq.size(); // store seq size for efficiency
+Sequence& SequenceTools::invert(Sequence& seq)
+{
+  size_t seq_size = seq.size(); // store seq size for efficiency
   unsigned int tmp_state = 0; // to store one state when swapping positions
-  unsigned int j = seq_size; // symetric position iterator from sequence end
-  for (unsigned int i = 0 ; i < seq_size / 2 ; i++) {
+  size_t j = seq_size; // symetric position iterator from sequence end
+  for (size_t i = 0; i < seq_size / 2; i++)
+  {
     j = seq_size - 1 - i;
     tmp_state = seq.getValue(i);
     seq.setElement(i, seq.getValue(j));
@@ -178,7 +195,8 @@ Sequence& SequenceTools::invert(Sequence& seq) {
 
 /******************************************************************************/
 
-Sequence* SequenceTools::getInvert(const Sequence& sequence) {
+Sequence* SequenceTools::getInvert(const Sequence& sequence)
+{
   Sequence* iSeq = sequence.clone();
   invert(*iSeq);
   return iSeq;
@@ -186,29 +204,37 @@ Sequence* SequenceTools::getInvert(const Sequence& sequence) {
 
 /******************************************************************************/
 
-Sequence& SequenceTools::invertComplement(Sequence& seq) {
+Sequence& SequenceTools::invertComplement(Sequence& seq)
+{
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet") {
+  if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet")
+  {
     NAR = &_DNARep;
-  } else if (seq.getAlphabet()->getAlphabetType() == "RNA alphabet") {
+  }
+  else if (seq.getAlphabet()->getAlphabetType() == "RNA alphabet")
+  {
     NAR = &_RNARep;
-  } else {
+  }
+  else
+  {
     throw AlphabetException("SequenceTools::complement: Sequence must be nucleic.", seq.getAlphabet());
   }
-  //for (size_t i = 0 ; i < seq.size() ; i++) {
+  // for (size_t i = 0 ; i < seq.size() ; i++) {
   //  seq.setElement(i, NAR->translate(seq.getValue(i)));
-  //}
+  // }
   size_t seq_size = seq.size(); // store seq size for efficiency
   int tmp_state = 0; // to store one state when swapping positions
   size_t j = seq_size; // symetric position iterator from sequence end
-  for (size_t i = 0 ; i < seq_size / 2 ; i++) {
+  for (size_t i = 0; i < seq_size / 2; i++)
+  {
     j = seq_size - 1 - i;
     tmp_state = seq.getValue(i);
     seq.setElement(i, NAR->translate(seq.getValue(j)));
     seq.setElement(j, NAR->translate(tmp_state));
   }
-  if (seq_size % 2) { // treate the state in the middle of odd sequences
+  if (seq_size % 2)   // treate the state in the middle of odd sequences
+  {
     seq.setElement(seq_size / 2, NAR->translate(seq.getValue(seq_size / 2)));
   }
   return seq;
@@ -223,57 +249,67 @@ double SequenceTools::getPercentIdentity(const Sequence& seq1, const Sequence& s
   if (seq1.size() != seq2.size())
     throw SequenceNotAlignedException("SequenceTools::getPercentIdentity", &seq2);
   int gap = seq1.getAlphabet()->getGapCharacterCode();
-  unsigned int id = 0;
-  unsigned int tot = 0;
-  for (unsigned int i = 0; i < seq1.size(); i++) {
+  size_t id = 0;
+  size_t tot = 0;
+  for (size_t i = 0; i < seq1.size(); i++)
+  {
     int x = seq1.getValue(i);
     int y = seq2.getValue(i);
-    if (ignoreGaps) {
-      if (x != gap && y != gap) {
+    if (ignoreGaps)
+    {
+      if (x != gap && y != gap)
+      {
         tot++;
-        if (x == y) id++;
+        if (x == y)
+          id++;
       }
-    } else {
+    }
+    else
+    {
       tot++;
-      if (x == y) id++;
+      if (x == y)
+        id++;
     }
   }
-  return static_cast<double>(id) / static_cast<double>(tot) * 100.; 			
+  return static_cast<double>(id) / static_cast<double>(tot) * 100.;
 }
 
 /******************************************************************************/
 
-unsigned int SequenceTools::getNumberOfSites(const Sequence& seq)
+size_t SequenceTools::getNumberOfSites(const Sequence& seq)
 {
-  unsigned int count = 0;
+  size_t count = 0;
   const Alphabet* alpha = seq.getAlphabet();
-  for(unsigned int i = 0; i < seq.size(); i++)
-    {
-      if(! alpha->isGap(seq[i])) count++;
-    }
+  for (size_t i = 0; i < seq.size(); i++)
+  {
+    if (!alpha->isGap(seq[i]))
+      count++;
+  }
   return count;
 }
 
 /******************************************************************************/
 
-unsigned int SequenceTools::getNumberOfCompleteSites(const Sequence & seq)
+size_t SequenceTools::getNumberOfCompleteSites(const Sequence& seq)
 {
-  unsigned int count = 0;
-  const Alphabet * alpha = seq.getAlphabet();
-  for(unsigned int i = 0; i < seq.size(); i++)
-    {
-      if(! alpha->isGap(seq[i]) && ! alpha->isUnresolved(seq[i])) count++;
-    }
+  size_t count = 0;
+  const Alphabet* alpha = seq.getAlphabet();
+  for (size_t i = 0; i < seq.size(); i++)
+  {
+    if (!alpha->isGap(seq[i]) && !alpha->isUnresolved(seq[i]))
+      count++;
+  }
   return count;
 }
 
 /******************************************************************************/
 
-unsigned int SequenceTools::getNumberOfUnresolvedSites(const Sequence& seq)
+size_t SequenceTools::getNumberOfUnresolvedSites(const Sequence& seq)
 {
-  unsigned int count = 0;
-  const Alphabet * alpha = seq.getAlphabet();
-  for (unsigned int i = 0 ; i < seq.size() ; i++) {
+  size_t count = 0;
+  const Alphabet* alpha = seq.getAlphabet();
+  for (size_t i = 0; i < seq.size(); i++)
+  {
     if (alpha->isUnresolved(seq[i]))
       count++;
   }
@@ -286,11 +322,12 @@ Sequence* SequenceTools::getSequenceWithoutGaps(const Sequence& seq)
 {
   const Alphabet* alpha = seq.getAlphabet();
   vector<int> content;
-  for (unsigned int i = 0; i < seq.size(); i++)
-    {
-      if (! alpha->isGap(seq[i])) content.push_back(seq[i]);
-    }
-  Sequence* newSeq = dynamic_cast<Sequence *>(seq.clone());
+  for (size_t i = 0; i < seq.size(); i++)
+  {
+    if (!alpha->isGap(seq[i]))
+      content.push_back(seq[i]);
+  }
+  Sequence* newSeq = dynamic_cast<Sequence*>(seq.clone());
   newSeq->setContent(content);
   return newSeq;
 }
@@ -300,10 +337,11 @@ Sequence* SequenceTools::getSequenceWithoutGaps(const Sequence& seq)
 void SequenceTools::removeGaps(Sequence& seq)
 {
   const Alphabet* alpha = seq.getAlphabet();
-  for (unsigned int i = seq.size(); i > 0; --i)
-    {
-      if (alpha->isGap(seq[i - 1])) seq.deleteElement(i - 1);
-    }
+  for (size_t i = seq.size(); i > 0; --i)
+  {
+    if (alpha->isGap(seq[i - 1]))
+      seq.deleteElement(i - 1);
+  }
 }
 
 /******************************************************************************/
@@ -314,10 +352,11 @@ Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq) throw (Exc
   if (!calpha)
     throw Exception("SequenceTools::getSequenceWithoutStops. Input sequence should have a codon alphabet.");
   vector<int> content;
-  for (unsigned int i = 0; i < seq.size(); i++)
-    {
-      if (!calpha->isStop(seq[i])) content.push_back(seq[i]);
-    }
+  for (size_t i = 0; i < seq.size(); i++)
+  {
+    if (!calpha->isStop(seq[i]))
+      content.push_back(seq[i]);
+  }
   Sequence* newSeq = dynamic_cast<Sequence*>(seq.clone());
   newSeq->setContent(content);
   return newSeq;
@@ -330,10 +369,11 @@ void SequenceTools::removeStops(Sequence& seq) throw (Exception)
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
   if (!calpha)
     throw Exception("SequenceTools::removeStops. Input sequence should have a codon alphabet.");
-  for (unsigned int i = seq.size(); i > 0; --i)
-    {
-      if (calpha->isStop(seq[i - 1])) seq.deleteElement(i - 1);
-    }
+  for (size_t i = seq.size(); i > 0; --i)
+  {
+    if (calpha->isStop(seq[i - 1]))
+      seq.deleteElement(i - 1);
+  }
 }
 
 /******************************************************************************/
@@ -344,57 +384,58 @@ void SequenceTools::replaceStopsWithGaps(Sequence& seq) throw (Exception)
   if (!calpha)
     throw Exception("SequenceTools::replaceStopsWithGaps. Input sequence should have a codon alphabet.");
   int gap = calpha->getGapCharacterCode();
-  for (unsigned int i = 0; i < seq.size(); ++i)
-    {
-      if (calpha->isStop(seq[i])) seq.setElement(i, gap);
-    }
+  for (size_t i = 0; i < seq.size(); ++i)
+  {
+    if (calpha->isStop(seq[i]))
+      seq.setElement(i, gap);
+  }
 }
 
 /******************************************************************************/
 
 BowkerTest* SequenceTools::bowkerTest(const Sequence& seq1, const Sequence& seq2)
-  throw (SequenceNotAlignedException)
+throw (SequenceNotAlignedException)
 {
-  if(seq1.size() != seq2.size())
+  if (seq1.size() != seq2.size())
     throw SequenceNotAlignedException("SequenceTools::bowkerTest.", &seq2);
-  unsigned int n = seq1.size();
+  size_t n = seq1.size();
   const Alphabet* alpha = seq1.getAlphabet();
   unsigned int r = alpha->getSize();
 
-  //Compute contingency table:
+  // Compute contingency table:
   RowMatrix<double> array(r, r);
   int x, y;
-  for(unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
+  {
+    x = seq1[i];
+    y = seq2[i];
+    if (!alpha->isGap(x) && !alpha->isUnresolved(x)
+        && !alpha->isGap(y) && !alpha->isUnresolved(y))
     {
-      x = seq1[i];
-      y = seq2[i];
-      if(!alpha->isGap(x) && !alpha->isUnresolved(x)
-         && !alpha->isGap(y) && !alpha->isUnresolved(y))
-        {
-          array(static_cast<unsigned int>(x), static_cast<unsigned int>(y))++;
-        }
+      array(static_cast<size_t>(x), static_cast<size_t>(y))++;
     }
-  
-  //Compute Bowker's statistic:
+  }
+
+  // Compute Bowker's statistic:
   double sb2 = 0, nij, nji;
-  for(unsigned int i = 1; i < r; ++i)
+  for (unsigned int i = 1; i < r; ++i)
+  {
+    for (unsigned int j = 0; j < i; ++j)
     {
-      for(unsigned int j = 0; j < i; ++j)
-        {
-          nij = array(i, j);
-          nji = array(j, i);
-          if (nij != 0 || nji != 0)
-            {
-              sb2 += pow(nij - nji, 2) / (nij + nji);
-            }
-          // Else: we should display a warning there.
-        }
+      nij = array(i, j);
+      nji = array(j, i);
+      if (nij != 0 || nji != 0)
+      {
+        sb2 += pow(nij - nji, 2) / (nij + nji);
+      }
+      // Else: we should display a warning there.
     }
-  
-  //Compute p-value:
+  }
+
+  // Compute p-value:
   double pvalue = 1. - RandomTools::pChisq(sb2, (r - 1) * r / 2);
 
-  //Return results:
+  // Return results:
   BowkerTest* test = new BowkerTest();
   test->setStatistic(sb2);
   test->setPValue(pvalue);
@@ -403,57 +444,71 @@ BowkerTest* SequenceTools::bowkerTest(const Sequence& seq1, const Sequence& seq2
 
 /******************************************************************************/
 
-void SequenceTools::getPutativeHaplotypes(const Sequence & seq, std::vector<Sequence *> & hap, unsigned int level)
+void SequenceTools::getPutativeHaplotypes(const Sequence& seq, std::vector<Sequence*>& hap, unsigned int level)
 {
-  vector< vector < int > > states(seq.size());
-  list<Sequence *> t_hap;
-  const Alphabet * alpha = seq.getAlphabet();
+  vector< vector< int > > states(seq.size());
+  list<Sequence*> t_hap;
+  const Alphabet* alpha = seq.getAlphabet();
   unsigned int hap_count = 1;
   // Vector of available states at each position
-  for (unsigned int i = 0 ; i < seq.size() ; i++) {
+  for (size_t i = 0; i < seq.size(); i++)
+  {
     vector<int> st = alpha->getAlias(seq[i]);
-    if (!st.size()) {
+    if (!st.size())
+    {
       st.push_back(alpha->getGapCharacterCode());
     }
-    if (st.size() <= level) {
+    if (st.size() <= level)
+    {
       states[i] = st;
-    } else {
-      states[i] = vector <int> (1, seq[i]);
+    }
+    else
+    {
+      states[i] = vector<int>(1, seq[i]);
     }
   }
   // Combinatorial haplotypes building (the use of tree may be more accurate)
   t_hap.push_back(new BasicSequence(seq.getName() + "_hap" + TextTools::toString(hap_count++), "", alpha));
-  for (unsigned int i = 0 ; i < states.size() ; i++) {
-    for (list<Sequence *>::iterator it = t_hap.begin() ; it != t_hap.end() ; it++) {
-      for (unsigned int j = 0 ; j < states[i].size() ; j++) {
-        Sequence * tmp_seq = new BasicSequence(seq.getName() + "_hap", (** it).getContent(), alpha);
-        if (j < states[i].size() - 1) {
+  for (size_t i = 0; i < states.size(); i++)
+  {
+    for (list<Sequence*>::iterator it = t_hap.begin(); it != t_hap.end(); it++)
+    {
+      for (unsigned int j = 0; j < states[i].size(); j++)
+      {
+        Sequence* tmp_seq = new BasicSequence(seq.getName() + "_hap", (**it).getContent(), alpha);
+        if (j < states[i].size() - 1)
+        {
           tmp_seq->setName(tmp_seq->getName() + TextTools::toString(hap_count++));
           tmp_seq->addElement(states[i][j]);
           t_hap.insert(it, tmp_seq);
         }
-        else {
-          (** it).addElement(states[i][j]);
+        else
+        {
+          (**it).addElement(states[i][j]);
         }
       }
     }
   }
-  for (list<Sequence *>::reverse_iterator it = t_hap.rbegin() ; it != t_hap.rend() ; it++) {
-    hap.push_back(* it);
+  for (list<Sequence*>::reverse_iterator it = t_hap.rbegin(); it != t_hap.rend(); it++)
+  {
+    hap.push_back(*it);
   }
 }
 
 /******************************************************************************/
 
-Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2) throw (AlphabetMismatchException) {
-  if (s1.getAlphabet()->getAlphabetType() != s2.getAlphabet()->getAlphabetType()) {
+Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2) throw (AlphabetMismatchException)
+{
+  if (s1.getAlphabet()->getAlphabetType() != s2.getAlphabet()->getAlphabetType())
+  {
     throw AlphabetMismatchException("SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2): s1 and s2 don't have same Alphabet.", s1.getAlphabet(), s2.getAlphabet());
   }
   const Alphabet* alpha = s1.getAlphabet();
   vector<int> st;
   vector<int> seq;
-  unsigned int length = NumTools::max(s1.size(), s2.size());
-  for (unsigned int i = 0 ; i < length ; i++) {
+  size_t length = NumTools::max(s1.size(), s2.size());
+  for (size_t i = 0; i < length; i++)
+  {
     if (i < s1.size())
       st.push_back(s1.getValue(i));
     if (i < s2.size())
@@ -467,27 +522,34 @@ Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2
 
 /******************************************************************************/
 
-Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h, string name, unsigned int level) throw (SequenceNotAlignedException) {
-  const Alphabet * alpha = s.getAlphabet();
-  if (name.size() == 0) 
+Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h, string name, unsigned int level) throw (SequenceNotAlignedException)
+{
+  const Alphabet* alpha = s.getAlphabet();
+  if (name.size() == 0)
     name = s.getName() + "_haplotype";
   string seq;
-  if (s.size() != h.size()) throw SequenceNotAlignedException("SequenceTools::subtractHaplotype: haplotype must be aligned with the sequence.", &h);
-  for (unsigned int i = 0 ; i < s.size() ; ++i) {
-    string c; 
+  if (s.size() != h.size())
+    throw SequenceNotAlignedException("SequenceTools::subtractHaplotype: haplotype must be aligned with the sequence.", &h);
+  for (unsigned int i = 0; i < s.size(); ++i)
+  {
+    string c;
     vector<int> nucs = alpha->getAlias(s.getValue(i));
-    if (nucs.size() > 1) {
+    if (nucs.size() > 1)
+    {
       remove(nucs.begin(), nucs.end(), h.getValue(i));
       nucs = vector<int>(nucs.begin(), nucs.end() - 1);
-    } else {
+    }
+    else
+    {
       nucs = vector<int>(nucs.begin(), nucs.end());
-    }  
+    }
     c = alpha->intToChar(alpha->getGeneric(nucs));
-    if (level <= nucs.size() && (alpha->isUnresolved(s.getValue(i)) || alpha->isUnresolved(h.getValue(i)))) {
+    if (level <= nucs.size() && (alpha->isUnresolved(s.getValue(i)) || alpha->isUnresolved(h.getValue(i))))
+    {
       c = alpha->intToChar(alpha->getUnknownCharacterCode());
-    }  
-    seq += c; 
-  }  
+    }
+    seq += c;
+  }
   Sequence* hap = new BasicSequence(name, seq, alpha);
   return hap;
 }
@@ -498,35 +560,35 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
 {
   // Alphabet type checking
   if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")
-    {
-      throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
-    }
-  
-  if ((ph<1) || (ph>3))
+  {
+    throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
+  }
+
+  if ((ph < 1) || (ph > 3))
     throw Exception("Bad phase for RNYSlice: " + TextTools::toString(ph) + ". Should be between 1 and 3.");
-  
-  int s = seq.size();
-  int n = (s - ph + 3) / 3;
+
+  size_t s = seq.size();
+  size_t n = (s - ph + 3) / 3;
 
   vector<int> content(n);
 
   int tir = seq.getAlphabet()->getGapCharacterCode();
-  int j;
+  size_t j;
 
-  for (int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
+  {
+    j = i * 3 + ph - 1;
+
+    if (j == 0)
+      content[i] = _RNY.getRNY(tir, seq[0], seq[1], *seq.getAlphabet());
+    else
     {
-      j = i * 3 + ph - 1;
-
-      if (j == 0)
-        content[i] = _RNY.getRNY(tir,seq[0],seq[1],*seq.getAlphabet());
+      if (j == s - 1)
+        content[i] = _RNY.getRNY(seq[j - 1], seq[j], tir, *seq.getAlphabet());
       else
-        {
-          if (j == s - 1)
-            content[i] = _RNY.getRNY(seq[j - 1],seq[j],tir, *seq.getAlphabet());
-          else
-            content[i] = _RNY.getRNY(seq[j - 1],seq[j],seq[j + 1],*seq.getAlphabet());
-        }
+        content[i] = _RNY.getRNY(seq[j - 1], seq[j], seq[j + 1], *seq.getAlphabet());
     }
+  }
 
   // New sequence creating, and sense reversing
   Sequence* sq = new BasicSequence(seq.getName(), content,
@@ -538,31 +600,31 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
 
 Sequence* SequenceTools::RNYslice(const Sequence& seq) throw (AlphabetException)
 {
-  
   // Alphabet type checking
   if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")
-    {
-      throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
-    }
+  {
+    throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
+  }
 
-  unsigned int n = seq.size();
+  size_t n = seq.size();
 
   vector<int> content(n);
 
   int tir = seq.getAlphabet()->getGapCharacterCode();
 
-  if (seq.size()>=2){
-    content[0] = _RNY.getRNY(tir,seq[0],seq[1], *seq.getAlphabet());
+  if (seq.size() >= 2)
+  {
+    content[0] = _RNY.getRNY(tir, seq[0], seq[1], *seq.getAlphabet());
 
     for (unsigned int i = 1; i < n - 1; i++)
-      {
-        content[i] = _RNY.getRNY(seq[i - 1],seq[i],seq[i + 1],
-                                 *seq.getAlphabet());
-      }
-    
-    content[n - 1] = _RNY.getRNY(seq[n - 2],seq[n - 1],tir, *seq.getAlphabet());
+    {
+      content[i] = _RNY.getRNY(seq[i - 1], seq[i], seq[i + 1],
+                               *seq.getAlphabet());
+    }
+
+    content[n - 1] = _RNY.getRNY(seq[n - 2], seq[n - 1], tir, *seq.getAlphabet());
   }
-  
+
   // New sequence creating, and sense reversing
   Sequence* s = new BasicSequence(seq.getName(), content,
                                   seq.getComments(), &_RNY);
@@ -579,39 +641,54 @@ void SequenceTools::getCDS(Sequence& sequence, bool checkInit, bool checkStop, b
   const CodonAlphabet* alphabet = dynamic_cast<const CodonAlphabet*>(sequence.getAlphabet());
   if (!alphabet)
     throw AlphabetException("SequenceTools::getCDS. Sequence is not a codon sequence.");
-  if (checkInit) {
+  if (checkInit)
+  {
     unsigned int i;
-    for (i = 0; i < sequence.size() && !alphabet->isInit(sequence[i]); ++i) {}
+    for (i = 0; i < sequence.size() && !alphabet->isInit(sequence[i]); ++i)
+    {}
     for (unsigned int j = 0; includeInit ? j < i : j <= i; ++j)
+    {
       sequence.deleteElement(j);
+    }
   }
-  if (checkStop) {
+  if (checkStop)
+  {
     unsigned int i;
-    for (i = 0; i < sequence.size() && !alphabet->isStop(sequence[i]); ++i) {}
+    for (i = 0; i < sequence.size() && !alphabet->isStop(sequence[i]); ++i)
+    {}
     for (unsigned int j = includeStop ? i + 1 : i; j < sequence.size(); ++j)
+    {
       sequence.deleteElement(j);
+    }
   }
 }
 
 /******************************************************************************/
 
-unsigned int SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif, bool strict)
+size_t SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif, bool strict)
 {
   if (motif.size() > seq.size())
     return seq.size();
-  for (size_t seqi = 0 ; seqi < seq.size() - motif.size() + 1 ; seqi++) {
+  for (size_t seqi = 0; seqi < seq.size() - motif.size() + 1; seqi++)
+  {
     bool match = false;
-    for (size_t moti = 0 ; moti < motif.size() ; moti++) {
-      if (strict) {
+    for (size_t moti = 0; moti < motif.size(); moti++)
+    {
+      if (strict)
+      {
         match = seq.getValue(seqi + moti) == motif.getValue(moti);
-      } else {
+      }
+      else
+      {
         match = AlphabetTools::match(seq.getAlphabet(), seq.getValue(seqi + moti), motif.getValue(moti));
       }
-      if (!match) {
+      if (!match)
+      {
         break;
       }
     }
-    if (match) {
+    if (match)
+    {
       return seqi;
     }
   }

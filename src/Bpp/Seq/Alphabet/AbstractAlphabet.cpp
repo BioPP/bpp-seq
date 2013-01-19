@@ -53,7 +53,7 @@ using namespace std;
 
 /******************************************************************************/
 
-void AbstractAlphabet::updateMaps_(unsigned int pos, const AlphabetState& st) {
+void AbstractAlphabet::updateMaps_(size_t pos, const AlphabetState& st) {
   if (letters_.find(st.getLetter()) == letters_.end())
     letters_[st.getLetter()] = pos;
   if (nums_.find(st.getNum()) == nums_.end())
@@ -71,7 +71,7 @@ void AbstractAlphabet::registerState(const AlphabetState& st) {
 
 /******************************************************************************/
 
-void AbstractAlphabet::setState(unsigned int pos, const AlphabetState& st)
+void AbstractAlphabet::setState(size_t pos, const AlphabetState& st)
   throw (IndexOutOfBoundsException) {
     if (pos > alphabet_.size())
       throw IndexOutOfBoundsException("AbstractAlphabet::setState: incorect position", pos, 0, alphabet_.size());
@@ -87,7 +87,7 @@ void AbstractAlphabet::setState(unsigned int pos, const AlphabetState& st)
 /******************************************************************************/
 
 const AlphabetState& AbstractAlphabet::getState(const std::string& letter) const throw (BadCharException) {
-  map<string, unsigned int>::const_iterator it = letters_.find(letter);
+  map<string, size_t>::const_iterator it = letters_.find(letter);
   if (it == letters_.end())
     throw BadCharException(letter, "AbstractAlphabet::getState(string): Specified base unknown", this);
   return * (alphabet_[it->second]);
@@ -96,7 +96,7 @@ const AlphabetState& AbstractAlphabet::getState(const std::string& letter) const
 /******************************************************************************/
 
 const AlphabetState& AbstractAlphabet::getState(int num) const throw (BadIntException) {
-  map<int, unsigned int>::const_iterator it = nums_.find(num);
+  map<int, size_t>::const_iterator it = nums_.find(num);
   if (it == nums_.end())
     throw BadIntException(num, "AbstractAlphabet::getState(int): Specified base unknown", this);
   return * (alphabet_[it->second]);
@@ -104,7 +104,7 @@ const AlphabetState& AbstractAlphabet::getState(int num) const throw (BadIntExce
 
 /******************************************************************************/
 
-AlphabetState& AbstractAlphabet::getStateAt(unsigned int pos) throw (IndexOutOfBoundsException) {
+AlphabetState& AbstractAlphabet::getStateAt(size_t pos) throw (IndexOutOfBoundsException) {
   if (pos > alphabet_.size())
     throw IndexOutOfBoundsException("AbstractAlphabet::getStateAt: incorect position", pos, 0, alphabet_.size());
   return * (alphabet_[pos]);
@@ -112,7 +112,7 @@ AlphabetState& AbstractAlphabet::getStateAt(unsigned int pos) throw (IndexOutOfB
 
 /******************************************************************************/
 
-const AlphabetState& AbstractAlphabet::getStateAt(unsigned int pos) const throw (IndexOutOfBoundsException) {
+const AlphabetState& AbstractAlphabet::getStateAt(size_t pos) const throw (IndexOutOfBoundsException) {
   if (pos > alphabet_.size())
     throw IndexOutOfBoundsException("AbstractAlphabet::getStateAt: incorect position", pos, 0, alphabet_.size());
   return * (alphabet_[pos]);
@@ -150,7 +150,7 @@ std::string AbstractAlphabet::intToChar(int state) const throw (BadIntException)
 
 bool AbstractAlphabet::isIntInAlphabet(int state) const
 {
-  map<int, unsigned int>::const_iterator it = nums_.find(state);
+  map<int, size_t>::const_iterator it = nums_.find(state);
   if (it != nums_.end())
     return true;
   return false;
@@ -160,7 +160,7 @@ bool AbstractAlphabet::isIntInAlphabet(int state) const
 
 bool AbstractAlphabet::isCharInAlphabet(const std::string& state) const
 {
-  map<string, unsigned int>::const_iterator it = letters_.find(state);
+  map<string, size_t>::const_iterator it = letters_.find(state);
   if (it != letters_.end())
     return true;
   return false;

@@ -435,7 +435,7 @@ void AlignedSequenceContainer::reindexSites()
   positions_.resize(length_);
   for (size_t i = 0; i < length_; i++)
   {
-    positions_[i] = i + 1; // start with 1.
+    positions_[i] = static_cast<int>(i + 1); // start with 1.
   }
 }
 

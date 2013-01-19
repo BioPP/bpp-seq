@@ -478,8 +478,8 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
       pi += (it1->second) * (it2->second) * (numberOfSynonymousDifferences(it1->first, it2->first, gc, minchange));
     }
   }
-  unsigned int n = site.size();
-  return pi * n / (n - 1);
+  size_t n = site.size();
+  return pi * static_cast<double>(n / (n - 1));
 }
 
 /******************************************************************************/
@@ -515,8 +515,8 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
       pi += (it1->second) * (it2->second) * (nbtot - nbsyn);
     }
   }
-  unsigned int n = site.size();
-  return pi * n / (n - 1);
+  size_t n = site.size();
+  return pi * static_cast<double>(n / (n - 1));
 }
 
 /******************************************************************************/
@@ -607,7 +607,7 @@ throw (AlphabetException, EmptySiteException)
   if (SiteTools::isConstant(site))
     return 0;
   Site* newsite;
-  if (freqmin > (double)1 / site.size())
+  if (freqmin > 1. / static_cast<double>(site.size()))
     newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site, freqmin);
   else
     newsite = new Site(site);
@@ -618,7 +618,7 @@ throw (AlphabetException, EmptySiteException)
 
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
 
-  for (unsigned int i = 0; i < newsite->size(); i++)
+  for (size_t i = 0; i < newsite->size(); i++)
   {
     pos1.push_back(ca->getFirstPosition(newsite->getValue(i)));
     pos2.push_back(ca->getSecondPosition(newsite->getValue(i)));
@@ -654,7 +654,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   if (SiteTools::isConstant(site))
     return 0;
   Site* newsite;
-  if (freqmin > (double) 1 / site.size())
+  if (freqmin > 1. / static_cast<double>(site.size()))
     newsite = generateCodonSiteWithoutRareVariant(site, freqmin);
   else
     newsite = new Site(site);

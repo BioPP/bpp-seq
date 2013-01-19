@@ -124,8 +124,8 @@ std::vector<std::string> RNA::getAlias(const std::string & state) const throw (B
 
 int RNA::getGeneric(const std::vector<int> & states) const throw (BadIntException)
 {
-  char v = 0;
-  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+  int v = 0;
+  for (size_t i = 0 ; i < states.size() ; ++i) {
     if (!isIntInAlphabet(states[i])) throw BadIntException(states[i], "RNA::getGeneric(const vector<int>& states): Specified base unknown.");
     v |= getState(states[i]).getBinaryCode();
   }

@@ -127,8 +127,8 @@ bool GeneticCode::isFourFoldDegenerated(int val) const
 
 Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForInitCodon, bool includeInitCodon) const throw (Exception)
 {
-  unsigned int initPos = 0;
-  unsigned int stopPos = sequence.size();
+  size_t initPos = 0;
+  size_t stopPos = sequence.size();
   if (AlphabetTools::isCodonAlphabet(sequence.getAlphabet()))
   {
     // Look for AUG(or ATG) codon:
@@ -145,7 +145,7 @@ Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForI
       }
     }
     // Look for stop codon:
-    for (unsigned int i = initPos; i < sequence.size(); i++)
+    for (size_t i = initPos; i < sequence.size(); i++)
     {
       if (codonAlphabet_->isStop(sequence[i]))
       {
@@ -170,7 +170,7 @@ Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForI
     }
     // Look for stop codon:
     const NucleicAlphabet* nucAlpha = codonAlphabet_->getNucleicAlphabet();
-    for (unsigned int i = initPos; i < sequence.size() - 2; i += 3)
+    for (size_t i = initPos; i < sequence.size() - 2; i += 3)
     {
       string codon = nucAlpha->intToChar(sequence[i])
                      + nucAlpha->intToChar(sequence[i + 1])

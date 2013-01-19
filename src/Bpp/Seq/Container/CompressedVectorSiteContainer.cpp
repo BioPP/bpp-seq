@@ -535,7 +535,7 @@ void CompressedVectorSiteContainer::setSequencesNames(
 throw (Exception)
 {
   if (names.size() != getNumberOfSequences())
-    throw BadIntegerException("CompressedVectorSiteContainer::setSequenceNames: bad number of names.", names.size());
+    throw IndexOutOfBoundsException("CompressedVectorSiteContainer::setSequenceNames: bad number of names.", names.size(), getNumberOfSequences(), getNumberOfSequences());
   if (checkNames)
   {
     for (size_t i = 0; i < names.size(); i++)

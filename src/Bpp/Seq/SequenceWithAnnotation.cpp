@@ -152,10 +152,10 @@ void SequenceWithAnnotation::setContent(const std::string& sequence) throw (BadC
 
 /******************************************************************************/
 
-void SequenceWithAnnotation::setToSizeR(unsigned int newSize)
+void SequenceWithAnnotation::setToSizeR(size_t newSize)
 {
 	// Size verification
-	unsigned int seqSize = content_.size();
+	size_t seqSize = content_.size();
 	if (newSize == seqSize) return;
 
 	if (newSize < seqSize)
@@ -177,10 +177,10 @@ void SequenceWithAnnotation::setToSizeR(unsigned int newSize)
 
 /******************************************************************************/
 
-void SequenceWithAnnotation::setToSizeL(unsigned int newSize)
+void SequenceWithAnnotation::setToSizeL(size_t newSize)
 {
 	// Size verification
-	unsigned int seqSize = content_.size();
+	size_t seqSize = content_.size();
 	if (newSize == seqSize) return;
 
 	if (newSize < seqSize)

@@ -53,7 +53,7 @@ int main() {
   BasicSequence motif5("motif", "CWCAT", &AlphabetTools::DNA_ALPHABET);
   BasicSequence motif6("motif", "CTCAT", &AlphabetTools::DNA_ALPHABET);
   BasicSequence motif7("motif", "AAGCA", &AlphabetTools::DNA_ALPHABET);
-  unsigned int pos;
+  size_t pos;
 
   cout << "--- Strict match ---" << endl;
 

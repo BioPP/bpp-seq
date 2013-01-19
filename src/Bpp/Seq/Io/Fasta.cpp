@@ -64,7 +64,7 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
   char c;
   while (!input.eof())
   {
-    c = input.peek();
+    c = static_cast<char>(input.peek());
     if (input.eof())
       c = '\n';
 
@@ -235,10 +235,10 @@ void Fasta::FileIndex::build(const std::string& path) throw (Exception) {
   fileSize_ = f_in.tellg();
   // feed the map
   f_in.seekg(0, std::ios::beg);
-  int pos = f_in.tellg();
+  streampos pos = f_in.tellg();
   char ch;
   std::string seq_id = "";
-  while(f_in.get(ch)) {
+  while (f_in.get(ch)) {
     if (ch == '>') {
       pos = static_cast<int>(f_in.tellg()) - 1;
       std::getline(f_in, seq_id);
@@ -248,8 +248,8 @@ void Fasta::FileIndex::build(const std::string& path) throw (Exception) {
   f_in.close();
 }
 
-int Fasta::FileIndex::getSequencePosition(const std::string& id) const throw (Exception) {
-  std::map<std::string, int>::const_iterator it = index_.find(id);
+streampos Fasta::FileIndex::getSequencePosition(const std::string& id) const throw (Exception) {
+  std::map<std::string, streampos>::const_iterator it = index_.find(id);
   if (it != index_.end()) {
     return it->second;
   }
@@ -272,7 +272,7 @@ void Fasta::FileIndex::read(const std::string& path) throw (Exception) {
 
 void Fasta::FileIndex::write(const std::string& path) throw (Exception) {
   std::ofstream f_out(path.c_str());
-  for (std::map<std::string, int>::const_iterator it = index_.begin() ; it != index_.end() ; ++it) {
+  for (std::map<std::string, streampos>::const_iterator it = index_.begin() ; it != index_.end() ; ++it) {
     f_out << it->first << "\t" << bpp::TextTools::toString(it->second) << std::endl;
   }
   f_out.close();
@@ -280,7 +280,7 @@ void Fasta::FileIndex::write(const std::string& path) throw (Exception) {
 
 void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, const std::string& path) const {
   Fasta fs(60);
-  int seq_pos = this->getSequencePosition(seqid);
+  streampos seq_pos = this->getSequencePosition(seqid);
   std::ifstream fasta(path.c_str());
   fasta.seekg(seq_pos);
   fs.nextSequence(fasta, seq);

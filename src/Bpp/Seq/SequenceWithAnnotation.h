@@ -95,7 +95,7 @@ class SequenceAnnotation :
      * @param pos Starting point of the region.
      * @param len The length of the region, in number of positions.
      */
-    virtual SequenceAnnotation* getPartAnnotation(unsigned int pos, unsigned int len) const throw (Exception) = 0;
+    virtual SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const throw (Exception) = 0;
 };
 
 /**
@@ -330,7 +330,7 @@ class SequenceWithAnnotation :
      *
      * @param newSize The new size of the sequence.
      */
-    virtual void setToSizeR(unsigned int newSize);
+    virtual void setToSizeR(size_t newSize);
     
     /**
      * @brief Set up the size of a sequence from the left side.
@@ -340,7 +340,7 @@ class SequenceWithAnnotation :
      *
      * @param newSize The new size of the sequence.
      */
-    virtual void setToSizeL(unsigned int newSize);
+    virtual void setToSizeL(size_t newSize);
 
     /**
      * @brief Append the specified content to the sequence.
@@ -385,7 +385,7 @@ class SequenceWithAnnotation :
  
     virtual bool hasAnnotation(const std::string& type) const
     {
-      for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
+      for (size_t i = 0; i < getNumberOfListeners(); ++i) {
         const SymbolListListener* listener = &getListener(i);
         const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(listener);
         if (anno && anno->getType() == type) return true;
@@ -396,7 +396,7 @@ class SequenceWithAnnotation :
    
     virtual const SequenceAnnotation& getAnnotation(const std::string& type) const
     {
-      for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
+      for (size_t i = 0; i < getNumberOfListeners(); ++i) {
         const SymbolListListener* listener = &getListener(i);
         const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(listener);
         if (anno && anno->getType() == type) return *anno;
@@ -406,7 +406,7 @@ class SequenceWithAnnotation :
     
     virtual SequenceAnnotation& getAnnotation(const std::string& type)
     {
-      for (unsigned int i = 0; i < getNumberOfListeners(); ++i) {
+      for (size_t i = 0; i < getNumberOfListeners(); ++i) {
         SymbolListListener* listener = &getListener(i);
         SequenceAnnotation* anno = dynamic_cast<SequenceAnnotation*>(listener);
         if (anno && anno->getType() == type) return *anno;

@@ -343,7 +343,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
       {
         if (verbose)
           ApplicationTools::displayTask("Remove sites with gaps", true);
-        for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
         {
           if (verbose)
             ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
@@ -363,7 +363,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
       {
         if (verbose)
           ApplicationTools::displayTask("Remove sites with gaps", true);
-        for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
         {
           if (verbose)
             ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
@@ -388,7 +388,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
       {
         if (verbose)
           ApplicationTools::displayTask("Keep Resolved sites", true);
-        for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
         {
           if (verbose)
             ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
@@ -408,13 +408,13 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     }
     else
     {
-      unsigned int nbSeq = sitesToAnalyse->getNumberOfSequences();
+      size_t nbSeq = sitesToAnalyse->getNumberOfSequences();
       unsigned int unresolvedNum = TextTools::to<unsigned int>(maxUnresolvedOption);
       if (unresolvedNum < nbSeq)
       {
         if (verbose)
           ApplicationTools::displayTask("Remove sites with gaps", true);
-        for (unsigned int i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
         {
           if (verbose)
             ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
@@ -442,14 +442,14 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   else if (option == "complete")
   {
     sitesToAnalyse = SiteContainerTools::getCompleteSites(allSites);
-    int nbSites = sitesToAnalyse->getNumberOfSites();
+    size_t nbSites = sitesToAnalyse->getNumberOfSites();
     if (verbose)
       ApplicationTools::displayResult("Complete sites", TextTools::toString(nbSites));
   }
   else if (option == "nogap")
   {
     sitesToAnalyse = SiteContainerTools::getSitesWithoutGaps(allSites);
-    int nbSites = sitesToAnalyse->getNumberOfSites();
+    size_t nbSites = sitesToAnalyse->getNumberOfSites();
     if (verbose)
       ApplicationTools::displayResult("Sites without gap", TextTools::toString(nbSites));
   }

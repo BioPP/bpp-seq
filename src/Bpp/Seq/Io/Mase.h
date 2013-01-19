@@ -70,9 +70,9 @@ class MaseHeader
     virtual ~MaseHeader() {}
 
   public:
-    unsigned int getNumberOfTrees() const { return trees_.size(); }
-    unsigned int getNumberOfSiteSelections() const { return siteSelections_.size(); }
-    unsigned int getNumberOfSequenceSelections() const { return sequenceSelections_.size(); }
+    size_t getNumberOfTrees() const { return trees_.size(); }
+    size_t getNumberOfSiteSelections() const { return siteSelections_.size(); }
+    size_t getNumberOfSequenceSelections() const { return sequenceSelections_.size(); }
 
     std::vector<std::string> getTreeNames() const { return MapTools::getKeys(trees_); }
     std::vector<std::string> getSiteSelectionNames() const { return MapTools::getKeys(siteSelections_); }

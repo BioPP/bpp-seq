@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (September 11, 2009)
+Copyright or © or Copr. Bio++ Development Team, (September 11, 2009)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -90,7 +90,7 @@ namespace bpp {
         }
       }
 
-      void setState(unsigned int pos, const AlphabetState& st) throw (IndexOutOfBoundsException) {
+      void setState(size_t pos, const AlphabetState& st) throw (IndexOutOfBoundsException) {
         AbstractAlphabet::setState(pos, st);
         if (caseSensitive_) {
           letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();

@@ -58,21 +58,21 @@ void Stockholm::writeAlignment(ostream& output, const SiteContainer& sc) const t
 
   output << "# STOCKHOLM 1.0" << endl; 
   // Loop for all general comments
-  for (unsigned int i = 0; i < sc.getGeneralComments().size(); ++i)
+  for (size_t i = 0; i < sc.getGeneralComments().size(); ++i)
   {
     output << "#=GF CC " << sc.getGeneralComments()[i] << endl;
   }
 
 	// Main loop : for all sequences in vector container
 	vector<string> names = sc.getSequencesNames();
-  unsigned int maxSize = 0; 
+  size_t maxSize = 0; 
   for(unsigned int i = 0; i < names.size(); ++i)
   {
     names[i] = TextTools::removeWhiteSpaces(names[i]);
     if (names[i].size() > maxSize) maxSize = names[i].size();
   }
   if (maxSize > 255) maxSize = 255;
-  for (unsigned int i = 0; i < sc.getNumberOfSequences(); ++i)
+  for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
   {
     output << TextTools::resizeRight(names[i], maxSize) << " " << sc.getSequence(i).toString() << endl;
 	}

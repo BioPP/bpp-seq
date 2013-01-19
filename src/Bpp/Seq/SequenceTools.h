@@ -120,7 +120,7 @@ class SequenceTools:
 		 * @return A new sequence object with the given subsequence.
 		 * @throw IndexOutOfBoundsException, Exception In case of bad indices.
 		 */
-		static Sequence* subseq(const Sequence& sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception) ;
+		static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end) throw (IndexOutOfBoundsException, Exception) ;
 
 		/**
 		 * @brief Concatenate two sequences.
@@ -233,14 +233,14 @@ class SequenceTools:
 		 *
 		 * @param seq The sequence to analyse.
 		 */
-		static unsigned int getNumberOfSites(const Sequence& seq);
+		static size_t getNumberOfSites(const Sequence& seq);
 
 		/**
 		 * @return The number of complete sites in the sequences, <i>i.e.</i> all positions without gaps and unresolved states (generic characters).
 		 *
 		 * @param seq The sequence to analyse.
 		 */
-		static unsigned int getNumberOfCompleteSites(const Sequence& seq);
+		static size_t getNumberOfCompleteSites(const Sequence& seq);
 
     /**
      * @return The number of unresolved sites in the sequence.
@@ -249,7 +249,7 @@ class SequenceTools:
      *
      * @author Sylvain Gaillard
      */
-    static unsigned int getNumberOfUnresolvedSites(const Sequence& seq);
+    static size_t getNumberOfUnresolvedSites(const Sequence& seq);
 
     /**
      * @brief Remove gaps from a sequence.
@@ -404,7 +404,7 @@ class SequenceTools:
      * @return The position of the first occurence of the motif or the seq
      * length.
      */
-    static unsigned int findFirstOf(const Sequence& seq, const Sequence& motif, bool strict=true);
+    static size_t findFirstOf(const Sequence& seq, const Sequence& motif, bool strict=true);
 };
 
 } //end of namespace bpp.

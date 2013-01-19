@@ -205,11 +205,11 @@ std::vector<std::string> Phylip::getSizedNames(const std::vector<std::string>& n
   {
     //Add 6 white spaces to the larger name and align other names.
     //First, determine the size of the wider name:
-    unsigned int sizeMax = 0;
-    for (unsigned int i = 0; i < names.size(); i++)
-      if(names[i].size() > sizeMax) sizeMax = names[i].size();
+    size_t sizeMax = 0;
+    for (size_t i = 0; i < names.size(); i++)
+      if (names[i].size() > sizeMax) sizeMax = names[i].size();
     //Quite easy ;-) Now update all lengths:
-    for (unsigned int i = 0; i < names.size(); i++)
+    for (size_t i = 0; i < names.size(); i++)
       sizedNames[i] = TextTools::resizeRight(names[i], sizeMax) + namesSplit_;  
   }
   else
@@ -226,12 +226,12 @@ std::vector<std::string> Phylip::getSizedNames(const std::vector<std::string>& n
 void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int charsByLine) const
 {
   //cout << "Write sequential" << endl;
-  int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
+  size_t numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
   out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
   
   vector<string> seqNames = sc.getSequencesNames();
   vector<string> names = getSizedNames(seqNames);
-  for (unsigned int i = 0; i < seqNames.size(); i++)
+  for (size_t i = 0; i < seqNames.size(); i++)
   {
     vector<string> seq = TextTools::split(sc.toString(seqNames[i]), charsByLine);
     out << names[i] << seq[0] << endl;
@@ -246,25 +246,25 @@ void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int
 void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, int charsByLine) const
 {
   //cout << "Write interleaved;" << endl;
-  int numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
+  size_t numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
   out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
   
   vector<string> seqNames = sc.getSequencesNames();
   vector<string> names = getSizedNames(seqNames);
   //Split sequences:
   vector< vector<string> > seqs(sc.getNumberOfSequences());
-  for (unsigned int i = 0; i < seqNames.size(); i++)
+  for (size_t i = 0; i < seqNames.size(); i++)
   {
     seqs[i] = TextTools::split(sc.toString(seqNames[i]), charsByLine);
   }
   //Write first block:
-  for (unsigned int i = 0; i < names.size(); i++)
+  for (size_t i = 0; i < names.size(); i++)
   {
     out << names[i] << seqs[i][0] << endl;
   }
   out << endl;
   //Write other blocks:
-  for (unsigned int j = 1; j < seqs[0].size(); j++)
+  for (size_t j = 1; j < seqs[0].size(); j++)
   {
     for (unsigned int i = 0; i < sc.getNumberOfSequences(); i++)
     {

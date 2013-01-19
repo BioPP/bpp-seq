@@ -66,7 +66,7 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SiteContainer & sc)
     
   string::size_type beginSeq = 0;
   unsigned int count = 0;
-  for (unsigned int i = lineRead.size(); i > 0; i--) {
+  for (size_t i = lineRead.size(); i > 0; i--) {
     char c = lineRead[i-1];
     if (c == ' ') {
       count++;
@@ -119,8 +119,8 @@ void Clustal::writeAlignment(std::ostream& output, const SiteContainer& sc) cons
     return;
 
   vector<string> text;
-  unsigned int length = 0;
-  for (unsigned int i = 0; i < sc.getNumberOfSequences(); ++i ) {
+  size_t length = 0;
+  for (size_t i = 0; i < sc.getNumberOfSequences(); ++i ) {
     const Sequence& seq = sc.getSequence(i);
     if (seq.getName().size() > length)
       length = seq.getName().size();

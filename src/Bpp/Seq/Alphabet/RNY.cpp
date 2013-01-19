@@ -270,11 +270,10 @@ vector<string> RNY::getAlias(const string& state) const throw (BadCharException)
 
   vector<int> v = getAlias(charToInt(state));
   vector<string> s;
-  int i,j;
-  j = v.size();
-  s.resize(j);
+  size_t size = v.size();
+  s.resize(size);
 
-  for (i = 0; i < j; i++)
+  for (size_t i = 0; i < size; i++)
   {
     s[i] = AbstractAlphabet::intToChar(v[i]);
   }
