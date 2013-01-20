@@ -458,7 +458,7 @@ const Sequence& CompressedVectorSiteContainer::getSequence(size_t i) const throw
 const Sequence& CompressedVectorSiteContainer::getSequence(const std::string& name) const throw (SequenceNotFoundException)
 {
   // Look for sequence name:
-  int pos = getSequencePosition(name);
+  size_t pos = getSequencePosition(name);
   return getSequence(pos);
 }
 
