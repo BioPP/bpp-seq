@@ -46,7 +46,7 @@ using namespace std;
 
 using namespace bpp;
 
-unsigned int SequenceWalker::getAlignmentPosition(unsigned int seqPos) throw (Exception)
+size_t SequenceWalker::getAlignmentPosition(size_t seqPos) throw (Exception)
 {
   if (seqPos == seqPos_) return alnPos_;
   if (seqPos > seqPos_) {
@@ -78,7 +78,7 @@ unsigned int SequenceWalker::getAlignmentPosition(unsigned int seqPos) throw (Ex
   return alnPos_;
 }
 
-unsigned int SequenceWalker::getSequencePosition(unsigned int alnPos) throw (Exception)
+size_t SequenceWalker::getSequencePosition(size_t alnPos) throw (Exception)
 {
   if (alnPos == alnPos_) return seqPos_;
   if (alnPos >= seq_->size())

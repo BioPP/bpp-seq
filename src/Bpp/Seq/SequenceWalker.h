@@ -55,7 +55,7 @@ class SequenceWalker
 {
   private:
     const Sequence* seq_;
-    unsigned int seqPos_, alnPos_;
+    size_t seqPos_, alnPos_;
     int gap_;
 
   public:
@@ -78,8 +78,8 @@ class SequenceWalker
     virtual ~SequenceWalker() {}
 
   public:
-    unsigned int getAlignmentPosition(unsigned int seqPos) throw (Exception);
-    unsigned int getSequencePosition(unsigned int alnPos) throw (Exception);
+    size_t getAlignmentPosition(size_t seqPos) throw (Exception);
+    size_t getSequencePosition(size_t alnPos) throw (Exception);
 };
 
 } //end of namespace bpp.
