@@ -41,6 +41,7 @@
 #define _BPPOSEQUENCESTREAMREADERFORMAT_H_
 
 #include "IoSequenceFactory.h"
+#include "ISequenceStream.h"
 
 namespace bpp
 {
