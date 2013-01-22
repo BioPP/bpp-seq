@@ -199,7 +199,7 @@ void Mase::readHeader_(std::istream& input, MaseHeader& header) const throw (Exc
           unsigned int numberOfSegments = TextTools::to<unsigned int>(st.nextToken());
           string name = st.unparseRemainingTokens();
           //Then look for the set definition:
-          MultiRange<unsigned int> siteSelection;
+          MultiRange<size_t> siteSelection;
           while (siteSelection.size() < numberOfSegments) {
             line = FileTools::getNextLine(input);
             if (line[0] != ';' || line[1] != ';')
@@ -211,7 +211,7 @@ void Mase::readHeader_(std::istream& input, MaseHeader& header) const throw (Exc
               unsigned int begin = TextTools::to<unsigned int>(st3.nextToken());
               unsigned int end   = TextTools::to<unsigned int>(st3.nextToken());
               //WARNING!!! In the mase+ format, sites numerotation is 1-based, including, while ranges are 0-based, [a, b[:
-              siteSelection.addRange(Range<unsigned int>(begin - 1, end));
+              siteSelection.addRange(Range<size_t>(begin - 1, end));
             }
             if (siteSelection.size() > numberOfSegments)
               throw Exception("Mase::readHeader_(): incorrected file, found " + TextTools::toString(siteSelection.size()) + "segments while expected " + TextTools::toString(numberOfSegments));
@@ -226,7 +226,7 @@ void Mase::readHeader_(std::istream& input, MaseHeader& header) const throw (Exc
             unsigned int numberOfSequences = TextTools::to<unsigned int>(st.nextToken());
             string name = st.unparseRemainingTokens();
             //The look for the set definition:
-            vector<unsigned int> sequenceSelection;
+            vector<size_t> sequenceSelection;
             while (sequenceSelection.size() < numberOfSequences) {
               line = FileTools::getNextLine(input);
               if (line[0] != ';' || line[1] != ';')
@@ -283,7 +283,7 @@ void Mase::writeHeader_(std::ostream& output, const MaseHeader& header) const
   //Write site selections:
   vector<string> siteSelectionNames = header.getSiteSelectionNames();
   for (size_t i = 0; i < siteSelectionNames.size(); ++i) {
-    MultiRange<unsigned int> ranges = header.getSiteSelection(siteSelectionNames[i]);
+    MultiRange<size_t> ranges = header.getSiteSelection(siteSelectionNames[i]);
     output << ";;# of segments=" << ranges.size() << " " << siteSelectionNames[i] << endl;
     output << ";;";
     for (unsigned int j = 0; j < ranges.size(); ++j) {
@@ -297,7 +297,7 @@ void Mase::writeHeader_(std::ostream& output, const MaseHeader& header) const
   //Write sequence selections:
   vector<string> sequenceSelectionNames = header.getSequenceSelectionNames();
   for (size_t i = 0; i < sequenceSelectionNames.size(); ++i) {
-    vector<unsigned int> set = header.getSequenceSelection(sequenceSelectionNames[i]);
+    vector<size_t> set = header.getSequenceSelection(sequenceSelectionNames[i]);
     output << ";;@ of species=" << set.size() << " " << sequenceSelectionNames[i] << endl;
     output << ";;";
     for (unsigned int j = 0; j < set.size(); ++j) {

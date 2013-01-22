@@ -62,8 +62,8 @@ class MaseHeader
 {
   private:
     mutable std::map<std::string, std::string> trees_;
-    mutable std::map<std::string, MultiRange<unsigned int> > siteSelections_;
-    mutable std::map<std::string, std::vector<unsigned int> > sequenceSelections_;
+    mutable std::map<std::string, MultiRange<size_t> > siteSelections_;
+    mutable std::map<std::string, std::vector<size_t> > sequenceSelections_;
 
   public:
     MaseHeader(): trees_(), siteSelections_(), sequenceSelections_() {}
@@ -85,14 +85,14 @@ class MaseHeader
         throw Exception("MaseHeader::getTree. No tree with name " + name);
       }
     }
-    const MultiRange<unsigned int>& getSiteSelection(const std::string& name) const throw (Exception) {
+    const MultiRange<size_t>& getSiteSelection(const std::string& name) const throw (Exception) {
       if (siteSelections_.find(name) != siteSelections_.end()) {
         return siteSelections_[name];
       } else {
         throw Exception("MaseHeader::getSiteSelection. No site selection with name " + name);
       }
     }
-    const std::vector<unsigned int>& getSequenceSelection(const std::string& name) const throw (Exception) {
+    const std::vector<size_t>& getSequenceSelection(const std::string& name) const throw (Exception) {
       if (sequenceSelections_.find(name) != sequenceSelections_.end()) {
         return sequenceSelections_[name];
       } else {
@@ -103,10 +103,10 @@ class MaseHeader
     void setTree(const std::string& name, const std::string& tree) {
       trees_[name] = tree;
     }
-    void setSiteSelection(const std::string& name, const MultiRange<unsigned int>& ranges) {
+    void setSiteSelection(const std::string& name, const MultiRange<size_t>& ranges) {
       siteSelections_[name] = ranges;
     }
-    void setSequenceSelection(const std::string& name, const std::vector<unsigned int>& set) {
+    void setSequenceSelection(const std::string& name, const std::vector<size_t>& set) {
       sequenceSelections_[name] = set;
     }
 
