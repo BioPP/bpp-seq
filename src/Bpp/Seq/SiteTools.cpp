@@ -39,11 +39,10 @@
  */
 
 #include "SiteTools.h"
+#include "Alphabet/CodonAlphabet.h"
 #include <Bpp/Utils/MapTools.h>
 #include <Bpp/Numeric/NumTools.h>
 #include <Bpp/Numeric/VectorTools.h>
-
-#include "Alphabet.all"
 
 using namespace bpp;
 

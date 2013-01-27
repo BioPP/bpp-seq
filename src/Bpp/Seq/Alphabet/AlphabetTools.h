@@ -40,7 +40,13 @@
 #ifndef _ALPHABETTOOLS_H_
 #define _ALPHABETTOOLS_H_
 
-#include "../Alphabet.all"
+#include "DNA.h"
+#include "RNA.h"
+#include "ProteicAlphabet.h"
+#include "DefaultAlphabet.h"
+#include "CodonAlphabet.h"
+#include "RNY.h"
+#include "BinaryAlphabet.h"
 #include <Bpp/Numeric/VectorTools.h>
 
 #include <typeinfo>

@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/App/ApplicationTools.h>
-#include <Bpp/Seq/Alphabet.all>
+#include <Bpp/Seq/Alphabet/RNA.h>
 #include <Bpp/Seq/Sequence.h>
 #include <Bpp/Seq/SequenceWalker.h>
 #include <Bpp/Numeric/Random/RandomTools.h>
@@ -54,8 +54,8 @@ bool testSeq(SequenceWalker& walker, unsigned int pos, unsigned int truth) {
   cout << walker.getSequencePosition(46) << endl;;
   for (unsigned int i = 0; i < 1000; ++i) {
     ApplicationTools::displayGauge(i, 999, '=');
-    unsigned int r = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(47);
-    unsigned int x = walker.getSequencePosition(r);
+    size_t r = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(47);
+    size_t x = walker.getSequencePosition(r);
     if (walker.getSequencePosition(pos) != truth) {
       cout << endl;
       cerr << r << "\t" << x << endl;
@@ -92,7 +92,7 @@ int main() {
   SequenceWalker walker(seq1);
 
   for (unsigned int i = 0; i < 27; ++i) {
-    unsigned int j = walker.getAlignmentPosition(i);
+    size_t j = walker.getAlignmentPosition(i);
     cout << i << "\t" << seq1.getChar(j) << "\t" << j << endl;
   }
 

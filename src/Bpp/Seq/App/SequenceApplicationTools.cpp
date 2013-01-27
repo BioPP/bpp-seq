@@ -39,10 +39,29 @@
  */
 
 #include "SequenceApplicationTools.h"
+#include "../Alphabet/BinaryAlphabet.h"
+#include "../Alphabet/DefaultAlphabet.h"
+#include "../Alphabet/EchinodermMitochondrialCodonAlphabet.h"
+#include "../Alphabet/InvertebrateMitochondrialCodonAlphabet.h"
+#include "../Alphabet/StandardCodonAlphabet.h"
+#include "../Alphabet/VertebrateMitochondrialCodonAlphabet.h"
+#include "../Alphabet/YeastMitochondrialCodonAlphabet.h"
+#include "../Alphabet/AlphabetTools.h"
+#include "../GeneticCode/EchinodermMitochondrialGeneticCode.h"
+#include "../GeneticCode/InvertebrateMitochondrialGeneticCode.h"
+#include "../GeneticCode/StandardGeneticCode.h"
+#include "../GeneticCode/VertebrateMitochondrialGeneticCode.h"
+#include "../GeneticCode/YeastMitochondrialGeneticCode.h"
+#include "../StateProperties/BLOSUM50.h"
+#include "../StateProperties/GranthamAAChemicalDistance.h"
+#include "../StateProperties/MiyataAAChemicalDistance.h"
+#include "../Io/BppOSequenceReaderFormat.h"
+#include "../Io/BppOAlignmentReaderFormat.h"
+#include "../Io/BppOSequenceWriterFormat.h"
+#include "../Io/BppOAlignmentWriterFormat.h"
+#include "../Io/MaseTools.h"
 #include "../SiteTools.h"
 #include "../SequenceTools.h"
-#include "../Alphabet.all"
-#include "../Io.all"
 #include <Bpp/App/ApplicationTools.h>
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Text/KeyvalTools.h>
@@ -138,6 +157,8 @@ Alphabet* SequenceApplicationTools::getAlphabet(
       chars = new StandardCodonAlphabet(pnalph);
     else if (type == "VertebrateMitochondrial")
       chars = new VertebrateMitochondrialCodonAlphabet(pnalph);
+    else if (type == "YeastMitochondrial")
+      chars = new YeastMitochondrialCodonAlphabet(pnalph);
     else
       throw Exception("Unknown Alphabet : " + alphabet);
     alphabet = alphabet + "(" + alphn + ")";

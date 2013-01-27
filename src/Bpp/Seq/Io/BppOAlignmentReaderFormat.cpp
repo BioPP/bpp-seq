@@ -38,6 +38,12 @@
 */
 
 #include "BppOAlignmentReaderFormat.h"
+#include "Mase.h"
+#include "Phylip.h"
+#include "Fasta.h"
+#include "Clustal.h"
+#include "Dcse.h"
+#include "NexusIoSequence.h"
 
 #include <Bpp/Text/KeyvalTools.h>
 

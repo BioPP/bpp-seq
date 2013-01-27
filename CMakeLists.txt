@@ -96,6 +96,10 @@ IF (DOXYGEN_FOUND)
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 ENDIF (DOXYGEN_FOUND)
 
+# Python, needed for install:
+FIND_PACKAGE(PythonInterp)
+FIND_PACKAGE(PythonLibs)
+
 ENDIF(NO_DEP_CHECK)
 
 # Packager
@@ -136,7 +140,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "Seq.tag"
  "Testing"
  "build-stamp"
- "genIncludes.py"
  "install_manifest.txt"
  "DartConfiguration.tcl"
  ${CPACK_SOURCE_IGNORE_FILES}

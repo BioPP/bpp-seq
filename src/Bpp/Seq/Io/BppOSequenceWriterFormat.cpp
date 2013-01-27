@@ -38,6 +38,8 @@
 */
 
 #include "BppOSequenceWriterFormat.h"
+#include "Fasta.h"
+#include "Mase.h"
 
 #include <Bpp/Text/KeyvalTools.h>
 

@@ -3,7 +3,7 @@
 # Created: 20/08/2009
 
 # File list
-set(CPP_FILES
+SET(CPP_FILES
   Bpp/Seq/DNAToRNA.cpp
   Bpp/Seq/NucleicAcidsReplication.cpp
   Bpp/Seq/Sequence.cpp
@@ -88,7 +88,7 @@ set(CPP_FILES
   Bpp/Seq/App/SequenceApplicationTools.cpp
   )
 
-set(H_FILES
+SET(H_FILES
   Bpp/Seq/CodonSiteTools.h
   Bpp/Seq/DNAToRNA.h
   Bpp/Seq/NucleicAcidsReplication.h
@@ -209,25 +209,29 @@ set(H_FILES
   )
 
 # Build the static lib
-add_library(bppseq-static STATIC ${CPP_FILES})
-set_target_properties(bppseq-static
+ADD_LIBRARY(bppseq-static STATIC ${CPP_FILES})
+SET_TARGET_PROPERTIES(bppseq-static
   PROPERTIES OUTPUT_NAME bpp-seq
   CLEAN_DIRECT_OUTPUT 1
   )
-target_link_libraries(bppseq-static ${LIBS})
+TARGET_LINK_LIBRARIES(bppseq-static ${LIBS})
 
 # Build the shared lib
-add_library(bppseq-shared SHARED ${CPP_FILES})
-set_target_properties(bppseq-shared
+ADD_LIBRARY(bppseq-shared SHARED ${CPP_FILES})
+SET_TARGET_PROPERTIES(bppseq-shared
   PROPERTIES OUTPUT_NAME bpp-seq
   CLEAN_DIRECT_OUTPUT 1
   VERSION ${BPPSEQ_VERSION}
   SOVERSION ${BPPSEQ_VERSION_MAJOR}
   )
-target_link_libraries(bppseq-shared ${LIBS})
+TARGET_LINK_LIBRARIES(bppseq-shared ${LIBS})
 
 # Install libs
-install(TARGETS bppseq-static bppseq-shared DESTINATION lib${LIB_SUFFIX})
+INSTALL(TARGETS bppseq-static bppseq-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h" PATTERN "*.all")
+INSTALL(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h")
+
+# Generate generic include files (.all)
+INSTALL(CODE "EXECUTE_PROCESS(COMMAND python ${CMAKE_SOURCE_DIR}/genIncludes.py ${CMAKE_PREFIX_PATH}/include/Bpp)")
+

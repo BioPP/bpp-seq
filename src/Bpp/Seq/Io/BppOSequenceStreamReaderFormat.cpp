@@ -38,6 +38,7 @@
 */
 
 #include "BppOSequenceStreamReaderFormat.h"
+#include "Fasta.h"
 
 #include <Bpp/Text/KeyvalTools.h>
 

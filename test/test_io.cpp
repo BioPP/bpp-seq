@@ -37,8 +37,11 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include <Bpp/Seq/Alphabet.all>
-#include <Bpp/Seq/Io.all>
+#include <Bpp/Seq/Alphabet/ProteicAlphabet.h>
+#include <Bpp/Seq/Io/Fasta.h>
+#include <Bpp/Seq/Io/Mase.h>
+#include <Bpp/Seq/Io/Clustal.h>
+#include <Bpp/Seq/Io/Phylip.h>
 #include <iostream>
 
 using namespace bpp;

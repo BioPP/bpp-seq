@@ -40,7 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _IOSEQUENCEFACTORY_H_
 #define _IOSEQUENCEFACTORY_H_
 
-#include "../Io.all"
+#include "ISequence.h"
+#include "OSequence.h"
 #include "../Alphabet/Alphabet.h"
 
 namespace bpp

@@ -41,10 +41,14 @@
 #ifndef _SEQUENCEAPPLICATIONTOOLS_H_
 #define _SEQUENCEAPPLICATIONTOOLS_H_
 
-#include "../Alphabet.all"
-#include "../Container.all"
-#include "../GeneticCode.all"
-#include "../StateProperties.all"
+#include "../Alphabet/Alphabet.h"
+#include "../GeneticCode/GeneticCode.h"
+#include "../StateProperties/AlphabetIndex2.h"
+#include "../Container/SequenceContainer.h"
+#include "../Container/VectorSiteContainer.h"
+
+#include <map>
+#include <string>
 
 namespace bpp
 {
@@ -98,7 +102,7 @@ public:
     bool allowGeneric = false) throw (Exception);
 
   /**
-   * @brief Build a Geneticcode object according to options.
+   * @brief Build a GeneticCode object according to options.
    *
    * @param alphabet pointer to the NucleicAlphabet
    * @param description for the name of the GeneticCode:

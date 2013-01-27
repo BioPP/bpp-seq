@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -38,6 +38,13 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "IoSequenceFactory.h"
+#include "Fasta.h"
+#include "Mase.h"
+#include "Clustal.h"
+#include "Dcse.h"
+#include "Phylip.h"
+#include "GenBank.h"
+#include "NexusIoSequence.h"
 
 using namespace bpp;
 using namespace std;

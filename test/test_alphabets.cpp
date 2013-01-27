@@ -37,7 +37,15 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include <Bpp/Seq/Alphabet.all>
+#include <Bpp/Seq/Alphabet/DNA.h>
+#include <Bpp/Seq/Alphabet/RNA.h>
+#include <Bpp/Seq/Alphabet/ProteicAlphabet.h>
+#include <Bpp/Seq/Alphabet/DefaultAlphabet.h>
+#include <Bpp/Seq/Alphabet/StandardCodonAlphabet.h>
+#include <Bpp/Seq/Alphabet/VertebrateMitochondrialCodonAlphabet.h>
+#include <Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.h>
+#include <Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.h>
+#include <Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.h>
 #include <iostream>
 
 using namespace bpp;

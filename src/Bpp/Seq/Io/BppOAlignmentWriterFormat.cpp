@@ -38,6 +38,11 @@
 */
 
 #include "BppOAlignmentWriterFormat.h"
+#include "Fasta.h"
+#include "Mase.h"
+#include "Clustal.h"
+#include "Phylip.h"
+#include "Stockholm.h"
 
 #include <Bpp/Text/KeyvalTools.h>
 
