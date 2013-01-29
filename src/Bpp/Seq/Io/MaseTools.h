@@ -116,7 +116,7 @@ class MaseTools
      * @param maseHeader Comments as described in the Mase+ format specification.
      * @return A vector of selection names.
      */
-    static std::map<std::string, unsigned int> getAvailableSiteSelections(const Comments & maseHeader);
+    static std::map<std::string, size_t> getAvailableSiteSelections(const Comments & maseHeader);
 
     /**
      * @brief Get a list of all available sequences selections.
@@ -124,7 +124,7 @@ class MaseTools
      * @param maseHeader Comments as described in the Mase+ format specification.
      * @return A vector of selection names.
      */
-		static std::map<std::string, unsigned int> getAvailableSequenceSelections(const Comments & maseHeader);
+		static std::map<std::string, size_t> getAvailableSequenceSelections(const Comments & maseHeader);
 
 		/**
 		 * @brief Get the phase of a given coding region from a mase+ header.
@@ -136,7 +136,7 @@ class MaseTools
 		 * @return 1,2 or 3.
 		 * @throw Exception If no corresponding tag found in file.
 		 */
-		static unsigned int getPhase(const Comments & maseFileHeader, const std::string &setName) throw (Exception);
+		static size_t getPhase(const Comments & maseFileHeader, const std::string &setName) throw (Exception);
 
 };
 
