@@ -379,7 +379,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     }
     else
     {
-      unsigned int gapNum = TextTools::to<unsigned int>(maxGapOption);
+      size_t gapNum = TextTools::to<size_t>(maxGapOption);
       if (gapNum < sitesToAnalyse->getNumberOfSequences())
       {
         if (verbose)
@@ -388,7 +388,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
         {
           if (verbose)
             ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
-          map<int, unsigned int> counts;
+          map<int, size_t> counts;
           SiteTools::getCounts(sitesToAnalyse->getSite(i - 1), counts);
           if (counts[-1] > gapNum)
             sitesToAnalyse->deleteSite(i - 1);
@@ -400,7 +400,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
 
     string maxUnresolvedOption = ApplicationTools::getStringParameter("input.sequence.max_unresolved_allowed", params, "100%", suffix, suffixIsOptional);
 
-    unsigned int sAlph = sitesToAnalyse->getAlphabet()->getSize();
+    size_t sAlph = sitesToAnalyse->getAlphabet()->getSize();
 
     if (maxUnresolvedOption[maxUnresolvedOption.size() - 1] == '%')
     {
@@ -430,7 +430,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     else
     {
       size_t nbSeq = sitesToAnalyse->getNumberOfSequences();
-      unsigned int unresolvedNum = TextTools::to<unsigned int>(maxUnresolvedOption);
+      size_t unresolvedNum = TextTools::to<size_t>(maxUnresolvedOption);
       if (unresolvedNum < nbSeq)
       {
         if (verbose)
@@ -439,10 +439,10 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
         {
           if (verbose)
             ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
-          map<int, unsigned int> counts;
+          map<int, size_t> counts;
           SiteTools::getCounts(sitesToAnalyse->getSite(i - 1), counts);
-          unsigned int x = 0;
-          for (unsigned int l = 0; l < sAlph; l++)
+          size_t x = 0;
+          for (int l = 0; l < static_cast<int>(sAlph); l++)
           {
             x += counts[l];
           }

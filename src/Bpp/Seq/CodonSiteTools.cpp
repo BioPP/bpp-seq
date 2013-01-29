@@ -63,7 +63,7 @@ bool CodonSiteTools::hasGapOrStop(const Site& site) throw (AlphabetException)
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
     throw AlphabetException("CodonSiteTools::hasGapOrStop: alphabet is not CodonAlphabet", site.getAlphabet());
-  for (unsigned int i = 0; i < site.size(); i++)
+  for (size_t i = 0; i < site.size(); i++)
   {
     if (site[i] < 0)
       return true;
@@ -79,7 +79,7 @@ bool CodonSiteTools::hasStop(const Site& site) throw (AlphabetException)
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
     throw AlphabetException("CodonSiteTools::hasStop: alphabet is not CodonAlphabet", site.getAlphabet());
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
-  for (unsigned int i = 0; i < site.size(); i++)
+  for (size_t i = 0; i < site.size(); i++)
   {
     if (ca->isStop(site[i]))
       return true;
@@ -104,7 +104,7 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site) throw (AlphabetExce
   // initialisation of the 3 sub-sites ot the codon
   vector<int> pos1, pos2, pos3;
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
-  for (unsigned int i = 0; i < site.size(); i++)
+  for (size_t i = 0; i < site.size(); i++)
   {
     pos1.push_back(ca->getFirstPosition(site[i]));
     pos2.push_back(ca->getSecondPosition(site[i]));
@@ -113,7 +113,7 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site) throw (AlphabetExce
   const NucleicAlphabet* na = ca->getNucleicAlphabet();
   Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
   // polymorphism checking for each sub-sites
-  unsigned int nbpol = 0;
+  size_t nbpol = 0;
   if (!SiteTools::isConstant(s1))
     nbpol++;
   if (!SiteTools::isConstant(s2))
@@ -146,7 +146,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   // Synonymous polymorphism checking
   vector<int> prot;
   int first_aa = gc.translate(site[0]);
-  for (unsigned int i = 1; i < site.size(); i++)
+  for (size_t i = 1; i < site.size(); i++)
   {
     int aa = gc.translate(site[i]);
     if (aa != first_aa)
@@ -189,7 +189,7 @@ throw (AlphabetException, EmptySiteException)
       }
     }
     vector<int> pos1, pos2, pos3;
-    for (unsigned int i = 0; i < site.size(); i++)
+    for (size_t i = 0; i < site.size(); i++)
     {
       pos1.push_back(ca->getFirstPosition(site[i]));
       pos2.push_back(ca->getSecondPosition(site[i]));
@@ -203,7 +203,7 @@ throw (AlphabetException, EmptySiteException)
     map<int, double> freq3;
     SiteTools::getFrequencies(s3, freq3);
     vector<int> codon;
-    for (unsigned int i = 0; i < site.size(); i++)
+    for (size_t i = 0; i < site.size(); i++)
     {
       if (freq1[s1.getValue(i)] > freqmin && freq2[s2.getValue(i)] > freqmin && freq3[s3.getValue(i)] > freqmin)
       {
@@ -219,9 +219,9 @@ throw (AlphabetException, EmptySiteException)
 
 /******************************************************************************/
 
-unsigned int CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet& ca)
+size_t CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet& ca)
 {
-  unsigned int nbdif = 0;
+  size_t nbdif = 0;
   if (ca.getFirstPosition(i) != ca.getFirstPosition(j))
     nbdif++;
   if (ca.getSecondPosition(i) != ca.getSecondPosition(j))
@@ -327,7 +327,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
       return VectorTools::max(path);
 
     double nbdif = 0;
-    for (unsigned int k = 0; k < 2; k++)
+    for (size_t k = 0; k < 2; k++)
     {
       nbdif += path[k] * weight[k];
     }
@@ -438,7 +438,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
       return VectorTools::max(path);
 
     double nbdif = 0;
-    for (unsigned int k = 0; k < 6; k++)
+    for (size_t k = 0; k < 6; k++)
     {
       nbdif += path[k] * weight[k];
     }
@@ -510,7 +510,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   {
     for (map<int, double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++)
     {
-      unsigned int nbtot = numberOfDifferences(it1->first, it2->first, *ca);
+      double nbtot = static_cast<double>(numberOfDifferences(it1->first, it2->first, *ca));
       double nbsyn = numberOfSynonymousDifferences(it1->first, it2->first, gc, minchange);
       pi += (it1->second) * (it2->second) * (nbtot - nbsyn);
     }
@@ -594,7 +594,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 
 /******************************************************************************/
 
-unsigned int CodonSiteTools::numberOfSubsitutions(const Site& site, double freqmin)
+size_t CodonSiteTools::numberOfSubsitutions(const Site& site, double freqmin)
 throw (AlphabetException, EmptySiteException)
 {
   // Alphabet checking
@@ -628,8 +628,8 @@ throw (AlphabetException, EmptySiteException)
   const NucleicAlphabet* na = ca->getNucleicAlphabet();
 
   Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
-  unsigned int Scodon = SiteTools::getNumberOfDistinctCharacters(*newsite) - 1;
-  unsigned int Sbase = SiteTools::getNumberOfDistinctCharacters(s1) + SiteTools::getNumberOfDistinctCharacters(s2) + SiteTools::getNumberOfDistinctCharacters(s3) - 3;
+  size_t Scodon = SiteTools::getNumberOfDistinctCharacters(*newsite) - 1;
+  size_t Sbase = SiteTools::getNumberOfDistinctCharacters(s1) + SiteTools::getNumberOfDistinctCharacters(s2) + SiteTools::getNumberOfDistinctCharacters(s3) - 3;
   delete newsite;
   if (Scodon >= Sbase)
     return Scodon;
@@ -639,7 +639,7 @@ throw (AlphabetException, EmptySiteException)
 
 /******************************************************************************/
 
-unsigned int CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, const GeneticCode& gc, double freqmin)
+size_t CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, const GeneticCode& gc, double freqmin)
 throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 {
   // Alphabet checking
@@ -661,20 +661,20 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   if (SiteTools::hasGap(*newsite))
     return 0;
   // computation
-  map<int, unsigned int> count;
+  map<int, size_t> count;
   SiteTools::getCounts(*newsite, count);
-  unsigned int NaSup = 0;
-  unsigned int Nminmin = 10;
+  size_t NaSup = 0;
+  size_t Nminmin = 10;
 
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
 
-  for (map<int, unsigned int>::iterator it1 = count.begin(); it1 != count.end(); it1++)
+  for (map<int, size_t>::iterator it1 = count.begin(); it1 != count.end(); it1++)
   {
-    unsigned int Nmin = 10;
-    for (map<int, unsigned int>::iterator it2 = count.begin(); it2 != count.end(); it2++)
+    size_t Nmin = 10;
+    for (map<int, size_t>::iterator it2 = count.begin(); it2 != count.end(); it2++)
     {
-      unsigned int Ntot = numberOfDifferences(it1->first, it2->first, *ca);
-      unsigned int Ns = (unsigned int)numberOfSynonymousDifferences(it1->first, it2->first, gc, true);
+      size_t Ntot = numberOfDifferences(it1->first, it2->first, *ca);
+      size_t Ns = (size_t)numberOfSynonymousDifferences(it1->first, it2->first, gc, true);
       if (Nmin > Ntot - Ns && it1->first != it2->first)
         Nmin = Ntot - Ns;
     }
@@ -688,7 +688,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 
 /******************************************************************************/
 
-vector<unsigned int> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& siteOut, int i, int j, const GeneticCode& gc)
+vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& siteOut, int i, int j, const GeneticCode& gc)
 throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 {
   // Alphabet checking
@@ -708,13 +708,13 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gc.getSourceAlphabet());
 
-  unsigned int Ntot = numberOfDifferences(i, j, *ca);
-  unsigned int Ns = (unsigned int) numberOfSynonymousDifferences(i, j, gc, true);
-  unsigned int Na = Ntot - Ns;
-  unsigned int Nfix = Ntot;
+  size_t Ntot = numberOfDifferences(i, j, *ca);
+  size_t Ns = (size_t) numberOfSynonymousDifferences(i, j, gc, true);
+  size_t Na = Ntot - Ns;
+  size_t Nfix = Ntot;
   vector<int> pos1in, pos2in, pos3in, pos1out, pos2out, pos3out;
 
-  for (unsigned int k = 0; k < siteIn.size(); k++)
+  for (size_t k = 0; k < siteIn.size(); k++)
   {
     pos1in.push_back(ca->getFirstPosition(siteIn[k]));
     pos2in.push_back(ca->getSecondPosition(siteIn[k]));
@@ -746,7 +746,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
     Nfix--;
   }
   // Suppression of differences when not fixed
-  vector<unsigned int> v(2);
+  vector<size_t> v(2);
   if (Nfix == 0)
   {
     v[0] = 0;
@@ -821,7 +821,7 @@ bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& 
     if (!(CodonSiteTools::isSynonymousPolymorphic(site, gc)))
       return false;
 
-    for (unsigned int i = 0; i < site.size(); i++)
+    for (size_t i = 0; i < site.size(); i++)
     {
       if (!(gc.isFourFoldDegenerated(site.getValue(i))))
       {
@@ -831,7 +831,7 @@ bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& 
   }
   else
   {
-    for (unsigned int i = 0; i < site.size(); i++)
+    for (size_t i = 0; i < site.size(); i++)
     {
       if (!(gc.isFourFoldDegenerated(site.getValue(i))))
       {

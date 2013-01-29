@@ -67,7 +67,7 @@ class SymbolListTools
      * @param list The list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-    static void getCounts(const SymbolList& list, std::map<int, unsigned int>& counts)
+    static void getCounts(const SymbolList& list, std::map<int, size_t>& counts)
     {
       for(std::vector<int>::const_iterator seqit = list.getContent().begin();
           seqit != list.getContent().end();
@@ -87,10 +87,10 @@ class SymbolListTools
      * @param list2 The second list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-    static void getCounts(const SymbolList& list1, const SymbolList& list2, std::map<int, std::map<int, unsigned int> >& counts) throw (DimensionException)
+    static void getCounts(const SymbolList& list1, const SymbolList& list2, std::map<int, std::map<int, size_t> >& counts) throw (DimensionException)
     {
       if(list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
-      for(unsigned int i = 0; i < list1.size(); i++)
+      for(size_t i = 0; i < list1.size(); i++)
         counts[list1[i]][list2[i]]++;
     }
 
@@ -171,7 +171,7 @@ class SymbolListTools
      * @return The number of distinct positions.
      * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
      */
-    static unsigned int getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException);
+    static size_t getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException);
     
     /**
       * @brief Get the number of positions without gap.
@@ -183,7 +183,7 @@ class SymbolListTools
      * @return The number of positions without gap.
      * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
      */
-    static unsigned int getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException);
+    static size_t getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException);
 
     /**
      * @brief Change all gap elements to unknown characters.

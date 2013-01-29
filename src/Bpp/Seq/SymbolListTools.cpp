@@ -65,7 +65,7 @@ void SymbolListTools::getCounts(const SymbolList& list, map<int, double>& counts
     {
       vector<int> alias = list.getAlphabet()->getAlias(*seqit);
       double n = (double)alias.size();
-      for (unsigned int j = 0; j < alias.size(); j++) counts[alias[j]] += 1./n ;
+      for (size_t j = 0; j < alias.size(); j++) counts[alias[j]] += 1./n ;
     }
   }
 }
@@ -75,19 +75,19 @@ void SymbolListTools::getCounts(const SymbolList& list1, const SymbolList& list2
   if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
   if (!resolveUnknowns)
   {
-    for (unsigned int i = 0; i < list1.size(); i++)
+    for (size_t i = 0; i < list1.size(); i++)
       counts[list1[i]][list2[i]]++;
   }
   else
   {
-    for (unsigned int i = 0; i < list1.size(); i++)
+    for (size_t i = 0; i < list1.size(); i++)
     {
       vector<int> alias1 = list1.getAlphabet()->getAlias(list1[i]);
       vector<int> alias2 = list2.getAlphabet()->getAlias(list2[i]);
       double n1 = (double)alias1.size();
       double n2 = (double)alias2.size();
-      for (unsigned int j = 0; j < alias1.size(); j++)
-        for (unsigned int k = 0; k < alias2.size(); k++)
+      for (size_t j = 0; j < alias1.size(); j++)
+        for (size_t k = 0; k < alias2.size(); k++)
           counts[alias1[j]][alias2[k]] += 1./(n1*n2) ;
     }
   }
@@ -123,7 +123,7 @@ double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolv
     throw AlphabetException("SymbolListTools::getGCContent. Method only works on nucleotides.", alphabet);
   double gc = 0;
   double total = 0;
-  for (unsigned int i = 0; i < list.size(); i++) {
+  for (size_t i = 0; i < list.size(); i++) {
     int state = list.getValue(i);
     if (state > -1) { // not a gap
       if (state == 1 || state == 2) { // G or C
@@ -155,23 +155,23 @@ double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolv
   return total != 0 ? gc/total : 0;
 }
 
-unsigned int SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
 {
 	if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	size_t n = min(l1.size(), l2.size());
-	unsigned int count = 0;
-	for (unsigned int i = 0; i < n; i++) {
+	size_t count = 0;
+	for (size_t i = 0; i < n; i++) {
 		if (l1[i] != l2[i]) count++;
 	}
 	return count;
 }
 
-unsigned int SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
 {
 	if (l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	size_t n = min(l1.size(), l2.size());
-	unsigned int count = 0;
-	for (unsigned int i = 0; i < n; i++) {
+	size_t count = 0;
+	for (size_t i = 0; i < n; i++) {
 		if (l1[i] != -1 && l2[i] != -1) count++;
 	}
 	return count;
@@ -180,7 +180,7 @@ unsigned int SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList& l
 void SymbolListTools::changeGapsToUnknownCharacters(SymbolList& l)
 {
   int unknownCode = l.getAlphabet()->getUnknownCharacterCode();
-  for (unsigned int i = 0; i < l.size(); i++)
+  for (size_t i = 0; i < l.size(); i++)
   {
     if (l.getAlphabet()->isGap(l[i])) l[i] = unknownCode;
   }
@@ -189,7 +189,7 @@ void SymbolListTools::changeGapsToUnknownCharacters(SymbolList& l)
 void SymbolListTools::changeUnresolvedCharactersToGaps(SymbolList& l)
 {
   int gapCode = l.getAlphabet()->getGapCharacterCode();
-  for (unsigned int i = 0; i < l.size(); i++)
+  for (size_t i = 0; i < l.size(); i++)
   {
     if (l.getAlphabet()->isUnresolved(l[i])) l[i] = gapCode;
   }

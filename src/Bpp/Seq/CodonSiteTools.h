@@ -128,7 +128,7 @@ class CodonSiteTools:
 		 * @param j a int
 		 * @param ca a CodonAlphabet
 		 */
-	  static unsigned int numberOfDifferences(int i, int j, const CodonAlphabet & ca);
+	  static size_t numberOfDifferences(int i, int j, const CodonAlphabet & ca);
 
 		/**
 		 * @brief Compute the number of synonymous differences between two codons
@@ -250,7 +250,7 @@ class CodonSiteTools:
 		 * @throw AlphabetException  If the alphabet associated to the site is not a codon alphabet.
 		 * @throw EmptySiteException If the site has size 0.
 		 */
-		static unsigned int numberOfSubsitutions(const Site & site, double freqmin = 0.)
+		static size_t numberOfSubsitutions(const Site & site, double freqmin = 0.)
 			  throw(AlphabetException, EmptySiteException);
 
 		/**
@@ -270,7 +270,7 @@ class CodonSiteTools:
 		 * @throw AlphabetMismatchException If the codon alphabet of the site do not match the codon alphabet of the genetic code.
 		 * @throw EmptySiteException        If the site has size 0.
 		 */
-		static unsigned int numberOfNonSynonymousSubstitutions(const Site & site, const GeneticCode & gc, double freqmin = 0.)
+		static size_t numberOfNonSynonymousSubstitutions(const Site & site, const GeneticCode & gc, double freqmin = 0.)
 			  throw (AlphabetException, AlphabetMismatchException, EmptySiteException);
 
 
@@ -310,7 +310,7 @@ class CodonSiteTools:
 		 * @throw AlphabetMismatchException If the codon alphabet each the site do not match the codon alphabet of the genetic code.
 		 * @throw EmptySiteException        If one of the sites has size 0.
 		 */
-		static std::vector<unsigned int> fixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const GeneticCode & gc)
+		static std::vector<size_t> fixedDifferences(const Site & siteIn, const Site & siteOut, int i, int j, const GeneticCode & gc)
 			  throw (AlphabetException, AlphabetMismatchException, EmptySiteException);
 
     

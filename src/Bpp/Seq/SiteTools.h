@@ -223,7 +223,7 @@ public:
    * @param site a Site
    * @return The number of distinct characters in the given site.
    */
-  static unsigned int getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException);
+  static size_t getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException);
 
   /**
    * @brief Tell if a site has singletons
