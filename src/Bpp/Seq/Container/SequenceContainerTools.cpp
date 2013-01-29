@@ -53,7 +53,7 @@ using namespace std;
 SequenceContainer* SequenceContainerTools::createContainerOfSpecifiedSize(const Alphabet* alphabet, size_t size)
 {
   VectorSequenceContainer* vsc = new VectorSequenceContainer(alphabet);
-  for (unsigned int i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
   {
     vsc->addSequence(BasicSequence("" + i, "", alphabet), false);
   }
@@ -80,7 +80,7 @@ void SequenceContainerTools::getSelectedSequences(
   SequenceContainer& outputCont) throw (Exception)
 {
   bool checkNames = outputCont.getNumberOfSequences() > 0;
-  for (unsigned int i = 0; i < selection.size(); i++)
+  for (size_t i = 0; i < selection.size(); i++)
   {
     outputCont.addSequence(sequences.getSequence(selection[i]), checkNames);
   }
@@ -120,7 +120,7 @@ void SequenceContainerTools::keepOnlySelectedSequences(
     // We need to do this because after removal the indices will not be the same!
     // another solution would be to sort decreasingly the indices...
     bool test = false;
-    for (unsigned int j = 0; j < selection.size() && !test; j++)
+    for (size_t j = 0; j < selection.size() && !test; j++)
     {
       test = (selection[j] == i);
     }
@@ -148,9 +148,9 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer&
 
 /******************************************************************************/
 
-void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, unsigned int pseudoCount)
+void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, double pseudoCount)
 {
-  size_t n = 0;
+  double n = 0;
   vector<string> names = sequences.getSequencesNames();
   for (size_t j = 0; j < names.size(); j++)
   {
@@ -159,23 +159,23 @@ void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, 
     {
       f[seq[i]]++;
     }
-    n += seq.size();
+    n += static_cast<double>(seq.size());
   }
 
   if (pseudoCount != 0)
   {
     const Alphabet* pA = sequences.getAlphabet();
-    for (unsigned int i = 0; i < pA->getSize(); i++)
+    for (int i = 0; i < static_cast<int>(pA->getSize()); i++)
     {
       f[i] += pseudoCount;
     }
 
-    n += pseudoCount * pA->getSize();
+    n += pseudoCount * static_cast<double>(pA->getSize());
   }
 
   for (map<int, double>::iterator i = f.begin(); i != f.end(); i++)
   {
-    i->second = i->second / static_cast<double>(n);
+    i->second = i->second / n;
   }
 }
 
@@ -198,7 +198,7 @@ void SequenceContainerTools::getCounts(const SequenceContainer& sequences, std::
 
 /******************************************************************************/
 
-SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContainer& sequences, unsigned int pos) throw (AlphabetException)
+SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContainer& sequences, size_t pos) throw (AlphabetException)
 {
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(sequences.getAlphabet());
   if (!calpha)
@@ -209,7 +209,7 @@ SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContai
   {
     vector<int> seq = sequences.getContent(names[j]);
     vector<int> newseq(seq.size());
-    for (unsigned int i = 0; i < seq.size(); i++)
+    for (size_t i = 0; i < seq.size(); i++)
     {
       newseq[i] = calpha->getNPosition(seq[i], pos);
     }

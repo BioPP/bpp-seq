@@ -53,7 +53,7 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-typedef std::vector<unsigned int> SequenceSelection;
+typedef std::vector<size_t> SequenceSelection;
 
 /**
  * @brief Utilitary methods dealing with sequence containers.
@@ -110,7 +110,7 @@ class SequenceContainerTools
      */
     template<class ContFrom, class ContTo, class Seq>
     static void convertContainer(const ContFrom& input, ContTo& output) {
-      for (unsigned int i = 0; i < input.getNumberOfSequences(); ++i) {
+      for (size_t i = 0; i < input.getNumberOfSequences(); ++i) {
         std::auto_ptr<Seq> seq(new Seq(input.getSequence(i)));
         output.addSequence(*seq);
       }
@@ -202,7 +202,7 @@ class SequenceContainerTools
    * States are stored as their int code.
    */
   
-  static void  getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, unsigned int pseudoCount = 0);
+  static void  getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, double pseudoCount = 0);
   
     /**
      * @brief Append all the sequences of a SequenceContainer to the end of another.
@@ -215,7 +215,7 @@ class SequenceContainerTools
     throw (Exception)
     {
       std::vector<std::string> seqNames = seqCont2.getSequencesNames();
-      for (unsigned int i = 0; i < seqNames.size(); i++)
+      for (size_t i = 0; i < seqNames.size(); i++)
         seqCont1.addSequence(seqCont2.getSequence(seqNames[i]), checkNames);
     }
     /**
@@ -228,7 +228,7 @@ class SequenceContainerTools
     static void append(SequenceContainer& seqCont1, const OrderedSequenceContainer& seqCont2, bool checkNames=true)
     throw (Exception)
     {
-      for (unsigned int i = 0; i < seqCont2.getNumberOfSequences(); i++)
+      for (size_t i = 0; i < seqCont2.getNumberOfSequences(); i++)
         seqCont1.addSequence(seqCont2.getSequence(i), checkNames);
     }
     
@@ -253,7 +253,7 @@ class SequenceContainerTools
         throw AlphabetMismatchException("SequenceContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
 
       std::vector<std::string> seqNames = seqCont1.getSequencesNames();
-      for (unsigned int i = 0; i < seqNames.size(); i++)
+      for (size_t i = 0; i < seqNames.size(); i++)
       {
         BasicSequence tmp = seqCont1.getSequence(seqNames[i]);
         tmp.append(seqCont2.getContent(seqNames[i]));
@@ -274,7 +274,7 @@ class SequenceContainerTools
     {  
       std::vector<std::string> seqNames = seqCont.getSequencesNames();
       bool checkNames = outputCont.getNumberOfSequences() > 0;
-      for (unsigned int i = 0; i < seqNames.size(); i++)
+      for (size_t i = 0; i < seqNames.size(); i++)
       {
         BasicSequence seq(seqNames[i], seqCont.toString(seqNames[i]), outputCont.getAlphabet());
         outputCont.addSequence(seq, checkNames);
@@ -289,7 +289,7 @@ class SequenceContainerTools
      * @return          A SequenceContainer with a nucleotide alphabet.
      * @throw AlphabetException If input sequences are not registered with a codon alphabet.
      */
-    static SequenceContainer* getCodonPosition(const SequenceContainer& sequences, unsigned int pos) throw (AlphabetException);
+    static SequenceContainer* getCodonPosition(const SequenceContainer& sequences, size_t pos) throw (AlphabetException);
 
 };
 
