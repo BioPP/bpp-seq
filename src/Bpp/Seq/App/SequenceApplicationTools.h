@@ -43,7 +43,8 @@
 
 #include "../Alphabet/Alphabet.h"
 #include "../GeneticCode/GeneticCode.h"
-#include "../StateProperties/AlphabetIndex2.h"
+#include "../AlphabetIndex/AlphabetIndex1.h"
+#include "../AlphabetIndex/AlphabetIndex2.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/VectorSiteContainer.h"
 
@@ -118,16 +119,30 @@ public:
 
 
   /**
-   * @brief Build a AlphabetIndex2<double> object for amino acid
-   * distance according to options.
+   * @brief Build a AlphabetIndex1 object for a given alphabet.
    *
    * @param Alphabet The alphabet to use. This is currently only used for assessing the type of distance allowed.
    * @param description Which distance to use. See the Bio++ Program Suite reference manual for a description of the syntax.
    * @param message To be displayed when parsing.
-   * @return A new AlphabetIndex2<double> object.
+   * @param verbose Tell if some info should be displayed while parsing.
+   * @return A new AlphabetIndex1 object.
    * @throw Exception in case of bad description.
    */
-  static AlphabetIndex2<double>* getAlphabetDistance(const Alphabet* alphabet, const std::string& description, const std::string& message = "Alphabet distance:") throw (Exception);
+  static AlphabetIndex1* getAlphabetIndex1(const Alphabet* alphabet, const std::string& description, const std::string& message = "Alphabet distance:", bool verbose = true) throw (Exception);
+
+
+  /**
+   * @brief Build a AlphabetIndex2 object for a given alphabet.
+   *
+   * @param Alphabet The alphabet to use. This is currently only used for assessing the type of distance allowed.
+   * @param description Which distance to use. See the Bio++ Program Suite reference manual for a description of the syntax.
+   * @param message To be displayed when parsing.
+   * @return A new AlphabetIndex2 object.
+   * @param verbose Tell if some info should be displayed while parsing.
+   * @throw Exception in case of bad description.
+   */
+  static AlphabetIndex2* getAlphabetIndex2(const Alphabet* alphabet, const std::string& description, const std::string& message = "Alphabet distance:", bool verbose = true) throw (Exception);
+
 
   /**
    * @brief Build a SequenceContainer object according to options.

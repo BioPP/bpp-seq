@@ -43,7 +43,7 @@
 #include "SiteContainer.h"
 #include "VectorSiteContainer.h"
 #include "AlignedSequenceContainer.h"
-#include "../StateProperties/AlphabetIndex2.h"
+#include "../AlphabetIndex/AlphabetIndex2.h"
 #include "../DistanceMatrix.h"
 #include <Bpp/Numeric/Matrix/Matrix.h>
 
@@ -316,7 +316,7 @@ class SiteContainerTools
      * @return A new SiteContainer instance.
      * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
      */
-    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2<double>& s, double gap) throw (AlphabetMismatchException);
+    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2& s, double gap) throw (AlphabetMismatchException);
 
     /**
      * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -333,7 +333,7 @@ class SiteContainerTools
      * @return A new SiteContainer instance.
      * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
      */
-    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2<double>& s, double opening, double extending) throw (AlphabetMismatchException);
+    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2& s, double opening, double extending) throw (AlphabetMismatchException);
 
     /**
      * @brief Sample sites in an alignment.

@@ -47,16 +47,16 @@ SET(CPP_FILES
   Bpp/Seq/GeneticCode/InvertebrateMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/EchinodermMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/YeastMitochondrialGeneticCode.cpp
-  Bpp/Seq/StateProperties/GranthamAAChemicalDistance.cpp
-  Bpp/Seq/StateProperties/MiyataAAChemicalDistance.cpp
-  Bpp/Seq/StateProperties/BLOSUM50.cpp
-  Bpp/Seq/StateProperties/DefaultNucleotideScore.cpp
-  Bpp/Seq/StateProperties/AAIndex1Entry.cpp
-  Bpp/Seq/StateProperties/AAIndex2Entry.cpp
-  Bpp/Seq/StateProperties/SimpleScore.cpp
-  Bpp/Seq/StateProperties/__GranthamMatrixCode
-  Bpp/Seq/StateProperties/__MiyataMatrixCode
-  Bpp/Seq/StateProperties/__BLOSUM50MatrixCode
+  Bpp/Seq/AlphabetIndex/GranthamAAChemicalDistance.cpp
+  Bpp/Seq/AlphabetIndex/MiyataAAChemicalDistance.cpp
+  Bpp/Seq/AlphabetIndex/BLOSUM50.cpp
+  Bpp/Seq/AlphabetIndex/DefaultNucleotideScore.cpp
+  Bpp/Seq/AlphabetIndex/AAIndex1Entry.cpp
+  Bpp/Seq/AlphabetIndex/AAIndex2Entry.cpp
+  Bpp/Seq/AlphabetIndex/SimpleScore.cpp
+  Bpp/Seq/AlphabetIndex/__GranthamMatrixCode
+  Bpp/Seq/AlphabetIndex/__MiyataMatrixCode
+  Bpp/Seq/AlphabetIndex/__BLOSUM50MatrixCode
   Bpp/Seq/Container/AbstractSequenceContainer.cpp
   Bpp/Seq/Container/AlignedSequenceContainer.cpp
   Bpp/Seq/Container/MapSequenceContainer.cpp
@@ -85,6 +85,8 @@ SET(CPP_FILES
   Bpp/Seq/Io/BppOAlignmentReaderFormat.cpp
   Bpp/Seq/Io/BppOAlignmentWriterFormat.cpp
   Bpp/Seq/Io/BppOSequenceStreamReaderFormat.cpp
+  Bpp/Seq/Io/BppOAlphabetIndex1Format.cpp
+  Bpp/Seq/Io/BppOAlphabetIndex2Format.cpp
   Bpp/Seq/App/SequenceApplicationTools.cpp
   )
 
@@ -167,6 +169,8 @@ SET(H_FILES
   Bpp/Seq/Io/BppOAlignmentReaderFormat.h
   Bpp/Seq/Io/BppOAlignmentWriterFormat.h
   Bpp/Seq/Io/BppOSequenceStreamReaderFormat.h
+  Bpp/Seq/Io/BppOAlphabetIndex1Format.h
+  Bpp/Seq/Io/BppOAlphabetIndex2Format.h
   Bpp/Seq/Container/VectorSequenceContainer.h
   Bpp/Seq/Container/VectorSiteContainer.h
   Bpp/Seq/Container/CompressedVectorSiteContainer.h
@@ -181,30 +185,30 @@ SET(H_FILES
   Bpp/Seq/Container/SiteContainer.h
   Bpp/Seq/Container/SiteContainerTools.h
   Bpp/Seq/Container/SiteIterator.h
-  Bpp/Seq/StateProperties/AlphabetIndex1.h
-  Bpp/Seq/StateProperties/AlphabetIndex2.h
-  Bpp/Seq/StateProperties/GranthamAAChemicalDistance.h
-  Bpp/Seq/StateProperties/GranthamAAPolarityIndex.h
-  Bpp/Seq/StateProperties/GranthamAAVolumeIndex.h
-  Bpp/Seq/StateProperties/MiyataAAChemicalDistance.h
-  Bpp/Seq/StateProperties/BLOSUM50.h
-  Bpp/Seq/StateProperties/SimpleIndexDistance.h
-  Bpp/Seq/StateProperties/DefaultNucleotideScore.h
-  Bpp/Seq/StateProperties/AAIndex1Entry.h
-  Bpp/Seq/StateProperties/AAIndex2Entry.h
-  Bpp/Seq/StateProperties/KleinAANetChargeIndex.h
-  Bpp/Seq/StateProperties/AAChargeIndex.h
-  Bpp/Seq/StateProperties/SimpleScore.h
-  Bpp/Seq/StateProperties/AAChouFasmanAHelixIndex.h
-  Bpp/Seq/StateProperties/AAChouFasmanBSheetIndex.h
-  Bpp/Seq/StateProperties/AAChouFasmanTurnIndex.h
-  Bpp/Seq/StateProperties/AAVolumeIndex.h
-  Bpp/Seq/StateProperties/AASurfaceIndex.h
-  Bpp/Seq/StateProperties/AAMassIndex.h
-  Bpp/Seq/StateProperties/AAChenGuHuangHydrophobicityIndex.h
-  Bpp/Seq/StateProperties/AASEASup30Index.h
-  Bpp/Seq/StateProperties/AASEAInf10Index.h
-  Bpp/Seq/StateProperties/AASEA1030Index.h
+  Bpp/Seq/AlphabetIndex/AlphabetIndex1.h
+  Bpp/Seq/AlphabetIndex/AlphabetIndex2.h
+  Bpp/Seq/AlphabetIndex/GranthamAAChemicalDistance.h
+  Bpp/Seq/AlphabetIndex/GranthamAAPolarityIndex.h
+  Bpp/Seq/AlphabetIndex/GranthamAAVolumeIndex.h
+  Bpp/Seq/AlphabetIndex/MiyataAAChemicalDistance.h
+  Bpp/Seq/AlphabetIndex/BLOSUM50.h
+  Bpp/Seq/AlphabetIndex/SimpleIndexDistance.h
+  Bpp/Seq/AlphabetIndex/DefaultNucleotideScore.h
+  Bpp/Seq/AlphabetIndex/AAIndex1Entry.h
+  Bpp/Seq/AlphabetIndex/AAIndex2Entry.h
+  Bpp/Seq/AlphabetIndex/KleinAANetChargeIndex.h
+  Bpp/Seq/AlphabetIndex/AAChargeIndex.h
+  Bpp/Seq/AlphabetIndex/SimpleScore.h
+  Bpp/Seq/AlphabetIndex/AAChouFasmanAHelixIndex.h
+  Bpp/Seq/AlphabetIndex/AAChouFasmanBSheetIndex.h
+  Bpp/Seq/AlphabetIndex/AAChouFasmanTurnIndex.h
+  Bpp/Seq/AlphabetIndex/AAVolumeIndex.h
+  Bpp/Seq/AlphabetIndex/AASurfaceIndex.h
+  Bpp/Seq/AlphabetIndex/AAMassIndex.h
+  Bpp/Seq/AlphabetIndex/AAChenGuHuangHydrophobicityIndex.h
+  Bpp/Seq/AlphabetIndex/AASEASup30Index.h
+  Bpp/Seq/AlphabetIndex/AASEAInf10Index.h
+  Bpp/Seq/AlphabetIndex/AASEA1030Index.h
   Bpp/Seq/App/SequenceApplicationTools.h
   )
 

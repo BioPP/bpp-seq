@@ -526,7 +526,7 @@ std::map<size_t, size_t> SiteContainerTools::translateSequence(const SiteContain
 AlignedSequenceContainer* SiteContainerTools::alignNW(
   const Sequence& seq1,
   const Sequence& seq2,
-  const AlphabetIndex2<double>& s,
+  const AlphabetIndex2& s,
   double gap)
 throw (AlphabetMismatchException)
 {
@@ -626,7 +626,7 @@ throw (AlphabetMismatchException)
 AlignedSequenceContainer* SiteContainerTools::alignNW(
   const Sequence& seq1,
   const Sequence& seq2,
-  const AlphabetIndex2<double>& s,
+  const AlphabetIndex2& s,
   double opening,
   double extending)
 throw (AlphabetMismatchException)

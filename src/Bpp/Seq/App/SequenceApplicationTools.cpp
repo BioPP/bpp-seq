@@ -52,29 +52,12 @@
 #include "../GeneticCode/StandardGeneticCode.h"
 #include "../GeneticCode/VertebrateMitochondrialGeneticCode.h"
 #include "../GeneticCode/YeastMitochondrialGeneticCode.h"
-#include "../StateProperties/BLOSUM50.h"
-#include "../StateProperties/GranthamAAChemicalDistance.h"
-#include "../StateProperties/MiyataAAChemicalDistance.h"
-#include "../StateProperties/GranthamAAPolarityIndex.h"
-#include "../StateProperties/GranthamAAVolumeIndex.h"
-#include "../StateProperties/KleinAANetChargeIndex.h"
-#include "../StateProperties/AAChouFasmanAHelixIndex.h"
-#include "../StateProperties/AAChouFasmanBSheetIndex.h"
-#include "../StateProperties/AAChouFasmanTurnIndex.h"
-#include "../StateProperties/AAChenGuHuangHydrophobicityIndex.h"
-#include "../StateProperties/AASurfaceIndex.h"
-#include "../StateProperties/AAMassIndex.h"
-#include "../StateProperties/AAVolumeIndex.h"
-#include "../StateProperties/AASEAInf10Index.h"
-#include "../StateProperties/AASEA1030Index.h"
-#include "../StateProperties/AASEASup30Index.h"
-#include "../StateProperties/SimpleIndexDistance.h"
-#include "../StateProperties/AAIndex1Entry.h"
-#include "../StateProperties/AAIndex2Entry.h"
 #include "../Io/BppOSequenceReaderFormat.h"
 #include "../Io/BppOAlignmentReaderFormat.h"
 #include "../Io/BppOSequenceWriterFormat.h"
 #include "../Io/BppOAlignmentWriterFormat.h"
+#include "../Io/BppOAlphabetIndex1Format.h"
+#include "../Io/BppOAlphabetIndex2Format.h"
 #include "../Io/MaseTools.h"
 #include "../SiteTools.h"
 #include "../SequenceTools.h"
@@ -233,168 +216,18 @@ GeneticCode* SequenceApplicationTools::getGeneticCode(
 
 /******************************************************************************/
 
-AlphabetIndex2<double>* SequenceApplicationTools::getAlphabetDistance(const Alphabet* alphabet, const string& description, const string& message)
+AlphabetIndex1* SequenceApplicationTools::getAlphabetIndex1(const Alphabet* alphabet, const string& description, const string& message, bool verbose)
 throw (Exception)
 {
-  if (description != "None")
-  {
-    string name;
-    map<string, string> args;
-    KeyvalTools::parseProcedure(description, name, args);
-    ApplicationTools::displayResult(message, name);
-    if (name == "Blosum50")
-    {
-      if (!AlphabetTools::isProteicAlphabet(alphabet))
-      {
-        throw Exception("Blosum50 distance can only be used with protein data.");
-      }
-      BLOSUM50* M = new BLOSUM50();
-      return M;
-    } else if (name == "AAdist")
-    {
-      if (!AlphabetTools::isProteicAlphabet(alphabet))
-      {
-        throw Exception("Chemical distance can only be used with protein data.");
-      }
-      string dist = ApplicationTools::getStringParameter("type", args, "grantham", "", true);
-      bool sym = ApplicationTools::getBooleanParameter("sym", args, true, "", true);
-      ApplicationTools::displayResult("Amino acid distance used", dist);
-      if (dist == "grantham")
-      {
-        GranthamAAChemicalDistance* M = new GranthamAAChemicalDistance();
-        M->setSymmetric(sym);
-        if (!sym) M->setPC1Sign(true);
-        return M;
-      }
-      else if (dist == "miyata")
-      {
-        MiyataAAChemicalDistance* M = new MiyataAAChemicalDistance();
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "grantham.polarity")
-      {
-        GranthamAAPolarityIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "grantham.volume")
-      {
-        GranthamAAVolumeIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "klein.charge")
-      {
-        KleinAANetChargeIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "chou-fasman.a-helix")
-      {
-        AAChouFasmanAHelixIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "chou-fasman.b-sheet")
-      {
-        AAChouFasmanBSheetIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "chen-gu-huang.hydrophobicity")
-      {
-        AAChenGuHuangHydrophobicityIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "chou-fasman.turn")
-      {
-        AAChouFasmanTurnIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "surface")
-      {
-        AASurfaceIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "mass")
-      {
-        AAMassIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "volume")
-      {
-        AAVolumeIndex I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "sea.medium")
-      {
-        AASEA1030Index I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "sea.high")
-      {
-        AASEASup30Index I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "sea.low")
-      {
-        AASEAInf10Index I;
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "user1")
-      {
-        string aax1FilePath = ApplicationTools::getAFilePath("file", args, true, true, "", false);
-        ifstream aax1File(aax1FilePath.c_str(), ios::in);
-        AAIndex1Entry I(aax1File);
-        SimpleIndexDistance<double>* M = new SimpleIndexDistance<double>(I);
-        aax1File.close();
-        M->setSymmetric(sym);
-        return M;
-      }
-      else if (dist == "user2")
-      {
-        string aax2FilePath = ApplicationTools::getAFilePath("file", args, true, true, "", false);
-        ifstream aax2File(aax2FilePath.c_str(), ios::in);
-        AAIndex2Entry* M = new AAIndex2Entry(aax2File, sym);
-        aax2File.close();
-        return M;
-      }
-      else
-      {
-        throw Exception("Invalid distance '" + dist + ".");
-      }
-    }
-    else
-    {
-      throw Exception("Invalid distance description: " + description);
-    }
-  }
-  else
-  {
-    return 0;
-  }
+  BppOAlphabetIndex1Format reader(alphabet, message, verbose);
+  return reader.read(description);
+}
+
+AlphabetIndex2* SequenceApplicationTools::getAlphabetIndex2(const Alphabet* alphabet, const string& description, const string& message, bool verbose)
+throw (Exception)
+{
+  BppOAlphabetIndex2Format reader(alphabet, message, verbose);
+  return reader.read(description);
 }
 
 /******************************************************************************/
