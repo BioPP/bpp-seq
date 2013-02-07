@@ -93,7 +93,7 @@ namespace bpp
  * @endcode
  */
 class AAChargeIndex :
-  public AlphabetIndex1<double>
+  public AlphabetIndex1
 {
 private:
   std::vector<double> charge_;

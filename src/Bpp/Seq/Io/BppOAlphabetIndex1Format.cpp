@@ -49,6 +49,7 @@
 #include "../AlphabetIndex/AASurfaceIndex.h"
 #include "../AlphabetIndex/AAMassIndex.h"
 #include "../AlphabetIndex/AAVolumeIndex.h"
+#include "../AlphabetIndex/AAChargeIndex.h"
 #include "../AlphabetIndex/AASEAInf10Index.h"
 #include "../AlphabetIndex/AASEA1030Index.h"
 #include "../AlphabetIndex/AASEASup30Index.h"
@@ -115,6 +116,10 @@ AlphabetIndex1* BppOAlphabetIndex1Format::read(const std::string& description) t
     else if (name == "Volume")
     {
       return new AAVolumeIndex();
+    }
+    else if (name == "Charge")
+    {
+      return new AAChargeIndex();
     }
     else if (name == "SEAMedium")
     {
