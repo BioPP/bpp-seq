@@ -121,14 +121,13 @@ public:
    * @brief Build a AlphabetIndex2<double> object for amino acid
    * distance according to options.
    *
-   * @param description name of the distance
-   *      [BLOSUM50,
-   *      | GranthamAAChemicalDistance
-   *      | MiyataAAChemicalDistance]
+   * @param Alphabet The alphabet to use. This is currently only used for assessing the type of distance allowed.
+   * @param description Which distance to use. See the Bio++ Program Suite reference manual for a description of the syntax.
+   * @param message To be displayed when parsing.
    * @return A new AlphabetIndex2<double> object.
    * @throw Exception in case of bad description.
    */
-  static AlphabetIndex2<double>* getAADistance(const std::string& description) throw (Exception);
+  static AlphabetIndex2<double>* getAlphabetDistance(const Alphabet* alphabet, const std::string& description, const std::string& message = "Alphabet distance:") throw (Exception);
 
   /**
    * @brief Build a SequenceContainer object according to options.
