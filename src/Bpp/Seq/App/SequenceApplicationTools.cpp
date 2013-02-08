@@ -356,7 +356,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
       {
         if (verbose)
           ApplicationTools::displayTask("Remove sites with gaps", true);
-        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; --i)
         {
           if (verbose)
             ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
@@ -400,8 +400,8 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
       if (unresolvedFreq < 1)
       {
         if (verbose)
-          ApplicationTools::displayTask("Keep Resolved sites", true);
-        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
+          ApplicationTools::displayTask("Remove unresolved sites", true);
+        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; --i)
         {
           if (verbose)
             ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
