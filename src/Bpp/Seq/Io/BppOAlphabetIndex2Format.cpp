@@ -64,7 +64,7 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description) t
     map<string, string> args;
     KeyvalTools::parseProcedure(description, name, args);
     if (verbose_)
-      ApplicationTools::displayResult(message_, name);
+      ApplicationTools::displayResult(message_, description);
 
     //Currently, only protein indices are supported:
     if (!AlphabetTools::isProteicAlphabet(alphabet_))
@@ -113,7 +113,7 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description) t
     }
     else
     {
-      throw Exception("Invalid index '" + name + ".");
+      throw Exception("Invalid index2 '" + name + "'.");
     }
   }
   else
