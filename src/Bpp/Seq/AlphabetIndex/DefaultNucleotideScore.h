@@ -89,7 +89,7 @@ public:
    * @{
    */
   /**
-   * @copydoc AlphabetIndex2<double>::getIndex(int state1, int state2) const
+   * @copydoc bpp::AlphabetIndex2::getIndex()
    *
    * If states are unresolved, takes the best score of all possible matches
    * and divides it by the number of different states.

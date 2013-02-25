@@ -121,7 +121,7 @@ public:
   /**
    * @brief Build a AlphabetIndex1 object for a given alphabet.
    *
-   * @param Alphabet The alphabet to use. This is currently only used for assessing the type of distance allowed.
+   * @param alphabet The alphabet to use. This is currently only used for assessing the type of distance allowed.
    * @param description Which distance to use. See the Bio++ Program Suite reference manual for a description of the syntax.
    * @param message To be displayed when parsing.
    * @param verbose Tell if some info should be displayed while parsing.
@@ -134,7 +134,7 @@ public:
   /**
    * @brief Build a AlphabetIndex2 object for a given alphabet.
    *
-   * @param Alphabet The alphabet to use. This is currently only used for assessing the type of distance allowed.
+   * @param alphabet The alphabet to use. This is currently only used for assessing the type of distance allowed.
    * @param description Which distance to use. See the Bio++ Program Suite reference manual for a description of the syntax.
    * @param message To be displayed when parsing.
    * @return A new AlphabetIndex2 object.
