@@ -71,7 +71,7 @@ namespace bpp
        * @param sc        The container to write.
        * @throw Exception If the file is not in the specified format.
        */
-      virtual void writeSequences(std::ostream& output, const SequenceContainer & sc) const throw (Exception) = 0;
+      virtual void writeSequences(std::ostream& output, const SequenceContainer& sc) const throw (Exception) = 0;
 
       /**
        * @brief Write a container to a file.

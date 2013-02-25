@@ -131,7 +131,7 @@ class SiteContainerTools
 		 * @brief Get a siteset with sites with less than a given amount of gaps.
 		 *
 		 * @param sites The container from which the sites have to be removed.
-     * @param maxPropGaps The maximum frequency of gaps in each site.
+     * @param maxFreqGaps The maximum frequency of gaps in each site.
 		 * @return A pointer toward a new SiteContainer.
 		 */
      static SiteContainer* removeGapSites(const SiteContainer& sites, double maxFreqGaps);
@@ -140,7 +140,7 @@ class SiteContainerTools
 		 * @brief Remove sites with a given amount of gaps.
 		 *
 		 * @param sites The container from which the sites have to be removed.
-     * @param maxPropGaps The maximum frequency of gaps in each site.
+     * @param maxFreqGaps The maximum frequency of gaps in each site.
 		 */
      static void removeGapSites(SiteContainer& sites, double maxFreqGaps);
 
@@ -443,7 +443,7 @@ class SiteContainerTools
      * Calculations are made according to formula for the "CS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682–2690.
      *
      * @param positions1 Alignment index for the test alignment.
-     * @param positions1 Alignment index for the reference alignment.
+     * @param positions2 Alignment index for the reference alignment.
      * @param na         The score to use if the tested column is full of gap.
      * @return A vector of score, as 0 or 1.
      * @see getSequencePositions for creating the alignment indexes.
@@ -458,7 +458,7 @@ class SiteContainerTools
      * Calculations are made according to formula for the "SPS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682–2690.
      *
      * @param positions1 Alignment index for the test alignment.
-     * @param positions1 Alignment index for the reference alignment.
+     * @param positions2 Alignment index for the reference alignment.
      * @param na         The score to use if the tested column is not testable, that is not containing at least to residues.
      * @return A vector of score, between 0 and 1 (+ na value).
      * @see getSequencePositions for creating the alignment indexes.
