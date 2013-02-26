@@ -54,7 +54,7 @@ StreamSequenceIterator::StreamSequenceIterator(ISequenceStream& seqStream, std::
   }
 }
 
-const Sequence* StreamSequenceIterator::nextSequence()
+Sequence* StreamSequenceIterator::nextSequence()
 {
   BasicSequence* seq = nextSeq_;
   if (nextSeq_) {
@@ -81,7 +81,7 @@ StreamSequenceWithQualityIterator::StreamSequenceWithQualityIterator(ISequenceSt
   }
 }
 
-const SequenceWithQuality* StreamSequenceWithQualityIterator::nextSequence()
+SequenceWithQuality* StreamSequenceWithQualityIterator::nextSequence()
 {
   SequenceWithQuality* seq = nextSeq_;
   if (nextSeq_) {

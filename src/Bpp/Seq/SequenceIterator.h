@@ -56,6 +56,20 @@ class SequenceIterator
 		virtual ~SequenceIterator() {}
 	
 	public:
+		virtual Sequence* nextSequence() = 0;
+		virtual bool hasMoreSequences() const = 0;
+};
+
+/**
+ * @brief Generic const sequence iterator interface, allowing to loop over const sequences.
+ */
+class ConstSequenceIterator
+{
+	public:
+		ConstSequenceIterator() {}
+		virtual ~ConstSequenceIterator() {}
+	
+	public:
 		virtual const Sequence* nextSequence() = 0;
 		virtual bool hasMoreSequences() const = 0;
 };
@@ -69,6 +83,20 @@ class SequenceWithQualityIterator:
 	public:
 		SequenceWithQualityIterator() {}
 		virtual ~SequenceWithQualityIterator() {}
+	
+	public:
+		virtual SequenceWithQuality* nextSequence() = 0;
+};
+
+/**
+ * @brief Generic const sequence iterator interface, allowing to loop over const sequences with quality scores.
+ */
+class ConstSequenceWithQualityIterator:
+  public virtual ConstSequenceIterator
+{
+	public:
+		ConstSequenceWithQualityIterator() {}
+		virtual ~ConstSequenceWithQualityIterator() {}
 	
 	public:
 		virtual const SequenceWithQuality* nextSequence() = 0;

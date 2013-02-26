@@ -51,7 +51,7 @@ namespace bpp
  * @brief Partial implementation of the SequenceIterator interface, allowing to loop over an ordered sequence container.
  */
 class AbstractSequenceContainerIterator :
-  public virtual SequenceIterator
+  public virtual ConstSequenceIterator
 {
 	protected:
 		const OrderedSequenceContainer* sequences_;

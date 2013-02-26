@@ -51,7 +51,7 @@ namespace bpp
  * @brief Partial implementation of the SiteIterator interface, allowing to loop over a site container.
  */
 class AbstractSiteContainerIterator :
-  public virtual SiteIterator
+  public virtual ConstSiteIterator
 {
 	protected:
 		const SiteContainer* sites_;

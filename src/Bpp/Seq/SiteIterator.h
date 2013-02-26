@@ -55,9 +55,24 @@ class SiteIterator
 		virtual ~SiteIterator() {}
 	
 	public:
+		virtual Site* nextSite() = 0;
+		virtual bool hasMoreSites() const = 0;
+};
+
+/**
+ * @brief Generic const site iterator interface, allowing to loop over const sites.
+ */
+class ConstSiteIterator
+{
+	public:
+		ConstSiteIterator() {}
+		virtual ~ConstSiteIterator() {}
+	
+	public:
 		virtual const Site* nextSite() = 0;
 		virtual bool hasMoreSites() const = 0;
 };
+
 
 } //end of namespace bpp.
 

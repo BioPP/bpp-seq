@@ -85,7 +85,7 @@ class StreamSequenceIterator:
     }
 	
 	public:
-		virtual const Sequence* nextSequence();
+		virtual Sequence* nextSequence();
     
     virtual bool hasMoreSequences() const { return nextSeq_ != 0; }
 };
@@ -126,7 +126,7 @@ class StreamSequenceWithQualityIterator:
     }
 	
 	public:
-		virtual const SequenceWithQuality* nextSequence();
+		virtual SequenceWithQuality* nextSequence();
     
     virtual bool hasMoreSequences() const { return nextSeq_ != 0; }
 };
