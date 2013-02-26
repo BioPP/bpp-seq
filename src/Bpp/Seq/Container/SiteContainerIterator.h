@@ -1,11 +1,11 @@
 //
-// File: SiteIterator.h
+// File: SiteContainerIterator.h
 // Created by: Julien Dutheil
 // Created on: Sun Oct 19 12:47:16 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,80 +37,69 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _SITEITERATOR_H_
-#define _SITEITERATOR_H_
+#ifndef _SITECONTAINERITERATOR_H_
+#define _SITECONTAINERITERATOR_H_
 
 #include "../Site.h"
+#include "../SiteIterator.h"
 #include "SiteContainer.h"
 
 namespace bpp
 {
 
 /**
- * @brief Loop over a SiteContainer.
+ * @brief Partial implementation of the SiteIterator interface, allowing to loop over a site container.
  */
-class SiteIterator
-{
-	public:
-		SiteIterator() {}
-		virtual ~SiteIterator() {}
-	
-	public:
-		virtual const Site* nextSite() = 0;
-		virtual bool hasMoreSites() const = 0;
-};
-
-/**
- * @brief Partial implementation of the SiteIterator interface.
- */
-class AbstractSiteIterator :
-  public SiteIterator
+class AbstractSiteContainerIterator :
+  public virtual SiteIterator
 {
 	protected:
 		const SiteContainer* sites_;
-		unsigned int currentPosition_;
+		int currentPosition_;
 	
 	public:
-		AbstractSiteIterator(const SiteContainer& sites);
+		AbstractSiteContainerIterator(const SiteContainer& sites);
 		
-    AbstractSiteIterator(const AbstractSiteIterator& asi) : sites_(asi.sites_), currentPosition_(asi.currentPosition_) {}
+    AbstractSiteContainerIterator(const AbstractSiteContainerIterator& asi) :
+      sites_(asi.sites_),
+      currentPosition_(asi.currentPosition_) {}
     
-    AbstractSiteIterator& operator=(const AbstractSiteIterator& asi)
+    AbstractSiteContainerIterator& operator=(const AbstractSiteContainerIterator& asi)
     {
       sites_ = asi.sites_;
       currentPosition_ = asi.currentPosition_;
       return *this;
     }
 
-		virtual ~AbstractSiteIterator() {}
+		virtual ~AbstractSiteContainerIterator() {}
 	
 };
 
 /**
  * @brief Loop over all sites in a SiteContainer.
  */
-class SimpleSiteIterator: public AbstractSiteIterator
+class SimpleSiteContainerIterator: public AbstractSiteContainerIterator
 {
 	public:
-		SimpleSiteIterator(const SiteContainer & sites);
-		virtual ~SimpleSiteIterator() {}
+		SimpleSiteContainerIterator(const SiteContainer& sites);
+		virtual ~SimpleSiteContainerIterator() {}
 	
 	public:
-		const Site * nextSite();
+		const Site* nextSite();
 		bool hasMoreSites() const;
 };
 
 /**
  * @brief Loop over all sites without gaps in a SiteContainer.
  */
-class NoGapSiteIterator: public AbstractSiteIterator
+class NoGapSiteContainerIterator: public AbstractSiteContainerIterator
 {
 	public:
-		NoGapSiteIterator(const SiteContainer & sites);
-		virtual ~NoGapSiteIterator() {}
+		NoGapSiteContainerIterator(const SiteContainer & sites);
+		virtual ~NoGapSiteContainerIterator() {}
 	
 	public:
-		const Site * nextSite();
+		const Site* nextSite();
 		bool hasMoreSites() const;
 		int nextSiteWithoutGapPosition(int current) const;
 		int previousSiteWithoutGapPosition(int current) const;
@@ -120,11 +109,11 @@ class NoGapSiteIterator: public AbstractSiteIterator
  * @brief Loop over all complete sites in a SiteContainer
  * (i.e. sites without gap and unresolved characters).
  */
-class CompleteSiteIterator: public AbstractSiteIterator
+class CompleteSiteContainerIterator: public AbstractSiteContainerIterator
 {
 	public:
-		CompleteSiteIterator(const SiteContainer & sites);
-		virtual ~CompleteSiteIterator() {}
+		CompleteSiteContainerIterator(const SiteContainer & sites);
+		virtual ~CompleteSiteContainerIterator() {}
 	
 	public:
 		const Site * nextSite();

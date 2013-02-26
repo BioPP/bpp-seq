@@ -66,7 +66,8 @@ SET(CPP_FILES
   Bpp/Seq/Container/VectorSequenceContainer.cpp
   Bpp/Seq/Container/VectorSiteContainer.cpp
   Bpp/Seq/Container/CompressedVectorSiteContainer.cpp
-  Bpp/Seq/Container/SiteIterator.cpp
+  Bpp/Seq/Container/SiteContainerIterator.cpp
+  Bpp/Seq/Container/SequenceContainerIterator.cpp
   Bpp/Seq/Io/Clustal.cpp
   Bpp/Seq/Io/Dcse.cpp
   Bpp/Seq/Io/Fasta.cpp
@@ -97,6 +98,7 @@ SET(H_FILES
   Bpp/Seq/SequenceExceptions.h
   Bpp/Seq/SequencePositionIterators.h
   Bpp/Seq/Sequence.h
+  Bpp/Seq/SequenceIterator.h
   Bpp/Seq/SequenceWithAnnotation.h
   Bpp/Seq/SequenceWithAnnotationTools.h
   Bpp/Seq/SequenceWithQuality.h
@@ -105,6 +107,7 @@ SET(H_FILES
   Bpp/Seq/SequenceWalker.h
   Bpp/Seq/SiteExceptions.h
   Bpp/Seq/Site.h
+  Bpp/Seq/SiteIterator.h
   Bpp/Seq/SiteTools.h
   Bpp/Seq/StringSequenceTools.h
   Bpp/Seq/SymbolList.h
@@ -184,7 +187,7 @@ SET(H_FILES
   Bpp/Seq/Container/SiteContainerExceptions.h
   Bpp/Seq/Container/SiteContainer.h
   Bpp/Seq/Container/SiteContainerTools.h
-  Bpp/Seq/Container/SiteIterator.h
+  Bpp/Seq/Container/SiteContainerIterator.h
   Bpp/Seq/AlphabetIndex/AlphabetIndex1.h
   Bpp/Seq/AlphabetIndex/AlphabetIndex2.h
   Bpp/Seq/AlphabetIndex/GranthamAAChemicalDistance.h

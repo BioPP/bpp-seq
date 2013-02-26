@@ -1,11 +1,11 @@
 //
-// File: SiteIterator.cpp
+// File: SiteContainerIterator.cpp
 // Created by: Julien Dutheil
 // Created on: Sun Oct 19 12:47:16 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -37,7 +37,7 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "SiteIterator.h"
+#include "SiteContainerIterator.h"
 #include "../SiteTools.h"
 
 using namespace bpp;
@@ -49,47 +49,47 @@ using namespace std;
 
 /******************************************************************************/
 	
-AbstractSiteIterator::AbstractSiteIterator(const SiteContainer& sites) :
+AbstractSiteContainerIterator::AbstractSiteContainerIterator(const SiteContainer& sites) :
   sites_(&sites),
   currentPosition_(0)
 {}
 
 /******************************************************************************/
 	
-SimpleSiteIterator::SimpleSiteIterator(const SiteContainer& sites): AbstractSiteIterator(sites) {}
+SimpleSiteContainerIterator::SimpleSiteContainerIterator(const SiteContainer& sites): AbstractSiteContainerIterator(sites) {}
 
-const Site* SimpleSiteIterator::nextSite()
+const Site* SimpleSiteContainerIterator::nextSite()
 {
 	const Site* s = &sites_->getSite(currentPosition_);
 	currentPosition_++;
 	return s;
 }
 
-bool SimpleSiteIterator::hasMoreSites() const
+bool SimpleSiteContainerIterator::hasMoreSites() const
 {
-	return currentPosition_ < sites_->getNumberOfSites();
+	return currentPosition_ < static_cast<int>(sites_->getNumberOfSites());
 }
 
 /******************************************************************************/
 	
-NoGapSiteIterator::NoGapSiteIterator(const SiteContainer& sites): AbstractSiteIterator(sites)
+NoGapSiteContainerIterator::NoGapSiteContainerIterator(const SiteContainer& sites): AbstractSiteContainerIterator(sites)
 {
 	currentPosition_ = nextSiteWithoutGapPosition(-1);
 }
 
-const Site* NoGapSiteIterator::nextSite()
+const Site* NoGapSiteContainerIterator::nextSite()
 {
 	const Site* s = &sites_->getSite(currentPosition_);
 	currentPosition_ = nextSiteWithoutGapPosition(currentPosition_);
 	return s;
 }
 
-bool NoGapSiteIterator::hasMoreSites() const
+bool NoGapSiteContainerIterator::hasMoreSites() const
 {
-	return currentPosition_ < sites_->getNumberOfSites();
+	return currentPosition_ < static_cast<int>(sites_->getNumberOfSites());
 }
 
-int NoGapSiteIterator::nextSiteWithoutGapPosition(int current) const
+int NoGapSiteContainerIterator::nextSiteWithoutGapPosition(int current) const
 {
 	unsigned int position = current + 1;
 	while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->getSite(position)))
@@ -97,7 +97,7 @@ int NoGapSiteIterator::nextSiteWithoutGapPosition(int current) const
 	return position;
 }
 
-int NoGapSiteIterator::previousSiteWithoutGapPosition(int current) const
+int NoGapSiteContainerIterator::previousSiteWithoutGapPosition(int current) const
 {
 	int position = current - 1;
 	while (position >= 0 && SiteTools::hasGap(sites_->getSite(position)))
@@ -107,24 +107,24 @@ int NoGapSiteIterator::previousSiteWithoutGapPosition(int current) const
 
 /******************************************************************************/
 	
-CompleteSiteIterator::CompleteSiteIterator(const SiteContainer & sites): AbstractSiteIterator(sites)
+CompleteSiteContainerIterator::CompleteSiteContainerIterator(const SiteContainer & sites): AbstractSiteContainerIterator(sites)
 {
 	currentPosition_ = nextCompleteSitePosition(-1);
 }
 
-const Site* CompleteSiteIterator::nextSite()
+const Site* CompleteSiteContainerIterator::nextSite()
 {
 	const Site* s = &sites_->getSite(currentPosition_);
 	currentPosition_ = nextCompleteSitePosition(currentPosition_);
 	return s;
 }
 
-bool CompleteSiteIterator::hasMoreSites() const
+bool CompleteSiteContainerIterator::hasMoreSites() const
 {
-	return currentPosition_ < sites_->getNumberOfSites();
+	return currentPosition_ < static_cast<int>(sites_->getNumberOfSites());
 }
 
-int CompleteSiteIterator::nextCompleteSitePosition(int current) const
+int CompleteSiteContainerIterator::nextCompleteSitePosition(int current) const
 {
   unsigned int position = current + 1;
 	while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->getSite(position)))
@@ -132,7 +132,7 @@ int CompleteSiteIterator::nextCompleteSitePosition(int current) const
 	return position;
 }
 
-int CompleteSiteIterator::previousCompleteSitePosition(int current) const
+int CompleteSiteContainerIterator::previousCompleteSitePosition(int current) const
 {
   int position = current - 1;
 	while (position >= 0 && !SiteTools::isComplete(sites_->getSite(position)))

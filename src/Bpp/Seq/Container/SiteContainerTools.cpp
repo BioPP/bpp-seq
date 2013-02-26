@@ -41,7 +41,7 @@
 #include "SiteContainerTools.h"
 #include "SequenceContainerTools.h"
 #include "VectorSiteContainer.h"
-#include "SiteIterator.h"
+#include "SiteContainerIterator.h"
 #include "../SiteTools.h"
 #include "../Alphabet/AlphabetTools.h"
 #include "../SequenceTools.h"
@@ -63,7 +63,7 @@ SiteContainer* SiteContainerTools::getSitesWithoutGaps(const SiteContainer& site
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
-  NoGapSiteIterator ngsi(sites);
+  NoGapSiteContainerIterator ngsi(sites);
   while (ngsi.hasMoreSites())
   {
     noGapCont->addSite(*ngsi.nextSite());
@@ -78,7 +78,7 @@ SiteContainer* SiteContainerTools::getCompleteSites(const SiteContainer& sites)
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
-  CompleteSiteIterator csi(sites);
+  CompleteSiteContainerIterator csi(sites);
   while (csi.hasMoreSites())
   {
     noGapCont->addSite(*csi.nextSite());
@@ -110,7 +110,7 @@ SiteContainer* SiteContainerTools::getSelectedSites(
 const Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::string& name, bool ignoreGap, bool resolveUnknown)
 {
   Vint consensus;
-  SimpleSiteIterator ssi(sc);
+  SimpleSiteContainerIterator ssi(sc);
   const Site* site;
   while (ssi.hasMoreSites())
   {
