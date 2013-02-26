@@ -81,6 +81,7 @@ SET(CPP_FILES
   Bpp/Seq/Io/NexusIoSequence.cpp
   Bpp/Seq/Io/NexusTools.cpp
   Bpp/Seq/Io/Stockholm.cpp
+  Bpp/Seq/Io/StreamSequenceIterator.cpp
   Bpp/Seq/Io/BppOSequenceReaderFormat.cpp
   Bpp/Seq/Io/BppOSequenceWriterFormat.cpp
   Bpp/Seq/Io/BppOAlignmentReaderFormat.cpp
@@ -167,6 +168,7 @@ SET(H_FILES
   Bpp/Seq/Io/Stockholm.h
   Bpp/Seq/Io/IoSequenceFactory.h
   Bpp/Seq/Io/SequenceFileIndex.h
+  Bpp/Seq/Io/StreamSequenceIterator.h
   Bpp/Seq/Io/BppOSequenceReaderFormat.h
   Bpp/Seq/Io/BppOSequenceWriterFormat.h
   Bpp/Seq/Io/BppOAlignmentReaderFormat.h

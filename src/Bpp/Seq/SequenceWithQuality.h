@@ -224,6 +224,22 @@ namespace bpp {
        */
 
       /**
+       * @brief Build a new empty SequenceWithQuality
+       *
+       * @param alpha    A pointer to an Alphabet
+       *
+       * @throw BadCharException if a state is not alowed by the Alphabet
+       */
+      SequenceWithQuality(
+          const Alphabet* alpha
+          ):
+        SequenceWithAnnotation(alpha),
+        qualScores_(new SequenceQuality(0, false))
+      {
+        addAnnotation(qualScores_);
+      }
+
+      /**
        * @brief Build a new SequenceWithQuality from a std::string
        *
        * Build a new SequenceWithQuality and set the quality scores to
