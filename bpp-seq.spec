@@ -1,5 +1,5 @@
 %define _basename bpp-seq
-%define _version 2.0.3
+%define _version 2.1.0
 %define _release 1
 %define _prefix /usr
 
@@ -66,7 +66,99 @@ rm -rf $RPM_BUILD_ROOT
 
 %post -n libbpp-seq9 -p /sbin/ldconfig
 
+%post -n libbpp-seq-devel
+createGeneric() {
+  echo "-- Creating generic include file: $1.all"
+  #Make sure we run into subdirectories first:
+  dirs=()
+  for file in "$1"/*
+  do
+    if [ -d "$file" ]
+    then
+      # Recursion:
+      dirs+=( "$file" )
+    fi
+  done
+  for dir in ${dirs[@]}
+  do
+    createGeneric $dir
+  done
+  #Now list all files, including newly created .all files:
+  if [ -f $1.all ]
+  then
+    rm $1.all
+  fi
+  dir=`basename $1`
+  for file in "$1"/*
+  do
+    if [ -f "$file" ] && ( [ "${file##*.}" == "h" ] || [ "${file##*.}" == "all" ] )
+    then
+      file=`basename $file`
+      echo "#include \"$dir/$file\"" >> $1.all
+    fi
+  done;
+}
+# Actualize .all files
+createGeneric %{_prefix}/include/Bpp
+exit 0
+
+%preun -n libbpp-seq-devel
+removeGeneric() {
+  if [ -f $1.all ]
+  then
+    echo "-- Remove generic include file: $1.all"
+    rm $1.all
+  fi
+  for file in "$1"/*
+  do
+    if [ -d "$file" ]
+    then
+      # Recursion:
+      removeGeneric $file
+    fi
+  done
+}
+# Actualize .all files
+removeGeneric %{_prefix}/include/Bpp
+exit 0
+
 %postun -n libbpp-seq9 -p /sbin/ldconfig
+
+%postun -n libbpp-seq-devel
+createGeneric() {
+  echo "-- Creating generic include file: $1.all"
+  #Make sure we run into subdirectories first:
+  dirs=()
+  for file in "$1"/*
+  do
+    if [ -d "$file" ]
+    then
+      # Recursion:
+      dirs+=( "$file" )
+    fi
+  done
+  for dir in ${dirs[@]}
+  do
+    createGeneric $dir
+  done
+  #Now list all files, including newly created .all files:
+  if [ -f $1.all ]
+  then
+    rm $1.all
+  fi
+  dir=`basename $1`
+  for file in "$1"/*
+  do
+    if [ -f "$file" ] && ( [ "${file##*.}" == "h" ] || [ "${file##*.}" == "all" ] )
+    then
+      file=`basename $file`
+      echo "#include \"$dir/$file\"" >> $1.all
+    fi
+  done;
+}
+# Actualize .all files
+createGeneric %{_prefix}/include/Bpp
+exit 0
 
 %files -n libbpp-seq9
 %defattr(-,root,root)
@@ -81,6 +173,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Tue Mar 05 2013 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.1.0-1
+- 'omics' tools now in bpp-seq-omics
+- Extended BppO support
+- StateProperties renamed to AlphabetIndex
 * Thu Feb 09 2012 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.0.3-1
 - Improved maf tools + new iterators
 - Added support for GFF

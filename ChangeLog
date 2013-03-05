@@ -1,3 +1,5 @@
+05/03/13 -*- Version 2.1.0 -*- 
+
 07/02/13 Julien Dutheil
 * StateProperties => Alphabet index (dir renamed).
 * New BppO classes forAlphabet Index 1 and 2, and corresponding methods in SequenceApplicationTools.
