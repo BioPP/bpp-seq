@@ -468,8 +468,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   }
   else
   {
-    ApplicationTools::displayError("Option '" + option + "' unknown in parameter 'sequence.sites_to_use'.");
-    exit(-1);
+    throw Exception("Option '" + option + "' unknown in parameter 'sequence.sites_to_use'.");
   }
 
   if (AlphabetTools::isCodonAlphabet(sitesToAnalyse->getAlphabet()))
