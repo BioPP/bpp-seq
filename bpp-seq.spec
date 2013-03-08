@@ -11,7 +11,7 @@ Release: %{_release}
 License: CECILL-2.0
 Vendor: The Bio++ Project
 Source: http://biopp.univ-montp2.fr/repos/sources/%{_basename}-%{_version}.tar.gz
-Summary: Bio++ Sequence library.
+Summary: Bio++ Sequence library
 Group: Development/Libraries/C and C++
 Requires: bpp-core = %{_version}
 
