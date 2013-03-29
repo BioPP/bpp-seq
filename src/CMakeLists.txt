@@ -192,6 +192,7 @@ SET(H_FILES
   Bpp/Seq/Container/SiteContainerIterator.h
   Bpp/Seq/AlphabetIndex/AlphabetIndex1.h
   Bpp/Seq/AlphabetIndex/AlphabetIndex2.h
+  Bpp/Seq/AlphabetIndex/UserAlphabetIndex1.h
   Bpp/Seq/AlphabetIndex/GranthamAAChemicalDistance.h
   Bpp/Seq/AlphabetIndex/GranthamAAPolarityIndex.h
   Bpp/Seq/AlphabetIndex/GranthamAAVolumeIndex.h
