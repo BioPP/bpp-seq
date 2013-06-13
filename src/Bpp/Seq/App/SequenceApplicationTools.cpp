@@ -41,11 +41,7 @@
 #include "SequenceApplicationTools.h"
 #include "../Alphabet/BinaryAlphabet.h"
 #include "../Alphabet/DefaultAlphabet.h"
-#include "../Alphabet/EchinodermMitochondrialCodonAlphabet.h"
-#include "../Alphabet/InvertebrateMitochondrialCodonAlphabet.h"
-#include "../Alphabet/StandardCodonAlphabet.h"
-#include "../Alphabet/VertebrateMitochondrialCodonAlphabet.h"
-#include "../Alphabet/YeastMitochondrialCodonAlphabet.h"
+#include "../Alphabet/CodonAlphabet.h"
 #include "../Alphabet/AlphabetTools.h"
 #include "../GeneticCode/EchinodermMitochondrialGeneticCode.h"
 #include "../GeneticCode/InvertebrateMitochondrialGeneticCode.h"
@@ -105,7 +101,6 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     flag = 2;
   }
 
-
   if (alphabet == "Binary")
     chars = new BinaryAlphabet();
   else if (alphabet == "DNA")
@@ -146,20 +141,8 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     else
       throw Exception("Alphabet not known in Codon : " + alphn);
 
-    string type = ApplicationTools::getStringParameter("type", args, "Standard");
 
-    if (type == "EchinodermMitochondrial")
-      chars = new EchinodermMitochondrialCodonAlphabet(pnalph);
-    else if (type == "InvertebrateMitochondrial")
-      chars = new InvertebrateMitochondrialCodonAlphabet(pnalph);
-    else if (type == "Standard")
-      chars = new StandardCodonAlphabet(pnalph);
-    else if (type == "VertebrateMitochondrial")
-      chars = new VertebrateMitochondrialCodonAlphabet(pnalph);
-    else if (type == "YeastMitochondrial")
-      chars = new YeastMitochondrialCodonAlphabet(pnalph);
-    else
-      throw Exception("Unknown Alphabet : " + alphabet);
+    chars = new CodonAlphabet(pnalph);
     alphabet = alphabet + "(" + alphn + ")";
   }
   else
@@ -471,7 +454,8 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     throw Exception("Option '" + option + "' unknown in parameter 'sequence.sites_to_use'.");
   }
 
-  if (AlphabetTools::isCodonAlphabet(sitesToAnalyse->getAlphabet()))
+  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(sitesToAnalyse->getAlphabet());
+  if (ca)
   {
     option = ApplicationTools::getStringParameter("input.sequence.remove_stop_codons", params, "no", suffix, true);
     if ((option != "") && verbose)
@@ -479,7 +463,12 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
 
     if (option == "yes")
     {
-      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse));
+      throw Exception("The format of this option has changed, and should now specify a genetic code to use.\nSee the BPO manual for a list of available genetic codes.");
+    }
+    if (option != "no")
+    {
+      auto_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet(), option));
+      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse, *gCode));
       delete sitesToAnalyse;
     }
     else

@@ -45,6 +45,7 @@
 #include "AlignedSequenceContainer.h"
 #include "../AlphabetIndex/AlphabetIndex2.h"
 #include "../DistanceMatrix.h"
+#include "../GeneticCode/GeneticCode.h"
 #include <Bpp/Numeric/Matrix/Matrix.h>
 
 //From the STL:
@@ -151,9 +152,10 @@ class SiteContainerTools
      * The container passed as input is not modified, all sites are copied.
      *
      * @param sites The container to analyse.
+		 * @param gCode the genetic code to use to determine stop codons.
      * @return A pointer toward a new SiteContainer.
      */
-    static SiteContainer* removeStopCodonSites(const SiteContainer& sites) throw (AlphabetException);
+    static SiteContainer* removeStopCodonSites(const SiteContainer& sitesi, const GeneticCode& gCode) throw (AlphabetException);
 
     /**
 		 * @brief Create a new container with a specified set of sites.

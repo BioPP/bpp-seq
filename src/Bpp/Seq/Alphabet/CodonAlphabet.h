@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -51,9 +51,10 @@ namespace bpp
 {
 
 /**
- * @brief The abstract base class for codon alphabets.
- * @author Laurent Guéguen
+ * @brief Codon alphabet class.
+ * @author Laurent Guéguen, Julien Dutheil
  * 
+ * A codon alphabet object is a particular case of WordAlphabet with three letters. 
  * Since codons are made of 3 nucleic bases (RNA or DNA), this class
  * has a NucleicAlphabet field used to check char description. This
  * nucleic alphabet is passed to the constructor. This class also adds
@@ -62,20 +63,6 @@ namespace bpp
 class CodonAlphabet:
   public WordAlphabet
 {
-protected:
-  /**
-   *@brief the vector of the numbers of the stop codon states.
-   */
-  std::vector<int> stopCodons_;
-  
-  //Constant used for init codon:
-  int initCodon_;
-
-
-public:
-  //Constant used for stop codons:
-  static const std::string STOP;
-  
 public: // Constructor and destructor.
 		
   /**
@@ -83,11 +70,16 @@ public: // Constructor and destructor.
    * 
    * @param alpha The nucleic alphabet to be used.
    */
-  CodonAlphabet(const NucleicAlphabet* alpha) : WordAlphabet(alpha, 3), stopCodons_(), initCodon_() {}
+  CodonAlphabet(const NucleicAlphabet* alpha) :
+    WordAlphabet(alpha, 3) {}
   
   virtual ~CodonAlphabet() {}
   
-  virtual std::string getAlphabetType() const  = 0;
+  std::string getAlphabetType() const
+  {
+    return "Codon alphabet("+ vAbsAlph_[0]->getAlphabetType() + ")";
+  }
+
   
 public:
   
@@ -97,18 +89,6 @@ public:
    * @{
    */
 
-  /**
-   * @brief Returns the number of stop codons
-   */
-
-  unsigned int numberOfStopCodons() const;
-  
-  /**
-   * @brief Returns the vector of the numbers of the stop codon states.
-   */
-
-  const std::vector<int>& stopCodons() const { return stopCodons_;}
-  
   /**
    * @brief Get the int code for a codon given the int code of the three underlying positions.
    *
@@ -179,50 +159,6 @@ public:
    * @return The char description of the third position of the codon.
    */
   virtual std::string getThirdPosition(const std::string& codon) const throw (BadCharException);
-  
-  /**
-   * @brief Tell whether a particular codon is a stop codon.
-   * 
-   * @param codon The int description of the codon to test.
-   * @return True if the codon is a stop codon.
-   */
-  bool isStop(int codon) const
-  {
-    return (getName(intToChar(codon)) == STOP);
-  }
-
-  /**
-   * @brief Tell whether a particular codon is a stop codon.
-   * 
-   * @param codon The char description of the codon to test.
-   * @return True if the codon is a stop codon.
-   */
-  bool isStop(const std::string& codon) const
-  {
-    return (getName(codon) == STOP);
-  }
-  
-  /**
-   * @brief Tell whether a particular codon is the init codon.
-   * 
-   * @param codon The int description of the codon to test.
-   * @return True if the codon is the init codon.
-   */
-  bool isInit(int codon) const
-  {
-    return (codon == initCodon_);
-  }
-
-  /**
-   * @brief Tell whether a particular codon is the init codon.
-   * 
-   * @param codon The char description of the codon to test.
-   * @return True if the codon is a init codon.
-   */
-  bool isInit(const std::string& codon) const
-  {
-    return (charToInt(codon) == initCodon_);
-  }
   
   /**
    * @return The nucleic alphabet associated to this codon alphabet.

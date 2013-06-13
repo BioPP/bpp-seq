@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -46,23 +46,21 @@ namespace bpp
 {
 
 /**
- * @brief This class implements the standard codon alphabet as describe on the NCBI 
- *        web site: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG1
+ * @deprecated This class has been replaced by the more generic CodonAlphabet class,
+ * and some functionalities have been moved to the corresponding GeneticCode class.
  */
 class StandardCodonAlphabet : public CodonAlphabet
 {
 public:
-  StandardCodonAlphabet(const NucleicAlphabet * alpha);
+  StandardCodonAlphabet(const NucleicAlphabet* alphabet):
+    CodonAlphabet(alphabet) {
+      std::cerr << "WARNING!!! The 'StandardCodonAlphabet' class has been deprecated." << std::endl;
+      std::cerr << "It has been replaced by the more generic CodonAlphabet class," << std::endl; 
+      std::cerr << "and some functionalities have been moved to the corresponding GeneticCode class." << std::endl;
+    }
   
   virtual ~StandardCodonAlphabet() {}
-	
-public:
   
-  std::string getAlphabetType() const
-  {
-    return "Codon alphabet: Standard("+ vAbsAlph_[0]->getAlphabetType() + ")";
-  }
-
 };
 
 } //end of namespace bpp.

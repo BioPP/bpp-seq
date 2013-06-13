@@ -105,22 +105,6 @@ bool SiteTools::hasUnknown(const Site& site)
 
 /******************************************************************************/
 
-bool SiteTools::hasStopCodon(const Site& site)
-{
-  // Main loop : for all characters in site
-  const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
-  if (pca == 0)
-    return false;
-  for (size_t i = 0; i < site.size(); i++)
-  {
-    if (pca->isStop(site[i]))
-      return true;
-  }
-  return false;
-}
-
-/******************************************************************************/
-
 bool SiteTools::isComplete(const Site& site)
 {
   // Main loop : for all characters in site

@@ -346,7 +346,7 @@ void SequenceTools::removeGaps(Sequence& seq)
 
 /******************************************************************************/
 
-Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq) throw (Exception)
+Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode) throw (Exception)
 {
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
   if (!calpha)
@@ -354,7 +354,7 @@ Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq) throw (Exc
   vector<int> content;
   for (size_t i = 0; i < seq.size(); i++)
   {
-    if (!calpha->isStop(seq[i]))
+    if (!gCode.isStop(seq[i]))
       content.push_back(seq[i]);
   }
   Sequence* newSeq = dynamic_cast<Sequence*>(seq.clone());
@@ -364,21 +364,21 @@ Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq) throw (Exc
 
 /******************************************************************************/
 
-void SequenceTools::removeStops(Sequence& seq) throw (Exception)
+void SequenceTools::removeStops(Sequence& seq, const GeneticCode& gCode) throw (Exception)
 {
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
   if (!calpha)
     throw Exception("SequenceTools::removeStops. Input sequence should have a codon alphabet.");
   for (size_t i = seq.size(); i > 0; --i)
   {
-    if (calpha->isStop(seq[i - 1]))
+    if (gCode.isStop(seq[i - 1]))
       seq.deleteElement(i - 1);
   }
 }
 
 /******************************************************************************/
 
-void SequenceTools::replaceStopsWithGaps(Sequence& seq) throw (Exception)
+void SequenceTools::replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode) throw (Exception)
 {
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
   if (!calpha)
@@ -386,7 +386,7 @@ void SequenceTools::replaceStopsWithGaps(Sequence& seq) throw (Exception)
   int gap = calpha->getGapCharacterCode();
   for (size_t i = 0; i < seq.size(); ++i)
   {
-    if (calpha->isStop(seq[i]))
+    if (gCode.isStop(seq[i]))
       seq.setElement(i, gap);
   }
 }
@@ -636,27 +636,27 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq) throw (AlphabetException)
 /******************************************************************************/
 
 
-void SequenceTools::getCDS(Sequence& sequence, bool checkInit, bool checkStop, bool includeInit, bool includeStop)
+void SequenceTools::getCDS(Sequence& sequence, const GeneticCode& gCode, bool checkInit, bool checkStop, bool includeInit, bool includeStop)
 {
   const CodonAlphabet* alphabet = dynamic_cast<const CodonAlphabet*>(sequence.getAlphabet());
   if (!alphabet)
     throw AlphabetException("SequenceTools::getCDS. Sequence is not a codon sequence.");
   if (checkInit)
   {
-    unsigned int i;
-    for (i = 0; i < sequence.size() && !alphabet->isInit(sequence[i]); ++i)
+    size_t i;
+    for (i = 0; i < sequence.size() && !gCode.isStart(sequence[i]); ++i)
     {}
-    for (unsigned int j = 0; includeInit ? j < i : j <= i; ++j)
+    for (size_t j = 0; includeInit ? j < i : j <= i; ++j)
     {
       sequence.deleteElement(j);
     }
   }
   if (checkStop)
   {
-    unsigned int i;
-    for (i = 0; i < sequence.size() && !alphabet->isStop(sequence[i]); ++i)
+    size_t i;
+    for (i = 0; i < sequence.size() && !gCode.isStop(sequence[i]); ++i)
     {}
-    for (unsigned int j = includeStop ? i + 1 : i; j < sequence.size(); ++j)
+    for (size_t j = includeStop ? i + 1 : i; j < sequence.size(); ++j)
     {
       sequence.deleteElement(j);
     }

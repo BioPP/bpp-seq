@@ -77,45 +77,36 @@ namespace bpp
    * @see CodonAlphabet, ProteicAlphabet
    */
   class GeneticCode:
-    public AbstractTransliterator
+    public AbstractTransliterator,
+    public virtual Clonable
   {
   protected:
-    const CodonAlphabet* codonAlphabet_;
-    const ProteicAlphabet* proteicAlphabet_;
+    CodonAlphabet codonAlphabet_;
+    ProteicAlphabet proteicAlphabet_;
+    std::map<int, int> tlnTable_;
 	
   public:
-    GeneticCode():
-      AbstractTransliterator() ,
-      codonAlphabet_(0),
-      proteicAlphabet_(0)
+    GeneticCode(const NucleicAlphabet* alphabet):
+      AbstractTransliterator(),
+      codonAlphabet_(alphabet),
+      proteicAlphabet_(),
+      tlnTable_()
     {}
-
-    GeneticCode(const GeneticCode& gc):
-      AbstractTransliterator(gc),
-      codonAlphabet_(gc.codonAlphabet_),
-      proteicAlphabet_(gc.proteicAlphabet_)
-    {}
-
-    GeneticCode& operator=(const GeneticCode& gc)
-    {
-      AbstractTransliterator::operator=(gc);
-      codonAlphabet_ = gc.codonAlphabet_;
-      proteicAlphabet_ = gc.proteicAlphabet_;
-      return *this;
-    }
 
     virtual ~GeneticCode() {}
 	
+    virtual GeneticCode* clone() const = 0;
+
   public:
     /**
      * @name Methods form the Transliterator interface.
      *
      * @{
      */
-    const Alphabet* getSourceAlphabet() const { return codonAlphabet_; }
-    const Alphabet* getTargetAlphabet() const { return proteicAlphabet_; }
-    virtual int translate(int state) const throw (BadIntException, Exception)  = 0;		
-    virtual std::string translate(const std::string& state) const throw (BadCharException, Exception) = 0;
+    const CodonAlphabet* getSourceAlphabet() const { return &codonAlphabet_; }
+    const ProteicAlphabet* getTargetAlphabet() const { return &proteicAlphabet_; }
+    virtual int translate(int state) const throw (BadIntException, Exception);		
+    virtual std::string translate(const std::string& state) const throw (BadCharException, Exception);
     virtual Sequence* translate(const Sequence& sequence) const throw (Exception)
     {
       return AbstractTransliterator::translate(sequence);	
@@ -128,15 +119,110 @@ namespace bpp
      *
      * @{
      */
+    
+    /**
+     * @return The number of stop codons.
+     */
+    virtual size_t getNumberOfStopCodons() const = 0;
+
+    /**
+     * @return A vector will all int codes for stop codons.
+     */
+    virtual std::vector<int> getStopCodonsAsInt() const = 0;
+
+    /**
+     * @return A vector will all char codes for stop codons.
+     */
+    virtual std::vector<std::string> getStopCodonsAsChar() const = 0;
+
+    /**
+     * @brief Tells is a particular codon is a stop codon.
+     *
+     * @param state The numeric code for the state to test.
+     * @return True if the state corresponds to a stop codon.
+     * @throw BadIntException if the state is not supported by the alphabet.
+     */
+    virtual bool isStop(int state) const throw (BadIntException) = 0;
+
+    /**
+     * @brief Tells is a particular codon is a stop codon.
+     *
+     * @param state The character code for the state to test.
+     * @return True if the state corresponds to a stop codon.
+     * @throw BadCharException if the state is not supported by the alphabet.
+     */
+    virtual bool isStop(const std::string& state) const throw (BadCharException) = 0;
+    
+    /**
+     * @brief Tells is a particular codon is a start codon.
+     *
+     * @param state The numeric code for the state to test.
+     * @return True if the state corresponds to a start codon.
+     * @throw BadIntException if the state is not supported by the alphabet.
+     */
+    virtual bool isStart(int state) const throw (BadIntException) {
+      //Test:
+      codonAlphabet_.intToChar(state); //throw exception if invalid state!
+      return (state == 14);
+    }
+
+    /**
+     * @brief Tells is a particular codon is a start codon.
+     *
+     * @param state The character code for the state to test.
+     * @return True if the state corresponds to a start codon.
+     * @throw BadCharException if the state is not supported by the alphabet.
+     */
+    virtual bool isStart(const std::string& state) const throw (BadCharException) {
+      return isStart(codonAlphabet_.charToInt(state));
+    }
+ 
+    /**
+     * @brief Tells is a particular codon is an alternative start codon.
+     *
+     * @param state The numeric code for the state to test.
+     * @return True if the state corresponds to an alternative start codon.
+     * @throw BadIntException if the state is not supported by the alphabet.
+     */
+    virtual bool isAltStart(int state) const throw (BadIntException) = 0;
+
+    /**
+     * @brief Tells is a particular codon is an alternative start codon.
+     *
+     * @param state The character code for the state to test.
+     * @return True if the state corresponds to an alternative start codon.
+     * @throw BadCharException if the state is not supported by the alphabet.
+     */
+    virtual bool isAltStart(const std::string& state) const throw (BadCharException) = 0;
+    
+    /**
+     * @brief Tell if two codons are synonymous, that is, if they encode the same amino-acid.
+     *
+     * @param i The numeric code for the first codon.
+     * @param j The numeric code for the second codon.
+     * @return True if the two codons are synonymous.
+     * @throw BadIntException if at least one of the states is not supported by the alphabet.
+     */
     bool areSynonymous(int i, int j) const throw (BadIntException)
     {
       return (translate(i) == translate(j));
     }
+
+    /**
+     * @brief Tell if two codons are synonymous, that is, if they encode the same amino-acid.
+     *
+     * @param i The character code for the first codon.
+     * @param j The character code for the second codon.
+     * @return True if the two codons are synonymous.
+     * @throw BadCharException if at least one of the states is not supported by the alphabet.
+     */
     bool areSynonymous(const std::string & i, const std::string & j) const throw (BadCharException)
     {
       return (translate(i) == translate(j));
     }
+
     std::vector<int> getSynonymous(int aminoacid) const throw (BadIntException);
+    
     std::vector<std::string> getSynonymous(const std::string & aminoacid) const throw (BadCharException);
 
     /**

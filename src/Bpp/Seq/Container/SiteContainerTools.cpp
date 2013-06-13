@@ -43,6 +43,7 @@
 #include "VectorSiteContainer.h"
 #include "SiteContainerIterator.h"
 #include "../SiteTools.h"
+#include "../CodonSiteTools.h"
 #include "../Alphabet/AlphabetTools.h"
 #include "../SequenceTools.h"
 #include <Bpp/App/ApplicationTools.h>
@@ -305,7 +306,7 @@ void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps
 
 /******************************************************************************/
 
-SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sites)  throw (AlphabetException)
+SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sites, const GeneticCode& gCode)  throw (AlphabetException)
 {
   const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
   if (!pca)
@@ -313,10 +314,10 @@ SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sit
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noStopCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noStopCont->setSequencesNames(seqNames, false);
-  for (unsigned int i = 0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     const Site* site = &sites.getSite(i);
-    if (!SiteTools::hasStopCodon(*site))
+    if (!CodonSiteTools::hasStop(*site, gCode))
       noStopCont->addSite(*site, false);
   }
   return noStopCont;

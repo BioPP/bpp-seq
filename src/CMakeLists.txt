@@ -33,11 +33,6 @@ SET(CPP_FILES
   Bpp/Seq/Alphabet/DNA.cpp
   Bpp/Seq/Alphabet/ProteicAlphabet.cpp
   Bpp/Seq/Alphabet/RNA.cpp
-  Bpp/Seq/Alphabet/StandardCodonAlphabet.cpp
-  Bpp/Seq/Alphabet/VertebrateMitochondrialCodonAlphabet.cpp
-  Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.cpp
-  Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.cpp
-  Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.cpp
   Bpp/Seq/Alphabet/WordAlphabet.cpp
   Bpp/Seq/Alphabet/RNY.cpp
   Bpp/Seq/Alphabet/BinaryAlphabet.cpp
@@ -47,6 +42,8 @@ SET(CPP_FILES
   Bpp/Seq/GeneticCode/InvertebrateMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/EchinodermMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/YeastMitochondrialGeneticCode.cpp
+  Bpp/Seq/GeneticCode/AscidianMitochondrialGeneticCode.cpp
+  Bpp/Seq/GeneticCode/MoldMitochondrialGeneticCode.cpp
   Bpp/Seq/AlphabetIndex/GranthamAAChemicalDistance.cpp
   Bpp/Seq/AlphabetIndex/MiyataAAChemicalDistance.cpp
   Bpp/Seq/AlphabetIndex/BLOSUM50.cpp
@@ -135,6 +132,8 @@ SET(H_FILES
   Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/AscidianMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/MoldMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/WordAlphabet.h
   Bpp/Seq/Alphabet/RNY.h
   Bpp/Seq/Alphabet/BinaryAlphabet.h

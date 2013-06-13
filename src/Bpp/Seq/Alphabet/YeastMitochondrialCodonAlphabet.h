@@ -1,11 +1,11 @@
 //
-// File: YeastbrateMitochondrialCodonAlphabet.h
+// File: YeastMitochondrialCodonAlphabet.h
 // Created by: Benoit Nabholz
 // Created on: Sun Oct 10 14:33 CET 2010
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -47,26 +47,22 @@ namespace bpp
 {
 
 /**
- * @brief This class implements the Yeast
- * @author Laurent Guéguen
- *
- * Mitochondrial codon alphabet as describe on the NCBI website:
- * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG3
+ * @deprecated This class has been replaced by the more generic CodonAlphabet class,
+ * and some functionalities have been moved to the corresponding GeneticCode class.
  */
 class YeastMitochondrialCodonAlphabet:
   public CodonAlphabet
 {
 public:
-  YeastMitochondrialCodonAlphabet(const NucleicAlphabet * alpha);
-  virtual ~YeastMitochondrialCodonAlphabet() {};
+  YeastMitochondrialCodonAlphabet(const NucleicAlphabet* alphabet) : 
+    CodonAlphabet(alphabet) {
+      std::cerr << "WARNING!!! The 'YeastMitochondrialCodonAlphabet' class has been deprecated." << std::endl;
+      std::cerr << "It has been replaced by the more generic CodonAlphabet class," << std::endl; 
+      std::cerr << "and some functionalities have been moved to the corresponding GeneticCode class." << std::endl;
+    }
+
+  virtual ~YeastMitochondrialCodonAlphabet() {}
 	
-public:
-
-  std::string getAlphabetType() const
-  {
-    return "Codon alphabet: YeastMitochondrial(" + vAbsAlph_[0]->getAlphabetType() + ")";
-  }
-
 };
 
 } //end of namespace bpp.

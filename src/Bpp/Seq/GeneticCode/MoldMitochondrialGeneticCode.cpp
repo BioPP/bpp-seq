@@ -1,7 +1,7 @@
 //
-// File: YeastbrateMitochondrialGeneticCode.cpp
-// Created by: Benoit Nabholz
-// Created on: Sun Oct 10 14:33 CET 2010
+// File: MoldMitochondrialGeneticCode.cpp
+// Created by: Julien Dutheil
+// Created on: Thu Jun 13 11:52 CET 2013
 //
 
 /*
@@ -37,7 +37,7 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "YeastMitochondrialGeneticCode.h"
+#include "MoldMitochondrialGeneticCode.h"
 
 using namespace bpp;
 
@@ -45,7 +45,7 @@ using namespace bpp;
 
 using namespace std;
 
-YeastMitochondrialGeneticCode::YeastMitochondrialGeneticCode(const NucleicAlphabet* alphabet) :
+MoldMitochondrialGeneticCode::MoldMitochondrialGeneticCode(const NucleicAlphabet* alphabet) :
   GeneticCode(alphabet) 
 {
   tlnTable_[0] = 11; //AAA -> K
@@ -56,11 +56,11 @@ YeastMitochondrialGeneticCode::YeastMitochondrialGeneticCode(const NucleicAlphab
   tlnTable_[5] = 16; //ACC -> T
   tlnTable_[6] = 16; //ACG -> T
   tlnTable_[7] = 16; //ACT -> T
-  tlnTable_[8] = 15; //AGA -> S
+  tlnTable_[8] = 1; //AGA -> R
   tlnTable_[9] = 15; //AGC -> S
-  tlnTable_[10] = 15; //AGG -> S
+  tlnTable_[10] = 1; //AGG -> R
   tlnTable_[11] = 15; //AGT -> S
-  tlnTable_[12] = 12; //ATA -> M
+  tlnTable_[12] = 9; //ATA -> I
   tlnTable_[13] = 9; //ATC -> I
   tlnTable_[14] = 12; //ATG -> M
   tlnTable_[15] = 9; //ATT -> I
@@ -76,10 +76,10 @@ YeastMitochondrialGeneticCode::YeastMitochondrialGeneticCode(const NucleicAlphab
   tlnTable_[25] = 1; //CGC -> R
   tlnTable_[26] = 1; //CGG -> R
   tlnTable_[27] = 1; //CGT -> R
-  tlnTable_[28] = 16; //CTA -> T
-  tlnTable_[29] = 16; //CTC -> T
-  tlnTable_[30] = 16; //CTG -> T
-  tlnTable_[31] = 16; //CTT -> T
+  tlnTable_[28] = 10; //CTA -> L
+  tlnTable_[29] = 10; //CTC -> L
+  tlnTable_[30] = 10; //CTG -> L
+  tlnTable_[31] = 10; //CTT -> L
   tlnTable_[32] = 6; //GAA -> E
   tlnTable_[33] = 3; //GAC -> D
   tlnTable_[34] = 6; //GAG -> E

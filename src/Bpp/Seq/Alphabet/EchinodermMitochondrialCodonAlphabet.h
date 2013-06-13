@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -47,24 +47,21 @@ namespace bpp
 {
 
 /**
- * @brief This class implements the Echinoderm and Faltworms
- * Mitochondrial codon alphabet as describe on the NCBI website:
- * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG9
- * @author Laurent Guéguen
+ * @deprecated This class has been replaced by the more generic CodonAlphabet class,
+ * and some functionalities have been moved to the corresponding GeneticCode class.
  */
-
 class EchinodermMitochondrialCodonAlphabet : public CodonAlphabet
 {
 public:
-  EchinodermMitochondrialCodonAlphabet(const NucleicAlphabet * alpha);
-  virtual ~EchinodermMitochondrialCodonAlphabet() {};
-	
-public:
-  std::string getAlphabetType() const
-  {
-    return "Codon alphabet: EchinodermMitochondrialCodonAlphabet(" + vAbsAlph_[0]->getAlphabetType() + ")";
-  }
+  EchinodermMitochondrialCodonAlphabet(const NucleicAlphabet* alphabet) :
+    CodonAlphabet(alphabet) {
+      std::cerr << "WARNING!!! The 'EchinodermMitochondrialCodonAlphabet' class has been deprecated." << std::endl;
+      std::cerr << "It has been replaced by the more generic CodonAlphabet class," << std::endl; 
+      std::cerr << "and some functionalities have been moved to the corresponding GeneticCode class." << std::endl;
+    }
 
+  virtual ~EchinodermMitochondrialCodonAlphabet() {}
+	
 };
 
 } //end of namespace bpp.

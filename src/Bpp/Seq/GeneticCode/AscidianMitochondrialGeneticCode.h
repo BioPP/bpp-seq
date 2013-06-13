@@ -1,7 +1,7 @@
 //
-// File: YeastbrateMitochondrialGeneticCode.h
-// Created by: Benoit Nabholz
-// Created on: Sun Oct 10 14:33 CET 2010
+// File: AscidianMitochondrialGeneticCode.h
+// Created by: Fidel Botero and Julien Dutheil
+// Created on: Thu Jun 13 11:32:00 CET 2013
 //
 
 /*
@@ -37,9 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-
-#ifndef _YEASTMITOCHONDRIALGENETICCODE_H_
-#define _YEASTMITOCHONDRIALGENETICCODE_H_
+#ifndef _ASCIDIANMITOCHONDRIALGENETICCODE_H_
+#define _ASCIDIANMITOCHONDRIALGENETICCODE_H_
 
 #include "GeneticCode.h"
 #include "../Alphabet/NucleicAlphabet.h"
@@ -48,36 +47,39 @@ namespace bpp
 {
 
 /**
- * @brief This class implements the Invertebrate
- * Mitochondrial genetic code as describe on the NCBI website:
- * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG3
+ * @brief This class implements the ascidian mitochondrial genetic code as describe on the NCBI 
+ *        web site: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG13
  */
-class YeastMitochondrialGeneticCode:
+class AscidianMitochondrialGeneticCode:
   public virtual GeneticCode
 {
 	public:
-		YeastMitochondrialGeneticCode(const NucleicAlphabet* alphaibet);
-
-		virtual ~YeastMitochondrialGeneticCode() {}
+		AscidianMitochondrialGeneticCode(const NucleicAlphabet* alphabet);
+		
+    virtual ~AscidianMitochondrialGeneticCode() {}
 	
-    virtual YeastMitochondrialGeneticCode* clone() const {
-      return new YeastMitochondrialGeneticCode(*this);
+    virtual AscidianMitochondrialGeneticCode* clone() const {
+      return new AscidianMitochondrialGeneticCode(*this);
     }
 
   public:
     size_t getNumberOfStopCodons() const { return 2.; }
  
     std::vector<int> getStopCodonsAsInt() const {
-      std::vector<int> v(2);
-      v[1] = 48;
-      v[2] = 50;
+      std::vector<int> v(4);
+      v[0] = 8;
+      v[1] = 10;
+      v[2] = 48;
+      v[3] = 50;
       return v;
     }
 
     std::vector<std::string> getStopCodonsAsChar() const {
-      std::vector<std::string> v(2);
-      v[1] = "TAA";
-      v[2] = "TAG";
+      std::vector<std::string> v(4);
+      v[0] = "AGA";
+      v[1] = "AGG";
+      v[2] = "TAA";
+      v[4] = "TAG";
       return v;
     }
     
@@ -95,18 +97,17 @@ class YeastMitochondrialGeneticCode:
     bool isAltStart(int state) const throw (BadIntException) {
       //Test:
       codonAlphabet_.intToChar(state); //throw exception if invalid state!
-      return (state == 12);
+      return (state == 12 || state == 46 || state == 62);
     }
     
     bool isAltStart(const std::string& state) const throw (BadCharException) {
       int i = codonAlphabet_.charToInt(state);
-      return (i == 12);
+      return (i == 12 || i == 46 || i == 62);
     }
-
 
 };
 
 } //end of namespace bpp.
 
-#endif	//_YEASTMITOCHONDRIALGENETICCODE_H_
+#endif	//_ASCIDIANMITOCHONDRIALGENETICCODE_H_
 

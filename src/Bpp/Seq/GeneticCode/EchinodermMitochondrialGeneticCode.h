@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -51,21 +51,57 @@ namespace bpp
  * Mitochondrial genetic code as describe on the NCBI website:
  * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG9
  */
-
 class EchinodermMitochondrialGeneticCode:
-  public GeneticCode
+  public virtual GeneticCode
 {
 	public:
-		EchinodermMitochondrialGeneticCode(const NucleicAlphabet * alpha);
-		virtual ~EchinodermMitochondrialGeneticCode();
-	
-	public:
-		int translate(int state) const throw (Exception);
-    std::string translate(const std::string & state) const throw (Exception);
-		Sequence * translate(const Sequence & sequence) const throw (Exception)
-    {
-			return GeneticCode::translate(sequence);	
-		}
+		EchinodermMitochondrialGeneticCode(const NucleicAlphabet* alphabet);
+
+		virtual ~EchinodermMitochondrialGeneticCode() {}
+
+    virtual EchinodermMitochondrialGeneticCode* clone() const {
+      return new EchinodermMitochondrialGeneticCode(*this);
+    }
+
+  public:
+    size_t getNumberOfStopCodons() const { return 2.; }
+ 
+    std::vector<int> getStopCodonsAsInt() const {
+      std::vector<int> v(2);
+      v[1] = 48;
+      v[2] = 50;
+      return v;
+    }
+
+    std::vector<std::string> getStopCodonsAsChar() const {
+      std::vector<std::string> v(2);
+      v[1] = "TAA";
+      v[2] = "TAG";
+      return v;
+    }
+    
+    bool isStop(int state) const throw (BadIntException) {
+      //Test:
+      codonAlphabet_.intToChar(state); //throw exception if invalid state!
+      return (state == 48 || state == 50);
+    }
+    
+    bool isStop(const std::string& state) const throw (BadCharException) {
+      int i = codonAlphabet_.charToInt(state);
+      return (i == 48 || i == 50);
+    }
+ 
+    bool isAltStart(int state) const throw (BadIntException) {
+      //Test:
+      codonAlphabet_.intToChar(state); //throw exception if invalid state!
+      return (state == 46);
+    }
+    
+    bool isAltStart(const std::string& state) const throw (BadCharException) {
+      int i = codonAlphabet_.charToInt(state);
+      return (i == 46);
+    }
+   
 };
 
 } //end of namespace bpp.

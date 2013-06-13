@@ -1,11 +1,11 @@
 //
-// File: CodonAlphabet.h
+// File: CodonAlphabet.cpp
 // Created by: Julien Dutheil
 // Created on: Sun Oct 12 17:41:56 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -47,14 +47,7 @@ using namespace bpp;
 
 using namespace std;
 
-const string CodonAlphabet::STOP = "Stop";
-
 /******************************************************************************/
-
-unsigned int CodonAlphabet::numberOfStopCodons() const
-{
-  return static_cast<unsigned int>(stopCodons_.size());
-}
 
 int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const
 throw (BadIntException)
@@ -125,3 +118,4 @@ throw (BadCharException)
   return getNPosition(codon,2);
 }
 
+/******************************************************************************/

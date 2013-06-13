@@ -1,7 +1,7 @@
 //
-// File: YeastbrateMitochondrialGeneticCode.h
-// Created by: Benoit Nabholz
-// Created on: Sun Oct 10 14:33 CET 2010
+// File: MoldMitochondrialGeneticCode.h
+// Created by: Julien Dutheil
+// Created on: Thu Jun 13 11:52 CET 2013
 //
 
 /*
@@ -38,8 +38,8 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 
-#ifndef _YEASTMITOCHONDRIALGENETICCODE_H_
-#define _YEASTMITOCHONDRIALGENETICCODE_H_
+#ifndef _MOLDMITOCHONDRIALGENETICCODE_H_
+#define _MOLDMITOCHONDRIALGENETICCODE_H_
 
 #include "GeneticCode.h"
 #include "../Alphabet/NucleicAlphabet.h"
@@ -48,20 +48,20 @@ namespace bpp
 {
 
 /**
- * @brief This class implements the Invertebrate
- * Mitochondrial genetic code as describe on the NCBI website:
- * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG3
+ * @brief This class implements the mold, protozoan, and coelenterate mitochondrial code
+ * and the Mycoplasma/Spiroplasma code as describe on the NCBI website:
+ * http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG4
  */
-class YeastMitochondrialGeneticCode:
+class MoldMitochondrialGeneticCode:
   public virtual GeneticCode
 {
 	public:
-		YeastMitochondrialGeneticCode(const NucleicAlphabet* alphaibet);
+		MoldMitochondrialGeneticCode(const NucleicAlphabet* alphabet);
 
-		virtual ~YeastMitochondrialGeneticCode() {}
+		virtual ~MoldMitochondrialGeneticCode() {}
 	
-    virtual YeastMitochondrialGeneticCode* clone() const {
-      return new YeastMitochondrialGeneticCode(*this);
+    virtual MoldMitochondrialGeneticCode* clone() const {
+      return new MoldMitochondrialGeneticCode(*this);
     }
 
   public:
@@ -80,7 +80,7 @@ class YeastMitochondrialGeneticCode:
       v[2] = "TAG";
       return v;
     }
-    
+   
     bool isStop(int state) const throw (BadIntException) {
       //Test:
       codonAlphabet_.intToChar(state); //throw exception if invalid state!
@@ -95,18 +95,17 @@ class YeastMitochondrialGeneticCode:
     bool isAltStart(int state) const throw (BadIntException) {
       //Test:
       codonAlphabet_.intToChar(state); //throw exception if invalid state!
-      return (state == 12);
+      return (state == 12 || state == 13 || state == 15 || state == 30 || state == 46 || state == 60 || state == 62);
     }
     
     bool isAltStart(const std::string& state) const throw (BadCharException) {
       int i = codonAlphabet_.charToInt(state);
-      return (i == 12);
+      return (i == 12 || i == 13 || i == 15 || i == 30 || i == 46 || i == 60 || i == 62);
     }
-
 
 };
 
 } //end of namespace bpp.
 
-#endif	//_YEASTMITOCHONDRIALGENETICCODE_H_
+#endif	//_MOLDMITOCHONDRIALGENETICCODE_H_
 

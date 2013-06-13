@@ -46,6 +46,7 @@
 #include "Alphabet/DNA.h"
 #include "Alphabet/RNA.h"
 #include "Alphabet/RNY.h"
+#include "GeneticCode/GeneticCode.h"
 #include "Sequence.h"
 #include "SymbolListTools.h"
 #include "NucleicAcidsReplication.h"
@@ -273,9 +274,10 @@ public:
    *
    * The deleteElement method of the Sequence object will be used where appropriate.
    * @param seq The sequence to analyse.
+   * @param gCode The genetic code according to which stop codons are specified.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static void removeStops(Sequence& seq) throw (Exception);
+  static void removeStops(Sequence& seq, const GeneticCode& gCode) throw (Exception);
 
   /**
    * @brief Get a copy of the codon sequence without stops.
@@ -284,19 +286,21 @@ public:
    * The original sequence will be cloned to serve as a template.
    *
    * @param seq The sequence to analyse.
+   * @param gCode The genetic code according to which stop codons are specified.
    * @return A new sequence object without stops.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static Sequence* getSequenceWithoutStops(const Sequence& seq) throw (Exception);
+  static Sequence* getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode) throw (Exception);
 
   /**
    * @brief Replace stop codons by gaps.
    *
    * The setElement method of the Sequence object will be used where appropriate.
    * @param seq The sequence to analyse.
+   * @param gCode The genetic code according to which stop codons are specified.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static void replaceStopsWithGaps(Sequence& seq) throw (Exception);
+  static void replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode) throw (Exception);
 
   /**
    * @brief Bowker's test for homogeneity.
@@ -385,12 +389,13 @@ public:
    * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.
    *
    * @param sequence The sequence to be reduced to CDS part.
+   * @param gCode The genetic code according to which start and stop codons are specified.
    * @param checkInit If true, then everything before the initiator codon will be removed, together with the initiator codon if includeInit is false.
    * @param checkStop If true, then everything after the first stop codon will be removed, together with the stop codon if includeStop is false.
    * @param includeInit Tell if initiator codon should be kept or removed. No effect if checkInit is false.
    * @param includeStop Tell if stop codon should be kept or removed. No effect if checkStop is false.
    */
-  static void getCDS(Sequence& sequence, bool checkInit, bool checkStop, bool includeInit = true, bool includeStop = true);
+  static void getCDS(Sequence& sequence, const GeneticCode& gCode, bool checkInit, bool checkStop, bool includeInit = true, bool includeStop = true);
 
   /**
    * @brief Find the position of a motif in a sequence

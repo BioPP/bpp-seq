@@ -88,11 +88,6 @@ public:
 
   /**
    * @param site A site.
-   * @return True if the site contains a Stop Codon, when the alphabet  is a CodonAlphabet.
-   */
-  static bool hasStopCodon(const Site& site);
-  /**
-   * @param site A site.
    * @return True if the site contains no gap and no unknown characters.
    */
   static bool isComplete(const Site& site);
