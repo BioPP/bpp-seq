@@ -66,7 +66,7 @@ void AbstractAlphabet::registerState(const AlphabetState& st) {
   // Add the state to the vector
   alphabet_.push_back(st.clone());
   // Update the maps
-  updateMaps_(alphabet_.size(), st);
+  updateMaps_(alphabet_.size() - 1, st);
 }
 
 /******************************************************************************/
