@@ -48,6 +48,8 @@
 #include "../GeneticCode/StandardGeneticCode.h"
 #include "../GeneticCode/VertebrateMitochondrialGeneticCode.h"
 #include "../GeneticCode/YeastMitochondrialGeneticCode.h"
+#include "../GeneticCode/AscidianMitochondrialGeneticCode.h"
+#include "../GeneticCode/MoldMitochondrialGeneticCode.h"
 #include "../Io/BppOSequenceReaderFormat.h"
 #include "../Io/BppOAlignmentReaderFormat.h"
 #include "../Io/BppOSequenceWriterFormat.h"
@@ -121,6 +123,8 @@ Alphabet* SequenceApplicationTools::getAlphabet(
   {
     if (args.find("letter") == args.end())
       throw Exception("Missing 'letter' argument in Codon :" + alphabet);
+    if (args.find("type") != args.end())
+      throw Exception("'type' argument in Codon is deprecated and has been superseded by the 'genetic_code' option.");
 
     string alphnDesc = ApplicationTools::getStringParameter("letter", args, "RNA");
     string alphn;
@@ -182,16 +186,20 @@ GeneticCode* SequenceApplicationTools::getGeneticCode(
   const string& description) throw (Exception)
 {
   GeneticCode* geneCode;
-  if (description.find("EchinodermMitochondrial") != string::npos)
+  if (description.find("EchinodermMitochondrial") != string::npos || description.find("9") != string::npos)
     geneCode = new EchinodermMitochondrialGeneticCode(alphabet);
-  else if (description.find("InvertebrateMitochondrial") != string::npos)
+  else if (description.find("InvertebrateMitochondrial") != string::npos || description.find("5") != string::npos)
     geneCode = new InvertebrateMitochondrialGeneticCode(alphabet);
-  else if (description.find("Standard") != string::npos)
+  else if (description.find("Standard") != string::npos || description.find("1") != string::npos)
     geneCode = new StandardGeneticCode(alphabet);
-  else if (description.find("VertebrateMitochondrial") != string::npos)
+  else if (description.find("VertebrateMitochondrial") != string::npos || description.find("2") != string::npos)
     geneCode = new VertebrateMitochondrialGeneticCode(alphabet);
-  else if (description.find("YeastMitochondrial") != string::npos)
+  else if (description.find("YeastMitochondrial") != string::npos || description.find("3") != string::npos)
     geneCode = new YeastMitochondrialGeneticCode(alphabet);
+  else if (description.find("AscidianMitochondrial") != string::npos || description.find("13") != string::npos)
+    geneCode = new AscidianMitochondrialGeneticCode(alphabet);
+  else if (description.find("MoldMitochondrial") != string::npos || description.find("4") != string::npos)
+    geneCode = new MoldMitochondrialGeneticCode(alphabet);
   else
     throw Exception("Unknown GeneticCode: " + description);
   return geneCode;
@@ -463,11 +471,8 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
 
     if (option == "yes")
     {
-      throw Exception("The format of this option has changed, and should now specify a genetic code to use.\nSee the BPO manual for a list of available genetic codes.");
-    }
-    if (option != "no")
-    {
-      auto_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet(), option));
+      string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, true);
+      auto_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet(), codeDesc));
       sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse, *gCode));
       delete sitesToAnalyse;
     }
