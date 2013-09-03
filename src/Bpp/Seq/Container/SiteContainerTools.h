@@ -185,7 +185,7 @@ class SiteContainerTools
      * If this option is set to true, a consensus sequence will never contain an unknown character.
      * @return A new Sequence object with the consensus sequence.
      */
-		static const Sequence* getConsensus(const SiteContainer & sc, const std::string& name = "consensus", bool ignoreGap = true, bool resolveUnknown = false);
+		static Sequence* getConsensus(const SiteContainer& sc, const std::string& name = "consensus", bool ignoreGap = true, bool resolveUnknown = false);
     
     /**
      * @brief Change all gaps to unknown state in a container, according to its alphabet.

@@ -108,7 +108,7 @@ SiteContainer* SiteContainerTools::getSelectedSites(
 
 /******************************************************************************/
 
-const Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::string& name, bool ignoreGap, bool resolveUnknown)
+Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::string& name, bool ignoreGap, bool resolveUnknown)
 {
   Vint consensus;
   SimpleSiteContainerIterator ssi(sc);
@@ -144,7 +144,7 @@ const Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const 
     }
     consensus.push_back(cons);
   }
-  const Sequence* seqConsensus = new BasicSequence(name, consensus, sc.getAlphabet());
+  Sequence* seqConsensus = new BasicSequence(name, consensus, sc.getAlphabet());
   return seqConsensus;
 }
 
