@@ -130,7 +130,7 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exc
   output << endl;
   // Sequence content
   string buffer; // use a buffer to format sequence with states > 1 char
-  for (unsigned int i = 0 ; i < seq.size() ; i++)
+  for (size_t i = 0 ; i < seq.size() ; ++i)
   {
     buffer += seq.getChar(i);
     if (buffer.size() >= charsByLine_ || i + 1 == seq.size())
@@ -217,7 +217,7 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const t
 
 	// Main loop : for all sequences in vector container
 	vector<string> names = sc.getSequencesNames();
-	for (unsigned int i = 0; i < names.size(); i ++)
+	for (size_t i = 0; i < names.size(); ++i)
   {
     writeSequence(output, sc.getSequence(names[i]));
 	}

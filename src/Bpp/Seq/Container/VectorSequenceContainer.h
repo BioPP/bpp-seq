@@ -63,131 +63,131 @@ namespace bpp
 class VectorSequenceContainer:
   public AbstractSequenceContainer
 {
-	private:
-
-		/**
-		 * @brief A std::vector of pointers toward the sequences stored in the container.
-		 */
-		mutable std::vector<Sequence*> sequences_;
-        
-	public:
-		
-		/**
-		 * @brief Build a new container from a std::vector of pointers toward sequence objects.
-		 *
-		 * The addSequence() method is called uppon each Sequence object, hence each sequence is
-		 * <i>copied</i> into the container.
-		 *
-		 * @param vs    The std::vector of pointers toward sequence objects.
-		 * @param alpha The alphabet to all sequences.
-		 * @throw AlphabetMismatchException if one sequence does not match the specified alphabet.
-		 */
-		VectorSequenceContainer(
-			const std::vector<const Sequence*>& vs, const Alphabet* alpha)
-			throw (AlphabetMismatchException);
-	
-		/**
-		 * @brief Build an empty container that will contain sequences of a particular alphabet.
-		 *
-		 * @param alpha The alphabet of the container.
-		 */
-		VectorSequenceContainer(const Alphabet* alpha): AbstractSequenceContainer(alpha), sequences_() {}
-		
-		/**
-		 * @name Copy contructors:
-		 *
-		 * @{
-		 */
-		
-		/**
-		 * @brief Copy from a VectorSequenceContainer.
-		 *
-		 * @param vsc The VectorSequenceContainer to copy into this container.
-		 */
-		VectorSequenceContainer(const VectorSequenceContainer& vsc);
-		
-		/**
-		 * @brief Copy from an OrderedSequenceContainer.
-		 *
-		 * @param osc The OrderedSequenceContainer to copy into this container.
-		 */
-		VectorSequenceContainer(const OrderedSequenceContainer& osc);
-
-		/**
-		 * @brief Copy from a SequenceContainer.
-		 *
-		 * @param osc The SequenceContainer to copy into this container.
-		 */
-		VectorSequenceContainer(const SequenceContainer& osc);
-
-		/** @} */
-
-		/**
-		 * @brief Assign from a VectorSequenceContainer.
-		 *
-		 * @param vsc The VectorSequenceContainer to copy into this container.
-		 */
-		VectorSequenceContainer& operator=(const VectorSequenceContainer& vsc);
-
-		/**
-		 * @brief Copy from an OrderedSequenceContainer.
-		 *
-		 * @param osc The OrderedSequenceContainer to copy into this container.
-		 */
-		VectorSequenceContainer& operator=(const OrderedSequenceContainer& osc);
-	
-		/**
-		 * @brief Copy from a SequenceContainer.
-		 *
-		 * @param osc The SequenceContainer to copy into this container.
-		 */
-		VectorSequenceContainer& operator=(const SequenceContainer& osc);
+  private:
 
     /**
-		 * @brief Container destructor: delete all sequences in the container.
-		 */
-		virtual ~VectorSequenceContainer() { clear(); }
+     * @brief A std::vector of pointers toward the sequences stored in the container.
+     */
+    mutable std::vector<Sequence*> sequences_;
+        
+  public:
+    
+    /**
+     * @brief Build a new container from a std::vector of pointers toward sequence objects.
+     *
+     * The addSequence() method is called uppon each Sequence object, hence each sequence is
+     * <i>copied</i> into the container.
+     *
+     * @param vs    The std::vector of pointers toward sequence objects.
+     * @param alpha The alphabet to all sequences.
+     * @throw AlphabetMismatchException if one sequence does not match the specified alphabet.
+     */
+    VectorSequenceContainer(
+      const std::vector<const Sequence*>& vs, const Alphabet* alpha)
+      throw (AlphabetMismatchException);
+  
+    /**
+     * @brief Build an empty container that will contain sequences of a particular alphabet.
+     *
+     * @param alpha The alphabet of the container.
+     */
+    VectorSequenceContainer(const Alphabet* alpha): AbstractSequenceContainer(alpha), sequences_() {}
+    
+    /**
+     * @name Copy contructors:
+     *
+     * @{
+     */
+    
+    /**
+     * @brief Copy from a VectorSequenceContainer.
+     *
+     * @param vsc The VectorSequenceContainer to copy into this container.
+     */
+    VectorSequenceContainer(const VectorSequenceContainer& vsc);
+    
+    /**
+     * @brief Copy from an OrderedSequenceContainer.
+     *
+     * @param osc The OrderedSequenceContainer to copy into this container.
+     */
+    VectorSequenceContainer(const OrderedSequenceContainer& osc);
 
-	public:
-		
-		/**
-		 * @name The Clonable interface.
-		 *
-		 * @{
-		 */
-		Clonable* clone() const { return new VectorSequenceContainer(*this); }
-		/** @} */
+    /**
+     * @brief Copy from a SequenceContainer.
+     *
+     * @param osc The SequenceContainer to copy into this container.
+     */
+    VectorSequenceContainer(const SequenceContainer& osc);
 
-		/**
-		 * @name The SequenceContainer interface.
-		 *
-		 * @{
-		 */
-		bool hasSequence(const std::string& name) const;
-	
+    /** @} */
+
+    /**
+     * @brief Assign from a VectorSequenceContainer.
+     *
+     * @param vsc The VectorSequenceContainer to copy into this container.
+     */
+    VectorSequenceContainer& operator=(const VectorSequenceContainer& vsc);
+
+    /**
+     * @brief Copy from an OrderedSequenceContainer.
+     *
+     * @param osc The OrderedSequenceContainer to copy into this container.
+     */
+    VectorSequenceContainer& operator=(const OrderedSequenceContainer& osc);
+  
+    /**
+     * @brief Copy from a SequenceContainer.
+     *
+     * @param osc The SequenceContainer to copy into this container.
+     */
+    VectorSequenceContainer& operator=(const SequenceContainer& osc);
+
+    /**
+     * @brief Container destructor: delete all sequences in the container.
+     */
+    virtual ~VectorSequenceContainer() { clear(); }
+
+  public:
+    
+    /**
+     * @name The Clonable interface.
+     *
+     * @{
+     */
+    Clonable* clone() const { return new VectorSequenceContainer(*this); }
+    /** @} */
+
+    /**
+     * @name The SequenceContainer interface.
+     *
+     * @{
+     */
+    bool hasSequence(const std::string& name) const;
+  
     const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
 
-		void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception)
+    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception)
     {
       setSequence(getSequencePosition(name), sequence, checkName);
     }
 
-		Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException)
+    Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException)
     {
       return removeSequence(getSequencePosition(name));
     }
 
-		void deleteSequence(const std::string& name) throw (SequenceNotFoundException)
+    void deleteSequence(const std::string& name) throw (SequenceNotFoundException)
     {
       deleteSequence(getSequencePosition(name));
     }
     
-		size_t getNumberOfSequences() const { return sequences_.size(); }
+    size_t getNumberOfSequences() const { return sequences_.size(); }
     
-		std::vector<std::string> getSequencesNames() const;
-		void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception);
-		void clear();
-		VectorSequenceContainer * createEmptyContainer() const;
+    std::vector<std::string> getSequencesNames() const;
+    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception);
+    void clear();
+    VectorSequenceContainer * createEmptyContainer() const;
     
     int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
     {
@@ -227,77 +227,77 @@ class VectorSequenceContainer:
     {
       return getSequence(sequenceIndex)[elementIndex];
     } 
-		/** @} */
+    /** @} */
 
 
-		/**
-		 * @name The OrderedSequenceContainer interface.
-		 *
-		 * @{
-		 */
-		void setComments(const std::string & name, const Comments& comments) throw (SequenceNotFoundException)
+    /**
+     * @name The OrderedSequenceContainer interface.
+     *
+     * @{
+     */
+    void setComments(const std::string & name, const Comments& comments) throw (SequenceNotFoundException)
     {
-			AbstractSequenceContainer::setComments(name, comments);
-		}
+      AbstractSequenceContainer::setComments(name, comments);
+    }
 
-		void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
-		size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
-		const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException);
-		void  setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (Exception);
-		Sequence* removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
-		void deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
-		/** @} */
-		
-		/**
-		 * @name Add sequence to this container.
-		 *
-		 * @{
-		 */
-		 
-		/**
-		 * @brief Add a sequence at the end of the container.
-		 *
-		 * The sequence is copied into the container.
-		 * If checkNames is set to true, the method check if the name of the
-		 * sequence is already used in the container, and sends an exception if it
-		 * is the case. Otherwise, do not check the name: the method is hence faster,
-		 * but use it at your own risks!
-		 *
-		 * @param sequence The sequence to add.
-		 * @param checkName Tell if the method must check the name of the sequence
-		 * before adding it.
-		 * @throw Exception If the sequence couldn't be added to the container.
-		 */
-		virtual void addSequence(const Sequence& sequence, bool checkName = true) throw (Exception);
+    void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
+    size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
+    const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException);
+    void  setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (Exception);
+    Sequence* removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
+    void deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
+    /** @} */
+    
+    /**
+     * @name Add sequence to this container.
+     *
+     * @{
+     */
+     
+    /**
+     * @brief Add a sequence at the end of the container.
+     *
+     * The sequence is copied into the container.
+     * If checkNames is set to true, the method check if the name of the
+     * sequence is already used in the container, and sends an exception if it
+     * is the case. Otherwise, do not check the name: the method is hence faster,
+     * but use it at your own risks!
+     *
+     * @param sequence The sequence to add.
+     * @param checkName Tell if the method must check the name of the sequence
+     * before adding it.
+     * @throw Exception If the sequence couldn't be added to the container.
+     */
+    virtual void addSequence(const Sequence& sequence, bool checkName = true) throw (Exception);
 
-		/**
-		 * @brief Add a sequence to the container at a particular position.
-		 *
-		 * The sequence is copied into the container.
-		 * If checkName is set to true, the method check if the name of the
-		 * sequence is already used in the container, and sends an exception if it
-		 * is the case. Otherwise, do not check the name: the method is hence faster,
-		 * but use it at your own risks!
-		 *
-		 * @param sequence The sequence to add.
-		 * @param sequenceIndex The position where to insert the new sequence.
-		 * All the following sequences will be pushed.
-		 * @param checkName Tell if the method must check the name of the sequence
-		 * before adding it.
-		 * @throw Exception If the sequence couldn't be added to the container.
-		 */
-		virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true) throw (Exception);
+    /**
+     * @brief Add a sequence to the container at a particular position.
+     *
+     * The sequence is copied into the container.
+     * If checkName is set to true, the method check if the name of the
+     * sequence is already used in the container, and sends an exception if it
+     * is the case. Otherwise, do not check the name: the method is hence faster,
+     * but use it at your own risks!
+     *
+     * @param sequence The sequence to add.
+     * @param sequenceIndex The position where to insert the new sequence.
+     * All the following sequences will be pushed.
+     * @param checkName Tell if the method must check the name of the sequence
+     * before adding it.
+     * @throw Exception If the sequence couldn't be added to the container.
+     */
+    virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true) throw (Exception);
 
-	protected:
+  protected:
 
-		/**
-		 * @name AbstractSequenceContainer methods.
-		 *
-		 * @{
-		 */
-		Sequence& getSequence_(size_t i) throw (IndexOutOfBoundsException);
-		Sequence& getSequence_(const std::string& name) throw (SequenceNotFoundException);
-		/** @} */
+    /**
+     * @name AbstractSequenceContainer methods.
+     *
+     * @{
+     */
+    Sequence& getSequence_(size_t i) throw (IndexOutOfBoundsException);
+    Sequence& getSequence_(const std::string& name) throw (SequenceNotFoundException);
+    /** @} */
 };
 
 } //end of namespace bpp.
