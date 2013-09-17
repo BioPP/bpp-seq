@@ -133,12 +133,13 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exc
   for (unsigned int i = 0 ; i < seq.size() ; i++)
   {
     buffer += seq.getChar(i);
-    if (buffer.size() >= charsByLine_ || i + 1 == seq.size())
+    if (buffer.size() >= charsByLine_)
     {
-      output << string(buffer.begin(), buffer.begin() + charsByLine_ < buffer.end() ? buffer.begin() + charsByLine_ : buffer.end()) << endl;
+      output << string(buffer.begin(), buffer.begin() + charsByLine_) << endl;
       buffer.erase(0, charsByLine_);
     }
   }
+  output << string(buffer.begin(), buffer.end()) << endl;
 }
 
 /******************************************************************************/
