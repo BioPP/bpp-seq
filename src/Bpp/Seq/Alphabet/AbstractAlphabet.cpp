@@ -104,6 +104,24 @@ const AlphabetState& AbstractAlphabet::getState(int num) const throw (BadIntExce
 
 /******************************************************************************/
 
+AlphabetState& AbstractAlphabet::getState(const std::string& letter) throw (BadCharException) {
+  map<string, size_t>::iterator it = letters_.find(letter);
+  if (it == letters_.end())
+    throw BadCharException(letter, "AbstractAlphabet::getState(string): Specified base unknown", this);
+  return * (alphabet_[it->second]);
+}
+
+/******************************************************************************/
+
+AlphabetState& AbstractAlphabet::getState(int num) throw (BadIntException) {
+  map<int, size_t>::iterator it = nums_.find(num);
+  if (it == nums_.end())
+    throw BadIntException(num, "AbstractAlphabet::getState(int): Specified base unknown", this);
+  return * (alphabet_[it->second]);
+}
+
+/******************************************************************************/
+
 AlphabetState& AbstractAlphabet::getStateAt(size_t pos) throw (IndexOutOfBoundsException) {
   if (pos > alphabet_.size())
     throw IndexOutOfBoundsException("AbstractAlphabet::getStateAt: incorect position", pos, 0, alphabet_.size());

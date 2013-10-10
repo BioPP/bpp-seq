@@ -148,6 +148,9 @@ namespace bpp
      * @throw BadCharException If the letter is not in the Alphabet.
      */
     const AlphabetState& getState(const std::string& letter) const throw (BadCharException);
+
+    AlphabetState& getState(const std::string& letter) throw (BadCharException);
+    
     /**
      * @brief Get a state by its num.
      *
@@ -158,6 +161,9 @@ namespace bpp
      * @throw BadIntException If the num is not in the Alphabet.
      */
     const AlphabetState& getState(int num) const throw (BadIntException);
+
+    AlphabetState& getState(int num) throw (BadIntException);
+
     /** @} */
 
   protected:
