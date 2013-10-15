@@ -696,4 +696,16 @@ size_t SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif, bo
 }
 
 /******************************************************************************/
+  
+Sequence* SequenceTools::getRandomSequence(const Alphabet* alphabet, size_t length)
+{
+  int s = static_cast<int>(alphabet->getSize());
+  vector<int> content(length);
+  for (size_t i = 0; i < length; ++i) {
+    content[i] = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(s);
+  }
+  return new BasicSequence("random", content, alphabet);
+}
+
+/******************************************************************************/
 
