@@ -100,6 +100,7 @@ class AlignedSequenceContainer:
     {
       reindexSites();
     }
+    
     /**
      * @brief Copy constructor.
      *
