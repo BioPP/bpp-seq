@@ -63,6 +63,8 @@ public:
   virtual ~AlphabetIndex1() {}
 
 public:
+  virtual AlphabetIndex1* clone() const = 0;
+  
   /**
    * @brief Get the index associated to a state.
    *

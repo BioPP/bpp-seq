@@ -100,7 +100,7 @@ public:
 
   const Alphabet* getAlphabet() const { return index_->getAlphabet(); }
 
-  Clonable* clone() const { return new SimpleIndexDistance(*this); }
+  SimpleIndexDistance* clone() const { return new SimpleIndexDistance(*this); }
 
   Matrix<double>* getIndexMatrix() const
   {

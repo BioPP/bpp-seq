@@ -408,6 +408,15 @@ public:
    * length.
    */
   static size_t findFirstOf(const Sequence& seq, const Sequence& motif, bool strict = true);
+
+  /**
+   * @brief Get a random sequence of given size and alphabet, with all state with equal probability.
+   *
+   * @param alphabet The alphabet to use.
+   * @param length The length of the sequence to generate.
+   * @return A pointer toward a new Sequence object.
+   */
+  static Sequence* getRandomSequence(const Alphabet* alphabet, size_t length);
 };
 } // end of namespace bpp.
 
