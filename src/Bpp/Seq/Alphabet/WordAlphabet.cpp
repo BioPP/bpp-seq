@@ -313,7 +313,7 @@ Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const th
   unsigned int l = getLength();
   size_t i = pos;
 
-  while (i + l < s)
+  while (i + l <= s)
   {
     v2.push_back(getWord(v1, i));
     i += l;
