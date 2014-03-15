@@ -8,37 +8,37 @@
 #define _SITECONTAINERTOOLS_H_
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
 
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability.
 
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and,  more generally, to use and operate it in the
+  same conditions as regards security.
 
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
 #include "SiteContainer.h"
 #include "VectorSiteContainer.h"
@@ -55,95 +55,95 @@
 namespace bpp
 {
 
-typedef std::vector<size_t> SiteSelection;
+  typedef std::vector<size_t> SiteSelection;
 
 /**
  * @brief Some utililitary methods to deal with site containers.
  */
-class SiteContainerTools
-{
-	public:
- 		SiteContainerTools() {}
-		virtual ~SiteContainerTools() {}
+  class SiteContainerTools
+  {
+  public:
+    SiteContainerTools() {}
+    virtual ~SiteContainerTools() {}
 
-	public:
-
-		/**
-		 * @brief Retrieves sites without gaps from SiteContainer.
-		 *
-		 * This function build a new SiteContainer instance with only sites without gaps.
-		 * The container passed as input is not modified, all sites are copied.
-		 *
-		 * @param sites The container to analyse.
-		 * @return A pointer toward a new SiteContainer with only sites with no gaps.
-		 */
-		static SiteContainer* getSitesWithoutGaps(const SiteContainer& sites);
-
-		/**
-		 * @brief Retrieves complete sites from SiteContainer.
-		 *
-		 * This function build a new SiteContainer instance with only complete sites,
-		 * i.e. site with fully resolved states (no gap, no unknown caracters).
-		 * The container passed as input is not modified, all sites are copied.
-		 *
-		 * @param sites The container to analyse.
-		 * @return A pointer toward a new SiteContainer with only complete sites.
-		 */
-		static SiteContainer* getCompleteSites(const SiteContainer& sites);
-
-		/**
-		 * @brief Get a site set without gap-only sites.
-		 *
-		 * This function build a new SiteContainer instance without sites with only gaps.
-		 * The container passed as input is not modified, all sites are copied.
-		 *
-     * @see removeGapOnlySites(SiteContainer& sites)
-		 * @param sites The container to analyse.
-		 * @return A pointer toward a new SiteContainer.
-		 */
-		static SiteContainer* removeGapOnlySites(const SiteContainer& sites);
+  public:
 
     /**
-		 * @brief Remove gap-only sites from a site set.
-		 *
-		 * @param sites The container where the sites have to be removed.
-		 */
-		static void removeGapOnlySites(SiteContainer& sites);
+     * @brief Retrieves sites without gaps from SiteContainer.
+     *
+     * This function build a new SiteContainer instance with only sites without gaps.
+     * The container passed as input is not modified, all sites are copied.
+     *
+     * @param sites The container to analyse.
+     * @return A pointer toward a new SiteContainer with only sites with no gaps.
+     */
+    static SiteContainer* getSitesWithoutGaps(const SiteContainer& sites);
 
-		/**
-		 * @brief Get a site set without gap/unresolved-only sites.
-		 *
-		 * This function build a new SiteContainer instance without sites with only gaps or unresolved characters.
-		 * The container passed as input is not modified, all sites are copied.
-		 *
-		 * @param sites The container to analyse.
-		 * @return A pointer toward a new SiteContainer.
-		 */
-		static SiteContainer* removeGapOrUnresolvedOnlySites(const SiteContainer& sites);
+    /**
+     * @brief Retrieves complete sites from SiteContainer.
+     *
+     * This function build a new SiteContainer instance with only complete sites,
+     * i.e. site with fully resolved states (no gap, no unknown caracters).
+     * The container passed as input is not modified, all sites are copied.
+     *
+     * @param sites The container to analyse.
+     * @return A pointer toward a new SiteContainer with only complete sites.
+     */
+    static SiteContainer* getCompleteSites(const SiteContainer& sites);
+
+    /**
+     * @brief Get a site set without gap-only sites.
+     *
+     * This function build a new SiteContainer instance without sites with only gaps.
+     * The container passed as input is not modified, all sites are copied.
+     *
+     * @see removeGapOnlySites(SiteContainer& sites)
+     * @param sites The container to analyse.
+     * @return A pointer toward a new SiteContainer.
+     */
+    static SiteContainer* removeGapOnlySites(const SiteContainer& sites);
+
+    /**
+     * @brief Remove gap-only sites from a site set.
+     *
+     * @param sites The container where the sites have to be removed.
+     */
+    static void removeGapOnlySites(SiteContainer& sites);
+
+    /**
+     * @brief Get a site set without gap/unresolved-only sites.
+     *
+     * This function build a new SiteContainer instance without sites with only gaps or unresolved characters.
+     * The container passed as input is not modified, all sites are copied.
+     *
+     * @param sites The container to analyse.
+     * @return A pointer toward a new SiteContainer.
+     */
+    static SiteContainer* removeGapOrUnresolvedOnlySites(const SiteContainer& sites);
 		
     /**
-		 * @brief Remove gap/unresolved-only sites from a site set.
-		 *
-		 * @param sites The container where the sites have to be removed.
-		 */
+     * @brief Remove gap/unresolved-only sites from a site set.
+     *
+     * @param sites The container where the sites have to be removed.
+     */
     static void removeGapOrUnresolvedOnlySites(SiteContainer& sites);
 
     /**
-		 * @brief Get a siteset with sites with less than a given amount of gaps.
-		 *
-		 * @param sites The container from which the sites have to be removed.
+     * @brief Get a siteset with sites with less than a given amount of gaps.
+     *
+     * @param sites The container from which the sites have to be removed.
      * @param maxFreqGaps The maximum frequency of gaps in each site.
-		 * @return A pointer toward a new SiteContainer.
-		 */
-     static SiteContainer* removeGapSites(const SiteContainer& sites, double maxFreqGaps);
+     * @return A pointer toward a new SiteContainer.
+     */
+    static SiteContainer* removeGapSites(const SiteContainer& sites, double maxFreqGaps);
 
     /**
-		 * @brief Remove sites with a given amount of gaps.
-		 *
-		 * @param sites The container from which the sites have to be removed.
+     * @brief Remove sites with a given amount of gaps.
+     *
+     * @param sites The container from which the sites have to be removed.
      * @param maxFreqGaps The maximum frequency of gaps in each site.
-		 */
-     static void removeGapSites(SiteContainer& sites, double maxFreqGaps);
+     */
+    static void removeGapSites(SiteContainer& sites, double maxFreqGaps);
 
     /**
      * @brief Get a site set without stop codons, if the alphabet is a CodonAlphabet, otherwise throws an Exception.
@@ -152,28 +152,28 @@ class SiteContainerTools
      * The container passed as input is not modified, all sites are copied.
      *
      * @param sites The container to analyse.
-		 * @param gCode the genetic code to use to determine stop codons.
+     * @param gCode the genetic code to use to determine stop codons.
      * @return A pointer toward a new SiteContainer.
      */
-    static SiteContainer* removeStopCodonSites(const SiteContainer& sitesi, const GeneticCode& gCode) throw (AlphabetException);
+    static SiteContainer* removeStopCodonSites(const SiteContainer& sites, const GeneticCode& gCode) throw (AlphabetException);
 
     /**
-		 * @brief Create a new container with a specified set of sites.
-		 *
-		 * A new VectorSiteContainer is created with specified sites.
-		 * The destruction of the container is up to the user.
-		 * Sites are specified by their indice, beginning at 0.
-		 * No position verification is performed, based on the assumption that
-		 * the container passed as an argument is a correct one.
-		 * Redundant selection is not checked, so be careful with what you're doing!
-		 *
-		 * @param sequences The container from wich sequences are to be taken.
-		 * @param selection The positions of all sites to retrieve.
-		 * @return A new container with all selected sites.
-		 */
-		static SiteContainer* getSelectedSites(const SiteContainer& sequences, const SiteSelection& selection);
+     * @brief Create a new container with a specified set of sites.
+     *
+     * A new VectorSiteContainer is created with specified sites.
+     * The destruction of the container is up to the user.
+     * Sites are specified by their indice, beginning at 0.
+     * No position verification is performed, based on the assumption that
+     * the container passed as an argument is a correct one.
+     * Redundant selection is not checked, so be careful with what you're doing!
+     *
+     * @param sequences The container from wich sequences are to be taken.
+     * @param selection The positions of all sites to retrieve.
+     * @return A new container with all selected sites.
+     */
+    static SiteContainer* getSelectedSites(const SiteContainer& sequences, const SiteSelection& selection);
 
-		/**
+    /**
      * @brief create the consensus sequence of the alignment.
      *
      * In case of ambiguity (for instance a AATT site), one state will be chosen arbitrarily.
@@ -185,7 +185,7 @@ class SiteContainerTools
      * If this option is set to true, a consensus sequence will never contain an unknown character.
      * @return A new Sequence object with the consensus sequence.
      */
-		static Sequence* getConsensus(const SiteContainer& sc, const std::string& name = "consensus", bool ignoreGap = true, bool resolveUnknown = false);
+    static Sequence* getConsensus(const SiteContainer& sc, const std::string& name = "consensus", bool ignoreGap = true, bool resolveUnknown = false);
     
     /**
      * @brief Change all gaps to unknown state in a container, according to its alphabet.
@@ -468,7 +468,7 @@ class SiteContainerTools
      * @author Julien Dutheil
      */
     static std::vector<double> getSumOfPairsScores(const Matrix<size_t>& positions1, const Matrix<size_t>& positions2, double na = 0);
-};
+  };
 
 } //end of namespace bpp.
 
