@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or Copr. CNRS, (November 17, 2004)
+   Copyright or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -41,7 +41,7 @@
 #ifndef _NUMERICALPHABET_H_
 #define _NUMERICALPHABET_H_
 
-#include <Bpp/Seq/Alphabet/AbstractAlphabet.h>
+#include "AbstractAlphabet.h"
 #include "AlphabetNumericState.h"
 
 #include <Bpp/Numeric/Prob.all>
