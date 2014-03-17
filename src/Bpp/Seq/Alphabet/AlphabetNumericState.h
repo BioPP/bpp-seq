@@ -5,7 +5,7 @@
 // 
 
 /*
-  Copyright or © or Copr. CNRS, (March, 2010)
+  Copyright or © or Copr. Bio++ Development Team, (March, 2010)
 
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -43,12 +43,12 @@
 // From the STL
 #include <string>
 
-// From Utils:
+// From bpp-core
 #include <Bpp/Clonable.h>
 
-// From Seqlib
+// From bpp-seq
 
-#include <Bpp/Seq/Alphabet/AlphabetState.h>
+#include "AlphabetState.h"
 
 namespace bpp {
   /**
