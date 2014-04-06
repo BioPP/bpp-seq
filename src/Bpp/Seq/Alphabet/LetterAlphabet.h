@@ -58,7 +58,7 @@ namespace bpp {
     public AbstractAlphabet
   {
     private:
-      static const int LETTER_UNDEF_VALUE = -99;
+      static const int LETTER_UNDEF_VALUE;
       std::vector<int> letters_;
       bool caseSensitive_;
 

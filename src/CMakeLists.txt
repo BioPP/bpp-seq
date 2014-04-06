@@ -25,6 +25,7 @@ SET(CPP_FILES
   Bpp/Seq/DistanceMatrix.cpp
   Bpp/Seq/CodonSiteTools.cpp
   Bpp/Seq/Alphabet/AbstractAlphabet.cpp
+  Bpp/Seq/Alphabet/LetterAlphabet.cpp
   Bpp/Seq/Alphabet/AlphabetExceptions.cpp
   Bpp/Seq/Alphabet/AlphabetTools.cpp
   Bpp/Seq/Alphabet/CodonAlphabet.cpp
