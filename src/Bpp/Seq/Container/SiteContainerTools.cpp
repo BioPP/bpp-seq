@@ -107,6 +107,37 @@ SiteContainer* SiteContainerTools::getSelectedSites(
 }
 
 /******************************************************************************/
+SiteContainer* SiteContainerTools::getSelectedPositions(
+  const SiteContainer& sequences,
+  const SiteSelection& selection)
+{
+  size_t wsize = sequences.getAlphabet()->getStateCodingSize();
+  if (wsize > 1)
+  {
+    if (selection.size() % wsize != 0)
+      throw IOException("SiteContainerTools::getSelectedPositions: Positions selection is not compatible with the alphabet in use in the container.");
+    SiteSelection selection2;
+    for (size_t i = 0; i < selection.size(); i += wsize)
+    {
+      if (selection[i] % wsize != 0)
+        throw IOException("SiteContainerTools::getSelectedPositions: Positions selection is not compatible with the alphabet in use in the container.");
+
+      for (size_t j = 1; j < wsize; ++j)
+      {
+        if (selection[i + j] != (selection[i + j - 1] + 1))
+          throw IOException("SiteContainerTools::getSelectedPositions: Positions selection is not compatible with the alphabet in use in the container.");
+      }
+      selection2.push_back(selection[i] / wsize);
+    }
+    return getSelectedSites(sequences, selection2);
+  }
+  else
+  {
+    return getSelectedSites(sequences, selection);
+  }
+}
+
+/******************************************************************************/
 
 Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::string& name, bool ignoreGap, bool resolveUnknown)
 {

@@ -62,6 +62,8 @@
 #include <Bpp/App/ApplicationTools.h>
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Text/KeyvalTools.h>
+#include <Bpp/App/NumCalcApplicationTools.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
 
 using namespace bpp;
 using namespace std;
@@ -289,6 +291,8 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   else
     sites = sites2;
 
+
+  
   // Look for site selection:
   if (iAln->getFormatName() == "MASE file")
   {
@@ -308,6 +312,60 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
         throw ioe;
       }
       if (selectedSites->getNumberOfSites() == 0)
+      {
+        throw Exception("Site set '" + siteSet + "' is empty.");
+      }
+      delete sites;
+      sites = selectedSites;
+    }
+  }
+  else
+  {
+    // getting site set:
+    size_t nbSites=sites->getNumberOfSites();
+    
+    string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, false);
+
+    VectorSiteContainer* selectedSites=0;
+    if (siteSet!="none")
+    {
+      vector<size_t> vSite;
+      try {
+        vector<int> vSite1=NumCalcApplicationTools::seqFromString(siteSet);
+        for (size_t i=0;i<vSite1.size();i++){
+          int x=(vSite1[i]>=0?int(vSite1[i]):(int)(nbSites+vSite1[i]));
+          if (x>=0)
+            vSite.push_back(x);
+        }
+        selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
+      }
+      catch (Exception& e)
+      {
+        string seln;
+        map<string, string> selArgs;
+        KeyvalTools::parseProcedure(siteSet, seln, selArgs);
+        if (seln=="Sample")
+        {
+          size_t n=(selArgs.find("n") == args.end())?nbSites:TextTools::toInt(selArgs["n"]);
+          bool replace =(selArgs.find("replace") == args.end())?false:(selArgs["replace"]=="true");
+
+          vSite.resize(n);
+          vector<size_t> vPos;
+          for (size_t p=0;p<nbSites;p++)
+            vPos.push_back(p);
+          
+          RandomTools::getSample(vPos,vSite,replace);
+
+          selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
+          if (replace)
+            selectedSites->reindexSites();
+        }
+      }
+
+      if (verbose)
+        ApplicationTools::displayResult("Selected sites", TextTools::toString(siteSet));
+
+      if (selectedSites && (selectedSites->getNumberOfSites() == 0))
       {
         throw Exception("Site set '" + siteSet + "' is empty.");
       }

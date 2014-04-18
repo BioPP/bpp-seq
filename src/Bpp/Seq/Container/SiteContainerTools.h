@@ -174,6 +174,27 @@ namespace bpp
     static SiteContainer* getSelectedSites(const SiteContainer& sequences, const SiteSelection& selection);
 
     /**
+     * @brief Create a new container with a specified set of positions.
+     *
+     * A new VectorSiteContainer is created with specified.
+     * The destruction of the container is up to the user.
+     *
+     * Positions are specified by their indice, beginning at 0, and
+     * are converted to site positions given the length of the words
+     * of the alphaber.
+     *
+     * No position verification is performed, based on the assumption that
+     * the container passed as an argument is a correct one.
+     * Redundant selection is not checked, so be careful with what you're doing!
+     *
+     * @param sequences The container from wich sequences are to be taken.
+     * @param selection The positions to retrieve.
+     * @return A new container with all selected sites.
+     */
+    
+    static SiteContainer* getSelectedPositions(const SiteContainer& sequences, const SiteSelection& selection);
+
+    /**
      * @brief create the consensus sequence of the alignment.
      *
      * In case of ambiguity (for instance a AATT site), one state will be chosen arbitrarily.

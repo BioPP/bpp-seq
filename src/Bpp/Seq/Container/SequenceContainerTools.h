@@ -53,8 +53,8 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-typedef std::vector<size_t> SequenceSelection;
-
+  typedef std::vector<size_t> SequenceSelection;
+  typedef std::vector<size_t> SiteSelection;
 /**
  * @brief Utilitary methods dealing with sequence containers.
  */
