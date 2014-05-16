@@ -56,12 +56,6 @@ private:
 
   unsigned int MAX_;
   
-protected:
-  void registerState(const AlphabetState& st) throw (Exception)
-  {
-    AbstractAlphabet::registerState(*(st.clone()));
-  }
-
 public:
   // class constructor
   IntegerAlphabet(unsigned int max);
