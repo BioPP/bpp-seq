@@ -57,14 +57,16 @@ void SequenceMask::afterSequenceChanged(const SymbolListEditionEvent& event)
 
 void SequenceMask::afterSequenceInserted(const SymbolListInsertionEvent& event)
 {
-  mask_.insert(mask_.begin() + event.getPosition(), event.getLength(), false);
+  mask_.insert(mask_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
+      event.getLength(), false);
 }
 
 /******************************************************************************/
 
 void SequenceMask::afterSequenceDeleted(const SymbolListDeletionEvent& event)
 {
-  mask_.erase(mask_.begin() + event.getPosition(), mask_.begin() + event.getPosition() + event.getLength());
+  mask_.erase(mask_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
+      mask_.begin() + static_cast<ptrdiff_t>(event.getPosition() + event.getLength()));
 }
 
 /******************************************************************************/
