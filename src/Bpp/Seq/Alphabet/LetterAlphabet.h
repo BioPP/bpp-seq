@@ -80,7 +80,7 @@ namespace bpp {
       }
 
     protected:
-      void registerState(const AlphabetState& st) {
+      void registerState(const AlphabetState& st) throw (Exception) {
         AbstractAlphabet::registerState(st);
         if (caseSensitive_) {
           letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();
@@ -90,7 +90,7 @@ namespace bpp {
         }
       }
 
-      void setState(size_t pos, const AlphabetState& st) throw (IndexOutOfBoundsException) {
+      void setState(size_t pos, const AlphabetState& st) throw (Exception, IndexOutOfBoundsException) {
         AbstractAlphabet::setState(pos, st);
         if (caseSensitive_) {
           letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();

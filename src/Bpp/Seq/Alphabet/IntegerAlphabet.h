@@ -57,9 +57,9 @@ private:
   unsigned int MAX_;
   
 protected:
-  void registerState(const AlphabetState& st)
+  void registerState(const AlphabetState& st) throw (Exception)
   {
-   AbstractAlphabet::registerState(*(st.clone()));
+    AbstractAlphabet::registerState(*(st.clone()));
   }
 
 public:

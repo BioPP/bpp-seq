@@ -47,6 +47,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <map>
 #include <iostream>
+#include <typeinfo>
 
 namespace bpp
 {
@@ -61,8 +62,8 @@ class NucleicAlphabet :
   public LetterAlphabet
 {
   private:
-    std::map<int, unsigned int> binCodes_;
-    void updateMaps_(int pos, const NucleicAlphabetState& st) {
+    std::map<int, size_t> binCodes_;
+    void updateBinMaps_(size_t pos, const NucleicAlphabetState& st) {
       if (binCodes_.find(st.getBinaryCode()) == binCodes_.end())
         binCodes_[st.getBinaryCode()] = pos;
     }
@@ -77,21 +78,33 @@ class NucleicAlphabet :
      * @name Overloaded methods from AbstractAlphabet
      * @{
      */
-    void registerState(const NucleicAlphabetState& st) {
-      LetterAlphabet::registerState(st);
-      updateMaps_(getNumberOfChars(), st);
+    void registerState(const AlphabetState& st) throw (Exception) {
+      try {
+        const NucleicAlphabetState& nst = dynamic_cast<const NucleicAlphabetState&>(st);
+        LetterAlphabet::registerState(nst);
+        updateBinMaps_(getNumberOfChars(), nst);
+      } catch(std::bad_cast&) {
+        throw Exception("NucleicAlphabet::registerState. Incorrect alphabet type.");
+      }
     }
-    void setState(unsigned int pos, const NucleicAlphabetState& st) {
-      LetterAlphabet::setState(pos, st);
-      updateMaps_(pos, st);
+
+    void setState(size_t pos, const AlphabetState& st) throw (Exception, IndexOutOfBoundsException) {
+      try {
+        const NucleicAlphabetState& nst = dynamic_cast<const NucleicAlphabetState&>(st);
+        LetterAlphabet::setState(pos, nst);
+        updateBinMaps_(pos, nst);
+      } catch(std::bad_cast&) {
+        throw Exception("NucleicAlphabet::setState. Incorrect alphabet type.");
+      }
     }
-    const NucleicAlphabetState& getStateAt(unsigned int pos) const
+
+    const NucleicAlphabetState& getStateAt(size_t pos) const
       throw (IndexOutOfBoundsException) {
         return dynamic_cast<const NucleicAlphabetState&>(
             AbstractAlphabet::getStateAt(pos)
             );
       }
-    NucleicAlphabetState& getStateAt(unsigned int pos)
+    NucleicAlphabetState& getStateAt(size_t pos)
       throw (IndexOutOfBoundsException) {
         return dynamic_cast<NucleicAlphabetState&>(
             AbstractAlphabet::getStateAt(pos)
@@ -133,7 +146,7 @@ class NucleicAlphabet :
      */
     const NucleicAlphabetState& getStateByBinCode(int code) const
       throw (BadIntException) {
-        std::map<int, unsigned int>::const_iterator it = binCodes_.find(code);
+        std::map<int, size_t>::const_iterator it = binCodes_.find(code);
       if (it == binCodes_.end())
         throw BadIntException(code, "NucleicAlphabet::getState(unsigned char): Binary code not in alphabet", this);
       return getStateAt(it->second);

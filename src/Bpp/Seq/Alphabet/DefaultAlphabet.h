@@ -55,7 +55,7 @@ class DefaultAlphabet:
   public LetterAlphabet
 {
 	protected:
-    void registerState(const AlphabetState& st) {
+    void registerState(const AlphabetState& st) throw (Exception) {
       AbstractAlphabet::registerState(* (st.clone()));
     }
 		const std::string chars_;
