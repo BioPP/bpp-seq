@@ -65,30 +65,39 @@ class ProteicAlphabet:
      */
   public:
     const ProteicAlphabetState& getState(const std::string& letter) const
-      throw (BadCharException) {
-        return dynamic_cast<const ProteicAlphabetState&>(
-            AbstractAlphabet::getState(letter)
-            );
-      }
+      throw (BadCharException)
+    {
+      return dynamic_cast<const ProteicAlphabetState&>(
+          AbstractAlphabet::getState(letter)
+      );
+    }
+    
     const ProteicAlphabetState& getState(int num) const
-      throw (BadIntException) {
-        return dynamic_cast<const ProteicAlphabetState&>(
-            AbstractAlphabet::getState(num)
-            );
-      }
+      throw (BadIntException)
+    {
+       return dynamic_cast<const ProteicAlphabetState&>(
+          AbstractAlphabet::getState(num)
+       );
+    }
+
   protected:
-    const ProteicAlphabetState& getStateAt(unsigned int pos) const
-      throw (IndexOutOfBoundsException) {
-        return dynamic_cast<const ProteicAlphabetState&>(
-            AbstractAlphabet::getStateAt(pos)
-            );
-      }
-    ProteicAlphabetState& getStateAt(unsigned int pos)
-      throw (IndexOutOfBoundsException) {
-        return dynamic_cast<ProteicAlphabetState&>(
-            AbstractAlphabet::getStateAt(pos)
-            );
-      }
+    
+    const ProteicAlphabetState& getStateAt(size_t pos) const
+      throw (IndexOutOfBoundsException)
+    {
+      return dynamic_cast<const ProteicAlphabetState&>(
+          AbstractAlphabet::getStateAt(pos)
+      );
+    }
+    
+    ProteicAlphabetState& getStateAt(size_t pos)
+      throw (IndexOutOfBoundsException)
+    {
+      return dynamic_cast<ProteicAlphabetState&>(
+          AbstractAlphabet::getStateAt(pos)
+      );
+    }
+    
     /** @} */
 	public:
 		ProteicAlphabet();

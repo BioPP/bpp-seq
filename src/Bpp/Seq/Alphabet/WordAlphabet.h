@@ -115,7 +115,7 @@ public:
     if (state.size() != vAbsAlph_.size())
       throw BadCharException(state, "WordAlphabet::charToInt", this);
     if (containsUnresolved(state))
-      return getSize();
+      return static_cast<int>(getSize());
     if (containsGap(state))
       return -1;
     else return AbstractAlphabet::charToInt(state);
@@ -155,9 +155,10 @@ public:
   }
 
   std::string getAlphabetType() const;
+
   int getUnknownCharacterCode() const
   {
-    return getSize();
+    return static_cast<int>(getSize());
   }
 
   bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }

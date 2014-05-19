@@ -179,7 +179,7 @@ void BasicSequence::setToSizeL(size_t newSize)
   {
 		//We must truncate sequence from the left.
 		//This is a very unefficient method!
-		content_.erase(content_.begin(), content_.begin() + (seqSize - newSize));
+		content_.erase(content_.begin(), content_.begin() + static_cast<ptrdiff_t>(seqSize - newSize));
 		return;
 	}
 

@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "SequenceWithAnnotation.h"
 #include <Bpp/Numeric/VectorTools.h>
 
+#include <cstddef>
+
 namespace bpp {
 
   class SequenceMask :
@@ -161,7 +163,7 @@ namespace bpp {
       void setMask(size_t pos, const std::vector<bool>& mask) {
         if (pos + mask.size() > mask_.size())
           throw Exception("SequenceMask::setMask. Vector overflow. Scores number: " + TextTools::toString(mask_.size()) + ", but trying to insert " + TextTools::toString(mask.size()) + " scores at position " + TextTools::toString(pos) + ".");
-        std::copy(mask.begin(), mask.end(), mask_.begin() + pos); 
+        std::copy(mask.begin(), mask.end(), mask_.begin() + static_cast<ptrdiff_t>(pos)); 
       }
 
       bool merge(const SequenceAnnotation& anno) {
@@ -175,7 +177,7 @@ namespace bpp {
       }
  
       SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const throw (Exception) {
-        return new SequenceMask(std::vector<bool>(mask_.begin() + pos, mask_.begin() + pos + len), removable_);
+        return new SequenceMask(std::vector<bool>(mask_.begin() + static_cast<ptrdiff_t>(pos), mask_.begin() + static_cast<ptrdiff_t>(pos + len)), removable_);
       }
   };
   

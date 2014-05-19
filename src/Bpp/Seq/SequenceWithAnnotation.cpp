@@ -188,7 +188,7 @@ void SequenceWithAnnotation::setToSizeL(size_t newSize)
 		//We must truncate sequence from the left.
     SymbolListDeletionEvent event(this, 0, seqSize - newSize);
     fireBeforeSequenceDeleted(event);
-		content_.erase(content_.begin(), content_.begin() + (seqSize - newSize));
+		content_.erase(content_.begin(), content_.begin() + static_cast<ptrdiff_t>(seqSize - newSize));
     fireAfterSequenceDeleted(event);
 		return;
 	}

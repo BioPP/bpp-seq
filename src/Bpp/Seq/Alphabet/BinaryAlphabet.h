@@ -51,12 +51,6 @@ namespace bpp
 class BinaryAlphabet :
   public AbstractAlphabet
 {
-protected:
-  void registerState(const AlphabetState& st) throw (Exception)
-  {
-    AbstractAlphabet::registerState(*(st.clone()));
-  }
-
 public:
   // class constructor
   BinaryAlphabet();
