@@ -42,18 +42,15 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std; // for the STL
 
-//=================================
-// AbstractSequencePositionIterator
-//=================================
 /******************************************************************************/
 
-bool AbstractSequencePositionIterator::operator==(const SequencePositionIterator & it) const {
+bool AbstractSequencePositionIterator::operator==(const SequencePositionIterator& it) const {
   return this->getPosition() == it.getPosition();
 }
 
 /******************************************************************************/
 
-bool AbstractSequencePositionIterator::operator!=(const SequencePositionIterator & it) const {
+bool AbstractSequencePositionIterator::operator!=(const SequencePositionIterator& it) const {
   return this->getPosition() != it.getPosition();
 }
 
@@ -98,7 +95,7 @@ SimpleSequencePositionIterator::SimpleSequencePositionIterator(const SequencePos
 
 /******************************************************************************/
 
-SimpleSequencePositionIterator & SimpleSequencePositionIterator::operator++() {
+SimpleSequencePositionIterator& SimpleSequencePositionIterator::operator++() {
   this->setPosition(this->getPosition() + 1);
   return *this;
 }
@@ -106,28 +103,36 @@ SimpleSequencePositionIterator & SimpleSequencePositionIterator::operator++() {
 /******************************************************************************/
 
 SimpleSequencePositionIterator SimpleSequencePositionIterator::operator++(int i) {
-  SimpleSequencePositionIterator ans = * this;
-  ++(* this);
+  SimpleSequencePositionIterator ans = *this;
+  ++(*this);
   return ans;
 }
 
 /******************************************************************************/
 
-SimpleSequencePositionIterator & SimpleSequencePositionIterator::operator+=(int i) {
-  this->setPosition(this->getPosition() + i);
-  return * this;
+SimpleSequencePositionIterator& SimpleSequencePositionIterator::operator+=(int i) {
+  if (i > 0)
+    this->setPosition(this->getPosition() + static_cast<unsigned int>(i));
+  else if (i < 0) {
+    unsigned int d = static_cast<unsigned int>(-i);
+    if (d > this->getPosition())
+      throw Exception("SimpleSequencePositionIterator::operator+=. Negative increment too large.");
+    else
+      this->setPosition(this->getPosition() - d);
+  }
+  return *this;
 }
 
 /******************************************************************************/
 
-SimpleSequencePositionIterator & SimpleSequencePositionIterator::operator-=(int i) {
-  return (* this) += -i;
+SimpleSequencePositionIterator& SimpleSequencePositionIterator::operator-=(int i) {
+  return (*this) += -i;
 }
 
 /******************************************************************************/
 
 SimpleSequencePositionIterator SimpleSequencePositionIterator::operator+(int i) const {
-  SimpleSequencePositionIterator res(* this);
+  SimpleSequencePositionIterator res(*this);
   res += i;
   return res;
 }
@@ -135,7 +140,7 @@ SimpleSequencePositionIterator SimpleSequencePositionIterator::operator+(int i) 
 /******************************************************************************/
 
 SimpleSequencePositionIterator SimpleSequencePositionIterator::operator-(int i) const {
-  return (* this) + (- i);
+  return (*this) + (- i);
 }
 
 /******************************************************************************/

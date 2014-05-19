@@ -62,14 +62,18 @@ void SequenceQuality::afterSequenceChanged(const SymbolListEditionEvent& event)
 
 void SequenceQuality::afterSequenceInserted(const SymbolListInsertionEvent& event)
 {
-  qualScores_.insert(qualScores_.begin() + event.getPosition(), event.getLength(), DEFAULT_QUALITY_VALUE);
+  qualScores_.insert(
+      qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
+      event.getLength(), DEFAULT_QUALITY_VALUE);
 }
 
 /******************************************************************************/
 
 void SequenceQuality::afterSequenceDeleted(const SymbolListDeletionEvent& event)
 {
-  qualScores_.erase(qualScores_.begin() + event.getPosition(), qualScores_.begin() + event.getPosition() + event.getLength());
+  qualScores_.erase(
+      qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
+      qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition() + event.getLength()));
 }
 
 /******************************************************************************/

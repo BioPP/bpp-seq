@@ -50,6 +50,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <string>
 #include <vector>
+#include <cstddef>
 
 namespace bpp {
   /**
@@ -182,7 +183,7 @@ namespace bpp {
       void setScores(size_t pos, const std::vector<int>& scores) {
         if (pos + scores.size() > qualScores_.size())
           throw Exception("SequenceQuality::setScores. Vector overflow. Scores number: " + TextTools::toString(qualScores_.size()) + ", but trying to insert " + TextTools::toString(scores.size()) + " scores at position " + TextTools::toString(pos) + ".");
-        std::copy(scores.begin(), scores.end(), qualScores_.begin() + pos); 
+        std::copy(scores.begin(), scores.end(), qualScores_.begin() + static_cast<ptrdiff_t>(pos)); 
       }
     
       bool merge(const SequenceAnnotation& anno) {
@@ -196,7 +197,11 @@ namespace bpp {
       }
 
       SequenceQuality* getPartAnnotation(size_t pos, size_t len) const throw (Exception) {
-        return new SequenceQuality(std::vector<int>(qualScores_.begin() + pos, qualScores_.begin() + pos + len), removable_);
+        return new SequenceQuality(
+            std::vector<int>(
+              qualScores_.begin() + static_cast<ptrdiff_t>(pos),
+              qualScores_.begin() + static_cast<ptrdiff_t>(pos + len)),
+            removable_);
       }
   };
 

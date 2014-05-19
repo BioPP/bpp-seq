@@ -77,8 +77,8 @@ Sequence* SequenceTools::subseq(const Sequence& sequence, size_t begin, size_t e
   vector<int> temp(sequence.getContent());
 
   // Truncate sequence
-  temp.erase(temp.begin() + end + 1, temp.end());
-  temp.erase(temp.begin(), temp.begin() + begin);
+  temp.erase(temp.begin() + static_cast<ptrdiff_t>(end + 1), temp.end());
+  temp.erase(temp.begin(), temp.begin() + static_cast<ptrdiff_t>(begin));
 
   // New sequence creation
   return new BasicSequence(sequence.getName(), temp, sequence.getComments(), sequence.getAlphabet());
@@ -181,7 +181,7 @@ Sequence* SequenceTools::reverseTranscript(const Sequence& sequence) throw (Alph
 Sequence& SequenceTools::invert(Sequence& seq)
 {
   size_t seq_size = seq.size(); // store seq size for efficiency
-  unsigned int tmp_state = 0; // to store one state when swapping positions
+  int tmp_state = 0; // to store one state when swapping positions
   size_t j = seq_size; // symetric position iterator from sequence end
   for (size_t i = 0; i < seq_size / 2; i++)
   {
@@ -568,7 +568,7 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
     throw Exception("Bad phase for RNYSlice: " + TextTools::toString(ph) + ". Should be between 1 and 3.");
 
   size_t s = seq.size();
-  size_t n = (s - ph + 3) / 3;
+  size_t n = (s - static_cast<size_t>(ph) + 3) / 3;
 
   vector<int> content(n);
 
@@ -577,7 +577,7 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
 
   for (size_t i = 0; i < n; i++)
   {
-    j = i * 3 + ph - 1;
+    j = i * 3 + static_cast<size_t>(ph) - 1;
 
     if (j == 0)
       content[i] = _RNY.getRNY(tir, seq[0], seq[1], *seq.getAlphabet());
