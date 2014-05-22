@@ -53,10 +53,11 @@ namespace bpp
  * @brief A Matrix class to store phylogenetic distances.
  */
 class DistanceMatrix:
-  public virtual RowMatrix<double>
+  public virtual Clonable
 {
 
 	private:
+    RowMatrix<double> distances_;
     std::vector<std::string> names_;
 
 	public:
@@ -69,7 +70,8 @@ class DistanceMatrix:
      * @param names The names to use.
      */
 		DistanceMatrix(const std::vector<std::string>& names):
-      RowMatrix<double>(names.size(), names.size()), names_(names)
+      distances_(names.size(), names.size()),
+      names_(names)
 		{
 			reset();
 		}
@@ -82,14 +84,16 @@ class DistanceMatrix:
      * @param n The size of the matrix.
      */
     DistanceMatrix(size_t n):
-      RowMatrix<double>(n, n), names_(n)
+      distances_(n, n), names_(n)
 		{
       resize(n);
 		}
 
 		virtual ~DistanceMatrix() {}
 
-		DistanceMatrix(const DistanceMatrix& dist): RowMatrix<double>(dist), names_(dist.names_)	{}
+		DistanceMatrix(const DistanceMatrix& dist):
+      distances_(dist.distances_),
+      names_(dist.names_)	{}
 
 		DistanceMatrix& operator=(const DistanceMatrix& dist)
 		{
@@ -99,12 +103,14 @@ class DistanceMatrix:
       {
 				for(size_t j = 0; j < n; ++j)
         {
-					operator()(i, j) = dist(i, j);
+					distances_(i, j) = dist(i, j);
 				}
 			}
 			names_ = dist.names_;
 			return *this;
 		}
+
+    DistanceMatrix* clone() const { return new DistanceMatrix(*this); }
 		
 	public:
 
@@ -114,11 +120,11 @@ class DistanceMatrix:
 		void reset()
 		{
 			size_t n = size();
-			for (size_t i = 0; i < n; i++)
+			for (size_t i = 0; i < n; ++i)
       {
-				for (size_t j = 0; j < n; j++)
+				for (size_t j = 0; j < n; ++j)
         {
-					operator()(i, j) = 0;
+					distances_(i, j) = 0;
 				}
 			}
 		}
@@ -184,7 +190,8 @@ class DistanceMatrix:
      * @param n the new dimension of the matrix.
      */
     void resize(size_t n) {
-      RowMatrix<double>::resize(n, n);
+      //RowMatrix<double>::resize(n, n);
+      distances_.resize(n, n);
       names_.resize(n);
 			for (size_t i = 0; i < n; ++i)
         names_[i] = "Taxon " + TextTools::toString(i);
@@ -203,7 +210,8 @@ class DistanceMatrix:
     {
       size_t i = getNameIndex(iName);
       size_t j = getNameIndex(jName);
-      return operator()(i,j);
+      //return operator()(i,j);
+      return distances_(i,j);
     }
 
     /**
@@ -218,16 +226,23 @@ class DistanceMatrix:
     {
       size_t i = getNameIndex(iName);
       size_t j = getNameIndex(jName);
-      return operator()(i,j);
+      //return operator()(i,j);
+      return distances_(i,j);
     }
 
     virtual const double& operator()(size_t i, size_t j) const
     {
-      return RowMatrix<double>::operator()(i, j);
+      //return RowMatrix<double>::operator()(i, j);
+      return distances_(i, j);
     }
     virtual double& operator()(size_t i, size_t j)
     {
-      return RowMatrix<double>::operator()(i, j);
+      //return RowMatrix<double>::operator()(i, j);
+      return distances_(i, j);
+    }
+
+    virtual const Matrix<double>& asMatrix() const {
+      return distances_;
     }
 };
 

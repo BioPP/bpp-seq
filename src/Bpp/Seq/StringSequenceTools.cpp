@@ -58,7 +58,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-string StringSequenceTools::subseq(const string& sequence, int begin, int end) throw (Exception)
+string StringSequenceTools::subseq(const string& sequence, size_t begin, size_t end) throw (Exception)
 {
   // Checking interval
   if (end < begin)
@@ -68,8 +68,8 @@ string StringSequenceTools::subseq(const string& sequence, int begin, int end) t
   string temp(sequence);
 
   // Truncate sequence
-  temp.erase(temp.begin() + end + 1, temp.end());
-  temp.erase(temp.begin(), temp.begin() + begin);
+  temp.erase(temp.begin() + static_cast<ptrdiff_t>(end + 1), temp.end());
+  temp.erase(temp.begin(), temp.begin() + static_cast<ptrdiff_t>(begin));
 
   // Send result
   return temp;
@@ -77,12 +77,12 @@ string StringSequenceTools::subseq(const string& sequence, int begin, int end) t
 
 /****************************************************************************************/
 
-string StringSequenceTools::setToSizeR(const string& sequence, int size)
+string StringSequenceTools::setToSizeR(const string& sequence, size_t size)
 {
   return TextTools::resizeRight(sequence, size, '-');
 }
 
-string StringSequenceTools::setToSizeL(const string& sequence, int size)
+string StringSequenceTools::setToSizeL(const string& sequence, size_t size)
 {
   return TextTools::resizeLeft(sequence, size, '-');
 }
@@ -273,9 +273,9 @@ vector<int> StringSequenceTools::codeSequence(const string& sequence, const Alph
 throw (BadCharException)
 {
   unsigned int size = AlphabetTools::getAlphabetCodingSize(alphabet); // Warning, an exception may be casted here!
-  vector<int> code((int)floor((double)sequence.size() / (double)size));
-  unsigned int pos = 0;
-  unsigned int count = 0;
+  vector<int> code(static_cast<size_t>(floor(static_cast<double>(sequence.size()) / static_cast<double>(size))));
+  size_t pos = 0;
+  size_t count = 0;
   while (pos + size <= sequence.size())
   {
     code[count] = alphabet->charToInt(sequence.substr(pos, size));

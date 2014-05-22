@@ -530,9 +530,9 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCo
   double nbsynpos = 0.0;
   vector<int> codon = ca->getPositions(i);
   int acid = gCode.translate(i);
-  for (int pos = 0; pos < 3; pos++)
+  for (size_t pos = 0; pos < 3; ++pos)
   {
-    for (int an = 0; an < 4; an++)
+    for (int an = 0; an < 4; ++an)
     {
       if (an == codon[pos])
         continue;

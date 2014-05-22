@@ -128,7 +128,7 @@ void BasicSymbolList::addElement(const string& c) throw (BadCharException)
 void BasicSymbolList::addElement(size_t pos, const string& c) throw (BadCharException, IndexOutOfBoundsException)
 {
   if(pos >= content_.size()) throw IndexOutOfBoundsException("BasicSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-	content_.insert(content_.begin() + pos, alphabet_->charToInt(c));
+	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), alphabet_->charToInt(c));
 }
 
 /****************************************************************************************/
@@ -164,7 +164,7 @@ void BasicSymbolList::deleteElement(size_t pos) throw (IndexOutOfBoundsException
 {
 	if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
-	content_.erase(content_.begin() + pos);
+	content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos));
 }
 
 /****************************************************************************************/
@@ -173,7 +173,7 @@ void BasicSymbolList::deleteElements(size_t pos, size_t len) throw (IndexOutOfBo
 {
 	if (pos + len > content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
-	 content_.erase(content_.begin() + pos, content_.begin() + pos + len);
+	 content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos), content_.begin() + static_cast<ptrdiff_t>(pos + len));
 }
 
 /****************************************************************************************/
@@ -193,7 +193,7 @@ void BasicSymbolList::addElement(size_t pos, int v) throw (BadIntException, Inde
 	if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
 	alphabet_->intToChar(v);
-	content_.insert(content_.begin() + pos, v);
+	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), v);
 }
 
 /****************************************************************************************/
@@ -333,7 +333,7 @@ void EdSymbolList::addElement(size_t pos, const string& c) throw (BadCharExcepti
   if (pos >= content_.size()) throw IndexOutOfBoundsException("EdSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
   SymbolListInsertionEvent event(this, pos, 1);
   fireBeforeSequenceInserted(event);
-	content_.insert(content_.begin() + pos, alphabet_->charToInt(c));
+	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), alphabet_->charToInt(c));
   fireAfterSequenceInserted(event);
 }
 
@@ -372,7 +372,7 @@ void EdSymbolList::deleteElement(size_t pos) throw (IndexOutOfBoundsException)
     throw IndexOutOfBoundsException("EdSymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
   SymbolListDeletionEvent event(this, pos, 1);
   fireBeforeSequenceDeleted(event);
-	content_.erase(content_.begin() + pos);
+	content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos));
   fireAfterSequenceDeleted(event);
 }
 
@@ -384,7 +384,7 @@ void EdSymbolList::deleteElements(size_t pos, size_t len) throw (IndexOutOfBound
     throw IndexOutOfBoundsException("EdSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
   SymbolListDeletionEvent event(this, pos, len);
   fireBeforeSequenceDeleted(event);
-	content_.erase(content_.begin() + pos, content_.begin() + pos + len);
+	content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos), content_.begin() + static_cast<ptrdiff_t>(pos + len));
   fireAfterSequenceDeleted(event);
 }
 
@@ -411,7 +411,7 @@ void EdSymbolList::addElement(size_t pos, int v) throw (BadIntException, IndexOu
   SymbolListInsertionEvent event(this, pos, 1);
   fireBeforeSequenceInserted(event);
 	alphabet_->intToChar(v);
-	content_.insert(content_.begin() + pos, v);
+	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), v);
   fireAfterSequenceInserted(event);
 }
 

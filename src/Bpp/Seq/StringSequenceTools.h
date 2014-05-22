@@ -80,7 +80,7 @@ class StringSequenceTools
      * @return A string with the subsequence.
      * @throw Exception If position does not not match the interval [0, length].
      */
-		static std::string subseq(const std::string& sequence, int begin, int end) throw (Exception);
+		static std::string subseq(const std::string& sequence, size_t begin, size_t end) throw (Exception);
 
 		/**
 		 * @brief Set up the size of a sequence from the right side.
@@ -91,7 +91,7 @@ class StringSequenceTools
      * @param sequence The input sequence.
 		 * @param size The new size of the sequence.
 		 */
-		static std::string setToSizeR(const std::string& sequence, int size);
+		static std::string setToSizeR(const std::string& sequence, size_t size);
 
     /**
 		 * @brief Set up the size of a sequence from the left side.
@@ -102,7 +102,7 @@ class StringSequenceTools
      * @param sequence The input sequence.
 		 * @param size The new size of the sequence.
 		 */
-		static std::string setToSizeL(const std::string& sequence, int size);
+		static std::string setToSizeL(const std::string& sequence, size_t size);
 
 		/**
      * @brief Delete all occurence of a character in the sequence.

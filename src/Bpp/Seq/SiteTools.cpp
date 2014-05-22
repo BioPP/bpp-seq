@@ -340,7 +340,7 @@ size_t SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (EmptySi
     return 1;
   map<int, size_t> counts;
   SymbolListTools::getCounts(site, counts);
-  int s = 0;
+  size_t s = 0;
   for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
   {
     if (it->second != 0)
