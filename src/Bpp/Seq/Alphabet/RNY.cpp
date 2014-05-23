@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide
    classes for sequences analysis.
@@ -52,11 +52,10 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 {
   // Alphabet size definition
   resize(351);
-  int i,j,k,l;
 
-  for (i = 0; i < 351; i++)
+  for (int i = 0; i < 351; ++i)
   {
-    setState(i,AlphabetState(i,"",""));
+    setState(i, AlphabetState(i, "", ""));
   }
 
   // Alphabet content definition
@@ -71,117 +70,118 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
   // NNN (0->35)
 
-  for (i = 0; i < 3; i++)
+  for (size_t i = 0; i < 3; ++i)
   {
-    for (j = 0; j < 4; j++)
+    for (size_t j = 0; j < 4; ++j)
     {
-      for (k = 0; k < 3; k++)
+      for (size_t k = 0; k < 3; ++k)
       {
-        l = i * 12 + j * 3 + k;
+        int l = static_cast<int>(i * 12 + j * 3 + k);
         s[0] = s1[i];
         s[1] = s2[j];
         s[2] = s3[k];
-        setState(l, AlphabetState(l,s,s));
+        setState(l, AlphabetState(l, s, s));
       }
     }
   }
 
   // NN- (50->83)
 
-  for (i = 0; i < 3; i++)
+  for (size_t i = 0; i < 3; ++i)
   {
-    for (j = 0; j < 4; j++)
+    for (size_t j = 0; j < 4; ++j)
     {
-      l = 50 + 12 * i + j * 3;
+      int l = static_cast<int>(50 + 12 * i + j * 3);
       s[0] = s1[i];
       s[1] = s2[j];
       s[2] = s3[3];
-      setState(l, AlphabetState(l,s,s));
+      setState(l, AlphabetState(l, s, s));
     }
   }
 
   // N-N (100->126)
 
-  for (i = 0; i < 3; i++)
+  for (size_t i = 0; i < 3; ++i)
   {
-    for (k = 0; k < 3; k++)
+    for (size_t k = 0; k < 3; ++k)
     {
-      l = 100 + 12 * i + k;
+      int l = static_cast<int>(100 + 12 * i + k);
       s[0] = s1[i];
       s[1] = s2[4];
       s[2] = s3[k];
-      setState(l, AlphabetState(l,s,s));
+      setState(l, AlphabetState(l, s, s));
     }
   }
 
   // N-- (150->152)
 
-  for (i = 0; i < 3; i++)
+  for (size_t i = 0; i < 3; ++i)
   {
-    l = 150 + 12 * i;
+    int l = static_cast<int>(150 + 12 * i);
     s[0] = s1[i];
     s[1] = s2[4];
     s[2] = s3[3];
-    setState(l, AlphabetState(l,s,s));
+    setState(l, AlphabetState(l, s, s));
   }
 
   // -NN (200->211)
 
-  for (j = 0; j < 4; j++)
+  for (size_t j = 0; j < 4; ++j)
   {
-    for (k = 0; k < 3; k++)
+    for (size_t k = 0; k < 3; ++k)
     {
-      l = 200 + j * 3 + k;
+      int l = static_cast<int>(200 + j * 3 + k);
       s[0] = s1[3];
       s[1] = s2[j];
       s[2] = s3[k];
-      setState(l, AlphabetState(l,s,s));
+      setState(l, AlphabetState(l, s, s));
     }
   }
 
 
   // -N- (250->253)
 
-  for (j = 0; j < 4; j++)
+  for (size_t j = 0; j < 4; ++j)
   {
-    l = 250 + 3 * j;
+    int l = static_cast<int>(250 + 3 * j);
     s[0] = s1[3];
     s[1] = s2[j];
     s[2] = s3[3];
-    setState(l, AlphabetState(l,s,s));
+    setState(l, AlphabetState(l, s, s));
   }
 
   // --N (300->302)
 
-  for (k = 0; k < 3; k++)
+  for (size_t k = 0; k < 3; ++k)
   {
-    l = 300 + k;
+    int l = static_cast<int>(300 + k);
     s[0] = s1[3];
     s[1] = s2[4];
     s[2] = s3[k];
-    setState(l, AlphabetState(l,s,s));
+    setState(l, AlphabetState(l, s, s));
   }
 
 
   // --- (350)
 
-  l = 350;
+  int l = 350;
   s[0] = s1[3];
   s[1] = s2[4];
   s[2] = s3[3];
-  setState(l, AlphabetState(l,s,s));
+  setState(l, AlphabetState(l, s, s));
 }
 
 /****************************************************************************************/
 
 vector<int> RNY::getAlias(int state) const throw (BadIntException)
 {
-  if (!isIntInAlphabet(state)) throw BadIntException(state, "RNY::getAlias(int): Specified base unknown.");
+  if (!isIntInAlphabet(state))
+    throw BadIntException(state, "RNY::getAlias(int): Specified base unknown.");
   vector<int> v;
 
   int qs = state / 50;
   int rs = state % 50;
-  int i,j,k;
+  int i, j, k;
 
   switch (qs)
   {
@@ -266,7 +266,8 @@ const NucleicAlphabet& RNY::getLetterAlphabet() const
 
 vector<string> RNY::getAlias(const string& state) const throw (BadCharException)
 {
-  if (!isCharInAlphabet(state)) throw BadCharException(state, "RNY::getAlias(int): Specified base unknown.");
+  if (!isCharInAlphabet(state))
+    throw BadCharException(state, "RNY::getAlias(int): Specified base unknown.");
 
   vector<int> v = getAlias(charToInt(state));
   vector<string> s;
@@ -284,7 +285,7 @@ vector<string> RNY::getAlias(const string& state) const throw (BadCharException)
 
 string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) const throw (BadCharException)
 {
-   string tr;
+  string tr;
 
   if (pos1 == "A" || pos1 == "G")
     tr = "R";
@@ -393,12 +394,12 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const throw (BadCharE
 /****************************************************************************************/
 bool RNY::isGap(int state) const
 {
-  return state==350;
+  return state == 350;
 }
 
 bool RNY::containsGap(const string& state) const throw (BadCharException)
 {
-  return (state.find("-")!=string::npos);
+  return state.find("-") != string::npos;
 }
 
 bool RNY::isUnresolved(const string& state) const
@@ -408,15 +409,16 @@ bool RNY::isUnresolved(const string& state) const
 
 bool RNY::isUnresolved(int state) const
 {
-  return (state>=50 && state!=350);
+  return state >= 50 && state != 350;
 }
 
 /****************************************************************************************/
 
 int RNY::charToInt(const string& state) const throw (BadCharException)
 {
-  if (state.size() != 3) throw BadCharException(state, "RNY::charToInt", this);
-  else 
+  if (state.size() != 3)
+    throw BadCharException(state, "RNY::charToInt", this);
+  else
     return AbstractAlphabet::charToInt(state);
 }
 
@@ -425,7 +427,7 @@ int RNY::charToInt(const string& state) const throw (BadCharException)
 
 string RNY::intToChar(int state) const throw (BadIntException)
 {
-   unsigned int i,j,k,l;
+  unsigned int i, j, k, l;
   for (i = 0; i < 3; i++)
   {
     for (j = 0; j < 4; j++)

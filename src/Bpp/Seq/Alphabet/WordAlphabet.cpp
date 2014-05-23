@@ -6,7 +6,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -69,9 +69,9 @@ WordAlphabet::WordAlphabet(const Alphabet* pAlpha, unsigned int num) :
 
 void WordAlphabet::build_()
 {
-  unsigned int size = 1;
+  size_t size = 1;
 
-  for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
+  for (size_t i = 0; i < vAbsAlph_.size(); ++i)
   {
     size *= vAbsAlph_[i]->getSize();
   }
@@ -79,48 +79,48 @@ void WordAlphabet::build_()
   resize(size + 2);
 
   string s = "";
-  for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
+  for (size_t i = 0; i < vAbsAlph_.size(); ++i)
   {
     s += "-";
   }
 
   setState(0, AlphabetState(-1, s, "gap"));
 
-  for (unsigned int i = 0; i < size; i++)
+  for (int i = 0; i < static_cast<int>(size); ++i)
   {
     setState(i + 1, AlphabetState(i, "", ""));
   }
 
-  unsigned lr = size;
+  size_t lr = size;
   char c;
-  for (unsigned int na = 0; na < vAbsAlph_.size(); na++)
+  for (size_t na = 0; na < vAbsAlph_.size(); ++na)
   {
     lr /= vAbsAlph_[na]->getSize();
-    unsigned int j = 1;
-    unsigned int i = 0;
+    size_t j = 1;
+    int i = 0;
     while (j <= size)
     {
       c = vAbsAlph_[na]->intToChar(i)[0];
 
-      for (unsigned int k = 0; k < lr; k++)
+      for (size_t k = 0; k < lr; k++)
       {
         getStateAt(j).setLetter(getStateAt(j).getLetter() + c);
         j++;
         // alphabet[j++].letter += c;
       }
 
-      if (++i == vAbsAlph_[na]->getSize())
+      if (++i == static_cast<int>(vAbsAlph_[na]->getSize()))
         i = 0;
     }
   }
 
   s = "";
-  for (unsigned i = 0; i < vAbsAlph_.size(); i++)
+  for (size_t i = 0; i < vAbsAlph_.size(); ++i)
   {
     s += "N";
   }
 
-  setState(size + 1, AlphabetState(size, s, "Unresolved"));
+  setState(static_cast<int>(size + 1), AlphabetState(static_cast<int>(size), s, "Unresolved"));
   remap();
 }
 
@@ -202,14 +202,14 @@ std::vector<int> WordAlphabet::getAlias(int state) const throw (BadIntException)
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
   vector<int> v;
-  int i, s = getSize();
+  size_t s = getSize();
 
-  if (state == s)
+  if (static_cast<size_t>(state) == s)
   {
     v.resize(s);
-    for (i = 0; i < s; i++)
+    for (size_t i = 0; i < s; ++i)
     {
-      v[i] = i;
+      v[i] = static_cast<int>(i);
     }
   }
   else
@@ -228,10 +228,10 @@ std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const 
     throw BadCharException(locstate, "WordAlphabet::getAlias(string): Specified base unknown.");
   vector<string> v;
 
-  unsigned int i, s = getSize();
+  size_t s = getSize();
 
   string st = "";
-  for (i = 0; i < vAbsAlph_.size(); i++)
+  for (size_t i = 0; i < vAbsAlph_.size(); ++i)
   {
     st += "N";
   }
@@ -239,9 +239,9 @@ std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const 
   if (locstate == st)
   {
     v.resize(s);
-    for (i = 0; i < s; i++)
+    for (size_t i = 0; i < s; ++i)
     {
-      v[i] = intToChar(i);
+      v[i] = intToChar(static_cast<int>(i));
     }
   }
   else

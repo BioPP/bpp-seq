@@ -188,7 +188,7 @@ namespace bpp
      *
      * @param size The new size of the Alphabet.
      */
-    void resize(unsigned int size) { alphabet_.resize(size); }
+    void resize(size_t size) { alphabet_.resize(size); }
     /**
      * @brief Get a state at a position in the alphabet_ vector.
      *
