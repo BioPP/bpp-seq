@@ -155,9 +155,9 @@ vector<string> ProteicAlphabet::getAlias(const string& state) const throw (BadCh
            || locstate == "?")  // all!
   {
     v.resize(20);
-    for (unsigned int i = 0; i < 20; i++)
+    for (int i = 0; i < 20; i++)
     {
-      v[i] = getState(i).getLetter();
+      v[static_cast<size_t>(i)] = getState(i).getLetter();
     }
   }
   else

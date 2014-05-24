@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -53,9 +53,8 @@ class IntegerAlphabet :
   public AbstractAlphabet
 {
 private:
-
   unsigned int MAX_;
-  
+
 public:
   // class constructor
   IntegerAlphabet(unsigned int max);
@@ -64,14 +63,18 @@ public:
   virtual ~IntegerAlphabet() {}
 
 public:
-  unsigned int getSize() const { return MAX_+1; }
-  unsigned int getNumberOfTypes() const { return MAX_+1; }
+  unsigned int getSize() const { return MAX_ + 1; }
+
+  unsigned int getNumberOfTypes() const { return MAX_ + 1; }
+  
   std::string getAlphabetType() const { return "Integer alphabet"; }
-  int getUnknownCharacterCode() const { return MAX_; }
-  bool isUnresolved(int state) const { return state == (int)MAX_; }
+  
+  int getUnknownCharacterCode() const { return static_cast<int>(MAX_); }
+  
+  bool isUnresolved(int state) const { return state == static_cast<int>(MAX_); }
+  
   bool isUnresolved(const std::string& state) const { return false; }
 };
 } // end of namespace bpp.
 
 #endif // _INTEGERALPHABET_H_
-

@@ -88,7 +88,7 @@ void WordAlphabet::build_()
 
   for (int i = 0; i < static_cast<int>(size); ++i)
   {
-    setState(i + 1, AlphabetState(i, "", ""));
+    setState(static_cast<size_t>(i + 1), AlphabetState(i, "", ""));
   }
 
   size_t lr = size;
@@ -120,7 +120,7 @@ void WordAlphabet::build_()
     s += "N";
   }
 
-  setState(static_cast<int>(size + 1), AlphabetState(static_cast<int>(size), s, "Unresolved"));
+  setState(size + 1, AlphabetState(static_cast<int>(size), s, "Unresolved"));
   remap();
 }
 

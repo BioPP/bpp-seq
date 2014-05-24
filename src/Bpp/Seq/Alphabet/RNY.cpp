@@ -55,12 +55,12 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
   for (int i = 0; i < 351; ++i)
   {
-    setState(i, AlphabetState(i, "", ""));
+    setState(static_cast<size_t>(i), AlphabetState(i, "", ""));
   }
 
   // Alphabet content definition
 
-  // / changer pour ARN
+  // / change for ARN
 
   string s1 = "RCT-";
   string s2 = "AGCT-";
@@ -76,11 +76,11 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     {
       for (size_t k = 0; k < 3; ++k)
       {
-        int l = static_cast<int>(i * 12 + j * 3 + k);
+        size_t l = i * 12 + j * 3 + k;
         s[0] = s1[i];
         s[1] = s2[j];
         s[2] = s3[k];
-        setState(l, AlphabetState(l, s, s));
+        setState(l, AlphabetState(static_cast<int>(l), s, s));
       }
     }
   }
@@ -91,11 +91,11 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
   {
     for (size_t j = 0; j < 4; ++j)
     {
-      int l = static_cast<int>(50 + 12 * i + j * 3);
+      size_t l = 50 + 12 * i + j * 3;
       s[0] = s1[i];
       s[1] = s2[j];
       s[2] = s3[3];
-      setState(l, AlphabetState(l, s, s));
+      setState(l, AlphabetState(static_cast<int>(l), s, s));
     }
   }
 
@@ -105,11 +105,11 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
   {
     for (size_t k = 0; k < 3; ++k)
     {
-      int l = static_cast<int>(100 + 12 * i + k);
+      size_t l = 100 + 12 * i + k;
       s[0] = s1[i];
       s[1] = s2[4];
       s[2] = s3[k];
-      setState(l, AlphabetState(l, s, s));
+      setState(l, AlphabetState(static_cast<int>(l), s, s));
     }
   }
 
@@ -117,11 +117,11 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
   for (size_t i = 0; i < 3; ++i)
   {
-    int l = static_cast<int>(150 + 12 * i);
+    size_t l = 150 + 12 * i;
     s[0] = s1[i];
     s[1] = s2[4];
     s[2] = s3[3];
-    setState(l, AlphabetState(l, s, s));
+    setState(l, AlphabetState(static_cast<int>(l), s, s));
   }
 
   // -NN (200->211)
@@ -130,11 +130,11 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
   {
     for (size_t k = 0; k < 3; ++k)
     {
-      int l = static_cast<int>(200 + j * 3 + k);
+      size_t l = 200 + j * 3 + k;
       s[0] = s1[3];
       s[1] = s2[j];
       s[2] = s3[k];
-      setState(l, AlphabetState(l, s, s));
+      setState(l, AlphabetState(static_cast<int>(l), s, s));
     }
   }
 
@@ -143,32 +143,31 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
   for (size_t j = 0; j < 4; ++j)
   {
-    int l = static_cast<int>(250 + 3 * j);
+    size_t l = 250 + 3 * j;
     s[0] = s1[3];
     s[1] = s2[j];
     s[2] = s3[3];
-    setState(l, AlphabetState(l, s, s));
+    setState(l, AlphabetState(static_cast<int>(l), s, s));
   }
 
   // --N (300->302)
 
   for (size_t k = 0; k < 3; ++k)
   {
-    int l = static_cast<int>(300 + k);
+    size_t l = 300 + k;
     s[0] = s1[3];
     s[1] = s2[4];
     s[2] = s3[k];
-    setState(l, AlphabetState(l, s, s));
+    setState(l, AlphabetState(static_cast<int>(l), s, s));
   }
 
 
   // --- (350)
 
-  int l = 350;
   s[0] = s1[3];
   s[1] = s2[4];
   s[2] = s3[3];
-  setState(l, AlphabetState(l, s, s));
+  setState(350, AlphabetState(350, s, s));
 }
 
 /****************************************************************************************/
@@ -191,64 +190,64 @@ vector<int> RNY::getAlias(int state) const throw (BadIntException)
     break;
   case 1: // NN-
     v.resize(3);
-    for (k = 0; k < 3; k++)
+    for (k = 0; k < 3; ++k)
     {
-      v[k] = k + rs;
+      v[static_cast<size_t>(k)] = k + rs;
     }
     break;
   case 2: // N-N
     v.resize(4);
-    for (j = 0; j < 4; j++)
+    for (j = 0; j < 4; ++j)
     {
-      v[j] = 3 * j + rs;
+      v[static_cast<size_t>(j)] = 3 * j + rs;
     }
     break;
   case 3: // N--
     v.resize(12);
-    for (j = 0; j < 4; j++)
+    for (j = 0; j < 4; ++j)
     {
-      for (k = 0; k < 3; k++)
+      for (k = 0; k < 3; ++k)
       {
-        v[3 * j + k] = rs + 3 * j + k;
+        v[static_cast<size_t>(3 * j + k)] = rs + 3 * j + k;
       }
     }
     break;
   case 4: // -NN
     v.resize(3);
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
-      v[i] = 12 * i + rs;
+      v[static_cast<size_t>(i)] = 12 * i + rs;
     }
     break;
   case 5: // -N-
     v.resize(9);
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
-      for (k = 0; k < 3; k++)
+      for (k = 0; k < 3; ++k)
       {
-        v[3 * i + k] = rs + 12 * i + k;
+        v[static_cast<size_t>(3 * i + k)] = rs + 12 * i + k;
       }
     }
     break;
   case 6: // --N
     v.resize(12);
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
-      for (j = 0; j < 4; j++)
+      for (j = 0; j < 4; ++j)
       {
-        v[4 * i + j] = rs + 12 * i + 3 * j;
+        v[static_cast<size_t>(4 * i + j)] = rs + 12 * i + 3 * j;
       }
     }
     break;
   case 7: // ---
     v.resize(36);
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
-      for (j = 0; j < 4; j++)
+      for (j = 0; j < 4; ++j)
       {
-        for (k = 0; k < 3; k++)
+        for (k = 0; k < 3; ++k)
         {
-          v[12 * i + 3 * j + k] = 12 * i + 3 * j + k;
+          v[static_cast<size_t>(12 * i + 3 * j + k)] = 12 * i + 3 * j + k;
         }
       }
     }
@@ -427,12 +426,12 @@ int RNY::charToInt(const string& state) const throw (BadCharException)
 
 string RNY::intToChar(int state) const throw (BadIntException)
 {
-  unsigned int i, j, k, l;
-  for (i = 0; i < 3; i++)
+  int i, j, k, l;
+  for (i = 0; i < 3; ++i)
   {
-    for (j = 0; j < 4; j++)
+    for (j = 0; j < 4; ++j)
     {
-      for (k = 0; k < 3; k++)
+      for (k = 0; k < 3; ++k)
       {
         l = i * 12 + j * 3 + k;
         if (getState(l).getNum() == state)
@@ -443,9 +442,9 @@ string RNY::intToChar(int state) const throw (BadIntException)
 
   // NN- (50->83)
 
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
-    for (j = 0; j < 4; j++)
+    for (j = 0; j < 4; ++j)
     {
       l = 50 + 12 * i + j * 3;
       if (getState(l).getNum() == state)
@@ -455,9 +454,9 @@ string RNY::intToChar(int state) const throw (BadIntException)
 
   // N-N (100->126)
 
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
-    for (k = 0; k < 3; k++)
+    for (k = 0; k < 3; ++k)
     {
       l = 100 + 12 * i + k;
       if (getState(l).getNum() == state)
@@ -467,7 +466,7 @@ string RNY::intToChar(int state) const throw (BadIntException)
 
   // N-- (150->152)
 
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
     l = 150 + 12 * i;
     if (getState(l).getNum() == state)
@@ -476,9 +475,9 @@ string RNY::intToChar(int state) const throw (BadIntException)
 
   // -NN (200->211)
 
-  for (j = 0; j < 4; j++)
+  for (j = 0; j < 4; ++j)
   {
-    for (k = 0; k < 3; k++)
+    for (k = 0; k < 3; ++k)
     {
       l = 200 + j * 3 + k;
       if (getState(l).getNum() == state)
@@ -489,7 +488,7 @@ string RNY::intToChar(int state) const throw (BadIntException)
 
   // -N- (250->253)
 
-  for (j = 0; j < 4; j++)
+  for (j = 0; j < 4; ++j)
   {
     l = 250 + 3 * j;
     if (getState(l).getNum() == state)
@@ -498,7 +497,7 @@ string RNY::intToChar(int state) const throw (BadIntException)
 
   // --N (300->302)
 
-  for (k = 0; k < 3; k++)
+  for (k = 0; k < 3; ++k)
   {
     l = 300 + k;
     if (getState(l).getNum() == state)

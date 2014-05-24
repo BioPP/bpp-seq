@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -54,9 +54,9 @@ IntegerAlphabet::IntegerAlphabet(unsigned int max) : MAX_(max)
   // Alphabet content definition
   setState(0, AlphabetState(-1, "-", "Gap"));
 
-  for (unsigned int i = 0; i < MAX_; i++)
+  for (int i = 0; i < static_cast<int>(MAX_); i++)
   {
-    setState(i + 1, AlphabetState(i, TextTools::toString(i), ""));
+    setState(static_cast<size_t>(i + 1), AlphabetState(i, TextTools::toString(i), ""));
   }
 }
 
