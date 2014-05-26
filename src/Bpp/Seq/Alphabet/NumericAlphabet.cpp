@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide
    classes for sequences analysis.
@@ -76,19 +76,28 @@ NumericAlphabet& NumericAlphabet::operator=(const NumericAlphabet& na)
 
 /****************************************************************************************/
 
-void NumericAlphabet::setState(unsigned int pos, const AlphabetNumericState& ans)
+void NumericAlphabet::setState(size_t pos, const AlphabetState& st) throw (Exception)
 {
-  AbstractAlphabet::setState(pos, ans);
-  double x=static_cast<const AlphabetNumericState&>(ans).getValue();
-  if (values_.find(x) == values_.end())
+  try {
+    AbstractAlphabet::setState(pos, st);
+    double x = static_cast<const AlphabetNumericState&>(st).getValue();
+    if (values_.find(x) == values_.end())
     values_[x] = pos;  
+  } catch(std::bad_cast&) {
+    throw Exception("NumericAlphabet::setState. Incorrect alphabet type.");
+  }
 }
 
-void NumericAlphabet::registerState(const AlphabetNumericState& ans) {
-  AbstractAlphabet::registerState(ans);
-  double x=static_cast<const AlphabetNumericState&>(ans).getValue();
-  if (values_.find(x) == values_.end())
-    values_[x] = getSize();
+void NumericAlphabet::registerState(const AlphabetState& st) throw (Exception)
+{
+  try {
+    AbstractAlphabet::registerState(st);
+    double x = static_cast<const AlphabetNumericState&>(st).getValue();
+    if (values_.find(x) == values_.end())
+      values_[x] = getSize();
+  } catch(std::bad_cast&) {
+    throw Exception("NumericAlphabet::registerState. Incorrect alphabet type.");
+  }
 }
 
 
@@ -130,23 +139,20 @@ bool NumericAlphabet::isUnresolved(int state) const
 
 unsigned int NumericAlphabet::getSize() const
 {
-  return (unsigned int)values_.size();
+  return static_cast<unsigned int>(values_.size());
 }
 
 unsigned int NumericAlphabet::getNumberOfTypes() const
 {
-  return (unsigned int)values_.size();
+  return static_cast<unsigned int>(values_.size());
 }  
 
 void NumericAlphabet::remap()
 {
   AbstractAlphabet::remap();
   values_.clear();
-  for (unsigned int pos = 0 ; pos < getSize() ; pos++) {
-    /******************
-    ???? getStateAt ????
-    **************/
-    double x=static_cast<const AlphabetNumericState&>(getState(pos)).getValue();
+  for (size_t pos = 0 ; pos < getSize() ; pos++) {
+    double x = getStateAt(pos).getValue();
     if (values_.find(x) == values_.end())
       values_[x] = pos;
   }
@@ -156,7 +162,7 @@ void NumericAlphabet::remap()
 
 double NumericAlphabet::getDelta() const
 {
-  return (pdd_->getUpperBound()-pdd_->getLowerBound())/(double)pdd_->getNumberOfCategories();
+  return (pdd_->getUpperBound() - pdd_->getLowerBound()) / static_cast<double>(pdd_->getNumberOfCategories());
 }
 
 double NumericAlphabet::intToValue(int state) const throw (BadIntException)
@@ -164,18 +170,18 @@ double NumericAlphabet::intToValue(int state) const throw (BadIntException)
   return static_cast<const AlphabetNumericState& >(getState(state)).getValue();
 }
 
-unsigned int NumericAlphabet::valueToInt(double value) const
+size_t NumericAlphabet::valueToInt(double value) const
 {
-  map<double, unsigned int>::const_iterator it=values_.find(pdd_->getValueCategory(value));
+  map<double, size_t>::const_iterator it = values_.find(pdd_->getValueCategory(value));
   return it->second;
 }
 
-AlphabetNumericState& NumericAlphabet::getStateAt(unsigned int pos)  throw (IndexOutOfBoundsException)
+AlphabetNumericState& NumericAlphabet::getStateAt(size_t pos)  throw (IndexOutOfBoundsException)
 {
   return static_cast<AlphabetNumericState&>(AbstractAlphabet::getStateAt(pos));
 }
 
-const AlphabetNumericState& NumericAlphabet::getStateAt(unsigned int pos) const  throw (IndexOutOfBoundsException)
+const AlphabetNumericState& NumericAlphabet::getStateAt(size_t pos) const throw (IndexOutOfBoundsException)
 {
   return static_cast<const AlphabetNumericState&>(AbstractAlphabet::getStateAt(pos));
 }

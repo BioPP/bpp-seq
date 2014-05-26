@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -68,11 +68,11 @@ throw (BadIntException)
     throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", alpha_);
   if (state2 < 0 || state2 > 19)
     throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", alpha_);
-  double d = distanceMatrix_(state1, state2);
+  double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   if (sign_ == SIGN_NONE)
     return NumTools::abs<double>(d);
   if (sign_ == SIGN_PC1)
-    return signMatrix_(state1, state2) * NumTools::abs<double>(d);
+    return signMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2)) * NumTools::abs<double>(d);
   return d;
 }
 

@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -79,7 +79,9 @@ throw (BadIntException)
   if (alpha_->isGap(state2) || !alpha_->isIntInAlphabet(state2))
     throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state1.", alpha_);
   if (!alpha_->isUnresolved(state1) && !alpha_->isUnresolved(state2))
-    return distanceMatrix_(state1, state2);
+    return distanceMatrix_(
+        static_cast<size_t>(state1),
+        static_cast<size_t>(state2));
   vector<int> states1 = alpha_->getAlias(state1);
   vector<int> states2 = alpha_->getAlias(state2);
   double score = -5;
@@ -99,7 +101,9 @@ throw (BadIntException)
 double DefaultNucleotideScore::getIndex(const std::string& state1, const std::string& state2) const
 throw (BadCharException)
 {
-  return distanceMatrix_(alpha_->charToInt(state1), alpha_->charToInt(state2));
+  return distanceMatrix_(
+      static_cast<size_t>(alpha_->charToInt(state1)),
+      static_cast<size_t>(alpha_->charToInt(state2)));
 }
 
 LinearMatrix<double>* DefaultNucleotideScore::getIndexMatrix() const

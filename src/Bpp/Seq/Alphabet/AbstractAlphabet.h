@@ -174,6 +174,7 @@ namespace bpp
      * @throw Exception If a wrong alphabet state is provided.
      */
     virtual void registerState(const AlphabetState& st) throw (Exception);
+    
     /**
      * @brief Set a state in the Alphabet.
      *
@@ -183,12 +184,14 @@ namespace bpp
      * @throw IndexOutOfBoundsException If an incorrect index is provided.
      */
     virtual void setState(size_t pos, const AlphabetState& st) throw (Exception, IndexOutOfBoundsException);
+    
     /**
      * @brief Resize the private alphabet_ vector.
      *
      * @param size The new size of the Alphabet.
      */
     void resize(size_t size) { alphabet_.resize(size); }
+    
     /**
      * @brief Get a state at a position in the alphabet_ vector.
      *
@@ -199,6 +202,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If pos is out of the vector.
      */
     virtual AlphabetState& getStateAt(size_t pos) throw (IndexOutOfBoundsException);
+    
     /**
      * @brief Get a state at a position in the alphabet_ vector.
      *
@@ -214,8 +218,8 @@ namespace bpp
      * @brief Re-update the maps using the alphabet_ vector content.
      */
     void remap() {
-      for (size_t i = 0 ; i < alphabet_.size() ; ++i) {
-        updateMaps_(i, * alphabet_[i]);
+      for (size_t i = 0; i < alphabet_.size(); ++i) {
+        updateMaps_(i, *alphabet_[i]);
       }
     }
 

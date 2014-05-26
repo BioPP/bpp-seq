@@ -99,7 +99,7 @@ const AlphabetState& AbstractAlphabet::getState(int num) const throw (BadIntExce
   map<int, size_t>::const_iterator it = nums_.find(num);
   if (it == nums_.end())
     throw BadIntException(num, "AbstractAlphabet::getState(int): Specified base unknown", this);
-  return * (alphabet_[it->second]);
+  return *(alphabet_[it->second]);
 }
 
 /******************************************************************************/

@@ -60,23 +60,18 @@ namespace bpp
   private:
     const UniformDiscreteDistribution* pdd_;
 
-    std::map<double, unsigned int> values_;
+    std::map<double, size_t> values_;
   
   public:
-    /**
-     *@ brief Construction from a UniformDiscreteDistribution. This
-     * UniformDiscreteDistribution is cloned.
-     *
-     */
-  
+
     NumericAlphabet(const UniformDiscreteDistribution&);
-    ~NumericAlphabet() { delete pdd_;}
+    virtual ~NumericAlphabet() { delete pdd_;}
     NumericAlphabet(const NumericAlphabet&);
     NumericAlphabet& operator=(const NumericAlphabet&);
   
   public:
-    void setState(unsigned int pos, const AlphabetNumericState&);
-    void registerState(const AlphabetNumericState& ans);
+    void setState(size_t pos, const AlphabetState& st) throw (Exception);
+    void registerState(const AlphabetState& st) throw (Exception);
   
     bool containsGap(const std::string& state) const throw (BadCharException);
 
@@ -91,32 +86,31 @@ namespace bpp
 
     std::string getAlphabetType() const { return "Numeric alphabet"; }
 
-    AlphabetNumericState& getStateAt(unsigned int pos)  throw (IndexOutOfBoundsException);
-    const AlphabetNumericState& getStateAt(unsigned int pos) const throw (IndexOutOfBoundsException);
+    AlphabetNumericState& getStateAt(size_t pos)  throw (IndexOutOfBoundsException);
+    const AlphabetNumericState& getStateAt(size_t pos) const throw (IndexOutOfBoundsException);
+    
     /**
      *@ brief Specific methods
      *
      */
 
     /**
-     *@brief Returns the difference between successive values
+     * @brief Returns the difference between successive values
      *
      */
-
     double getDelta() const;
+
     /**
-     *@brief Returns the value for the character number 
+     * @brief Returns the value for the character number 
      *
      */
-  
     double intToValue(int state) const throw (BadIntException);
 
     /**
-     *@brief Returns the CategoryIndex of the category to which the value belongs.
+     * @brief Returns the CategoryIndex of the category to which the value belongs.
      *
      */
-
-    unsigned int valueToInt(double value) const;
+    size_t valueToInt(double value) const;
 
 
     /**
