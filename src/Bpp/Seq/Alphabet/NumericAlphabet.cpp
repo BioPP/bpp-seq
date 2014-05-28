@@ -53,24 +53,26 @@ NumericAlphabet::NumericAlphabet(const UniformDiscreteDistribution& pd) :
 {
   
   // Alphabet size definition
-  unsigned int size= (unsigned int) pdd_->getNumberOfCategories();
+  size_t size = pdd_->getNumberOfCategories();
   resize(size);
 
-  Vdouble vd=pdd_->getCategories();
+  Vdouble vd = pdd_->getCategories();
   
-  for (size_t i = 0; i < size; i++){
-    setState((int)i,AlphabetNumericState((int)i,vd[i],TextTools::toString(vd[i]),TextTools::toString(vd[i])));
+  for (size_t i = 0; i < size; ++i){
+    setState(i, AlphabetNumericState(static_cast<int>(i), vd[i], TextTools::toString(vd[i]), TextTools::toString(vd[i])));
   }
 }
 
-NumericAlphabet::NumericAlphabet(const NumericAlphabet& na) : AbstractAlphabet(na),
-                                                              pdd_(na.pdd_->clone()), values_(na.values_)
+NumericAlphabet::NumericAlphabet(const NumericAlphabet& na) :
+  AbstractAlphabet(na),
+  pdd_(na.pdd_->clone()),
+  values_(na.values_)
 {}
 
 NumericAlphabet& NumericAlphabet::operator=(const NumericAlphabet& na) 
 {
   AbstractAlphabet::operator=(na);
-  pdd_=na.pdd_->clone();
+  pdd_ = na.pdd_->clone();
   return *this;
 }
 
