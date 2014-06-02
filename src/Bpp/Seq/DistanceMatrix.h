@@ -244,6 +244,10 @@ class DistanceMatrix:
     virtual const Matrix<double>& asMatrix() const {
       return distances_;
     }
+    
+    virtual Matrix<double>& asMatrix() {
+      return distances_;
+    }
 };
 
 } //end of namespace bpp.
