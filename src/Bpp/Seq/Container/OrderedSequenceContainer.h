@@ -168,6 +168,10 @@ class OrderedSequenceContainer:
      * @{
      */
 
+    virtual int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+
+    virtual const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+
     /**
      * @brief Element access operator.
      *

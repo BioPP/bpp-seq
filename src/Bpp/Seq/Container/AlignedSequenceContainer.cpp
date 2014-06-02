@@ -203,13 +203,13 @@ Site* AlignedSequenceContainer::removeSite(size_t pos) throw (IndexOutOfBoundsEx
   }
 
   // Delete site's position
-  positions_.erase(positions_.begin() + pos);
+  positions_.erase(positions_.begin() + static_cast<ptrdiff_t>(pos));
   length_--;
 
   // Actualizes the 'sites' vector:
   if (sites_[pos])
     delete sites_[pos];
-  sites_.erase(sites_.begin() + pos);
+  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(pos));
 
   // Send result
   return old;
@@ -229,13 +229,13 @@ void AlignedSequenceContainer::deleteSite(size_t pos) throw (IndexOutOfBoundsExc
   }
 
   // Delete site's position
-  positions_.erase(positions_.begin() + pos);
+  positions_.erase(positions_.begin() + static_cast<ptrdiff_t>(pos));
   length_--;
 
   // Actualizes the 'sites' vector:
   if (sites_[pos])
     delete sites_[pos];
-  sites_.erase(sites_.begin() + pos);
+  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(pos));
 }
 
 /******************************************************************************/
@@ -252,7 +252,8 @@ void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length) thro
   }
 
   // Delete site's siteIndexition
-  positions_.erase(positions_.begin() + siteIndex, positions_.begin() + siteIndex + length);
+  positions_.erase(positions_.begin() + static_cast<ptrdiff_t>(siteIndex),
+      positions_.begin() + static_cast<ptrdiff_t>(siteIndex + length));
   length_ -= length;
 
   // Actualizes the 'sites' vector:
@@ -261,7 +262,8 @@ void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length) thro
     if (sites_[i])
       delete sites_[i];
   }
-  sites_.erase(sites_.begin() + siteIndex, sites_.begin() + siteIndex + length);
+  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(siteIndex),
+      sites_.begin() + static_cast<ptrdiff_t>(siteIndex + length));
 }
 
 /******************************************************************************/
@@ -381,10 +383,10 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool 
   }
 
   length_++;
-  positions_.insert(positions_.begin() + siteIndex, position);
+  positions_.insert(positions_.begin() + static_cast<ptrdiff_t>(siteIndex), position);
 
   // Actualizes the 'sites' vector:
-  sites_.insert(sites_.begin() + siteIndex, 0);
+  sites_.insert(sites_.begin() + static_cast<ptrdiff_t>(siteIndex), 0);
 }
 
 /******************************************************************************/
@@ -422,10 +424,10 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, int p
   }
 
   length_++;
-  positions_.insert(positions_.begin() + siteIndex, position);
+  positions_.insert(positions_.begin() + static_cast<ptrdiff_t>(siteIndex), position);
 
   // Actualizes the 'sites' vector:
-  sites_.insert(sites_.begin() + siteIndex, 0);
+  sites_.insert(sites_.begin() + static_cast<ptrdiff_t>(siteIndex), 0);
 }
 
 /******************************************************************************/
