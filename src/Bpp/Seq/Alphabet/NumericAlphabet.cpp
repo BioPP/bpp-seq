@@ -42,6 +42,7 @@
 #include <Bpp/Text/TextTools.h>
 
 #include <iostream>
+#include <typeinfo>
 
 using namespace std;
 using namespace bpp;
