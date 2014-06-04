@@ -91,7 +91,7 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(size_t size, const 
   // Seq names and comments:
   for (size_t i = 0; i < size; i++)
   {
-    names_[i]    = "Seq_" + i;
+    names_[i]    = "Seq_" + TextTools::toString(i);
     comments_[i] = new Comments();
   }
 }
@@ -272,7 +272,7 @@ void CompressedVectorSiteContainer::setSite(size_t pos, const Site& site, bool c
     {
       //There was no other site pointing toward this pattern, so we remove it.
       delete sites_[current];
-      sites_.erase(sites_.begin() + current);
+      sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(current));
       //Now we have to correct all indices:
       for (size_t i = 0; i < index_.size(); ++i)
       {
@@ -343,14 +343,14 @@ void CompressedVectorSiteContainer::deleteSite(size_t siteIndex) throw (IndexOut
   {
     //There was no other site pointing toward this pattern, so we remove it.
     delete sites_[current];
-    sites_.erase(sites_.begin() + current);
+    sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(current));
     //Now we have to correct all indices:
     for (size_t j = 0; j < index_.size(); ++j)
     {
       if (index_[j] > current) index_[j]--;
     }
   }
-  index_.erase(index_.begin() + siteIndex);
+  index_.erase(index_.begin() + static_cast<ptrdiff_t>(siteIndex));
 }
 
 /******************************************************************************/
@@ -408,7 +408,7 @@ void CompressedVectorSiteContainer::addSite(const Site& site, size_t siteIndex, 
     Site* copy = dynamic_cast<Site*>(site.clone());
     sites_.push_back(copy);
   }
-  index_.insert(index_.begin() + siteIndex, index);
+  index_.insert(index_.begin() + static_cast<ptrdiff_t>(siteIndex), index);
 }
 
 /******************************************************************************/

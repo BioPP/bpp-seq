@@ -7,7 +7,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -164,7 +164,7 @@ size_t MapSequenceContainer::getSequencePosition(const string& name)
   const throw (SequenceNotFoundException)
 {
   // Specified sequence name research into all sequences
-  int pos = 0;
+  size_t pos = 0;
   for (map<string, Sequence*>::const_iterator it = sequences_.begin(); it != sequences_.end(); it++)
   {
     if (it->second->getName() == name) return pos;

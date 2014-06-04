@@ -6,7 +6,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -262,7 +262,7 @@ Sequence* VectorSequenceContainer::removeSequence(size_t sequenceIndex) throw (I
     throw IndexOutOfBoundsException("VectorSequenceContainer::removeSequence.", sequenceIndex, 0, sequences_.size() - 1);
   Sequence* old = sequences_[sequenceIndex];
   // Remove pointer toward old sequence:
-  sequences_.erase(sequences_.begin() + sequenceIndex);
+  sequences_.erase(sequences_.begin() + static_cast<ptrdiff_t>(sequenceIndex));
   // Send copy:
   return old;
 }
@@ -276,7 +276,7 @@ void VectorSequenceContainer::deleteSequence(size_t sequenceIndex) throw (IndexO
     throw IndexOutOfBoundsException("VectorSequenceContainer::deleteSequence.", sequenceIndex, 0, sequences_.size() - 1);
   delete sequences_[sequenceIndex];
   // Remove pointer toward old sequence:
-  sequences_.erase(sequences_.begin() + sequenceIndex);
+  sequences_.erase(sequences_.begin() + static_cast<ptrdiff_t>(sequenceIndex));
 }
 
 /******************************************************************************/
@@ -321,7 +321,7 @@ void VectorSequenceContainer::addSequence(const Sequence& sequence, size_t seque
   if (sequence.getAlphabet()->getAlphabetType() == getAlphabet()->getAlphabetType())
   {
     // insert(begin() + pos, new Sequence(sequence.getName(), sequence.getContent(), alphabet));
-    sequences_.insert(sequences_.begin() + sequenceIndex, dynamic_cast<Sequence*>(sequence.clone()));
+    sequences_.insert(sequences_.begin() + static_cast<ptrdiff_t>(sequenceIndex), dynamic_cast<Sequence*>(sequence.clone()));
   }
   else
     throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());

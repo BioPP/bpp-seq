@@ -60,7 +60,7 @@ SimpleSiteContainerIterator::SimpleSiteContainerIterator(const SiteContainer& si
 
 const Site* SimpleSiteContainerIterator::nextSite()
 {
-	const Site* s = &sites_->getSite(currentPosition_);
+	const Site* s = &sites_->getSite(static_cast<size_t>(currentPosition_));
 	currentPosition_++;
 	return s;
 }
@@ -79,7 +79,7 @@ NoGapSiteContainerIterator::NoGapSiteContainerIterator(const SiteContainer& site
 
 const Site* NoGapSiteContainerIterator::nextSite()
 {
-	const Site* s = &sites_->getSite(currentPosition_);
+	const Site* s = &sites_->getSite(static_cast<size_t>(currentPosition_));
 	currentPosition_ = nextSiteWithoutGapPosition(currentPosition_);
 	return s;
 }
@@ -91,8 +91,8 @@ bool NoGapSiteContainerIterator::hasMoreSites() const
 
 int NoGapSiteContainerIterator::nextSiteWithoutGapPosition(int current) const
 {
-	unsigned int position = current + 1;
-	while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->getSite(position)))
+	int position = current + 1;
+	while (position < static_cast<int>(sites_->getNumberOfSites()) && SiteTools::hasGap(sites_->getSite(position)))
     position++;
 	return position;
 }
@@ -101,7 +101,7 @@ int NoGapSiteContainerIterator::previousSiteWithoutGapPosition(int current) cons
 {
 	int position = current - 1;
 	while (position >= 0 && SiteTools::hasGap(sites_->getSite(position)))
-    position --;
+    position--;
 	return position;
 }
 
@@ -114,7 +114,7 @@ CompleteSiteContainerIterator::CompleteSiteContainerIterator(const SiteContainer
 
 const Site* CompleteSiteContainerIterator::nextSite()
 {
-	const Site* s = &sites_->getSite(currentPosition_);
+	const Site* s = &sites_->getSite(static_cast<size_t>(currentPosition_));
 	currentPosition_ = nextCompleteSitePosition(currentPosition_);
 	return s;
 }
@@ -126,8 +126,8 @@ bool CompleteSiteContainerIterator::hasMoreSites() const
 
 int CompleteSiteContainerIterator::nextCompleteSitePosition(int current) const
 {
-  unsigned int position = current + 1;
-	while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->getSite(position)))
+  int position = current + 1;
+	while (position < static_cast<int>(sites_->getNumberOfSites()) && !SiteTools::isComplete(sites_->getSite(position)))
     position ++;
 	return position;
 }

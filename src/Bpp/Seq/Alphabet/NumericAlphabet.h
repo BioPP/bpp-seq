@@ -110,8 +110,7 @@ namespace bpp
      * @brief Returns the CategoryIndex of the category to which the value belongs.
      *
      */
-    size_t valueToInt(double value) const;
-
+    size_t getValueIndex(double value) const;
 
     /**
      * @brief Re-update the maps.

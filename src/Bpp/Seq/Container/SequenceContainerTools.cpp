@@ -41,6 +41,9 @@
 #include "VectorSequenceContainer.h"
 #include "../Alphabet/CodonAlphabet.h"
 
+// From bpp-core:
+#include <Bpp/Text/TextTools.h>
+
 using namespace bpp;
 
 // From the STL:
@@ -55,7 +58,7 @@ SequenceContainer* SequenceContainerTools::createContainerOfSpecifiedSize(const 
   VectorSequenceContainer* vsc = new VectorSequenceContainer(alphabet);
   for (size_t i = 0; i < size; ++i)
   {
-    vsc->addSequence(BasicSequence("" + i, "", alphabet), false);
+    vsc->addSequence(BasicSequence(TextTools::toString(i), "", alphabet), false);
   }
   return vsc;
 }

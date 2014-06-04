@@ -173,7 +173,7 @@ double NumericAlphabet::intToValue(int state) const throw (BadIntException)
   return static_cast<const AlphabetNumericState& >(getState(state)).getValue();
 }
 
-size_t NumericAlphabet::valueToInt(double value) const
+size_t NumericAlphabet::getValueIndex(double value) const
 {
   map<double, size_t>::const_iterator it = values_.find(pdd_->getValueCategory(value));
   return it->second;

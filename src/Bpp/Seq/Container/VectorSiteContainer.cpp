@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -331,7 +331,7 @@ Site* VectorSiteContainer::removeSite(size_t i) throw (IndexOutOfBoundsException
   if (i >= getNumberOfSites())
     throw IndexOutOfBoundsException("VectorSiteContainer::removeSite.", i, 0, getNumberOfSites() - 1);
   Site* site = sites_[i];
-  sites_.erase(sites_.begin() + i);
+  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(i));
   return site;
 }
 
@@ -342,7 +342,7 @@ void VectorSiteContainer::deleteSite(size_t i) throw (IndexOutOfBoundsException)
   if (i >= getNumberOfSites())
     throw IndexOutOfBoundsException("VectorSiteContainer::deleteSite.", i, 0, getNumberOfSites() - 1);
   delete sites_[i];
-  sites_.erase(sites_.begin() + i);
+  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(i));
 }
 
 /******************************************************************************/
@@ -355,7 +355,7 @@ void VectorSiteContainer::deleteSites(size_t siteIndex, size_t length) throw (In
   {
     delete sites_[i];
   }
-  sites_.erase(sites_.begin() + siteIndex, sites_.begin() + siteIndex + length);
+  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(siteIndex), sites_.begin() + static_cast<ptrdiff_t>(siteIndex + length));
 }
 
 /******************************************************************************/
@@ -446,7 +446,7 @@ void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool check
   }
 
   // insert(begin() + pos, new Site(site));
-  sites_.insert(sites_.begin() + siteIndex, dynamic_cast<Site*>(site.clone()));
+  sites_.insert(sites_.begin() + static_cast<ptrdiff_t>(siteIndex), dynamic_cast<Site*>(site.clone()));
 }
 
 /******************************************************************************/
@@ -479,7 +479,7 @@ void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, int positi
 
   Site* copy = dynamic_cast<Site*>(site.clone());
   copy->setPosition(position);
-  sites_.insert(sites_.begin() + siteIndex, copy);
+  sites_.insert(sites_.begin() + static_cast<ptrdiff_t>(siteIndex), copy);
 }
 
 /******************************************************************************/
@@ -636,13 +636,13 @@ Sequence* VectorSiteContainer::removeSequence(size_t i) throw (IndexOutOfBoundsE
   }
 
   // Now actualize names and comments:
-  names_.erase(names_.begin() + i);
+  names_.erase(names_.begin() + static_cast<ptrdiff_t>(i));
   if (comments_[i])
     delete comments_[i];
-  comments_.erase(comments_.begin() + i);
+  comments_.erase(comments_.begin() + static_cast<ptrdiff_t>(i));
   // We remove the sequence, so the destruction of the sequence is up to the user:
   // if (sequences_[i] != 0) delete sequences_[i];
-  sequences_.erase(sequences_.begin() + i);
+  sequences_.erase(sequences_.begin() + static_cast<ptrdiff_t>(i));
   return sequence;
 }
 
@@ -667,13 +667,13 @@ void VectorSiteContainer::deleteSequence(size_t i) throw (IndexOutOfBoundsExcept
   }
 
   // Now actualize names and comments:
-  names_.erase(names_.begin() + i);
+  names_.erase(names_.begin() + static_cast<ptrdiff_t>(i));
   if (comments_[i])
     delete comments_[i];
-  comments_.erase(comments_.begin() + i);
+  comments_.erase(comments_.begin() + static_cast<ptrdiff_t>(i));
   if (sequences_[i])
     delete sequences_[i];
-  sequences_.erase(sequences_.begin() + i);
+  sequences_.erase(sequences_.begin() + static_cast<ptrdiff_t>(i));
 }
 
 /******************************************************************************/
@@ -759,9 +759,9 @@ throw (Exception)
     sites_[i]->addElement(pos, sequence.getValue(i));
   }
   // Actualize names and comments:
-  names_.insert(names_.begin() + pos, sequence.getName());
-  comments_.insert(comments_.begin() + pos, new Comments(sequence.getComments()));
-  sequences_.insert(sequences_.begin() + pos, 0);
+  names_.insert(names_.begin() + static_cast<ptrdiff_t>(pos), sequence.getName());
+  comments_.insert(comments_.begin() + static_cast<ptrdiff_t>(pos), new Comments(sequence.getComments()));
+  sequences_.insert(sequences_.begin() + static_cast<ptrdiff_t>(pos), 0);
 }
 
 /******************************************************************************/
