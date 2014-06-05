@@ -194,7 +194,7 @@ void Mase::readHeader_(std::istream& input, MaseHeader& header) const throw (Exc
         //Site selection:
         string::size_type index = line.find("# of");
         if (index < line.npos) {
-          StringTokenizer st(string(line.begin() + index + 4, line.end()), " \t=;");
+          StringTokenizer st(string(line.begin() + static_cast<ptrdiff_t>(index + 4), line.end()), " \t=;");
           st.nextToken(); //skip next word: may be 'regions' or 'segments' or else ;-)
           unsigned int numberOfSegments = TextTools::to<unsigned int>(st.nextToken());
           string name = st.unparseRemainingTokens();

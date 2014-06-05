@@ -74,7 +74,7 @@ void DCSE::appendAlignmentFromStream(istream& input, SiteContainer& sc) const th
     if(line == "") break;
     string::size_type endOfSeq = line.find("     ");
     if(endOfSeq == line.npos) break;
-    sequence = string(line.begin(), line.begin() + endOfSeq);
+    sequence = string(line.begin(), line.begin() + static_cast<ptrdiff_t>(endOfSeq));
     sequence = TextTools::removeWhiteSpaces(sequence);
     sequence = TextTools::removeChar(sequence, '{');
     sequence = TextTools::removeChar(sequence, '}');
@@ -83,7 +83,7 @@ void DCSE::appendAlignmentFromStream(istream& input, SiteContainer& sc) const th
     sequence = TextTools::removeChar(sequence, '(');
     sequence = TextTools::removeChar(sequence, ')');
     sequence = TextTools::removeChar(sequence, '^');
-    name     = string(line.begin() + endOfSeq + 1, line.end()),
+    name     = string(line.begin() + static_cast<ptrdiff_t>(endOfSeq + 1), line.end()),
     name     = TextTools::removeFirstWhiteSpaces(name);
     if(name.find("Helix numbering") == name.npos
     && name.find("mask") == name.npos)

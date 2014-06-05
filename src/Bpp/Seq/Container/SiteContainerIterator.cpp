@@ -91,16 +91,16 @@ bool NoGapSiteContainerIterator::hasMoreSites() const
 
 int NoGapSiteContainerIterator::nextSiteWithoutGapPosition(int current) const
 {
-	int position = current + 1;
-	while (position < static_cast<int>(sites_->getNumberOfSites()) && SiteTools::hasGap(sites_->getSite(position)))
+	size_t position = current + 1;
+	while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->getSite(position)))
     position++;
-	return position;
+	return static_cast<int>(position);
 }
 
 int NoGapSiteContainerIterator::previousSiteWithoutGapPosition(int current) const
 {
 	int position = current - 1;
-	while (position >= 0 && SiteTools::hasGap(sites_->getSite(position)))
+	while (position >= 0 && SiteTools::hasGap(sites_->getSite(static_cast<size_t>(position))))
     position--;
 	return position;
 }
@@ -126,16 +126,16 @@ bool CompleteSiteContainerIterator::hasMoreSites() const
 
 int CompleteSiteContainerIterator::nextCompleteSitePosition(int current) const
 {
-  int position = current + 1;
-	while (position < static_cast<int>(sites_->getNumberOfSites()) && !SiteTools::isComplete(sites_->getSite(position)))
-    position ++;
-	return position;
+  size_t position = current + 1;
+	while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->getSite(position)))
+    position++;
+	return static_cast<int>(position);
 }
 
 int CompleteSiteContainerIterator::previousCompleteSitePosition(int current) const
 {
   int position = current - 1;
-	while (position >= 0 && !SiteTools::isComplete(sites_->getSite(position)))
+	while (position >= 0 && !SiteTools::isComplete(sites_->getSite(static_cast<size_t>(position))))
     position --;
 	return position;
 }

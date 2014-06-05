@@ -67,7 +67,7 @@ const Sequence* SimpleSequenceContainerIterator::nextSequence()
 
 bool SimpleSequenceContainerIterator::hasMoreSequences() const
 {
-	return currentPosition_ < static_cast<int>(sequences_->getNumberOfSequences());
+	return currentPosition_ < sequences_->getNumberOfSequences();
 }
 
 /******************************************************************************/

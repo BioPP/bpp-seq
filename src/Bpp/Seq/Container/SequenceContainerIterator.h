@@ -55,7 +55,7 @@ class AbstractSequenceContainerIterator :
 {
 	protected:
 		const OrderedSequenceContainer* sequences_;
-		int currentPosition_;
+		size_t currentPosition_;
 	
 	public:
 		AbstractSequenceContainerIterator(const OrderedSequenceContainer& sites);
