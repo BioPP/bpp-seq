@@ -92,6 +92,11 @@ public:
    * @return A matrix object with all indices.
    */
   virtual Matrix<double>* getIndexMatrix() const = 0;
+  
+  /**
+   * @return True if the index is symatric (that is, index(i,j) == index(j, i)).
+   */
+  virtual bool isSymmetric() const = 0;
 };
 } // end of namespace bpp.
 

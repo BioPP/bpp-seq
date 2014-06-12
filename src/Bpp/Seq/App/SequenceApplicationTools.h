@@ -93,6 +93,7 @@ namespace bpp
      * @param suffixIsOptional Tell if the suffix is absolutely required.
      * @param verbose Print some info to the 'message' output stream.
      * @param allowGeneric Tell if generic alphabets can be used.
+     * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
      * @return A new Alphabet object according to options specified.
      */
     static Alphabet* getAlphabet(
@@ -100,7 +101,8 @@ namespace bpp
       const std::string& suffix = "",
       bool suffixIsOptional = true,
       bool verbose = true,
-      bool allowGeneric = false) throw (Exception);
+      bool allowGeneric = false,
+      int warn = 1) throw (Exception);
 
     /**
      * @brief Build a GeneticCode object according to options.
@@ -127,7 +129,11 @@ namespace bpp
      * @return A new AlphabetIndex1 object.
      * @throw Exception in case of bad description.
      */
-    static AlphabetIndex1* getAlphabetIndex1(const Alphabet* alphabet, const std::string& description, const std::string& message = "Alphabet distance:", bool verbose = true) throw (Exception);
+    static AlphabetIndex1* getAlphabetIndex1(
+        const Alphabet* alphabet,
+        const std::string& description,
+        const std::string& message = "Alphabet distance:",
+        bool verbose = true) throw (Exception);
 
 
     /**
@@ -140,7 +146,11 @@ namespace bpp
      * @param verbose Tell if some info should be displayed while parsing.
      * @throw Exception in case of bad description.
      */
-    static AlphabetIndex2* getAlphabetIndex2(const Alphabet* alphabet, const std::string& description, const std::string& message = "Alphabet distance:", bool verbose = true) throw (Exception);
+    static AlphabetIndex2* getAlphabetIndex2(
+        const Alphabet* alphabet,
+        const std::string& description,
+        const std::string& message = "Alphabet distance:",
+        bool verbose = true) throw (Exception);
 
 
     /**
@@ -156,6 +166,7 @@ namespace bpp
      * @param suffix  A suffix to be applied to each attribute name.
      * @param suffixIsOptional Tell if the suffix is absolutely required.
      * @param verbose Print some info to the 'message' output stream.
+     * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
      * @return A new VectorSequenceContainer object according to options specified.
      * @see getSiteContainer to read an alignment.
      */
@@ -165,7 +176,8 @@ namespace bpp
       std::map<std::string, std::string>& params,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
-      bool verbose = true);
+      bool verbose = true,
+      int warn = 1);
 
     /**
      * @brief Build a SiteContainer object according to options.
@@ -180,6 +192,7 @@ namespace bpp
      * @param suffix  A suffix to be applied to each attribute name.
      * @param suffixIsOptional Tell if the suffix is absolutely required.
      * @param verbose Print some info to the 'message' output stream.
+     * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
      * @return A new VectorSiteContainer object according to options specified.
      */
     static VectorSiteContainer* getSiteContainer(
@@ -187,7 +200,8 @@ namespace bpp
       std::map<std::string, std::string>& params,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
-      bool verbose = true);
+      bool verbose = true,
+      int warn = 1);
 
     /**
      * @brief Retrieves sites suitable for the analysis.
@@ -214,6 +228,7 @@ namespace bpp
      * @param suffixIsOptional Tell if the suffix is absolutely required.
      * @param gapAsUnknown Convert gaps to unknown characters.
      * @param verbose Print some info to the 'message' output stream.
+     * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
      * @return A new VectorSiteContainer object containing sites of interest.
      */
     static VectorSiteContainer* getSitesToAnalyse(
@@ -222,7 +237,8 @@ namespace bpp
       std::string suffix = "",
       bool suffixIsOptional = true,
       bool gapAsUnknown = true,
-      bool verbose = true);
+      bool verbose = true,
+      int warn = 1);
 
     /**
      * @brief Write a sequence file according to options.
@@ -237,12 +253,14 @@ namespace bpp
      * @param params  The attribute map where options may be found.
      * @param suffix  A suffix to be applied to each attribute name.
      * @param verbose Print some info to the 'message' output stream.
+     * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
      */
     static void writeSequenceFile(
       const SequenceContainer& sequences,
       std::map<std::string, std::string>& params,
       const std::string& suffix = "",
-      bool verbose = true);
+      bool verbose = true,
+      int warn = 1);
 
     /**
      * @brief Write a sequence alignment file according to options.
@@ -255,12 +273,14 @@ namespace bpp
      * @param params  The attribute map where options may be found.
      * @param suffix  A suffix to be applied to each attribute name.
      * @param verbose Print some info to the 'message' output stream.
+     * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
      */
     static void writeAlignmentFile(
       const SiteContainer& sequences,
       std::map<std::string, std::string>& params,
       const std::string& suffix = "",
-      bool verbose = true);
+      bool verbose = true,
+      int warn = 1);
   };
 } // end of namespace bpp.
 

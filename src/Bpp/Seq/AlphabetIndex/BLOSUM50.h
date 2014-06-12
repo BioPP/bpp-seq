@@ -96,6 +96,7 @@ public:
   const Alphabet* getAlphabet() const { return alpha_; }
   BLOSUM50* clone() const { return new BLOSUM50(); }
   LinearMatrix<double>* getIndexMatrix() const;
+  bool isSymmetric() const { return true; }
   /** @} */
 };
 } // end of namespace bpp.

@@ -97,6 +97,7 @@ public:
   double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException);
   const Alphabet* getAlphabet() const { return alphabet_; }
   LinearMatrix<double>* getIndexMatrix() const;
+  bool isSymmetric() const { return true; }
   /** @} */
 };
 } // end of namespace bpp.

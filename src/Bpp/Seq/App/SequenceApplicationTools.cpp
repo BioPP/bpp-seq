@@ -75,10 +75,11 @@ Alphabet* SequenceApplicationTools::getAlphabet(
   const string& suffix,
   bool suffixIsOptional,
   bool verbose,
-  bool allowGeneric) throw (Exception)
+  bool allowGeneric,
+  int warn) throw (Exception)
 {
   Alphabet* chars;
-  string alphtt = ApplicationTools::getStringParameter("alphabet", params, "DNA", suffix, suffixIsOptional);
+  string alphtt = ApplicationTools::getStringParameter("alphabet", params, "DNA", suffix, suffixIsOptional, warn);
 
   string alphabet = "";
   map<string, string> args;
@@ -109,12 +110,12 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     chars = new BinaryAlphabet();
   else if (alphabet == "DNA")
   {
-    bool mark = ApplicationTools::getBooleanParameter("bangAsGap", args, false, "", true, false);
+    bool mark = ApplicationTools::getBooleanParameter("bangAsGap", args, false, "", true, warn + 1);
     chars = new DNA(mark);
   }
   else if (alphabet == "RNA")
   {
-    bool mark = ApplicationTools::getBooleanParameter("bangAsGap", args, false, "", true, false);
+    bool mark = ApplicationTools::getBooleanParameter("bangAsGap", args, false, "", true, warn + 1);
     chars = new RNA(mark);
   }
   else if (alphabet == "Protein")
@@ -136,12 +137,12 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     NucleicAlphabet* pnalph;
     if (alphn == "RNA")
     {
-      bool mark = ApplicationTools::getBooleanParameter("bangAsGap", alphnArgs, false, "", true, false);
+      bool mark = ApplicationTools::getBooleanParameter("bangAsGap", alphnArgs, false, "", true, warn + 1);
       pnalph = new RNA(mark);
     }
     else if (alphn == "DNA")
     {
-      bool mark = ApplicationTools::getBooleanParameter("bangAsGap", alphnArgs, false, "", true, false);
+      bool mark = ApplicationTools::getBooleanParameter("bangAsGap", alphnArgs, false, "", true, warn + 1);
       pnalph = new DNA(mark);
     }
     else
@@ -229,10 +230,11 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   map<string, string>& params,
   const string& suffix,
   bool suffixIsOptional,
-  bool verbose)
+  bool verbose,
+  int warn)
 {
-  string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional);
-  string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional);
+  string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, warn);
+  string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
   BppOSequenceReaderFormat bppoReader(verbose);
   auto_ptr<ISequence> iSeq(bppoReader.read(sequenceFormat));
   if (verbose)
@@ -252,10 +254,11 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   map<string, string>& params,
   const string& suffix,
   bool suffixIsOptional,
-  bool verbose)
+  bool verbose,
+  int warn)
 {
-  string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional);
-  string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional);
+  string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, warn);
+  string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
   BppOAlignmentReaderFormat bppoReader(verbose);
   auto_ptr<IAlignment> iAln(bppoReader.read(sequenceFormat));
   map<string, string> args(bppoReader.getUnparsedArguments());
@@ -297,7 +300,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   if (iAln->getFormatName() == "MASE file")
   {
     // getting site set:
-    string siteSet = ApplicationTools::getStringParameter("siteSelection", args, "none", suffix, suffixIsOptional, false);
+    string siteSet = ApplicationTools::getStringParameter("siteSelection", args, "none", suffix, suffixIsOptional, warn + 1);
     if (siteSet != "none")
     {
       VectorSiteContainer* selectedSites;
@@ -324,17 +327,17 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
     // getting site set:
     size_t nbSites=sites->getNumberOfSites();
     
-    string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, false);
+    string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
 
     VectorSiteContainer* selectedSites=0;
-    if (siteSet!="none")
+    if (siteSet != "none")
     {
       vector<size_t> vSite;
       try {
-        vector<int> vSite1=NumCalcApplicationTools::seqFromString(siteSet);
-        for (size_t i=0;i<vSite1.size();i++){
-          int x=(vSite1[i]>=0?int(vSite1[i]):(int)(nbSites+vSite1[i]));
-          if (x>=0)
+        vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet);
+        for (size_t i = 0; i < vSite1.size(); ++i){
+          int x = (vSite1[i] >= 0 ? static_cast<int>(vSite1[i]) : static_cast<int>(nbSites+vSite1[i]));
+          if (x >= 0)
             vSite.push_back(x);
         }
         selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
@@ -344,17 +347,17 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
         string seln;
         map<string, string> selArgs;
         KeyvalTools::parseProcedure(siteSet, seln, selArgs);
-        if (seln=="Sample")
+        if (seln == "Sample")
         {
-          size_t n=(selArgs.find("n") == args.end())?nbSites:TextTools::toInt(selArgs["n"]);
-          bool replace =(selArgs.find("replace") == args.end())?false:(selArgs["replace"]=="true");
+          size_t n = ApplicationTools::getParameter<size_t>("n", selArgs, nbSites, "", true, warn + 1);
+          bool replace = ApplicationTools::getBooleanParameter("replace", selArgs, false, "", true, warn + 1);
 
           vSite.resize(n);
           vector<size_t> vPos;
-          for (size_t p=0;p<nbSites;p++)
+          for (size_t p = 0; p < nbSites; ++p)
             vPos.push_back(p);
           
-          RandomTools::getSample(vPos,vSite,replace);
+          RandomTools::getSample(vPos, vSite, replace);
 
           selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
           if (replace)
@@ -384,19 +387,20 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   string suffix,
   bool suffixIsOptional,
   bool gapAsUnknown,
-  bool verbose)
+  bool verbose,
+  int warn)
 {
   // Fully resolved sites, i.e. without jokers and gaps:
   SiteContainer* sitesToAnalyse;
   VectorSiteContainer* sitesToAnalyse2;
 
-  string option = ApplicationTools::getStringParameter("input.sequence.sites_to_use", params, "complete", suffix, suffixIsOptional);
+  string option = ApplicationTools::getStringParameter("input.sequence.sites_to_use", params, "complete", suffix, suffixIsOptional, warn);
   if (verbose)
     ApplicationTools::displayResult("Sites to use", option);
   if (option == "all")
   {
     sitesToAnalyse = new VectorSiteContainer(allSites);
-    string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional);
+    string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional, warn);
 
     if (maxGapOption[maxGapOption.size() - 1] == '%')
     {
@@ -439,7 +443,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
       }
     }
 
-    string maxUnresolvedOption = ApplicationTools::getStringParameter("input.sequence.max_unresolved_allowed", params, "100%", suffix, suffixIsOptional);
+    string maxUnresolvedOption = ApplicationTools::getStringParameter("input.sequence.max_unresolved_allowed", params, "100%", suffix, suffixIsOptional, warn);
 
     size_t sAlph = sitesToAnalyse->getAlphabet()->getSize();
 
@@ -523,13 +527,13 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(sitesToAnalyse->getAlphabet());
   if (ca)
   {
-    option = ApplicationTools::getStringParameter("input.sequence.remove_stop_codons", params, "no", suffix, true);
+    option = ApplicationTools::getStringParameter("input.sequence.remove_stop_codons", params, "no", suffix, true, warn);
     if ((option != "") && verbose)
       ApplicationTools::displayResult("Remove Stop Codons", option);
 
     if (option == "yes")
     {
-      string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, true);
+      string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, warn);
       auto_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet(), codeDesc));
       sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse, *gCode));
       delete sitesToAnalyse;
@@ -549,10 +553,11 @@ void SequenceApplicationTools::writeSequenceFile(
   const SequenceContainer& sequences,
   map<string, string>& params,
   const string& suffix,
-  bool verbose)
+  bool verbose,
+  int warn)
 {
-  string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
-  string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);
+  string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, warn);
+  string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
   BppOSequenceWriterFormat bppoWriter(verbose);
   auto_ptr<OSequence> oSeq(bppoWriter.read(sequenceFormat));
   if (verbose)
@@ -571,10 +576,11 @@ void SequenceApplicationTools::writeAlignmentFile(
   const SiteContainer& sequences,
   map<string, string>& params,
   const string& suffix,
-  bool verbose)
+  bool verbose,
+  int warn)
 {
-  string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false);
-  string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, true);
+  string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, warn);
+  string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
   BppOAlignmentWriterFormat bppoWriter(verbose);
   auto_ptr<OAlignment> oAln(bppoWriter.read(sequenceFormat));
   if (verbose)

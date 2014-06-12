@@ -49,7 +49,8 @@ using namespace std;
 
 AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException) :
   property_(20, 20),
-  alpha_(&AlphabetTools::PROTEIN_ALPHABET)
+  alpha_(&AlphabetTools::PROTEIN_ALPHABET),
+  sym_(sym)
 {
   // Parse entry:
   string line;
@@ -97,5 +98,7 @@ AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException) 
   while (!ok);
   if (!ok)
     throw IOException("AAIndex2Entry: invalid AAIndex2 entry.");
+  if (!diag)
+    sym_ = false;
 }
 

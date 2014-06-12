@@ -100,6 +100,7 @@ public:
   const Alphabet* getAlphabet() const { return alpha_; }
   DefaultNucleotideScore* clone() const { return new DefaultNucleotideScore(*this); }
   LinearMatrix<double>* getIndexMatrix() const;
+  bool isSymmetric() const { return true; }
   /** @} */
 };
 } // end of namespace bpp.

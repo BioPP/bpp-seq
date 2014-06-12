@@ -55,6 +55,7 @@ class AAIndex2Entry :
 private:
   LinearMatrix<double> property_;
   const ProteicAlphabet* alpha_;
+  bool sym_;
 
 public:
   /**
@@ -65,19 +66,22 @@ public:
    * This option as an effect only if the matrix is specified as a triangle in the entry.
    * If sym==true, the oher triangle will be built by symmetry.
    * If sym==false, the other triangle will be set to (-) the given triangle.
+   * If the input matrix is square, it will be considered non-symetric.
    * @throw IOException if the stream content does not follow the AAIndex2 database entry format.
    */
   AAIndex2Entry(std::istream& input, bool sym = true) throw (IOException);
 
   AAIndex2Entry(const AAIndex2Entry& index) :
     property_(index.property_),
-    alpha_(index.alpha_)
+    alpha_(index.alpha_),
+    sym_(index.sym_)
   {}
 
   AAIndex2Entry& operator=(const AAIndex2Entry& index)
   {
     property_ = index.property_;
     alpha_ = index.alpha_;
+    sym_ = index.sym_;
     return *this;
   }
 
@@ -103,6 +107,9 @@ public:
   }
 
   LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(property_); }
+
+  bool isSymmetric() const { return sym_; }
+
 };
 } // end of namespace bpp.
 
