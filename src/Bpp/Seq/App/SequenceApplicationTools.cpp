@@ -259,7 +259,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
-  BppOAlignmentReaderFormat bppoReader(verbose);
+  BppOAlignmentReaderFormat bppoReader;
   auto_ptr<IAlignment> iAln(bppoReader.read(sequenceFormat));
   map<string, string> args(bppoReader.getUnparsedArguments());
   if (verbose)
@@ -558,7 +558,7 @@ void SequenceApplicationTools::writeSequenceFile(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, warn);
   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
-  BppOSequenceWriterFormat bppoWriter(verbose);
+  BppOSequenceWriterFormat bppoWriter;
   auto_ptr<OSequence> oSeq(bppoWriter.read(sequenceFormat));
   if (verbose)
   {
@@ -581,7 +581,7 @@ void SequenceApplicationTools::writeAlignmentFile(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, warn);
   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
-  BppOAlignmentWriterFormat bppoWriter(verbose);
+  BppOAlignmentWriterFormat bppoWriter;
   auto_ptr<OAlignment> oAln(bppoWriter.read(sequenceFormat));
   if (verbose)
   {

@@ -115,7 +115,7 @@ OAlignment* BppOAlignmentWriterFormat::read(const std::string& description) thro
   }
   else if (format == "Stockholm")
   {
-    oAln.reset(reinterpret_cast<OAlignment*>(new Stockholm()));
+    oAln.reset(new Stockholm());
   }
   else
   {

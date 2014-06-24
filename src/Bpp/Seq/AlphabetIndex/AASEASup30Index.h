@@ -48,8 +48,6 @@ namespace bpp
 {
 /**
  * @brief Percentage of amino acids having a Solvent Exposed Area above 30 Angström^2 for each type of amino acid, according to http://prowl.rockefeller.edu/aainfo/access.htm
- *
- *
  */
 class AASEASup30Index :
   public AlphabetIndex1
@@ -92,12 +90,12 @@ public:
   double getIndex(int state) const throw (BadIntException)
   {
     if (state < 0 || state > 19) throw BadIntException(state, "AASEASup30Index::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
-    return seaSup30_[state];
+    return seaSup30_[static_cast<size_t>(state)];
   }
 
   double getIndex(const std::string& state) const throw (BadCharException)
   {
-    return seaSup30_[AlphabetTools::PROTEIN_ALPHABET.charToInt(state)];
+    return seaSup30_[static_cast<size_t>(AlphabetTools::PROTEIN_ALPHABET.charToInt(state))];
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(seaSup30_); }

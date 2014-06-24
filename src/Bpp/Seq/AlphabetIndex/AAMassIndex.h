@@ -48,8 +48,6 @@ namespace bpp
 {
 /**
  * @brief Mass (dalton) of each amino acid, according to http://www.imb-jena.de/IMAGE_AA.html.
- *
- *
  */
 class AAMassIndex :
   public AlphabetIndex1
@@ -92,12 +90,12 @@ public:
   double getIndex(int state) const throw (BadIntException)
   {
     if (state < 0 || state > 19) throw BadIntException(state, "AAMassIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
-    return mass_[state];
+    return mass_[static_cast<size_t>(state)];
   }
 
   double getIndex(const std::string& state) const throw (BadCharException)
   {
-    return mass_[AlphabetTools::PROTEIN_ALPHABET.charToInt(state)];
+    return mass_[static_cast<size_t>(AlphabetTools::PROTEIN_ALPHABET.charToInt(state))];
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(mass_); }

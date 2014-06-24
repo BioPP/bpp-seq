@@ -106,11 +106,11 @@ public:
   {
     size_t n = index_->getAlphabet()->getSize(); //We should change to "supported ints" there...
     RowMatrix<double>* m = new RowMatrix<double>(n, n);
-    for (int i = 0; i < static_cast<int>(n); i++)
+    for (size_t i = 0; i < n; ++i)
     {
-      for (int j = 0; j < static_cast<int>(n); j++)
+      for (size_t j = 0; j < n; ++j)
       {
-        (*m)(i, j) = getIndex(i, j);
+        (*m)(i, j) = getIndex(static_cast<int>(i), static_cast<int>(j));
       }
     }
     return m;

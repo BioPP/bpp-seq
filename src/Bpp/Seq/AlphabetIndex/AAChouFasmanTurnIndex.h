@@ -92,12 +92,12 @@ public:
   double getIndex(int state) const throw (BadIntException)
   {
     if (state < 0 || state > 19) throw BadIntException(state, "AAChouFasmanTurnIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
-    return turn_[state];
+    return turn_[static_cast<size_t>(state)];
   }
 
   double getIndex(const std::string& state) const throw (BadCharException)
   {
-    return turn_[AlphabetTools::PROTEIN_ALPHABET.charToInt(state)];
+    return turn_[static_cast<size_t>(AlphabetTools::PROTEIN_ALPHABET.charToInt(state))];
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(turn_); }

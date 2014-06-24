@@ -48,8 +48,6 @@ namespace bpp
 {
 /**
  * @brief Surface (Angström^2) of each amino acid, according to http://www.imb-jena.de/IMAGE_AA.html
- *
- *
  */
 class AASurfaceIndex :
   public AlphabetIndex1
@@ -92,12 +90,12 @@ public:
   double getIndex(int state) const throw (BadIntException)
   {
     if (state < 0 || state > 19) throw BadIntException(state, "AASurfaceIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
-    return surface_[state];
+    return surface_[static_cast<size_t>(state)];
   }
 
   double getIndex(const std::string& state) const throw (BadCharException)
   {
-    return surface_[AlphabetTools::PROTEIN_ALPHABET.charToInt(state)];
+    return surface_[static_cast<size_t>(AlphabetTools::PROTEIN_ALPHABET.charToInt(state))];
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(surface_); }
