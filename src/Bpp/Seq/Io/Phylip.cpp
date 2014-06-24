@@ -190,7 +190,7 @@ unsigned int Phylip::getNumberOfSequences(const std::string& path) const throw (
   string firstLine = FileTools::getNextLine(file);
   StringTokenizer st(firstLine, " \t");
   istringstream iss(st.nextToken());
-  int nb;
+  unsigned int nb;
   iss >> nb;
   file.close();
   return nb;
@@ -223,7 +223,7 @@ std::vector<std::string> Phylip::getSizedNames(const std::vector<std::string>& n
 
 /******************************************************************************/
 
-void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int charsByLine) const
+void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc) const
 {
   //cout << "Write sequential" << endl;
   size_t numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
@@ -231,11 +231,11 @@ void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int
   
   vector<string> seqNames = sc.getSequencesNames();
   vector<string> names = getSizedNames(seqNames);
-  for (size_t i = 0; i < seqNames.size(); i++)
+  for (size_t i = 0; i < seqNames.size(); ++i)
   {
-    vector<string> seq = TextTools::split(sc.toString(seqNames[i]), charsByLine);
+    vector<string> seq = TextTools::split(sc.toString(seqNames[i]), charsByLine_);
     out << names[i] << seq[0] << endl;
-    for (unsigned int j = 1; j < seq.size(); j++)
+    for (size_t j = 1; j < seq.size(); ++j)
     {
       out << string(names[i].size(), ' ') << seq[j] << endl;
     }
@@ -243,7 +243,7 @@ void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc, int
   }
 }
 
-void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, int charsByLine) const
+void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc) const
 {
   //cout << "Write interleaved;" << endl;
   size_t numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
@@ -253,20 +253,20 @@ void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc, in
   vector<string> names = getSizedNames(seqNames);
   //Split sequences:
   vector< vector<string> > seqs(sc.getNumberOfSequences());
-  for (size_t i = 0; i < seqNames.size(); i++)
+  for (size_t i = 0; i < seqNames.size(); ++i)
   {
-    seqs[i] = TextTools::split(sc.toString(seqNames[i]), charsByLine);
+    seqs[i] = TextTools::split(sc.toString(seqNames[i]), charsByLine_);
   }
   //Write first block:
-  for (size_t i = 0; i < names.size(); i++)
+  for (size_t i = 0; i < names.size(); ++i)
   {
     out << names[i] << seqs[i][0] << endl;
   }
   out << endl;
   //Write other blocks:
-  for (size_t j = 1; j < seqs[0].size(); j++)
+  for (size_t j = 1; j < seqs[0].size(); ++j)
   {
-    for (unsigned int i = 0; i < sc.getNumberOfSequences(); i++)
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
     {
       out << seqs[i][j] << endl;
     }
@@ -285,8 +285,8 @@ void Phylip::writeAlignment(std::ostream& output, const SiteContainer& sc) const
   // Checking the existence of specified file, and possibility to open it in write mode
   if (!output) { throw IOException ("Phylip::write : failed to open file"); }
 
-  if (sequential_) writeSequential (output, sc, charsByLine_);
-  else             writeInterleaved(output, sc, charsByLine_);
+  if (sequential_) writeSequential (output, sc);
+  else             writeInterleaved(output, sc);
 }
 
 /******************************************************************************/

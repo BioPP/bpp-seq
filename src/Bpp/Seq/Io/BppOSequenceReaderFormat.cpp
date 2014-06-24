@@ -123,7 +123,7 @@ ISequence* BppOSequenceReaderFormat::read(const std::string& description) throw 
   }
   else if (format == "GenBank")
   {
-    iSeq.reset(reinterpret_cast<ISequence*>(new GenBank())); // This is required to remove a strict-aliasing warning in gcc 4.4
+    iSeq.reset(new GenBank()); // This is required to remove a strict-aliasing warning in gcc 4.4
   }
   else if (format == "Nexus")
   {

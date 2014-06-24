@@ -58,7 +58,7 @@ SiteSelection MaseTools::getSiteSet(const Comments& maseFileHeader, const string
     string::size_type index = current.find("# of");
     if (index < current.npos)
     {
-      StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t=;");
+      StringTokenizer st(string(current.begin() + static_cast<ptrdiff_t>(index + 4), current.end()), " \t=;");
       st.nextToken(); // skip next word: may be 'regions' or 'segments' or else ;-)
       size_t numberOfSegments = TextTools::to<size_t>(st.nextToken());
       string name = st.unparseRemainingTokens();
@@ -111,7 +111,7 @@ SequenceSelection MaseTools::getSequenceSet(const Comments& maseFileHeader, cons
     string::size_type index = current.find("@ of");
     if (index < current.npos)
     {
-      StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t=;");
+      StringTokenizer st(string(current.begin() + static_cast<ptrdiff_t>(index + 4), current.end()), " \t=;");
       st.nextToken(); // skip next word: may be 'sequences' or else ;-)
       size_t numberOfSequences = TextTools::to<size_t>(st.nextToken());
       string name = st.unparseRemainingTokens();
@@ -130,7 +130,7 @@ SequenceSelection MaseTools::getSequenceSet(const Comments& maseFileHeader, cons
             int seqIndex = TextTools::toInt(st2.nextToken());
             // WARNING!!! In the mase+ format, sequences are numbered from 1 to nbSequences,
             // Whereas in SequenceContainer the index begins at 0.
-            selection.push_back(seqIndex - 1); // bounds included.
+            selection.push_back(static_cast<size_t>(seqIndex - 1)); // bounds included.
             counter++;
             if (counter == numberOfSequences)
               return selection;
@@ -203,9 +203,9 @@ map<string, size_t> MaseTools::getAvailableSiteSelections(const Comments& maseHe
     string::size_type index = current.find("# of");
     if (index < current.npos)
     {
-      StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
+      StringTokenizer st(string(current.begin() + static_cast<ptrdiff_t>(index + 4), current.end()), " \t\n\f\r=;");
       st.nextToken(); // skip next word: may be 'sequences' or else ;-)
-      size_t numberOfSegments = TextTools::toInt(st.nextToken());
+      size_t numberOfSegments = TextTools::to<size_t>(st.nextToken());
       string name = st.nextToken();
       while (st.hasMoreToken())
       {
@@ -222,8 +222,8 @@ map<string, size_t> MaseTools::getAvailableSiteSelections(const Comments& maseHe
         while (st2.hasMoreToken())
         {
           StringTokenizer st3(st2.nextToken(), ",");
-          size_t begin = TextTools::toInt(st3.nextToken());
-          size_t end   = TextTools::toInt(st3.nextToken());
+          size_t begin = TextTools::to<size_t>(st3.nextToken());
+          size_t end   = TextTools::to<size_t>(st3.nextToken());
           counter++;
           nbSites += end - begin + 1;
         }
@@ -250,7 +250,7 @@ map<string, size_t> MaseTools::getAvailableSequenceSelections(const Comments& ma
     string::size_type index = current.find("@ of");
     if (index < current.npos)
     {
-      StringTokenizer st(string(current.begin() + index + 4, current.end()), " \t\n\f\r=;");
+      StringTokenizer st(string(current.begin() + static_cast<ptrdiff_t>(index + 4), current.end()), " \t\n\f\r=;");
       st.nextToken(); // skip next word: may be 'sequences' or else ;-)
       size_t numberOfSequences = TextTools::fromString<size_t>(st.nextToken());
       string name = st.nextToken();
@@ -277,7 +277,7 @@ size_t MaseTools::getPhase(const Comments& maseFileHeader, const string& setName
     index = current.find("# of");
     if (index < current.npos)
     {
-      StringTokenizer st(string(current.begin() + index + 12, current.end()), " \t\n\f\r=;");
+      StringTokenizer st(string(current.begin() + static_cast<ptrdiff_t>(index + 12), current.end()), " \t\n\f\r=;");
       // size_t numberOfSegments = TextTools::toInt(st.nextToken());
       // cout << "Number of regions: " << st.nextToken() << endl;
       string name;
@@ -295,8 +295,8 @@ size_t MaseTools::getPhase(const Comments& maseFileHeader, const string& setName
     index = current.find("/codon_start");
     if (index < current.npos)
     {
-      StringTokenizer st(string(current.begin() + index + 12, current.end()), " \t\n\f\r=;");
-      phase = TextTools::toInt(st.nextToken());
+      StringTokenizer st(string(current.begin() + static_cast<ptrdiff_t>(index + 12), current.end()), " \t\n\f\r=;");
+      phase = TextTools::to<size_t>(st.nextToken());
     }
   }
   throw Exception("PolymorphismSequenceContainer::getPhase: no /codon_start found, or site selection missing.");

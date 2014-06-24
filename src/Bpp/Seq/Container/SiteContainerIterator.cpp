@@ -91,7 +91,7 @@ bool NoGapSiteContainerIterator::hasMoreSites() const
 
 int NoGapSiteContainerIterator::nextSiteWithoutGapPosition(int current) const
 {
-	size_t position = current + 1;
+	size_t position = static_cast<size_t>(current + 1);
 	while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->getSite(position)))
     position++;
 	return static_cast<int>(position);
@@ -126,7 +126,7 @@ bool CompleteSiteContainerIterator::hasMoreSites() const
 
 int CompleteSiteContainerIterator::nextCompleteSitePosition(int current) const
 {
-  size_t position = current + 1;
+  size_t position = static_cast<size_t>(current + 1);
 	while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->getSite(position)))
     position++;
 	return static_cast<int>(position);

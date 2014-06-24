@@ -186,8 +186,8 @@ class Phylip :
     void readInterleaved(std::istream& in, SiteContainer& asc) const throw (Exception);
     //Writing tools:
     std::vector<std::string> getSizedNames(const std::vector<std::string>& names) const;
-    void writeSequential (std::ostream& out, const SequenceContainer& sc, int charsByLine) const;
-    void writeInterleaved(std::ostream& out, const SequenceContainer& sc, int charsByLine) const;
+    void writeSequential(std::ostream& out, const SequenceContainer& sc) const;
+    void writeInterleaved(std::ostream& out, const SequenceContainer& sc) const;
 };
 
 } //end of namespace bpp.

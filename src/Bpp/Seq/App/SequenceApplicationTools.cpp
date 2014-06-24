@@ -235,7 +235,7 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
-  BppOSequenceReaderFormat bppoReader(verbose);
+  BppOSequenceReaderFormat bppoReader;
   auto_ptr<ISequence> iSeq(bppoReader.read(sequenceFormat));
   if (verbose)
   {

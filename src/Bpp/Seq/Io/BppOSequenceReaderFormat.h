@@ -57,12 +57,10 @@ namespace bpp
     public virtual IOFormat
   {
   private:
-    bool verbose_;
     std::map<std::string, std::string> unparsedArguments_;
 
   public:
-    BppOSequenceReaderFormat(bool verbose = true):
-      verbose_(verbose),
+    BppOSequenceReaderFormat():
       unparsedArguments_() {}
     virtual ~BppOSequenceReaderFormat() {}
 
