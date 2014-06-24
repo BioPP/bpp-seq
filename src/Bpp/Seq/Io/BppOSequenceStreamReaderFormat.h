@@ -52,18 +52,15 @@ namespace bpp
    * Creates a new ISequenceStream object according to
    * distribution description syntax (see the Bio++ Program Suite
    * manual for a detailed description of this syntax).
-   *
    */
   class BppOSequenceStreamReaderFormat:
     public virtual IOFormat
   {
   private:
-    bool verbose_;
     std::map<std::string, std::string> unparsedArguments_;
 
   public:
-    BppOSequenceStreamReaderFormat(bool verbose = true):
-      verbose_(verbose),
+    BppOSequenceStreamReaderFormat():
       unparsedArguments_() {}
     virtual ~BppOSequenceStreamReaderFormat() {}
 

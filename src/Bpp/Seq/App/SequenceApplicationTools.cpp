@@ -325,7 +325,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   else
   {
     // getting site set:
-    size_t nbSites=sites->getNumberOfSites();
+    size_t nbSites = sites->getNumberOfSites();
     
     string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
 
@@ -336,9 +336,11 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
       try {
         vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet);
         for (size_t i = 0; i < vSite1.size(); ++i){
-          int x = (vSite1[i] >= 0 ? static_cast<int>(vSite1[i]) : static_cast<int>(nbSites+vSite1[i]));
+          int x = (vSite1[i] >= 0 ? vSite1[i] : static_cast<int>(nbSites) + vSite1[i]);
           if (x >= 0)
-            vSite.push_back(x);
+            vSite.push_back(static_cast<size_t>(x));
+          else
+            throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect negative index: " + TextTools::toString(x));
         }
         selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
       }
@@ -445,7 +447,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
 
     string maxUnresolvedOption = ApplicationTools::getStringParameter("input.sequence.max_unresolved_allowed", params, "100%", suffix, suffixIsOptional, warn);
 
-    size_t sAlph = sitesToAnalyse->getAlphabet()->getSize();
+    int sAlph = static_cast<int>(sitesToAnalyse->getAlphabet()->getSize());
 
     if (maxUnresolvedOption[maxUnresolvedOption.size() - 1] == '%')
     {
@@ -461,7 +463,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
           map<int, double> freq;
           SiteTools::getFrequencies(sitesToAnalyse->getSite(i - 1), freq);
           double x = 0;
-          for (unsigned int l = 0; l < sAlph; l++)
+          for (int l = 0; l < sAlph; ++l)
           {
             x += freq[l];
           }
@@ -487,7 +489,7 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
           map<int, size_t> counts;
           SiteTools::getCounts(sitesToAnalyse->getSite(i - 1), counts);
           size_t x = 0;
-          for (int l = 0; l < static_cast<int>(sAlph); l++)
+          for (int l = 0; l < sAlph; l++)
           {
             x += counts[l];
           }
