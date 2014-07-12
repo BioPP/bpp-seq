@@ -58,10 +58,11 @@ namespace bpp
   {
   private:
     std::map<std::string, std::string> unparsedArguments_;
+    int warningLevel_;
 
   public:
-    BppOAlignmentReaderFormat():
-      unparsedArguments_() {}
+    BppOAlignmentReaderFormat(int warningLevel):
+      unparsedArguments_(), warningLevel_(warningLevel) {}
     virtual ~BppOAlignmentReaderFormat() {}
 
   public:

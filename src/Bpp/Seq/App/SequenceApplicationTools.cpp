@@ -235,7 +235,7 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
-  BppOSequenceReaderFormat bppoReader;
+  BppOSequenceReaderFormat bppoReader(warn);
   auto_ptr<ISequence> iSeq(bppoReader.read(sequenceFormat));
   if (verbose)
   {
@@ -259,7 +259,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
-  BppOAlignmentReaderFormat bppoReader;
+  BppOAlignmentReaderFormat bppoReader(warn);
   auto_ptr<IAlignment> iAln(bppoReader.read(sequenceFormat));
   map<string, string> args(bppoReader.getUnparsedArguments());
   if (verbose)
