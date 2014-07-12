@@ -58,11 +58,27 @@ namespace bpp
     void registerState(const AlphabetState& st) throw (Exception) {
       AbstractAlphabet::registerState(* (st.clone()));
     }
-    const std::string chars_;
+    std::string chars_;
 		
   public:
     // class constructor
     DefaultAlphabet();
+
+    DefaultAlphabet(const DefaultAlphabet& bia) : LetterAlphabet(bia), chars_(bia.chars_) {}
+
+    DefaultAlphabet& operator=(const DefaultAlphabet& bia)
+    {
+      LetterAlphabet::operator=(bia);
+      chars_=bia.chars_;
+      return *this;
+    }
+
+    DefaultAlphabet* clone() const
+    {
+      return new DefaultAlphabet(*this);
+    }
+
+
 
     // class destructor
     virtual ~DefaultAlphabet() {}

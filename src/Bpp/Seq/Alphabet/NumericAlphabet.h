@@ -65,9 +65,17 @@ namespace bpp
   public:
 
     NumericAlphabet(const UniformDiscreteDistribution&);
+
     virtual ~NumericAlphabet() { delete pdd_;}
+
     NumericAlphabet(const NumericAlphabet&);
+
     NumericAlphabet& operator=(const NumericAlphabet&);
+
+    NumericAlphabet* clone() const
+    {
+      return new NumericAlphabet(*this);
+    }
   
   public:
     void setState(size_t pos, const AlphabetState& st) throw (Exception);

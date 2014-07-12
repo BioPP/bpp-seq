@@ -47,6 +47,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AlphabetExceptions.h"
 #include "AlphabetState.h"
 
+#include <Bpp/Clonable.h>
+
 /**
  * @mainpage
  *
@@ -118,12 +120,24 @@ namespace bpp
  *
  * @see AlphabetException, BadCharException, BadIntException 
  */
-class Alphabet
+  class Alphabet:
+    public virtual Clonable
 {
   public:
     Alphabet() {}
     virtual ~Alphabet() {}
+
+  /**
+   * @name The Clonable interface
+   *
+   * @{
+   */
+#ifndef NO_VIRTUAL_COV
+  Alphabet* clone() const = 0;
+#endif
   
+  /** @} */
+
   public:
     
     /**

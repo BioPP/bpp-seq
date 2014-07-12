@@ -55,6 +55,20 @@ public:
   // class constructor
   BinaryAlphabet();
 
+  BinaryAlphabet(const BinaryAlphabet& bia) : AbstractAlphabet(bia) {}
+
+  BinaryAlphabet& operator=(const BinaryAlphabet& bia)
+  {
+    AbstractAlphabet::operator=(bia);
+
+    return *this;
+  }
+
+  BinaryAlphabet* clone() const
+  {
+    return new BinaryAlphabet(*this);
+  }
+  
   // class destructor
   virtual ~BinaryAlphabet() {}
 

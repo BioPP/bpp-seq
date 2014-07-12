@@ -59,6 +59,20 @@ public:
   // class constructor
   IntegerAlphabet(unsigned int max);
 
+  IntegerAlphabet(const IntegerAlphabet& bia) : AbstractAlphabet(bia), MAX_(bia.MAX_) {}
+
+  IntegerAlphabet& operator=(const IntegerAlphabet& bia)
+  {
+    AbstractAlphabet::operator=(bia);
+    MAX_=bia.MAX_;
+    
+    return *this;
+  }
+
+  IntegerAlphabet* clone() const
+  {
+    return new IntegerAlphabet(*this);
+  }
   // class destructor
   virtual ~IntegerAlphabet() {}
 

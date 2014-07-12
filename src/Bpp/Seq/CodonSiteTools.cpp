@@ -38,7 +38,6 @@
  */
 
 #include "CodonSiteTools.h"
-#include "Alphabet/StandardCodonAlphabet.h"
 #include "Alphabet/CodonAlphabet.h"
 #include "Alphabet/DNA.h"
 #include "Alphabet/AlphabetTools.h"

@@ -104,6 +104,32 @@ namespace bpp
 		
     AbstractAlphabet(): alphabet_(), letters_(), nums_(), charList_(), intList_() {}
 
+    AbstractAlphabet(const AbstractAlphabet& alph) : alphabet_(), letters_(alph.letters_), nums_(alph.nums_), charList_(alph.charList_), intList_(alph.intList_)
+    {
+      for (size_t i=0;i<alph.alphabet_.size();i++)
+        alphabet_.push_back(new AlphabetState(*alph.alphabet_[i]));
+    }
+
+    AbstractAlphabet& operator=(const AbstractAlphabet& alph)
+    {
+      for (size_t i = 0 ; i < alphabet_.size() ; i++)
+        delete alphabet_[i];
+
+      for (size_t i=0;i<alph.alphabet_.size();i++)
+        alphabet_.push_back(new AlphabetState(*alph.alphabet_[i]));
+
+      letters_= alph.letters_;
+      nums_=alph.nums_;
+      charList_=alph.charList_;
+      intList_=alph.intList_;
+
+      return *this;
+    }
+
+#ifndef NO_VIRTUAL_COV
+    virtual AbstractAlphabet* clone() const = 0;
+#endif
+
     virtual ~AbstractAlphabet()
     {
       for (unsigned int i = 0 ; i < alphabet_.size() ; i++)

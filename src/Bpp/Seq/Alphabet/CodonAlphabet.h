@@ -72,7 +72,20 @@ public: // Constructor and destructor.
    */
   CodonAlphabet(const NucleicAlphabet* alpha) :
     WordAlphabet(alpha, 3) {}
+
+  CodonAlphabet(const CodonAlphabet& bia) : WordAlphabet(bia) {}
+
+  CodonAlphabet& operator=(const CodonAlphabet& bia)
+  {
+    WordAlphabet::operator=(bia);
+    return *this;
+  }
   
+  CodonAlphabet* clone() const
+  {
+    return new CodonAlphabet(*this);
+  }
+
   virtual ~CodonAlphabet() {}
   
   std::string getAlphabetType() const

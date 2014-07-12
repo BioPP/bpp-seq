@@ -90,6 +90,20 @@ public:
    */
   WordAlphabet(const Alphabet* pAlpha, unsigned int num);
 
+  WordAlphabet(const WordAlphabet& bia) : AbstractAlphabet(bia), vAbsAlph_(bia.vAbsAlph_) {}
+
+  WordAlphabet& operator=(const WordAlphabet& bia)
+  {
+    AbstractAlphabet::operator=(bia);
+    vAbsAlph_=bia.vAbsAlph_;
+    return *this;
+  }
+
+  WordAlphabet* clone() const
+  {
+    return new WordAlphabet(*this);
+  }
+
   virtual ~WordAlphabet() {}
 
 public:

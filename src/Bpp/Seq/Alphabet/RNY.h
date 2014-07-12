@@ -69,6 +69,21 @@ private:
 
 public:
   RNY(const NucleicAlphabet&);
+
+  RNY(const RNY& bia) : AbstractAlphabet(bia), nuclalph_(bia.nuclalph_) {}
+
+  RNY& operator=(const RNY& bia)
+  {
+    AbstractAlphabet::operator=(bia);
+//  nuclalph_=bia.nuclalph_;
+    return *this;
+  }
+
+  RNY* clone() const
+  {
+    return new RNY(*this);
+  }
+
   ~RNY() {}
 
 public:

@@ -7,36 +7,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _NUCLEICALPHABET_H_
@@ -58,9 +58,9 @@ namespace bpp
  * This class only implements a few methods, it is mainly designed for methods/classes
  * that will require to work with both RNA and DNA.
  */
-class NucleicAlphabet :
-  public LetterAlphabet
-{
+  class NucleicAlphabet :
+    public LetterAlphabet
+  {
   private:
     std::map<int, size_t> binCodes_;
     void updateBinMaps_(size_t pos, const NucleicAlphabetState& st) {
@@ -68,10 +68,23 @@ class NucleicAlphabet :
         binCodes_[st.getBinaryCode()] = pos;
     }
 
-	public:
-    NucleicAlphabet(): binCodes_() {}
+  public:
+    NucleicAlphabet(): LetterAlphabet(), binCodes_() {}
 
-		virtual ~NucleicAlphabet() {}
+    NucleicAlphabet(const NucleicAlphabet& bia) : LetterAlphabet(bia), binCodes_(bia.binCodes_) {}
+
+    NucleicAlphabet& operator=(const NucleicAlphabet& bia)
+    {
+      LetterAlphabet::operator=(bia);
+      binCodes_=bia.binCodes_;
+      return *this;
+    }
+
+#ifndef NO_VIRTUAL_COV
+    virtual NucleicAlphabet* clone() const = 0;
+#endif
+
+    virtual ~NucleicAlphabet() {}
 
   protected:
     /**
@@ -100,16 +113,16 @@ class NucleicAlphabet :
 
     const NucleicAlphabetState& getStateAt(size_t pos) const
       throw (IndexOutOfBoundsException) {
-        return dynamic_cast<const NucleicAlphabetState&>(
-            AbstractAlphabet::getStateAt(pos)
-            );
-      }
+      return dynamic_cast<const NucleicAlphabetState&>(
+        AbstractAlphabet::getStateAt(pos)
+        );
+    }
     NucleicAlphabetState& getStateAt(size_t pos)
       throw (IndexOutOfBoundsException) {
-        return dynamic_cast<NucleicAlphabetState&>(
-            AbstractAlphabet::getStateAt(pos)
-            );
-      }
+      return dynamic_cast<NucleicAlphabetState&>(
+        AbstractAlphabet::getStateAt(pos)
+        );
+    }
     /** @} */
 
   public:
@@ -119,16 +132,16 @@ class NucleicAlphabet :
      */
     const NucleicAlphabetState& getState(const std::string& letter) const
       throw (BadCharException) {
-        return dynamic_cast<const NucleicAlphabetState&>(
-            AbstractAlphabet::getState(letter)
-            );
-      }
+      return dynamic_cast<const NucleicAlphabetState&>(
+        AbstractAlphabet::getState(letter)
+        );
+    }
     const NucleicAlphabetState& getState(int num) const
       throw (BadIntException) {
-        return dynamic_cast<const NucleicAlphabetState&>(
-            AbstractAlphabet::getState(num)
-            );
-      }
+      return dynamic_cast<const NucleicAlphabetState&>(
+        AbstractAlphabet::getState(num)
+        );
+    }
     /** @} */
 
     /**
@@ -146,7 +159,7 @@ class NucleicAlphabet :
      */
     const NucleicAlphabetState& getStateByBinCode(int code) const
       throw (BadIntException) {
-        std::map<int, size_t>::const_iterator it = binCodes_.find(code);
+      std::map<int, size_t>::const_iterator it = binCodes_.find(code);
       if (it == binCodes_.end())
         throw BadIntException(code, "NucleicAlphabet::getState(unsigned char): Binary code not in alphabet", this);
       return getStateAt(it->second);
@@ -252,19 +265,19 @@ class NucleicAlphabet :
 
     /** @} */
 	
-	public:
-		// return 4 : A, C, G, T (or U)
-		unsigned int getSize() const { return 4; }
+  public:
+    // return 4 : A, C, G, T (or U)
+    unsigned int getSize() const { return 4; }
 
-		// return 15 : gap isn't included, generic unresolved bases (N, X, ?, O, 0) count for one
-		unsigned int getNumberOfTypes() const { return 15; }
+    // return 15 : gap isn't included, generic unresolved bases (N, X, ?, O, 0) count for one
+    unsigned int getNumberOfTypes() const { return 15; }
     
     int getUnknownCharacterCode() const { return 14; }
 
     bool isUnresolved(int state) const { return state > 3; }
     bool isUnresolved(const std::string& state) const { return charToInt(state) > 3; }
 
-};
+  };
 
 } //end of namespace bpp.
 
