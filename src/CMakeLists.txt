@@ -130,6 +130,13 @@ SET(H_FILES
   Bpp/Seq/Alphabet/ProteicAlphabet.h
   Bpp/Seq/Alphabet/ProteicAlphabetState.h
   Bpp/Seq/Alphabet/RNA.h
+  Bpp/Seq/Alphabet/StandardCodonAlphabet.h
+  Bpp/Seq/Alphabet/VertebrateMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/AscidianMitochondrialCodonAlphabet.h
+  Bpp/Seq/Alphabet/MoldMitochondrialCodonAlphabet.h
   Bpp/Seq/Alphabet/WordAlphabet.h
   Bpp/Seq/Alphabet/RNY.h
   Bpp/Seq/Alphabet/BinaryAlphabet.h
