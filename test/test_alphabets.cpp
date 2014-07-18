@@ -41,11 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Bpp/Seq/Alphabet/RNA.h>
 #include <Bpp/Seq/Alphabet/ProteicAlphabet.h>
 #include <Bpp/Seq/Alphabet/DefaultAlphabet.h>
-#include <Bpp/Seq/Alphabet/StandardCodonAlphabet.h>
-#include <Bpp/Seq/Alphabet/VertebrateMitochondrialCodonAlphabet.h>
-#include <Bpp/Seq/Alphabet/InvertebrateMitochondrialCodonAlphabet.h>
-#include <Bpp/Seq/Alphabet/EchinodermMitochondrialCodonAlphabet.h>
-#include <Bpp/Seq/Alphabet/YeastMitochondrialCodonAlphabet.h>
+#include <Bpp/Seq/Alphabet/CodonAlphabet.h>
 #include <iostream>
 
 using namespace bpp;
@@ -57,21 +53,13 @@ int main() {
   NucleicAlphabet* rna = new RNA();
   Alphabet* pro = new ProteicAlphabet;
   Alphabet* def = new DefaultAlphabet;
-  Alphabet* stdCdn = new StandardCodonAlphabet(rna);
-  Alphabet* vmtCdn = new VertebrateMitochondrialCodonAlphabet(rna);
-  Alphabet* imtCdn = new InvertebrateMitochondrialCodonAlphabet(rna);
-  Alphabet* emtCdn = new EchinodermMitochondrialCodonAlphabet(rna);
-  Alphabet* ymtCdn = new YeastMitochondrialCodonAlphabet(rna);
+  Alphabet* cdn = new CodonAlphabet(rna);
 
   delete dna;
   delete rna;
   delete pro;
   delete def;
-  delete stdCdn;
-  delete vmtCdn;
-  delete imtCdn;
-  delete emtCdn;
-  delete ymtCdn;
+  delete cdn;
 
   return (0);
 }
