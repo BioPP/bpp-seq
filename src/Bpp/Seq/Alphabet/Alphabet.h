@@ -133,7 +133,7 @@ namespace bpp
    * @{
    */
 #ifndef NO_VIRTUAL_COV
-  virtual Alphabet* clone() const = 0;
+  Alphabet* clone() const = 0;
 #endif
   
   /** @} */
