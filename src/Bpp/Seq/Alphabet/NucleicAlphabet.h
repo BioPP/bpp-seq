@@ -76,7 +76,7 @@ namespace bpp
     NucleicAlphabet& operator=(const NucleicAlphabet& bia)
     {
       LetterAlphabet::operator=(bia);
-      binCodes_=bia.binCodes_;
+      binCodes_ = bia.binCodes_;
       return *this;
     }
 
@@ -111,6 +111,13 @@ namespace bpp
       }
     }
 
+    /** @} */
+
+  public:
+    /**
+     * @name Overloaded methods from AbstractAlphabet
+     * @{
+     */
     const NucleicAlphabetState& getStateAt(size_t pos) const
       throw (IndexOutOfBoundsException) {
       return dynamic_cast<const NucleicAlphabetState&>(
@@ -123,13 +130,6 @@ namespace bpp
         AbstractAlphabet::getStateAt(pos)
         );
     }
-    /** @} */
-
-  public:
-    /**
-     * @name Overloaded methods from AbstractAlphabet
-     * @{
-     */
     const NucleicAlphabetState& getState(const std::string& letter) const
       throw (BadCharException) {
       return dynamic_cast<const NucleicAlphabetState&>(

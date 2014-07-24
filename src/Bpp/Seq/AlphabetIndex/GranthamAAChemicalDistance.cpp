@@ -64,15 +64,13 @@ GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
 throw (BadIntException)
 {
-  if (state1 < 0 || state1 > 19)
-    throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", alpha_);
-  if (state2 < 0 || state2 > 19)
-    throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", alpha_);
-  double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
+  size_t stateIndex1 = alpha_->getStateIndex(state1);
+  size_t stateIndex2 = alpha_->getStateIndex(state2);
+  double d = distanceMatrix_(stateIndex1, stateIndex2);
   if (sign_ == SIGN_NONE)
     return NumTools::abs<double>(d);
   if (sign_ == SIGN_PC1)
-    return signMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2)) * NumTools::abs<double>(d);
+    return signMatrix_(stateIndex1, stateIndex2) * NumTools::abs<double>(d);
   return d;
 }
 
@@ -87,9 +85,9 @@ Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const
   RowMatrix<double>* m = new RowMatrix<double>(distanceMatrix_);
   if (sign_ == SIGN_NONE)
   {
-    for (unsigned int i = 0; i < 20; i++)
+    for (size_t i = 0; i < 20; ++i)
     {
-      for (unsigned int j = 0; j < 20; j++)
+      for (size_t j = 0; j < 20; ++j)
       {
         (*m)(i, j) = NumTools::abs<double>((*m)(i, j));
       }
@@ -97,9 +95,9 @@ Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const
   }
   else if (sign_ == SIGN_PC1)
   {
-    for (unsigned int i = 0; i < 20; i++)
+    for (size_t i = 0; i < 20; ++i)
     {
-      for (unsigned int j = 0; j < 20; j++)
+      for (size_t j = 0; j < 20; ++j)
       {
         (*m)(i, j) = signMatrix_(i, j) * NumTools::abs<double>((*m)(i, j));
       }

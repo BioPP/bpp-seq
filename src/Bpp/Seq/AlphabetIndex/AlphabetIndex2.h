@@ -68,16 +68,26 @@ public:
    *
    * @param state1 First state to consider, as a int value.
    * @param state2 Second state to consider, as a int value.
-   * @return The index associated to the pair of states
+   * @return The index associated to the pair of states.
    */
   virtual double getIndex(int state1, int state2) const = 0;
+
+//  /**
+//   * @brief Get the index associated to a pair of states.
+//   *
+//   * @param stateIndex1 Index of the first state to consider.
+//   * @param stateIndex2 Index of the Second state to consider.
+//   * @return The index associated to the pair of states.
+//   * @throw IndexOutOfBoundException in case of invalid state index.
+//   */
+//  virtual double getIndex(size_t stateIndex1, size_t stateIndex2) const throw (IndexOutOfBoundsException) = 0;
 
   /**
    * @brief Get the index associated to a pair of states.
    *
    * @param state1 First state to consider, as a string value.
    * @param state2 Second state to consider, as a string value.
-   * @return The index associated to the pair of states
+   * @return The index associated to the pair of states.
    */
   virtual double getIndex(const std::string& state1, const std::string& state2) const = 0;
 

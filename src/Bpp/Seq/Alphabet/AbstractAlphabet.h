@@ -106,22 +106,22 @@ namespace bpp
 
     AbstractAlphabet(const AbstractAlphabet& alph) : alphabet_(), letters_(alph.letters_), nums_(alph.nums_), charList_(alph.charList_), intList_(alph.intList_)
     {
-      for (size_t i=0;i<alph.alphabet_.size();i++)
+      for (size_t i = 0; i < alph.alphabet_.size(); ++i)
         alphabet_.push_back(new AlphabetState(*alph.alphabet_[i]));
     }
 
     AbstractAlphabet& operator=(const AbstractAlphabet& alph)
     {
-      for (size_t i = 0 ; i < alphabet_.size() ; i++)
+      for (size_t i = 0 ; i < alphabet_.size() ; ++i)
         delete alphabet_[i];
 
-      for (size_t i=0;i<alph.alphabet_.size();i++)
+      for (size_t i = 0; i < alph.alphabet_.size(); ++i)
         alphabet_.push_back(new AlphabetState(*alph.alphabet_[i]));
 
-      letters_= alph.letters_;
-      nums_=alph.nums_;
-      charList_=alph.charList_;
-      intList_=alph.intList_;
+      letters_  = alph.letters_;
+      nums_     = alph.nums_;
+      charList_ = alph.charList_;
+      intList_  = alph.intList_;
 
       return *this;
     }
@@ -132,7 +132,7 @@ namespace bpp
 
     virtual ~AbstractAlphabet()
     {
-      for (unsigned int i = 0 ; i < alphabet_.size() ; i++)
+      for (size_t i = 0 ; i < alphabet_.size() ; ++i)
         delete alphabet_[i];
     }
 	
@@ -142,6 +142,7 @@ namespace bpp
      *
      * @{
      */
+    size_t getNumberOfStates() const { return alphabet_.size(); }
     unsigned int getNumberOfChars() const { return static_cast<unsigned int>(alphabet_.size()); }
     std::string getName(const std::string& state) const throw (BadCharException);
     std::string getName(int state) const throw (BadIntException);
@@ -164,6 +165,28 @@ namespace bpp
      * @name Specific methods to access AlphabetState
      * @{
      */
+    /**
+     * @brief Get a state at a position in the alphabet_ vector.
+     *
+     * This method must be overloaded in specialized classes to send back
+     * a reference of the corect type.
+     *
+     * @param stateIndex The index of the state in the alphabet_ vector.
+     * @throw IndexOutOfBoundsException If the index is invalid.
+     */
+    virtual AlphabetState& getStateAt(size_t pos) throw (IndexOutOfBoundsException);
+    
+    /**
+     * @brief Get a state at a position in the alphabet_ vector.
+     *
+     * This method must be overloaded in specialized classes to send back
+     * a reference of the corect type.
+     *
+     * @param stateIndex The index of the state in the alphabet_ vector.
+     * @throw IndexOutOfBoundsException If the index is invalid.
+     */
+    virtual const AlphabetState& getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException);
+
     /**
      * @brief Get a state by its letter.
      *
@@ -190,6 +213,17 @@ namespace bpp
 
     AlphabetState& getState(int num) throw (BadIntException);
 
+    int getIntCodeAt(size_t stateIndex) const throw (IndexOutOfBoundsException) {
+      return getStateAt(stateIndex).getNum();
+    }
+
+    const std::string& getCharCodeAt(size_t stateIndex) const throw (IndexOutOfBoundsException) {
+      return getStateAt(stateIndex).getLetter();
+    }
+
+    size_t getStateIndex(int state) const throw (BadIntException);
+    
+    size_t getStateIndex(const std::string& state) const throw (BadCharException);
     /** @} */
 
   protected:
@@ -219,31 +253,11 @@ namespace bpp
     void resize(size_t size) { alphabet_.resize(size); }
     
     /**
-     * @brief Get a state at a position in the alphabet_ vector.
-     *
-     * This method must be overloaded in specialized classes to send back
-     * a reference of the corect type.
-     *
-     * @param pos The index of the state in the alphabet_ vector.
-     * @throw IndexOutOfBoundsException If pos is out of the vector.
-     */
-    virtual AlphabetState& getStateAt(size_t pos) throw (IndexOutOfBoundsException);
-    
-    /**
-     * @brief Get a state at a position in the alphabet_ vector.
-     *
-     * This method must be overloaded in specialized classes to send back
-     * a reference of the corect type.
-     *
-     * @param pos The index of the state in the alphabet_ vector.
-     * @throw IndexOutOfBoundsException If pos is out of the vector.
-     */
-    virtual const AlphabetState& getStateAt(size_t pos) const throw (IndexOutOfBoundsException);
-
-    /**
      * @brief Re-update the maps using the alphabet_ vector content.
      */
     void remap() {
+      letters_.clear();
+      nums_.clear();
       for (size_t i = 0; i < alphabet_.size(); ++i) {
         updateMaps_(i, *alphabet_[i]);
       }

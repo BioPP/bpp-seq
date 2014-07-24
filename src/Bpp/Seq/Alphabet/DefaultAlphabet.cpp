@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -48,15 +48,12 @@ using namespace bpp;
 DefaultAlphabet::DefaultAlphabet():
   chars_("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
 {
-	// Alphabet size definition
-	resize(static_cast<unsigned int>(chars_.size()) + 1);
-
 	// Alphabet content definition
-  setState(0, AlphabetState(-1, "-", "Gap"));
+  registerState(AlphabetState(-1, "-", "Gap"));
 
 	for (size_t i = 0; i < chars_.size(); i++)
   {
-    setState(i + 1, AlphabetState(static_cast<int>(i), TextTools::toString(chars_[i]), ""));
+    registerState(AlphabetState(static_cast<int>(i), TextTools::toString(chars_[i]), ""));
 	}
 }
 

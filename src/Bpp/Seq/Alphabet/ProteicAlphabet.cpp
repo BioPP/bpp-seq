@@ -54,38 +54,35 @@ using namespace std;
 
 ProteicAlphabet::ProteicAlphabet()
 {
-  // Alphabet size definition
-  resize(28);
-
   // Alphabet content definition
-  setState( 0, ProteicAlphabetState(-1, "-", "GAP", "Gap"));
-  setState( 1, ProteicAlphabetState( 0, "A", "ALA", "Alanine"));
-  setState( 2, ProteicAlphabetState( 1, "R", "ARG", "Arginine"));
-  setState( 3, ProteicAlphabetState( 2, "N", "ASN", "Asparagine"));
-  setState( 4, ProteicAlphabetState( 3, "D", "ASP", "Asparatic Acid"));
-  setState( 5, ProteicAlphabetState( 4, "C", "CYS", "Cysteine"));
-  setState( 6, ProteicAlphabetState( 5, "Q", "GLN", "Glutamine"));
-  setState( 7, ProteicAlphabetState( 6, "E", "GLU", "Glutamic acid"));
-  setState( 8, ProteicAlphabetState( 7, "G", "GLY", "Glycine"));
-  setState( 9, ProteicAlphabetState( 8, "H", "HIS", "Histidine"));
-  setState(10, ProteicAlphabetState( 9, "I", "ILE", "Isoleucine"));
-  setState(11, ProteicAlphabetState(10, "L", "LEU", "Leucine"));
-  setState(12, ProteicAlphabetState(11, "K", "LYS", "Lysine"));
-  setState(13, ProteicAlphabetState(12, "M", "MET", "Methionine"));
-  setState(14, ProteicAlphabetState(13, "F", "PHE", "Phenylalanine"));
-  setState(15, ProteicAlphabetState(14, "P", "PRO", "Proline"));
-  setState(16, ProteicAlphabetState(15, "S", "SER", "Serine"));
-  setState(17, ProteicAlphabetState(16, "T", "THR", "Threonine"));
-  setState(18, ProteicAlphabetState(17, "W", "TRP", "Tryptophan"));
-  setState(19, ProteicAlphabetState(18, "Y", "TYR", "Tyrosine"));
-  setState(20, ProteicAlphabetState(19, "V", "VAL", "Valine"));
-  setState(21, ProteicAlphabetState(20, "B", "B", "N or D"));
-  setState(22, ProteicAlphabetState(21, "Z", "Z", "Q or E"));
-  setState(23, ProteicAlphabetState(22, "X", "X", "Unresolved amino acid"));
-  setState(24, ProteicAlphabetState(22, "O", "O", "Unresolved amino acid"));
-  setState(25, ProteicAlphabetState(22, "0", "0", "Unresolved amino acid"));
-  setState(26, ProteicAlphabetState(22, "?", "?", "Unresolved amino acid"));
-  setState(27, ProteicAlphabetState(-2, "*", "STOP", "Stop"));
+  registerState(ProteicAlphabetState(-1, "-", "GAP", "Gap"));
+  registerState(ProteicAlphabetState( 0, "A", "ALA", "Alanine"));
+  registerState(ProteicAlphabetState( 1, "R", "ARG", "Arginine"));
+  registerState(ProteicAlphabetState( 2, "N", "ASN", "Asparagine"));
+  registerState(ProteicAlphabetState( 3, "D", "ASP", "Asparatic Acid"));
+  registerState(ProteicAlphabetState( 4, "C", "CYS", "Cysteine"));
+  registerState(ProteicAlphabetState( 5, "Q", "GLN", "Glutamine"));
+  registerState(ProteicAlphabetState( 6, "E", "GLU", "Glutamic acid"));
+  registerState(ProteicAlphabetState( 7, "G", "GLY", "Glycine"));
+  registerState(ProteicAlphabetState( 8, "H", "HIS", "Histidine"));
+  registerState(ProteicAlphabetState( 9, "I", "ILE", "Isoleucine"));
+  registerState(ProteicAlphabetState(10, "L", "LEU", "Leucine"));
+  registerState(ProteicAlphabetState(11, "K", "LYS", "Lysine"));
+  registerState(ProteicAlphabetState(12, "M", "MET", "Methionine"));
+  registerState(ProteicAlphabetState(13, "F", "PHE", "Phenylalanine"));
+  registerState(ProteicAlphabetState(14, "P", "PRO", "Proline"));
+  registerState(ProteicAlphabetState(15, "S", "SER", "Serine"));
+  registerState(ProteicAlphabetState(16, "T", "THR", "Threonine"));
+  registerState(ProteicAlphabetState(17, "W", "TRP", "Tryptophan"));
+  registerState(ProteicAlphabetState(18, "Y", "TYR", "Tyrosine"));
+  registerState(ProteicAlphabetState(19, "V", "VAL", "Valine"));
+  registerState(ProteicAlphabetState(20, "B", "B", "N or D"));
+  registerState(ProteicAlphabetState(21, "Z", "Z", "Q or E"));
+  registerState(ProteicAlphabetState(22, "X", "X", "Unresolved amino acid"));
+  registerState(ProteicAlphabetState(22, "O", "O", "Unresolved amino acid"));
+  registerState(ProteicAlphabetState(22, "0", "0", "Unresolved amino acid"));
+  registerState(ProteicAlphabetState(22, "?", "?", "Unresolved amino acid"));
+  registerState(ProteicAlphabetState(-2, "*", "STOP", "Stop"));
 }
 
 /******************************************************************************/

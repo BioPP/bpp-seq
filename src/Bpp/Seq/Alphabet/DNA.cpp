@@ -56,35 +56,32 @@ using namespace std;
 
 DNA::DNA(bool exclamationMarkCountsAsGap)
 {
-	// Alphabet size definition
-	resize(21);
-
 	// Alphabet content definition
 	// all unresolved bases use n°14
-  setState( 0, NucleicAlphabetState(-1, "-",  0, "Gap"));
-  setState( 1, NucleicAlphabetState( 0, "A",  1, "Adenine"));
-  setState( 2, NucleicAlphabetState( 1, "C",  2, "Cytosine"));
-  setState( 3, NucleicAlphabetState( 2, "G",  4, "Guanine"));
-  setState( 4, NucleicAlphabetState( 3, "T",  8, "Thymine"));
-  setState( 5, NucleicAlphabetState( 4, "M",  3, "Adenine or Cytosine"));
-  setState( 6, NucleicAlphabetState( 5, "R",  5, "Purine (Adenine or Guanine)"));
-  setState( 7, NucleicAlphabetState( 6, "W",  9, "Adenine or Thymine"));
-  setState( 8, NucleicAlphabetState( 7, "S",  6, "Cytosine or Guanine"));
-  setState( 9, NucleicAlphabetState( 8, "Y", 10, "Pyrimidine (Cytosine or Thymine)"));
-  setState(10, NucleicAlphabetState( 9, "K", 12, "Guanine or Thymine"));
-  setState(11, NucleicAlphabetState(10, "V",  7, "Adenine or Cytosine or Guanine"));
-  setState(12, NucleicAlphabetState(11, "H", 11, "Adenine or Cytosine or Thymine"));
-  setState(13, NucleicAlphabetState(12, "D", 13, "Adenine or Guanine or Thymine"));
-  setState(14, NucleicAlphabetState(13, "B", 14, "Cytosine or Guanine or Thymine"));
-  setState(15, NucleicAlphabetState(14, "N", 15, "Unresolved base"));
-  setState(16, NucleicAlphabetState(14, "X", 15, "Unresolved base"));
-  setState(17, NucleicAlphabetState(14, "O", 15, "Unresolved base"));
-  setState(18, NucleicAlphabetState(14, "0", 15, "Unresolved base"));
-  setState(19, NucleicAlphabetState(14, "?", 15, "Unresolved base"));
+  registerState(NucleicAlphabetState(-1, "-",  0, "Gap"));
+  registerState(NucleicAlphabetState( 0, "A",  1, "Adenine"));
+  registerState(NucleicAlphabetState( 1, "C",  2, "Cytosine"));
+  registerState(NucleicAlphabetState( 2, "G",  4, "Guanine"));
+  registerState(NucleicAlphabetState( 3, "T",  8, "Thymine"));
+  registerState(NucleicAlphabetState( 4, "M",  3, "Adenine or Cytosine"));
+  registerState(NucleicAlphabetState( 5, "R",  5, "Purine (Adenine or Guanine)"));
+  registerState(NucleicAlphabetState( 6, "W",  9, "Adenine or Thymine"));
+  registerState(NucleicAlphabetState( 7, "S",  6, "Cytosine or Guanine"));
+  registerState(NucleicAlphabetState( 8, "Y", 10, "Pyrimidine (Cytosine or Thymine)"));
+  registerState(NucleicAlphabetState( 9, "K", 12, "Guanine or Thymine"));
+  registerState(NucleicAlphabetState(10, "V",  7, "Adenine or Cytosine or Guanine"));
+  registerState(NucleicAlphabetState(11, "H", 11, "Adenine or Cytosine or Thymine"));
+  registerState(NucleicAlphabetState(12, "D", 13, "Adenine or Guanine or Thymine"));
+  registerState(NucleicAlphabetState(13, "B", 14, "Cytosine or Guanine or Thymine"));
+  registerState(NucleicAlphabetState(14, "N", 15, "Unresolved base"));
+  registerState(NucleicAlphabetState(14, "X", 15, "Unresolved base"));
+  registerState(NucleicAlphabetState(14, "O", 15, "Unresolved base"));
+  registerState(NucleicAlphabetState(14, "0", 15, "Unresolved base"));
+  registerState(NucleicAlphabetState(14, "?", 15, "Unresolved base"));
   if (exclamationMarkCountsAsGap)
-    setState(20, NucleicAlphabetState(-1, "!", 0, "Unresolved base"));
+    registerState(NucleicAlphabetState(-1, "!", 0, "Frameshift"));
   else
-    setState(20, NucleicAlphabetState(14, "!", 15, "Unresolved base"));
+    registerState(NucleicAlphabetState(14, "!", 15, "Unresolved base"));
 }
 
 /******************************************************************************/

@@ -50,12 +50,9 @@ using namespace bpp;
 
 RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 {
-  // Alphabet size definition
-  resize(351);
-
   for (int i = 0; i < 351; ++i)
   {
-    setState(static_cast<size_t>(i), AlphabetState(i, "", ""));
+    registerState(AlphabetState(i, TextTools::toString(i), ""));
   }
 
   // Alphabet content definition

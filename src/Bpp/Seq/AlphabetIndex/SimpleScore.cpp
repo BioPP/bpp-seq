@@ -51,10 +51,10 @@ SimpleScore::SimpleScore(const Alphabet* alphabet, double match, double mismatch
   alphabet_(alphabet)
 {
   // Load the matrix:
-  unsigned int n = alphabet_->getSize();
-  for (unsigned int i = 0; i < n; i++)
+  size_t n = alphabet_->getSize();
+  for (size_t i = 0; i < n; ++i)
   {
-    for (unsigned int j = 0; j < n; j++)
+    for (size_t j = 0; j < n; ++j)
     {
       distanceMatrix_(i, j) = (i == j ? match : mismatch);
     }
@@ -64,19 +64,17 @@ SimpleScore::SimpleScore(const Alphabet* alphabet, double match, double mismatch
 double SimpleScore::getIndex(int state1, int state2) const
 throw (BadIntException)
 {
-  if (state1 < 0 || state1 > (int)alphabet_->getSize())
-    throw BadIntException(state1, "SimpleScore::getIndex(). Invalid state1.", alphabet_);
-  if (state2 < 0 || state2 > (int)alphabet_->getSize())
-    throw BadIntException(state2, "SimpleScore::getIndex(). Invalid state2.", alphabet_);
-  return distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
+  size_t stateIndex1 = alphabet_->getStateIndex(state1);
+  size_t stateIndex2 = alphabet_->getStateIndex(state2);
+  return distanceMatrix_(stateIndex1, stateIndex2);
 }
 
 double SimpleScore::getIndex(const std::string& state1, const std::string& state2) const
 throw (BadCharException)
 {
-  return distanceMatrix_(
-      static_cast<size_t>(alphabet_->charToInt(state1)),
-      static_cast<size_t>(alphabet_->charToInt(state2)));
+  size_t stateIndex1 = alphabet_->getStateIndex(state1);
+  size_t stateIndex2 = alphabet_->getStateIndex(state2);
+  return distanceMatrix_(stateIndex1, stateIndex2);
 }
 
 LinearMatrix<double>* SimpleScore::getIndexMatrix() const

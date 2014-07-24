@@ -48,6 +48,7 @@ using namespace bpp;
 // From the STL:
 #include <ctype.h>
 #include <map>
+#include <iostream>
 
 using namespace std;
 
@@ -56,8 +57,12 @@ using namespace std;
 void AbstractAlphabet::updateMaps_(size_t pos, const AlphabetState& st) {
   if (letters_.find(st.getLetter()) == letters_.end())
     letters_[st.getLetter()] = pos;
+  else
+    throw Exception("AbstractAlphabet::updateMaps_. A state with the same character code already exists! " + st.getLetter() + ".");
   if (nums_.find(st.getNum()) == nums_.end())
     nums_[st.getNum()] = pos;
+  else
+    nums_[st.getNum()] = min(pos, nums_[st.getNum()]);
 }
 
 /******************************************************************************/
@@ -95,11 +100,29 @@ const AlphabetState& AbstractAlphabet::getState(const std::string& letter) const
 
 /******************************************************************************/
 
+size_t AbstractAlphabet::getStateIndex(const std::string& letter) const throw (BadCharException) {
+  map<string, size_t>::const_iterator it = letters_.find(letter);
+  if (it == letters_.end())
+    throw BadCharException(letter, "AbstractAlphabet::getStateIndex(string): Specified base unknown", this);
+  return it->second;
+}
+
+/******************************************************************************/
+
 const AlphabetState& AbstractAlphabet::getState(int num) const throw (BadIntException) {
   map<int, size_t>::const_iterator it = nums_.find(num);
   if (it == nums_.end())
     throw BadIntException(num, "AbstractAlphabet::getState(int): Specified base unknown", this);
   return *(alphabet_[it->second]);
+}
+
+/******************************************************************************/
+
+size_t AbstractAlphabet::getStateIndex(int num) const throw (BadIntException) {
+  map<int, size_t>::const_iterator it = nums_.find(num);
+  if (it == nums_.end())
+    throw BadIntException(num, "AbstractAlphabet::getStateIndex(int): Specified base unknown", this);
+  return it->second;
 }
 
 /******************************************************************************/
@@ -264,7 +287,7 @@ const std::vector<int>& AbstractAlphabet::getSupportedInts() const
   {
     intList_.resize(alphabet_.size());
     charList_.resize(alphabet_.size());
-    for(unsigned int i = 0; i < alphabet_.size(); i++)
+    for (size_t i = 0; i < alphabet_.size(); ++i)
     {
       intList_[i]  = alphabet_[i]->getNum();
       charList_[i] = alphabet_[i]->getLetter();
@@ -281,7 +304,7 @@ const std::vector<std::string>& AbstractAlphabet::getSupportedChars() const
   {
     intList_.resize(alphabet_.size());
     charList_.resize(alphabet_.size());
-    for(unsigned int i = 0; i < alphabet_.size(); i++)
+    for (size_t i = 0; i < alphabet_.size(); ++i)
     {
       intList_[i]  = alphabet_[i]->getNum();
       charList_[i] = alphabet_[i]->getLetter();

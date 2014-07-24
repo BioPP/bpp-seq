@@ -114,6 +114,13 @@ namespace bpp
  * the Alphabet classes, and the two methods intToChar() and charToInt().
  * The Alphabet interface also provides other methods, like getting the full name
  * of the states and so on.
+ *
+ * An Alphabet object in itself stores the states as AlphabetStates object, in a
+ * potentially arbitrary but consistent series. All states are then indexed from
+ * 0 to 'numbersOfChars'. The number of states is equal to the number of string
+ * representations, but is usually higher than the number of int representation,
+ * as several characters can correspond to the same state (for instance X, N and ?
+ * in nucleotide alphabets).
  * 
  * The alphabet objects may throw several exceptions derived of the AlphabetException
  * class.
@@ -165,7 +172,29 @@ namespace bpp
     virtual std::string getName(const std::string& state) const throw (BadCharException) = 0;
 
     /**
-     * @name = Tests
+     * @return The int code of a given state.
+     * @param stateIndex The index of the state to fetch.
+     */
+    virtual int getIntCodeAt(size_t stateIndex) const throw (IndexOutOfBoundsException) = 0;
+
+    /**
+     * @return The char code of a given state.
+     * @param stateIndex The index of the state to fetch.
+     */
+    virtual const std::string& getCharCodeAt(size_t stateIndex) const throw (IndexOutOfBoundsException) = 0;
+
+    /**
+     * @return The indices of the states with corresponding int code.
+     */
+    virtual size_t getStateIndex(int state) const throw (BadIntException) = 0;
+    
+    /**
+     * @return The index of the state with corresponding char code.
+     */
+    virtual size_t getStateIndex(const std::string& state) const throw (BadCharException) = 0;
+
+    /**
+     * @name Tests
      *
      * @{
      */
@@ -196,7 +225,18 @@ namespace bpp
      */
 
     /**
+     * @brief Get a state given its index.
+     *
+     * @param stateIndex The index of the state.
+     * @return The AlphabetState.
+     * @throw IndexOutOfBoundsException When index is not a valid.
+     */
+    virtual const AlphabetState& getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException) = 0;
+
+    /**
      * @brief Get a state given its int description.
+     *
+     * Note: several states can share the same int values. This function will return one.
      *
      * @param state The int description.
      * @return The AlphabetState.
@@ -245,7 +285,15 @@ namespace bpp
      *
      * @{
      */
-    
+ 
+    /**
+     * @brief This is a convenient  alias for getNumberOfChars(), returning a size_t
+     * instead of unsigned int.
+     *
+     * This funcion is typically used il loops over all states of an alphabet.
+     */
+    virtual size_t getNumberOfStates() const = 0;
+   
     /**
      * @brief Get the number of supported characters in this alphabet,
      * including generic characters (e.g. return 20 for DNA alphabet).

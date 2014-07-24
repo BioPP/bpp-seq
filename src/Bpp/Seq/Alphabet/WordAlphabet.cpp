@@ -88,7 +88,7 @@ void WordAlphabet::build_()
 
   for (int i = 0; i < static_cast<int>(size); ++i)
   {
-    setState(static_cast<size_t>(i + 1), AlphabetState(i, "", ""));
+    setState(static_cast<size_t>(i + 1), AlphabetState(i, TextTools::toString(i), ""));
   }
 
   size_t lr = size;
