@@ -78,8 +78,8 @@ namespace bpp
     }
   
   public:
-    void setState(size_t pos, const AlphabetState& st) throw (Exception);
-    void registerState(const AlphabetState& st) throw (Exception);
+    void setState(size_t pos, AlphabetState* st) throw (Exception);
+    void registerState(AlphabetState* st) throw (Exception);
   
     bool containsGap(const std::string& state) const throw (BadCharException);
 

@@ -52,11 +52,11 @@ IntegerAlphabet::IntegerAlphabet(unsigned int max) : MAX_(max)
   resize(MAX_);
 
   // Alphabet content definition
-  setState(0, AlphabetState(-1, "-", "Gap"));
+  registerState(new AlphabetState(-1, "-", "Gap"));
 
   for (int i = 0; i < static_cast<int>(MAX_); i++)
   {
-    setState(static_cast<size_t>(i + 1), AlphabetState(i, TextTools::toString(i), ""));
+    registerState(new AlphabetState(i, TextTools::toString(i), ""));
   }
 }
 

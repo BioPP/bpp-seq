@@ -48,15 +48,12 @@ using namespace bpp;
 
 BinaryAlphabet::BinaryAlphabet()
 {
-  // Alphabet size definition
-  resize(3);
-
   // Alphabet content definition
-  setState(0, AlphabetState(-1, "-", "Gap"));
+  registerState(new AlphabetState(-1, "-", "Gap"));
 
   for (int i = 0; i < 2; i++)
   {
-    setState(static_cast<size_t>(i + 1), AlphabetState(i, TextTools::toString(i), ""));
+    registerState(new AlphabetState(i, TextTools::toString(i), ""));
   }
 }
 

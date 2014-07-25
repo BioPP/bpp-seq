@@ -55,34 +55,34 @@ using namespace std;
 ProteicAlphabet::ProteicAlphabet()
 {
   // Alphabet content definition
-  registerState(ProteicAlphabetState(-1, "-", "GAP", "Gap"));
-  registerState(ProteicAlphabetState( 0, "A", "ALA", "Alanine"));
-  registerState(ProteicAlphabetState( 1, "R", "ARG", "Arginine"));
-  registerState(ProteicAlphabetState( 2, "N", "ASN", "Asparagine"));
-  registerState(ProteicAlphabetState( 3, "D", "ASP", "Asparatic Acid"));
-  registerState(ProteicAlphabetState( 4, "C", "CYS", "Cysteine"));
-  registerState(ProteicAlphabetState( 5, "Q", "GLN", "Glutamine"));
-  registerState(ProteicAlphabetState( 6, "E", "GLU", "Glutamic acid"));
-  registerState(ProteicAlphabetState( 7, "G", "GLY", "Glycine"));
-  registerState(ProteicAlphabetState( 8, "H", "HIS", "Histidine"));
-  registerState(ProteicAlphabetState( 9, "I", "ILE", "Isoleucine"));
-  registerState(ProteicAlphabetState(10, "L", "LEU", "Leucine"));
-  registerState(ProteicAlphabetState(11, "K", "LYS", "Lysine"));
-  registerState(ProteicAlphabetState(12, "M", "MET", "Methionine"));
-  registerState(ProteicAlphabetState(13, "F", "PHE", "Phenylalanine"));
-  registerState(ProteicAlphabetState(14, "P", "PRO", "Proline"));
-  registerState(ProteicAlphabetState(15, "S", "SER", "Serine"));
-  registerState(ProteicAlphabetState(16, "T", "THR", "Threonine"));
-  registerState(ProteicAlphabetState(17, "W", "TRP", "Tryptophan"));
-  registerState(ProteicAlphabetState(18, "Y", "TYR", "Tyrosine"));
-  registerState(ProteicAlphabetState(19, "V", "VAL", "Valine"));
-  registerState(ProteicAlphabetState(20, "B", "B", "N or D"));
-  registerState(ProteicAlphabetState(21, "Z", "Z", "Q or E"));
-  registerState(ProteicAlphabetState(22, "X", "X", "Unresolved amino acid"));
-  registerState(ProteicAlphabetState(22, "O", "O", "Unresolved amino acid"));
-  registerState(ProteicAlphabetState(22, "0", "0", "Unresolved amino acid"));
-  registerState(ProteicAlphabetState(22, "?", "?", "Unresolved amino acid"));
-  registerState(ProteicAlphabetState(-2, "*", "STOP", "Stop"));
+  registerState(new ProteicAlphabetState(-1, "-", "GAP", "Gap"));
+  registerState(new ProteicAlphabetState( 0, "A", "ALA", "Alanine"));
+  registerState(new ProteicAlphabetState( 1, "R", "ARG", "Arginine"));
+  registerState(new ProteicAlphabetState( 2, "N", "ASN", "Asparagine"));
+  registerState(new ProteicAlphabetState( 3, "D", "ASP", "Asparatic Acid"));
+  registerState(new ProteicAlphabetState( 4, "C", "CYS", "Cysteine"));
+  registerState(new ProteicAlphabetState( 5, "Q", "GLN", "Glutamine"));
+  registerState(new ProteicAlphabetState( 6, "E", "GLU", "Glutamic acid"));
+  registerState(new ProteicAlphabetState( 7, "G", "GLY", "Glycine"));
+  registerState(new ProteicAlphabetState( 8, "H", "HIS", "Histidine"));
+  registerState(new ProteicAlphabetState( 9, "I", "ILE", "Isoleucine"));
+  registerState(new ProteicAlphabetState(10, "L", "LEU", "Leucine"));
+  registerState(new ProteicAlphabetState(11, "K", "LYS", "Lysine"));
+  registerState(new ProteicAlphabetState(12, "M", "MET", "Methionine"));
+  registerState(new ProteicAlphabetState(13, "F", "PHE", "Phenylalanine"));
+  registerState(new ProteicAlphabetState(14, "P", "PRO", "Proline"));
+  registerState(new ProteicAlphabetState(15, "S", "SER", "Serine"));
+  registerState(new ProteicAlphabetState(16, "T", "THR", "Threonine"));
+  registerState(new ProteicAlphabetState(17, "W", "TRP", "Tryptophan"));
+  registerState(new ProteicAlphabetState(18, "Y", "TYR", "Tyrosine"));
+  registerState(new ProteicAlphabetState(19, "V", "VAL", "Valine"));
+  registerState(new ProteicAlphabetState(20, "B", "B", "N or D"));
+  registerState(new ProteicAlphabetState(21, "Z", "Z", "Q or E"));
+  registerState(new ProteicAlphabetState(22, "X", "X", "Unresolved amino acid"));
+  registerState(new ProteicAlphabetState(22, "O", "O", "Unresolved amino acid"));
+  registerState(new ProteicAlphabetState(22, "0", "0", "Unresolved amino acid"));
+  registerState(new ProteicAlphabetState(22, "?", "?", "Unresolved amino acid"));
+  registerState(new ProteicAlphabetState(-2, "*", "STOP", "Stop"));
 }
 
 /******************************************************************************/

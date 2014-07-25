@@ -76,7 +76,7 @@ void WordAlphabet::build_()
     size *= vAbsAlph_[i]->getSize();
   }
 
-  resize(size + 2);
+  vector<AlphabetState*> states(size + 2);
 
   string s = "";
   for (size_t i = 0; i < vAbsAlph_.size(); ++i)
@@ -84,11 +84,11 @@ void WordAlphabet::build_()
     s += "-";
   }
 
-  setState(0, AlphabetState(-1, s, "gap"));
+  states[0] = new AlphabetState(-1, s, "gap");
 
-  for (int i = 0; i < static_cast<int>(size); ++i)
+  for (size_t i = 0; i < size; ++i)
   {
-    setState(static_cast<size_t>(i + 1), AlphabetState(i, TextTools::toString(i), ""));
+    states[i + 1] = new AlphabetState(static_cast<int>(i), "", "");
   }
 
   size_t lr = size;
@@ -104,7 +104,7 @@ void WordAlphabet::build_()
 
       for (size_t k = 0; k < lr; k++)
       {
-        getStateAt(j).setLetter(getStateAt(j).getLetter() + c);
+        states[j]->setLetter(states[j]->getLetter() + c);
         j++;
         // alphabet[j++].letter += c;
       }
@@ -120,8 +120,14 @@ void WordAlphabet::build_()
     s += "N";
   }
 
-  setState(size + 1, AlphabetState(static_cast<int>(size), s, "Unresolved"));
-  remap();
+  states[size + 1] = new AlphabetState(static_cast<int>(size), s, "Unresolved");
+
+  //Now register all states once for all:
+  for (size_t i = 0; i < states.size(); ++i) {
+    registerState(states[i]);
+  }
+  //jdutheil on 24/07/14: this should not be necessary anymore.
+  //remap();
 }
 
 /******************************************************************************/

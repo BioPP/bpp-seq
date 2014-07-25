@@ -233,7 +233,7 @@ namespace bpp
      * @param st The state to add.
      * @throw Exception If a wrong alphabet state is provided.
      */
-    virtual void registerState(const AlphabetState& st) throw (Exception);
+    virtual void registerState(AlphabetState* st) throw (Exception);
     
     /**
      * @brief Set a state in the Alphabet.
@@ -243,7 +243,7 @@ namespace bpp
      * @throw Exception If a wrong alphabet state is provided.
      * @throw IndexOutOfBoundsException If an incorrect index is provided.
      */
-    virtual void setState(size_t pos, const AlphabetState& st) throw (Exception, IndexOutOfBoundsException);
+    virtual void setState(size_t pos, AlphabetState* st) throw (Exception, IndexOutOfBoundsException);
     
     /**
      * @brief Resize the private alphabet_ vector.

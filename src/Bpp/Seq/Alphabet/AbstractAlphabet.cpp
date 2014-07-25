@@ -67,16 +67,16 @@ void AbstractAlphabet::updateMaps_(size_t pos, const AlphabetState& st) {
 
 /******************************************************************************/
 
-void AbstractAlphabet::registerState(const AlphabetState& st) throw (Exception) {
+void AbstractAlphabet::registerState(AlphabetState* st) throw (Exception) {
   // Add the state to the vector
-  alphabet_.push_back(st.clone());
+  alphabet_.push_back(st);
   // Update the maps
-  updateMaps_(alphabet_.size() - 1, st);
+  updateMaps_(alphabet_.size() - 1, *st);
 }
 
 /******************************************************************************/
 
-void AbstractAlphabet::setState(size_t pos, const AlphabetState& st)
+void AbstractAlphabet::setState(size_t pos, AlphabetState* st)
   throw (Exception, IndexOutOfBoundsException) {
     if (pos > alphabet_.size())
       throw IndexOutOfBoundsException("AbstractAlphabet::setState: incorect position", pos, 0, alphabet_.size());
@@ -84,9 +84,9 @@ void AbstractAlphabet::setState(size_t pos, const AlphabetState& st)
     if (alphabet_[pos] != 0)
       delete alphabet_[pos];
     // Put the state in the vector
-    alphabet_[pos] = st.clone();
+    alphabet_[pos] = st;
     // Update the maps
-    updateMaps_(pos, st);
+    updateMaps_(pos, *st);
   }
 
 /******************************************************************************/

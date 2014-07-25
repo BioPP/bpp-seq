@@ -97,23 +97,23 @@ namespace bpp {
     }
 
   protected:
-    void registerState(const AlphabetState& st) throw (Exception) {
+    void registerState(AlphabetState* st) throw (Exception) {
       AbstractAlphabet::registerState(st);
       if (caseSensitive_) {
-        letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();
+        letters_[static_cast<unsigned int>(st->getLetter()[0])] = st->getNum();
       } else {
-        letters_[static_cast<unsigned int>(tolower(st.getLetter()[0]))] = st.getNum();
-        letters_[static_cast<unsigned int>(toupper(st.getLetter()[0]))] = st.getNum();
+        letters_[static_cast<unsigned int>(tolower(st->getLetter()[0]))] = st->getNum();
+        letters_[static_cast<unsigned int>(toupper(st->getLetter()[0]))] = st->getNum();
       }
     }
 
-    void setState(size_t pos, const AlphabetState& st) throw (Exception, IndexOutOfBoundsException) {
+    void setState(size_t pos, AlphabetState* st) throw (Exception, IndexOutOfBoundsException) {
       AbstractAlphabet::setState(pos, st);
       if (caseSensitive_) {
-        letters_[static_cast<unsigned int>(st.getLetter()[0])] = st.getNum();
+        letters_[static_cast<unsigned int>(st->getLetter()[0])] = st->getNum();
       } else {
-        letters_[static_cast<unsigned int>(tolower(st.getLetter()[0]))] = st.getNum();
-        letters_[static_cast<unsigned int>(toupper(st.getLetter()[0]))] = st.getNum();
+        letters_[static_cast<unsigned int>(tolower(st->getLetter()[0]))] = st->getNum();
+        letters_[static_cast<unsigned int>(toupper(st->getLetter()[0]))] = st->getNum();
       }
     }
 

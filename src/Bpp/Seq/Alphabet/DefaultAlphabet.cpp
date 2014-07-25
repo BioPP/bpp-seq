@@ -49,11 +49,11 @@ DefaultAlphabet::DefaultAlphabet():
   chars_("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
 {
 	// Alphabet content definition
-  registerState(AlphabetState(-1, "-", "Gap"));
+  registerState(new AlphabetState(-1, "-", "Gap"));
 
 	for (size_t i = 0; i < chars_.size(); i++)
   {
-    registerState(AlphabetState(static_cast<int>(i), TextTools::toString(chars_[i]), ""));
+    registerState(new AlphabetState(static_cast<int>(i), TextTools::toString(chars_[i]), ""));
 	}
 }
 

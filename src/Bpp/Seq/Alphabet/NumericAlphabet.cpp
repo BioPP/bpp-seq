@@ -55,12 +55,11 @@ NumericAlphabet::NumericAlphabet(const UniformDiscreteDistribution& pd) :
   
   // Alphabet size definition
   size_t size = pdd_->getNumberOfCategories();
-  resize(size);
 
   Vdouble vd = pdd_->getCategories();
   
   for (size_t i = 0; i < size; ++i){
-    setState(i, AlphabetNumericState(static_cast<int>(i), vd[i], TextTools::toString(vd[i]), TextTools::toString(vd[i])));
+    registerState(new AlphabetNumericState(static_cast<int>(i), vd[i], TextTools::toString(vd[i]), TextTools::toString(vd[i])));
   }
 }
 
@@ -79,11 +78,11 @@ NumericAlphabet& NumericAlphabet::operator=(const NumericAlphabet& na)
 
 /****************************************************************************************/
 
-void NumericAlphabet::setState(size_t pos, const AlphabetState& st) throw (Exception)
+void NumericAlphabet::setState(size_t pos, AlphabetState* st) throw (Exception)
 {
   try {
     AbstractAlphabet::setState(pos, st);
-    double x = static_cast<const AlphabetNumericState&>(st).getValue();
+    double x = dynamic_cast<AlphabetNumericState*>(st)->getValue();
     if (values_.find(x) == values_.end())
     values_[x] = pos;  
   } catch(std::bad_cast&) {
@@ -91,11 +90,11 @@ void NumericAlphabet::setState(size_t pos, const AlphabetState& st) throw (Excep
   }
 }
 
-void NumericAlphabet::registerState(const AlphabetState& st) throw (Exception)
+void NumericAlphabet::registerState(AlphabetState* st) throw (Exception)
 {
   try {
     AbstractAlphabet::registerState(st);
-    double x = static_cast<const AlphabetNumericState&>(st).getValue();
+    double x = dynamic_cast<AlphabetNumericState*>(st)->getValue();
     if (values_.find(x) == values_.end())
       values_[x] = getSize();
   } catch(std::bad_cast&) {

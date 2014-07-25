@@ -53,13 +53,13 @@ CaseMaskedAlphabet::CaseMaskedAlphabet(const LetterAlphabet* nocaseAlphabet) :
   nocaseAlphabet_(nocaseAlphabet)
 {
   vector<string> chars = nocaseAlphabet_->getSupportedChars();
-  for (unsigned int i = 0; i < chars.size(); ++i) {
-    AlphabetState state = nocaseAlphabet_->getState(chars[i]);
+  for (size_t i = 0; i < chars.size(); ++i) {
+    AlphabetState* state = nocaseAlphabet_->getState(chars[i]).clone();
     registerState(state);
     char c = *chars[i].c_str();
     if (isalpha(c)) {
       if (isupper(c)) {
-        registerState(AlphabetState(state.getNum() + 100, TextTools::toLower(state.getLetter()), string("Masked ") + state.getName()));
+        registerState(new AlphabetState(state->getNum() + 100, TextTools::toLower(state->getLetter()), string("Masked ") + state->getName()));
       }
     }
   }

@@ -251,6 +251,7 @@ public:
       throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
 
     std::string s = intToChar(word);
+    std::cout << "WordA: " << s << std::endl;
     return vAbsAlph_[n]->charToInt(s.substr(n, 1));
   }
 
@@ -279,7 +280,7 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The char description of the n-position of the word.
    */
-  std::string getNPosition (const std::string& word, size_t n) const throw (BadCharException)
+  std::string getNPosition(const std::string& word, size_t n) const throw (BadCharException)
   {
     if (n > vAbsAlph_.size())
       throw BadCharException("", "WordAlphabet::getNPosition", this);

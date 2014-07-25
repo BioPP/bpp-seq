@@ -56,30 +56,30 @@ RNA::RNA(bool exclamationMarkCountsAsGap)
 {
 	// Alphabet content definition
 	// all unresolved bases use n°14
-  registerState(NucleicAlphabetState(-1, "-",  0, "Gap"));
-  registerState(NucleicAlphabetState( 0, "A",  1, "Adenine"));
-  registerState(NucleicAlphabetState( 1, "C",  2, "Cytosine"));
-  registerState(NucleicAlphabetState( 2, "G",  4, "Guanine"));
-  registerState(NucleicAlphabetState( 3, "U",  8, "Uracile"));
-  registerState(NucleicAlphabetState( 4, "M",  3, "Adenine or Cytosine"));
-  registerState(NucleicAlphabetState( 5, "R",  5, "Purine (Adenine or Guanine)"));
-  registerState(NucleicAlphabetState( 6, "W",  9, "Adenine or Uracile"));
-  registerState(NucleicAlphabetState( 7, "S",  6, "Cytosine or Guanine"));
-  registerState(NucleicAlphabetState( 8, "Y", 10, "Pyrimidine (Cytosine or Uracile)"));
-  registerState(NucleicAlphabetState( 9, "K", 12, "Guanine or Uracile"));
-  registerState(NucleicAlphabetState(10, "V",  7, "Adenine or Cytosine or Guanine"));
-  registerState(NucleicAlphabetState(11, "H", 11, "Adenine or Cytosine or Uracile"));
-  registerState(NucleicAlphabetState(12, "D", 13, "Adenine or Guanine or Uracile"));
-  registerState(NucleicAlphabetState(13, "B", 14, "Cytosine or Guanine or Uracile"));
-  registerState(NucleicAlphabetState(14, "N", 15, "Unresolved base"));
-  registerState(NucleicAlphabetState(14, "X", 15, "Unresolved base"));
-  registerState(NucleicAlphabetState(14, "O", 15, "Unresolved base"));
-  registerState(NucleicAlphabetState(14, "0", 15, "Unresolved base"));
-  registerState(NucleicAlphabetState(14, "?", 15, "Unresolved base"));
+  registerState(new NucleicAlphabetState(-1, "-",  0, "Gap"));
+  registerState(new NucleicAlphabetState( 0, "A",  1, "Adenine"));
+  registerState(new NucleicAlphabetState( 1, "C",  2, "Cytosine"));
+  registerState(new NucleicAlphabetState( 2, "G",  4, "Guanine"));
+  registerState(new NucleicAlphabetState( 3, "U",  8, "Uracile"));
+  registerState(new NucleicAlphabetState( 4, "M",  3, "Adenine or Cytosine"));
+  registerState(new NucleicAlphabetState( 5, "R",  5, "Purine (Adenine or Guanine)"));
+  registerState(new NucleicAlphabetState( 6, "W",  9, "Adenine or Uracile"));
+  registerState(new NucleicAlphabetState( 7, "S",  6, "Cytosine or Guanine"));
+  registerState(new NucleicAlphabetState( 8, "Y", 10, "Pyrimidine (Cytosine or Uracile)"));
+  registerState(new NucleicAlphabetState( 9, "K", 12, "Guanine or Uracile"));
+  registerState(new NucleicAlphabetState(10, "V",  7, "Adenine or Cytosine or Guanine"));
+  registerState(new NucleicAlphabetState(11, "H", 11, "Adenine or Cytosine or Uracile"));
+  registerState(new NucleicAlphabetState(12, "D", 13, "Adenine or Guanine or Uracile"));
+  registerState(new NucleicAlphabetState(13, "B", 14, "Cytosine or Guanine or Uracile"));
+  registerState(new NucleicAlphabetState(14, "N", 15, "Unresolved base"));
+  registerState(new NucleicAlphabetState(14, "X", 15, "Unresolved base"));
+  registerState(new NucleicAlphabetState(14, "O", 15, "Unresolved base"));
+  registerState(new NucleicAlphabetState(14, "0", 15, "Unresolved base"));
+  registerState(new NucleicAlphabetState(14, "?", 15, "Unresolved base"));
   if (exclamationMarkCountsAsGap)
-    registerState(NucleicAlphabetState(-1, "!", 0, "Frameshift"));
+    registerState(new NucleicAlphabetState(-1, "!", 0, "Frameshift"));
   else
-    registerState(NucleicAlphabetState(14, "!", 15, "Unresolved base"));
+    registerState(new NucleicAlphabetState(14, "!", 15, "Unresolved base"));
 }
 
 /******************************************************************************/

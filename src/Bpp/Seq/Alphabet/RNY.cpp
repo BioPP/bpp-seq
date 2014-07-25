@@ -50,9 +50,12 @@ using namespace bpp;
 
 RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 {
+  vector<AlphabetState*> states(351);
+
   for (int i = 0; i < 351; ++i)
   {
-    registerState(AlphabetState(i, TextTools::toString(i), ""));
+    //states[i] = new AlphabetState(i, "", ""); //jdutheil on 25/07/14: this does not work, we end with several states with empty states :s
+    states[i] = new AlphabetState(i, TextTools::toString(i), "");
   }
 
   // Alphabet content definition
@@ -77,7 +80,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
         s[0] = s1[i];
         s[1] = s2[j];
         s[2] = s3[k];
-        setState(l, AlphabetState(static_cast<int>(l), s, s));
+        states[l] = new AlphabetState(static_cast<int>(l), s, s);
       }
     }
   }
@@ -92,7 +95,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[i];
       s[1] = s2[j];
       s[2] = s3[3];
-      setState(l, AlphabetState(static_cast<int>(l), s, s));
+      states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
 
@@ -106,7 +109,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[i];
       s[1] = s2[4];
       s[2] = s3[k];
-      setState(l, AlphabetState(static_cast<int>(l), s, s));
+      states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
 
@@ -118,7 +121,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[i];
     s[1] = s2[4];
     s[2] = s3[3];
-    setState(l, AlphabetState(static_cast<int>(l), s, s));
+    states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
   // -NN (200->211)
@@ -131,7 +134,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[3];
       s[1] = s2[j];
       s[2] = s3[k];
-      setState(l, AlphabetState(static_cast<int>(l), s, s));
+      states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
 
@@ -144,7 +147,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[3];
     s[1] = s2[j];
     s[2] = s3[3];
-    setState(l, AlphabetState(static_cast<int>(l), s, s));
+    states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
   // --N (300->302)
@@ -155,7 +158,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[3];
     s[1] = s2[4];
     s[2] = s3[k];
-    setState(l, AlphabetState(static_cast<int>(l), s, s));
+    states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
 
@@ -164,7 +167,11 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
   s[0] = s1[3];
   s[1] = s2[4];
   s[2] = s3[3];
-  setState(350, AlphabetState(350, s, s));
+  states[350] = new AlphabetState(350, s, s);
+
+  // Register all states:
+  for (size_t i = 0; i < states.size(); ++i)
+    registerState(states[i]);
 }
 
 /****************************************************************************************/

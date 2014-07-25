@@ -91,24 +91,20 @@ namespace bpp
      * @name Overloaded methods from AbstractAlphabet
      * @{
      */
-    void registerState(const AlphabetState& st) throw (Exception) {
-      try {
-        const NucleicAlphabetState& nst = dynamic_cast<const NucleicAlphabetState&>(st);
-        LetterAlphabet::registerState(nst);
-        updateBinMaps_(getNumberOfChars(), nst);
-      } catch(std::bad_cast&) {
+    void registerState(AlphabetState* st) throw (Exception) {
+      NucleicAlphabetState* nst = dynamic_cast<NucleicAlphabetState*>(st);
+      if (!nst)
         throw Exception("NucleicAlphabet::registerState. Incorrect alphabet type.");
-      }
+      LetterAlphabet::registerState(nst);
+      updateBinMaps_(getNumberOfChars(), *nst);
     }
 
-    void setState(size_t pos, const AlphabetState& st) throw (Exception, IndexOutOfBoundsException) {
-      try {
-        const NucleicAlphabetState& nst = dynamic_cast<const NucleicAlphabetState&>(st);
-        LetterAlphabet::setState(pos, nst);
-        updateBinMaps_(pos, nst);
-      } catch(std::bad_cast&) {
+    void setState(size_t pos, AlphabetState* st) throw (Exception, IndexOutOfBoundsException) {
+      NucleicAlphabetState* nst = dynamic_cast<NucleicAlphabetState*>(st);
+      if (!nst)
         throw Exception("NucleicAlphabet::setState. Incorrect alphabet type.");
-      }
+      LetterAlphabet::setState(pos, nst);
+      updateBinMaps_(pos, *nst);
     }
 
     /** @} */
