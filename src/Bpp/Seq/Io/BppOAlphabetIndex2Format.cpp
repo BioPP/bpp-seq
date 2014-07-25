@@ -75,7 +75,7 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description) t
     }
     else if (name == "Grantham")
     {
-      bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true);
+      bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true, 1);
       GranthamAAChemicalDistance* M = new GranthamAAChemicalDistance();
       M->setSymmetric(sym);
       if (!sym) M->setPC1Sign(true);
@@ -83,14 +83,14 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description) t
     }
     else if (name == "Miyata")
     {
-      bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true);
+      bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true, 1);
       MiyataAAChemicalDistance* M = new MiyataAAChemicalDistance();
       M->setSymmetric(sym);
       return M;
     }
     else if (name == "Diff")
     {
-      string index1Desc = ApplicationTools::getStringParameter("index1", args, "None", "", true);
+      string index1Desc = ApplicationTools::getStringParameter("index1", args, "None", "", true, 1);
       bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true);
       BppOAlphabetIndex1Format index1Reader(alphabet_, "" , false);
       AlphabetIndex1* index1 = index1Reader.read(index1Desc);
@@ -104,7 +104,7 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description) t
     }
     else if (name == "User")
     {
-      bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true);
+      bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true, 1);
       string aax2FilePath = ApplicationTools::getAFilePath("file", args, true, true, "", false);
       ifstream aax2File(aax2FilePath.c_str(), ios::in);
       AAIndex2Entry* M = new AAIndex2Entry(aax2File, sym);
@@ -120,6 +120,5 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description) t
   {
     return 0;
   }
-
 }
 

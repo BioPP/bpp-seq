@@ -150,6 +150,5 @@ AlphabetIndex1* BppOAlphabetIndex1Format::read(const std::string& description) t
   {
     return 0;
   }
-
 }
 

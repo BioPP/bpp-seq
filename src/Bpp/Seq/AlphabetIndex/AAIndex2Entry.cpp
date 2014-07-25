@@ -61,7 +61,7 @@ AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException) 
     line = FileTools::getNextLine(input);
     if (line[0] == 'M')
     {
-      for (unsigned int i = 0; i < 20; i++)
+      for (size_t i = 0; i < 20; ++i)
       {
         line = FileTools::getNextLine(input);
         StringTokenizer st1(line, " ");
@@ -75,7 +75,7 @@ AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException) 
         {
           if (st1.numberOfRemainingTokens() != i + 1)
             break;
-          for (unsigned int j = 0; j <= i; j++)
+          for (size_t j = 0; j <= i; ++j)
           {
             property_(i, j) = TextTools::toDouble(st1.nextToken());
           }
@@ -84,7 +84,7 @@ AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException) 
         {
           if (st1.numberOfRemainingTokens() != 20)
             break;
-          for (unsigned int j = 0; j < 20; j++)
+          for (size_t j = 0; j < 20; ++j)
           {
             property_(i, j) = TextTools::toDouble(st1.nextToken());
           }
