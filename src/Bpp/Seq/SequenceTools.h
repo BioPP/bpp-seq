@@ -242,13 +242,24 @@ public:
   static size_t getNumberOfCompleteSites(const Sequence& seq);
 
   /**
+   * @brief keep only complete sites in a sequence.
+   *
+   * The deleteElement method of the Sequence object will be used where appropriate.
+   * @param seq The sequence to analyse.
+   */
+  
+  static Sequence* getSequenceWithCompleteSites(const Sequence& seq);
+
+  /**
    * @return The number of unresolved sites in the sequence.
    *
    * @param seq The sequence to analyse.
    *
    * @author Sylvain Gaillard
    */
+  
   static size_t getNumberOfUnresolvedSites(const Sequence& seq);
+
 
   /**
    * @brief Remove gaps from a sequence.

@@ -251,7 +251,6 @@ public:
       throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
 
     std::string s = intToChar(word);
-    std::cout << "WordA: " << s << std::endl;
     return vAbsAlph_[n]->charToInt(s.substr(n, 1));
   }
 

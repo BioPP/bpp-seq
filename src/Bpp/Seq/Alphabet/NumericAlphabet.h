@@ -44,7 +44,7 @@
 #include "AbstractAlphabet.h"
 #include "AlphabetNumericState.h"
 
-#include <Bpp/Numeric/Prob.all>
+#include <Bpp/Numeric/Prob/UniformDiscreteDistribution.h>
 
 #include <string>
 

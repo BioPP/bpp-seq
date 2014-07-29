@@ -41,6 +41,7 @@
 
 // From Utils:
 #include <Bpp/Text/TextTools.h>
+#include "AlphabetTools.h"
 
 #include <iostream>
 using namespace std;
@@ -54,16 +55,25 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
   for (int i = 0; i < 351; ++i)
   {
-    //states[i] = new AlphabetState(i, "", ""); //jdutheil on 25/07/14: this does not work, we end with several states with empty states :s
     states[i] = new AlphabetState(i, TextTools::toString(i), "");
   }
 
   // Alphabet content definition
 
-  // / change for ARN
+  string s1;
 
-  string s1 = "RCT-";
-  string s2 = "AGCT-";
+  if (AlphabetTools::isDNAAlphabet(&na))
+    s1 = "RCT-";
+  else 
+    s1 = "RCU-";
+  
+  string s2;
+ 
+  if (AlphabetTools::isDNAAlphabet(&na))
+    s2 = "AGCT-";
+  else
+    s2 = "AGCU-";
+  
   string s3 = "AGY-";
   string s = "   ";
 
@@ -297,7 +307,7 @@ string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) c
 
   tr += pos2;
 
-  if (pos3 == "T" || pos3 == "C")
+  if (pos3 == "T" || pos3 == "U" || pos3 == "C")
     tr += "Y";
   else
     tr += pos3;
@@ -310,9 +320,9 @@ string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) c
 /**************************************************************************************/
 int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const throw (BadCharException)
 {
-  if (alph.getAlphabetType() != "DNA alphabet")
+  if (! AlphabetTools::isNucleicAlphabet(&alph))
   {
-    throw AlphabetException ("RNY::getRNY : Sequence must be DNA",
+    throw AlphabetException ("RNY::getRNY : Sequence must be Nucleic",
                              &alph);
   }
 
@@ -333,6 +343,7 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const throw (BadCharE
     r += 1;
     break;
   case 'T':
+  case 'U':
     r += 2;
     break;
   case '-':
@@ -358,6 +369,7 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const throw (BadCharE
     r += 2;
     break;
   case 'T':
+  case 'U':
     r += 3;
     break;
   case '-':
@@ -381,6 +393,7 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const throw (BadCharE
     break;
   case 'C':
   case 'T':
+  case 'U':
     r += 2;
     break;
   case '-':

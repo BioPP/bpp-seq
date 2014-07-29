@@ -304,6 +304,22 @@ size_t SequenceTools::getNumberOfCompleteSites(const Sequence& seq)
 
 /******************************************************************************/
 
+Sequence* SequenceTools::getSequenceWithCompleteSites(const Sequence& seq)
+{
+  const Alphabet* alpha = seq.getAlphabet();
+  vector<int> content;
+  for (size_t i = 0; i < seq.size(); i++)
+  {
+    if (!(alpha->isGap(seq[i]) || alpha->isUnresolved(seq[i])))
+      content.push_back(seq[i]);
+  }
+  Sequence* newSeq = dynamic_cast<Sequence*>(seq.clone());
+  newSeq->setContent(content);
+  return newSeq;
+}
+
+/******************************************************************************/
+
 size_t SequenceTools::getNumberOfUnresolvedSites(const Sequence& seq)
 {
   size_t count = 0;

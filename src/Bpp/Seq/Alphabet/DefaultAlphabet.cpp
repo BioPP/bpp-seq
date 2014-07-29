@@ -51,9 +51,9 @@ DefaultAlphabet::DefaultAlphabet():
 	// Alphabet content definition
   registerState(new AlphabetState(-1, "-", "Gap"));
 
-	for (size_t i = 0; i < chars_.size(); i++)
+  for (size_t i = 0; i < chars_.size(); i++)
   {
     registerState(new AlphabetState(static_cast<int>(i), TextTools::toString(chars_[i]), ""));
-	}
+  }
 }
 
