@@ -51,14 +51,14 @@ using namespace bpp;
 
 RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 {
-  vector<AlphabetState*> states(351);
-
+  // Initialization:
+  vector<AlphabetState*> states;
   for (int i = 0; i < 351; ++i)
   {
-    states[i] = new AlphabetState(i, TextTools::toString(i), "");
+    states.push_back(new AlphabetState(i, TextTools::toString(i), ""));
   }
 
-  // Alphabet content definition
+  // Alphabet content definition:
 
   string s1;
 

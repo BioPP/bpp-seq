@@ -54,7 +54,7 @@ bool testSeq(SequenceWalker& walker, unsigned int pos, unsigned int truth) {
   cout << walker.getSequencePosition(46) << endl;;
   for (unsigned int i = 0; i < 1000; ++i) {
     ApplicationTools::displayGauge(i, 999, '=');
-    size_t r = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(47);
+    size_t r = RandomTools::giveIntRandomNumberBetweenZeroAndEntry<size_t>(47);
     size_t x = walker.getSequencePosition(r);
     if (walker.getSequencePosition(pos) != truth) {
       cout << endl;
@@ -74,7 +74,7 @@ bool testAln(SequenceWalker& walker, unsigned int pos, unsigned int truth) {
   cout << walker.getAlignmentPosition(26) << endl;
   for (unsigned int i = 0; i < 1000; ++i) {
     ApplicationTools::displayGauge(i, 999, '=');
-    unsigned int r = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(27);
+    size_t r = RandomTools::giveIntRandomNumberBetweenZeroAndEntry<size_t>(27);
     walker.getAlignmentPosition(r);
     if (walker.getAlignmentPosition(pos) != truth) {
       cout << endl;

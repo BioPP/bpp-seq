@@ -91,11 +91,7 @@ public:
    *
    * @{
    */
-  double getIndex(int state1, int state2) const {
-    return getIndex(static_cast<size_t>(state1), static_cast<size_t>(state2));
-    //Note jdutheil on 22/07/14: we should use StateIndex instead!
-  }
-  double getIndex(size_t stateIndex1, size_t stateIndex2) const throw (IndexOutOfBoundsException);
+  double getIndex(int state1, int state2) const throw (BadIntException);
   double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException);
   const Alphabet* getAlphabet() const { return alpha_; }
   BLOSUM50* clone() const { return new BLOSUM50(); }

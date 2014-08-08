@@ -48,7 +48,7 @@ using namespace std;
 BasicSequence* getRandomSequence(const Alphabet* alphabet, unsigned int size) {
   string seq = "";
   for (unsigned int i = 0; i < size; ++i)
-    seq += alphabet->intToChar(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(alphabet->getSize()));
+    seq += alphabet->intToChar(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(static_cast<int>(alphabet->getSize())));
   return new BasicSequence("random seq", seq, alphabet);
 }
 

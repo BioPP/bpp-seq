@@ -55,13 +55,11 @@ BLOSUM50::BLOSUM50() :
   #include "__BLOSUM50MatrixCode"
 }
 
-double BLOSUM50::getIndex(size_t stateIndex1, size_t stateIndex2) const
-throw (IndexOutOfBoundsException)
+double BLOSUM50::getIndex(int state1, int state2) const
+throw (BadIntException)
 {
-  if (stateIndex1 < 0 || stateIndex1 > 19)
-    throw IndexOutOfBoundsException("BLOSUM50::getIndex(). Invalid state1.", stateIndex1, 0, 19);
-  if (stateIndex2 < 0 || stateIndex2 > 19)
-    throw IndexOutOfBoundsException("BLOSUM50::getIndex(). Invalid state2.", stateIndex2, 0, 19);
+  size_t stateIndex1 = alpha_->getStateIndex(state1);
+  size_t stateIndex2 = alpha_->getStateIndex(state2);
   return distanceMatrix_(stateIndex1, stateIndex2);
 }
 
