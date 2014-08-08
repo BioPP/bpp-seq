@@ -62,20 +62,17 @@ public:
   UserAlphabetIndex1(const Alphabet* alph) :
   alph_(alph),
   index_(alph->getSize(),0)
-  {    
-  }
+  {}
 
   UserAlphabetIndex1(const UserAlphabetIndex1& uAlph) :
     alph_(uAlph.alph_),//->clone()),
     index_(uAlph.index_)
-  {    
-  }
+  {}
 
   UserAlphabetIndex1& operator=(const UserAlphabetIndex1& uAlph)
   {
-    alph_=uAlph.alph_;//->clone();
-    index_=uAlph.index_;
-
+    alph_  = uAlph.alph_;//->clone();
+    index_ = uAlph.index_;
     return *this;
   }    
   
@@ -86,26 +83,22 @@ public:
 public:
   double getIndex(int state) const
   {
-    if (state < 0 || state >= (int)alph_->getSize())
-      throw BadIntException(state, "UserAlphabetIndex1::getIndex(). Invalid state.", alph_);
-    return index_[state];
+    return index_[alph_->getStateIndex(state)];
   }
 
   void setIndex(int state, double val) 
   {
-    if (state < 0 || state >= (int)alph_->getSize())
-      throw BadIntException(state, "UserAlphabetIndex1::getIndex(). Invalid state.", alph_);
-    index_[state]=val;
+    index_[alph_->getStateIndex(state)] = val;
   }
 
   double getIndex(const std::string& state) const
   {
-    return index_[alph_->charToInt(state)];
+    return index_[alph_->getStateIndex(state)];
   }
 
   void setIndex(const std::string& state, double val) 
   {
-    index_[alph_->charToInt(state)]=val;
+    index_[alph_->getStateIndex(state)] = val;
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(index_); }
