@@ -58,10 +58,13 @@ namespace bpp
   {
   private:
     std::map<std::string, std::string> unparsedArguments_;
+    int warningLevel_;
 
   public:
-    BppOAlignmentWriterFormat():
-      unparsedArguments_() {}
+    BppOAlignmentWriterFormat(int warningLevel):
+      unparsedArguments_(),
+      warningLevel_(warningLevel) {}
+
      virtual ~BppOAlignmentWriterFormat() {}
 
   public:

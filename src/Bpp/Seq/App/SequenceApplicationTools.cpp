@@ -560,7 +560,7 @@ void SequenceApplicationTools::writeSequenceFile(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, "none", warn);
   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
-  BppOSequenceWriterFormat bppoWriter;
+  BppOSequenceWriterFormat bppoWriter(warn);
   auto_ptr<OSequence> oSeq(bppoWriter.read(sequenceFormat));
   if (verbose)
   {
@@ -583,7 +583,7 @@ void SequenceApplicationTools::writeAlignmentFile(
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, "none", warn);
   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
-  BppOAlignmentWriterFormat bppoWriter;
+  BppOAlignmentWriterFormat bppoWriter(warn);
   auto_ptr<OAlignment> oAln(bppoWriter.read(sequenceFormat));
   if (verbose)
   {

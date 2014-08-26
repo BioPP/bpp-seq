@@ -57,7 +57,7 @@ OAlignment* BppOAlignmentWriterFormat::read(const std::string& description) thro
   unparsedArguments_.clear();
   string format = "";
   KeyvalTools::parseProcedure(description, format, unparsedArguments_);
-  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", unparsedArguments_, 100, "", true, false);
+  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", unparsedArguments_, 100, "", true, warningLevel_);
   auto_ptr<OAlignment> oAln;
   if (format == "Fasta")
   {
@@ -75,43 +75,32 @@ OAlignment* BppOAlignmentWriterFormat::read(const std::string& description) thro
   {
     bool sequential = true, extended = true;
     string split = "  ";
-    if (unparsedArguments_.find("order") != unparsedArguments_.end())
-    {
-      if (unparsedArguments_["order"] == "sequential")
-        sequential = true;
-      else if (unparsedArguments_["order"] == "interleaved")
-        sequential = false;
-      else
-        ApplicationTools::displayWarning("Argument '" +
-                                         unparsedArguments_["order"] +
-                                         "' for argument 'Phylip#order' is unknown. " +
-                                         "Default used instead: sequential.");
-    }
+    string order = ApplicationTools::getStringParameter("order", unparsedArguments_, "sequential", "", true, warningLevel_);
+    if (order == "sequential")
+      sequential = true;
+    else if (order == "interleaved")
+      sequential = false;
     else
-      ApplicationTools::displayWarning("Argument 'Phylip#order' not found. Default used instead: sequential.");
-    if (unparsedArguments_.find("type") != unparsedArguments_.end())
+      throw Exception("BppOAlignmentWriterFormat::read. Invalid argument 'order' for phylip format: " + order);
+ 
+    string type = ApplicationTools::getStringParameter("type", unparsedArguments_, "extended", "", true, warningLevel_);
+    if (type == "extended")
     {
-      if (unparsedArguments_["type"] == "extended")
-      {
-        extended = true;
-        split = ApplicationTools::getStringParameter("split", unparsedArguments_, "spaces", "", true, false);
-        if (split == "spaces")
-          split = "  ";
-        else if (split == "tab")
-          split = "\t";
-        else
-          throw Exception("Unknown option for Phylip#split: " + split);
-      }
-      else if (unparsedArguments_["type"] == "classic")
-        extended = false;
+      extended = true;
+      split = ApplicationTools::getStringParameter("split", unparsedArguments_, "spaces", "", true, warningLevel_);
+      if (split == "spaces")
+        split = "  ";
+      else if (split == "tab")
+        split = "\t";
       else
-        ApplicationTools::displayWarning("Argument '" +
-                                         unparsedArguments_["type"] + "' for parameter 'Phylip#type' is unknown. " +
-                                         "Default used instead: extended.");
+        throw Exception("BppOAlignmentWriterFormat::read. Invalid argument 'split' for phylip format: " + split);
     }
+    else if (type == "classic")
+      extended = false;
     else
-      ApplicationTools::displayWarning("Argument 'Phylip#type' not found. Default used instead: extended.");
-    oAln.reset(new Phylip(extended, sequential, ncol, true, split));
+      throw Exception("BppOAlignmentWriterFormat::read. Invalid argument 'type' for phylip format: " + type);
+    
+   oAln.reset(new Phylip(extended, sequential, ncol, true, split));
   }
   else if (format == "Stockholm")
   {
