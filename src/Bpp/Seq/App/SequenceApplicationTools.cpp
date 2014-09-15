@@ -338,7 +338,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
         for (size_t i = 0; i < vSite1.size(); ++i){
           int x = (vSite1[i] >= 0 ? vSite1[i] : static_cast<int>(nbSites) + vSite1[i]);
           if (x >= 0)
-            vSite.push_back(static_cast<size_t>(x));
+            vSite.push_back(static_cast<size_t>(x-1));
           else
             throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect negative index: " + TextTools::toString(x));
         }
