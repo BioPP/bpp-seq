@@ -131,7 +131,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
     throw AlphabetException("CodonSiteTools::isSynonymousPolymorphic: alphabet is not CodonAlphabet", site.getAlphabet());
-  if (typeid(site.getAlphabet()) != typeid(gCode.getSourceAlphabet()))
+  if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::isSynonymousPolymorphic: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
   // Empty site checking
   if (site.size() == 0)
@@ -456,7 +456,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
     throw AlphabetException("CodonSiteTools::piSynonymous: alphabet is not CodonAlphabet", site.getAlphabet());
-  if (typeid(site.getAlphabet()) != typeid(gCode.getSourceAlphabet()))
+  if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::piSynonymous: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
   // Empty site checking
   if (site.size() == 0)
@@ -488,7 +488,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
     throw AlphabetException("CodonSiteTools::piNonSynonymous: alphabet is not CodonAlphabet", site.getAlphabet());
-  if (typeid(site.getAlphabet()) != typeid(gCode.getSourceAlphabet()))
+  if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::piNonSynonymous: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
   // Empty site checking
   if (site.size() == 0)
@@ -566,7 +566,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
     throw AlphabetException("CodonSiteTools::meanNumberOfSynonymousPositions: alphabet is not CodonAlphabet", site.getAlphabet());
-  if (typeid(site.getAlphabet()) != typeid(gCode.getSourceAlphabet()))
+  if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::meanNumberOfSynonymousPositions: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
   // Empty site checking
   if (site.size() == 0)
@@ -636,7 +636,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
     throw AlphabetException("CodonSiteTools::numberOfNonSynonymousSubstitutions: alphabet is not CodonAlphabet", site.getAlphabet());
-  if (typeid(site.getAlphabet()) != typeid(gCode.getSourceAlphabet()))
+  if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::numberOfNonSynonymousSubstitutions: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
   // Empty site checking
   if (site.size() == 0)
@@ -687,9 +687,9 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
     throw AlphabetException("CodonSiteTools::fixedDifferences: alphabet is not CodonAlphabet (siteIn)", siteIn.getAlphabet());
   if (!AlphabetTools::isCodonAlphabet(siteOut.getAlphabet()))
     throw AlphabetException("CodonSiteTools::fixedDifferences: alphabet is not CodonAlphabet (siteOut)", siteOut.getAlphabet());
-  if (typeid(siteIn.getAlphabet()) != typeid(gCode.getSourceAlphabet()))
+  if (!siteIn.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::fixedDifferences: siteIn and genetic code have not the same codon alphabet.", siteIn.getAlphabet(), gCode.getSourceAlphabet());
-  if (typeid(siteOut.getAlphabet()) != typeid(gCode.getSourceAlphabet()))
+  if (!siteOut.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::fixedDifferences: siteOut and genetic code have not the same codon alphabet.", siteOut.getAlphabet(), gCode.getSourceAlphabet());
   // Empty site checking
   if (siteIn.size() == 0)

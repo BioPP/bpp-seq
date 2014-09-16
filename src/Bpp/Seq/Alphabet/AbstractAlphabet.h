@@ -265,6 +265,9 @@ namespace bpp
 
     unsigned int getStateCodingSize() const { return 1; }
 
+    bool equals(const Alphabet& alphabet) const {
+      return getAlphabetType() == alphabet.getAlphabetType();
+    }
   };
 
 } //end of namespace bpp.

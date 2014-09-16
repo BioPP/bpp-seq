@@ -444,6 +444,13 @@ namespace bpp
      * @author Sylvain Gaillard
      */
     virtual unsigned int getStateCodingSize() const = 0;
+
+    /**
+     * @brief Comparison of alphabets
+     *
+     * @return true If the two instances are of the same class.
+     */
+    virtual bool equals(const Alphabet& alphabet) const = 0;
 };
 
 } //end of namespace bpp.
