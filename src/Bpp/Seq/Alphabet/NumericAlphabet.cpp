@@ -78,13 +78,13 @@ NumericAlphabet& NumericAlphabet::operator=(const NumericAlphabet& na)
 
 /****************************************************************************************/
 
-void NumericAlphabet::setState(size_t pos, AlphabetState* st) throw (Exception)
+void NumericAlphabet::setState(size_t stateIndex, AlphabetState* st) throw (Exception)
 {
   try {
-    AbstractAlphabet::setState(pos, st);
+    AbstractAlphabet::setState(stateIndex, st);
     double x = dynamic_cast<AlphabetNumericState*>(st)->getValue();
     if (values_.find(x) == values_.end())
-    values_[x] = pos;  
+    values_[x] = stateIndex;  
   } catch(std::bad_cast&) {
     throw Exception("NumericAlphabet::setState. Incorrect alphabet type.");
   }
@@ -118,11 +118,11 @@ vector<string> NumericAlphabet::getAlias(const string& state) const throw (BadCh
 }
 
 /****************************************************************************************/
+
 bool NumericAlphabet::isGap(int state) const
 {
   return false;
 }
-
 
 bool NumericAlphabet::containsGap(const string& state) const throw (BadCharException)
 {
@@ -178,12 +178,12 @@ size_t NumericAlphabet::getValueIndex(double value) const
   return it->second;
 }
 
-AlphabetNumericState& NumericAlphabet::getStateAt(size_t pos)  throw (IndexOutOfBoundsException)
+AlphabetNumericState& NumericAlphabet::getStateAt(size_t stateIndex) throw (IndexOutOfBoundsException)
 {
-  return static_cast<AlphabetNumericState&>(AbstractAlphabet::getStateAt(pos));
+  return static_cast<AlphabetNumericState&>(AbstractAlphabet::getStateAt(stateIndex));
 }
 
-const AlphabetNumericState& NumericAlphabet::getStateAt(size_t pos) const throw (IndexOutOfBoundsException)
+const AlphabetNumericState& NumericAlphabet::getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException)
 {
-  return static_cast<const AlphabetNumericState&>(AbstractAlphabet::getStateAt(pos));
+  return static_cast<const AlphabetNumericState&>(AbstractAlphabet::getStateAt(stateIndex));
 }

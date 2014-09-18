@@ -114,16 +114,16 @@ namespace bpp
      * @name Overloaded methods from AbstractAlphabet
      * @{
      */
-    const NucleicAlphabetState& getStateAt(size_t pos) const
+    const NucleicAlphabetState& getStateAt(size_t stateIndex) const
       throw (IndexOutOfBoundsException) {
       return dynamic_cast<const NucleicAlphabetState&>(
-        AbstractAlphabet::getStateAt(pos)
+        AbstractAlphabet::getStateAt(stateIndex)
         );
     }
-    NucleicAlphabetState& getStateAt(size_t pos)
+    NucleicAlphabetState& getStateAt(size_t stateIndex)
       throw (IndexOutOfBoundsException) {
       return dynamic_cast<NucleicAlphabetState&>(
-        AbstractAlphabet::getStateAt(pos)
+        AbstractAlphabet::getStateAt(stateIndex)
         );
     }
     const NucleicAlphabetState& getState(const std::string& letter) const

@@ -174,7 +174,7 @@ namespace bpp
      * @param stateIndex The index of the state in the alphabet_ vector.
      * @throw IndexOutOfBoundsException If the index is invalid.
      */
-    virtual AlphabetState& getStateAt(size_t pos) throw (IndexOutOfBoundsException);
+    virtual AlphabetState& getStateAt(size_t stateIndex) throw (IndexOutOfBoundsException);
     
     /**
      * @brief Get a state at a position in the alphabet_ vector.

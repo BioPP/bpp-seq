@@ -94,11 +94,11 @@ namespace bpp
 
     std::string getAlphabetType() const { return "Numeric alphabet"; }
 
-    AlphabetNumericState& getStateAt(size_t pos)  throw (IndexOutOfBoundsException);
-    const AlphabetNumericState& getStateAt(size_t pos) const throw (IndexOutOfBoundsException);
+    AlphabetNumericState& getStateAt(size_t stateIndex)  throw (IndexOutOfBoundsException);
+    const AlphabetNumericState& getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException);
     
     /**
-     *@ brief Specific methods
+     * @ brief Specific methods
      *
      */
 
