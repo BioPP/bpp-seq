@@ -1,5 +1,5 @@
 %define _basename bpp-seq
-%define _version 2.1.0
+%define _version 2.2.0
 %define _release 1
 %define _prefix /usr
 
@@ -173,6 +173,9 @@ exit 0
 %{_prefix}/include/*
 
 %changelog
+* Thu Sep 18 2014 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.2.0-1
+- Alphabet classes refreshed and updated
+- Bug fixes.
 * Tue Mar 05 2013 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.1.0-1
 - 'omics' tools now in bpp-seq-omics
 - Extended BppO support
