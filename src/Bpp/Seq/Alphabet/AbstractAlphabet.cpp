@@ -283,7 +283,7 @@ std::string AbstractAlphabet::getGeneric(const std::vector<std::string>& states)
 
 const std::vector<int>& AbstractAlphabet::getSupportedInts() const
 {
-  if(intList_.size() == 0)
+  if(intList_.size() != alphabet_.size())
   {
     intList_.resize(alphabet_.size());
     charList_.resize(alphabet_.size());
@@ -300,7 +300,7 @@ const std::vector<int>& AbstractAlphabet::getSupportedInts() const
 
 const std::vector<std::string>& AbstractAlphabet::getSupportedChars() const
 {
-  if(charList_.size() == 0)
+  if(charList_.size() != alphabet_.size())
   {
     intList_.resize(alphabet_.size());
     charList_.resize(alphabet_.size());

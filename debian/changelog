@@ -3,7 +3,7 @@ libbpp-seq (2.2.0-1) unstable; urgency=low
   * Alphabet classes refreshed and updated
   * Bug fixes.
 
- -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 18 Sep 2014 14:00:00 +0100
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 23 Sep 2014 14:00:00 +0100
 
 libbpp-seq (2.1.0-1) unstable; urgency=low
 
