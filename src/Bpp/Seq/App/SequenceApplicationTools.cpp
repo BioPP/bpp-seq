@@ -343,6 +343,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
             throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect negative index: " + TextTools::toString(x));
         }
         selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
+        selectedSites->reindexSites();
       }
       catch (Exception& e)
       {
