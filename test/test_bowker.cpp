@@ -61,9 +61,9 @@ int test(const Alphabet* alphabet, unsigned int size, unsigned int rep) {
   //ofstream out("pvalues.txt", ios::out);
   for (unsigned int i = 0; i < rep; ++i) {
     ApplicationTools::displayGauge(i, rep-1);
-    auto_ptr<BasicSequence> seq1(getRandomSequence(alphabet, size));
-    auto_ptr<BasicSequence> seq2(getRandomSequence(alphabet, size));
-    auto_ptr<BowkerTest> test(SequenceTools::bowkerTest(*seq1, *seq2));
+    unique_ptr<BasicSequence> seq1(getRandomSequence(alphabet, size));
+    unique_ptr<BasicSequence> seq2(getRandomSequence(alphabet, size));
+    unique_ptr<BowkerTest> test(SequenceTools::bowkerTest(*seq1, *seq2));
     double p = test->getPValue();
     if (p <= 0.01) n01++;
     if (p <= 0.05) n05++;

@@ -567,9 +567,9 @@ throw (AlphabetMismatchException)
   if (seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
   // Check that sequences have no gap!
-  auto_ptr<Sequence> s1(seq1.clone());
+  unique_ptr<Sequence> s1(seq1.clone());
   SequenceTools::removeGaps(*s1);
-  auto_ptr<Sequence> s2(seq2.clone());
+  unique_ptr<Sequence> s2(seq2.clone());
   SequenceTools::removeGaps(*s2);
 
   // 1) Initialize matrix:
@@ -668,9 +668,9 @@ throw (AlphabetMismatchException)
   if (seq1.getAlphabet()->getAlphabetType() != s.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), s.getAlphabet());
   // Check that sequences have no gap!
-  auto_ptr<Sequence> s1(seq1.clone());
+  unique_ptr<Sequence> s1(seq1.clone());
   SequenceTools::removeGaps(*s1);
-  auto_ptr<Sequence> s2(seq2.clone());
+  unique_ptr<Sequence> s2(seq2.clone());
   SequenceTools::removeGaps(*s2);
 
   // 1) Initialize matrix:
