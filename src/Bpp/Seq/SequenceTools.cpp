@@ -56,33 +56,12 @@ using namespace bpp;
 
 using namespace std;
 
-DNA SequenceTools::_DNA;
-RNA SequenceTools::_RNA;
-RNY SequenceTools::_RNY(_DNA);
-NucleicAcidsReplication SequenceTools::_DNARep(&_DNA, &_DNA);
-NucleicAcidsReplication SequenceTools::_RNARep(&_RNA, &_RNA);
-NucleicAcidsReplication SequenceTools::_transc(&_DNA, &_RNA);
-
-/******************************************************************************/
-
-Sequence* SequenceTools::subseq(const Sequence& sequence, size_t begin, size_t end) throw (IndexOutOfBoundsException, Exception)
-{
-  // Checking interval
-  if (end >= sequence.size())
-    throw IndexOutOfBoundsException ("SequenceTools::subseq : Invalid upper bound", end, 0, sequence.size());
-  if (end < begin)
-    throw Exception ("SequenceTools::subseq : Invalid interval");
-
-  // Copy sequence
-  vector<int> temp(sequence.getContent());
-
-  // Truncate sequence
-  temp.erase(temp.begin() + static_cast<ptrdiff_t>(end + 1), temp.end());
-  temp.erase(temp.begin(), temp.begin() + static_cast<ptrdiff_t>(begin));
-
-  // New sequence creation
-  return new BasicSequence(sequence.getName(), temp, sequence.getComments(), sequence.getAlphabet());
-}
+DNA SequenceTools::DNA_;
+RNA SequenceTools::RNA_;
+RNY SequenceTools::RNY_(DNA_);
+NucleicAcidsReplication SequenceTools::DNARep_(&DNA_, &DNA_);
+NucleicAcidsReplication SequenceTools::RNARep_(&RNA_, &RNA_);
+NucleicAcidsReplication SequenceTools::transc_(&DNA_, &RNA_);
 
 /******************************************************************************/
 
@@ -97,10 +76,11 @@ Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2)
     throw Exception ("SequenceTools::concatenate : Sequence's names don't match");
 
   // Concatenate sequences and send result
-  vector<int> sequence  = seq1.getContent();
-  vector<int> sequence2 = seq2.getContent();
-  sequence.insert(sequence.end(), sequence2.begin(), sequence2.end());
-  return new BasicSequence(seq1.getName(), sequence, seq1.getComments(), seq1.getAlphabet());
+  Sequence* concat = seq1.clone();
+  concat->setToSizeR(seq1.size() + seq2.size());
+  for (size_t i = 0; i < seq2.size(); ++i)
+    (*concat)[seq1.size() + i] = seq2[i];
+  return concat;
 }
 
 /******************************************************************************/
@@ -111,11 +91,11 @@ Sequence& SequenceTools::complement(Sequence& seq) throw (AlphabetException)
   NucleicAcidsReplication* NAR;
   if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet")
   {
-    NAR = &_DNARep;
+    NAR = &DNARep_;
   }
   else if (seq.getAlphabet()->getAlphabetType() == "RNA alphabet")
   {
-    NAR = &_RNARep;
+    NAR = &RNARep_;
   }
   else
   {
@@ -136,11 +116,11 @@ Sequence* SequenceTools::getComplement(const Sequence& sequence) throw (Alphabet
   NucleicAcidsReplication* NAR;
   if (sequence.getAlphabet()->getAlphabetType() == "DNA alphabet")
   {
-    NAR = &_DNARep;
+    NAR = &DNARep_;
   }
   else if (sequence.getAlphabet()->getAlphabetType() == "RNA alphabet")
   {
-    NAR = &_RNARep;
+    NAR = &RNARep_;
   }
   else
   {
@@ -160,7 +140,7 @@ Sequence* SequenceTools::transcript(const Sequence& sequence) throw (AlphabetExc
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
   }
 
-  return _transc.translate(sequence);
+  return transc_.translate(sequence);
 }
 
 /******************************************************************************/
@@ -173,7 +153,7 @@ Sequence* SequenceTools::reverseTranscript(const Sequence& sequence) throw (Alph
     throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
   }
 
-  return _transc.reverse(sequence);
+  return transc_.reverse(sequence);
 }
 
 /******************************************************************************/
@@ -210,11 +190,11 @@ Sequence& SequenceTools::invertComplement(Sequence& seq)
   NucleicAcidsReplication* NAR;
   if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet")
   {
-    NAR = &_DNARep;
+    NAR = &DNARep_;
   }
   else if (seq.getAlphabet()->getAlphabetType() == "RNA alphabet")
   {
-    NAR = &_RNARep;
+    NAR = &RNARep_;
   }
   else
   {
@@ -489,9 +469,11 @@ void SequenceTools::getPutativeHaplotypes(const Sequence& seq, std::vector<Seque
   {
     for (list<Sequence*>::iterator it = t_hap.begin(); it != t_hap.end(); it++)
     {
-      for (unsigned int j = 0; j < states[i].size(); j++)
+      for (size_t j = 0; j < states[i].size(); j++)
       {
-        Sequence* tmp_seq = new BasicSequence(seq.getName() + "_hap", (**it).getContent(), alpha);
+        //Sequence* tmp_seq = new BasicSequence(seq.getName() + "_hap", (**it).getContent(), alpha);
+        Sequence* tmp_seq = (**it).clone();
+        tmp_seq->setName(seq.getName() + "_hap");
         if (j < states[i].size() - 1)
         {
           tmp_seq->setName(tmp_seq->getName() + TextTools::toString(hap_count++));
@@ -596,19 +578,19 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
     j = i * 3 + static_cast<size_t>(ph) - 1;
 
     if (j == 0)
-      content[i] = _RNY.getRNY(tir, seq[0], seq[1], *seq.getAlphabet());
+      content[i] = RNY_.getRNY(tir, seq[0], seq[1], *seq.getAlphabet());
     else
     {
       if (j == s - 1)
-        content[i] = _RNY.getRNY(seq[j - 1], seq[j], tir, *seq.getAlphabet());
+        content[i] = RNY_.getRNY(seq[j - 1], seq[j], tir, *seq.getAlphabet());
       else
-        content[i] = _RNY.getRNY(seq[j - 1], seq[j], seq[j + 1], *seq.getAlphabet());
+        content[i] = RNY_.getRNY(seq[j - 1], seq[j], seq[j + 1], *seq.getAlphabet());
     }
   }
 
   // New sequence creating, and sense reversing
   Sequence* sq = new BasicSequence(seq.getName(), content,
-                                   seq.getComments(), &_RNY);
+                                   seq.getComments(), &RNY_);
 
   // Send result
   return sq;
@@ -630,20 +612,20 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq) throw (AlphabetException)
 
   if (seq.size() >= 2)
   {
-    content[0] = _RNY.getRNY(tir, seq[0], seq[1], *seq.getAlphabet());
+    content[0] = RNY_.getRNY(tir, seq[0], seq[1], *seq.getAlphabet());
 
     for (unsigned int i = 1; i < n - 1; i++)
     {
-      content[i] = _RNY.getRNY(seq[i - 1], seq[i], seq[i + 1],
+      content[i] = RNY_.getRNY(seq[i - 1], seq[i], seq[i + 1],
                                *seq.getAlphabet());
     }
 
-    content[n - 1] = _RNY.getRNY(seq[n - 2], seq[n - 1], tir, *seq.getAlphabet());
+    content[n - 1] = RNY_.getRNY(seq[n - 2], seq[n - 1], tir, *seq.getAlphabet());
   }
 
   // New sequence creating, and sense reversing
   Sequence* s = new BasicSequence(seq.getName(), content,
-                                  seq.getComments(), &_RNY);
+                                  seq.getComments(), &RNY_);
 
   // Send result
   return s;

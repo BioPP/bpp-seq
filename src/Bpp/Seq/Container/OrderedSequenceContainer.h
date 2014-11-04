@@ -61,14 +61,6 @@ class OrderedSequenceContainer:
 		virtual ~OrderedSequenceContainer() {}
 
 	public:
-		/**
-		 * @brief Get the content of a sequence.
-		 *
-		 * @param sequenceIndex The position of the sequence.
-		 * @return The content of the sequence as a vector of integers.
-		 * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
-		 */
-		virtual const std::vector<int>& getContent(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 		
 		/**
 		 * @brief Convert a particular sequence to a string.
@@ -226,7 +218,6 @@ class OrderedSequenceContainer:
 		 *
 		 * @{
 		 */
-		virtual const std::vector<int>& getContent(const std::string& name) const throw (SequenceNotFoundException) = 0;  
 		virtual std::string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
 		virtual const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) = 0;
 		virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;

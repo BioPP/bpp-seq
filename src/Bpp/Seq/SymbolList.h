@@ -99,13 +99,6 @@ namespace bpp
      */
 
     /**
-     * @brief Get the whole content of the list as a vector of int.
-     *
-     * @return A reference to the content of the list.
-     */
-    virtual const std::vector<int>& getContent() const = 0;
-
-    /**
      * @brief Set the whole content of the list.
      *
      * @param list The new content of the list.
@@ -349,8 +342,6 @@ namespace bpp
 
     virtual size_t size() const { return static_cast<size_t>(content_.size()); }
 
-    virtual const std::vector<int>& getContent() const { return content_; }
-		
     virtual void setContent(const std::vector<int>& list) throw (BadIntException);
 
     virtual void setContent(const std::vector<std::string>& list) throw (BadCharException);

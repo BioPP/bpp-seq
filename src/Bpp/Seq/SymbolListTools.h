@@ -69,10 +69,8 @@ class SymbolListTools
      */
     static void getCounts(const SymbolList& list, std::map<int, size_t>& counts)
     {
-      for(std::vector<int>::const_iterator seqit = list.getContent().begin();
-          seqit != list.getContent().end();
-          seqit++)
-        counts[*seqit]++;
+      for (size_t i = 0; i < list.size(); ++i)
+        counts[list[i]]++;
     }
     
     /**

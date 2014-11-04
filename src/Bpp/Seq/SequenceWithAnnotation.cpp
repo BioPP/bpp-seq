@@ -203,16 +203,28 @@ void SequenceWithAnnotation::setToSizeL(size_t newSize)
 
 /******************************************************************************/
 
+void SequenceWithAnnotation::append(const Sequence& seq) throw (AlphabetMismatchException)
+{
+  if (seq.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("SequenceWithAnnotation::append");
+  SymbolListInsertionEvent event(this, content_.size(), seq.size());
+  fireBeforeSequenceInserted(event);
+	for (size_t i = 0; i < seq.size(); i++)
+		content_.push_back(seq[i]);
+  
+  fireAfterSequenceInserted(event);
+}
+
 void SequenceWithAnnotation::append(const std::vector<int>& content) throw (BadIntException)
 {
   SymbolListInsertionEvent event(this, content_.size(), content.size());
   fireBeforeSequenceInserted(event);
 	// Check list for incorrect characters
-	for (unsigned int i = 0; i < content.size(); i++)
+	for (size_t i = 0; i < content.size(); i++)
 		if(!getAlphabet()->isIntInAlphabet(content[i]))
       throw BadIntException(content[i], "SequenceWithAnnotation::append", getAlphabet());
 	//SequenceWithAnnotation is valid:
-	for (unsigned int i = 0; i < content.size(); i++)
+	for (size_t i = 0; i < content.size(); i++)
 		content_.push_back(content[i]);
   
   fireAfterSequenceInserted(event);
@@ -223,12 +235,12 @@ void SequenceWithAnnotation::append(const std::vector<std::string>& content) thr
   SymbolListInsertionEvent event(this, content_.size(), content.size());
   fireBeforeSequenceInserted(event);
 	// Check list for incorrect characters
-	for (unsigned int i = 0; i < content.size(); i++)
+	for (size_t i = 0; i < content.size(); i++)
 		if(!getAlphabet()->isCharInAlphabet(content[i]))
       throw BadCharException(content[i], "SequenceWithAnnotation::append", getAlphabet());
 	
 	//SequenceWithAnnotation is valid:
-	for (unsigned int i = 0; i < content.size(); i++)
+	for (size_t i = 0; i < content.size(); i++)
 		content_.push_back(getAlphabet()->charToInt(content[i]));
   
   fireAfterSequenceInserted(event);

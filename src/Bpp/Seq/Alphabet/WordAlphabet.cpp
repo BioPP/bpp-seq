@@ -273,6 +273,23 @@ std::string WordAlphabet::getGeneric(const std::vector<std::string>& states) con
 
 /******************************************************************************/
 
+int WordAlphabet::getWord(const Sequence& seq, size_t pos) const throw (IndexOutOfBoundsException)
+{
+  if (seq.size() < pos + vAbsAlph_.size())
+    throw IndexOutOfBoundsException("WordAlphabet::getWord", pos, 0, seq.size() - vAbsAlph_.size());
+
+  vector<string> vs;
+  for (size_t i = 0; i < vAbsAlph_.size(); i++)
+  {
+    vs.push_back(vAbsAlph_[i]->intToChar(seq[i + pos]));
+  }
+
+  return charToInt(getWord(vs)); // This can't throw a BadCharException!
+}
+
+
+/******************************************************************************/
+
 int WordAlphabet::getWord(const std::vector<int>& vint, size_t pos) const throw (IndexOutOfBoundsException)
 {
   if (vint.size() < pos + vAbsAlph_.size())
@@ -312,8 +329,7 @@ Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const th
       (sequence.getAlphabet()->getAlphabetType() != vAbsAlph_[0]->getAlphabetType()))
     throw AlphabetMismatchException("No matching alphabets", sequence.getAlphabet(), vAbsAlph_[0]);
 
-  vector<int> v1 = sequence.getContent();
-  vector<int> v2;
+  vector<int> content;
 
   size_t s = sequence.size();
   unsigned int l = getLength();
@@ -321,11 +337,11 @@ Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const th
 
   while (i + l <= s)
   {
-    v2.push_back(getWord(v1, i));
+    content.push_back(getWord(sequence, i));
     i += l;
   }
 
-  return new BasicSequence(sequence.getName(), v2, this);
+  return new BasicSequence(sequence.getName(), content, this);
 }
 
 /****************************************************************************************/

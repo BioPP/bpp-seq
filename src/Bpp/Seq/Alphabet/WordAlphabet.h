@@ -219,6 +219,18 @@ public:
    * @brief Get the int code for a word given the int code of the underlying positions.
    *
    * The int code of each position must match the corresponding alphabet specified at this position.
+   * @param seq description for all the positions as a Sequence object.
+   * @param pos the start position to match in the vector.
+   * @return The int code of the word.
+   * @throw IndexOutOfBoundsException In case of wrong position.
+   */
+  virtual int getWord(const Sequence& seq, size_t pos = 0) const throw (IndexOutOfBoundsException);
+
+
+  /**
+   * @brief Get the int code for a word given the int code of the underlying positions.
+   *
+   * The int code of each position must match the corresponding alphabet specified at this position.
    * @param vint description for all the positions.
    * @param pos the start position to match in the vector.
    * @return The int code of the word.

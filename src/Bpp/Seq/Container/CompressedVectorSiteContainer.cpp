@@ -446,7 +446,7 @@ const Sequence& CompressedVectorSiteContainer::getSequence(size_t i) const throw
   vector<int> sequence(n);
   for (size_t j = 0; j < n; j++)
   {
-    sequence[j] = sites_[index_[j]]->getContent()[i];
+    sequence[j] = (*sites_[index_[j]])[i];
   }
   if (sequences_[i]) delete sequences_[i];
   sequences_[i] = new BasicSequence(names_[i], sequence, *comments_[i], getAlphabet());

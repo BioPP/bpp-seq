@@ -61,22 +61,28 @@ BasicSymbolList::BasicSymbolList(const std::vector<int>& list, const Alphabet* a
 /****************************************************************************************/
 
 BasicSymbolList::BasicSymbolList(const SymbolList& list):
-  alphabet_(list.getAlphabet()), content_(list.getContent()) {}
+  alphabet_(list.getAlphabet()), content_(list.size())
+{
+  for (size_t i = 0; i < list.size(); ++i)
+    content_[i] = list[i];
+}
 
 BasicSymbolList::BasicSymbolList(const BasicSymbolList& list):
-  alphabet_(list.getAlphabet()), content_(list.getContent()) {}
+  alphabet_(list.alphabet_), content_(list.content_) {}
 
 BasicSymbolList& BasicSymbolList::operator=(const SymbolList& list)
 {
-	content_  = list.getContent();
+	content_.resize(list.size());
+  for (size_t i = 0; i < list.size(); ++i)
+    content_[i] = list[i];
 	alphabet_ = list.getAlphabet();
 	return *this;
 }
 
 BasicSymbolList& BasicSymbolList::operator=(const BasicSymbolList& list)
 {
-	content_  = list.getContent();
-	alphabet_ = list.getAlphabet();
+	content_  = list.content_;
+	alphabet_ = list.alphabet_;
 	return *this;
 }
 
@@ -236,10 +242,15 @@ EdSymbolList::EdSymbolList(const std::vector<int>& list, const Alphabet* alpha) 
 /****************************************************************************************/
 
 EdSymbolList::EdSymbolList(const SymbolList& list):
-  alphabet_(list.getAlphabet()), propagateEvents_(true), content_(list.getContent()), listeners_() {}
+  alphabet_(list.getAlphabet()), propagateEvents_(true), content_(list.size()), listeners_()
+{
+  for (size_t i = 0; i < list.size(); ++i) {
+    content_[i] = list[i];
+  }
+}
 
 EdSymbolList::EdSymbolList(const EdSymbolList& list):
-  alphabet_(list.getAlphabet()), propagateEvents_(list.propagateEvents_), content_(list.getContent()), listeners_(list.listeners_)
+  alphabet_(list.getAlphabet()), propagateEvents_(list.propagateEvents_), content_(list.content_), listeners_(list.listeners_)
 {
   for (size_t i = 0; i < listeners_.size(); ++i)
     if (!list.listeners_[i]->isShared())
@@ -248,7 +259,10 @@ EdSymbolList::EdSymbolList(const EdSymbolList& list):
 
 EdSymbolList& EdSymbolList::operator=(const SymbolList& list)
 {
-	content_         = list.getContent();
+	content_.resize(list.size());
+  for (size_t i = 0; i < list.size(); ++i) {
+    content_[i] = list[i];
+  }
 	alphabet_        = list.getAlphabet();
   propagateEvents_ = true;
   for (size_t i = 0; i < listeners_.size(); ++i)

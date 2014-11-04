@@ -93,15 +93,6 @@ class SequenceContainer:
 		virtual const Alphabet* getAlphabet() const = 0;
 		
 		/**
-		 * @brief Get the content of a sequence.
-		 *
-		 * @param name The name of the sequence.
-		 * @return The content of the sequence as a vector of integers.
-		 * @throw SequenceNotFoundException If the name does not match any sequence in the container.
-		 */
-		virtual const std::vector<int>& getContent(const std::string& name) const throw (SequenceNotFoundException) = 0;  
-		
-		/**
 		 * @brief Convert a particular sequence to a string.
 		 *
 		 * @param name The name of the sequence.

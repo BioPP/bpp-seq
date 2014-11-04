@@ -524,7 +524,7 @@ const Sequence& VectorSiteContainer::getSequence(size_t i) const throw (IndexOut
   vector<int> sequence(n);
   for (size_t j = 0; j < n; j++)
   {
-    sequence[j] = sites_[j]->getContent()[i];
+    sequence[j] = (*sites_[j])[i];
   }
   if (sequences_[i])
     delete sequences_[i];

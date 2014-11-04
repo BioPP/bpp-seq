@@ -157,7 +157,7 @@ void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, 
   vector<string> names = sequences.getSequencesNames();
   for (size_t j = 0; j < names.size(); j++)
   {
-    vector<int> seq = sequences.getContent(names[j]);
+    const Sequence& seq = sequences.getSequence(names[j]);
     for (size_t i = 0; i < seq.size(); i++)
     {
       f[seq[i]]++;
@@ -190,7 +190,7 @@ void SequenceContainerTools::getCounts(const SequenceContainer& sequences, std::
   vector<string> names = sequences.getSequencesNames();
   for (size_t j = 0; j < names.size(); j++)
   {
-    vector<int> seq = sequences.getContent(names[j]);
+    const Sequence& seq = sequences.getSequence(names[j]);
     for (size_t i = 0; i < seq.size(); i++)
     {
       f[seq[i]]++;
@@ -210,7 +210,7 @@ SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContai
   VectorSequenceContainer* newcont = new VectorSequenceContainer(calpha->getNucleicAlphabet());
   for (size_t j = 0; j < names.size(); j++)
   {
-    vector<int> seq = sequences.getContent(names[j]);
+    const Sequence& seq = sequences.getSequence(names[j]);
     vector<int> newseq(seq.size());
     for (size_t i = 0; i < seq.size(); i++)
     {

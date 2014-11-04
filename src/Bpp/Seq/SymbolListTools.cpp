@@ -52,19 +52,15 @@ void SymbolListTools::getCounts(const SymbolList& list, map<int, double>& counts
 {
   if (!resolveUnknowns)
   {
-    for (vector<int>::const_iterator seqit = list.getContent().begin();
-        seqit != list.getContent().end();
-        seqit++)
-      counts[*seqit]++;
+    for (size_t i = 0; i < list.size(); ++i)
+      counts[list[i]]++;
   }
   else
   {
-    for (vector<int>::const_iterator seqit = list.getContent().begin();
-        seqit != list.getContent().end();
-        seqit++)
+    for (size_t i = 0; i < list.size(); ++i)
     {
-      vector<int> alias = list.getAlphabet()->getAlias(*seqit);
-      double n = (double)alias.size();
+      vector<int> alias = list.getAlphabet()->getAlias(list[i]);
+      double n = static_cast<double>(alias.size());
       for (size_t j = 0; j < alias.size(); j++) counts[alias[j]] += 1./n ;
     }
   }

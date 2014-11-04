@@ -256,7 +256,7 @@ class SequenceContainerTools
       for (size_t i = 0; i < seqNames.size(); i++)
       {
         BasicSequence tmp = seqCont1.getSequence(seqNames[i]);
-        tmp.append(seqCont2.getContent(seqNames[i]));
+        tmp.append(seqCont2.getSequence(seqNames[i]));
         outputCont.addSequence(tmp, false);
       }
     }

@@ -43,34 +43,11 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-DNA SequenceWithQualityTools::_DNA;
-RNA SequenceWithQualityTools::_RNA;
-NucleicAcidsReplication SequenceWithQualityTools::_DNARep(& _DNA, & _DNA);
-NucleicAcidsReplication SequenceWithQualityTools::_RNARep(& _RNA, & _RNA);
-NucleicAcidsReplication SequenceWithQualityTools::_transc(& _DNA, & _RNA);
-
-/******************************************************************************/
-
-SequenceWithQuality * SequenceWithQualityTools::subseq(const SequenceWithQuality & sequence, unsigned int begin, unsigned int end) throw (IndexOutOfBoundsException, Exception)
-{
-	// Checking interval
-	if (end >= sequence.size()) throw IndexOutOfBoundsException ("SequenceTools::subseq : Invalid upper bound", end, 0, sequence.size());
-	if (end < begin) throw Exception ("SequenceTools::subseq : Invalid interval");
-
-	// Copy sequence
-	vector<int> temp(sequence.getContent());
-	vector<int> qualtemp(sequence.getQualities());
-
-	// Truncate sequence
-	temp.erase(temp.begin() + end + 1, temp.end());
-	temp.erase(temp.begin(), temp.begin() + begin);
-	qualtemp.erase(qualtemp.begin() + end + 1, qualtemp.end());
-	qualtemp.erase(qualtemp.begin(), qualtemp.begin() + begin);
-
-	// New sequence creation
-	return new SequenceWithQuality(sequence.getName(), temp, qualtemp, sequence.getComments(), sequence.getAlphabet());
-
-}
+DNA SequenceWithQualityTools::DNA_;
+RNA SequenceWithQualityTools::RNA_;
+NucleicAcidsReplication SequenceWithQualityTools::DNARep_(& DNA_, & DNA_);
+NucleicAcidsReplication SequenceWithQualityTools::RNARep_(& RNA_, & RNA_);
+NucleicAcidsReplication SequenceWithQualityTools::transc_(& DNA_, & RNA_);
 
 /******************************************************************************/
 
@@ -100,21 +77,21 @@ SequenceWithQuality* SequenceWithQualityTools::concatenate(const SequenceWithQua
 SequenceWithQuality* SequenceWithQualityTools::complement(const SequenceWithQuality& sequence) throw (AlphabetException)
 {
   // Alphabet type checking
-  NucleicAcidsReplication * NAR;
+  NucleicAcidsReplication* NAR;
   if (sequence.getAlphabet()->getAlphabetType() == "DNA alphabet")
   {
-    NAR = &_DNARep;
+    NAR = &DNARep_;
   }
   else if(sequence.getAlphabet()->getAlphabetType() == "RNA alphabet")
   {
-    NAR = &_RNARep;
+    NAR = &RNARep_;
   }
   else
   {
     throw AlphabetException ("SequenceTools::complement : Sequence must be nucleic.", sequence.getAlphabet());
   }
-  Sequence * seq = NAR->translate(sequence);
-  SequenceWithQuality * seqwq = new SequenceWithQuality(sequence.getName(), seq->getContent(), sequence.getQualities(), sequence.getComments(), sequence.getAlphabet());
+  Sequence* seq = NAR->translate(sequence);
+  SequenceWithQuality* seqwq = new SequenceWithQuality(*seq, sequence.getQualities());
   delete seq;
   return seqwq;
 }
@@ -128,8 +105,8 @@ SequenceWithQuality* SequenceWithQualityTools::transcript(const SequenceWithQual
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
   }
-  Sequence * seq = _transc.translate(sequence);
-  SequenceWithQuality * seqwq = new SequenceWithQuality(sequence.getName(), seq->getContent(), sequence.getQualities(), sequence.getComments(), sequence.getAlphabet());
+  Sequence* seq = transc_.translate(sequence);
+  SequenceWithQuality* seqwq = new SequenceWithQuality(*seq, sequence.getQualities());
   delete seq;
   return seqwq;
 }
@@ -144,8 +121,10 @@ SequenceWithQuality* SequenceWithQualityTools::reverseTranscript(const SequenceW
     throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
   }
 
-  Sequence * seq = _transc.reverse(sequence);
-  SequenceWithQuality * seqwq = new SequenceWithQuality(sequence.getName(), seq->getContent(), sequence.getQualities(), sequence.getComments(), sequence.getAlphabet());
+  Sequence* seq = transc_.reverse(sequence);
+  //Here we must also reverse the scores:
+  vector<int> scores(sequence.getQualities().rbegin(), sequence.getQualities().rend());
+  SequenceWithQuality* seqwq = new SequenceWithQuality(*seq, scores);
   delete seq;
   return seqwq;
 }

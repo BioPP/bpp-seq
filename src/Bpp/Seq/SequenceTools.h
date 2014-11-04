@@ -98,12 +98,12 @@ class SequenceTools :
   public SymbolListTools
 {
 private:
-  static DNA _DNA;
-  static RNA _RNA;
-  static RNY _RNY;
-  static NucleicAcidsReplication _DNARep;
-  static NucleicAcidsReplication _RNARep;
-  static NucleicAcidsReplication _transc;
+  static DNA DNA_;
+  static RNA RNA_;
+  static RNY RNY_;
+  static NucleicAcidsReplication DNARep_;
+  static NucleicAcidsReplication RNARep_;
+  static NucleicAcidsReplication transc_;
 
 public:
   SequenceTools() {}
@@ -114,12 +114,36 @@ public:
    * @brief Get a sub-sequence.
    *
    * @param sequence The sequence to trunc.
+   * @param begin    The first position of the subsequence.
+   * @param end      The last position of the subsequence (included).
+   * @param output   A sequence object to be appended with the given subsequence.
+   */
+  static void subseq(const Sequence& sequence, size_t begin, size_t end, Sequence& output) throw (Exception) {
+    if (end < begin || end >= sequence.size())
+      throw Exception("SequenceTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
+    std::vector<int> content(end - begin + 1);
+    for (size_t i = 0; i <= end - begin; ++i) {
+      content[i] = sequence[begin + i];
+    }
+    output.append(content);
+  }
+ 
+  /**
+   * @brief Get a sub-sequence.
+   *
+   * @param sequence The sequence to trunc.
    * @param begin The first position of the subsequence.
    * @param end   The last position of the subsequence.
    * @return A new sequence object with the given subsequence.
-   * @throw IndexOutOfBoundsException, Exception In case of bad indices.
    */
-  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end) throw (IndexOutOfBoundsException, Exception);
+  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end) throw (IndexOutOfBoundsException, Exception) {
+    Sequence* seq = new BasicSequence(sequence.getAlphabet());
+    seq->setName(sequence.getName());
+    seq->setComments(sequence.getComments());
+    subseq(sequence, begin, end, *seq);
+    return seq;
+  }
+
 
   /**
    * @brief Concatenate two sequences.
@@ -130,6 +154,7 @@ public:
    * @param seq1 The first sequence.
    * @param seq2 The second sequence.
    * @return A new sequence object with the concatenation of the two sequences.
+   * The type of the output sequence is the same as the one of seq1, as it is created using the clone method.
    * @throw AlphabetMismatchException If the two alphabets do not match.
    * @throw Exception If the sequence names do not match.
    */

@@ -121,10 +121,6 @@ class AbstractSequenceContainer:
 		 * @{
 		 */
 		const Alphabet* getAlphabet() const { return alphabet_; }
-		const std::vector<int>& getContent(const std::string& name) const throw (SequenceNotFoundException)
-    {
-	    return getSequence(name).getContent();
-    }
 
     std::string toString(const std::string& name) const throw (SequenceNotFoundException)
     {
@@ -164,11 +160,6 @@ class AbstractSequenceContainer:
 	    return getSequence(sequenceIndex).getName();
     }
     
-		virtual const std::vector<int>& getContent(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
-    {
-	    return getSequence(sequenceIndex).getContent();
-    }
-		
     virtual std::string toString(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
     {
       return getSequence(sequenceIndex).toString();

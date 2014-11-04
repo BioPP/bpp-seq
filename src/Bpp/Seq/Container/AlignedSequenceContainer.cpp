@@ -159,10 +159,8 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("AlignedSequenceContainer::setSite", getAlphabet(), site.getAlphabet());
 
-  std::vector<int> s = site.getContent();
-
   // Check size:
-  if (s.size() != getNumberOfSequences())
+  if (site.size() != getNumberOfSequences())
     throw SiteException("AlignedSequenceContainer::setSite, site does not have the appropriate length", &site);
 
   // Check position:
@@ -180,7 +178,7 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
   {
-    getSequence_(j).setElement(pos, s[j]);
+    getSequence_(j).setElement(pos, site[j]);
   }
   positions_[pos] = site.getPosition();
 }
@@ -274,20 +272,16 @@ void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions) th
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("AlignedSequenceContainer::addSite");
 
-  // Initializing
-  std::vector<int> s = site.getContent();
-
   // Check size:
-  if (s.size() != getNumberOfSequences())
+  if (site.size() != getNumberOfSequences())
     throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
 
   // Check position:
-
   int position = site.getPosition();
   if (checkPositions)
   {
     // For all positions in vector : throw exception if position already exists
-    for (unsigned int i = 0; i < positions_.size(); i++)
+    for (size_t i = 0; i < positions_.size(); i++)
     {
       if (positions_[i] == position)
         throw SiteException("AlignedSequenceContainer::addSite: Site position already exists in container", &site);
@@ -295,9 +289,9 @@ void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions) th
   }
 
   // For all sequences
-  for (unsigned int j = 0; j < getNumberOfSequences(); j++)
+  for (size_t j = 0; j < getNumberOfSequences(); j++)
   {
-    getSequence_(j).addElement(s[j]);
+    getSequence_(j).addElement(site[j]);
   }
 
   length_++;
@@ -315,19 +309,15 @@ void AlignedSequenceContainer::addSite(const Site& site, int position, bool chec
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("AlignedSequenceContainer::addSite");
 
-  // Initializing
-  std::vector<int> s = site.getContent();
-
   // Check size:
-  if (s.size() != getNumberOfSequences())
+  if (site.size() != getNumberOfSequences())
     throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
 
   // Check position:
-
   if (checkPositions)
   {
     // For all positions in vector : throw exception if position already exists
-    for (unsigned int i = 0; i < positions_.size(); i++)
+    for (size_t i = 0; i < positions_.size(); i++)
     {
       if (positions_[i] == position)
         throw SiteException("AlignedSequenceContainer::addSite: Site position already exists in container", &site);
@@ -335,9 +325,9 @@ void AlignedSequenceContainer::addSite(const Site& site, int position, bool chec
   }
 
   // For all sequences
-  for (unsigned int j = 0; j < getNumberOfSequences(); j++)
+  for (size_t j = 0; j < getNumberOfSequences(); j++)
   {
-    getSequence_(j).addElement(s[j]);
+    getSequence_(j).addElement(site[j]);
   }
 
   length_++;
@@ -358,10 +348,8 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool 
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("AlignedSequenceContainer::addSite", getAlphabet(), site.getAlphabet());
 
-  std::vector<int> s = site.getContent();
-
   // Check size:
-  if (s.size() != getNumberOfSequences())
+  if (site.size() != getNumberOfSequences())
     throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
 
   // Check position:
@@ -400,10 +388,8 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, int p
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("AlignedSequenceContainer::addSite", getAlphabet(), site.getAlphabet());
 
-  std::vector<int> s = site.getContent();
-
   // Check size:
-  if (s.size() != getNumberOfSequences())
+  if (site.size() != getNumberOfSequences())
     throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", &site);
 
   // Check position:

@@ -190,6 +190,15 @@ void BasicSequence::setToSizeL(size_t newSize)
 
 /******************************************************************************/
 
+void BasicSequence::append(const Sequence& seq) throw (AlphabetMismatchException)
+{
+  if (seq.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("BasicSequence::append");
+	// Check list for incorrect characters
+	for (size_t i = 0; i < seq.size(); i++)
+		content_.push_back(seq[i]);
+}
+
 void BasicSequence::append(const std::vector<int>& content) throw (BadIntException)
 {
 	// Check list for incorrect characters

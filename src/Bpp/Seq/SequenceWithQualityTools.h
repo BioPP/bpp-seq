@@ -59,28 +59,49 @@ namespace bpp {
 
   class SequenceWithQualityTools {
     private:
-      static DNA _DNA;
-      static RNA _RNA;
-      static NucleicAcidsReplication _DNARep;
-      static NucleicAcidsReplication _RNARep;
-      static NucleicAcidsReplication _transc;
+      static DNA DNA_;
+      static RNA RNA_;
+      static NucleicAcidsReplication DNARep_;
+      static NucleicAcidsReplication RNARep_;
+      static NucleicAcidsReplication transc_;
 
-    public:
+public:
+  /**
+   * @brief Get a sub-sequence.
+   *
+   * @param sequence The sequence to trunc.
+   * @param begin    The first position of the subsequence.
+   * @param end      The last position of the subsequence (included).
+   * @param output   A sequence object to be appended with the given subsequence.
+   */
+  static void subseq(const SequenceWithQuality& sequence, size_t begin, size_t end, SequenceWithQuality& output) throw (Exception) {
+    if (end < begin || end >= sequence.size())
+      throw Exception("SequenceWithQualityTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
+    std::vector<int> content(end - begin + 1);
+    std::vector<int> scores(end - begin + 1);
+    for (size_t i = 0; i <= end - begin; ++i) {
+      content[i] = sequence[begin + i];
+      scores[i] = sequence.getQuality(begin + i);
+    }
+    output.append(content, scores);
+  }
+ 
+  /**
+   * @brief Get a sub-sequence.
+   *
+   * @param sequence The sequence to trunc.
+   * @param begin The first position of the subsequence.
+   * @param end   The last position of the subsequence.
+   * @return A new sequence object with the given subsequence.
+   */
+  static SequenceWithQuality* subseq(const SequenceWithQuality& sequence, size_t begin, size_t end) throw (IndexOutOfBoundsException, Exception) {
+    SequenceWithQuality* seq = new SequenceWithQuality(sequence.getAlphabet());
+    seq->setName(sequence.getName());
+    seq->setComments(sequence.getComments());
+    subseq(sequence, begin, end, *seq);
+    return seq;
+  }
 
-      /**
-       * @brief Get a sub-sequence.
-       *
-       * @param sequence The sequence to trunc.
-       * @param begin The first position of the subsequence.
-       * @param end   The last position of the subsequence.
-       * @return A new SequenceWithQuality object with the given subsequence.
-       * @throw IndexOutOfBoundsException, Exception In case of bad indices.
-       */
-      static SequenceWithQuality* subseq(
-          const SequenceWithQuality& sequence,
-          unsigned int begin,
-          unsigned int end
-          ) throw (IndexOutOfBoundsException, Exception) ;
 
       /**
        * @brief Concatenate two sequences.

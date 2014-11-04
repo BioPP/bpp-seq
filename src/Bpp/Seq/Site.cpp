@@ -70,8 +70,8 @@ Site::Site(const Site& site): BasicSymbolList(site), position_(site.getPosition(
 Site& Site::operator=(const Site& s)
 {
   SymbolList::operator=(s);
-	content_  = s.getContent();
-	position_ = s.getPosition();
+	content_  = s.content_;
+	position_ = s.position_;
 	return *this;
 }
 
