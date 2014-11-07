@@ -65,7 +65,7 @@ class InvertebrateMitochondrialGeneticCode:
     }
 
   public:
-    size_t getNumberOfStopCodons() const { return 2.; }
+    size_t getNumberOfStopCodons() const { return 2; }
  
     std::vector<int> getStopCodonsAsInt() const {
       std::vector<int> v(2);

@@ -63,7 +63,7 @@ class VertebrateMitochondrialGeneticCode:
     }
 
   public:
-    size_t getNumberOfStopCodons() const { return 4.; }
+    size_t getNumberOfStopCodons() const { return 4; }
  
     std::vector<int> getStopCodonsAsInt() const {
       std::vector<int> v(4);

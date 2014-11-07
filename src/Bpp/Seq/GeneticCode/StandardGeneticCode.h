@@ -63,7 +63,7 @@ class StandardGeneticCode:
     }
 
   public:
-    size_t getNumberOfStopCodons() const { return 3.; }
+    size_t getNumberOfStopCodons() const { return 3; }
     
     std::vector<int> getStopCodonsAsInt() const {
       std::vector<int> v(3);
