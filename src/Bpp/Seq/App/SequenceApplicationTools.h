@@ -203,6 +203,15 @@ namespace bpp
       bool verbose = true,
       int warn = 1);
 
+    static std::map<size_t, SiteContainer*> getSiteContainers(
+      const Alphabet* alpha,
+      std::map<std::string, std::string>& params,
+      const std::string& prefix = "input.",
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
+
     /**
      * @brief Retrieves sites suitable for the analysis.
      *

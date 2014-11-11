@@ -247,7 +247,91 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   return sequences;
 }
 
+
 /******************************************************************************/
+
+map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
+  const Alphabet* alpha,
+  map<string, string>& params,
+  const string& prefix,
+  const string& suffix,
+  bool suffixIsOptional,
+  bool verbose,
+  int warn)
+{
+  vector<string> vContName=ApplicationTools::matchingParameters(prefix+"data*", params);
+
+  map<size_t, SiteContainer*> mCont;
+
+  for (size_t nT=0; nT < vContName.size(); nT++)
+  {
+    size_t poseq=vContName[nT].find("=");
+    size_t num = 0;
+    size_t len = (prefix+"data").size();
+    
+    string suff = vContName[nT].substr(len,poseq-len);
+
+    if (TextTools::isDecimalInteger(suff,'$'))
+      num=static_cast<size_t>(TextTools::toInt(suff));
+    else
+      num=1;
+
+    string contDesc = ApplicationTools::getStringParameter(vContName[nT], params, "", suffix, suffixIsOptional);
+
+    string contName;
+    
+    map<string, string> args;
+    
+    KeyvalTools::parseProcedure(contDesc, contName, args);
+
+    map<string, string> args2;
+    
+    if (contName=="sequence")
+    {
+      string format;
+      
+      if (args.find("file")!=args.end())
+        args2["input.sequence.file"]=args["file"];
+      else
+        args2["input.sequence.file"]="";
+
+      if (args.find("format")!=args.end())
+        args2["input.sequence.format"]=args["format"];
+
+      if (args.find("selection")!=args.end())
+        args2["input.site.selection"]=args["selection"];
+      
+      if (args.find("sites_to_use")!=args.end())
+        args2["input.sequence.sites_to_use"]=args["sites_to_use"];
+      
+      if (args.find("max_gap_allowed")!=args.end())
+        args2["input.sequence.max_gap_allowed"]=args["max_gap_allowed"];
+
+      if (args.find("max_unresolved_allowed")!=args.end())
+        args2["input.sequence.max_unresolved_allowed"]=args["max_unresolved_allowed"];
+
+      if (args.find("remove_stop_codons")!=args.end())
+        args2["input.sequence.remove_stop_codons"]=args["remove_stop_codons"];
+
+      args2["genetic_code"]=ApplicationTools::getStringParameter("genetic_code", params, "", "", true, 0);
+
+      VectorSiteContainer* vsC=getSiteContainer(alpha, args2, "", true, verbose, warn);
+
+      VectorSiteContainer* vsC2=getSitesToAnalyse(*vsC, args2, "", true, false);
+
+      delete vsC;
+
+      if (mCont.find(num)!=mCont.end())
+      {
+        ApplicationTools::displayWarning("Sequence " + TextTools::toString(num) + " already assigned, replaced by new one.");
+        delete mCont[num];
+      }
+      mCont[num]=vsC2;
+    }
+  }
+
+  return mCont;
+}
 
 VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   const Alphabet* alpha,
