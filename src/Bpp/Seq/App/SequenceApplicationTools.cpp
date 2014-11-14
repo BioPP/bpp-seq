@@ -286,7 +286,7 @@ map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
 
     map<string, string> args2;
     
-    if (contName=="sequence")
+    if (contName=="alignment")
     {
       string format;
       
