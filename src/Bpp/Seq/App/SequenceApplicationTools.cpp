@@ -315,6 +315,8 @@ map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
 
       args2["genetic_code"]=ApplicationTools::getStringParameter("genetic_code", params, "", "", true, 0);
 
+      ApplicationTools::displayMessage("Data " + TextTools::toString(num));
+
       VectorSiteContainer* vsC=getSiteContainer(alpha, args2, "", true, verbose, warn);
 
       VectorSiteContainer* vsC2=getSitesToAnalyse(*vsC, args2, "", true, false);
@@ -323,7 +325,7 @@ map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
 
       if (mCont.find(num)!=mCont.end())
       {
-        ApplicationTools::displayWarning("Sequence " + TextTools::toString(num) + " already assigned, replaced by new one.");
+        ApplicationTools::displayWarning("Alignment " + TextTools::toString(num) + " already assigned, replaced by new one.");
         delete mCont[num];
       }
       mCont[num]=vsC2;
@@ -378,7 +380,6 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   else
     sites = sites2;
 
-
   
   // Look for site selection:
   if (iAln->getFormatName() == "MASE file")
@@ -419,6 +420,9 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
       vector<size_t> vSite;
       try {
         vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet);
+        for (size_t i = 0; i < vSite1.size(); ++i)
+          cerr << vSite1[i] << endl;
+        
         for (size_t i = 0; i < vSite1.size(); ++i){
           int x = (vSite1[i] >= 0 ? vSite1[i] : static_cast<int>(nbSites) + vSite1[i]);
           if (x >= 0)
@@ -450,6 +454,8 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
           if (replace)
             selectedSites->reindexSites();
         }
+        else
+          throw Exception("Unknown site selection description: " + siteSet);
       }
 
       if (verbose)
