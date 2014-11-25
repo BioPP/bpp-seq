@@ -153,30 +153,7 @@ SiteContainer* MaseTools::getSelectedSites(
   const string& setName) throw (IOException)
 {
   SiteSelection ss = getSiteSet(sequences.getGeneralComments(), setName);
-  // We need to convert positions in case of word alphabet:
-  // size_t wsize = sequences.getAlphabet()->getStateCodingSize();
-  // if (wsize > 1)
-  // {
-  //   if (ss.size() % wsize != 0)
-  //     throw IOException("MaseTools::getSelectedSites: Site selection is not compatible with the alphabet in use in the container.");
-  //   SiteSelection ss2;
-  //   for (size_t i = 0; i < ss.size(); i += wsize)
-  //   {
-  //     if (ss[i] % wsize != 0)
-  //       throw IOException("MaseTools::getSelectedSites: Site selection is not compatible with the alphabet in use in the container.");
-  //     for (size_t j = 1; j < wsize; ++j)
-  //     {
-  //       if (ss[i + j] != (ss[i + j - 1] + 1))
-  //         throw IOException("MaseTools::getSelectedSites: Site selection is not compatible with the alphabet in use in the container.");
-  //     }
-  //     ss2.push_back(ss[i] / wsize);
-  //   }
   return SiteContainerTools::getSelectedPositions(sequences, ss);
-  // }
-  // else
-  // {
-  //   return SiteContainerTools::getSelectedSites(sequences, ss);
-  // }
 }
 
 /******************************************************************************/

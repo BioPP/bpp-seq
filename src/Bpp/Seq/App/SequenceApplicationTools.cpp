@@ -259,76 +259,76 @@ map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
   bool verbose,
   int warn)
 {
-  vector<string> vContName=ApplicationTools::matchingParameters(prefix+"data*", params);
+  vector<string> vContName = ApplicationTools::matchingParameters(prefix + "data*", params);
 
   map<size_t, SiteContainer*> mCont;
 
-  for (size_t nT=0; nT < vContName.size(); nT++)
+  for (size_t nT = 0; nT < vContName.size(); nT++)
   {
-    size_t poseq=vContName[nT].find("=");
+    size_t poseq = vContName[nT].find("=");
     size_t num = 0;
-    size_t len = (prefix+"data").size();
-    
-    string suff = vContName[nT].substr(len,poseq-len);
+    size_t len = (prefix + "data").size();
 
-    if (TextTools::isDecimalInteger(suff,'$'))
-      num=static_cast<size_t>(TextTools::toInt(suff));
+    string suff = vContName[nT].substr(len, poseq - len);
+
+    if (TextTools::isDecimalInteger(suff, '$'))
+      num = TextTools::to<size_t>(suff);
     else
-      num=1;
+      num = 1;
 
     string contDesc = ApplicationTools::getStringParameter(vContName[nT], params, "", suffix, suffixIsOptional);
 
     string contName;
-    
+
     map<string, string> args;
-    
+
     KeyvalTools::parseProcedure(contDesc, contName, args);
 
     map<string, string> args2;
-    
-    if (contName=="alignment")
+
+    if (contName == "alignment")
     {
       string format;
-      
-      if (args.find("file")!=args.end())
-        args2["input.sequence.file"]=args["file"];
+
+      if (args.find("file") != args.end())
+        args2["input.sequence.file"] = args["file"];
       else
-        args2["input.sequence.file"]="";
+        args2["input.sequence.file"] = "";
 
-      if (args.find("format")!=args.end())
-        args2["input.sequence.format"]=args["format"];
+      if (args.find("format") != args.end())
+        args2["input.sequence.format"] = args["format"];
 
-      if (args.find("selection")!=args.end())
-        args2["input.site.selection"]=args["selection"];
-      
-      if (args.find("sites_to_use")!=args.end())
-        args2["input.sequence.sites_to_use"]=args["sites_to_use"];
-      
-      if (args.find("max_gap_allowed")!=args.end())
-        args2["input.sequence.max_gap_allowed"]=args["max_gap_allowed"];
+      if (args.find("selection") != args.end())
+        args2["input.site.selection"] = args["selection"];
 
-      if (args.find("max_unresolved_allowed")!=args.end())
-        args2["input.sequence.max_unresolved_allowed"]=args["max_unresolved_allowed"];
+      if (args.find("sites_to_use") != args.end())
+        args2["input.sequence.sites_to_use"] = args["sites_to_use"];
 
-      if (args.find("remove_stop_codons")!=args.end())
-        args2["input.sequence.remove_stop_codons"]=args["remove_stop_codons"];
+      if (args.find("max_gap_allowed") != args.end())
+        args2["input.sequence.max_gap_allowed"] = args["max_gap_allowed"];
 
-      args2["genetic_code"]=ApplicationTools::getStringParameter("genetic_code", params, "", "", true, 0);
+      if (args.find("max_unresolved_allowed") != args.end())
+        args2["input.sequence.max_unresolved_allowed"] = args["max_unresolved_allowed"];
+
+      if (args.find("remove_stop_codons") != args.end())
+        args2["input.sequence.remove_stop_codons"] = args["remove_stop_codons"];
+
+      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, 0);
 
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
 
-      VectorSiteContainer* vsC=getSiteContainer(alpha, args2, "", true, verbose, warn);
+      VectorSiteContainer* vsC = getSiteContainer(alpha, args2, "", true, verbose, warn);
 
-      VectorSiteContainer* vsC2=getSitesToAnalyse(*vsC, args2, "", true, false);
+      VectorSiteContainer* vsC2 = getSitesToAnalyse(*vsC, args2, "", true, false);
 
       delete vsC;
 
-      if (mCont.find(num)!=mCont.end())
+      if (mCont.find(num) != mCont.end())
       {
         ApplicationTools::displayWarning("Alignment " + TextTools::toString(num) + " already assigned, replaced by new one.");
         delete mCont[num];
       }
-      mCont[num]=vsC2;
+      mCont[num] = vsC2;
     }
   }
 
@@ -380,7 +380,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   else
     sites = sites2;
 
-  
+
   // Look for site selection:
   if (iAln->getFormatName() == "MASE file")
   {
@@ -411,22 +411,26 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   {
     // getting site set:
     size_t nbSites = sites->getNumberOfSites();
-    
+
     string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
 
-    VectorSiteContainer* selectedSites=0;
+    VectorSiteContainer* selectedSites = 0;
     if (siteSet != "none")
     {
       vector<size_t> vSite;
-      try {
+      try
+      {
         vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet);
         for (size_t i = 0; i < vSite1.size(); ++i)
+        {
           cerr << vSite1[i] << endl;
-        
-        for (size_t i = 0; i < vSite1.size(); ++i){
+        }
+
+        for (size_t i = 0; i < vSite1.size(); ++i)
+        {
           int x = (vSite1[i] >= 0 ? vSite1[i] : static_cast<int>(nbSites) + vSite1[i]);
           if (x >= 0)
-            vSite.push_back(static_cast<size_t>(x-1));
+            vSite.push_back(static_cast<size_t>(x - 1));
           else
             throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect negative index: " + TextTools::toString(x));
         }
@@ -446,8 +450,10 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
           vSite.resize(n);
           vector<size_t> vPos;
           for (size_t p = 0; p < nbSites; ++p)
+          {
             vPos.push_back(p);
-          
+          }
+
           RandomTools::getSample(vPos, vSite, replace);
 
           selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
@@ -687,4 +693,3 @@ void SequenceApplicationTools::writeAlignmentFile(
 }
 
 /******************************************************************************/
-

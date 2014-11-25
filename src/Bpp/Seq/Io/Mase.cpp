@@ -127,7 +127,7 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const th
   if (comments.size() == 0) {
     output << ";;" << endl;
   }
-  for (unsigned int i = 0 ; i < comments.size() ; i++) {
+  for (size_t i = 0 ; i < comments.size() ; i++) {
     output << ";;" << comments[i] << endl;
   }
 
@@ -135,7 +135,7 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const th
 
   // Main loop : for all sequences
   vector<string> names = sc.getSequencesNames();
-  for (unsigned int i = 0 ; i < names.size() ; i ++)
+  for (size_t i = 0 ; i < names.size() ; i ++)
   {
     comments = sc.getComments(names[i]);
 
@@ -147,7 +147,7 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const th
     }
     else
     {
-      for (unsigned int j = 0 ; j < comments.size() ; j++)
+      for (size_t j = 0 ; j < comments.size() ; j++)
       {
         output << ";" << comments[j] << endl;
       }
@@ -163,9 +163,9 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const th
       if (seq.size() > charsByLine_)
       {
         temp = seq;
-        temp.erase(temp.begin() + charsByLine_ , temp.end());
+        temp.erase(temp.begin() + static_cast<ptrdiff_t>(charsByLine_), temp.end());
         output << temp  << endl;
-        seq.erase(seq.begin(), seq.begin() + charsByLine_);
+        seq.erase(seq.begin(), seq.begin() + static_cast<ptrdiff_t>(charsByLine_));
       }
       else
       {
@@ -284,9 +284,10 @@ void Mase::writeHeader_(std::ostream& output, const MaseHeader& header) const
   vector<string> siteSelectionNames = header.getSiteSelectionNames();
   for (size_t i = 0; i < siteSelectionNames.size(); ++i) {
     MultiRange<size_t> ranges = header.getSiteSelection(siteSelectionNames[i]);
+    output << ";;Site selection " << siteSelectionNames[i] << " (" << ranges.totalLength() << " sites)" << endl;
     output << ";;# of segments=" << ranges.size() << " " << siteSelectionNames[i] << endl;
     output << ";;";
-    for (unsigned int j = 0; j < ranges.size(); ++j) {
+    for (size_t j = 0; j < ranges.size(); ++j) {
       output << " " << (ranges.getRange(j).begin() + 1) << "," << ranges.getRange(j).end();
       if ((j + 1) % 10 == 0)
         output << endl << ";;";
