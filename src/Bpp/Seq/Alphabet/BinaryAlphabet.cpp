@@ -50,11 +50,55 @@ BinaryAlphabet::BinaryAlphabet()
 {
   // Alphabet content definition
   registerState(new AlphabetState(-1, "-", "Gap"));
-  registerState(new AlphabetState(3, "?", "Unresolved state"));
+  registerState(new AlphabetState(2, "?", "Unresolved state"));
 
   for (int i = 0; i < 2; i++)
   {
     registerState(new AlphabetState(i, TextTools::toString(i), ""));
   }
+}
+
+/******************************************************************************/
+
+std::vector<int> BinaryAlphabet::getAlias(int state) const throw (BadIntException) 
+{
+  if (!isIntInAlphabet(state)) throw BadIntException(state, "BinaryAlphabet::getAlias(int): Specified base unknown.");
+  std::vector<int> v;
+  switch(state)
+  {
+  case -1:
+    v.push_back(-1);
+    break;
+  case 0:
+    v.push_back(0);
+    break;
+  case 1:
+    v.push_back(1);
+    break;
+  case 2:
+    v.push_back(0);
+    v.push_back(1);
+    break;
+  }
+  
+  return v;
+}
+
+/******************************************************************************/
+
+std::vector<std::string> BinaryAlphabet::getAlias(const std::string& state) const throw (BadCharException) 
+{
+  if (!isCharInAlphabet(state)) throw BadCharException(state, "BinaryAlphabet::getAlias(char): Specified base unknown.");
+  
+  std::vector<std::string> v(1);
+  if (state=="?")
+  {
+    v.push_back("0");
+    v.push_back("1");
+  }
+  else
+    v.push_back(state);
+  
+  return v;
 }
 
