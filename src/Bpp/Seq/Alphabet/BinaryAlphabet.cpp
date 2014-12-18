@@ -50,6 +50,7 @@ BinaryAlphabet::BinaryAlphabet()
 {
   // Alphabet content definition
   registerState(new AlphabetState(-1, "-", "Gap"));
+  registerState(new AlphabetState(3, "?", "Unresolved state"));
 
   for (int i = 0; i < 2; i++)
   {
