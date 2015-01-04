@@ -147,6 +147,7 @@ public:
   size_t getNumberOfSites() const;
   void reindexSites();
   Vint getSitePositions() const;
+  void setSitePositions(Vint vPositions);
   /** @} */
 
   // Theses methods are implemented for this class:
