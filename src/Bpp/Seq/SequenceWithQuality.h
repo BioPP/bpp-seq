@@ -590,11 +590,7 @@ namespace bpp {
         return qualScores_->getScores();
       }
 
-      void append(const std::vector<int>& content)
-        throw (BadIntException)
-      {
-        SequenceWithAnnotation::append(content);
-      }
+      using SequenceWithAnnotation::append;
 
       /**
        * @brief Append content with quality
@@ -607,7 +603,7 @@ namespace bpp {
        * @throw DimensionException if qualities does not have the same size as
        * content
        */
-      void append(
+      virtual void append(
           const std::vector<int>& content,
           const std::vector<int>& qualities)
         throw (BadIntException, DimensionException)
@@ -618,12 +614,6 @@ namespace bpp {
         append(content); //This automatically extend scores array with default values through the listener
         //Update scores:
         qualScores_->setScores(pos, qualities);
-      }
-
-      void append(const std::vector<std::string>& content)
-        throw (BadCharException)
-      {
-        SequenceWithAnnotation::append(content);
       }
 
       /**
@@ -637,7 +627,7 @@ namespace bpp {
        * @throw DimensionException if qualities does not have the same size as
        * content
        */
-      void append(
+      virtual void append(
           const std::vector<std::string>& content,
           const std::vector<int>& qualities)
         throw (BadCharException, DimensionException)
@@ -648,12 +638,6 @@ namespace bpp {
         SequenceWithAnnotation::append(content); //This automatically extend scores array with default values through the listener
         //Update scores:
         qualScores_->setScores(pos, qualities);
-      }
-
-      void append(const std::string& content)
-        throw (BadCharException)
-      {
-        SequenceWithAnnotation::append(content);
       }
 
       /**
@@ -667,7 +651,7 @@ namespace bpp {
        * @throw DimensionException if qualities does not have the same size as
        * content
        */
-      void append(
+      virtual void append(
           const std::string& content,
           const std::vector<int>& qualities)
         throw (BadCharException, DimensionException)
