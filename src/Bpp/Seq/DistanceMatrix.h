@@ -56,11 +56,11 @@ class DistanceMatrix:
   public virtual Clonable
 {
 
-	private:
+  private:
     RowMatrix<double> distances_;
     std::vector<std::string> names_;
 
-	public:
+  public:
 
     /**
      * @brief Build a new distance matrix with specified names.
@@ -69,14 +69,14 @@ class DistanceMatrix:
      *
      * @param names The names to use.
      */
-		DistanceMatrix(const std::vector<std::string>& names):
+    DistanceMatrix(const std::vector<std::string>& names):
       distances_(names.size(), names.size()),
       names_(names)
-		{
-			reset();
-		}
+    {
+      reset();
+    }
 
-		/**
+    /**
      * @brief Build a new distance matrix with specified size.
      *
      * Row names will be named 'Taxon 0', 'Taxon 1', and so on.
@@ -85,54 +85,54 @@ class DistanceMatrix:
      */
     DistanceMatrix(size_t n):
       distances_(n, n), names_(n)
-		{
+    {
       resize(n);
-		}
+    }
 
-		virtual ~DistanceMatrix() {}
+    virtual ~DistanceMatrix() {}
 
-		DistanceMatrix(const DistanceMatrix& dist):
+    DistanceMatrix(const DistanceMatrix& dist):
       distances_(dist.distances_),
-      names_(dist.names_)	{}
+      names_(dist.names_)  {}
 
-		DistanceMatrix& operator=(const DistanceMatrix& dist)
-		{
-			size_t n = dist.size();
-			resize(n);
-			for(size_t i = 0; i < n; ++i)
+    DistanceMatrix& operator=(const DistanceMatrix& dist)
+    {
+      size_t n = dist.size();
+      resize(n);
+      for(size_t i = 0; i < n; ++i)
       {
-				for(size_t j = 0; j < n; ++j)
+        for(size_t j = 0; j < n; ++j)
         {
-					distances_(i, j) = dist(i, j);
-				}
-			}
-			names_ = dist.names_;
-			return *this;
-		}
+          distances_(i, j) = dist(i, j);
+        }
+      }
+      names_ = dist.names_;
+      return *this;
+    }
 
     DistanceMatrix* clone() const { return new DistanceMatrix(*this); }
-		
-	public:
+    
+  public:
 
     /**
      * @brief Reset the distance matrix: all distances are set to 0.
      */
-		void reset()
-		{
-			size_t n = size();
-			for (size_t i = 0; i < n; ++i)
+    void reset()
+    {
+      size_t n = size();
+      for (size_t i = 0; i < n; ++i)
       {
-				for (size_t j = 0; j < n; ++j)
+        for (size_t j = 0; j < n; ++j)
         {
-					distances_(i, j) = 0;
-				}
-			}
-		}
-		
+          distances_(i, j) = 0;
+        }
+      }
+    }
+    
     /**
      * @return The dimension of the matrix.
      */
-		size_t size() const { return names_.size(); }
+    size_t size() const { return names_.size(); }
 
     /**
      * @return The names associated to the matrix.
@@ -157,11 +157,11 @@ class DistanceMatrix:
      * @param name The new name.
      * @throw IndexOutOfBoundsException If i is not a valid index.
      */
-		void setName(size_t i, const std::string& name) throw (IndexOutOfBoundsException)
-		{
-			if (i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::setName. Invalid indice.", i, 0, size());
-			names_[i] = name;
-		}
+    void setName(size_t i, const std::string& name) throw (IndexOutOfBoundsException)
+    {
+      if (i >= size()) throw IndexOutOfBoundsException("DistanceMatrix::setName. Invalid indice.", i, 0, size());
+      names_[i] = name;
+    }
 
     /**
      * @brief Set the names associated to the matrix.
@@ -169,11 +169,11 @@ class DistanceMatrix:
      * @param names Matrix names.
      * @throw DimensionException If 'names' have not the same size as the matrix.
      */
-		void setNames(const std::vector<std::string>& names) throw (DimensionException)
-		{
-			if (names.size() != names_.size()) throw DimensionException("DistanceMatrix::setNames. Invalid number of names.", names.size(), names_.size());
-			names_ = names;
-		}
+    void setNames(const std::vector<std::string>& names) throw (DimensionException)
+    {
+      if (names.size() != names_.size()) throw DimensionException("DistanceMatrix::setNames. Invalid number of names.", names.size(), names_.size());
+      names_ = names;
+    }
 
     /**
      * @brief Get the index of a given name.
@@ -193,7 +193,7 @@ class DistanceMatrix:
       //RowMatrix<double>::resize(n, n);
       distances_.resize(n, n);
       names_.resize(n);
-			for (size_t i = 0; i < n; ++i)
+      for (size_t i = 0; i < n; ++i)
         names_[i] = "Taxon " + TextTools::toString(i);
       reset();
     }
