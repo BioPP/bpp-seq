@@ -420,18 +420,19 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
       vector<size_t> vSite;
       try
       {
-        vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet);
+        vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet,",",":");
         for (size_t i = 0; i < vSite1.size(); ++i)
         {
-          int x = (vSite1[i] >= 0 ? vSite1[i] : static_cast<int>(nbSites) + vSite1[i]);
+          int x = (vSite1[i] >= 0 ? vSite1[i] : static_cast<int>(nbSites) + vSite1[i]+ 1);
           if (x<=(int)nbSites)
           {
-            if (x >= 0)
+            if (x > 0)
               vSite.push_back(static_cast<size_t>(x - 1));
             else
-              throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect negative index: " + TextTools::toString(x));
+              throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect null index: " + TextTools::toString(x));
           }
-          
+          else
+            throw Exception("SequenceApplicationTools::getSiteContainer(). Too large index: " + TextTools::toString(x));
         }
         selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
         selectedSites->reindexSites();
