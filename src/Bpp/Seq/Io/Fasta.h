@@ -185,7 +185,16 @@ class Fasta:
       public:
         FileIndex(): index_(), fileSize_(0) {}
         ~FileIndex() {}
-        void build(const std::string& path) throw (Exception);
+        void build(const std::string& path) throw (Exception) {
+          build(path, false);
+        }
+        /**
+         * @brief Constructor
+         *
+         * @param path The path to the file.
+         * @param strictSequenceNames Tells if the sequence names should be restricted to the characters between '>' and the first blank one.
+         */
+        void build(const std::string& path, const bool strictSequenceNames) throw (Exception);
         std::streampos getSequencePosition(const std::string& id) const throw (Exception);
         size_t getNumberOfSequences() const throw (Exception) {
           return index_.size();
