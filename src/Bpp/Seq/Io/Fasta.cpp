@@ -283,7 +283,12 @@ void Fasta::FileIndex::write(const std::string& path) throw (Exception) {
 }
 
 void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, const std::string& path) const {
+  getSequence(seqid, seq, path, false);
+}
+
+void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, const std::string& path, const bool strictSequenceNames) const {
   Fasta fs(60);
+  fs.strictNames(strictSequenceNames);
   streampos seq_pos = this->getSequencePosition(seqid);
   std::ifstream fasta(path.c_str());
   fasta.seekg(seq_pos);

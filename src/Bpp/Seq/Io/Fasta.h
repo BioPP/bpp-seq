@@ -211,6 +211,7 @@ class Fasta:
          * @brief Get a sequence given its ID
          */
         void getSequence(const std::string& seqid, Sequence& seq, const std::string& path) const;
+        void getSequence(const std::string& seqid, Sequence& seq, const std::string& path, const bool strictSequenceNames) const;
       private:
         std::map<std::string, std::streampos> index_;
         std::streampos fileSize_;
