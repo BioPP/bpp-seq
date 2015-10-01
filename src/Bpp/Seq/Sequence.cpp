@@ -63,7 +63,7 @@ BasicSequence::BasicSequence(
   const std::string& sequence,
   const Alphabet* alpha
 ) throw (BadCharException) :
-  AbstractCoreSequence(),
+  AbstractCoreSequence(name),
   BasicSymbolList(alpha)
 {
   if (sequence!="")
