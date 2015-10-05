@@ -122,6 +122,19 @@ class ProbabilisticSymbolList :
 
   /** @} */
 
+  /**
+   * @name Retrieving the content of a list.
+   *
+   * @{
+   */
+
+  /**
+   * @brief Get the entire content of the list.
+   *
+   * @return list The content of the list.
+   */
+  virtual DataTable & getContent() const = 0;
+
 };
 
 /**
@@ -162,7 +175,7 @@ class BasicProbabilisticSymbolList :
    *
    * @param alpha the alphabet to use.
    */
- BasicProbabilisticSymbolList(const Alphabet * alpha) : alphabet_(alpha), content() {}
+  BasicProbabilisticSymbolList(const Alphabet * alpha);
 
   /**
    * @brief Build a new BasicProbabilisticSymbolList object with the specified alphabet.
@@ -211,13 +224,15 @@ class BasicProbabilisticSymbolList :
 
   virtual size_t size() const { return static_cast<size_t>(content_.getNumberOfRows()); }
 
-  virtual std::string toString() const;
+  virtual std::string toString() const { return "" }; // not implemented at the moment, for later
 
   virtual void setContent(const DataTable & list) throw (Exception);
 
   virtual void addElement(const std::vector<std::string> & e) throw (Exception);
 
   virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException);
+
+  virtual DataTable & getContent() const { return content_; }
 
 };
 
