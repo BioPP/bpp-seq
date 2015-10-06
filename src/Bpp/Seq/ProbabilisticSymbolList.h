@@ -110,7 +110,7 @@ class ProbabilisticSymbolList :
    * @param e The elment to add, given as a vector of string.
    * @throw Exception If the element is internally inconsistent, or is inconsistent with the specified alphabet.
    */
-  virtual void addElement(const std::vector<std::string> & e) throw (Exception) = 0;
+  virtual void addElement(const std::vector<std::string> & element) throw (Exception) = 0;
 
   /**
    * @brief Delete the element at position 'pos'.
@@ -224,13 +224,11 @@ class BasicProbabilisticSymbolList :
 
   virtual size_t size() const { return static_cast<size_t>(content_.getNumberOfRows()); }
 
-  virtual std::string toString() const { return "" }; // not implemented at the moment, for later
-
   virtual void setContent(const DataTable & list) throw (Exception);
 
-  virtual void addElement(const std::vector<std::string> & e) throw (Exception);
+  virtual void addElement(const std::vector<std::string> & element) throw (Exception);
 
-  virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException);
+  virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException) { content_.deleteRow(pos); }
 
   virtual DataTable & getContent() const { return content_; }
 

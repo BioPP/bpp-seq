@@ -49,11 +49,11 @@ using namespace std;
 // get the set of states represented by the elements of this list, as
 // defined by the alphabet object, which are the non-gap resolved
 // characters of this alphabet
-std::vector<std::string> getRepresentedStates(const Alphabet * alpha)
+std::vector<std::string> const getRepresentedStates(const Alphabet * alpha)
 
 // check to see if an element is internally consistent, i.e., that it
 // is a list of decimal numbers that sums up to 1
-void checkElement(const std::vector<std::string> & e) throw (Exception);
+void checkElement(const std::vector<std::string> & element) throw (Exception);
 
 /****************************************************************************************/
 
@@ -141,12 +141,51 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
     // e.g., binary alphabets and DNA alphabets
     std::vector<std::string> states = getRepresentedStates(getAlphabet());
 
-    // set the names.  Note: there should not be a DimensionException
-    // because we check above for size, but in any case, this method
-    // throws DimensionExceptions.  This method does not, however,
-    // throw DuplicatedTableColumnNameExceptions, however, we assume
-    // that Alphabet already disallows duplicated characters
+    // set the names.  Note: that setColumnNames can throw both
+    // DimensionException and DuplicatedTableColumnNameException.
+    // There should never be a DimensionException because we check
+    // above for size.  The fact that Alphabet already disallows
+    // duplicated characters ensures no
+    // DuplicatedTableColumnNameException
     content_.setColumnNames(states);
+  }
+}
+
+/****************************************************************************************/
+
+void BasicProbabilisticSymbolList::addElement(const std::vector<std::string> & element) throw (Exception)
+{
+
+  // first we check if the 'row' is not larger than the size of the
+  // alphabet, hence the number of columns of content DataTable
+  if(element.size() > getAlphabet()->getSize())
+    throw DimensionException("ProabilisticSite::addElement. ", element.size(), getAlphabet()->getSize());
+
+  // next, we check if element to add is internally consistent
+  try {
+    checkElement(element);
+  }
+  catch(Exception e) {
+    throw Exception(std::string("ProbabilisticSite::addElement. ") + e.what());
+  }
+
+  // now we add this 'row', to the content DataTable, padding the end
+  // with 0's should its length be smaller than the alphabet, hence
+  // the number of columns in this content DataTable
+  if(element.size() < getAlphabet->getSize()) {
+    std::vector<std::string> padded_element(element);
+    padded_element.resize(getAlphabet->getSize(),"0");
+
+    // Note that addRow can throw both DimensionException and
+    // TableRowNamesException.  Above, we have controlled for all
+    // possible DimensionException, so we need not check for this.
+    // Since the construction of BasicProbabilisticSymbolList ensures
+    // a DataTable with no row names, a TableRowNamesExceptoin cannot
+    // happen, so we need not check for this
+    content_.addRow(padded_element);
+  }
+  else {
+    content_.addRow(element);
   }
 }
 
@@ -154,7 +193,7 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
 
 // Auxiliary methods used by several class methods
 
-std::vector<std::string> getRepresentedStates(const Alphabet * alpha)
+std::vector<std::string> const getRepresentedStates(const Alphabet * alpha)
 {
 
   std::vector<std::string> states;
