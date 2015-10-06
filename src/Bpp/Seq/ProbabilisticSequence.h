@@ -108,7 +108,7 @@ class ProbabilisticSequence :
  * alphabet object, which is passed to the contructor by a pointer.
  *
  * ProbabilisticSequence objects also contain a name attribute and
- * potentially severl comment lines.
+ * potentially several comment lines.
  *
  * @see Alphabet
  */
@@ -195,7 +195,7 @@ class BasicProbabilisticSequence :
 
  public :
 
-  void setContent(const DataTable & content) throw (Exception);
+  void setContent(const DataTable & content) throw (Exception) { BasicProbabilisticSymbolList::setContent(content); }
 
 };
 
