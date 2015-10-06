@@ -191,15 +191,16 @@ class BasicProbabilisticSymbolList :
    * @brief Build a new void BasicProbabilisticSymbolList object with the specified alphabet.
    *
    * @param alpha the alphabet to use.
+   * @throw AlphabetException If alphabet is not supported by this object
    */
-  BasicProbabilisticSymbolList(const Alphabet * alpha);
+  BasicProbabilisticSymbolList(const Alphabet * alpha) throw (AlphabetException);
 
   /**
    * @brief Build a new BasicProbabilisticSymbolList object with the specified alphabet.
    *
    * @param list The content of the site.
    * @param alpha The alphabet to use.
-   * @throw Exception If the content is internally inconsistent, or is inconsistent with the specified alphabet.
+   * @throw Exception If the alphabet is not supported by this object, or if the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
   BasicProbabilisticSymbolList(const DataTable & list, const Alphabet * alpha) throw (Exception);
 

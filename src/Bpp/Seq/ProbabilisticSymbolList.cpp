@@ -52,16 +52,21 @@ void checkElement(const std::vector<std::string> & element) throw (Exception);
 
 /****************************************************************************************/
 
-BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const Alphabet * alpha) :
+BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const Alphabet * alpha) throw (AlphabetException) :
   alphabet_(alpha), content_(alpha->getSize())
 {
-  std::vector<std::string> states = getRepresentedStates(getAlphabet());
-  content_.setColumnNames(states);
+  if(getAlphabet()->getSize() != getStates().size)
+    throw AlphabetException("BasicProbabilisticSymbolList::BasicProbabilisticSymbolList. Alphabet not supported. ", getAlphabet()); 
+
+  content_.setColumnNames(getStates());
 }
 
 BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const DataTable & list, const Alphabet * alpha) throw (Exception) :
   alphabet_(alpha), content_(0)
 {
+  if(getAlphabet()->getSize() != getStates().size)
+    throw AlphabetException("BasicProbabilisticSymbolList::BasicProbabilisticSymbolList. Alphabet not supported. ", getAlphabet()); 
+
   setContent(list);
 }
 
