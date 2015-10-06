@@ -83,6 +83,23 @@ class ProbabilisticSymbolList :
   virtual const Alphabet * getAlphabet() const = 0;
 
   /**
+   * @brief Get the set of states associated with the alphabet
+   *
+   * Since we are dealing here with lists of sets of probabilities
+   * over the states of an alphabet, it is useful to define a standard
+   * for ordering for the set of states of this alphabet (when reading
+   * in tables, or from files, etc.).
+   *
+   * This method defines such a standard, in that it returns the
+   * states of the alphabet that can be represented by a probability,
+   * and in a canonical order.
+   *
+   * @return A vector of string representation of states.
+   * @see Alphabet class.
+   */
+  virtual const std::vector<std::string> getStates() const = 0;
+
+  /**
    * @brief Get the number of elements in the list.
    *
    * @return The number of sites in the list.
@@ -211,7 +228,7 @@ class BasicProbabilisticSymbolList :
    *
    * @{
    */
-  BasicProbabilisticSymbolList clone() const { return BasicProbabilisticSymbolList(* this); }
+  BasicProbabilisticSymbolList * clone() const { return BasicProbabilisticSymbolList(* this); }
 
   /** @} */
 
@@ -221,6 +238,8 @@ class BasicProbabilisticSymbolList :
  public :
 
   virtual const AlphaBet * getAlphabet() const { return alphabet_; }
+
+  virtual const std::vector<std::string> getStates() const;
 
   virtual size_t size() const { return static_cast<size_t>(content_.getNumberOfRows()); }
 

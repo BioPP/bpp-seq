@@ -38,18 +38,13 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "ProbabilisticSymbolList.h"
+#include <Bpp/Text/TextTools.h>
 
 using namespace bpp;
-using namespace std;
 
 /****************************************************************************************/
 
 // Auxiliary methods used by several class methods
-
-// get the set of states represented by the elements of this list, as
-// defined by the alphabet object, which are the non-gap resolved
-// characters of this alphabet
-std::vector<std::string> const getRepresentedStates(const Alphabet * alpha)
 
 // check to see if an element is internally consistent, i.e., that it
 // is a list of decimal numbers that sums up to 1
@@ -94,21 +89,44 @@ BasicProbabilisticSymbolList & operator=(const BasicProbabilisticSymbolList & li
 
 /****************************************************************************************/
 
+const std::vector<std::string> getStates()
+{
+
+  std::vector<std::string> states;
+  for(std::vector<std::string>::const_iterator s = getAlphabet()->getSupportedChars().begin(); s != getAlphabet()->getSupportedChars().end(); ++s) {
+    // ensure that we take only the non-gap resolved characters
+    if(!getAlphabet()->isGap(*s) && !getAlphabet()->isUnresolved(*s))
+      states.push_back(*s);
+  }
+
+  return states;
+}
+
+/****************************************************************************************/
+
 void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exception)
 {
 
-  // first, if table has column names, we run these names against the
-  // alphabet to see if they match.  Note: we ignore row names -- they
+  // first, if table has column names, we ensure that this is
+  // identical to the represented states of the alphabet (even the
+  // ordering must be the same).  Note: we ignore row names -- they
   // serve us no purpose here
   if(list.hasColumnNames()) {
 
-    // loop through names in DataTable.  Note: getColumnNames could
+    // first we check if the column names has the same size as the
+    // represented states of the alphabet.  Note: getColumnNames could
     // throw a NoTableColumnNamesException, but we don't try to catch
     // this because we did a check above for hasColumnNames
-    const std::vector<std::string> & a = list.getColumnNames();
-    for(std::size_t i = 0; i < a.size(); ++i)
-      if(!getAlphabet()->isCharInAlphabet(a[i]))
-        throw BadCharException(a[i], "ProbabilisticSite::setData", getAlphabet());
+    if(list.getColumnNames().size() != getAlphabet->getSize())
+      throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list.getColumNames().size(), getAlphabet()->getSize());
+
+    // above check passes : they are of the same size, now we check if
+    // the elements are identical
+    std::vector<std::string>::const_iterator column = list.getColumnNames().begin();
+    std::vector<std::string>::const_iterator state = getStates().begin();
+    for(; column != list.getColumnNames().end; ++column, ++state)
+      if(*column != *state)
+	throw Exception(std::string("BasicProbabilisticSymbolList::setContent. Column names / alphabet states mismatch at ") + *column + std::string(" and ") + *state);
   }
   else { // DataTable has no column names
 
@@ -116,7 +134,7 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
     // the alphabet size.  Note: getSize returns the number of
     // *resolved* characters (which is what we want)
     if(list.getNumberOfColumns() != getAlphabet()->getSize())
-      throw DimensionException("ProabilisticSite::setData", list.getNumberOfColumns(), getAlphabet()->getSize());
+      throw DimensionException("BasicProabilisticSymbolList::setContent. ", list.getNumberOfColumns(), getAlphabet()->getSize());
   }
 
   // the above check passes (in either case), and so now we do a pass
@@ -126,7 +144,7 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
       checkElement(list.getRow(i));
     }
     catch(Exception e) {
-      throw Exception(std::string("ProbabilisticSite::setData. ") + e.what());
+      throw Exception(std::string("BasicProbabilisticSymbolList::setContent. ") + e.what());
     }
   }
 
@@ -136,18 +154,15 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
   // it has no column names
   if(!list.hasColumnNames()) {
 
-    // we associate the columns of DataTable with the (non-gap
-    // resolved) characters of the alphabet ... this will work with,
-    // e.g., binary alphabets and DNA alphabets
-    std::vector<std::string> states = getRepresentedStates(getAlphabet());
-
-    // set the names.  Note: that setColumnNames can throw both
-    // DimensionException and DuplicatedTableColumnNameException.
-    // There should never be a DimensionException because we check
-    // above for size.  The fact that Alphabet already disallows
-    // duplicated characters ensures no
-    // DuplicatedTableColumnNameException
-    content_.setColumnNames(states);
+    // we set the columns of DataTable to the (non-gap resolved)
+    // characters of the alphabet ... this will work with, e.g.,
+    // binary alphabets and DNA alphabets.  Note: that setColumnNames
+    // can throw both DimensionException and
+    // DuplicatedTableColumnNameException.  There should never be a
+    // DimensionException because we check above for size.  The fact
+    // that Alphabet already disallows duplicated characters ensures
+    // no DuplicatedTableColumnNameException
+    content_.setColumnNames(getStates());
   }
 }
 
@@ -159,14 +174,14 @@ void BasicProbabilisticSymbolList::addElement(const std::vector<std::string> & e
   // first we check if the 'row' is not larger than the size of the
   // alphabet, hence the number of columns of content DataTable
   if(element.size() > getAlphabet()->getSize())
-    throw DimensionException("ProabilisticSite::addElement. ", element.size(), getAlphabet()->getSize());
+    throw DimensionException("BasicProabilisticSymbolList::addElement. ", element.size(), getAlphabet()->getSize());
 
   // next, we check if element to add is internally consistent
   try {
     checkElement(element);
   }
   catch(Exception e) {
-    throw Exception(std::string("ProbabilisticSite::addElement. ") + e.what());
+    throw Exception(std::string("BasicProbabilisticSymbolList::addElement. ") + e.what());
   }
 
   // now we add this 'row', to the content DataTable, padding the end
@@ -192,19 +207,6 @@ void BasicProbabilisticSymbolList::addElement(const std::vector<std::string> & e
 /****************************************************************************************/
 
 // Auxiliary methods used by several class methods
-
-std::vector<std::string> const getRepresentedStates(const Alphabet * alpha)
-{
-
-  std::vector<std::string> states;
-  for(std::vector<std::string>::const_iterator s = alpha->getSupportedChars().begin(); s != alpha->getSupportedChars().end(); ++s) {
-    // ensure that we take only the non-gap resolved characters
-    if(!alpha->isGap(*s) && !alpha->isUnresolved(*s))
-      states.push_back(*s);
-  }
-
-  return states;
-}
 
 void checkElement(const std::vector<std::string> & e) throw (Exception)
 {
