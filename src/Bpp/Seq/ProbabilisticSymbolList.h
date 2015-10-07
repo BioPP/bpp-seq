@@ -42,7 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Alphabet/Alphabet.h"
 #include <Bpp/Clonable.h>
-#include <Bpp/Numeric/Datatable.h>
+#include <Bpp/Numeric/DataTable.h>
 
 // From the STL :
 #include <string>
@@ -69,7 +69,9 @@ class ProbabilisticSymbolList :
    */
   ProbabilisticSymbolList * clone () const = 0;
 
-  /** @} */
+  /**
+   * @}
+   */
 
   // class destructor
   virtual ~ProbabilisticSymbolList() {}
@@ -81,23 +83,6 @@ class ProbabilisticSymbolList :
    * @see Alphabet class.
    */
   virtual const Alphabet * getAlphabet() const = 0;
-
-  /**
-   * @brief Get the set of states associated with the alphabet
-   *
-   * Since we are dealing here with lists of sets of probabilities
-   * over the states of an alphabet, it is useful to define a standard
-   * for ordering for the set of states of this alphabet (when reading
-   * in tables, or from files, etc.).
-   *
-   * This method defines such a standard, in that it returns the
-   * states of the alphabet that can be represented by a probability,
-   * and in a canonical order.
-   *
-   * @return A vector of string representation of states.
-   * @see Alphabet class.
-   */
-  virtual const std::vector<std::string> getStates() const = 0;
 
   /**
    * @brief Get the number of elements in the list.
@@ -137,8 +122,10 @@ class ProbabilisticSymbolList :
    */
   virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException) = 0;
 
-  /** @} */
-
+  /**
+   * @}
+   */
+  
   /**
    * @name Retrieving the content of a list.
    *
@@ -150,7 +137,7 @@ class ProbabilisticSymbolList :
    *
    * @return list The content of the list.
    */
-  virtual DataTable & getContent() const = 0;
+  virtual const DataTable & getContent() const = 0;
 
 };
 
@@ -191,16 +178,15 @@ class BasicProbabilisticSymbolList :
    * @brief Build a new void BasicProbabilisticSymbolList object with the specified alphabet.
    *
    * @param alpha the alphabet to use.
-   * @throw AlphabetException If alphabet is not supported by this object
    */
-  BasicProbabilisticSymbolList(const Alphabet * alpha) throw (AlphabetException);
+  BasicProbabilisticSymbolList(const Alphabet * alpha);
 
   /**
    * @brief Build a new BasicProbabilisticSymbolList object with the specified alphabet.
    *
    * @param list The content of the site.
    * @param alpha The alphabet to use.
-   * @throw Exception If the alphabet is not supported by this object, or if the content is internally inconsistent, or is inconsistent with the specified alphabet.
+   * @throw If the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
   BasicProbabilisticSymbolList(const DataTable & list, const Alphabet * alpha) throw (Exception);
 
@@ -229,18 +215,20 @@ class BasicProbabilisticSymbolList :
    *
    * @{
    */
-  BasicProbabilisticSymbolList * clone() const { return BasicProbabilisticSymbolList(* this); }
+  BasicProbabilisticSymbolList * clone() const { return new BasicProbabilisticSymbolList(* this); }
 
-  /** @} */
+  /**
+   * @}
+   */
 
   // class destructor
   virtual ~BasicProbabilisticSymbolList() {}
 
  public :
 
-  virtual const AlphaBet * getAlphabet() const { return alphabet_; }
+  virtual const Alphabet * getAlphabet() const { return alphabet_; }
 
-  virtual const std::vector<std::string> getStates() const;
+  virtual const std::vector<std::string> & getStates() const;
 
   virtual size_t size() const { return static_cast<size_t>(content_.getNumberOfRows()); }
 
@@ -250,7 +238,7 @@ class BasicProbabilisticSymbolList :
 
   virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException) { content_.deleteRow(pos); }
 
-  virtual DataTable & getContent() const { return content_; }
+  virtual const DataTable & getContent() const { return content_; }
 
 };
 
