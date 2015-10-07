@@ -51,6 +51,10 @@
 
 #include <typeinfo>
 
+// From the STL :
+#include <string>
+#include <vector>
+
 namespace bpp
 {
 /**
@@ -129,6 +133,14 @@ public:
    * @return The common size of all text descriptionif there is one. Else throws an AlphabetException.
    */
   static unsigned int getAlphabetCodingSize(const Alphabet* alphabet) throw (AlphabetException);
+
+  /**
+   * @brief The subset of supported chars that are also resolved
+   *
+   * @param alphabet A pointer to the alphabet to analyse
+   * @return Vector of string of resolved chars supported by alphabet
+   */
+  static std::vector<std::string> getResolvedChars(const Alphabet * alphabet);
 
   /**
    * @return True if the alphabet is an instanciation of the NucleicAlphabet class.
