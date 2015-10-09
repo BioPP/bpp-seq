@@ -50,6 +50,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <Bpp/Numeric/DataTable.h>
 
+#include <Bpp/Seq/Sequence.h>
+#include <Bpp/Seq/ProbabilisticSequence.h>
+
 using namespace std;
 using namespace bpp;
 
@@ -131,6 +134,14 @@ int main() {
   cout << "prob-list contains : ";
   DataTable::write(p_list.getContent(), cout);
 
+  cout << endl << "init binary sequence with : " << str(content) << " ...";
+  BasicSequence seq("basic binary sequence",content,a);
+  cout << "OK." << endl;
+
+  cout << endl << "init binary prob-sequence with its content...";
+  BasicProbabilisticSequence p_seq("basic probabilistic binary sequence",*data,a);
+  cout << "OK." << endl;
+
   /*
    * *** lists with DNA content ***
    */
@@ -158,5 +169,13 @@ int main() {
 
   cout << "prob-list contains : ";
   DataTable::write(dna_p_list.getContent(), cout);
+
+  cout << endl << "init DNA sequence with : " << str(dna_content) << " ...";
+  BasicSequence dna_seq("basic DNA sequence",dna_content,dna);
+  cout << "OK." << endl;
+
+  cout << endl << "init DNA prob-sequence with its content...";
+  BasicProbabilisticSequence dna_p_seq("basic probabilistic binary sequence",*dna_data,dna);
+  cout << "OK." << endl;
 
 }
