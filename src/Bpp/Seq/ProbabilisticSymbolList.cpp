@@ -46,15 +46,15 @@ using namespace bpp;
 /****************************************************************************************/
 
 BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const Alphabet * alpha) :
-  alphabet_(alpha), content_(0)
+  alphabet_(alpha), content_(alpha->getResolvedChars().size())
 {
-  content_.setColumnNames(AlphabetTools::getResolvedChars(alpha));
+  content_.setColumnNames(alpha->getResolvedChars());
 }
 
 BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const DataTable & list, const Alphabet * alpha) throw (Exception) :
-  alphabet_(alpha), content_(0)
+  alphabet_(alpha), content_(alpha->getResolvedChars().size())
 {
-  content_.setColumnNames(AlphabetTools::getResolvedChars(alpha));
+  content_.setColumnNames(alpha->getResolvedChars());
   setContent(list);
 }
 
@@ -85,9 +85,6 @@ BasicProbabilisticSymbolList & BasicProbabilisticSymbolList::operator=(const Bas
 void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exception)
 {
 
-  // set of resolved characters of the alphabet
-  std::vector<std::string> resolved_chars = AlphabetTools::getResolvedChars(alphabet_);
-
   // first, if table has column names, we ensure that this is
   // identical to the resolved characters the alphabet (even the
   // ordering must be the same).  Note: we ignore row names -- they
@@ -98,13 +95,13 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
     // resolved characters of the alphabet.  Note: getColumnNames
     // could throw a NoTableColumnNamesException, but we don't try to
     // catch this because we did a check above for hasColumnNames
-    if(list.getColumnNames().size() != resolved_chars.size())
-      throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list.getColumnNames().size(), resolved_chars.size());
+    if(list.getColumnNames().size() != alphabet_->getResolvedChars().size())
+      throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list.getColumnNames().size(), alphabet_->getResolvedChars().size());
 
     // above check passes : they are of the same size, now we check if
     // they are identical
     std::vector<std::string>::const_iterator column = list.getColumnNames().begin();
-    std::vector<std::string>::const_iterator resolved_char = resolved_chars.begin();
+    std::vector<std::string>::const_iterator resolved_char = alphabet_->getResolvedChars().begin();
     for(; column != list.getColumnNames().end(); ++column, ++resolved_char)
       if(*column != *resolved_char)
 	throw Exception("BasicProbabilisticSymbolList::setContent. Column names / resolved characters of alphabet mismatch at " + *column + " and " + *resolved_char);
@@ -113,8 +110,8 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
 
     // hence, we first check if width of DataTable is not larger than
     // the resolved characters of the alphabet
-    if(list.getNumberOfColumns() != resolved_chars.size())
-      throw DimensionException("BasicProabilisticSymbolList::setContent. ", list.getNumberOfColumns(), resolved_chars.size());
+    if(list.getNumberOfColumns() != alphabet_->getResolvedChars().size())
+      throw DimensionException("BasicProabilisticSymbolList::setContent. ", list.getNumberOfColumns(), alphabet_->getResolvedChars().size());
   }
 
   // the above check passes (in either case), and so now we do a pass
@@ -137,7 +134,7 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
     // above for size.  The fact that Alphabet already disallows
     // duplicated characters ensures no
     // DuplicatedTableColumnNameException
-    content_.setColumnNames(AlphabetTools::getResolvedChars(alphabet_));
+    content_.setColumnNames(alphabet_->getResolvedChars());
   }
 }
 

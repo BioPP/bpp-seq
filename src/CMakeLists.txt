@@ -24,6 +24,8 @@ SET(CPP_FILES
   Bpp/Seq/Transliterator.cpp
   Bpp/Seq/DistanceMatrix.cpp
   Bpp/Seq/CodonSiteTools.cpp
+  Bpp/Seq/ProbabilisticSymbolList.cpp
+  Bpp/Seq/ProbabilisticSymbolListTools.cpp
   Bpp/Seq/Alphabet/AbstractAlphabet.cpp
   Bpp/Seq/Alphabet/LetterAlphabet.cpp
   Bpp/Seq/Alphabet/AlphabetExceptions.cpp
@@ -115,6 +117,8 @@ SET(H_FILES
   Bpp/Seq/SymbolListTools.h
   Bpp/Seq/Transliterator.h
   Bpp/Seq/DistanceMatrix.h
+  Bpp/Seq/ProbabilisticSymbolList.h
+  Bpp/Seq/ProbabilisticSymbolListTools.h
   Bpp/Seq/Alphabet/AbstractAlphabet.h
   Bpp/Seq/Alphabet/AlphabetExceptions.h
   Bpp/Seq/Alphabet/Alphabet.h

@@ -228,8 +228,6 @@ class BasicProbabilisticSymbolList :
 
   virtual const Alphabet * getAlphabet() const { return alphabet_; }
 
-  virtual const std::vector<std::string> & getStates() const;
-
   virtual size_t size() const { return static_cast<size_t>(content_.getNumberOfRows()); }
 
   virtual void setContent(const DataTable & list) throw (Exception);
