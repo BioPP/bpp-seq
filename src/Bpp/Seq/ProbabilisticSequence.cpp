@@ -46,13 +46,13 @@ using namespace bpp;
 BasicProbabilisticSequence::BasicProbabilisticSequence(const Alphabet * alpha) :
   AbstractCoreSequence(), BasicProbabilisticSymbolList(alpha) {}
 
-BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name, const DataTable & sequence, const Alphabet & alpha) throw (Exception) :
+BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name, const DataTable & sequence, const Alphabet * alpha) throw (Exception) :
   AbstractCoreSequence(name), BasicProbabilisticSymbolList(alpha)
 {
   setContent(sequence);
 }
 
-BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name, const DataTable & sequence, const Comment & comments, const Alphabet * alpha) throw (Exception) :
+BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name, const DataTable & sequence, const Comments & comments, const Alphabet * alpha) throw (Exception) :
   AbstractCoreSequence(name, comments), BasicProbabilisticSymbolList(sequence, alpha) {}
 
 /****************************************************************************************/
@@ -63,16 +63,16 @@ BasicProbabilisticSequence::BasicProbabilisticSequence(const ProbabilisticSequen
 BasicProbabilisticSequence::BasicProbabilisticSequence(const BasicProbabilisticSequence & sequence) :
   AbstractCoreSequence(sequence), BasicProbabilisticSymbolList(sequence) {}
 
-BasicProbabilisticSequence & operator=(const ProbabilisticSequence & sequence)
+BasicProbabilisticSequence & BasicProbabilisticSequence::operator=(const ProbabilisticSequence & sequence)
 {
   AbstractCoreSequence::operator=(sequence);
   BasicProbabilisticSymbolList::operator=(sequence);
-  return * this;
+  return *this;
 }
 
-BasicProbabilisticSequence & operator=(const BasicProbabilisticSequence & sequence)
+BasicProbabilisticSequence & BasicProbabilisticSequence::operator=(const BasicProbabilisticSequence & sequence)
 {
   AbstractCoreSequence::operator=(sequence);
   BasicProbabilisticSymbolList::operator=(sequence);
-  return * this;
+  return *this;
 }

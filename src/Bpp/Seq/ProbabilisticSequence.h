@@ -42,7 +42,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "ProbabilisticSymbolList.h"
 #include "CoreSequence.h"
-#include "SequenceExceptions.h"
 
 // From the STL :
 #include <string>
@@ -63,7 +62,7 @@ namespace bpp
  * @see Alphabet
  */
 class ProbabilisticSequence :
-  public virtual CoreSequence
+  public virtual CoreSequence,
   public virtual ProbabilisticSymbolList
 {
 
@@ -76,7 +75,9 @@ class ProbabilisticSequence :
    */
   ProbabilisticSequence * clone() const = 0;
 
-  /** @} */
+  /**
+   * @}
+   */
 
   // class destructor
   virtual ~ProbabilisticSequence() {}
@@ -96,7 +97,9 @@ class ProbabilisticSequence :
    */
   virtual void setContent(const DataTable & content) throw (Exception) = 0;
 
-  /** @} */
+  /**
+   * @}
+   */
 
 };
 
@@ -155,7 +158,7 @@ class BasicProbabilisticSequence :
    * @param alpha A pointer to the alphabet associated with this sequence.
    * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
-  BasicProbabilisticSequence(const std::string & name, const DataTable & sequence, const Comment & comments, const Alphabet * alpha) throw (Exception);
+  BasicProbabilisticSequence(const std::string & name, const DataTable & sequence, const Comments & comments, const Alphabet * alpha) throw (Exception);
 
   /**
    * @brief The ProbabilisticSequence generic copy constructor.  This does not perform a hard copy of the alphabet object.
@@ -186,9 +189,11 @@ class BasicProbabilisticSequence :
    *
    * @{
    */
-  BasicProbabilisticSequence * clone() const { return new BasicProbabilisticSequence(* this); }
+  BasicProbabilisticSequence * clone() const { return new BasicProbabilisticSequence(*this); }
 
-  /** @} */
+  /**
+   * @}
+   */
 
   // class destructor
   virtual ~BasicProbabilisticSequence() {}
@@ -196,6 +201,10 @@ class BasicProbabilisticSequence :
  public :
 
   void setContent(const DataTable & content) throw (Exception) { BasicProbabilisticSymbolList::setContent(content); }
+
+  void setToSizeR(size_t newSize) {}; // leave empty for now
+
+  void setToSizeL(size_t newSize) {};
 
 };
 
