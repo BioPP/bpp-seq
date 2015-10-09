@@ -121,16 +121,3 @@ unsigned int AlphabetTools::getAlphabetCodingSize(const Alphabet* alphabet) thro
 {
   return getAlphabetCodingSize(*alphabet);
 }
-
-/**********************************************************************************************/
-
-std::vector<std::string> AlphabetTools::getResolvedChars(const Alphabet * alphabet)
-{
-  std::vector<std::string> resolved_chars;
-  for(std::vector<std::string>::const_iterator s = alphabet->getSupportedChars().begin(); s != alphabet->getSupportedChars().end(); ++s)
-    // well, non-gap chars also
-    if(!alphabet->isGap(*s) && !alphabet->isUnresolved(*s))
-      resolved_chars.push_back(*s);
-
-  return resolved_chars;
-}

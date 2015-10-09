@@ -135,14 +135,6 @@ public:
   static unsigned int getAlphabetCodingSize(const Alphabet* alphabet) throw (AlphabetException);
 
   /**
-   * @brief The subset of supported chars that are also resolved
-   *
-   * @param alphabet A pointer to the alphabet to analyse
-   * @return Vector of string of resolved chars supported by alphabet
-   */
-  static std::vector<std::string> getResolvedChars(const Alphabet * alphabet);
-
-  /**
    * @return True if the alphabet is an instanciation of the NucleicAlphabet class.
    * @param alphabet The alphabet to check.
    */
@@ -237,7 +229,7 @@ private:
     }
   }
 };
+
 } // end of namespace bpp.
 
 #endif  // _ALPHABETTOOLS_H_
-
