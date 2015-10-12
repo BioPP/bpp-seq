@@ -53,6 +53,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Bpp/Seq/Sequence.h>
 #include <Bpp/Seq/ProbabilisticSequence.h>
 
+#include <Bpp/Seq/Site.h>
+
 using namespace std;
 using namespace bpp;
 
@@ -111,17 +113,29 @@ int main() {
    */
   cout << endl << "*** lists with binary content ***" << endl;
 
-  // the normal version
+  // *** the normal version ***
   string c[] = {"1","0","0"};
   vector<string> content(c,c+sizeof(c)/sizeof(c[0]));
 
-  cout << endl << "init binary list with : " << str(content) << " ...";
+  cout << endl << "init binary symbol list with : " << str(content) << " ...";
   BasicSymbolList list(content,a);
   cout << "OK." << endl;
 
   cout << "list contains : " << list.toString() << endl;
+
+  // sequence
+  cout << endl << "init binary sequence with : " << str(content) << " ...";
+  BasicSequence seq("basic binary sequence",content,a);
+  cout << "OK." << endl;
+
+  // site
+  cout << endl << "init binary site with : " << str(content) << " and position 42 ...";
+  Site site(content,a,42);
+  cout << "OK." << endl;
+
+  cout << "site has position : " << site.getPosition() << endl;
   
-  // the probabilistic version
+  // *** the probabilistic version ***
   istringstream iss("0 1\n0.85 0.15\n0.99 0.01");
   DataTable * data = DataTable::read(iss, " ", false);
 
@@ -134,10 +148,7 @@ int main() {
   cout << "prob-list contains : ";
   DataTable::write(p_list.getContent(), cout);
 
-  cout << endl << "init binary sequence with : " << str(content) << " ...";
-  BasicSequence seq("basic binary sequence",content,a);
-  cout << "OK." << endl;
-
+  // sequence
   cout << endl << "init binary prob-sequence with its content...";
   BasicProbabilisticSequence p_seq("basic probabilistic binary sequence",*data,a);
   cout << "OK." << endl;
@@ -147,17 +158,29 @@ int main() {
    */
   cout << endl << "*** lists with DNA content ***" << endl;
 
-  // the normal version
+  // *** the normal version ***
   string cc[] = {"G", "T", "C"};
   vector<string> dna_content(cc,cc+sizeof(cc)/sizeof(cc[0]));
 
-  cout << endl << "init DNA list with : " << str(dna_content) << " ...";
+  cout << endl << "init DNA symbol list with : " << str(dna_content) << " ...";
   BasicSymbolList dna_list(dna_content,dna);
   cout << "OK." << endl;
 
   cout << "list contains : " << dna_list.toString() << endl;
 
-  // the probabilistic version
+  // sequence
+  cout << endl << "init DNA sequence with : " << str(dna_content) << " ...";
+  BasicSequence dna_seq("basic DNA sequence",dna_content,dna);
+  cout << "OK." << endl;
+
+  // site
+  cout << endl << "init DNA site with : " << str(dna_content) << " and position 23 ...";
+  Site dna_site(dna_content,dna,23);
+  cout << "OK." << endl;
+
+  cout << "site has position : " << dna_site.getPosition() << endl;
+
+  // *** the probabilistic version ***
   istringstream isss("0 0 1 0\n0.05 0 0.05 0.9\n0.01 0.97 0 0.02");
   DataTable * dna_data = DataTable::read(isss, " ", false);
 
@@ -170,10 +193,7 @@ int main() {
   cout << "prob-list contains : ";
   DataTable::write(dna_p_list.getContent(), cout);
 
-  cout << endl << "init DNA sequence with : " << str(dna_content) << " ...";
-  BasicSequence dna_seq("basic DNA sequence",dna_content,dna);
-  cout << "OK." << endl;
-
+  // sequence
   cout << endl << "init DNA prob-sequence with its content...";
   BasicProbabilisticSequence dna_p_seq("basic probabilistic binary sequence",*dna_data,dna);
   cout << "OK." << endl;
