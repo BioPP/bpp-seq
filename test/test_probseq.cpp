@@ -37,23 +37,28 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
+// from the STL
 #include <iostream>
 #include <string>
 #include <vector>
 
+// alphabets
 #include <Bpp/Seq/Alphabet/BinaryAlphabet.h>
 #include <Bpp/Seq/Alphabet/DNA.h>
 #include <Bpp/Seq/Alphabet/AlphabetTools.h>
 
+// symbol lists
 #include <Bpp/Seq/SymbolList.h>
 #include <Bpp/Seq/ProbabilisticSymbolList.h>
-
 #include <Bpp/Numeric/DataTable.h>
 
+// sequences
 #include <Bpp/Seq/Sequence.h>
 #include <Bpp/Seq/ProbabilisticSequence.h>
 
+// sites
 #include <Bpp/Seq/Site.h>
+#include <Bpp/Seq/ProbabilisticSite.h>
 
 using namespace std;
 using namespace bpp;
@@ -139,7 +144,7 @@ int main() {
   istringstream iss("0 1\n0.85 0.15\n0.99 0.01");
   DataTable * data = DataTable::read(iss, " ", false);
 
-  cout << endl << "init probabilistic version with : " << endl;
+  cout << endl << "init probabilistic symbol list with : " << endl;
   DataTable::write(*data, cout);
   cout << "...";
   BasicProbabilisticSymbolList p_list(*data,a);
@@ -149,9 +154,16 @@ int main() {
   DataTable::write(p_list.getContent(), cout);
 
   // sequence
-  cout << endl << "init binary prob-sequence with its content...";
+  cout << endl << "init binary probabilistic sequence with its content...";
   BasicProbabilisticSequence p_seq("basic probabilistic binary sequence",*data,a);
   cout << "OK." << endl;
+
+  // site
+  cout << endl << "init binary probabilistic site with its content and position 3 ...";
+  BasicProbabilisticSite p_site(*data,a,3);
+  cout << "OK." << endl;
+
+  cout << "site has position : " << p_site.getPosition() << endl;
 
   /*
    * *** lists with DNA content ***
@@ -184,18 +196,24 @@ int main() {
   istringstream isss("0 0 1 0\n0.05 0 0.05 0.9\n0.01 0.97 0 0.02");
   DataTable * dna_data = DataTable::read(isss, " ", false);
 
-  cout << endl << "init probabilistic version with : " << endl;
+  cout << endl << "init probabilistic DNA symbol list with : " << endl;
   DataTable::write(*dna_data, cout);
   cout << "...";
   BasicProbabilisticSymbolList dna_p_list(*dna_data,dna);
   cout << "OK." << endl;
 
-  cout << "prob-list contains : ";
+  cout << "probabilistic list contains : ";
   DataTable::write(dna_p_list.getContent(), cout);
 
   // sequence
-  cout << endl << "init DNA prob-sequence with its content...";
+  cout << endl << "init DNA probabilistic sequence with its content...";
   BasicProbabilisticSequence dna_p_seq("basic probabilistic binary sequence",*dna_data,dna);
   cout << "OK." << endl;
 
+  // site
+  cout << endl << "init DNA probabilistic site with its content...";
+  BasicProbabilisticSite dna_p_site(*dna_data,dna);
+  cout << "OK." << endl;
+
+  cout << "site has position : " << dna_p_site.getPosition() << endl;
 }
