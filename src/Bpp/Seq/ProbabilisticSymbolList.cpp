@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ProbabilisticSymbolList.h"
 #include "Alphabet/AlphabetTools.h"
 #include "ProbabilisticSymbolListTools.h"
+#include <Bpp/Text/TextTools.h>
 
 using namespace bpp;
 
@@ -100,11 +101,11 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
 
     // above check passes : they are of the same size, now we check if
     // they are identical
-    std::vector<std::string>::const_iterator column = list.getColumnNames().begin();
-    std::vector<std::string>::const_iterator resolved_char = alphabet_->getResolvedChars().begin();
-    for(; column != list.getColumnNames().end(); ++column, ++resolved_char)
-      if(*column != *resolved_char)
-	throw Exception("BasicProbabilisticSymbolList::setContent. Column names / resolved characters of alphabet mismatch at " + *column + " and " + *resolved_char);
+    std::vector<std::string> column_names = list.getColumnNames();
+    std::vector<std::string> resolved_chars = alphabet_->getResolvedChars();
+    for(std::size_t i = 0; i < list.getColumnNames().size(); ++i)
+      if(column_names[i] != resolved_chars[i])
+	throw Exception("BasicProbabilisticSymbolList::setContent. Column names / resolved characters of alphabet mismatch at " + TextTools::toString(column_names[i]) + " and " + TextTools::toString(resolved_chars[i]) + ".");
   }
   else { // DataTable has no column names
 
@@ -118,7 +119,7 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list) throw (Exc
   // over the table to ensure that each entry is internally consistent
   for(std::size_t i = 0; i < list.getNumberOfRows(); ++i)
     if(!ProbabilisticSymbolListTools::isConsistent(list.getRow(i)))
-      throw Exception("BasicProbabilisticSymbolList::setContent. Row " + TextTools::toString(i) + " is internally inconsistent");
+      throw Exception("BasicProbabilisticSymbolList::setContent. Row " + TextTools::toString(i) + " is internally inconsistent.");
 
   content_ = list; // final check passes, content_ becomes DataTable
 
@@ -149,7 +150,7 @@ void BasicProbabilisticSymbolList::addElement(const std::vector<std::string> & e
 
   // next, we check if element to add is internally consistent
   if(!ProbabilisticSymbolListTools::isConsistent(element))
-    throw Exception("BasicProbabilisticSymbolList::addElement. Element is internally inconsistent");
+    throw Exception("BasicProbabilisticSymbolList::addElement. Element is internally inconsistent.");
 
   // now we add this 'row', to the content DataTable, padding the end
   // with 0's should its length be smaller than the width of this DataTable
