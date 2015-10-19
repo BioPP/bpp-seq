@@ -72,6 +72,7 @@ SET(CPP_FILES
   Bpp/Seq/Container/CompressedVectorSiteContainer.cpp
   Bpp/Seq/Container/SiteContainerIterator.cpp
   Bpp/Seq/Container/SequenceContainerIterator.cpp
+  Bpp/Seq/Container/VectorProbabilisticSiteContainer.cpp
   Bpp/Seq/Io/Clustal.cpp
   Bpp/Seq/Io/Dcse.cpp
   Bpp/Seq/Io/Fasta.cpp
@@ -196,6 +197,7 @@ SET(H_FILES
   Bpp/Seq/Container/SiteContainer.h
   Bpp/Seq/Container/SiteContainerTools.h
   Bpp/Seq/Container/SiteContainerIterator.h
+  Bpp/Seq/Container/VectorProbabilisticSiteContainer.h
   Bpp/Seq/AlphabetIndex/AlphabetIndex1.h
   Bpp/Seq/AlphabetIndex/AlphabetIndex2.h
   Bpp/Seq/AlphabetIndex/UserAlphabetIndex1.h
