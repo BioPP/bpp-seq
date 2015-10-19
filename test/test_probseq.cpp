@@ -60,6 +60,10 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Bpp/Seq/Site.h>
 #include <Bpp/Seq/ProbabilisticSite.h>
 
+// containers
+#include <Bpp/Seq/Container/VectorSiteContainer.h>
+#include <Bpp/Seq/Container/VectorProbabilisticSiteContainer.h>
+
 using namespace std;
 using namespace bpp;
 
@@ -116,7 +120,10 @@ int main() {
   /*
    * *** lists with binary content ***
    */
-  cout << endl << "*** lists with binary content ***" << endl;
+  cout << endl;
+  cout << "***" << endl;
+  cout << "*** lists with binary content ***" << endl;
+  cout << "***" << endl;
 
   // *** the normal version ***
   string c[] = {"1","0","0"};
@@ -134,7 +141,7 @@ int main() {
   cout << "OK." << endl;
 
   // site
-  cout << endl << "init binary site with : " << str(content) << " and position 42 ...";
+  cout << endl << "init binary site with : " << str(content) << " and position 42...";
   Site site(content,a,42);
   cout << "OK." << endl;
 
@@ -159,7 +166,7 @@ int main() {
   cout << "OK." << endl;
 
   // site
-  cout << endl << "init binary probabilistic site with its content and position 3 ...";
+  cout << endl << "init binary probabilistic site with its content and position 3...";
   BasicProbabilisticSite p_site(*data,a,3);
   cout << "OK." << endl;
 
@@ -168,7 +175,10 @@ int main() {
   /*
    * *** lists with DNA content ***
    */
-  cout << endl << "*** lists with DNA content ***" << endl;
+  cout << endl;
+  cout << "***" << endl;
+  cout << "*** lists with DNA content ***" << endl;
+  cout << "***" << endl;
 
   // *** the normal version ***
   string cc[] = {"G", "T", "C"};
@@ -186,7 +196,7 @@ int main() {
   cout << "OK." << endl;
 
   // site
-  cout << endl << "init DNA site with : " << str(dna_content) << " and position 23 ...";
+  cout << endl << "init DNA site with : " << str(dna_content) << " and position 23...";
   Site dna_site(dna_content,dna,23);
   cout << "OK." << endl;
 
@@ -216,4 +226,39 @@ int main() {
   cout << "OK." << endl;
 
   cout << "site has position : " << dna_p_site.getPosition() << endl;
+
+  /*
+   * *** vector (probabilistic) site containers ***
+   */
+  cout << endl;
+  cout << "***" << endl;
+  cout << "*** vector site containers ***" << endl;
+  cout << "***" << endl;
+
+  // *** the normal version ***
+  cout << endl << "init vector site containers with just alphabets...";
+  VectorSiteContainer container(a);
+  VectorSiteContainer dna_container(dna);
+  cout << "OK." << endl;
+
+  cout << endl << "add binary sequence " << seq.toString() << " to binary container...";
+  container.addSequence(seq);
+  cout << "OK." << endl;
+
+  cout << "binary container's first element is : ";
+  cout << container.getSequence(0).toString() << endl;
+
+  // ** the probabilistic version ***
+  cout << endl << "init vector probabilistic site containers with just alphabets...";
+  VectorProbabilisticSiteContainer p_container(a);
+  VectorProbabilisticSiteContainer dna_p_container(dna);
+  cout << "OK." << endl;
+
+  cout << endl << "add binary probabilistic sequence to binary probabilistic container...";
+  p_container.addSequence(p_seq);
+  cout << "OK." << endl;
+
+  cout << "binary probabilistic container's first element is : ";  
+  DataTable::write(p_container.getProbabilisticSequence(0).getContent(), cout);
+
 }
