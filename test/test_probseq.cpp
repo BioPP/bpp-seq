@@ -64,6 +64,10 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Bpp/Seq/Container/VectorSiteContainer.h>
 #include <Bpp/Seq/Container/VectorProbabilisticSiteContainer.h>
 
+// file formats
+#include <Bpp/Seq/Io/Fasta.h>
+#include <Bpp/Seq/Io/Pasta.h>
+
 using namespace std;
 using namespace bpp;
 
@@ -248,7 +252,7 @@ int main() {
   cout << "binary container's first element is : ";
   cout << container.getSequence(0).toString() << endl;
 
-  // ** the probabilistic version ***
+  // *** the probabilistic version ***
   cout << endl << "init vector probabilistic site containers with just alphabets...";
   VectorProbabilisticSiteContainer p_container(a);
   VectorProbabilisticSiteContainer dna_p_container(dna);
@@ -260,5 +264,46 @@ int main() {
 
   cout << "binary probabilistic container's first element is : ";  
   DataTable::write(p_container.getProbabilisticSequence(0).getContent(), cout);
+
+  /*
+   * *** Fasta (and Pasta) files ***
+   */
+  cout << endl;
+  cout << "***" << endl;
+  cout << "*** Fasta (and Pasta) files ***" << endl;
+  cout << "***" << endl;
+
+  // *** the normal version ***
+  Fasta * fasta = new Fasta();
+  cout << endl << "created a handler of type : " << fasta->getFormatName() << endl;
+
+  string fasta_in = ">another binary sequence\n101\n";
+  istringstream fasta_iss(fasta_in);
+  cout << "read the following into binary container..." << endl;
+  cout << endl << fasta_in << endl;
+  fasta->appendSequencesFromStream(fasta_iss, container);
+  cout << "OK." << endl;
+  
+  cout << "binary container contains : " << endl << endl;
+  for(size_t i = 0; i < container.getNumberOfSequences(); ++i)
+    cout << container.getSequence(i).toString() << endl;
+  cout << endl;
+
+  // *** the probabilistic version ***
+  Pasta * pasta = new Pasta();
+  cout << "created a handler of type : " << pasta->getFormatName() << endl;
+
+  string pasta_in = ">another binary probabilistic sequence\n0.8 0.4 0.333\n";
+  istringstream pasta_iss(pasta_in);
+  cout << "read the following into binary probabilistic container..." << endl;
+  cout << endl << pasta_in << endl;
+  pasta->appendSequencesFromStream(pasta_iss, p_container);
+  cout << "OK." << endl;
+
+  cout << "binary probabilistic container contains : " << endl << endl;
+  for(size_t i = 0; i < p_container.getNumberOfProbabilisticSequences(); ++i) {
+    DataTable::write(p_container.getProbabilisticSequence(i).getContent(), cout);
+    cout << endl;
+  }
 
 }
