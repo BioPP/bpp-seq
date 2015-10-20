@@ -76,6 +76,7 @@ SET(CPP_FILES
   Bpp/Seq/Io/Clustal.cpp
   Bpp/Seq/Io/Dcse.cpp
   Bpp/Seq/Io/Fasta.cpp
+  Bpp/Seq/Io/Pasta.cpp
   Bpp/Seq/Io/Mase.cpp
   Bpp/Seq/Io/MaseTools.cpp
   Bpp/Seq/Io/Phylip.cpp
@@ -158,6 +159,7 @@ SET(H_FILES
   Bpp/Seq/Io/Clustal.h
   Bpp/Seq/Io/Dcse.h
   Bpp/Seq/Io/Fasta.h
+  Bpp/Seq/Io/Pasta.h
   Bpp/Seq/Io/IOSequence.h
   Bpp/Seq/Io/ISequence.h
   Bpp/Seq/Io/ISequenceStream.h
