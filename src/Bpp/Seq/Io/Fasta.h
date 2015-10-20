@@ -67,7 +67,7 @@ class Fasta:
   public virtual ISequenceStream,
   public virtual OSequenceStream
 {
-  private:
+  protected:
 
     /**
      * @brief The maximum number of chars to be written on a line.
