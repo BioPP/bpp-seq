@@ -67,13 +67,18 @@ typedef std::vector<std::string> Comments;
 class CoreSequence:
   public virtual Clonable
 {
-  public:
-    virtual ~CoreSequence() {}
+public:
+  CoreSequence() {}
 
-  public:
+  virtual ~CoreSequence() {}
   
+
+public:
+  
+#ifndef NO_VIRTUAL_COV
     CoreSequence* clone() const = 0;
-    
+#endif
+  
     /**
      * @name Setting/getting the name of the sequence.
      *
@@ -206,7 +211,8 @@ class AbstractCoreSequence :
       return *this;
     }
    
-    virtual ~AbstractCoreSequence() {}
+      virtual ~AbstractCoreSequence() {}
+        
 
   public:
   
@@ -215,7 +221,7 @@ class AbstractCoreSequence :
      *
      * @{
      */
-    AbstractCoreSequence* clone() const = 0;
+     virtual AbstractCoreSequence* clone() const = 0;
     /** @} */
         
     

@@ -46,7 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-// From the STL:
+ // From the STL:
 #include <iostream>
 
 using namespace std;
@@ -126,12 +126,14 @@ BasicSequence::BasicSequence(
 BasicSequence::BasicSequence(const Sequence& s) :
   AbstractCoreSequence(s),
   BasicSymbolList(s)
-{}
+{
+}
 
 BasicSequence::BasicSequence(const BasicSequence& s) :
   AbstractCoreSequence(s),
   BasicSymbolList(s)
-{}
+{
+}
 
 /* Assignation operator: ******************************************************/
 

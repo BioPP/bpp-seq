@@ -166,8 +166,8 @@ class Sequence:
  */
 class BasicSequence :
   public virtual Sequence,
-  public AbstractCoreSequence,
-  public BasicSymbolList
+  public virtual AbstractCoreSequence,
+  public virtual BasicSymbolList
 {
   public:
 
