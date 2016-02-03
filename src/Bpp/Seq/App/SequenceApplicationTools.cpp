@@ -313,7 +313,7 @@ map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
       if (args.find("remove_stop_codons") != args.end())
         args2["input.sequence.remove_stop_codons"] = args["remove_stop_codons"];
 
-      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, 0);
+      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (dynamic_cast<const CodonAlphabet*>(alpha)?0:1));
 
       ApplicationTools::displayMessage("");
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
