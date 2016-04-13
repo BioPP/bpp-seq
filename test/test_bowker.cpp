@@ -90,7 +90,7 @@ int main() {
   RNA* alpha = new RNA();
   BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
   BasicSequence seq2("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
-  auto_ptr<BowkerTest> btest(SequenceTools::bowkerTest(seq1, seq2));
+  unique_ptr<BowkerTest> btest(SequenceTools::bowkerTest(seq1, seq2));
   cout << btest->getStatistic() << "\t" << btest->getPValue() << endl;
   delete alpha;
 
