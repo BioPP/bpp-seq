@@ -91,7 +91,7 @@ class Pasta :
    *
    * @{
    */
-  bool nextSequence(std::istream & input, ProbabilisticSequence & seq) const throw (Exception);
+  bool nextSequence(std::istream& input, ProbabilisticSequence& seq) const throw (Exception);
   /**
    * @}
    */
@@ -101,7 +101,7 @@ class Pasta :
    *
    * @{
    */
-  void writeSequence(std::ostream & output, const ProbabilisticSequence & seq) const throw (Exception);
+  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq) const throw (Exception);
   /**
    * @}
    */
@@ -110,7 +110,7 @@ class Pasta :
    * @name The AbstractISequence interface
    *
    */
-  void appendSequencesFromStream(std::istream & input, VectorProbabilisticSiteContainer & container) const throw (Exception);
+  void appendSequencesFromStream(std::istream& input, VectorProbabilisticSiteContainer& container) const throw (Exception);
   /**
    * @}
    */
