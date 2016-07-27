@@ -101,7 +101,7 @@ public:
   bool isUnresolved(int state) const;
   bool isUnresolved(const std::string& state) const;
 
-  std::string getAlphabetType() const { return "RNY alphabet"; }
+  std::string getAlphabetType() const { return "RNY(letter=" + nuclalph_.getAlphabetType() + ")"; }
 
   const NucleicAlphabet& getLetterAlphabet() const;
 

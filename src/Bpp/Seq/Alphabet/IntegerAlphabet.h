@@ -81,7 +81,7 @@ public:
 
   unsigned int getNumberOfTypes() const { return MAX_ + 1; }
   
-  std::string getAlphabetType() const { return "Integer alphabet"; }
+  std::string getAlphabetType() const { return "Integer"; }
   
   int getUnknownCharacterCode() const { return static_cast<int>(MAX_); }
   

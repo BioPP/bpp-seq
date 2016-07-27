@@ -92,7 +92,7 @@ namespace bpp
     bool isUnresolved(int state) const;
     bool isUnresolved(const std::string& state) const;
 
-    std::string getAlphabetType() const { return "Numeric alphabet"; }
+    std::string getAlphabetType() const { return "Numeric"; }
 
     AlphabetNumericState& getStateAt(size_t stateIndex)  throw (IndexOutOfBoundsException);
     const AlphabetNumericState& getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException);
