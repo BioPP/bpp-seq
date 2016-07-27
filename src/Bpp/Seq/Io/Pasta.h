@@ -98,7 +98,7 @@ class Pasta
    *
    * @{
    */
-  bool nextSequence(std::istream& input, ProbabilisticSequence& seq) const throw (Exception);
+  bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, std::vector<int> & permutationMap) const throw (Exception);
   /**
    * @}
    */
