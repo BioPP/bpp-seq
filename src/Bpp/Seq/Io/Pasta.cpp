@@ -171,7 +171,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
 
       // junk up the tokens into groups of alphabetsize, and permute
       // according to how the header is permuted
-      string row[permutationMap.size()];
+      vector<string> row(permutationMap.size());
       for(vector<int>::const_iterator j = permutationMap.begin(); j != permutationMap.end(); ++j) {
 	if(i == tokens.end())
 	  throw Exception("Pasta::nextSequence : input is incomplete");
@@ -179,8 +179,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
       	++i;
       }
 
-      vector<string> row_v(row,row+permutationMap.size());
-      content.addRow(row_v);
+      content.addRow(row);
     }
 
     // finally set the content
