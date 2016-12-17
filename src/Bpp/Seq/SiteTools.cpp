@@ -351,6 +351,28 @@ size_t SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (EmptySi
 
 /******************************************************************************/
 
+size_t SiteTools::getMinorAlleleFrequency(const Site& site) throw (EmptySiteException)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::getMinorAlleleFrequency(): Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  if (SiteTools::isConstant(site))
+    return site.size();
+  map<int, size_t> counts;
+  SymbolListTools::getCounts(site, counts);
+  size_t s = site.size();
+  for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+  {
+    if (it->second != 0)
+      if (it->second < s)
+        s = it->second;
+  }
+  return s;
+}
+
+/******************************************************************************/
+
 bool SiteTools::hasSingleton(const Site& site) throw (EmptySiteException)
 {
   // Empty site checking
@@ -400,10 +422,18 @@ bool SiteTools::isTriplet(const Site& site) throw (EmptySiteException)
   if (site.size() == 0)
     throw EmptySiteException("SiteTools::isTriplet: Incorrect specified site, size must be > 0", &site);
   // For all site's characters
-  if (SiteTools::getNumberOfDistinctCharacters(site) >= 3)
-    return true;
-  else
-    return false;
+  return (SiteTools::getNumberOfDistinctCharacters(site) >= 3);
+}
+
+/******************************************************************************/
+
+bool SiteTools::isDoubleton(const Site& site) throw (EmptySiteException)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::isDoubleton: Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  return (SiteTools::getNumberOfDistinctCharacters(site) == 2);
 }
 
 /******************************************************************************/

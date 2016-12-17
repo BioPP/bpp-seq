@@ -107,7 +107,7 @@ public:
   /**
    * @param site1 The first site.
    * @param site2 The second site.
-   * @return True if the two states have the same content (and, of course, alphabet).
+   * @return True if the two sites have the same content (and, of course, alphabet).
    */
   static bool areSitesIdentical(const Site& site1, const Site& site2);
 
@@ -221,6 +221,14 @@ public:
   static size_t getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException);
 
   /**
+   * @brief return the number of occurrences of the least common allele.
+   *
+   * @param site a Site
+   * @return The frequency (number of sequences) displaying the less frequent state.
+   */
+  static size_t getMinorAlleleFrequency(const Site& site) throw (EmptySiteException);
+
+  /**
    * @brief Tell if a site has singletons
    *
    *
@@ -247,8 +255,16 @@ public:
    * @return True if the site has more than 2 distinct characters
    */
   static bool isTriplet(const Site& site) throw (EmptySiteException);
+
+  /**
+   * @brief Tell if a site has exactly 2 distinct characters
+   *
+   * @param site a Site.
+   * @return True if the site has exactly 2 distinct characters
+   */
+  static bool isDoubleton(const Site& site) throw (EmptySiteException);
 };
 } // end of namespace bpp.
 
-#endif  // _SITETOOLS_H_
+#endif //_SITETOOLS_H_
 

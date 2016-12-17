@@ -74,7 +74,7 @@ class Sequence:
   public:
   
     Sequence* clone() const = 0;
-    
+
     /** @} */
     
     /**
@@ -290,7 +290,7 @@ class BasicSequence :
      */
     BasicSequence* clone() const { return new BasicSequence(*this); }
     /** @} */
-        
+    
     /**
      * @name Adjusting the size of the sequence.
      *
