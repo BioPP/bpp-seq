@@ -62,6 +62,7 @@ namespace bpp
  * @see Alphabet
  */
 class ProbabilisticSequence :
+  public virtual CoreSequence,
   public virtual ProbabilisticSymbolList
 {
 
