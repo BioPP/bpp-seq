@@ -111,6 +111,13 @@ public:
 
 public:
   /**
+   * @param seq1 The first sequence.
+   * @param seq2 The second sequence.
+   * @return True if the two sequences have the same content (and, of course, alphabet).
+   */
+  static bool areSequencesIdentical(const Sequence& seq1, const Sequence& seq2);
+
+  /**
    * @brief Get a sub-sequence.
    *
    * @param sequence The sequence to trunc.

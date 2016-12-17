@@ -65,6 +65,26 @@ NucleicAcidsReplication SequenceTools::transc_(&DNA_, &RNA_);
 
 /******************************************************************************/
 
+bool SequenceTools::areSequencesIdentical(const Sequence& seq1, const Sequence& seq2)
+{
+  // Site's size and content checking
+  if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+    return false;
+  if (seq1.size() != seq2.size())
+    return false;
+  else
+  {
+    for (size_t i = 0; i < seq1.size(); i++)
+    {
+      if (seq1[i] != seq2[i])
+        return false;
+    }
+    return true;
+  }
+}
+
+/******************************************************************************/
+
 Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception)
 {
   // Sequence's alphabets matching verification
