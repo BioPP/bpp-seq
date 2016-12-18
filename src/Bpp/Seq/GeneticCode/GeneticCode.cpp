@@ -52,7 +52,7 @@ StopCodonException::StopCodonException(const std::string& text, const std::strin
 
 /**********************************************************************************************/
 
-int GeneticCode::translate(int state) const throw (BadIntException, Exception)
+int GeneticCode::translate(int state) const
 {
   if (isStop(state))
     throw StopCodonException("GeneticCode::translate().", codonAlphabet_.intToChar(state)); 
@@ -66,7 +66,7 @@ int GeneticCode::translate(int state) const throw (BadIntException, Exception)
 
 /**********************************************************************************************/
 
-std::string GeneticCode::translate(const std::string& state) const throw (BadCharException, Exception)
+std::string GeneticCode::translate(const std::string& state) const
 {
   int x = codonAlphabet_.charToInt(state);
   return proteicAlphabet_.intToChar(translate(x));
@@ -74,7 +74,7 @@ std::string GeneticCode::translate(const std::string& state) const throw (BadCha
 
 /**********************************************************************************************/
 
-vector<int> GeneticCode::getSynonymous(int aminoacid) const throw (BadIntException)
+vector<int> GeneticCode::getSynonymous(int aminoacid) const
 {
   // test:
   proteicAlphabet_.intToChar(aminoacid);
@@ -95,7 +95,7 @@ vector<int> GeneticCode::getSynonymous(int aminoacid) const throw (BadIntExcepti
 
 /**********************************************************************************************/
 
-std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid) const throw (BadCharException)
+std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid) const
 {
   // test:
   int aa = proteicAlphabet_.charToInt(aminoacid);
@@ -146,7 +146,7 @@ bool GeneticCode::isFourFoldDegenerated(int val) const
 
 /**********************************************************************************************/
 
-Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForInitCodon, bool includeInitCodon) const throw (Exception)
+Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForInitCodon, bool includeInitCodon) const
 {
   size_t initPos = 0;
   size_t stopPos = sequence.size();

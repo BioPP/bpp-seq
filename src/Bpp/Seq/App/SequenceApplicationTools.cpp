@@ -655,7 +655,8 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     {
       string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, warn);
       unique_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet(), codeDesc));
-      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*sitesToAnalyse, *gCode));
+      const SiteContainer* constSites = sitesToAnalyse;
+      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*constSites, *gCode));
       delete sitesToAnalyse;
     }
     else

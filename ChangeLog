@@ -1,3 +1,6 @@
+18/12/16 Julien Dutheil
+* Removed exception specifications in Transliterators
+
 17/12/16 Julien Dutheil
 * new function SiteTools::isDoubleton
 * new function SiteTools::getMinoralleleFrequency

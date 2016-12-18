@@ -328,7 +328,7 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
 
 void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps)
 {
-  for (size_t i = sites.getNumberOfSites(); i > 0; i--) {
+  for (size_t i = sites.getNumberOfSites(); i > 0; --i) {
     map<int, double> freq;
     SiteTools::getFrequencies(sites.getSite(i - 1), freq);
     if (freq[-1] > maxFreqGaps)
@@ -346,13 +346,28 @@ SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sit
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noStopCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noStopCont->setSequencesNames(seqNames, false);
-  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); ++i)
   {
-    const Site* site = &sites.getSite(i);
-    if (!CodonSiteTools::hasStop(*site, gCode))
-      noStopCont->addSite(*site, false);
+    const Site& site = sites.getSite(i);
+    if (!CodonSiteTools::hasStop(site, gCode))
+      noStopCont->addSite(site, false);
   }
   return noStopCont;
+}
+
+/******************************************************************************/
+
+void SiteContainerTools::removeStopCodonSites(SiteContainer& sites, const GeneticCode& gCode)  throw (AlphabetException)
+{
+  const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
+  if (!pca)
+    throw AlphabetException("Not a Codon Alphabet", sites.getAlphabet());
+  for (size_t i = sites.getNumberOfSites(); i > 0; --i)
+  {
+    const Site& site = sites.getSite(i - 1);
+    if (!CodonSiteTools::hasStop(site, gCode))
+      sites.deleteSite(i - 1);
+  }
 }
 
 /******************************************************************************/

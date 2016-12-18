@@ -158,6 +158,14 @@ namespace bpp
     static SiteContainer* removeStopCodonSites(const SiteContainer& sites, const GeneticCode& gCode) throw (AlphabetException);
 
     /**
+     * @brief Remove sites with stop codons, if the alphabet is a CodonAlphabet, otherwise throws an Exception.
+     *
+     * @param sites The container to analyse.
+     * @param gCode the genetic code to use to determine stop codons.
+     */
+    static void removeStopCodonSites(SiteContainer& sites, const GeneticCode& gCode) throw (AlphabetException);
+
+    /**
      * @brief Create a new container with a specified set of sites.
      *
      * A new VectorSiteContainer is created with specified sites.
