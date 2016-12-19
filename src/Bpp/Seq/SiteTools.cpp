@@ -351,7 +351,54 @@ size_t SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (EmptySi
 
 /******************************************************************************/
 
-size_t SiteTools::getMinorAlleleFrequency(const Site& site) throw (EmptySiteException)
+size_t SiteTools::getMajorAlleleFrequency(const Site& site)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::getMajorAlleleFrequency(): Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  if (SiteTools::isConstant(site))
+    return site.size();
+  map<int, size_t> counts;
+  SymbolListTools::getCounts(site, counts);
+  size_t s = 0;
+  for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+  {
+    if (it->second != 0)
+      if (it->second > s)
+        s = it->second;
+  }
+  return s;
+}
+
+/******************************************************************************/
+
+int SiteTools::getMajorAllele(const Site& site)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::getMajorAllele(): Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  if (SiteTools::isConstant(site))
+    return site[0];
+  map<int, size_t> counts;
+  SymbolListTools::getCounts(site, counts);
+  size_t s = 0;
+  int ma = -100;
+  for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+  {
+    if (it->second != 0)
+      if (it->second > s) {
+        s = it->second;
+        ma = it->first;
+      }
+  }
+  return ma;
+}
+
+/******************************************************************************/
+
+size_t SiteTools::getMinorAlleleFrequency(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -369,6 +416,31 @@ size_t SiteTools::getMinorAlleleFrequency(const Site& site) throw (EmptySiteExce
         s = it->second;
   }
   return s;
+}
+
+/******************************************************************************/
+
+int SiteTools::getMinorAllele(const Site& site)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::getMinorAllele(): Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  if (SiteTools::isConstant(site))
+    return site[0];
+  map<int, size_t> counts;
+  SymbolListTools::getCounts(site, counts);
+  size_t s = site.size();
+  int ma = -100;
+  for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+  {
+    if (it->second != 0)
+      if (it->second < s) {
+        s = it->second;
+        ma = it->first;
+      }
+  }
+  return ma;
 }
 
 /******************************************************************************/

@@ -221,12 +221,36 @@ public:
   static size_t getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException);
 
   /**
+   * @brief return the number of occurrences of the most common allele.
+   *
+   * @param site a Site
+   * @return The frequency (number of sequences) displaying the most frequent state.
+   */
+  static size_t getMajorAlleleFrequency(const Site& site);
+
+  /**
+   * @brief return the state corresponding to the most common allele.
+   *
+   * @param site a Site
+   * @return The most frequent state.
+   */
+  static int getMajorAllele(const Site& site);
+
+  /**
    * @brief return the number of occurrences of the least common allele.
    *
    * @param site a Site
    * @return The frequency (number of sequences) displaying the less frequent state.
    */
-  static size_t getMinorAlleleFrequency(const Site& site) throw (EmptySiteException);
+  static size_t getMinorAlleleFrequency(const Site& site);
+
+  /**
+   * @brief return the state corresponding to the least common allele.
+   *
+   * @param site a Site
+   * @return The less frequent state.
+   */
+  static int getMinorAllele(const Site& site);
 
   /**
    * @brief Tell if a site has singletons
