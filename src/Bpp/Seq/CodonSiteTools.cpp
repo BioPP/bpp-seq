@@ -778,10 +778,13 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
     {
       if (test1)
       {
-        if (ca->getSecondPosition(i) == ca->getSecondPosition(j))
-          Na--;
-        else
-          Ns--;
+        if (ca->getSecondPosition(i) == ca->getSecondPosition(j)) {
+          if (Na > 0) //jdutheil on 19/12/16: added these checks to avoid negative Na/Ns
+            Na--;
+        } else {
+          if (Ns > 0)
+            Ns--;
+        }
       }
       if (test2)
         Na--;
@@ -789,6 +792,7 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
         Ns--;
     }
   }
+  //cout << Na << " " << Ns << endl;
   v[0] = Ns;
   v[1] = Na;
   return v;
