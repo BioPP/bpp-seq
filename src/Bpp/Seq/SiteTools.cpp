@@ -138,7 +138,7 @@ bool SiteTools::areSitesIdentical(const Site& site1, const Site& site2)
 
 /******************************************************************************/
 
-bool SiteTools::isConstant(const Site& site, bool ignoreUnknown, bool unresolvedRaisesException) throw (EmptySiteException)
+bool SiteTools::isConstant(const Site& site, bool ignoreUnknown, bool unresolvedRaisesException)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -199,7 +199,7 @@ bool SiteTools::isConstant(const Site& site, bool ignoreUnknown, bool unresolved
 
 /******************************************************************************/
 
-double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown) throw (EmptySiteException)
+double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -219,7 +219,7 @@ double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown) thro
 
 /******************************************************************************/
 
-double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool resolveUnknown) throw (DimensionException, EmptySiteException)
+double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool resolveUnknown)
 {
   // Empty site checking
   if (site1.size() == 0)
@@ -266,7 +266,7 @@ double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool r
 
 /******************************************************************************/
 
-double SiteTools::jointEntropy(const Site& site1, const Site& site2, bool resolveUnknown) throw (DimensionException, EmptySiteException)
+double SiteTools::jointEntropy(const Site& site1, const Site& site2, bool resolveUnknown)
 {
   // Empty site checking
   if (site1.size() == 0)
@@ -301,7 +301,7 @@ double SiteTools::jointEntropy(const Site& site1, const Site& site2, bool resolv
 
 /******************************************************************************/
 
-double SiteTools::variabilityFactorial(const Site& site) throw (EmptySiteException)
+double SiteTools::variabilityFactorial(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -316,7 +316,7 @@ double SiteTools::variabilityFactorial(const Site& site) throw (EmptySiteExcepti
 
 /******************************************************************************/
 
-double SiteTools::heterozygosity(const Site& site) throw (EmptySiteException)
+double SiteTools::heterozygosity(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -330,7 +330,7 @@ double SiteTools::heterozygosity(const Site& site) throw (EmptySiteException)
 
 /******************************************************************************/
 
-size_t SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException)
+size_t SiteTools::getNumberOfDistinctCharacters(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -445,7 +445,7 @@ int SiteTools::getMinorAllele(const Site& site)
 
 /******************************************************************************/
 
-bool SiteTools::hasSingleton(const Site& site) throw (EmptySiteException)
+bool SiteTools::hasSingleton(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -465,7 +465,7 @@ bool SiteTools::hasSingleton(const Site& site) throw (EmptySiteException)
 
 /******************************************************************************/
 
-bool SiteTools::isParsimonyInformativeSite(const Site& site) throw (EmptySiteException)
+bool SiteTools::isParsimonyInformativeSite(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -488,7 +488,7 @@ bool SiteTools::isParsimonyInformativeSite(const Site& site) throw (EmptySiteExc
 
 /******************************************************************************/
 
-bool SiteTools::isTriplet(const Site& site) throw (EmptySiteException)
+bool SiteTools::isTriplet(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -499,7 +499,7 @@ bool SiteTools::isTriplet(const Site& site) throw (EmptySiteException)
 
 /******************************************************************************/
 
-bool SiteTools::isDoubleton(const Site& site) throw (EmptySiteException)
+bool SiteTools::isDoubleton(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
