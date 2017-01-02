@@ -365,7 +365,7 @@ void SiteContainerTools::removeStopCodonSites(SiteContainer& sites, const Geneti
   for (size_t i = sites.getNumberOfSites(); i > 0; --i)
   {
     const Site& site = sites.getSite(i - 1);
-    if (!CodonSiteTools::hasStop(site, gCode))
+    if (CodonSiteTools::hasStop(site, gCode))
       sites.deleteSite(i - 1);
   }
 }
