@@ -57,7 +57,7 @@ using namespace std;
 
 /******************************************************************************/
 
-bool CodonSiteTools::hasGapOrStop(const Site& site, const GeneticCode& gCode) throw (AlphabetException)
+bool CodonSiteTools::hasGapOrStop(const Site& site, const GeneticCode& gCode)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -72,7 +72,7 @@ bool CodonSiteTools::hasGapOrStop(const Site& site, const GeneticCode& gCode) th
 
 /******************************************************************************/
 
-bool CodonSiteTools::hasStop(const Site& site, const GeneticCode& gCode) throw (AlphabetException)
+bool CodonSiteTools::hasStop(const Site& site, const GeneticCode& gCode)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -87,7 +87,7 @@ bool CodonSiteTools::hasStop(const Site& site, const GeneticCode& gCode) throw (
 
 /******************************************************************************/
 
-bool CodonSiteTools::isMonoSitePolymorphic(const Site& site) throw (AlphabetException, EmptySiteException)
+bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -126,7 +126,6 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site) throw (AlphabetExce
 /******************************************************************************/
 
 bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode& gCode)
-throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -156,7 +155,6 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 /******************************************************************************/
 
 Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, const GeneticCode& gCode, double freqmin)
-throw (AlphabetException, EmptySiteException)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -451,7 +449,6 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
 /******************************************************************************/
 
 double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, bool minchange)
-throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -483,7 +480,6 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 /******************************************************************************/
 
 double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCode, bool minchange)
-throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -519,7 +515,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 
 /******************************************************************************/
 
-double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCode, double ratio) throw (Exception)
+double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCode, double ratio)
 {
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gCode.getSourceAlphabet());
   if (gCode.isStop(i))
@@ -561,7 +557,6 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCo
 /******************************************************************************/
 
 double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const GeneticCode& gCode, double ratio)
-throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -586,7 +581,6 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 /******************************************************************************/
 
 size_t CodonSiteTools::numberOfSubsitutions(const Site& site, const GeneticCode& gCode, double freqmin)
-throw (AlphabetException, EmptySiteException)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -631,7 +625,6 @@ throw (AlphabetException, EmptySiteException)
 /******************************************************************************/
 
 size_t CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, const GeneticCode& gCode, double freqmin)
-throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
@@ -680,7 +673,6 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 /******************************************************************************/
 
 vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& siteOut, int i, int j, const GeneticCode& gCode)
-throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(siteIn.getAlphabet()))
@@ -700,7 +692,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gCode.getSourceAlphabet());
 
   size_t Ntot = numberOfDifferences(i, j, *ca);
-  size_t Ns = (size_t) numberOfSynonymousDifferences(i, j, gCode, true);
+  size_t Ns = static_cast<size_t>(numberOfSynonymousDifferences(i, j, gCode, true));
   size_t Na = Ntot - Ns;
   size_t Nfix = Ntot;
   vector<int> pos1in, pos2in, pos3in, pos1out, pos2out, pos3out;
@@ -786,10 +778,13 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
     {
       if (test1)
       {
-        if (ca->getSecondPosition(i) == ca->getSecondPosition(j))
-          Na--;
-        else
-          Ns--;
+        if (ca->getSecondPosition(i) == ca->getSecondPosition(j)) {
+          if (Na > 0) //jdutheil on 19/12/16: added these checks to avoid negative Na/Ns
+            Na--;
+        } else {
+          if (Ns > 0)
+            Ns--;
+        }
       }
       if (test2)
         Na--;
@@ -797,6 +792,7 @@ throw (AlphabetException, AlphabetMismatchException, EmptySiteException)
         Ns--;
     }
   }
+  //cout << Na << " " << Ns << endl;
   v[0] = Ns;
   v[1] = Na;
   return v;

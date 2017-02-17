@@ -100,14 +100,13 @@ public:
    * Otherwise, a site with one single state + any uncertain state will not be considered as constant.
    * @param unresolvedRaisesException In case of ambiguous case (gap only site for instance), throw an exception. Otherwise returns false.
    * @return True if the site is made of only one state.
-   * @throw EmptySiteException If the site has size 0 or if the site cannot be resolved (for instance is made of gaps only) and unresolvedRaisesException is set to true.
    */
-  static bool isConstant(const Site& site, bool ignoreUnknown = false, bool unresolvedRaisesException = true) throw (EmptySiteException);
+  static bool isConstant(const Site& site, bool ignoreUnknown = false, bool unresolvedRaisesException = true);
 
   /**
    * @param site1 The first site.
    * @param site2 The second site.
-   * @return True if the two states have the same content (and, of course, alphabet).
+   * @return True if the two sites have the same content (and, of course, alphabet).
    */
   static bool areSitesIdentical(const Site& site1, const Site& site2);
 
@@ -123,9 +122,8 @@ public:
    * @param site A site.
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return The Shannon entropy index of this site.
-   * @throw EmptySiteException If the site has size 0.
    */
-  static double variabilityShannon(const Site& site, bool resolveUnknowns) throw (EmptySiteException);
+  static double variabilityShannon(const Site& site, bool resolveUnknowns);
 
   /**
    * @brief Compute the factorial diversity index of a site.
@@ -138,9 +136,8 @@ public:
    * @author J. Dutheil
    * @param site A site.
    * @return The factorial diversity index of this site.
-   * @throw EmptySiteException If the site has size 0.
    */
-  static double variabilityFactorial(const Site& site) throw (EmptySiteException);
+  static double variabilityFactorial(const Site& site);
 
   /**
    * @brief Compute the mutual information between two sites.
@@ -156,10 +153,8 @@ public:
    * @param site2 Second site
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return The mutual information for the pair of sites.
-   * @throw DimensionException If the sites do not have the same length.
-   * @throw EmptySiteException If the sites have size 0.
    */
-  static double mutualInformation(const Site& site1, const Site& site2, bool resolveUnknowns) throw (DimensionException,EmptySiteException);
+  static double mutualInformation(const Site& site1, const Site& site2, bool resolveUnknowns);
 
   /**
    * @brief Compute the entropy of a site. This is an alias of method variabilityShannon.
@@ -173,9 +168,8 @@ public:
    * @param site A site.
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return The Shannon entropy index of this site.
-   * @throw EmptySiteException If the site has size 0.
    */
-  static double entropy(const Site& site, bool resolveUnknowns) throw (EmptySiteException) {
+  static double entropy(const Site& site, bool resolveUnknowns) {
     return variabilityShannon(site, resolveUnknowns); 
   }
 
@@ -193,10 +187,8 @@ public:
    * @param site2 Second site
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return The mutual information for the pair of sites.
-   * @throw DimensionException If the sites do not have the same length.
-   * @throw EmptySiteException If the sites have size 0.
    */
-  static double jointEntropy(const Site& site1, const Site& site2, bool resolveUnknowns) throw (DimensionException,EmptySiteException);
+  static double jointEntropy(const Site& site1, const Site& site2, bool resolveUnknowns);
 
   /**
    * @brief Compute the heterozygosity index of a site.
@@ -208,9 +200,8 @@ public:
    *
    * @param site A site.
    * @return The heterozygosity index of this site.
-   * @throw EmptySiteException If the site has size 0.
    */
-  static double heterozygosity(const Site& site) throw (EmptySiteException);
+  static double heterozygosity(const Site& site);
 
   /**
    * @brief Give the number of distinct characters at a site.
@@ -218,7 +209,39 @@ public:
    * @param site a Site
    * @return The number of distinct characters in the given site.
    */
-  static size_t getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException);
+  static size_t getNumberOfDistinctCharacters(const Site& site);
+
+  /**
+   * @brief return the number of occurrences of the most common allele.
+   *
+   * @param site a Site
+   * @return The frequency (number of sequences) displaying the most frequent state.
+   */
+  static size_t getMajorAlleleFrequency(const Site& site);
+
+  /**
+   * @brief return the state corresponding to the most common allele.
+   *
+   * @param site a Site
+   * @return The most frequent state.
+   */
+  static int getMajorAllele(const Site& site);
+
+  /**
+   * @brief return the number of occurrences of the least common allele.
+   *
+   * @param site a Site
+   * @return The frequency (number of sequences) displaying the less frequent state.
+   */
+  static size_t getMinorAlleleFrequency(const Site& site);
+
+  /**
+   * @brief return the state corresponding to the least common allele.
+   *
+   * @param site a Site
+   * @return The less frequent state.
+   */
+  static int getMinorAllele(const Site& site);
 
   /**
    * @brief Tell if a site has singletons
@@ -227,7 +250,7 @@ public:
    * @param site a Site.
    * @return True if the site has singletons.
    */
-  static bool hasSingleton(const Site& site) throw (EmptySiteException);
+  static bool hasSingleton(const Site& site);
 
   /**
    * @brief Tell if a site is a parsimony informative site.
@@ -237,7 +260,7 @@ public:
    * @param site a Site.
    * @return True if the site is parsimony informative.
    */
-  static bool isParsimonyInformativeSite(const Site& site) throw (EmptySiteException);
+  static bool isParsimonyInformativeSite(const Site& site);
 
 
   /**
@@ -246,9 +269,17 @@ public:
    * @param site a Site.
    * @return True if the site has more than 2 distinct characters
    */
-  static bool isTriplet(const Site& site) throw (EmptySiteException);
+  static bool isTriplet(const Site& site);
+
+  /**
+   * @brief Tell if a site has exactly 2 distinct characters
+   *
+   * @param site a Site.
+   * @return True if the site has exactly 2 distinct characters
+   */
+  static bool isDoubleton(const Site& site);
 };
 } // end of namespace bpp.
 
-#endif  // _SITETOOLS_H_
+#endif //_SITETOOLS_H_
 

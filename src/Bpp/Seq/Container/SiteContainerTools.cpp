@@ -186,7 +186,7 @@ void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainer& sites)
 {
   // NB: use iterators for a better algorithm?
   int unknownCode = sites.getAlphabet()->getUnknownCharacterCode();
-  for (unsigned int i = 0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     for (unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
     {
@@ -203,7 +203,7 @@ void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainer& sites)
 {
   // NB: use iterators for a better algorithm?
   int gapCode = sites.getAlphabet()->getGapCharacterCode();
-  for (unsigned int i = 0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     for (unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
     {
@@ -221,7 +221,7 @@ SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
-  for (unsigned int i = 0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     const Site* site = &sites.getSite(i);
     if (!SiteTools::isGapOnly(*site))
@@ -268,7 +268,7 @@ SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCont
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
-  for (unsigned int i = 0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     const Site* site = &sites.getSite(i);
     if (!SiteTools::isGapOrUnresolvedOnly(*site))
@@ -315,7 +315,7 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
-  for (unsigned int i = 0; i < sites.getNumberOfSites(); ++i) {
+  for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
     map<int, double> freq;
     SiteTools::getFrequencies(sites.getSite(i), freq);
     if (freq[-1] <= maxFreqGaps)
@@ -328,7 +328,7 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
 
 void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps)
 {
-  for (size_t i = sites.getNumberOfSites(); i > 0; i--) {
+  for (size_t i = sites.getNumberOfSites(); i > 0; --i) {
     map<int, double> freq;
     SiteTools::getFrequencies(sites.getSite(i - 1), freq);
     if (freq[-1] > maxFreqGaps)
@@ -346,13 +346,28 @@ SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sit
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noStopCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noStopCont->setSequencesNames(seqNames, false);
-  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); ++i)
   {
-    const Site* site = &sites.getSite(i);
-    if (!CodonSiteTools::hasStop(*site, gCode))
-      noStopCont->addSite(*site, false);
+    const Site& site = sites.getSite(i);
+    if (!CodonSiteTools::hasStop(site, gCode))
+      noStopCont->addSite(site, false);
   }
   return noStopCont;
+}
+
+/******************************************************************************/
+
+void SiteContainerTools::removeStopCodonSites(SiteContainer& sites, const GeneticCode& gCode)  throw (AlphabetException)
+{
+  const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
+  if (!pca)
+    throw AlphabetException("Not a Codon Alphabet", sites.getAlphabet());
+  for (size_t i = sites.getNumberOfSites(); i > 0; --i)
+  {
+    const Site& site = sites.getSite(i - 1);
+    if (CodonSiteTools::hasStop(site, gCode))
+      sites.deleteSite(i - 1);
+  }
 }
 
 /******************************************************************************/

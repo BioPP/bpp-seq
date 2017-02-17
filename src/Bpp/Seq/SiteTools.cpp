@@ -138,7 +138,7 @@ bool SiteTools::areSitesIdentical(const Site& site1, const Site& site2)
 
 /******************************************************************************/
 
-bool SiteTools::isConstant(const Site& site, bool ignoreUnknown, bool unresolvedRaisesException) throw (EmptySiteException)
+bool SiteTools::isConstant(const Site& site, bool ignoreUnknown, bool unresolvedRaisesException)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -199,7 +199,7 @@ bool SiteTools::isConstant(const Site& site, bool ignoreUnknown, bool unresolved
 
 /******************************************************************************/
 
-double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown) throw (EmptySiteException)
+double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -219,7 +219,7 @@ double SiteTools::variabilityShannon(const Site& site, bool resolveUnknown) thro
 
 /******************************************************************************/
 
-double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool resolveUnknown) throw (DimensionException, EmptySiteException)
+double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool resolveUnknown)
 {
   // Empty site checking
   if (site1.size() == 0)
@@ -266,7 +266,7 @@ double SiteTools::mutualInformation(const Site& site1, const Site& site2, bool r
 
 /******************************************************************************/
 
-double SiteTools::jointEntropy(const Site& site1, const Site& site2, bool resolveUnknown) throw (DimensionException, EmptySiteException)
+double SiteTools::jointEntropy(const Site& site1, const Site& site2, bool resolveUnknown)
 {
   // Empty site checking
   if (site1.size() == 0)
@@ -301,7 +301,7 @@ double SiteTools::jointEntropy(const Site& site1, const Site& site2, bool resolv
 
 /******************************************************************************/
 
-double SiteTools::variabilityFactorial(const Site& site) throw (EmptySiteException)
+double SiteTools::variabilityFactorial(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -316,7 +316,7 @@ double SiteTools::variabilityFactorial(const Site& site) throw (EmptySiteExcepti
 
 /******************************************************************************/
 
-double SiteTools::heterozygosity(const Site& site) throw (EmptySiteException)
+double SiteTools::heterozygosity(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -330,7 +330,7 @@ double SiteTools::heterozygosity(const Site& site) throw (EmptySiteException)
 
 /******************************************************************************/
 
-size_t SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (EmptySiteException)
+size_t SiteTools::getNumberOfDistinctCharacters(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -351,7 +351,101 @@ size_t SiteTools::getNumberOfDistinctCharacters(const Site& site) throw (EmptySi
 
 /******************************************************************************/
 
-bool SiteTools::hasSingleton(const Site& site) throw (EmptySiteException)
+size_t SiteTools::getMajorAlleleFrequency(const Site& site)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::getMajorAlleleFrequency(): Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  if (SiteTools::isConstant(site))
+    return site.size();
+  map<int, size_t> counts;
+  SymbolListTools::getCounts(site, counts);
+  size_t s = 0;
+  for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+  {
+    if (it->second != 0)
+      if (it->second > s)
+        s = it->second;
+  }
+  return s;
+}
+
+/******************************************************************************/
+
+int SiteTools::getMajorAllele(const Site& site)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::getMajorAllele(): Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  if (SiteTools::isConstant(site))
+    return site[0];
+  map<int, size_t> counts;
+  SymbolListTools::getCounts(site, counts);
+  size_t s = 0;
+  int ma = -100;
+  for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+  {
+    if (it->second != 0)
+      if (it->second > s) {
+        s = it->second;
+        ma = it->first;
+      }
+  }
+  return ma;
+}
+
+/******************************************************************************/
+
+size_t SiteTools::getMinorAlleleFrequency(const Site& site)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::getMinorAlleleFrequency(): Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  if (SiteTools::isConstant(site))
+    return site.size();
+  map<int, size_t> counts;
+  SymbolListTools::getCounts(site, counts);
+  size_t s = site.size();
+  for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+  {
+    if (it->second != 0)
+      if (it->second < s)
+        s = it->second;
+  }
+  return s;
+}
+
+/******************************************************************************/
+
+int SiteTools::getMinorAllele(const Site& site)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::getMinorAllele(): Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  if (SiteTools::isConstant(site))
+    return site[0];
+  map<int, size_t> counts;
+  SymbolListTools::getCounts(site, counts);
+  size_t s = site.size();
+  int ma = -100;
+  for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+  {
+    if (it->second != 0)
+      if (it->second < s) {
+        s = it->second;
+        ma = it->first;
+      }
+  }
+  return ma;
+}
+
+/******************************************************************************/
+
+bool SiteTools::hasSingleton(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -371,7 +465,7 @@ bool SiteTools::hasSingleton(const Site& site) throw (EmptySiteException)
 
 /******************************************************************************/
 
-bool SiteTools::isParsimonyInformativeSite(const Site& site) throw (EmptySiteException)
+bool SiteTools::isParsimonyInformativeSite(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
@@ -394,16 +488,24 @@ bool SiteTools::isParsimonyInformativeSite(const Site& site) throw (EmptySiteExc
 
 /******************************************************************************/
 
-bool SiteTools::isTriplet(const Site& site) throw (EmptySiteException)
+bool SiteTools::isTriplet(const Site& site)
 {
   // Empty site checking
   if (site.size() == 0)
     throw EmptySiteException("SiteTools::isTriplet: Incorrect specified site, size must be > 0", &site);
   // For all site's characters
-  if (SiteTools::getNumberOfDistinctCharacters(site) >= 3)
-    return true;
-  else
-    return false;
+  return (SiteTools::getNumberOfDistinctCharacters(site) >= 3);
+}
+
+/******************************************************************************/
+
+bool SiteTools::isDoubleton(const Site& site)
+{
+  // Empty site checking
+  if (site.size() == 0)
+    throw EmptySiteException("SiteTools::isDoubleton: Incorrect specified site, size must be > 0", &site);
+  // For all site's characters
+  return (SiteTools::getNumberOfDistinctCharacters(site) == 2);
 }
 
 /******************************************************************************/

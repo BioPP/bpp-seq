@@ -51,55 +51,49 @@ namespace bpp
  */
 class Transliterator
 {
-	public:
-		Transliterator() {}
-		virtual ~Transliterator() {}
-	
-	public:
+  public:
+    Transliterator() {}
+    virtual ~Transliterator() {}
+  
+  public:
 
-		/**
-		 * @brief Get the source alphabet.
-		 *
-		 * @return The source alphabet.
-		 */
-		virtual const Alphabet * getSourceAlphabet() const = 0;
-		
-		/**
-		 * @brief Get the target alphabet.
-		 *
-		 * @return The target alphabet.
-		 */
-		virtual const Alphabet * getTargetAlphabet() const = 0;
-		
-		/**
-		 * @brief Translate a given state coded as a int from source alphabet to target alphabet.
-		 *
-		 * @param state A state in source alphabet.
-		 * @return The corresponding state in target alphabet.
-		 * @throw BadIntException If the state is not a proper state for source alphabet.
-		 * @throw Exception       Other kind of error, depending on the implementation.
-		 */
-		virtual int translate(int state) const throw (BadIntException, Exception) = 0;		
-		
-		/**
-		 * @brief Translate a given state coded as a string from source alphabet to target alphabet.
-		 *
-		 * @param state A state in source alphabet.
-		 * @return The corresponding state in target alphabet.
-		 * @throw BadCharException If the state is not a proper state for source alphabet.
-		 * @throw Exception        Other kind of error, depending on the implementation.
-		 */
-		virtual std::string translate(const std::string & state) const throw (BadCharException, Exception) = 0;
-		
-		/**
-		 * @brief Translate a whole sequence from source alphabet to target alphabet.
-		 *
-		 * @param sequence A sequence in source alphabet.
-		 * @return The corresponding sequence in target alphabet.
-		 * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
-		 * @throw Exception                 Other kind of error, depending on the implementation.
-		 */	
-		virtual Sequence * translate(const Sequence & sequence) const throw (AlphabetMismatchException, Exception) = 0; 
+    /**
+     * @brief Get the source alphabet.
+     *
+     * @return The source alphabet.
+     */
+    virtual const Alphabet* getSourceAlphabet() const = 0;
+    
+    /**
+     * @brief Get the target alphabet.
+     *
+     * @return The target alphabet.
+     */
+    virtual const Alphabet* getTargetAlphabet() const = 0;
+    
+    /**
+     * @brief Translate a given state coded as a int from source alphabet to target alphabet.
+     *
+     * @param state A state in source alphabet.
+     * @return The corresponding state in target alphabet.
+     */
+    virtual int translate(int state) const = 0;    
+    
+    /**
+     * @brief Translate a given state coded as a string from source alphabet to target alphabet.
+     *
+     * @param state A state in source alphabet.
+     * @return The corresponding state in target alphabet.
+     */
+    virtual std::string translate(const std::string& state) const = 0;
+    
+    /**
+     * @brief Translate a whole sequence from source alphabet to target alphabet.
+     *
+     * @param sequence A sequence in source alphabet.
+     * @return The corresponding sequence in target alphabet.
+     */  
+    virtual Sequence* translate(const Sequence& sequence) const = 0; 
 };
 
 /**
@@ -108,41 +102,35 @@ class Transliterator
 class ReverseTransliterator:
   public virtual Transliterator
 {
-	public:
-		ReverseTransliterator() {}
-		virtual ~ReverseTransliterator() {}
-	
-	public:
-		
-		/**
-		 * @brief Translate a given state coded as a int from target alphabet to source alphabet.
-		 *
-		 * @param state A state in target alphabet.
-		 * @return The corresponding state in source alphabet.
-		 * @throw BadIntException If the state is not a proper state for target alphabet.
-		 * @throw Exception       Other kind of error, depending on the implementation.
-		 */
-		virtual int reverse(int state) const throw (BadIntException, Exception) = 0;
-		
-		/**
-		 * @brief Translate a given state coded as a string from target alphabet to source alphabet.
-		 *
-		 * @param state A state in target alphabet.
-		 * @return The corresponding state in source alphabet.
-		 * @throw BadCharException If the state is not a proper state for target alphabet.
-		 * @throw Exception        Other kind of error, depending on the implementation.
-		 */
-		virtual std::string reverse(const std::string & state) const throw (BadCharException, Exception) = 0;			
+  public:
+    ReverseTransliterator() {}
+    virtual ~ReverseTransliterator() {}
+  
+  public:
+    
+    /**
+     * @brief Translate a given state coded as a int from target alphabet to source alphabet.
+     *
+     * @param state A state in target alphabet.
+     * @return The corresponding state in source alphabet.
+     */
+    virtual int reverse(int state) const = 0;
+    
+    /**
+     * @brief Translate a given state coded as a string from target alphabet to source alphabet.
+     *
+     * @param state A state in target alphabet.
+     * @return The corresponding state in source alphabet.
+     */
+    virtual std::string reverse(const std::string& state) const = 0;      
 
-		/**
-		 * @brief Translate a whole sequence from target alphabet to source alphabet.
-		 *
-		 * @param sequence A sequence in target alphabet.
-		 * @return The corresponding sequence in source alphabet.
-		 * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
-		 * @throw Exception                 Other kind of error, depending on the implementation.
-		 */	
-		virtual Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception) = 0; 
+    /**
+     * @brief Translate a whole sequence from target alphabet to source alphabet.
+     *
+     * @param sequence A sequence in target alphabet.
+     * @return The corresponding sequence in source alphabet.
+     */  
+    virtual Sequence* reverse(const Sequence& sequence) const = 0; 
 };
 
 /**
@@ -151,14 +139,14 @@ class ReverseTransliterator:
 class AbstractTransliterator:
   public virtual Transliterator
 {
-	public:
-		AbstractTransliterator() {}
-		virtual ~AbstractTransliterator() {}
-	
-	public:
-		virtual int translate(int state) const throw (BadIntException, Exception) = 0;		
-		virtual std::string translate(const std::string & state) const throw (BadCharException, Exception) = 0;
-		virtual Sequence * translate(const Sequence & sequence) const throw (AlphabetMismatchException, Exception); 
+  public:
+    AbstractTransliterator() {}
+    virtual ~AbstractTransliterator() {}
+  
+  public:
+    virtual int translate(int state) const = 0;    
+    virtual std::string translate(const std::string& state) const = 0;
+    virtual Sequence* translate(const Sequence& sequence) const; 
 };
 
 /**
@@ -168,20 +156,20 @@ class AbstractReverseTransliterator:
   public ReverseTransliterator,
   public AbstractTransliterator
 {
-	public:
-		AbstractReverseTransliterator() {}
-		virtual ~AbstractReverseTransliterator() {}
-	
-	public:
-		//These two redeclarations must be here because of the multiple inheritance.
-		virtual const Alphabet * getSourceAlphabet() const = 0;
-		virtual const Alphabet * getTargetAlphabet() const = 0;
-		virtual int reverse(int state) const throw (BadIntException, Exception) = 0;
-		virtual std::string reverse(const std::string & state) const throw (BadCharException, Exception) = 0;			
-		virtual Sequence * reverse(const Sequence & sequence) const throw (AlphabetMismatchException, Exception);
+  public:
+    AbstractReverseTransliterator() {}
+    virtual ~AbstractReverseTransliterator() {}
+  
+  public:
+    //These two redeclarations must be here because of the multiple inheritance.
+    virtual const Alphabet* getSourceAlphabet() const = 0;
+    virtual const Alphabet* getTargetAlphabet() const = 0;
+    virtual int reverse(int state) const = 0;
+    virtual std::string reverse(const std::string& state) const = 0;      
+    virtual Sequence* reverse(const Sequence& sequence) const;
 };
 
 } //end of namespace bpp.
 
-#endif	//_TRANSLITERATOR_H_
+#endif  //_TRANSLITERATOR_H_
 

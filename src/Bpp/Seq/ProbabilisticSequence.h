@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _PROBABILISTIC_SEQUENCE_H_
-#define _PROBABILISTIC_SEQUENCE_H_
+#ifndef _PROBABILISTICSEQUENCE_H_
+#define _PROBABILISTICSEQUENCE_H_
 
 #include "ProbabilisticSymbolList.h"
 #include "CoreSequence.h"
@@ -50,7 +50,7 @@ namespace bpp
 {
 
 /**
- * @brief The probabilisitc sequence interface.
+ * @brief The probabilistic sequence interface.
  *
  * This is a general purpose container, containing an ordered list of
  * elements.  The states represented by the elements is defined by an
@@ -210,4 +210,4 @@ class BasicProbabilisticSequence :
 
 } // end of namespace bpp
 
-#endif // _PROBABILISTIC_SEQUENCE_H_
+#endif // _PROBABILISTICSEQUENCE_H_

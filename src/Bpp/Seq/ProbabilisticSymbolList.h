@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _PROBABILISTIC_SYMBOLLIST_H_
-#define _PROBABILISTIC_SYMBOLLIST_H_
+#ifndef _PROBABILISTICSYMBOLLIST_H_
+#define _PROBABILISTICSYMBOLLIST_H_
 
 #include "Alphabet/Alphabet.h"
 #include <Bpp/Clonable.h>
@@ -52,7 +52,7 @@ namespace bpp
 {
 
 /**
- * @brief The ProbabilisticSymobolList interface.
+ * @brief The ProbabilisticSymbolList interface.
  *
  * @see Alphabet
  */
@@ -242,4 +242,4 @@ class BasicProbabilisticSymbolList :
 
 } // end of namespace bpp
 
-#endif // _PROBABILISTIC_SYMBOLLIST_H
+#endif // _PROBABILISTICSYMBOLLIST_H

@@ -52,7 +52,7 @@ namespace bpp
    * @brief Exception thrown when a stop codon is found.
    */
   class StopCodonException:
-    public Exception
+    public virtual Exception
   {
   private:
     std::string codon_;
@@ -105,9 +105,9 @@ namespace bpp
      */
     const CodonAlphabet* getSourceAlphabet() const { return &codonAlphabet_; }
     const ProteicAlphabet* getTargetAlphabet() const { return &proteicAlphabet_; }
-    virtual int translate(int state) const throw (BadIntException, Exception);		
-    virtual std::string translate(const std::string& state) const throw (BadCharException, Exception);
-    virtual Sequence* translate(const Sequence& sequence) const throw (Exception)
+    virtual int translate(int state) const;		
+    virtual std::string translate(const std::string& state) const;
+    virtual Sequence* translate(const Sequence& sequence) const
     {
       return AbstractTransliterator::translate(sequence);	
     }
@@ -140,27 +140,24 @@ namespace bpp
      *
      * @param state The numeric code for the state to test.
      * @return True if the state corresponds to a stop codon.
-     * @throw BadIntException if the state is not supported by the alphabet.
      */
-    virtual bool isStop(int state) const throw (BadIntException) = 0;
+    virtual bool isStop(int state) const = 0;
 
     /**
      * @brief Tells is a particular codon is a stop codon.
      *
      * @param state The character code for the state to test.
      * @return True if the state corresponds to a stop codon.
-     * @throw BadCharException if the state is not supported by the alphabet.
      */
-    virtual bool isStop(const std::string& state) const throw (BadCharException) = 0;
+    virtual bool isStop(const std::string& state) const = 0;
     
     /**
      * @brief Tells is a particular codon is a start codon.
      *
      * @param state The numeric code for the state to test.
      * @return True if the state corresponds to a start codon.
-     * @throw BadIntException if the state is not supported by the alphabet.
      */
-    virtual bool isStart(int state) const throw (BadIntException) {
+    virtual bool isStart(int state) const {
       //Test:
       codonAlphabet_.intToChar(state); //throw exception if invalid state!
       return (state == 14);
@@ -171,9 +168,8 @@ namespace bpp
      *
      * @param state The character code for the state to test.
      * @return True if the state corresponds to a start codon.
-     * @throw BadCharException if the state is not supported by the alphabet.
      */
-    virtual bool isStart(const std::string& state) const throw (BadCharException) {
+    virtual bool isStart(const std::string& state) const {
       return isStart(codonAlphabet_.charToInt(state));
     }
  
@@ -182,18 +178,16 @@ namespace bpp
      *
      * @param state The numeric code for the state to test.
      * @return True if the state corresponds to an alternative start codon.
-     * @throw BadIntException if the state is not supported by the alphabet.
      */
-    virtual bool isAltStart(int state) const throw (BadIntException) = 0;
+    virtual bool isAltStart(int state) const = 0;
 
     /**
      * @brief Tells is a particular codon is an alternative start codon.
      *
      * @param state The character code for the state to test.
      * @return True if the state corresponds to an alternative start codon.
-     * @throw BadCharException if the state is not supported by the alphabet.
      */
-    virtual bool isAltStart(const std::string& state) const throw (BadCharException) = 0;
+    virtual bool isAltStart(const std::string& state) const = 0;
     
     /**
      * @brief Tell if two codons are synonymous, that is, if they encode the same amino-acid.
@@ -201,9 +195,8 @@ namespace bpp
      * @param i The numeric code for the first codon.
      * @param j The numeric code for the second codon.
      * @return True if the two codons are synonymous.
-     * @throw BadIntException if at least one of the states is not supported by the alphabet.
      */
-    bool areSynonymous(int i, int j) const throw (BadIntException)
+    bool areSynonymous(int i, int j) const
     {
       return (translate(i) == translate(j));
     }
@@ -214,16 +207,15 @@ namespace bpp
      * @param i The character code for the first codon.
      * @param j The character code for the second codon.
      * @return True if the two codons are synonymous.
-     * @throw BadCharException if at least one of the states is not supported by the alphabet.
      */
-    bool areSynonymous(const std::string & i, const std::string & j) const throw (BadCharException)
+    bool areSynonymous(const std::string& i, const std::string& j) const
     {
       return (translate(i) == translate(j));
     }
 
-    std::vector<int> getSynonymous(int aminoacid) const throw (BadIntException);
+    std::vector<int> getSynonymous(int aminoacid) const;
     
-    std::vector<std::string> getSynonymous(const std::string & aminoacid) const throw (BadCharException);
+    std::vector<std::string> getSynonymous(const std::string& aminoacid) const;
 
     /**
      * @return True if the specified codon is fourfold degenerated
@@ -250,7 +242,7 @@ namespace bpp
      * @param includeInitCodon (if lookForInitCodon is true) tell if the init codon must be included in the subsequence.
      * @return A nucleotide/codon subsequence.
      */
-    Sequence* getCodingSequence(const Sequence& sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const throw (Exception);
+    Sequence* getCodingSequence(const Sequence& sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const;
     /** @} */
   };
 

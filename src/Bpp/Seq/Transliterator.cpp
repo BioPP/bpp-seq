@@ -41,32 +41,32 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-Sequence* AbstractTransliterator::translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* AbstractTransliterator::translate(const Sequence& sequence) const
 {
-	if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("AbstractTransliterator::translate", getSourceAlphabet(), getTargetAlphabet());
-	Sequence* tSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
-	int gap = sequence.getAlphabet()->getGapCharacterCode();
+  if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("AbstractTransliterator::translate", getSourceAlphabet(), getTargetAlphabet());
+  Sequence* tSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
+  int gap = sequence.getAlphabet()->getGapCharacterCode();
   for (unsigned int i = 0; i < sequence.size(); ++i)
   {
     int state = sequence.getValue(i);
     if (state == gap)
       tSeq->addElement(gap);
     else
-		  tSeq->addElement(translate(state));
-	}
-	return tSeq;
+      tSeq->addElement(translate(state));
+  }
+  return tSeq;
 }
 
-Sequence* AbstractReverseTransliterator::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* AbstractReverseTransliterator::reverse(const Sequence& sequence) const
 {
-	if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
-		throw AlphabetMismatchException("AbstractReverseTransliterator::reverse", getSourceAlphabet(), getTargetAlphabet());
-	Sequence* rSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
-	for (unsigned int i = 0; i < sequence.size(); ++i)
+  if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("AbstractReverseTransliterator::reverse", getSourceAlphabet(), getTargetAlphabet());
+  Sequence* rSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
+  for (unsigned int i = 0; i < sequence.size(); ++i)
   {
-		rSeq->addElement(reverse(sequence.getValue(i)));
-	}
-	return rSeq;
+    rSeq->addElement(reverse(sequence.getValue(i)));
+  }
+  return rSeq;
 }
 
