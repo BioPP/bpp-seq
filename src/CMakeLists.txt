@@ -97,32 +97,32 @@ SET(CPP_FILES
   )
 
 # Build the static lib
-add_library (bpp-seq-static STATIC ${CPP_FILES})
-target_include_directories (bpp-seq-static PUBLIC
+add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES})
+target_include_directories (${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:include>
   )
-set_target_properties (bpp-seq-static PROPERTIES OUTPUT_NAME bpp-seq)
-target_link_libraries (bpp-seq-static ${BPP_LIBS_STATIC})
+set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC})
 
 # Build the shared lib
-add_library (bpp-seq-shared SHARED ${CPP_FILES})
-target_include_directories (bpp-seq-shared PUBLIC
+add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES})
+target_include_directories (${PROJECT_NAME}-shared PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:include>
   )
-set_target_properties (bpp-seq-shared
-  PROPERTIES OUTPUT_NAME bpp-seq
+set_target_properties (${PROJECT_NAME}-shared
+  PROPERTIES OUTPUT_NAME ${PROJECT_NAME}
   MACOSX_RPATH 1
-  VERSION ${BPPSEQ_VERSION}
-  SOVERSION ${BPPSEQ_VERSION_MAJOR}
+  VERSION ${${PROJECT_NAME}_VERSION}
+  SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR}
   )
-target_link_libraries (bpp-seq-shared ${BPP_LIBS_SHARED})
+target_link_libraries (${PROJECT_NAME}-shared ${BPP_LIBS_SHARED})
 
 # Install libs and headers
 install (
-  TARGETS bpp-seq-static bpp-seq-shared
-  EXPORT bpp-seq-config
+  TARGETS ${PROJECT_NAME}-static ${PROJECT_NAME}-shared
+  EXPORT ${PROJECT_NAME}-targets
   LIBRARY DESTINATION lib${LIB_SUFFIX}
   ARCHIVE DESTINATION lib${LIB_SUFFIX}
   )
@@ -131,5 +131,5 @@ install (
   DESTINATION include
   FILES_MATCHING PATTERN "*.h"
   )
-install (EXPORT bpp-seq-config DESTINATION lib/cmake/bpp-seq)
-
+# Install cmake file representing targets
+install (EXPORT ${PROJECT_NAME}-targets DESTINATION ${cmake-package-location})
