@@ -88,18 +88,7 @@ namespace bpp
      *
      * @{
      */
-    /**
-     * @brief Get the complete name of a state given its string description.
-     *
-     * In case of undefined characters (i.e. N and X for nucleic alphabets),
-     * this method will return the name of the undefined word.
-     *
-     * @param state The string description of the given state.
-     * @return The name of the state.
-     * @throw BadCharException When state is not a valid char description.
-     */
-    
-    unsigned int getSize() const
+    size_t getSize() const
     {
       return getNumberOfChars() - 2;
     }
@@ -107,11 +96,7 @@ namespace bpp
     /** @} */
 
 
-    /**
-     * @brief Returns the number of resolved states + one for unresolved
-     *
-     */
-    unsigned int getNumberOfTypes() const
+    size_t getNumberOfTypes() const
     {
       return getNumberOfChars() - 1;
     }
