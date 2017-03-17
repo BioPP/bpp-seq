@@ -88,7 +88,7 @@ namespace bpp
      *
      * @{
      */
-    size_t getSize() const
+    unsigned int getSize() const
     {
       return getNumberOfChars() - 2;
     }
@@ -96,7 +96,7 @@ namespace bpp
     /** @} */
 
 
-    size_t getNumberOfTypes() const
+    unsigned int getNumberOfTypes() const
     {
       return getNumberOfChars() - 1;
     }
