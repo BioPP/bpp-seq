@@ -85,7 +85,7 @@ namespace bpp
     std::vector<std::string> getAlias(const std::string & state) const throw (BadCharException);
     int getGeneric(const std::vector<int> & states) const throw (BadIntException);
     std::string getGeneric(const std::vector<std::string> & states) const throw (BadCharException);
-    std::string getAlphabetType() const { return "RNA alphabet"; }
+    std::string getAlphabetType() const { return "RNA"; }
   };
 
 } //end of namespace bpp.

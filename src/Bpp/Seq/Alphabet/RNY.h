@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -52,7 +52,7 @@
  *
  * More explicitly, a quotiented triplet RNY is defined on the alphabet
  * 
- * @f\{C,T,R\} x \{A,C,G,T\} x \{ A,G,Y\}@f.
+ * \f[\{C,T,R\} x \{A,C,G,T\} x \{ A,G,Y\}\f].
  *
  * Triplet "---" is the only triplet defined as gap. Other triplets
  * with "-" are defined as unresolved.
@@ -101,7 +101,7 @@ public:
   bool isUnresolved(int state) const;
   bool isUnresolved(const std::string& state) const;
 
-  std::string getAlphabetType() const { return "RNY alphabet"; }
+  std::string getAlphabetType() const { return "RNY(letter=" + nuclalph_.getAlphabetType() + ")"; }
 
   const NucleicAlphabet& getLetterAlphabet() const;
 
