@@ -44,6 +44,7 @@ SET(CPP_FILES
   Bpp/Seq/Container/SiteContainerExceptions.cpp
   Bpp/Seq/Container/SiteContainerIterator.cpp
   Bpp/Seq/Container/SiteContainerTools.cpp
+  Bpp/Seq/Container/VectorProbabilisticSiteContainer.cpp
   Bpp/Seq/Container/VectorSequenceContainer.cpp
   Bpp/Seq/Container/VectorSiteContainer.cpp
   Bpp/Seq/DNAToRNA.cpp
@@ -72,12 +73,17 @@ SET(CPP_FILES
   Bpp/Seq/Io/MaseTools.cpp
   Bpp/Seq/Io/NexusIoSequence.cpp
   Bpp/Seq/Io/NexusTools.cpp
+  Bpp/Seq/Io/Pasta.cpp
   Bpp/Seq/Io/PhredPhd.cpp
   Bpp/Seq/Io/PhredPoly.cpp
   Bpp/Seq/Io/Phylip.cpp
   Bpp/Seq/Io/Stockholm.cpp
   Bpp/Seq/Io/StreamSequenceIterator.cpp
   Bpp/Seq/NucleicAcidsReplication.cpp
+  Bpp/Seq/ProbabilisticSymbolList.cpp
+  Bpp/Seq/ProbabilisticSymbolListTools.cpp
+  Bpp/Seq/ProbabilisticSequence.cpp
+  Bpp/Seq/ProbabilisticSite.cpp
   Bpp/Seq/Sequence.cpp
   Bpp/Seq/SequenceExceptions.cpp
   Bpp/Seq/SequencePositionIterators.cpp
