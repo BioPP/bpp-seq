@@ -358,10 +358,10 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
       c = last_c;
       BasicProbabilisticSequence tmpseq(container.getAlphabet()); // add probabilistic sequences instead
       hasSeq = nextSequence(input, tmpseq, hasLabels, permutationMap);
-      container.addSequence(tmpseq, checkNames_);
+      container.addSequence(std::make_shared<BasicProbabilisticSequence>(tmpseq), checkNames_);
     }
   }
   if(extended_ && cmts.size()) {
-    container.setGeneralComments(cmts);
+    container.setComments(cmts);
   }
 }

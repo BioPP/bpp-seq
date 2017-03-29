@@ -54,31 +54,31 @@ namespace bpp
  *
  * This abstract class provides an alphabet and comments, with associated methods.
  */
-class AbstractSequenceContainer:
-  public virtual OrderedSequenceContainer
-{
-	private:
+  class AbstractSequenceContainer:
+    public virtual OrderedSequenceContainer
+  {
+  private:
 
-		/**
-		 * @brief The container's alphabet.
-		 */
-		const Alphabet* alphabet_;
+    /**
+     * @brief The container's alphabet.
+     */
+    const Alphabet* alphabet_;
 
     /**
      * @brief The container's comments.
      */
-		Comments comments_;
+    Comments comments_;
 
-	public:
+  public:
 
-		/**
-		 * @brief This constructor initialize the alphabet pointer.
-		 *
-		 * This constructor is to be called by constructors of derived classes.
-		 *
-		 * @param alpha The alphabet to be associated to this container.
-		 */
-		AbstractSequenceContainer(const Alphabet* alpha):
+    /**
+     * @brief This constructor initialize the alphabet pointer.
+     *
+     * This constructor is to be called by constructors of derived classes.
+     *
+     * @param alpha The alphabet to be associated to this container.
+     */
+    AbstractSequenceContainer(const Alphabet* alpha):
       alphabet_(alpha), comments_() {}
 		
     AbstractSequenceContainer(const AbstractSequenceContainer& sc):
@@ -111,53 +111,53 @@ class AbstractSequenceContainer:
       return *this;
     }
 
-		virtual ~AbstractSequenceContainer() {}
+    virtual ~AbstractSequenceContainer() {}
 		
-	public:
+  public:
 	
-		/**
-		 * @name From the SequenceContainer interface
-		 *
-		 * @{
-		 */
-		const Alphabet* getAlphabet() const { return alphabet_; }
+    /**
+     * @name From the SequenceContainer interface
+     *
+     * @{
+     */
+    const Alphabet* getAlphabet() const { return alphabet_; }
 
     std::string toString(const std::string& name) const throw (SequenceNotFoundException)
     {
       return getSequence(name).toString();
     }
 
-		const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException)
+    const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException)
     {
       return getSequence(name).getComments();
     }
 
-		void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException);
-		const Comments& getGeneralComments() const
+    void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException);
+    const Comments& getGeneralComments() const
     {
       return comments_;
     }
 
-		void setGeneralComments(const Comments& comments)
+    void setGeneralComments(const Comments& comments)
     {
       comments_ = comments;
     }
 
-		void deleteGeneralComments()
+    void deleteGeneralComments()
     {
       comments_.clear();
     }
 
-		/** @} */
+    /** @} */
 
-		/**
-		 * @name From the OrderedSequenceContainer interface
-		 *
-		 * @{
-		 */
-		virtual const std::string& getName(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+    /**
+     * @name From the OrderedSequenceContainer interface
+     *
+     * @{
+     */
+    virtual const std::string& getName(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
     {
-	    return getSequence(sequenceIndex).getName();
+      return getSequence(sequenceIndex).getName();
     }
     
     virtual std::string toString(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
@@ -165,15 +165,15 @@ class AbstractSequenceContainer:
       return getSequence(sequenceIndex).toString();
     }
 
-		virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+    virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
     {
       return getSequence(sequenceIndex).getComments();
     }
 
-		virtual void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException) = 0;
-		/** @} */
+    virtual void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException) = 0;
+    /** @} */
 
-};
+  };
 
 } //end of namespace bpp.
 

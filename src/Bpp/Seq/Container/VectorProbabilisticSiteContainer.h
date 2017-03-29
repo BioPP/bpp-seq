@@ -40,7 +40,8 @@
 #ifndef _VECTORPROBABILISTICSITECONTAINER_H_
 #define _VECTORPROBABILISTICSITECONTAINER_H_
 
-#include "VectorSiteContainer.h"
+#include "VectorPositionedContainer.h"
+#include "VectorMappedContainer.h"
 
 #include "../ProbabilisticSite.h"
 #include "../ProbabilisticSequence.h"
@@ -64,22 +65,22 @@ namespace bpp
  *
  * @see ProbabilisticSequence, ProbabilisticSite, VectorSiteContainer
  */
+  
 class VectorProbabilisticSiteContainer :
-  public VectorSiteContainer
+    public VectorPositionedContainer<ProbabilisticSite>,
+    public VectorMappedContainer<ProbabilisticSequence>,
+    public Commentable
 {
-
- protected :
-
-  std::vector<ProbabilisticSite *> p_sites_;
-  mutable std::vector<ProbabilisticSequence *> p_sequences_;
-
- public :
+private:
+  const Alphabet* alphabet_;
+  
+public :
 
   /**
    * @brief Build a new emtpy container.
    *
-   * @param alpha The alphabet for this container.
    */
+  
   VectorProbabilisticSiteContainer(const Alphabet * alpha);
 
   /**
@@ -87,35 +88,95 @@ class VectorProbabilisticSiteContainer :
    *
    * @{
    */
-  VectorSiteContainer* clone() const { return new VectorSiteContainer(*this); }
+
+  VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc) :
+    VectorPositionedContainer<ProbabilisticSite>(vpsc),
+    VectorMappedContainer<ProbabilisticSequence>(vpsc),
+    Commentable(vpsc),
+    alphabet_(vpsc.alphabet_)
+  {
+  }
+
+  VectorProbabilisticSiteContainer& operator=(const VectorProbabilisticSiteContainer& vpsc)
+  {
+    alphabet_ = vpsc.alphabet_;
+    VectorPositionedContainer<ProbabilisticSite>::operator=(vpsc);
+    VectorMappedContainer<ProbabilisticSequence>::operator=(vpsc);
+    Commentable::operator=(vpsc);
+    
+    return *this;
+  }
+  
+  VectorProbabilisticSiteContainer* clone() const { return new VectorProbabilisticSiteContainer(*this); }
 
   /**
    * @}
    */
 
   // class destructor
-  virtual ~VectorProbabilisticSiteContainer() { pClear(); }
-
+  virtual ~VectorProbabilisticSiteContainer() {}
+  
  public :
 
-  const ProbabilisticSite & getProbabilisticSite(std::size_t i) const throw (IndexOutOfBoundsException);
+  const Alphabet* getAlphabet() const
+  {
+    return alphabet_;
+  }
 
-  void addSite(const ProbabilisticSite & site, bool checkPosition = true) throw (Exception);
+  size_t getNumberOfSites() const { return VectorPositionedContainer<ProbabilisticSite>::getSize(); }
+  
+  size_t getNumberOfSequences() const { return VectorMappedContainer<ProbabilisticSequence>::getSize(); }
 
-  const ProbabilisticSequence & getProbabilisticSequence(std::size_t i) const throw (IndexOutOfBoundsException);
+  /*
+   * @brief get Objects
+   *
+   * @{
+   */
+  
+  const std::shared_ptr<ProbabilisticSite> getSite(size_t i) const
+  {
+    if(i >= getNumberOfSites())
+      throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getProbabilisticSite.", i, 0, getNumberOfSites() - 1);
 
-  void addSequence(const ProbabilisticSequence & sequence, bool checkName = true) throw (Exception);
+    return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
+  }
 
-  std::size_t getNumberOfProbabilisticSites() const { return p_sites_.size(); }
-  std::size_t getNumberOfProbabilisticSequences() const { return p_sequences_.size(); }
+  std::shared_ptr<ProbabilisticSite> getSite(size_t i)
+  {
+    if(i >= getNumberOfSites())
+      throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getProbabilisticSite.", i, 0, getNumberOfSites() - 1);
 
-  void pClear();
-  void reindexpSites();
+    return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
+  }
 
- protected :
+  const std::shared_ptr<ProbabilisticSequence> getSequence(std::size_t i) const
+  {
+    return VectorMappedContainer<ProbabilisticSequence>::getObject(i);
+  }
 
-  // create n void probabilistic sites :
-  void pRealloc(std::size_t n);
+  std::shared_ptr<ProbabilisticSequence> getSequence(std::size_t i)
+  {
+    return VectorMappedContainer<ProbabilisticSequence>::getObject(i);
+  }
+
+  /*
+   * @}
+   *
+   */
+
+  /*
+   * @brief Add elements
+   *
+   */
+  
+  void addSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false);
+  
+  void addSequence(std::shared_ptr<ProbabilisticSequence> sequence, bool checkName = true);
+
+  void clear();
+
+  void reindexSites();
+
 };
 
 } // end of namespace bpp

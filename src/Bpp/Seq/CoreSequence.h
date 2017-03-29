@@ -6,36 +6,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _CORESEQUENCE_H_
@@ -56,24 +56,73 @@ namespace bpp
  * Comments are defined as a std::vector of std::strings to allow the later creation of a
  * full Comments class.
  */
-typedef std::vector<std::string> Comments;
+  typedef std::vector<std::string> Comments;
 
+  class Commentable
+  {
+  private:
+    Comments comments_;
+    
+  public:
+    Commentable() :
+      comments_()
+    {
+    }
+
+    Commentable(const Comments& comments) :
+      comments_(comments)
+    {
+    }
+
+    Commentable(const Commentable& com) :
+      comments_(com.comments_)
+    {
+    }
+
+    Commentable& operator=(const Commentable& com)
+    {
+      comments_=com.comments_;
+      return *this;
+    }
+
+    virtual ~Commentable() 
+    {
+    }
+
+    /**
+     * @brief Get the comments.
+     *
+     * @return The comments.
+     */
+     
+    const Comments& getComments() const { return comments_; }
+
+    /**
+     * @brief Set the comments.
+     *
+     * @param comments The new comments.
+     */
+
+    void setComments(const Comments& comments) { comments_ = comments; }    
+  };
+  
+    
 /**
  * @brief The core sequence interface. 
  *
  * This interface specifies the 'core' functionality of a sequence, that is,
  * an ordered set of states, a name and some meta data (comments).
  */
-class CoreSequence:
-  public virtual Clonable
-{
-public:
-  CoreSequence() {}
-
-  virtual ~CoreSequence() {}
   
+  class CoreSequence:
+    public virtual Clonable
+  {
+  public:
+    CoreSequence() {}
 
-public:
+    virtual ~CoreSequence() {}
+
+  public:
   
 #ifndef NO_VIRTUAL_COV
     CoreSequence* clone() const = 0;
@@ -100,28 +149,23 @@ public:
     virtual void setName(const std::string& name) = 0;    
     /** @} */
     
+    
     /**
-     * @name Setting/getting the comments associated to the sequence.
+     * @brief Get the comments.
      *
-     * @{
+     * @return The comments.
      */
      
-    /**
-     * @brief Get the comments associated to this sequence.
-     *
-     * @return The comments of the sequence.
-     */
     virtual const Comments& getComments() const = 0;
-    
+
     /**
-     * @brief Set the comments associated to this sequence.
+     * @brief Set the comments.
      *
-     * @param comments The new comments of the sequence.
+     * @param comments The new comments.
      */
+
     virtual void setComments(const Comments& comments) = 0;
-    
-    /** @} */
-    
+  
     /**
      * @name Adjusting the size of the sequence.
      *
@@ -150,26 +194,22 @@ public:
 
     /** @} */
 
-};
+  };
 
 
 /**
  * @brief A partial implementation of the CoreSequence interface. 
  */
-class AbstractCoreSequence :
-  public virtual CoreSequence
-{
+  class AbstractCoreSequence :
+    public virtual CoreSequence,
+    public virtual Commentable
+  {
   private:
 
     /**
      * @brief The sequence name.
      */
     std::string name_;
-
-    /**
-     * @brief The sequence comments.
-     */
-    Comments comments_;
 
   public:
 
@@ -179,7 +219,8 @@ class AbstractCoreSequence :
      * @param name     The sequence name.
      */
     AbstractCoreSequence(const std::string& name):
-      name_(name), comments_() {}
+      Commentable(),
+      name_(name) {}
 
     /**
      * @brief Constructor of the AbstractCoreSequence object.
@@ -188,32 +229,40 @@ class AbstractCoreSequence :
      * @param comments Comments to add to the sequence.
      */
     AbstractCoreSequence(const std::string& name, const Comments& comments):
-      name_(name), comments_(comments) {}
+      Commentable(comments),
+      name_(name) {}
 
     AbstractCoreSequence():
-      name_(), comments_() {}
+      Commentable(),
+      name_() {}
 
     AbstractCoreSequence(const AbstractCoreSequence& s):
-      name_(s.name_), comments_(s.comments_) {}
+      Commentable(s),
+      name_(s.name_) {}
     
-    AbstractCoreSequence& operator=(const AbstractCoreSequence& s) {
+    AbstractCoreSequence& operator=(const AbstractCoreSequence& s)
+    {
+      Commentable::operator=(s);
       name_ = s.name_;
-      comments_ = s.comments_;
       return *this;
     }
   
     AbstractCoreSequence(const CoreSequence& s):
-      name_(s.getName()), comments_(s.getComments()) {}
+      Commentable(s.getComments()),
+      name_(s.getName())
+    {
+    }
     
-    AbstractCoreSequence& operator=(const CoreSequence& s) {
+    AbstractCoreSequence& operator=(const CoreSequence& s)
+    {
+      Commentable::setComments(s.getComments());
       name_ = s.getName();
-      comments_ = s.getComments();
       return *this;
     }
    
-      virtual ~AbstractCoreSequence() {}
+    virtual ~AbstractCoreSequence() {}
         
-
+    
   public:
   
     /**
@@ -221,7 +270,7 @@ class AbstractCoreSequence :
      *
      * @{
      */
-     virtual AbstractCoreSequence* clone() const = 0;
+    virtual AbstractCoreSequence* clone() const = 0;
     /** @} */
         
     
@@ -234,22 +283,20 @@ class AbstractCoreSequence :
     const std::string& getName() const { return name_; }
     
     void setName(const std::string& name) { name_ = name; }
-    
+
+    const Comments& getComments() const
+    {
+      return Commentable::getComments();
+    }
+
+    void setComments(const Comments& comments)
+    {
+      Commentable::setComments(comments);
+    }    
+
     /** @} */
     
-    /**
-     * @name Setting/getting the comments associated to the sequence.
-     *
-     * @{
-     */
-     
-    const Comments& getComments() const { return comments_; }
-    
-    void setComments(const Comments& comments) { comments_ = comments; }
-    
-    /** @} */
-    
-};
+  };
 
 } //end of namespace bpp.
 

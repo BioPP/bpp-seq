@@ -259,11 +259,11 @@ int main() {
   cout << "OK." << endl;
 
   cout << endl << "add binary probabilistic sequence to binary probabilistic container...";
-  p_container.addSequence(p_seq);
+  p_container.addSequence(std::make_shared<BasicProbabilisticSequence>(p_seq));
   cout << "OK." << endl;
 
   cout << "binary probabilistic container's first element is : ";  
-  DataTable::write(p_container.getProbabilisticSequence(0).getContent(), cout);
+  DataTable::write(p_container.getSequence(0)->getContent(), cout);
 
   /*
    * *** Fasta (and Pasta) files ***
@@ -323,8 +323,8 @@ int main() {
   cout << "OK." << endl;
 
   cout << "binary probabilistic container contains : " << endl << endl;
-  for(size_t i = 0; i < p_container.getNumberOfProbabilisticSequences(); ++i) {
-    DataTable::write(p_container.getProbabilisticSequence(i).getContent(), cout);
+  for(size_t i = 0; i < p_container.getNumberOfSequences(); ++i) {
+    DataTable::write(p_container.getSequence(i)->getContent(), cout);
     cout << endl;
   }
 
@@ -347,8 +347,8 @@ int main() {
   cout << "OK." << endl;
 
   cout << "dna prob. container contains : " << endl << endl;
-  for(size_t i = 0; i < dna_p_container.getNumberOfProbabilisticSequences(); ++i) {
-    DataTable::write(dna_p_container.getProbabilisticSequence(i).getContent(), cout);
+  for(size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i) {
+    DataTable::write(dna_p_container.getSequence(i)->getContent(), cout);
     cout << endl;
   }
 
