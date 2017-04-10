@@ -144,24 +144,24 @@ class BasicProbabilisticSite :
 
   /**
    * @brief Build a new BasicProbabilisticSite object with the specified alphabet.
-   * The content of the site is initialized from a DataTable object.
+   * The content of the site is initialized from a Table<double> object.
    *
    * @param site     The content of the probabilist site.
    * @param alpha    The alphabet to use.
    * @throw Exception If the content does not match the specified alphabet or is internally inconsistent.
    */
-  BasicProbabilisticSite(const DataTable & site, const Alphabet* alpha) throw (Exception);
+  BasicProbabilisticSite(const Table<double> & site, const Alphabet* alpha) throw (Exception);
 
   /**
    * @brief Build a new BasicProbabilisticSite object with the specified alphabet and position.
-   * The content of the probabilistic site is initialized from a DataTable object.
+   * The content of the probabilistic site is initialized from a Table<double> object.
    *
    * @param site     The content of the probabilistic site.
    * @param alpha    The alphabet to use.
    * @param position The position attribute for this site.
    * @throw Exception If the content does not match the specified alphabet or is internally insconsistent.
    */
-  BasicProbabilisticSite(const DataTable & site, const Alphabet* alpha, int position) throw (Exception);
+  BasicProbabilisticSite(const Table<double> & site, const Alphabet* alpha, int position) throw (Exception);
 
   /**
    * @brief The generic copy constructor.

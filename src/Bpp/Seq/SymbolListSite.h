@@ -1,7 +1,7 @@
 //
-// File: ProbabilisticiSymbolListTools.h
-// Created by: Murray Patterson
-// Created on: Wed Oct 7 2015
+// File: SymbolListSite.h
+// Created by: Laurent Guéguen
+// Created on: samedi 1 avril 2017, à 23h 34
 //
 
 /*
@@ -37,39 +37,37 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _PROBABILISTIC_SYMBOLLISTTOOLS_H_
-#define _PROBABILISTIC_SYMBOLLISTTOOLS_H_
+#ifndef _SYMBOLLIST_SITE_H_
+#define _SYMBOLLIST_SITE_H_
 
-// From the STL :
-#include <string>
-#include <vector>
-
+#include "SymbolList.h"
+#include "CoreSite.h"
 namespace bpp
 {
 
-/**
- * @brief Utilitary functions dealing with both probabilistic sites and probabilistic sequences.
- */
-class ProbabilisticSymbolListTools
-{
-
- public: 
-
-  ProbabilisticSymbolListTools() {}
-  virtual ~ProbabilisticSymbolListTools() {}
-
- public:
-
   /**
-   * @brief Check to see if an elment is internally consistent, i.e., that it is a list of decimal numbers that sums up to 1
+   * @brief The SymbolListSite interface, from CoreSite and SymbolList
    *
-   * @param element The element to store in the list
-   * @return True if consistent, o.w., false
    */
-  static bool isConsistent(const std::vector<std::string> & element);
+  class SymbolListSite: 
+    public virtual CoreSite,
+    public virtual SymbolList
+  {
 
-};
+  public: 
+    /**
+     * @name The Clonable interface
+     *
+     * @{
+     */
+    SymbolListSite* clone() const = 0;
+    /** @} */
+    
+    // Class destructor
+    virtual ~SymbolListSite() {}
 
-} // end of namespace bpp
+  };
+} //end of namespace bpp.
 
-#endif // _PROBABILISTIC_SYMBOLLISTTOOLS_H_
+#endif // _SYMBOLLIST_SITE_H_
+

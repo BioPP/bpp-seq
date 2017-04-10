@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../ProbabilisticSequence.h"
 #include "../Container/VectorProbabilisticSiteContainer.h"
 
+#include <Bpp/Numeric/Table.h>
+
 namespace bpp
 {
 
@@ -70,6 +72,8 @@ class Pasta
   bool strictNames_;         // If name is between '>' and first space
 
  public :
+
+  typedef Table<double> DataTable;
 
   /**
    * @brief Build a new Pasta object.

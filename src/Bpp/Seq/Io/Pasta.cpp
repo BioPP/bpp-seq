@@ -45,7 +45,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Text/StringTokenizer.h>
 #include <Bpp/Io/FileTools.h>
-#include <Bpp/Numeric/DataTable.h>
 
 using namespace bpp;
 using namespace std;
@@ -58,7 +57,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
     throw IOException("Pasta::nextSequence : can't read from istream input");
 
   string seqname = "";
-  vector<string> tokens;
+  vector<double> tokens;
   Comments seqcmts;
   short seqcpt = 0;
   string linebuffer = "";
@@ -86,48 +85,15 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
       seqname = string(linebuffer.begin() + 1, linebuffer.end());
     }
 
-    /*
-      While dealing with all the formatting, names, etc., including
-      strictNames and extended formats will all be the same as with
-      the Fasta format, this is where it will be radically different :
-      the handling of the sequence content
-
-      For the moment, I'm keeping it simple : assuming that all of the
-      'sequence' has a 'width' of 1, i.e., one can read it line by
-      line, like we do below, that is, that it pertains to a binary
-      alphabet (and moreover, the probability that the character is
-      1).  However, one can make this much more general -- for general
-      alphabets, where the 'width' would be the size S of the
-      alphabet, i.e., we would read in S lines at a time -- something
-      I may come back and do someday
-
-      Note also, that the goal here is to feed this 'sequence' into a
-      ProbabilisticSequence object, which contains a DataTable, where
-      the intension was to read column-wise 'sequences' with
-      DataTable's read function, yet I'm now feeding this row-wise
-      sequence into (a column of the DataTable of)
-      ProbabilisticSequence.  This is because I like the Pasta format
-      as is, but in the future, another generalization could be to
-      really have this column-wise type of Pasta format ... we'll
-      cross that river when we get to it I suppose
-
-      idea : a format that generalizes this one is
-      p(0);p(1);p(2);...;p(s-1) where p(i) is the probability that
-      site has state i, and s is the number of states (p(s) is not
-      needed, because p(s) = 1 - (p(0)+...+p(s-1)) which is checked
-      for in probabilistic symbol list.  Since binary alphabet has 2
-      states, the format we handle here is exactly this ... something
-      to think about for the future
-    */
-
     if(c != '>' && !TextTools::isWhiteSpaceCharacter(c)) {
 
       // sequence content : probabilities for each site are space-separated
       StringTokenizer st(linebuffer, " \t\n", false, false);
       while(st.hasMoreToken()) {
-
-	string s = st.nextToken();
-	tokens.push_back(s);
+        double t;
+        stringstream ss(st.nextToken());
+        ss >> t;        
+	tokens.push_back(t);
       }
     }
   }
@@ -164,14 +130,13 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
   // there is a header that specifies to which character each
   // probability is associated
   if(hasLabels) {
-
-    DataTable content(permutationMap.size());
-    vector<string>::const_iterator i = tokens.begin();
+    DataTable content(permutationMap.size(),0);
+    vector<double>::const_iterator i = tokens.begin();
     while(i != tokens.end()) {
 
       // junk up the tokens into groups of alphabetsize, and permute
       // according to how the header is permuted
-      vector<string> row(permutationMap.size());
+      vector<double> row(permutationMap.size());
       for(vector<int>::const_iterator j = permutationMap.begin(); j != permutationMap.end(); ++j) {
 	if(i == tokens.end())
 	  throw Exception("Pasta::nextSequence : input is incomplete");
@@ -179,7 +144,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
       	++i;
       }
 
-      content.addRow(row);
+      content.addColumn(row);
     }
 
     // finally set the content
@@ -189,18 +154,17 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
   // character is 1
   else {
 
-    DataTable content(2);
+    DataTable content(2,0);
 
     // fill in pairs of probabilities that (binary) character is 0,
     // resp. 1
-    for(vector<string>::const_iterator i = tokens.begin(); i != tokens.end(); ++i) {
+    for(vector<double>::const_iterator i = tokens.begin(); i != tokens.end(); ++i) {
 
       // the following will throw an exception if v[i] is not a properly
       // formatted double : a check that we want to have
-      int precision = 10; // I think this will be more than enough
-      string pair[] = {TextTools::toString(double(1) - TextTools::toDouble(*i,'.','E'), precision), *i};
-      vector<string> pair_v(pair,pair+2);
-      content.addRow(pair_v); // p(0), p(1)
+      
+      vector<double> pair_v{1.-*i,*i};
+      content.addColumn(pair_v);
     }
 
     // finally, we set the content of the sequence to the above.
@@ -244,25 +208,19 @@ void Pasta::writeSequence(ostream & output, const ProbabilisticSequence & seq) c
   */
 
   // sequence content
-  vector<string> column = seq.getContent().getColumn("1");
+  const vector<vector<double> >& data = seq.getContent();
 
-  vector<string>::iterator i = column.begin();
-  if(i != column.end()) // output the first element
-    output << *i;
-  for( ; i != column.end(); ++i) // output the rest preceeded by a space
-    output << " " + *i;
+  for (auto i : data)
+  {
+    output << i[1];
+    output << " ";
+  }
+  
   output << endl;
 }
 
 /********************************************************************************/
 
-// note: because we did the quick hack of making
-// VectorProbabilisticSiteContainer a modified copy of
-// VectorSiteContainer, it, nor any object from which it inherits can
-// take in a ProbabilisticSequence, so we can only read into
-// VectorProbabilisticSiteContainers ... all we'll need for working
-// with bppAncestor and bppMl, etc.  But a more general solution could
-// be future work
 void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteContainer & container) const throw (Exception) {
 
   if(!input)

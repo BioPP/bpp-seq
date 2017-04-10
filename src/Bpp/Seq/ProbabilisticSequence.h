@@ -61,11 +61,11 @@ namespace bpp
  *
  * @see Alphabet
  */
-class ProbabilisticSequence :
+
+  class ProbabilisticSequence :
   public virtual CoreSequence,
   public virtual ProbabilisticSymbolList
 {
-
  public :
 
   /**
@@ -95,8 +95,10 @@ class ProbabilisticSequence :
    * @throw Exception If the content is internally inconsistent, or is inconsistent with the specified alphabet.
    * @see The ProbabilisticSequence constructor for information about the way probabilistic sequences are internally stored.
    */
-  virtual void setContent(const DataTable & content) throw (Exception) = 0;
+  virtual void setContent(const Table<double> & content) throw (Exception) = 0;
 
+  virtual const std::vector<std::vector<double> >& getContent() const = 0;
+  
   /**
    * @}
    */
@@ -136,29 +138,29 @@ class BasicProbabilisticSequence :
   BasicProbabilisticSequence(const Alphabet * alpha);
 
   /**
-   * @brief Direct constructor : build a ProbabilisticSequence object from DataTable.
+   * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
    *
    * One can use it safely for RNA, DNA and protein sequences.
    *
    * @param name The sequence name.
-   * @param sequence The entire sequence to parsed as a DataTable.
+   * @param sequence The entire sequence to parsed as a Table<double>.
    * @param alpha A pointer to the alphabet associated with this sequence.
    * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
-  BasicProbabilisticSequence(const std::string & name, const DataTable & sequence, const Alphabet * alpha) throw (Exception);
+  BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Alphabet * alpha) throw (Exception);
 
   /**
-   * @brief Direct constructor : build a ProbabilisticSequence object from DataTable.
+   * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
    *
    * One can use it safely for RNA, DNA and protein sequences.
    *
    * @param name The sequence name.
-   * @param sequence The entire sequence to parsed as a DataTable.
+   * @param sequence The entire sequence to parsed as a Table<double>.
    * @param comments Comments to add to the sequence.
    * @param alpha A pointer to the alphabet associated with this sequence.
    * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
-  BasicProbabilisticSequence(const std::string & name, const DataTable & sequence, const Comments & comments, const Alphabet * alpha) throw (Exception);
+  BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Comments & comments, const Alphabet * alpha) throw (Exception);
 
   /**
    * @brief The ProbabilisticSequence generic copy constructor.  This does not perform a hard copy of the alphabet object.
@@ -200,8 +202,13 @@ class BasicProbabilisticSequence :
 
  public :
 
-  void setContent(const DataTable & content) throw (Exception) { BasicProbabilisticSymbolList::setContent(content); }
+  void setContent(const Table<double> & content) throw (Exception) { BasicProbabilisticSymbolList::setContent(content); }
 
+  const std::vector<std::vector<double> >& getContent() const
+  {
+    return BasicProbabilisticSymbolList::getContent();
+  }
+  
   void setToSizeR(size_t newSize) {}; // leave empty for now
 
   void setToSizeL(size_t newSize) {};

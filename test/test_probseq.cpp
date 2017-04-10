@@ -50,7 +50,7 @@ knowledge of the CeCILL license and that you accept its terms.
 // symbol lists
 #include <Bpp/Seq/SymbolList.h>
 #include <Bpp/Seq/ProbabilisticSymbolList.h>
-#include <Bpp/Numeric/DataTable.h>
+#include <Bpp/Numeric/Table.h>
 
 // sequences
 #include <Bpp/Seq/Sequence.h>
@@ -71,6 +71,8 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 using namespace bpp;
 
+typedef Table<double> DataTable;
+
 // convert a vector of string to a string
 const string str(const vector<string> & v) {
 
@@ -85,17 +87,17 @@ const string str(const vector<string> & v) {
 // basic info about an alphabet
 void alphabet_info(const Alphabet * a) {
 
-  cout << "alphabet is of size : " << a->getSize() << endl;
-  cout << "supported chars : " << str(a->getSupportedChars()) << endl;
-  cout << "resolved chars : " << str(a->getResolvedChars()) << endl;
+  cerr << "alphabet is of size : " << a->getSize() << endl;
+  cerr << "supported chars : " << str(a->getSupportedChars()) << endl;
+  cerr << "resolved chars : " << str(a->getResolvedChars()) << endl;
 }
 
 // initialize empty (Probabilistic-) SymbolLists just to see
 void init_empty_lists(const Alphabet * a) {
-    BasicSymbolList list(a);
-    BasicProbabilisticSymbolList p_list(a);
+  BasicSymbolList list(a);
+  BasicProbabilisticSymbolList p_list(a);
 }
-void init_empty_lists(const vector<Alphabet *> as) { // for several alphabets
+void init_empty_lists(const vector<Alphabet *> as) { // for several
   for(vector<Alphabet *>::const_iterator a = as.begin(); a != as.end(); ++a) { init_empty_lists(*a); }
 }
 
@@ -104,252 +106,269 @@ void init_empty_lists(const vector<Alphabet *> as) { // for several alphabets
  */
 int main() {
 
+  cerr << "========================================================" << endl;
+      
   // initialize alphabets
-  cout << endl << "init binary alphabet...";
+  cerr << "init binary alphabet...";
   const BinaryAlphabet * a = new BinaryAlphabet();
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
   alphabet_info(a);
 
-  cout << endl << "init DNA alphabet...";
+  cerr << endl << "init DNA alphabet...";
   const DNA * dna = new DNA();
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
   alphabet_info(dna);
 
   // initialize empty (Probabilistic-) SymbolLists as a start
-  cout << endl << "init (Probabilistic-) SymbolList with just alphabets...";
+  cerr << endl << "init (Probabilistic-) SymbolList with just alphabets...";
   init_empty_lists(a);
   init_empty_lists(dna);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
+
+  cerr << "========================================================" << endl;
+  cerr << " LISTS " << endl;
+  cerr << "========================================================" << endl;
+  
   /*
    * *** lists with binary content ***
    */
-  cout << endl;
-  cout << "***" << endl;
-  cout << "*** lists with binary content ***" << endl;
-  cout << "***" << endl;
+  cerr << "*** lists with binary content ***" << endl;
+  cerr << "***" << endl;
 
   // *** the normal version ***
   string c[] = {"1","0","0"};
   vector<string> content(c,c+sizeof(c)/sizeof(c[0]));
 
-  cout << endl << "init binary symbol list with : " << str(content) << " ...";
+  cerr << endl << "init binary symbol list with : " << str(content) << " ...";
   BasicSymbolList list(content,a);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "list contains : " << list.toString() << endl;
+  cerr << "list contains : " << list.toString() << endl;
 
   // sequence
-  cout << endl << "init binary sequence with : " << str(content) << " ...";
+  cerr << endl << "init binary sequence with : " << str(content) << " ...";
   BasicSequence seq("basic binary sequence",content,a);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
   // site
-  cout << endl << "init binary site with : " << str(content) << " and position 42...";
+  cerr << endl << "init binary site with : " << str(content) << " and position 42...";
   Site site(content,a,42);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "site has position : " << site.getPosition() << endl;
+  cerr << "site has position : " << site.getPosition() << endl;
   
   // *** the probabilistic version ***
   istringstream iss("0 1\n0.85 0.15\n0.99 0.01");
-  DataTable * data = DataTable::read(iss, " ", false);
+  DataTable * data = DataTable::read(iss, false, " ", false);
 
-  cout << endl << "init probabilistic symbol list with : " << endl;
-  DataTable::write(*data, cout);
-  cout << "...";
+  cerr << endl << "init probabilistic symbol list with : " << endl;
+  
+  DataTable::write(*data, cerr, false);
+  cerr << "...";
   BasicProbabilisticSymbolList p_list(*data,a);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "prob-list contains : ";
-  DataTable::write(p_list.getContent(), cout);
+  cerr << "prob-list contains : ";
+  DataTable::write(p_list.getContent(), cerr, false);
 
   // sequence
-  cout << endl << "init binary probabilistic sequence with its content...";
+  cerr << endl << "init binary probabilistic sequence with its content..." << endl;
   BasicProbabilisticSequence p_seq("basic probabilistic binary sequence",*data,a);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
   // site
-  cout << endl << "init binary probabilistic site with its content and position 3...";
+  cerr << endl << "init binary probabilistic site with its content and position 3...";
   BasicProbabilisticSite p_site(*data,a,3);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "site has position : " << p_site.getPosition() << endl;
+  cerr << "site has position : " << p_site.getPosition() << endl;
 
   /*
    * *** lists with DNA content ***
    */
-  cout << endl;
-  cout << "***" << endl;
-  cout << "*** lists with DNA content ***" << endl;
-  cout << "***" << endl;
+  cerr << endl;
+  cerr << "***" << endl;
+  cerr << "*** lists with DNA content ***" << endl;
+  cerr << "***" << endl;
 
   // *** the normal version ***
   string cc[] = {"G", "T", "C"};
   vector<string> dna_content(cc,cc+sizeof(cc)/sizeof(cc[0]));
 
-  cout << endl << "init DNA symbol list with : " << str(dna_content) << " ...";
+  cerr << endl << "init DNA symbol list with : " << str(dna_content) << " ...";
   BasicSymbolList dna_list(dna_content,dna);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "list contains : " << dna_list.toString() << endl;
+  cerr << "list contains : " << dna_list.toString() << endl;
 
   // sequence
-  cout << endl << "init DNA sequence with : " << str(dna_content) << " ...";
+  cerr << endl << "init DNA sequence with : " << str(dna_content) << " ...";
   BasicSequence dna_seq("basic DNA sequence",dna_content,dna);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
   // site
-  cout << endl << "init DNA site with : " << str(dna_content) << " and position 23...";
+  cerr << endl << "init DNA site with : " << str(dna_content) << " and position 23...";
   Site dna_site(dna_content,dna,23);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "site has position : " << dna_site.getPosition() << endl;
+  cerr << "site has position : " << dna_site.getPosition() << endl;
 
-  // *** the probabilistic version ***
+  // *** the probabilist¡ic version ***
   istringstream isss("0 0 1 0\n0.05 0 0.05 0.9\n0.01 0.97 0 0.02");
-  DataTable * dna_data = DataTable::read(isss, " ", false);
+  DataTable * dna_data = DataTable::read(isss, false, " ", false);
 
-  cout << endl << "init probabilistic DNA symbol list with : " << endl;
-  DataTable::write(*dna_data, cout);
-  cout << "...";
+  cerr << endl << "init probabilistic DNA symbol list with : " << endl;
+  DataTable::write(*dna_data, cerr, false);
+  cerr << "...";
   BasicProbabilisticSymbolList dna_p_list(*dna_data,dna);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "probabilistic list contains : ";
-  DataTable::write(dna_p_list.getContent(), cout);
+  cerr << "probabilistic list contains : " << endl;
+  DataTable::write(dna_p_list.getContent(), cerr, false);
+
 
   // sequence
-  cout << endl << "init DNA probabilistic sequence with its content...";
+  cerr << endl << "init DNA probabilistic sequence with its content...";
   BasicProbabilisticSequence dna_p_seq("basic probabilistic binary sequence",*dna_data,dna);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
   // site
-  cout << endl << "init DNA probabilistic site with its content...";
+  cerr << endl << "init DNA probabilistic site with its content...";
   BasicProbabilisticSite dna_p_site(*dna_data,dna);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "site has position : " << dna_p_site.getPosition() << endl;
+  cerr << "site has position : " << dna_p_site.getPosition() << endl;
+
+  
+  cerr << "========================================================" << endl;
+  cerr << "     CONTAINERS      " << endl;
+  cerr << "========================================================" << endl;
 
   /*
    * *** vector (probabilistic) site containers ***
    */
-  cout << endl;
-  cout << "***" << endl;
-  cout << "*** vector site containers ***" << endl;
-  cout << "***" << endl;
+  cerr << endl;
+  cerr << "***" << endl;
+  cerr << "*** vector site containers ***" << endl;
+  cerr << "***" << endl;
 
   // *** the normal version ***
-  cout << endl << "init vector site containers with just alphabets...";
+  cerr << endl << "Init vector site containers with just alphabets...";
   VectorSiteContainer container(a);
   VectorSiteContainer dna_container(dna);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << endl << "add binary sequence " << seq.toString() << " to binary container...";
+  cerr << "=========================" << endl;
+  cerr << "     BINARY " << endl;
+  
+  cerr << endl << "add binary sequence " << seq.toString() << " to binary container...";
   container.addSequence(seq);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "binary container's first element is : ";
-  cout << container.getSequence(0).toString() << endl;
+  cerr << "binary container's first element is : ";
+  cerr << container.getSequence(0).toString() << endl;
 
   // *** the probabilistic version ***
-  cout << endl << "init vector probabilistic site containers with just alphabets...";
+  cerr << endl << "Init vector probabilistic site containers with just alphabets...";
   VectorProbabilisticSiteContainer p_container(a);
   VectorProbabilisticSiteContainer dna_p_container(dna);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << endl << "add binary probabilistic sequence to binary probabilistic container...";
+  cerr << endl << "add binary probabilistic sequence to binary probabilistic container...";
   p_container.addSequence(std::make_shared<BasicProbabilisticSequence>(p_seq));
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "binary probabilistic container's first element is : ";  
-  DataTable::write(p_container.getSequence(0)->getContent(), cout);
+  cerr << "binary probabilistic container's first element is : " << endl;
+  DataTable::write(p_container.getSequence(0)->getContent(), cerr, false);
 
   /*
    * *** Fasta (and Pasta) files ***
    */
-  cout << endl;
-  cout << "***" << endl;
-  cout << "*** Fasta (and Pasta) files ***" << endl;
-  cout << "***" << endl;
+  cerr << endl;
+  cerr << "***" << endl;
+  cerr << "*** Fasta (and Pasta) files ***" << endl;
+  cerr << "***" << endl;
 
   // *** the normal version ***
   Fasta * fasta = new Fasta();
-  cout << endl << "created a handler of type : " << fasta->getFormatName() << endl;
+  cerr << endl << "created a handler of type : " << fasta->getFormatName() << endl;
 
   string fasta_in = ">another binary sequence\n101\n";
   istringstream fasta_iss(fasta_in);
-  cout << "read the following into binary container..." << endl;
-  cout << endl << fasta_in << endl;
+  cerr << "read the following into binary container..." << endl;
+  cerr << endl << fasta_in << endl;
   fasta->appendSequencesFromStream(fasta_iss, container);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
   
-  cout << "binary container contains : " << endl << endl;
+  cerr << "binary container contains : " << endl << endl;
   for(size_t i = 0; i < container.getNumberOfSequences(); ++i)
-    cout << container.getSequence(i).toString() << endl;
-  cout << endl;
-
-  // DNA ...
-  Fasta * dna_fasta = new Fasta();
-  cout << endl << "created a handler of type : " << fasta->getFormatName() << endl;
-  string dna_fasta_in = ">another dna sequence\nACG\n";
-  istringstream dna_fasta_iss(dna_fasta_in);
-  cout << "read the following into binary container..." << endl;
-  cout << endl << dna_fasta_in << endl;
-  dna_fasta->appendSequencesFromStream(dna_fasta_iss, dna_container);
-  cout << "OK." << endl;
-
-  cout << "DNA container contains : " << endl << endl;
-  for(size_t i = 0; i < dna_container.getNumberOfSequences(); ++i)
-    cout << dna_container.getSequence(i).toString() << endl;
-  cout << endl;
+    cerr << container.getSequence(i).toString() << endl;
+  cerr << endl;
 
   // *** the probabilistic version ***
   Pasta * pasta = new Pasta();
-  cout << "created a handler of type : " << pasta->getFormatName() << endl;
+  cerr << "created a handler of type : " << pasta->getFormatName() << endl;
 
   string pasta_in = "0 1\n>a binary probabilistic sequence\n0.64 0.36\n0 1\n0.3 0.7\n";
   istringstream pasta_iss(pasta_in);
-  cout << "read the following into binary probabilistic container..." << endl;
-  cout << endl << pasta_in << endl;
+  cerr << "read the following into binary probabilistic container..." << endl;
+  cerr << endl << pasta_in << endl;
   pasta->appendSequencesFromStream(pasta_iss, p_container);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
   string pasta_in2 = ">another binary probabilistic sequence\n0.8 0.4 0.333\n";
   istringstream pasta_iss2(pasta_in2);
-  cout << "read the following into binary probabilistic container (in fast-track way for binary alphabets)..." << endl;
-  cout << endl << pasta_in2 << endl;
+  cerr << "read the following into binary probabilistic container (in fast-track way for binary alphabets)..." << endl;
+  cerr << endl << pasta_in2 << endl;
   pasta->appendSequencesFromStream(pasta_iss2, p_container);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "binary probabilistic container contains : " << endl << endl;
+  cerr << "binary probabilistic container contains : " << endl << endl;
   for(size_t i = 0; i < p_container.getNumberOfSequences(); ++i) {
-    DataTable::write(p_container.getSequence(i)->getContent(), cout);
-    cout << endl;
+    DataTable::write(p_container.getSequence(i)->getContent(), cerr, false);
+    cerr << endl;
   }
+  
+  cerr << "=========================" << endl;
+  cerr << "     DNA " << endl;
+
+  Fasta * dna_fasta = new Fasta();
+  cerr << endl << "created a handler of type : " << fasta->getFormatName() << endl;
+  string dna_fasta_in = ">another dna sequence\nACG\n";
+  istringstream dna_fasta_iss(dna_fasta_in);
+  cerr << "read the following into binary container..." << endl;
+  cerr << endl << dna_fasta_in << endl;
+  dna_fasta->appendSequencesFromStream(dna_fasta_iss, dna_container);
+  cerr << "OK." << endl;
+
+  cerr << "DNA container contains : " << endl << endl;
+  for(size_t i = 0; i < dna_container.getNumberOfSequences(); ++i)
+    cerr << dna_container.getSequence(i).toString() << endl;
+  cerr << endl;
 
   // DNA...
   Pasta * dna_pasta = new Pasta();
-  cout << "created a handler of type : " << pasta->getFormatName() << endl;
+  cerr << "created a handler of type : " << pasta->getFormatName() << endl;
 
   string dna_pasta_in = "A C G T\n>a dna prob. sequence\n0.1834088 0.6140376 0.132227880 0.07032571\n0.4960896 0.0523049 0.123549944 0.32805560\n";
   istringstream dna_pasta_iss(dna_pasta_in);
-  cout << "read the following into dna prob. container" << endl;
-  cout << endl << dna_pasta_in << endl;
+  cerr << "read the following into dna prob. container" << endl;
+  cerr << endl << dna_pasta_in << endl;
   dna_pasta->appendSequencesFromStream(dna_pasta_iss, dna_p_container);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
   string dna_pasta_in2 = "C T A G\n>another dna prob. sequence\n0.1885256 0.2023275 0.570924031 0.03822292\n0.1122945 0.2366416 0.004093129 0.64697079\n";
   istringstream dna_pasta_iss2(dna_pasta_in2);
-  cout << "read the following (permuted) sequence into dna prob. container" << endl;
-  cout << endl << dna_pasta_in2 << endl;
+  cerr << "read the following (permuted) sequence into dna prob. container" << endl;
+  cerr << endl << dna_pasta_in2 << endl;
   dna_pasta->appendSequencesFromStream(dna_pasta_iss2, dna_p_container);
-  cout << "OK." << endl;
+  cerr << "OK." << endl;
 
-  cout << "dna prob. container contains : " << endl << endl;
+  cerr << "dna prob. container contains : " << endl << endl;
   for(size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i) {
-    DataTable::write(dna_p_container.getSequence(i)->getContent(), cout);
-    cout << endl;
+    DataTable::write(dna_p_container.getSequence(i)->getContent(), cerr, false);
+    cerr << endl;
   }
 
   // the end

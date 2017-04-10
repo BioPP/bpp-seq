@@ -81,7 +81,6 @@ SET(CPP_FILES
   Bpp/Seq/Io/StreamSequenceIterator.cpp
   Bpp/Seq/NucleicAcidsReplication.cpp
   Bpp/Seq/ProbabilisticSymbolList.cpp
-  Bpp/Seq/ProbabilisticSymbolListTools.cpp
   Bpp/Seq/ProbabilisticSequence.cpp
   Bpp/Seq/ProbabilisticSite.cpp
   Bpp/Seq/Sequence.cpp
