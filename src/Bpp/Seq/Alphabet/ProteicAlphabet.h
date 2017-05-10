@@ -129,7 +129,7 @@ namespace bpp
     std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
     bool isUnresolved(int state) const { return state > 19; }
     bool isUnresolved(const std::string& state) const { return charToInt(state) > 19; }
-    std::string getAlphabetType() const { return "Proteic alphabet"; }
+    std::string getAlphabetType() const { return "Proteic"; }
 	
   public:
 

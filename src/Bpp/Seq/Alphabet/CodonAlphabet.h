@@ -90,7 +90,7 @@ public: // Constructor and destructor.
   
   std::string getAlphabetType() const
   {
-    return "Codon alphabet("+ vAbsAlph_[0]->getAlphabetType() + ")";
+    return "Codon(letter="+ vAbsAlph_[0]->getAlphabetType() + ")";
   }
 
   

@@ -82,7 +82,7 @@ namespace bpp
   public:
     unsigned int getSize() const { return nocaseAlphabet_->getSize(); }
     unsigned int getNumberOfTypes() const { return nocaseAlphabet_->getNumberOfTypes(); }
-    std::string getAlphabetType() const { return "Default alphabet"; }
+    std::string getAlphabetType() const { return "CaseMasked"; }
     int getUnknownCharacterCode() const { return nocaseAlphabet_->getUnknownCharacterCode(); }
     bool isUnresolved(int state) const { return nocaseAlphabet_->isUnresolved(state); }
     bool isUnresolved(const std::string& state) const { return nocaseAlphabet_->isUnresolved(state); }
