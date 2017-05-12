@@ -51,26 +51,26 @@ using namespace std;
 
 /****************************************************************************************/
 
-Site::Site(const Alphabet* alpha) : AbstractCoreSite(), BasicSymbolList(alpha) {}
+Site::Site(const Alphabet* alpha) : AbstractCoreSite(), BasicIntSymbolList(alpha) {}
 
-Site::Site(const Alphabet* alpha, int position) : AbstractCoreSite(position), BasicSymbolList(alpha) {}
+Site::Site(const Alphabet* alpha, int position) : AbstractCoreSite(position), BasicIntSymbolList(alpha) {}
 
-Site::Site(const vector<string>& site, const Alphabet* alpha) throw (BadCharException) : AbstractCoreSite(), BasicSymbolList(site, alpha) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha) throw (BadCharException) : AbstractCoreSite(), BasicIntSymbolList(site, alpha) {}
 
-Site::Site(const vector<string>& site, const Alphabet* alpha, int position) throw (BadCharException) : AbstractCoreSite(position), BasicSymbolList(site, alpha) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha, int position) throw (BadCharException) : AbstractCoreSite(position), BasicIntSymbolList(site, alpha) {}
 
-Site::Site(const vector<int>& site, const Alphabet* alpha) throw (BadIntException) : AbstractCoreSite(), BasicSymbolList(site, alpha) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha) throw (BadIntException) : AbstractCoreSite(), BasicIntSymbolList(site, alpha) {}
 
-Site::Site(const vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException) : AbstractCoreSite(position), BasicSymbolList(site, alpha) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException) : AbstractCoreSite(position), BasicIntSymbolList(site, alpha) {}
 
 /****************************************************************************************/
 
-Site::Site(const Site& site): AbstractCoreSite(site.getPosition()), BasicSymbolList(site) {}
+Site::Site(const Site& site): AbstractCoreSite(site.getPosition()), BasicIntSymbolList(site) {}
 
 Site& Site::operator=(const Site& s)
 {
   AbstractCoreSite::operator=(s);
-  BasicSymbolList::operator=(s);
+  BasicIntSymbolList::operator=(s);
   return *this;
 }
 

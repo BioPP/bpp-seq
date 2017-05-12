@@ -101,7 +101,7 @@ class CoreSite :
 };
 
 /**
- * @brief A partial implementation of the CoreSite interface. 
+ * @brief An implementation of the CoreSite interface. 
  */
 class AbstractCoreSite :
   public virtual CoreSite
@@ -169,7 +169,8 @@ class AbstractCoreSite :
   /**
    * @name The Clonable interface
    */
-  AbstractCoreSite * clone() const = 0;
+  
+  AbstractCoreSite * clone() const { return new AbstractCoreSite(*this);}
 
   /**
    * @}

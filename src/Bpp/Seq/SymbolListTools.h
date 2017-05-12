@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _SYMBOLLISTTOOLS_H_
 #define _SYMBOLLISTTOOLS_H_
 
-#include "SymbolList.h"
+#include "IntSymbolList.h"
 #include "Alphabet/AlphabetExceptions.h"
 #include <Bpp/Numeric/VectorExceptions.h>
 
@@ -67,7 +67,7 @@ class SymbolListTools
      * @param list The list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-    static void getCounts(const SymbolList& list, std::map<int, size_t>& counts)
+    static void getCounts(const IntSymbolList& list, std::map<int, size_t>& counts)
     {
       for (size_t i = 0; i < list.size(); ++i)
         counts[list[i]]++;
@@ -85,7 +85,7 @@ class SymbolListTools
      * @param list2 The second list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-    static void getCounts(const SymbolList& list1, const SymbolList& list2, std::map<int, std::map<int, size_t> >& counts) throw (DimensionException)
+    static void getCounts(const IntSymbolList& list1, const IntSymbolList& list2, std::map<int, std::map<int, size_t> >& counts) throw (DimensionException)
     {
       if(list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
       for(size_t i = 0; i < list1.size(); i++)
@@ -104,7 +104,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @return A map with all states and corresponding counts.
      */
-    static void getCounts(const SymbolList& list, std::map<int, double>& counts, bool resolveUnknowns);
+    static void getCounts(const IntSymbolList& list, std::map<int, double>& counts, bool resolveUnknowns);
     
     /**
      * @brief Count all pair of states for two lists of the same size, optionaly resolving unknown characters.
@@ -123,7 +123,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @return A map with all states and corresponding counts.
      */
-    static void getCounts(const SymbolList& list1, const SymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException);
+    static void getCounts(const IntSymbolList& list1, const IntSymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException);
     
     /**
      * @brief Get all states frequencies in the list.
@@ -134,7 +134,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @param frequencies The output map with all states and corresponding frequencies. Existing frequencies will be erased if any.
      */
-    static void getFrequencies(const SymbolList& list, std::map<int, double>& frequencies, bool resolveUnknowns = false);
+    static void getFrequencies(const IntSymbolList& list, std::map<int, double>& frequencies, bool resolveUnknowns = false);
 
     /**
      * @brief Get all state pairs frequencies for two lists of the same size..
@@ -146,7 +146,7 @@ class SymbolListTools
      * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
      * @param frequencies The output map with all state pairs and corresponding frequencies. Existing frequencies will be erased if any.
      */
-    static void getFrequencies(const SymbolList& list1, const SymbolList& list2, std::map<int, std::map<int, double> >& frequencies, bool resolveUnknowns = false) throw (DimensionException);
+    static void getFrequencies(const IntSymbolList& list1, const IntSymbolList& list2, std::map<int, std::map<int, double> >& frequencies, bool resolveUnknowns = false) throw (DimensionException);
 
     /**
      * @brief Get the GC content of a symbol list.
@@ -157,45 +157,45 @@ class SymbolListTools
      * @param ignoreGap Do not count gaps in total.
      * @throw AlphabetException If the list is not made of nucleotide states.
      */
-    static double getGCContent(const SymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true) throw (AlphabetException);
+    static double getGCContent(const IntSymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true) throw (AlphabetException);
     
     /**
       * @brief Get the number of distinct positions.
      *
      * The comparison in achieved from position 0 to the minimum size of the two vectors.
      *
-     * @param l1 SymbolList 1.
-     * @param l2 SymbolList 2.
+     * @param l1 IntSymbolList 1.
+     * @param l2 IntSymbolList 2.
      * @return The number of distinct positions.
      * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
      */
-    static size_t getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException);
+    static size_t getNumberOfDistinctPositions(const IntSymbolList& l1, const IntSymbolList& l2) throw (AlphabetMismatchException);
     
     /**
       * @brief Get the number of positions without gap.
      *
      * The comparison in achieved from position 0 to the minimum size of the two vectors.
      *
-     * @param l1 SymbolList 1.
-     * @param l2 SymbolList 2.
+     * @param l1 IntSymbolList 1.
+     * @param l2 IntSymbolList 2.
      * @return The number of positions without gap.
      * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
      */
-    static size_t getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException);
+    static size_t getNumberOfPositionsWithoutGap(const IntSymbolList& l1, const IntSymbolList& l2) throw (AlphabetMismatchException);
 
     /**
      * @brief Change all gap elements to unknown characters.
      *
      * @param l The input list of characters.
      */
-    static void changeGapsToUnknownCharacters(SymbolList& l);
+    static void changeGapsToUnknownCharacters(IntSymbolList& l);
 
     /**
      * @brief Change all unknown characters to gap elements.
      *
      * @param l The input list of characters.
      */
-    static void changeUnresolvedCharactersToGaps(SymbolList& l);
+    static void changeUnresolvedCharactersToGaps(IntSymbolList& l);
 
 };
 

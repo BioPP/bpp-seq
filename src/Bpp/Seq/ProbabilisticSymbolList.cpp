@@ -85,22 +85,11 @@ BasicProbabilisticSymbolList & BasicProbabilisticSymbolList::operator=(const Bas
 
 void BasicProbabilisticSymbolList::setContent(const DataTable & list)
 {
-
-  // first, if table has column names, we ensure that this is
-  // identical to the resolved characters the alphabet (even the
-  // ordering must be the same).  Note: we ignore row names -- they
-  // serve us no purpose here
   if(list.hasRowNames()) {
 
-    // first we check if the column names has the same size as the
-    // resolved characters of the alphabet.  Note: getRowNames
-    // could throw a NoTableRowNamesException, but we don't try to
-    // catch this because we did a check above for hasRowNames
     if(list.getRowNames().size() != alphabet_->getResolvedChars().size())
       throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list.getRowNames().size(), alphabet_->getResolvedChars().size());
 
-    // above check passes : they are of the same size, now we check if
-    // they are identical
     std::vector<std::string> column_names = list.getRowNames();
     std::vector<std::string> resolved_chars = alphabet_->getResolvedChars();
     for(std::size_t i = 0; i < list.getRowNames().size(); ++i)
@@ -109,8 +98,6 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list)
   }
   else { // DataTable has no column names
 
-    // hence, we first check if width of DataTable is not larger than
-    // the resolved characters of the alphabet
     if(list.getNumberOfRows() != alphabet_->getResolvedChars().size())
       throw DimensionException("BasicProabilisticSymbolList::setContent. ", list.getNumberOfRows(), alphabet_->getResolvedChars().size());
   }
@@ -118,21 +105,34 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list)
 
   content_ = list; // final check passes, content_ becomes DataTable
 
-  // now, we work with the columns of our DataTable, in the case that
-  // it has no column names
   if(!list.hasRowNames()) {
-
-    // we set the columns of DataTable to the resolved characters of
-    // the alphabet ... this will work with, e.g., binary alphabets
-    // and DNA alphabets.  Note: that setRowNames can throw both
-    // DimensionException and DuplicatedTableRowNameException.
-    // There should never be a DimensionException because we check
-    // above for size.  The fact that Alphabet already disallows
-    // duplicated characters ensures no
-    // DuplicatedTableRowNameException
     content_.setRowNames(alphabet_->getResolvedChars());
   }
 }
+
+
+std::string BasicProbabilisticSymbolList::toString() const
+{
+  stringstream ss;
+  ss.precision(10);
+  
+  for (size_t j=0;j<content_.getNumberOfColumns();j++)
+  {
+    if (j!=0)
+      ss << "|";
+    
+    for (size_t i=0;i<content_.getNumberOfRows();i++)
+    {
+      ss << content_.getRowName(i) << "(";
+      ss << content_(i,j) << ")";
+    }
+  }
+  
+  string st;
+  ss >> st;
+  return st;
+}
+
 
 /****************************************************************************************/
 
@@ -140,11 +140,6 @@ void BasicProbabilisticSymbolList::setContent(const std::vector<std::vector<doub
 {
   if (list.size()==0)
     return;
-
-  // first we check if the column names has the same size as the
-  // resolved characters of the alphabet.  Note: getRowNames
-  // could throw a NoTableRowNamesException, but we don't try to
-  // catch this because we did a check above for hasRowNames
 
   if(list[0].size() != alphabet_->getResolvedChars().size())
     throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list[0].size(), alphabet_->getResolvedChars().size());
@@ -164,12 +159,6 @@ void BasicProbabilisticSymbolList::addElement(const std::vector<double> & elemen
     
     padded_element.resize(content_.getNumberOfRows(),0.);
 
-    // Note that addColumn can throw both DimensionException and
-    // TableColumnNamesException.  Above, we have controlled for all
-    // possible DimensionException, so we need not check for this.
-    // Since the construction of BasicProbabilisticSymbolList ensures
-    // a DataTable with no row names, a TableColumnNamesException cannot
-    // happen, so we need not check for this
     content_.addColumn(padded_element);
   }
   else {
@@ -185,13 +174,6 @@ void  BasicProbabilisticSymbolList::addElement(size_t pos, const std::vector<dou
     std::vector<double> padded_element(element);
     
     padded_element.resize(content_.getNumberOfRows(),0.);
-
-    // Note that addColumn can throw both DimensionException and
-    // TableColumnNamesException.  Above, we have controlled for all
-    // possible DimensionException, so we need not check for this.
-    // Since the construction of BasicProbabilisticSymbolList ensures
-    // a DataTable with no row names, a TableColumnNamesException cannot
-    // happen, so we need not check for this
     content_.addColumn(padded_element, (int)pos);
   }
   else {
@@ -201,19 +183,10 @@ void  BasicProbabilisticSymbolList::addElement(size_t pos, const std::vector<dou
 
 void  BasicProbabilisticSymbolList::setElement(size_t pos, const std::vector<double> & element)
 {
-  // now we change this 'row', to the content DataTable, padding the end
-  // with 0's should its length be smaller than the width of this DataTable
   if(element.size() < content_.getNumberOfRows()) {
     std::vector<double> padded_element(element);
     
     padded_element.resize(content_.getNumberOfRows(),0.);
-
-    // Note that addColumn can throw both DimensionException and
-    // TableColumnNamesException.  Above, we have controlled for all
-    // possible DimensionException, so we need not check for this.
-    // Since the construction of BasicProbabilisticSymbolList ensures
-    // a DataTable with no row names, a TableColumnNamesException cannot
-    // happen, so we need not check for this
     content_.setColumn(padded_element, pos);
   }
   else {

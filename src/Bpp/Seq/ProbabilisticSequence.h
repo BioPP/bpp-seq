@@ -41,7 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _PROBABILISTICSEQUENCE_H_
 
 #include "ProbabilisticSymbolList.h"
-#include "CoreSequence.h"
+#include "CoreSequenceSymbolList.h"
 
 // From the STL :
 #include <string>
@@ -62,48 +62,26 @@ namespace bpp
  * @see Alphabet
  */
 
-  class ProbabilisticSequence :
-  public virtual CoreSequence,
-  public virtual ProbabilisticSymbolList
-{
- public :
+  // class ProbabilisticSequence:
+  //   public virtual probaCoreSequenceSL,
+  //   public virtual ProbabilisticSymbolList
+  // {
+  // public: 
+  //   /**
+  //    * @name The Clonable interface
+  //    *
+  //    * @{
+  //    */
+  //   ProbabilisticSequence* clone() const = 0;
+  //   /** @} */
 
-  /**
-   * @name The Clonable interface
-   *
-   * @{
-   */
-  ProbabilisticSequence * clone() const = 0;
+  //   // Class destructor
+  //   virtual ~ProbabilisticSequence() {}
+    
 
-  /**
-   * @}
-   */
-
-  // class destructor
-  virtual ~ProbabilisticSequence() {}
-
-  /**
-   * @name Modifying the content of the probabilistic sequence
-   *
-   * @{
-   */
-
-  /**
-   * @brief Set the entire content of the probabilistic sequence.
-   *
-   * @param content The new content of the sequence.
-   * @throw Exception If the content is internally inconsistent, or is inconsistent with the specified alphabet.
-   * @see The ProbabilisticSequence constructor for information about the way probabilistic sequences are internally stored.
-   */
-  virtual void setContent(const Table<double> & content) throw (Exception) = 0;
-
-  virtual const std::vector<std::vector<double> >& getContent() const = 0;
+  // };
   
-  /**
-   * @}
-   */
-
-};
+    
 
 /**
  * @brief A basic implementation of the ProbabilisticSequence interface.
@@ -119,9 +97,9 @@ namespace bpp
  */
 
 class BasicProbabilisticSequence :
-  public virtual ProbabilisticSequence,
-  public AbstractCoreSequence,
-  public BasicProbabilisticSymbolList
+  public virtual probaCoreSequenceSL,
+  public virtual AbstractCoreSequence,
+  public virtual BasicProbabilisticSymbolList
 {
 
  public :

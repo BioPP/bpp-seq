@@ -44,7 +44,8 @@
 #include "VectorMappedContainer.h"
 
 #include "../SymbolListSite.h"
-#include "../CoreSequence.h"
+#include "../SymbolList.h"
+#include "../Sequence.h"
 
 // From the STL :
 #include <vector>
@@ -67,7 +68,7 @@ namespace bpp
  */
   
 class VectorSymbolListSiteContainer :
-    public VectorPositionedContainer<SymbolListSite>,
+    public VectorPositionedContainer<SymbolList>,
     public VectorMappedContainer<CoreSequence>,
     public Commentable
 {
@@ -90,7 +91,7 @@ public :
    */
 
   VectorSymbolListSiteContainer(const VectorSymbolListSiteContainer& vpsc) :
-    VectorPositionedContainer<SymbolListSite>(vpsc),
+    VectorPositionedContainer<SymbolList>(vpsc),
     VectorMappedContainer<CoreSequence>(vpsc),
     Commentable(vpsc),
     alphabet_(vpsc.alphabet_)
@@ -100,7 +101,7 @@ public :
   VectorSymbolListSiteContainer& operator=(const VectorSymbolListSiteContainer& vpsc)
   {
     alphabet_ = vpsc.alphabet_;
-    VectorPositionedContainer<SymbolListSite>::operator=(vpsc);
+    VectorPositionedContainer<SymbolList>::operator=(vpsc);
     VectorMappedContainer<CoreSequence>::operator=(vpsc);
     Commentable::operator=(vpsc);
     
@@ -123,7 +124,7 @@ public :
     return alphabet_;
   }
 
-  size_t getNumberOfSites() const { return VectorPositionedContainer<SymbolListSite>::getSize(); }
+  size_t getNumberOfSites() const { return VectorPositionedContainer<SymbolList>::getSize(); }
   
   size_t getNumberOfSequences() const { return VectorMappedContainer<CoreSequence>::getSize(); }
 
@@ -133,20 +134,20 @@ public :
    * @{
    */
   
-  const std::shared_ptr<SymbolListSite> getSite(size_t i) const
+  const std::shared_ptr<SymbolList> getSite(size_t i) const
   {
     if(i >= getNumberOfSites())
-      throw IndexOutOfBoundsException("VectorSymbolListSiteContainer::getSymbolListSite.", i, 0, getNumberOfSites() - 1);
+      throw IndexOutOfBoundsException("VectorSymbolListSiteContainer::getSymbolList.", i, 0, getNumberOfSites() - 1);
 
-    return VectorPositionedContainer<SymbolListSite>::getObject(i);
+    return VectorPositionedContainer<SymbolList>::getObject(i);
   }
 
-  std::shared_ptr<SymbolListSite> getSite(size_t i)
+  std::shared_ptr<SymbolList> getSite(size_t i)
   {
     if(i >= getNumberOfSites())
-      throw IndexOutOfBoundsException("VectorSymbolListSiteContainer::getSymbolListSite.", i, 0, getNumberOfSites() - 1);
+      throw IndexOutOfBoundsException("VectorSymbolListSiteContainer::getSymbolList.", i, 0, getNumberOfSites() - 1);
 
-    return VectorPositionedContainer<SymbolListSite>::getObject(i);
+    return VectorPositionedContainer<SymbolList>::getObject(i);
   }
 
   const std::shared_ptr<CoreSequence> getSequence(std::size_t i) const
@@ -169,9 +170,9 @@ public :
    *
    */
   
-  void addSite(std::shared_ptr<SymbolListSite> site, bool checkPosition = false);
-  
-  void addSequence(std::shared_ptr<CoreSequence> sequence, bool checkName = true);
+  void addSite(std::shared_ptr<SymbolList> site, bool checkPosition = false);
+
+  void addSequence(std::shared_ptr<Sequence> sequence, bool checkName = true);
 
   void clear();
 

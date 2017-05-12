@@ -48,6 +48,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <memory>
 
 namespace bpp
 {
@@ -127,7 +128,7 @@ namespace bpp
     /**
      * @brief Add a character to the end of the list.
      *
-     * @param c The character to add, given as a string.
+     * @param c The character to add.
      */
     virtual void addElement(const T& c) = 0;
 
@@ -135,7 +136,7 @@ namespace bpp
      * @brief Add a character at a certain position in the list.
      *
      * @param pos The postion where to insert the element.
-     * @param c   The character to add, given as a string.
+     * @param c   The character to add.
      */
     virtual void addElement(size_t pos, const T& c) = 0;
 
@@ -143,8 +144,9 @@ namespace bpp
      * @brief Set the element at position 'pos' to character 'c'.
      *
      * @param pos The position of the character to set.
-     * @param c   The value of the element, given as a string.
+     * @param c   The value of the element.
      */
+
     virtual void setElement(size_t pos, const T& c) = 0;
 
     /**
@@ -323,332 +325,80 @@ namespace bpp
   class EdCoreSymbolList: 
     public virtual CoreSymbolList<T>
   {
-
-  private:
-    /**
-     * @brief The Alphabet attribute must be initialized in constructor and then can never be changed.
-     * 
-     * To apply another alphabet to a list you'll have to create a new list.
-     */
-    const Alphabet* alphabet_;
-
-    bool propagateEvents_;
-
-  protected:
-    /**
-     * @brief The list content.
-     */
-    std::vector<T> content_;
-
-    /**
-     * @brief Contains the listeners.
-     */
-    std::vector<CoreSymbolListListener<T>*> listeners_;
-
-
-  public: 
-    /**
-     * @brief Build a new void CoreSymbolList object with the specified alphabet.
-     *
-     * @param alpha The alphabet to use.
-     */
-    EdCoreSymbolList(const Alphabet* alpha) : alphabet_(alpha), propagateEvents_(true), content_(), listeners_() {}
-
-    /**
-     * @brief Build a new CoreSymbolList object with the specified alphabet.
-     * The content of the site is initialized from a vector of integers.
-     *
-     * @param list     The content of the site.
-     * @param alpha    The alphabet to use.
-     * @throw BadIntException If the content does not match the specified alphabet.
-     */
-
-    EdCoreSymbolList(const std::vector<T>& list, const Alphabet* alpha) :
-	alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
-    {
-      setContent(list);
-    }
-    
-
-    /**
-     * @brief The generic copy constructor.
-     */
-    EdCoreSymbolList(const CoreSymbolList<T>& list) :
-      alphabet_(list.getAlphabet()), propagateEvents_(true), content_(list.size()), listeners_()
-    {
-      for (size_t i = 0; i < list.size(); ++i) {
-        content_[i] = list[i];
-      }
-    }
-    
-
-    /**
-     * @brief The copy constructor.
-     */
-    EdCoreSymbolList(const EdCoreSymbolList<T>& list) :
-      alphabet_(list.getAlphabet()), propagateEvents_(list.propagateEvents_), content_(list.content_), listeners_(list.listeners_)
-    {
-      for (size_t i = 0; i < listeners_.size(); ++i)
-        if (!list.listeners_[i]->isShared())
-          listeners_[i] = dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone());
-    }
-
-    /**
-     * @brief The generic assignment operator.
-     */
-    EdCoreSymbolList<T>& operator=(const CoreSymbolList<T>& list)
-    {
-      content_.resize(list.size());
-      for (size_t i = 0; i < list.size(); ++i) {
-        content_[i] = list[i];
-      }
-      alphabet_        = list.getAlphabet();
-      propagateEvents_ = true;
-      for (size_t i = 0; i < listeners_.size(); ++i)
-        if (!listeners_[i]->isShared())
-          delete listeners_[i];
-      listeners_.clear();
-      return *this;
-    }
-
-
-    /**
-     * @brief The assignment operator.
-     */
-    
-    EdCoreSymbolList<T>& operator=(const EdCoreSymbolList& list)
-    {
-      content_         = list.getContent();
-      alphabet_        = list.getAlphabet();
-      propagateEvents_ = list.propagateEvents_;
-      for (size_t i = 0; i < listeners_.size(); ++i)
-        delete listeners_[i];
-      listeners_ = list.listeners_;
-      for (size_t i = 0; i < listeners_.size(); ++i)
-        if (!list.listeners_[i]->isShared())
-          listeners_[i] = dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone());
-      return *this;
-    }
-
+  public:
     /**
      * @name The Clonable interface
      *
      * @{
      */
-    EdCoreSymbolList* clone() const { return new EdCoreSymbolList(* this); }
+    virtual EdCoreSymbolList* clone() const = 0;
     /** @} */
 
     // Class destructor
     virtual ~EdCoreSymbolList()
     {
-      for (size_t i = 0; i < listeners_.size(); ++i) {
-        if (listeners_[i] && !listeners_[i]->isShared()) {
-          delete listeners_[i];
-        }
-      }
     }
 
   public:
 
-    const Alphabet* getAlphabet() const { return alphabet_; }
-
-    size_t size() const { return static_cast<size_t>(content_.size()); }
-
-    const std::vector<T>& getContent() const { return content_; }
-
-    std::vector<T>& getContent() { return content_; }
-
-    virtual void setContent(const std::vector<T>& list)
-    {
-      CoreSymbolListEditionEvent<T> event(this);
-      fireBeforeSequenceChanged(event);
-      
-      //Sequence is valid:
-      content_ = list;
-      fireAfterSequenceChanged(event);
-    }
-    
-    void deleteElement(size_t pos)
-    {
-      if (pos >= content_.size())
-        throw IndexOutOfBoundsException("EdCoreSymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
-      CoreSymbolListDeletionEvent<T> event(this, pos, 1);
-      fireBeforeSequenceDeleted(event);
-      content_.erase(content_.begin() + std::ptrdiff_t(pos));
-      fireAfterSequenceDeleted(event);
-    }
-
-		
-    void deleteElements(size_t pos, size_t len)
-    {
-      if(pos + len > content_.size())
-        throw IndexOutOfBoundsException("EdCoreSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
-      CoreSymbolListDeletionEvent<T> event(this, pos, len);
-      fireBeforeSequenceDeleted(event);
-      content_.erase(content_.begin() + std::ptrdiff_t(pos), content_.begin() + std::ptrdiff_t(pos + len));
-      fireAfterSequenceDeleted(event);
-    }
-
-    const T& getElement(size_t pos) const
-    {
-      if (pos >= content_.size())
-        throw IndexOutOfBoundsException("EdCoreSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
-      std::string c = "";
-      try {
-        c = alphabet_->intToChar(content_[pos]);
-      } catch(BadIntException bie) {
-        //This should never happen!
-      }
-      return c;
-    }
-
-    virtual void addElement(int v)
-    {
-      CoreSymbolListInsertionEvent<T> event(this, size(), 1);
-      fireBeforeSequenceInserted(event);
-      content_.push_back(v);
-      fireAfterSequenceInserted(event);
-    }
-
-    virtual void addElement(size_t pos, int v)
-    {
-      //test:
-      if (pos >= content_.size())
-        throw IndexOutOfBoundsException("EdCoreSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-      CoreSymbolListInsertionEvent<T> event(this, pos, 1);
-      fireBeforeSequenceInserted(event);
-      content_.insert(content_.begin() + std::ptrdiff_t(pos), v);
-      fireAfterSequenceInserted(event);
-    }
-
-
-    virtual void setElement(size_t pos, int v)
-    {
-      //test:
-      if (pos >= content_.size())
-        throw IndexOutOfBoundsException("EdCoreSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-      CoreSymbolListSubstitutionEvent<T> event(this, pos, pos);
-      fireBeforeSequenceSubstituted(event);
-      content_[pos] = v;
-      fireAfterSequenceSubstituted(event);
-    }
-    
-    int getValue(size_t pos) const
-    {
-      if (pos >= content_.size())
-        throw IndexOutOfBoundsException("EdCoreSymbolList::getValue. Invalid position.", pos, 0, size() - 1);
-      return content_[pos];
-    }
-
-    const T& operator[](size_t i) const { return content_[i]; }
-		
-    T& operator[](size_t i) { return content_[i]; }
-
-    void shuffle()
-    {
-      random_shuffle(content_.begin(), content_.end());
-    }
+    // const T& getValue(size_t pos) const
+    // {
+    //   if (pos >= content_.size())
+    //     throw IndexOutOfBoundsException("EdCoreSymbolList::getValue. Invalid position.", pos, 0, size() - 1);
+    //   return content_[pos];
+    // }
 
     /**
      * @name Events handling
      *
      * @{
      */
-    virtual size_t getNumberOfListeners() const { return listeners_.size(); }
 
-    virtual const CoreSymbolListListener<T>& getListener(size_t i) const {
-      if (listeners_[i] == 0)
-        std::cout << "EdCoreSymbolList::getListener: aie!!!" << std::endl;
-      return *listeners_[i];
-    }
+    virtual size_t getNumberOfListeners() const = 0;
+
+    virtual const CoreSymbolListListener<T>& getListener(size_t i) const = 0;
     
-    virtual CoreSymbolListListener<T>& getListener(size_t i) { 
-      if (listeners_[i] == 0)
-        std::cout << "EdCoreSymbolList::getListener: aie!!!" << std::endl;
-      return *listeners_[i];
-    }
+    virtual CoreSymbolListListener<T>& getListener(size_t i) = 0;
 
-    virtual void addCoreSymbolListListener(CoreSymbolListListener<T>* listener) { 
-      listeners_.push_back(listener);
-    }
+    virtual void addCoreSymbolListListener(CoreSymbolListListener<T>* listener)  = 0;
 
-    virtual void removeCoreSymbolListListener(CoreSymbolListListener<T>* listener) {
-      if (listener->isRemovable())
-        listeners_.erase(remove(listeners_.begin(), listeners_.end(), listener), listeners_.end());
-      else
-        throw Exception("EdCoreSymbolList::removeCoreSymbolListListener. Listener is not removable.");
-    } 
+    virtual void removeCoreSymbolListListener(CoreSymbolListListener<T>* listener) = 0;
  
   protected:
-    virtual void beforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {};
-    virtual void afterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {};
-    virtual void beforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {};
-    virtual void afterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {};
-    virtual void beforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {};
-    virtual void afterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {};
-    virtual void beforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {};
-    virtual void afterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {};
+    virtual void beforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) = 0;
+    
+    virtual void afterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) = 0;
+    
+    virtual void beforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) = 0;
+    virtual void afterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) = 0;
+    
+    virtual void beforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) = 0;
+    virtual void afterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) = 0;
+    
+    virtual void beforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) = 0;
+    virtual void afterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) = 0;
+    
+    virtual void fireBeforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) = 0;
 
-    void fireBeforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {
-      beforeSequenceChanged(event);
-      if (propagateEvents_)
-        for (size_t i = 0; i < listeners_.size(); ++i)
-          listeners_[i]->beforeSequenceChanged(event);
-    }
-
-    void fireAfterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {
-      afterSequenceChanged(event);
-      if (propagateEvents_)
-        for (size_t i = 0; i < listeners_.size(); ++i)
-          listeners_[i]->afterSequenceChanged(event);
-    }
+    virtual void fireAfterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) = 0;
    
-    void fireBeforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {
-      beforeSequenceInserted(event);
-      if (propagateEvents_)
-        for (size_t i = 0; i < listeners_.size(); ++i)
-          listeners_[i]->beforeSequenceInserted(event);
-    }
+    virtual void fireBeforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) = 0;
+    
+    virtual void fireAfterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) = 0;
+    
+    virtual void fireBeforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) = 0;
+    
+    virtual void fireAfterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) = 0;
 
-    void fireAfterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {
-      afterSequenceInserted(event);
-      if (propagateEvents_)
-        for (size_t i = 0; i < listeners_.size(); ++i)
-          listeners_[i]->afterSequenceInserted(event);
-    }
+    virtual void fireBeforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) = 0;
 
-    void fireBeforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {
-      beforeSequenceDeleted(event);
-      if (propagateEvents_)
-        for (size_t i = 0; i < listeners_.size(); ++i)
-          listeners_[i]->beforeSequenceDeleted(event);
-    }
+    virtual void fireAfterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) = 0;
 
-    void fireAfterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {
-      afterSequenceDeleted(event);
-      if (propagateEvents_)
-        for (size_t i = 0; i < listeners_.size(); ++i)
-          listeners_[i]->afterSequenceDeleted(event);
-    }
-
-    void fireBeforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {
-      beforeSequenceSubstituted(event);
-      if (propagateEvents_)
-        for (size_t i = 0; i < listeners_.size(); ++i)
-          listeners_[i]->beforeSequenceSubstituted(event);
-    }
-
-    void fireAfterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {
-      afterSequenceSubstituted(event);
-      if (propagateEvents_)
-        for (size_t i = 0; i < listeners_.size(); ++i)
-          listeners_[i]->afterSequenceSubstituted(event);
-    }
-    /** @} */
+/** @} */
 
   protected:
-    void propagateEvents(bool yn) { propagateEvents_ = yn; }
-    bool propagateEvents() const { return propagateEvents_; }
+    virtual void propagateEvents(bool yn) = 0;
+    virtual bool propagateEvents() const = 0;
 
   };
 

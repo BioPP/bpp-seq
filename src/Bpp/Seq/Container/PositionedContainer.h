@@ -118,5 +118,5 @@ namespace bpp
 
 } //end of namespace bpp.
 
-#endif	//_ORDERED_CONTAINER_H_
+#endif	//_POSITIONED_CONTAINER_H_
 

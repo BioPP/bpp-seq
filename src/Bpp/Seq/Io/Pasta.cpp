@@ -148,7 +148,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
     }
 
     // finally set the content
-    seq.setContent(content);
+    seq.setContent(content.getData());
   }
   // o.w., we assume that each probability is that a (binary)
   // character is 1
@@ -173,7 +173,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
     // construction of a DataTable object, the only thing left that
     // could go wrong is that p(0) + p(1) != 1 : a check that is done
     // in the call of the function below
-    seq.setContent(content);
+    seq.setContent(content.getData());
   }
 
   return res;

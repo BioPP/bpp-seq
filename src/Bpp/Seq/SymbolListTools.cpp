@@ -48,7 +48,7 @@ using namespace std;
 
 using namespace bpp;
 
-void SymbolListTools::getCounts(const SymbolList& list, map<int, double>& counts, bool resolveUnknowns)
+void SymbolListTools::getCounts(const IntSymbolList& list, map<int, double>& counts, bool resolveUnknowns)
 {
   if (!resolveUnknowns)
   {
@@ -66,7 +66,7 @@ void SymbolListTools::getCounts(const SymbolList& list, map<int, double>& counts
   }
 }
 
-void SymbolListTools::getCounts(const SymbolList& list1, const SymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getCounts(const IntSymbolList& list1, const IntSymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException)
 {
   if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
   if (!resolveUnknowns)
@@ -89,7 +89,7 @@ void SymbolListTools::getCounts(const SymbolList& list1, const SymbolList& list2
   }
 }
 
-void SymbolListTools::getFrequencies(const SymbolList& list, map<int, double>& frequencies, bool resolveUnknowns)
+void SymbolListTools::getFrequencies(const IntSymbolList& list, map<int, double>& frequencies, bool resolveUnknowns)
 {
 	double n = (double)list.size();
   map<int, double> counts;
@@ -100,7 +100,7 @@ void SymbolListTools::getFrequencies(const SymbolList& list, map<int, double>& f
   }
 }
 
-void SymbolListTools::getFrequencies(const SymbolList& list1, const SymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getFrequencies(const IntSymbolList& list1, const IntSymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns) throw (DimensionException)
 {
 	double n2 = (double)list1.size() * (double)list1.size();
   map<int, map<int, double> > counts;
@@ -112,7 +112,7 @@ void SymbolListTools::getFrequencies(const SymbolList& list1, const SymbolList& 
   }
 }
 
-double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
+double SymbolListTools::getGCContent(const IntSymbolList& list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
 {
   const Alphabet * alphabet = list.getAlphabet();
   if (!AlphabetTools::isNucleicAlphabet(alphabet))
@@ -151,7 +151,7 @@ double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolv
   return total != 0 ? gc/total : 0;
 }
 
-size_t SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfDistinctPositions(const IntSymbolList& l1, const IntSymbolList& l2) throw (AlphabetMismatchException)
 {
 	if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	size_t n = min(l1.size(), l2.size());
@@ -162,7 +162,7 @@ size_t SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const
 	return count;
 }
 
-size_t SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfPositionsWithoutGap(const IntSymbolList& l1, const IntSymbolList& l2) throw (AlphabetMismatchException)
 {
 	if (l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	size_t n = min(l1.size(), l2.size());
@@ -173,7 +173,7 @@ size_t SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList& l1, con
 	return count;
 }
 
-void SymbolListTools::changeGapsToUnknownCharacters(SymbolList& l)
+void SymbolListTools::changeGapsToUnknownCharacters(IntSymbolList& l)
 {
   int unknownCode = l.getAlphabet()->getUnknownCharacterCode();
   for (size_t i = 0; i < l.size(); i++)
@@ -182,7 +182,7 @@ void SymbolListTools::changeGapsToUnknownCharacters(SymbolList& l)
   }
 }
 
-void SymbolListTools::changeUnresolvedCharactersToGaps(SymbolList& l)
+void SymbolListTools::changeUnresolvedCharactersToGaps(IntSymbolList& l)
 {
   int gapCode = l.getAlphabet()->getGapCharacterCode();
   for (size_t i = 0; i < l.size(); i++)

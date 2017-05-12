@@ -48,7 +48,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Bpp/Seq/Alphabet/AlphabetTools.h>
 
 // symbol lists
-#include <Bpp/Seq/SymbolList.h>
+#include <Bpp/Seq/IntSymbolList.h>
 #include <Bpp/Seq/ProbabilisticSymbolList.h>
 #include <Bpp/Numeric/Table.h>
 
@@ -94,7 +94,7 @@ void alphabet_info(const Alphabet * a) {
 
 // initialize empty (Probabilistic-) SymbolLists just to see
 void init_empty_lists(const Alphabet * a) {
-  BasicSymbolList list(a);
+  BasicIntSymbolList list(a);
   BasicProbabilisticSymbolList p_list(a);
 }
 void init_empty_lists(const vector<Alphabet *> as) { // for several
@@ -120,7 +120,7 @@ int main() {
   alphabet_info(dna);
 
   // initialize empty (Probabilistic-) SymbolLists as a start
-  cerr << endl << "init (Probabilistic-) SymbolList with just alphabets...";
+  cerr << endl << "init (Probabilistic-) IntSymbolList with just alphabets...";
   init_empty_lists(a);
   init_empty_lists(dna);
   cerr << "OK." << endl;
@@ -141,7 +141,7 @@ int main() {
   vector<string> content(c,c+sizeof(c)/sizeof(c[0]));
 
   cerr << endl << "init binary symbol list with : " << str(content) << " ...";
-  BasicSymbolList list(content,a);
+  BasicIntSymbolList list(content,a);
   cerr << "OK." << endl;
 
   cerr << "list contains : " << list.toString() << endl;
@@ -169,7 +169,7 @@ int main() {
   BasicProbabilisticSymbolList p_list(*data,a);
   cerr << "OK." << endl;
 
-  cerr << "prob-list contains : ";
+  cerr << "prob-list contains : " << endl;
   DataTable::write(p_list.getContent(), cerr, false);
 
   // sequence
@@ -178,12 +178,12 @@ int main() {
   cerr << "OK." << endl;
 
   // site
-  cerr << endl << "init binary probabilistic site with its content and position 3...";
+  cerr << endl << "init binary probabilistic site with its content and position 3..." << endl;
   BasicProbabilisticSite p_site(*data,a,3);
   cerr << "OK." << endl;
 
   cerr << "site has position : " << p_site.getPosition() << endl;
-
+  
   /*
    * *** lists with DNA content ***
    */
@@ -197,7 +197,7 @@ int main() {
   vector<string> dna_content(cc,cc+sizeof(cc)/sizeof(cc[0]));
 
   cerr << endl << "init DNA symbol list with : " << str(dna_content) << " ...";
-  BasicSymbolList dna_list(dna_content,dna);
+  BasicIntSymbolList dna_list(dna_content,dna);
   cerr << "OK." << endl;
 
   cerr << "list contains : " << dna_list.toString() << endl;
@@ -225,7 +225,8 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "probabilistic list contains : " << endl;
-  DataTable::write(dna_p_list.getContent(), cerr, false);
+  
+  DataTable::write(dna_p_list.getTable(), cerr, false);
 
 
   // sequence
@@ -235,7 +236,7 @@ int main() {
 
   // site
   cerr << endl << "init DNA probabilistic site with its content...";
-  BasicProbabilisticSite dna_p_site(*dna_data,dna);
+  BasicProbabilisticSite dna_p_site(*dna_data,dna,5);
   cerr << "OK." << endl;
 
   cerr << "site has position : " << dna_p_site.getPosition() << endl;
@@ -280,7 +281,7 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "binary probabilistic container's first element is : " << endl;
-  DataTable::write(p_container.getSequence(0)->getContent(), cerr, false);
+  DataTable::write(p_container.getSequence(0)->getTable(), cerr, false);
 
   /*
    * *** Fasta (and Pasta) files ***
@@ -329,7 +330,11 @@ int main() {
     DataTable::write(p_container.getSequence(i)->getContent(), cerr, false);
     cerr << endl;
   }
-  
+
+  cerr << "binary probabilistic 1st site contains :" << endl << endl;
+  cerr << p_container.getSite(0)->toString();
+  cerr << endl;
+
   cerr << "=========================" << endl;
   cerr << "     DNA " << endl;
 
@@ -367,10 +372,13 @@ int main() {
 
   cerr << "dna prob. container contains : " << endl << endl;
   for(size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i) {
-    DataTable::write(dna_p_container.getSequence(i)->getContent(), cerr, false);
+    DataTable::write(dna_p_container.getSequence(i)->getTable(), cerr, false);
     cerr << endl;
   }
 
+  cerr << "String of the 1st site:" << endl;
+  
+  cerr << dna_p_container.getSite(0)->toString() << endl;
   // the end
   return 0;
 }

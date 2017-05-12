@@ -43,36 +43,27 @@ using namespace bpp;
 
 /****************************************************************************************/
 
-BasicProbabilisticSite::BasicProbabilisticSite(const Alphabet* alpha) :
+ProbabilisticSite::ProbabilisticSite(const Alphabet* alpha) :
   AbstractCoreSite(), BasicProbabilisticSymbolList(alpha) {}
 
-BasicProbabilisticSite::BasicProbabilisticSite(const Alphabet* alpha, int position) :
+ProbabilisticSite::ProbabilisticSite(const Alphabet* alpha, int position) :
   AbstractCoreSite(position), BasicProbabilisticSymbolList(alpha) {}
 
-BasicProbabilisticSite::BasicProbabilisticSite(const Table<double> & site, const Alphabet* alpha) throw (Exception) :
+ProbabilisticSite::ProbabilisticSite(const Table<double> & site, const Alphabet* alpha) throw (Exception) :
   AbstractCoreSite(), BasicProbabilisticSymbolList(site, alpha) {}
 
-BasicProbabilisticSite::BasicProbabilisticSite(const Table<double> & site, const Alphabet* alpha, int position) throw (Exception) :
+ProbabilisticSite::ProbabilisticSite(const Table<double> & site, const Alphabet* alpha, int position) throw (Exception) :
   AbstractCoreSite(position), BasicProbabilisticSymbolList(site, alpha) {}
 
 /****************************************************************************************/
 
-BasicProbabilisticSite::BasicProbabilisticSite(const ProbabilisticSite & site) :
+ProbabilisticSite::ProbabilisticSite(const ProbabilisticSite & site) :
   AbstractCoreSite(site), BasicProbabilisticSymbolList(site) {}
 
-BasicProbabilisticSite::BasicProbabilisticSite(const BasicProbabilisticSite & site) :
-  AbstractCoreSite(site), BasicProbabilisticSymbolList(site) {}
-
-BasicProbabilisticSite & BasicProbabilisticSite::operator=(const ProbabilisticSite & site)
+ProbabilisticSite & ProbabilisticSite::operator=(const ProbabilisticSite & site)
 {
   AbstractCoreSite::operator=(site);
   BasicProbabilisticSymbolList::operator=(site);
   return *this;
 }
 
-BasicProbabilisticSite & BasicProbabilisticSite::operator=(const BasicProbabilisticSite & site)
-{
-  AbstractCoreSite::operator=(site);
-  BasicProbabilisticSymbolList::operator=(site);
-  return *this;
-}

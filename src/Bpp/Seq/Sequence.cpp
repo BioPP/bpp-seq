@@ -55,7 +55,7 @@ using namespace std;
 
 BasicSequence::BasicSequence(const Alphabet* alpha):
   AbstractCoreSequence(),
-  BasicSymbolList(alpha)
+  BasicIntSymbolList(alpha)
 {}
 
 BasicSequence::BasicSequence(
@@ -64,7 +64,7 @@ BasicSequence::BasicSequence(
   const Alphabet* alpha
 ) throw (BadCharException) :
   AbstractCoreSequence(name),
-  BasicSymbolList(alpha)
+  BasicIntSymbolList(alpha)
 {
   if (sequence!="")
     setContent(sequence);
@@ -77,7 +77,7 @@ BasicSequence::BasicSequence(
   const Alphabet* alpha
 ) throw (BadCharException) :
   AbstractCoreSequence(name, comments),
-  BasicSymbolList(alpha)
+  BasicIntSymbolList(alpha)
 {
   if (sequence != "")
     setContent(sequence);
@@ -89,7 +89,7 @@ BasicSequence::BasicSequence(
   const Alphabet* alpha
 ) throw (BadCharException) :
   AbstractCoreSequence(name),
-  BasicSymbolList(sequence, alpha)
+  BasicIntSymbolList(sequence, alpha)
 {}
 
 BasicSequence::BasicSequence(
@@ -99,7 +99,7 @@ BasicSequence::BasicSequence(
   const Alphabet* alpha
 ) throw (BadCharException) :
   AbstractCoreSequence(name, comments),
-  BasicSymbolList(sequence, alpha)
+  BasicIntSymbolList(sequence, alpha)
 {}
 
 BasicSequence::BasicSequence(
@@ -108,7 +108,7 @@ BasicSequence::BasicSequence(
   const Alphabet* alpha
 ) throw (BadIntException) :
   AbstractCoreSequence(name),
-  BasicSymbolList(sequence, alpha)
+  BasicIntSymbolList(sequence, alpha)
 {}
 
 BasicSequence::BasicSequence(
@@ -118,20 +118,20 @@ BasicSequence::BasicSequence(
   const Alphabet* alpha
 ) throw (BadIntException) :
   AbstractCoreSequence(name, comments),
-  BasicSymbolList(sequence, alpha)
+  BasicIntSymbolList(sequence, alpha)
 {}
 
 /* Copy constructors: *********************************************************/
 
 BasicSequence::BasicSequence(const Sequence& s) :
   AbstractCoreSequence(s),
-  BasicSymbolList(s)
+  BasicIntSymbolList(s)
 {
 }
 
 BasicSequence::BasicSequence(const BasicSequence& s) :
   AbstractCoreSequence(s),
-  BasicSymbolList(s)
+  BasicIntSymbolList(s)
 {
 }
 
@@ -140,14 +140,14 @@ BasicSequence::BasicSequence(const BasicSequence& s) :
 BasicSequence& BasicSequence::operator=(const Sequence& s)
 {
   AbstractCoreSequence::operator=(s);
-  BasicSymbolList::operator=(s);
+  BasicIntSymbolList::operator=(s);
   return *this;
 }
 
 BasicSequence& BasicSequence::operator=(const BasicSequence& s)
 {
   AbstractCoreSequence::operator=(s);
-  BasicSymbolList::operator=(s);
+  BasicIntSymbolList::operator=(s);
   return *this;
 }
 

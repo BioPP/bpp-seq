@@ -53,57 +53,34 @@
 namespace bpp
 {
 
-/**
- * @brief The ProbabilisticSymbolList interface.
- *
- * @see Alphabet
- */
+  class ProbabilisticSymbolList:
+    virtual public CoreSymbolList<std::vector<double> >
+  {
+  public:
+
+    ProbabilisticSymbolList() 
+    {
+    }
   
-  typedef CoreSymbolList<std::vector<double> > ProbabilisticSymbolList;
+    /**
+     * @name The Colonable interface
+     *
+     * @{
+     */
+    ProbabilisticSymbolList * clone() const = 0;
+
+    /**
+     * @}
+     */
+
+    // class destructor
+    virtual ~ProbabilisticSymbolList() {}
   
-// {
-//  public :
+  public:
+    typedef Table<double> DataTable;
 
-  
-//   /**
-//    * @name The Clonable interface
-//    *
-//    * @{
-//    */
-//   ProbabilisticSymbolList * clone () const = 0;
-
-//   /**
-//    * @}
-//    */
-
-//   // class destructor
-//   virtual ~ProbabilisticSymbolList() {}
-
-  /**
-   * @brief Set the entire content of the list.
-   *
-   * @param list The new content of the list.
-   * @throw Exception If the content is internally inconsistent, or is inconsistent with the specified alphabet.
-   * @see The ProbabilisticSymbolList constructor for information about the way lists are internally stored.
-   */
-//  virtual void setContent(const DataTable & list) throw (Exception) = 0;
-
-  // /**
-  //  * @}
-  //  */
-  
-  // /**
-  //  * @name Retrieving the content of a list.
-  //  *
-  //  * @{
-  //  */
-
-  // /**
-  //  * @brief Get the entire content of the list.
-  //  *
-  //  * @return list The content of the list.
-  //  */
-  // virtual const DataTable& getContent() const = 0;
+    virtual const DataTable& getTable() const = 0;
+  };
 
 /**
  * @brief A basic ProbabilisticSymbolList object.
@@ -204,10 +181,16 @@ public :
 
   void setContent(const DataTable& list);
 
-  std::string toString() const
-  {
-    return "";
-  }
+  /*
+   * @brief String output, as a concatenate of:
+   *  alphabet character(value)
+   *
+   * with letters ordered alphabetically. Value is written with
+   * scientific format, and precision 8.
+   *
+   */
+  
+  std::string toString() const;
 
   void addElement(const std::vector<double> & element);
 
@@ -228,6 +211,8 @@ public :
   }
   
   const std::vector<std::vector<double> >& getContent() const { return content_.getData(); }
+
+  const DataTable& getTable() const { return content_; }
 
   const std::vector<double>& operator[](size_t i) const
   {

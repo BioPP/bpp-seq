@@ -5,42 +5,44 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _SEQUENCEWITHANNOTATION_H_
 #define _SEQUENCEWITHANNOTATION_H_
 
+#include "CoreSequence.h"
 #include "Sequence.h"
+#include "IntSymbolList.h"
 
 // From the STL:
 #include <string>
@@ -49,14 +51,14 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-class SequenceWithAnnotation;
+  class SequenceWithAnnotation;
 
 /**
  * @brief Interface for sequence annotations.
  */
-class SequenceAnnotation :
-  public virtual SymbolListListener
-{
+  class SequenceAnnotation :
+    public virtual IntSymbolListListener
+  {
   public:
     virtual SequenceAnnotation* clone() const = 0;
 
@@ -96,7 +98,7 @@ class SequenceAnnotation :
      * @param len The length of the region, in number of positions.
      */
     virtual SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const throw (Exception) = 0;
-};
+  };
 
 /**
  * @brief An implementation of the Sequence interface that supports annotation. 
@@ -115,22 +117,11 @@ class SequenceAnnotation :
  *
  * @see BasicSequence
  */
-class SequenceWithAnnotation :
-  public Sequence,
-  public EdSymbolList
-{
-  private:
-
-    /**
-     * @brief The sequence name.
-     */
-    std::string name_;
-
-    /**
-     * @brief The sequence comments.
-     */
-    Comments comments_;
-
+  class SequenceWithAnnotation :
+    public virtual intCoreSequenceSL,
+    public virtual AbstractCoreSequence,
+    public virtual EdIntSymbolList
+  {
   public:
 
     /**
@@ -220,6 +211,7 @@ class SequenceWithAnnotation :
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
      */
+  
     SequenceWithAnnotation(const Sequence& s);
    
     /**
@@ -255,51 +247,6 @@ class SequenceWithAnnotation :
         
     
     /**
-     * @name Setting/getting the name of the sequence.
-     *
-     * @{
-     */
-     
-    /**
-     * @brief Get the name of this sequence.
-     *
-     * @return This sequence name.
-     */
-    const std::string& getName() const { return name_; }
-    
-    /**
-     * @brief Set the name of this sequence.
-     *
-     * @param name The new name of the sequence.
-     */
-    void setName(const std::string& name) { name_ = name; }
-    
-    /** @} */
-    
-    /**
-     * @name Setting/getting the comments associated to the sequence.
-     *
-     * @{
-     */
-     
-    /**
-     * @brief Get the comments associated to this sequence.
-     *
-     * @return The comments of the sequence.
-     */
-    const Comments& getComments() const { return comments_; }
-    
-    /**
-     * @brief Set the comments associated to this sequence.
-     *
-     * @param comments The new comments of the sequence.
-     */
-    void setComments(const Comments& comments) { comments_ = comments; }
-    
-    /** @} */
-    
-    
-    /**
      * @name Adjusting the size of the sequence.
      *
      * @{
@@ -312,15 +259,11 @@ class SequenceWithAnnotation :
      * @see The Sequence constructor for information about the way sequences are internaly stored.
      */
     virtual void setContent(const std::string& sequence) throw (BadCharException);
-    void setContent(const std::vector<int>& list) throw (BadIntException)
-    {
-      EdSymbolList::setContent(list);
-    }
-    void setContent(const std::vector<std::string>& list) throw (BadCharException)
-    {
-      EdSymbolList::setContent(list);
-    }
 
+    // void setContent(const std::vector<std::string>& list) throw (BadCharException)
+    // {
+    //   EdIntSymbolList::setContent(list);
+    // }
 
     void setToSizeR(size_t newSize);
     
@@ -351,16 +294,17 @@ class SequenceWithAnnotation :
      * @throw Exception If the annotation is not valid for this sequence.
      * @see SequenceWithAnnotation::isValidWith
      */
+  
     virtual void addAnnotation(SequenceAnnotation* anno) throw (Exception)
     {
       anno->isValidWith(*this);
-      addSymbolListListener(anno);
+      addIntSymbolListListener(anno);
     }
  
     virtual bool hasAnnotation(const std::string& type) const
     {
       for (size_t i = 0; i < getNumberOfListeners(); ++i) {
-        const SymbolListListener* listener = &getListener(i);
+        const IntSymbolListListener* listener = &getListener(i);
         const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(listener);
         if (anno && anno->getType() == type) return true;
       }
@@ -371,7 +315,7 @@ class SequenceWithAnnotation :
     virtual const SequenceAnnotation& getAnnotation(const std::string& type) const
     {
       for (size_t i = 0; i < getNumberOfListeners(); ++i) {
-        const SymbolListListener* listener = &getListener(i);
+        const IntSymbolListListener* listener = &getListener(i);
         const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(listener);
         if (anno && anno->getType() == type) return *anno;
       }
@@ -381,7 +325,7 @@ class SequenceWithAnnotation :
     virtual SequenceAnnotation& getAnnotation(const std::string& type)
     {
       for (size_t i = 0; i < getNumberOfListeners(); ++i) {
-        SymbolListListener* listener = &getListener(i);
+        IntSymbolListListener* listener = &getListener(i);
         SequenceAnnotation* anno = dynamic_cast<SequenceAnnotation*>(listener);
         if (anno && anno->getType() == type) return *anno;
       }
@@ -406,10 +350,10 @@ class SequenceWithAnnotation :
      * @throw Exception If the sequence names do not match.
      */
     virtual void merge(const SequenceWithAnnotation& swa)
-        throw (AlphabetMismatchException, Exception);
+      throw (AlphabetMismatchException, Exception);
 
 
-};
+  };
 
 } //end of namespace bpp.
 

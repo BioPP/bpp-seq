@@ -47,15 +47,15 @@ const string SequenceMask::MASK = "Boolean mask";
 
 /******************************************************************************/
 
-void SequenceMask::afterSequenceChanged(const SymbolListEditionEvent& event)
+void SequenceMask::afterSequenceChanged(const IntSymbolListEditionEvent& event)
 {
   mask_.clear();
-  mask_.insert(mask_.begin(), event.getSymbolList()->size(), false);
+  mask_.insert(mask_.begin(), event.getIntSymbolList()->size(), false);
 }
 
 /******************************************************************************/
 
-void SequenceMask::afterSequenceInserted(const SymbolListInsertionEvent& event)
+void SequenceMask::afterSequenceInserted(const IntSymbolListInsertionEvent& event)
 {
   mask_.insert(mask_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
       event.getLength(), false);
@@ -63,7 +63,7 @@ void SequenceMask::afterSequenceInserted(const SymbolListInsertionEvent& event)
 
 /******************************************************************************/
 
-void SequenceMask::afterSequenceDeleted(const SymbolListDeletionEvent& event)
+void SequenceMask::afterSequenceDeleted(const IntSymbolListDeletionEvent& event)
 {
   mask_.erase(mask_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
       mask_.begin() + static_cast<ptrdiff_t>(event.getPosition() + event.getLength()));

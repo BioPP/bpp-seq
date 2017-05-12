@@ -620,7 +620,8 @@ throw (Exception)
   // Update elements at each site:
   for (size_t i = 0; i < sites_.size(); i++)
   {
-    sites_[i]->setElement(pos, sequence.getValue(i));
+    int v=sequence.getValue(i);
+    sites_[i]->setElement(pos, v);
   }
   // Update comments:
   if (comments_[pos])

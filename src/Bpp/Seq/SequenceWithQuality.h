@@ -144,14 +144,14 @@ namespace bpp {
 
       bool isRemovable() const { return removable_; }
       bool isShared() const { return false; }
-      void beforeSequenceChanged(const SymbolListEditionEvent& event) {}
-      void afterSequenceChanged(const SymbolListEditionEvent& event);
-      void beforeSequenceInserted(const SymbolListInsertionEvent& event) {}
-      void afterSequenceInserted(const SymbolListInsertionEvent& event);
-      void beforeSequenceDeleted(const SymbolListDeletionEvent& event) {}
-      void afterSequenceDeleted(const SymbolListDeletionEvent& event);
-      void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
-      void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
+      void beforeSequenceChanged(const IntSymbolListEditionEvent& event) {}
+      void afterSequenceChanged(const IntSymbolListEditionEvent& event);
+      void beforeSequenceInserted(const IntSymbolListInsertionEvent& event) {}
+      void afterSequenceInserted(const IntSymbolListInsertionEvent& event);
+      void beforeSequenceDeleted(const IntSymbolListDeletionEvent& event) {}
+      void afterSequenceDeleted(const IntSymbolListDeletionEvent& event);
+      void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
+      void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
 
       size_t getSize() const { return qualScores_.size(); }
 
@@ -233,6 +233,8 @@ namespace bpp {
       SequenceWithQuality(
           const Alphabet* alpha
           ):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(alpha),
         qualScores_(new SequenceQuality(0, false))
       {
@@ -256,6 +258,8 @@ namespace bpp {
           const std::string& sequence,
           const Alphabet* alpha
           ) throw (BadCharException):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(name, sequence, alpha),
         qualScores_(new SequenceQuality(sequence.size(), false))
       {
@@ -283,6 +287,8 @@ namespace bpp {
           const Comments& comments,
           const Alphabet* alpha
           ) throw (BadCharException):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(name, sequence, comments, alpha),
         qualScores_(new SequenceQuality(sequence.size(), false))
       {
@@ -310,6 +316,8 @@ namespace bpp {
           const std::vector<int>& quality,
           const Alphabet* alpha)
         throw (BadCharException, DimensionException):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(name, sequence, alpha),
         qualScores_(new SequenceQuality(quality, false))
       {
@@ -341,6 +349,8 @@ namespace bpp {
           const Comments& comments,
           const Alphabet* alpha)
         throw (BadCharException, DimensionException):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(name, sequence, comments, alpha),
         qualScores_(new SequenceQuality(quality, false))
       {
@@ -364,6 +374,8 @@ namespace bpp {
           const std::vector<int>& sequence,
           const Alphabet* alpha)
         throw (BadIntException):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(name, sequence, alpha),
         qualScores_(new SequenceQuality(sequence.size(), false))
       {
@@ -391,6 +403,8 @@ namespace bpp {
           const Comments& comments,
           const Alphabet* alpha)
         throw (BadIntException):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(name, sequence, comments, alpha),
         qualScores_(new SequenceQuality(sequence.size(), false))
       {
@@ -418,6 +432,8 @@ namespace bpp {
           const std::vector<int>& quality,
           const Alphabet* alpha)
         throw (BadIntException, DimensionException):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(name, sequence, alpha),
         qualScores_(new SequenceQuality(quality, false))
       {
@@ -449,6 +465,8 @@ namespace bpp {
           const Comments& comments,
           const Alphabet* alpha)
         throw (BadIntException, DimensionException):
+        EdSymbolList<int>(alpha),
+        EdIntSymbolList(alpha),
         SequenceWithAnnotation(name, sequence, comments, alpha),
         qualScores_(new SequenceQuality(quality, false))
       {
@@ -464,10 +482,12 @@ namespace bpp {
        * @param s The Sequence object
        */
       SequenceWithQuality(const Sequence& s) :
+        EdSymbolList<int>(s.getAlphabet()),
+        EdIntSymbolList(s),
         SequenceWithAnnotation(s), qualScores_(new SequenceQuality(s.size(), false))
-      {
-        addAnnotation(qualScores_);
-      }
+    {
+      addAnnotation(qualScores_);
+    }
 
       /**
        * @brief Build a new SequenceWithQuality
@@ -485,6 +505,8 @@ namespace bpp {
           const Sequence& s,
           const std::vector<int>& sc)
         throw (DimensionException):
+        EdSymbolList<int>(s),
+        EdIntSymbolList(s),
         SequenceWithAnnotation(s),
         qualScores_(new SequenceQuality(sc, false))
       {
@@ -501,6 +523,8 @@ namespace bpp {
       /** @} */
 
       SequenceWithQuality(const SequenceWithQuality& sequence) : 
+        EdSymbolList<int>(sequence.getAlphabet()),
+        EdIntSymbolList(sequence.getAlphabet()),
         SequenceWithAnnotation(sequence), qualScores_(0)
       {
         qualScores_ = dynamic_cast<SequenceQuality*>(&getAnnotation(SequenceQuality::QUALITY_SCORE));                  
@@ -708,7 +732,7 @@ namespace bpp {
       void addElement(int v)
         throw (BadIntException)
       {
-        SequenceWithAnnotation::addElement(v);
+        EdSymbolList<int>::addElement(v);
       }
 
       /**
@@ -722,14 +746,14 @@ namespace bpp {
       void addElement(int v, int q)
         throw (BadIntException)
       {
-        SequenceWithAnnotation::addElement(v);
+        EdSymbolList<int>::addElement(v);
         qualScores_->setScore(size() - 1, q);
       }
 
       void addElement(size_t pos, int v)
         throw (BadIntException, IndexOutOfBoundsException)
       {
-        SequenceWithAnnotation::addElement(pos, v);
+        EdSymbolList<int>::addElement(pos, v);
       }
 
       /**
@@ -746,7 +770,7 @@ namespace bpp {
       void addElement(size_t pos, int v, int q)
         throw (BadCharException, IndexOutOfBoundsException)
       {
-        SequenceWithAnnotation::addElement(pos, v);
+        EdSymbolList<int>::addElement(pos, v);
         qualScores_->setScore(pos, q);
       }
 

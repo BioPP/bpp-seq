@@ -41,8 +41,6 @@
 #ifndef _CORESEQUENCE_H_
 #define _CORESEQUENCE_H_
 
-#include "SequenceExceptions.h"
-
 // From the STL:
 #include <string>
 #include <vector>

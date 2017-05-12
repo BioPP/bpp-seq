@@ -110,9 +110,9 @@ void VectorProbabilisticSiteContainer::addSequence(std::shared_ptr<Probabilistic
   for(size_t i = 0; i < getNumberOfSites(); ++i)
   {
     if (!getSite(i))
-      addSite(std::shared_ptr<BasicProbabilisticSite>(new BasicProbabilisticSite(sequence->getAlphabet(), (int)(i+1))));
+      addSite(std::shared_ptr<ProbabilisticSite>(new ProbabilisticSite(sequence->getAlphabet(), (int)(i+1))));
 
-    BasicProbabilisticSite bpl(sequence->getAlphabet(), (int)(i+1));
+    ProbabilisticSite bpl(sequence->getAlphabet(), (int)(i+1));
   }
 
   // append :

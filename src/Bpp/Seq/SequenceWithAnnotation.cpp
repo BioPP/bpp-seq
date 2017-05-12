@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use,
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info".
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability.
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or
-data to be ensured and,  more generally, to use and operate it in the
-same conditions as regards security.
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and,  more generally, to use and operate it in the
+  same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "SequenceWithAnnotation.h" // class's header file
@@ -53,16 +53,13 @@ using namespace std;
 /* Constructors: **************************************************************/
 
 SequenceWithAnnotation::SequenceWithAnnotation(const Alphabet* alpha):
-  EdSymbolList(alpha),
-  name_(),
-  comments_()
+  AbstractCoreSequence(""),
+  EdIntSymbolList(alpha)
 {}
 
-SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha)
-throw (BadCharException) :
-	EdSymbolList(alpha),
-	name_(name),
-  comments_()
+SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException) :
+  AbstractCoreSequence(name),
+  EdIntSymbolList(alpha)
 {
   if (sequence!="")
     setContent(sequence);
@@ -70,82 +67,74 @@ throw (BadCharException) :
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadCharException) :
-	EdSymbolList(alpha),
-	name_(name),
-	comments_(comments)
+  AbstractCoreSequence(name, comments),
+  EdIntSymbolList(alpha)
 {
   if (sequence != "")
     setContent(sequence);
 }
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha)
-throw (BadCharException) :
-	EdSymbolList(sequence, alpha),
-	name_(name),
-  comments_()
+  throw (BadCharException) :
+  AbstractCoreSequence(name),
+  EdIntSymbolList(sequence, alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadCharException) :
-	EdSymbolList(sequence, alpha),
-	name_(name),
-	comments_(comments)
+  AbstractCoreSequence(name, comments),
+  EdIntSymbolList(sequence, alpha),
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha)
   throw (BadIntException) :
-	EdSymbolList(sequence, alpha),
-	name_(name),
-  comments_()
+  AbstractCoreSequence(name),
+  EdIntSymbolList(sequence, alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadIntException) :
-	EdSymbolList(sequence, alpha),
-	name_(name),
-	comments_(comments)
+  AbstractCoreSequence(name, comments),
+  EdIntSymbolList(sequence, alpha)
 {}
 
 /* Copy constructors: *********************************************************/
 
 SequenceWithAnnotation::SequenceWithAnnotation(const Sequence& s) :
-	EdSymbolList(s),
-	name_(s.getName()),
-	comments_(s.getComments())
+  AbstractCoreSequence(s.getName(), s.getComments()),
+  EdIntSymbolList(s)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const SequenceWithAnnotation& s) :
-	EdSymbolList(s),
-	name_(s.getName()),
-	comments_(s.getComments())
+  AbstractCoreSequence(s.getName(), s.getComments()),
+  EdIntSymbolList(s)
 {}
 
 /* Assignation operator: ******************************************************/
 
 SequenceWithAnnotation& SequenceWithAnnotation::operator=(const Sequence& s)
 {
-  EdSymbolList::operator=(s);
-	name_     = s.getName();
-	comments_ = s.getComments();
+  EdIntSymbolList::operator=(s);
+  setName(s.getName());
+  setComments(s.getComments());
   return *this;
 }
 
 SequenceWithAnnotation& SequenceWithAnnotation::operator=(const SequenceWithAnnotation& s)
 {
-  EdSymbolList::operator=(s);
-	name_     = s.getName();
-	comments_ = s.getComments();
-	return *this;
+  AbstractCoreSequence::operator=(s);
+  EdIntSymbolList::operator=(s);
+  return *this;
 }
 
 /******************************************************************************/
 
 void SequenceWithAnnotation::setContent(const std::string& sequence) throw (BadCharException)
 {
-  SymbolListEditionEvent event(this);
+  IntSymbolListEditionEvent event(this);
   fireBeforeSequenceChanged(event);
-	// Remove blanks in sequence
-	content_ = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet());
+  // Remove blanks in sequence
+  setContent(StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet()));
   //Warning, an exception may be thrown here!
   fireAfterSequenceChanged(event);
 }
@@ -154,24 +143,24 @@ void SequenceWithAnnotation::setContent(const std::string& sequence) throw (BadC
 
 void SequenceWithAnnotation::setToSizeR(size_t newSize)
 {
-	// Size verification
-	size_t seqSize = content_.size();
-	if (newSize == seqSize) return;
+  // Size verification
+  size_t seqSize = content_.size();
+  if (newSize == seqSize) return;
 
-	if (newSize < seqSize)
+  if (newSize < seqSize)
   {
-    SymbolListDeletionEvent event(this, newSize, seqSize - newSize);
+    IntSymbolListDeletionEvent event(this, newSize, seqSize - newSize);
     fireBeforeSequenceDeleted(event);
-		content_.resize(newSize);
+    content_.resize(newSize);
     fireAfterSequenceDeleted(event);
-		return;
-	}
+    return;
+  }
 
-	// Add gaps up to specified size
-  SymbolListInsertionEvent event(this, seqSize, newSize - seqSize);
+  // Add gaps up to specified size
+  IntSymbolListInsertionEvent event(this, seqSize, newSize - seqSize);
   fireBeforeSequenceInserted(event);
   int gap = getAlphabet()->getGapCharacterCode();
-	while (content_.size() < newSize) content_.push_back(gap);
+  while (content_.size() < newSize) content_.push_back(gap);
   fireAfterSequenceInserted(event);
 }
 
@@ -179,76 +168,76 @@ void SequenceWithAnnotation::setToSizeR(size_t newSize)
 
 void SequenceWithAnnotation::setToSizeL(size_t newSize)
 {
-	// Size verification
-	size_t seqSize = content_.size();
-	if (newSize == seqSize) return;
+  // Size verification
+  size_t seqSize = content_.size();
+  if (newSize == seqSize) return;
 
-	if (newSize < seqSize)
+  if (newSize < seqSize)
   {
-		//We must truncate sequence from the left.
-    SymbolListDeletionEvent event(this, 0, seqSize - newSize);
+    //We must truncate sequence from the left.
+    IntSymbolListDeletionEvent event(this, 0, seqSize - newSize);
     fireBeforeSequenceDeleted(event);
-		content_.erase(content_.begin(), content_.begin() + static_cast<ptrdiff_t>(seqSize - newSize));
+    content_.erase(content_.begin(), content_.begin() + static_cast<ptrdiff_t>(seqSize - newSize));
     fireAfterSequenceDeleted(event);
-		return;
-	}
+    return;
+  }
 
-	// Add gaps up to specified size
-  SymbolListInsertionEvent event(this, 0, newSize - seqSize);
+  // Add gaps up to specified size
+  IntSymbolListInsertionEvent event(this, 0, newSize - seqSize);
   fireBeforeSequenceInserted(event);
   int gap = getAlphabet()->getGapCharacterCode();
-	content_.insert(content_.begin(), newSize - seqSize, gap);
+  content_.insert(content_.begin(), newSize - seqSize, gap);
   fireAfterSequenceInserted(event);
 }
 
 /******************************************************************************/
 
-void SequenceWithAnnotation::append(const Sequence& seq) throw (AlphabetMismatchException)
+void SequenceWithAnnotation::append(const CoreSequence& seq) throw (AlphabetMismatchException)
 {
   if (seq.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SequenceWithAnnotation::append");
-  SymbolListInsertionEvent event(this, content_.size(), seq.size());
+  IntSymbolListInsertionEvent event(this, content_.size(), seq.size());
   fireBeforeSequenceInserted(event);
-	for (size_t i = 0; i < seq.size(); i++)
-		content_.push_back(seq[i]);
+  for (size_t i = 0; i < seq.size(); i++)
+    content_.push_back(seq[i]);
   
   fireAfterSequenceInserted(event);
 }
 
 void SequenceWithAnnotation::append(const std::vector<int>& content) throw (BadIntException)
 {
-  SymbolListInsertionEvent event(this, content_.size(), content.size());
+  IntSymbolListInsertionEvent event(this, content_.size(), content.size());
   fireBeforeSequenceInserted(event);
-	// Check list for incorrect characters
-	for (size_t i = 0; i < content.size(); i++)
-		if(!getAlphabet()->isIntInAlphabet(content[i]))
+  // Check list for incorrect characters
+  for (size_t i = 0; i < content.size(); i++)
+    if(!getAlphabet()->isIntInAlphabet(content[i]))
       throw BadIntException(content[i], "SequenceWithAnnotation::append", getAlphabet());
-	//SequenceWithAnnotation is valid:
-	for (size_t i = 0; i < content.size(); i++)
-		content_.push_back(content[i]);
+  //SequenceWithAnnotation is valid:
+  for (size_t i = 0; i < content.size(); i++)
+    content_.push_back(content[i]);
   
   fireAfterSequenceInserted(event);
 }
 
 void SequenceWithAnnotation::append(const std::vector<std::string>& content) throw (BadCharException)
 {
-  SymbolListInsertionEvent event(this, content_.size(), content.size());
+  IntSymbolListInsertionEvent event(this, content_.size(), content.size());
   fireBeforeSequenceInserted(event);
-	// Check list for incorrect characters
-	for (size_t i = 0; i < content.size(); i++)
-		if(!getAlphabet()->isCharInAlphabet(content[i]))
+  // Check list for incorrect characters
+  for (size_t i = 0; i < content.size(); i++)
+    if(!getAlphabet()->isCharInAlphabet(content[i]))
       throw BadCharException(content[i], "SequenceWithAnnotation::append", getAlphabet());
 	
-	//SequenceWithAnnotation is valid:
-	for (size_t i = 0; i < content.size(); i++)
-		content_.push_back(getAlphabet()->charToInt(content[i]));
+  //SequenceWithAnnotation is valid:
+  for (size_t i = 0; i < content.size(); i++)
+    content_.push_back(getAlphabet()->charToInt(content[i]));
   
   fireAfterSequenceInserted(event);
 }
 
 void SequenceWithAnnotation::append(const std::string& content) throw (BadCharException)
 {
-	append(StringSequenceTools::codeSequence(content, getAlphabet()));
+  append(StringSequenceTools::codeSequence(content, getAlphabet()));
 }
 
 /******************************************************************************/
@@ -270,17 +259,17 @@ void SequenceWithAnnotation::merge(const SequenceWithAnnotation& swa)
   throw (AlphabetMismatchException, Exception)
 {
   // Sequence's alphabets matching verification
-	if ((swa.getAlphabet()->getAlphabetType()) != (getAlphabet()->getAlphabetType())) 
-		throw AlphabetMismatchException("SequenceWithAnnotation::merge: Sequence's alphabets don't match ", swa.getAlphabet(), getAlphabet());
+  if ((swa.getAlphabet()->getAlphabetType()) != (getAlphabet()->getAlphabetType())) 
+    throw AlphabetMismatchException("SequenceWithAnnotation::merge: Sequence's alphabets don't match ", swa.getAlphabet(), getAlphabet());
 	
-	// Sequence's names matching verification
-	if (swa.getName() != getName())
+  // Sequence's names matching verification
+  if (swa.getName() != getName())
     throw Exception ("SequenceWithAnnotation::merge: Sequence's names don't match");
 
-	// Concatenate sequences and send result
-	propagateEvents(false);
+  // Concatenate sequences and send result
+  propagateEvents(false);
   append(swa.getContent());
-	propagateEvents(true);
+  propagateEvents(true);
 
   // Try to merge annotations.
   //First start with annotations in this sequence:

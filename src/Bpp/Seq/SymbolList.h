@@ -1,7 +1,9 @@
 //
 // File: SymbolList.h
 // Created by: Julien Dutheil
+//             Laurent Guéguen
 // Created on: Fri Apr 9 2005
+//             mercredi 12 avril 2017, à 12h 02
 //
 
 /*
@@ -42,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Alphabet/Alphabet.h"
 #include <Bpp/Clonable.h>
+#include "CoreSymbolList.h"
 
 // From the STL:
 #include <string>
@@ -53,209 +56,20 @@ namespace bpp
 {
 
   /**
-   * @brief The SymbolList interface.
+   * @brief A SymbolList object.
+   *
+   * This is a general purpose container, containing an ordered list
+   * of T states. The states that allowed to be present in the list
+   * are defined by an alphabet object, which is passed to the list
+   * constructor by a pointer.
    *
    * @see Alphabet
    */
+
+  template<class T>
   class SymbolList: 
-    public virtual Clonable
+    public virtual CoreSymbolList<T>
   {
-
-  public: 
-    /**
-     * @name The Clonable interface
-     *
-     * @{
-     */
-    SymbolList* clone() const = 0;
-    /** @} */
-
-    // Class destructor
-    virtual ~SymbolList() {}
-
-  public:
-
-    /**
-     * @brief Get the alphabet associated to the list.
-     *
-     * @return A const pointer to the alphabet.
-     * @see Alphabet class.
-     */
-    virtual const Alphabet* getAlphabet() const = 0;
-
-    /**
-     * @brief Get the number of elements in the list.
-     *
-     * @return The number of sites in the list.
-     */
-    virtual size_t size() const = 0;
-
-    /**
-     * @name Acting on the content of the list.
-     *
-     * @{
-     */
-
-    /**
-     * @brief Set the whole content of the list.
-     *
-     * @param list The new content of the list.
-     * @see The list constructor for information about the way lists are internaly stored.
-     */
-    virtual void setContent(const std::vector<int>& list) throw (BadIntException) = 0;
-
-    /**
-     * @brief Set the whole content of the list.
-     *
-     * @param list The new content of the list.
-     * @see The list constructor for information about the way lists are internaly stored.
-     */
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException) = 0;
-
-    /** @} */
-
-    /**
-     * @brief Convert the list as a string.
-     *
-     * This method is useful for dumping a list to a file or to the screen for display.
-     *
-     * @return The whole list as a string.
-     */
-    virtual std::string toString() const = 0;
-
-    /**
-     * @name Edition methods.
-     *
-     * @{
-     */
-
-    /**
-     * @brief Add a character to the end of the list.
-     *
-     * @param c The character to add, given as a string.
-     */
-    virtual void addElement(const std::string& c) throw (BadCharException) = 0;
-
-    /**
-     * @brief Add a character at a certain position in the list.
-     *
-     * @param pos The postion where to insert the element.
-     * @param c   The character to add, given as a string.
-     */
-    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Set the element at position 'pos' to character 'c'.
-     *
-     * @param pos The position of the character to set.
-     * @param c   The value of the element, given as a string.
-     */
-    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Delete the element at position 'pos'.
-     *
-     * @param pos The position of the element to delete.
-     */
-    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Delete the elements at position 'pos'.
-     *
-     * @param pos The position of the first element to delete.
-     * @param len The length of the region to delete.
-     */
-    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException) = 0;
-
-
-    /**
-     * @brief Get the element at position 'pos' as a character.
-     *
-     * @param pos The position of the character to retrieve.
-     */
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Add a character to the end of the list.
-     *
-     * @param v The character to add, given as an int.
-     */
-    virtual void addElement(int v) throw (BadIntException) = 0;
-
-    /**
-     * @brief Add a character at a certain position in the list.
-     *
-     * @param pos The postion where to insert the element.
-     * @param v   The character to add, given as an int.
-     */
-    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Set the element at position 'pos' to character 'v'.
-     *
-     * @param pos The position of the character to set.
-     * @param v   The value of the element, given as an int.
-     */
-    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Get the element at position 'pos' as an int.
-     *
-     * @param pos The position of the character to retrieve.
-     */
-    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException) = 0;
-
-    /** @} */
-
-    /**
-     * @name Provide direct access to the list content.
-     *
-     * @warning These operators allow you to modifiy the list content.
-     * No alphabet checking is performed for your modifications, so use with care, or
-     * consider using the setContent() method.
-     *
-     * @{
-     */
-
-    /**
-     * @brief Operator [] overloaded for quick access to a character in list.
-     *
-     * @param i The position to retrieve.
-     * @return The integer value of character at position i.
-     */
-    virtual const int& operator[](size_t i) const = 0;
-    /**
-     * @brief Operator [] overloaded for quick access to a character in list.
-     *
-     * @param i The position to retrieve.
-     * @return The integer value of character at position i.
-     */
-    virtual int& operator[](size_t i) = 0;
-
-    /**
-     * @brief Randomly shuffle the content of the list, with linear complexity.
-     */
-    virtual void shuffle() = 0;
-    /** @} */
-  };
-
-
-  /**
-   * @brief A basic SymbolList object.
-   *
-   * This is a general purpose container, containing an ordered list of states(= letters).
-   * The states that allowed to be present in the list are defined by an alphabet object,
-   * which is passed to the list constructor by a pointer.
-   *
-   * For programming convenience, the states are stored as integers, but the translation toward
-   * and from a char description is easily performed with the Alphabet classes.
-   *
-   * @see Alphabet
-   */
-  class BasicSymbolList: 
-    public virtual SymbolList
-  {
-
   private:
     /**
      * @brief The Alphabet attribute must be initialized in constructor and then can never be changed.
@@ -268,7 +82,7 @@ namespace bpp
     /**
      * @brief The list content.
      */
-    std::vector<int> content_;
+    std::vector<T> content_;
 
   public: 
     /**
@@ -276,94 +90,141 @@ namespace bpp
      *
      * @param alpha The alphabet to use.
      */
-    BasicSymbolList(const Alphabet* alpha) : alphabet_(alpha), content_() {}
+    
+    SymbolList(const Alphabet* alpha) : alphabet_(alpha), content_() {}
 
     /**
-     * @brief Build a new BasicSymbolList object with the specified alphabet.
-     * The content of the site is initialized from a vector of characters.
+     * @brief Build a new SymbolList object with the specified alphabet.
+     * The content of the site is initialized from a vector of T objects.
      *
      * @param list     The content of the site.
      * @param alpha    The alphabet to use.
-     * @throw BadCharException If the content does not match the specified alphabet.
      */
-    BasicSymbolList(const std::vector<std::string>& list, const Alphabet* alpha) throw (BadCharException);
-
-    /**
-     * @brief Build a new BasicSymbolList object with the specified alphabet.
-     * The content of the site is initialized from a vector of integers.
-     *
-     * @param list     The content of the site.
-     * @param alpha    The alphabet to use.
-     * @throw BadIntException If the content does not match the specified alphabet.
-     */
-    BasicSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException);
+    
+    SymbolList(const std::vector<T>& list, const Alphabet* alpha) :
+      alphabet_(alpha), content_()
+    {
+      setContent(list);
+    }
 
     /**
      * @brief The generic copy constructor.
-     */
-    BasicSymbolList(const SymbolList& list);
+    */
+    
+    SymbolList(const SymbolList<T>& list) :
+      alphabet_(list.alphabet_), content_(list.content_)
+    {}
 
-    /**
+
+     /**
      * @brief The copy constructor.
      */
-    BasicSymbolList(const BasicSymbolList& list);
+    SymbolList(const CoreSymbolList<T>& list) : 
+      alphabet_(list.getAlphabet()), content_(list.size())
+    {
+      for (size_t i = 0; i < list.size(); ++i)
+        content_[i] = list[i];
+    }
+
 
     /**
      * @brief The generic assignment operator.
      */
-    BasicSymbolList& operator=(const SymbolList& list);
+    
+    SymbolList<T>& operator=(const CoreSymbolList<T>& list)
+    {
+      content_.resize(list.size());
+      for (size_t i = 0; i < list.size(); ++i)
+        content_[i] = list[i];
+      alphabet_ = list.getAlphabet();
+      return *this;
+    }
 
     /**
      * @brief The assignment operator.
      */
-    BasicSymbolList& operator=(const BasicSymbolList& list);
-
+    
+    SymbolList<T>& operator=(const SymbolList<T>& list)
+    {
+      content_  = list.content_;
+      alphabet_ = list.alphabet_;
+      return *this;
+    }
+    
     /**
      * @name The Clonable interface
      *
      * @{
      */
-    BasicSymbolList* clone() const { return new BasicSymbolList(* this); }
+    SymbolList<T>* clone() const { return new SymbolList<T>(* this); }
     /** @} */
 
     // Class destructor
-    virtual ~BasicSymbolList() {}
+    virtual ~SymbolList() {}
     
   public:
 
-    virtual const Alphabet* getAlphabet() const { return alphabet_; }
+    const Alphabet* getAlphabet() const { return alphabet_; }
 
-    virtual size_t size() const { return static_cast<size_t>(content_.size()); }
+    size_t size() const { return static_cast<size_t>(content_.size()); }
 
-    virtual void setContent(const std::vector<int>& list) throw (BadIntException);
+    virtual void setContent(const std::vector<T>& list)
+    {
+      content_ = list;
+    };
 
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException);
-
-    virtual std::string toString() const;
-
-    virtual void addElement(const std::string& c) throw (BadCharException);
-
-    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
-
-    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
-
-    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException);
+    virtual const std::vector<T>& getContent() const { return content_; }
 		
-    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException);
+    virtual std::string toString() const
+    {
+      return "";
+    }
 
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException);
+    void deleteElement(size_t pos)
+    {
+      if(pos >= content_.size())
+        throw IndexOutOfBoundsException("SymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
+      content_.erase(content_.begin() + static_cast<std::ptrdiff_t>(pos));
+    }
+    
+    void deleteElements(size_t pos, size_t len)
+    {
+      if (pos + len > content_.size())
+        throw IndexOutOfBoundsException("SymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
+      content_.erase(content_.begin() + static_cast<std::ptrdiff_t>(pos), content_.begin() + static_cast<std::ptrdiff_t>(pos + len));
+    }
+    
+    void addElement(const T& v)
+    {
+      content_.push_back(v);
+    }
 
-    virtual void addElement(int v) throw (BadIntException);
+    void addElement(size_t pos, const T& v)
+    {
+      //test:
+      if(pos >= content_.size())
+        throw IndexOutOfBoundsException("SymbolList::addElement. Invalid position.", pos, 0, size() - 1);
+      content_.insert(content_.begin() + static_cast<std::ptrdiff_t>(pos), v);
+    }
 
-    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    void setElement(size_t pos, const T& v)
+    {
+      //test:
+      if(pos >= content_.size())
+        throw IndexOutOfBoundsException("SymbolList::setElement. Invalid position.", pos, 0, size() - 1);
+      content_[pos] = v;
+    }
 
-    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual const T& getElement(size_t pos) const
+    {
+      if(pos >= content_.size())
+        throw IndexOutOfBoundsException("SymbolList::getElement. Invalid position.", pos, 0, size() - 1);
+      return content_[pos];
+    }
 
-    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException);
-
-    virtual const int& operator[](size_t i) const { return content_[i]; }
+    virtual const T& operator[](size_t i) const { return content_[i]; }
 		
-    virtual int& operator[](size_t i) { return content_[i]; }
+    virtual T& operator[](size_t i) { return content_[i]; }
 
     virtual void shuffle()
     {
@@ -371,193 +232,115 @@ namespace bpp
     }
   };
 
-  class SymbolListEditionEvent
+  template<class T>
+  class EdSymbolList:
+    public SymbolList<T>,
+    public virtual EdCoreSymbolList<T>
   {
-  private:
-    SymbolList* list_;
-
-  public:
-    SymbolListEditionEvent(SymbolList* list):
-      list_(list) {}
-
-    SymbolListEditionEvent(const SymbolListEditionEvent& slee): list_(slee.list_) {}
-    
-    SymbolListEditionEvent& operator=(const SymbolListEditionEvent& slee) { 
-      list_ = slee.list_;
-      return *this;
-    }
-
-    virtual ~SymbolListEditionEvent() {}
-
-  public:
-    virtual SymbolList* getSymbolList() { return list_; }
-    virtual const SymbolList* getSymbolList() const { return list_; }
-  };
-
-
-  class SymbolListInsertionEvent:
-    public SymbolListEditionEvent
-  {
-  private:
-    size_t pos_;
-    size_t len_;
-
-  public:
-    SymbolListInsertionEvent(SymbolList* list, size_t pos, size_t len):
-      SymbolListEditionEvent(list), pos_(pos), len_(len) {}
-
-  public:
-    virtual size_t getPosition() const { return pos_; }
-    virtual size_t getLength() const { return len_; }
-  };
-
-
-  class SymbolListDeletionEvent:
-    public SymbolListEditionEvent
-  {
-  private:
-    size_t pos_;
-    size_t len_;
-
-  public:
-    SymbolListDeletionEvent(SymbolList* list, size_t pos, size_t len):
-      SymbolListEditionEvent(list), pos_(pos), len_(len) {}
-
-  public:
-    virtual size_t getPosition() const { return pos_; }
-    virtual size_t getLength() const { return len_; }
-  };
-
-
-  class SymbolListSubstitutionEvent:
-    public SymbolListEditionEvent
-  {
-  private:
-    size_t begin_;
-    size_t end_;
-
-  public:
-    SymbolListSubstitutionEvent(SymbolList* list, size_t begin, size_t end) :
-      SymbolListEditionEvent(list), begin_(begin), end_(end) {}
-
-  public:
-    virtual size_t getBegin() const { return begin_; }
-    virtual size_t getEnd() const { return end_; }
-  };
-
-  class SymbolListListener :
-    public virtual Clonable
-  {
-  public:
-    virtual ~SymbolListListener() {}
-
-    virtual SymbolListListener* clone() const = 0;
-
-  public:
-    virtual bool isRemovable() const = 0;
-    virtual bool isShared() const = 0;
-    virtual void beforeSequenceChanged(const SymbolListEditionEvent& event) = 0;
-    virtual void afterSequenceChanged(const SymbolListEditionEvent& event) = 0;
-    virtual void beforeSequenceInserted(const SymbolListInsertionEvent& event) = 0;
-    virtual void afterSequenceInserted(const SymbolListInsertionEvent& event) = 0;
-    virtual void beforeSequenceDeleted(const SymbolListDeletionEvent& event) = 0;
-    virtual void afterSequenceDeleted(const SymbolListDeletionEvent& event) = 0;
-    virtual void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) = 0;
-    virtual void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) = 0;
-  };
-
-
-  /**
-   * @brief A event-driven SymbolList object.
-   *
-   * This is a general purpose container, containing an ordered list of states(= letters).
-   * The states that allowed to be present in the list are defined by an alphabet object,
-   * which is passed to the list constructor by a pointer.
-   *
-   * For programming convenience, the states are stored as integers, but the translation toward
-   * and from a char description is easily performed with the Alphabet classes.
-   *
-   * @see Alphabet
-   */
-  class EdSymbolList: 
-    public virtual SymbolList
-  {
-
   private:
     /**
      * @brief The Alphabet attribute must be initialized in constructor and then can never be changed.
      * 
      * To apply another alphabet to a list you'll have to create a new list.
      */
-    const Alphabet* alphabet_;
-
     bool propagateEvents_;
 
   protected:
     /**
-     * @brief The list content.
-     */
-    std::vector<int> content_;
-
-    /**
      * @brief Contains the listeners.
      */
-    std::vector<SymbolListListener*> listeners_;
-
-
-  public: 
+    std::vector<CoreSymbolListListener<T>* > listeners_;
+    
     /**
-     * @brief Build a new void BasicSymbolList object with the specified alphabet.
+     * @brief Build a new void CoreSymbolList object with the specified alphabet.
      *
      * @param alpha The alphabet to use.
      */
-    EdSymbolList(const Alphabet* alpha) : alphabet_(alpha), propagateEvents_(true), content_(), listeners_() {}
+    
+    EdSymbolList(const Alphabet* alpha) : SymbolList<T>(alpha), propagateEvents_(true), listeners_() {}
 
     /**
-     * @brief Build a new BasicSymbolList object with the specified alphabet.
-     * The content of the site is initialized from a vector of characters.
-     *
-     * @param list     The content of the site.
-     * @param alpha    The alphabet to use.
-     * @throw BadCharException If the content does not match the specified alphabet.
-     */
-    EdSymbolList(const std::vector<std::string>& list, const Alphabet* alpha) throw (BadCharException);
-
-    /**
-     * @brief Build a new BasicSymbolList object with the specified alphabet.
+     * @brief Build a new CoreSymbolList object with the specified alphabet.
      * The content of the site is initialized from a vector of integers.
      *
      * @param list     The content of the site.
      * @param alpha    The alphabet to use.
      * @throw BadIntException If the content does not match the specified alphabet.
      */
-    EdSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException);
+
+    EdSymbolList(const std::vector<T>& list, const Alphabet* alpha) :
+      SymbolList<T>(list,alpha), propagateEvents_(true), listeners_()
+    {}
+    
 
     /**
      * @brief The generic copy constructor.
      */
-    EdSymbolList(const SymbolList& list);
+    EdSymbolList(const CoreSymbolList<T>& list) :
+      SymbolList<T>(list), propagateEvents_(true), listeners_()
+    {}
+    
 
     /**
      * @brief The copy constructor.
      */
-    EdSymbolList(const EdSymbolList& list);
+    EdSymbolList(const EdSymbolList<T>& list) :
+      SymbolList<T>(list), propagateEvents_(list.propagateEvents_), listeners_(list.listeners_)
+    {
+      for (size_t i = 0; i < listeners_.size(); ++i)
+      {
+        if (!list.listeners_[i]->isShared())
+          throw Exception("EdSymbolList(EdSymbolList) :  mgmt of non shared listeners to be implemented");
+
+        listeners_[i] = (dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone()));
+      }
+      
+    }
 
     /**
      * @brief The generic assignment operator.
      */
-    EdSymbolList& operator=(const SymbolList& list);
+    EdSymbolList<T>& operator=(const CoreSymbolList<T>& list)
+    {
+      SymbolList<T>::operator=(list);
+      propagateEvents_ = true;
+      for (size_t i = 0; i < listeners_.size(); ++i)
+        if (!listeners_[i]->isShared())
+          delete listeners_[i];
+      listeners_.clear();
+      return *this;
+    }
+
 
     /**
      * @brief The assignment operator.
      */
-    EdSymbolList& operator=(const EdSymbolList& list);
+    
+    EdSymbolList<T>& operator=(const EdSymbolList& list)
+    {
+      SymbolList<T>::operator=(list);
+      propagateEvents_ = list.propagateEvents_;
+      listeners_ = list.listeners_;
+      for (size_t i = 0; i < listeners_.size(); ++i)
+        delete listeners_[i];
+
+      for (size_t i = 0; i < listeners_.size(); ++i)
+      {
+        if (!list.listeners_[i]->isShared())
+          throw Exception("EdSymbolList::operator= :  mgmt of non shared listeners to be implemented");
+        
+        listeners_[i] = dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone());
+      }
+      
+      return *this;
+    }
 
     /**
      * @name The Clonable interface
      *
      * @{
      */
+    
     EdSymbolList* clone() const { return new EdSymbolList(* this); }
     /** @} */
 
@@ -572,47 +355,64 @@ namespace bpp
     }
 
   public:
-
-    virtual const Alphabet* getAlphabet() const { return alphabet_; }
-
-    virtual size_t size() const { return static_cast<size_t>(content_.size()); }
-
-    virtual const std::vector<int>& getContent() const { return content_; }
-		
-    virtual void setContent(const std::vector<int>& list) throw (BadIntException);
-
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException);
-
-    virtual std::string toString() const;
-
-    virtual void addElement(const std::string& c) throw (BadCharException);
-
-    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
-
-    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
-
-    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException);
-		
-    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException);
-
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException);
-
-    virtual void addElement(int v) throw (BadIntException);
-
-    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
-
-    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
-
-    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException);
-
-    virtual const int& operator[](size_t i) const { return content_[i]; }
-		
-    virtual int& operator[](size_t i) { return content_[i]; }
-
-    virtual void shuffle()
+    virtual void setContent(const std::vector<T>& list)
     {
-      random_shuffle(content_.begin(), content_.end());
+      CoreSymbolListEditionEvent<T> event(this);
+      fireBeforeSequenceChanged(event);
+      
+      //Sequence is valid:
+      SymbolList<T>::setContent(list);
+      fireAfterSequenceChanged(event);
     }
+
+    void deleteElement(size_t pos)
+    {
+      CoreSymbolListDeletionEvent<T> event(this, pos, 1);
+      fireBeforeSequenceDeleted(event);
+      SymbolList<T>::deleteElement(pos);
+      fireAfterSequenceDeleted(event);
+    }
+
+		
+    void deleteElements(size_t pos, size_t len)
+    {
+      CoreSymbolListDeletionEvent<T> event(this, pos, len);
+      fireBeforeSequenceDeleted(event);
+      SymbolList<T>::deleteElements(pos,len);
+      fireAfterSequenceDeleted(event);
+    }
+
+    virtual void addElement(const T& v)
+    {
+      CoreSymbolListInsertionEvent<T> event(this, SymbolList<T>::size(), 1);
+      fireBeforeSequenceInserted(event);
+      SymbolList<T>::addElement(v);
+      fireAfterSequenceInserted(event);
+    }
+
+    virtual void addElement(size_t pos, const T& v)
+    {
+      CoreSymbolListInsertionEvent<T> event(this, pos, 1);
+      fireBeforeSequenceInserted(event);
+      SymbolList<T>::addElement(pos,v);
+      fireAfterSequenceInserted(event);
+    }
+
+
+    virtual void setElement(size_t pos, const T& v)
+    {
+      CoreSymbolListSubstitutionEvent<T> event(this, pos, pos);
+      fireBeforeSequenceSubstituted(event);
+      SymbolList<T>::setElement(pos, v);
+      fireAfterSequenceSubstituted(event);
+    }
+    
+    // const T& getValue(size_t pos) const
+    // {
+    //   if (pos >= content_.size())
+    //     throw IndexOutOfBoundsException("EdSymbolList::getValue. Invalid position.", pos, 0, size() - 1);
+    //   return content_[pos];
+    // }
 
     /**
      * @name Events handling
@@ -621,87 +421,89 @@ namespace bpp
      */
     virtual size_t getNumberOfListeners() const { return listeners_.size(); }
 
-    virtual const SymbolListListener& getListener(size_t i) const {
-      if (listeners_[i] == 0) std::cout << "aie!!!" << std::endl;
+    virtual const CoreSymbolListListener<T>& getListener(size_t i) const {
+      if (listeners_[i] == 0)
+        std::cout << "EdSymbolList::getListener: aie!!!" << std::endl;
       return *listeners_[i];
     }
     
-    virtual SymbolListListener& getListener(size_t i) { 
-      if (listeners_[i] == 0) std::cout << "aie!!!" << std::endl;
+    virtual CoreSymbolListListener<T>& getListener(size_t i) { 
+      if (listeners_[i] == 0)
+        std::cout << "EdSymbolList::getListener: aie!!!" << std::endl;
       return *listeners_[i];
     }
 
-    virtual void addSymbolListListener(SymbolListListener* listener) { 
+    virtual void addCoreSymbolListListener(CoreSymbolListListener<T>* listener) { 
       listeners_.push_back(listener);
     }
 
-    virtual void removeSymbolListListener(SymbolListListener* listener) {
+    virtual void removeCoreSymbolListListener(CoreSymbolListListener<T>* listener) {
       if (listener->isRemovable())
         listeners_.erase(remove(listeners_.begin(), listeners_.end(), listener), listeners_.end());
       else
-        throw Exception("EdSymbolList::removeSymbolListListener. Listener is not removable.");
+        throw Exception("EdSymbolList::removeCoreSymbolListListener. Listener is not removable.");
     } 
  
   protected:
-    virtual void beforeSequenceChanged(const SymbolListEditionEvent& event) {};
-    virtual void afterSequenceChanged(const SymbolListEditionEvent& event) {};
-    virtual void beforeSequenceInserted(const SymbolListInsertionEvent& event) {};
-    virtual void afterSequenceInserted(const SymbolListInsertionEvent& event) {};
-    virtual void beforeSequenceDeleted(const SymbolListDeletionEvent& event) {};
-    virtual void afterSequenceDeleted(const SymbolListDeletionEvent& event) {};
-    virtual void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {};
-    virtual void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {};
+    virtual void beforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {};
+    virtual void afterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {};
+    virtual void beforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {};
+    virtual void afterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {};
+    virtual void beforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {};
+    virtual void afterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {};
+    virtual void beforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {};
+    virtual void afterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {};
 
-    void fireBeforeSequenceChanged(const SymbolListEditionEvent& event) {
+    void fireBeforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {
       beforeSequenceChanged(event);
       if (propagateEvents_)
         for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->beforeSequenceChanged(event);
     }
 
-    void fireAfterSequenceChanged(const SymbolListEditionEvent& event) {
+    void fireAfterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {
       afterSequenceChanged(event);
       if (propagateEvents_)
         for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->afterSequenceChanged(event);
     }
    
-    void fireBeforeSequenceInserted(const SymbolListInsertionEvent& event) {
+    void fireBeforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {
       beforeSequenceInserted(event);
       if (propagateEvents_)
         for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->beforeSequenceInserted(event);
     }
 
-    void fireAfterSequenceInserted(const SymbolListInsertionEvent& event) {
+    void fireAfterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {
       afterSequenceInserted(event);
       if (propagateEvents_)
         for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->afterSequenceInserted(event);
     }
 
-    void fireBeforeSequenceDeleted(const SymbolListDeletionEvent& event) {
+    void fireBeforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {
       beforeSequenceDeleted(event);
       if (propagateEvents_)
         for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->beforeSequenceDeleted(event);
     }
 
-    void fireAfterSequenceDeleted(const SymbolListDeletionEvent& event) {
+    void fireAfterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {
       afterSequenceDeleted(event);
       if (propagateEvents_)
         for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->afterSequenceDeleted(event);
     }
 
-    void fireBeforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {
+    void fireBeforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {
       beforeSequenceSubstituted(event);
       if (propagateEvents_)
         for (size_t i = 0; i < listeners_.size(); ++i)
           listeners_[i]->beforeSequenceSubstituted(event);
     }
 
-    void fireAfterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {
+    void fireAfterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {
       afterSequenceSubstituted(event);
       if (propagateEvents_)
         for (size_t i = 0; i < listeners_.size(); ++i)
@@ -714,8 +516,7 @@ namespace bpp
     bool propagateEvents() const { return propagateEvents_; }
 
   };
-
-
+  
 } //end of namespace bpp.
 
 #endif // _SYMBOLLIST_H_

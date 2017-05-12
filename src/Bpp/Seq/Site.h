@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _SITE_H_
 #define _SITE_H_
 
-#include "SymbolList.h"
+#include "IntSymbolList.h"
 #include "CoreSite.h"
 #include "SiteExceptions.h"
 
@@ -61,7 +61,7 @@ namespace bpp
  */
 class Site:
   public AbstractCoreSite,
-  public BasicSymbolList 
+  public BasicIntSymbolList 
 {  
 
   public:
@@ -150,6 +150,26 @@ class Site:
      *
      * @{
      */
+
+    void setElement(size_t pos, int v)
+    {
+      SymbolList<int>::setElement(pos,v);
+    }
+
+  void addElement(const std::string& s)
+  {
+    IntSymbolList::addElement(s);
+  }
+
+  void addElement(int v)
+  {
+    SymbolList<int>::addElement(v);
+  }
+
+  void addElement(size_t pos, int v)
+  {
+    SymbolList<int>::addElement(pos, v);
+  }
 
     /**
      * @brief Get the position of this site.

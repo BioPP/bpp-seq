@@ -47,6 +47,7 @@ SET(CPP_FILES
   Bpp/Seq/Container/VectorProbabilisticSiteContainer.cpp
   Bpp/Seq/Container/VectorSequenceContainer.cpp
   Bpp/Seq/Container/VectorSiteContainer.cpp
+#  Bpp/Seq/Container/VectorSymbolListSiteContainer.cpp
   Bpp/Seq/DNAToRNA.cpp
   Bpp/Seq/DistanceMatrix.cpp
   Bpp/Seq/GeneticCode/AscidianMitochondrialGeneticCode.cpp
@@ -96,7 +97,7 @@ SET(CPP_FILES
   Bpp/Seq/SiteExceptions.cpp
   Bpp/Seq/SiteTools.cpp
   Bpp/Seq/StringSequenceTools.cpp
-  Bpp/Seq/SymbolList.cpp
+  Bpp/Seq/IntSymbolList.cpp
   Bpp/Seq/SymbolListTools.cpp
   Bpp/Seq/Transliterator.cpp
   )

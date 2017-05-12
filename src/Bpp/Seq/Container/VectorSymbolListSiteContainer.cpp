@@ -88,7 +88,7 @@ void VectorSymbolListSiteContainer::addSite(std::shared_ptr<SymbolListSite> site
 
 /********************************************************************************/
 
-void VectorSymbolListSiteContainer::addSequence(std::shared_ptr<CoreSequence> sequence, bool checkName)
+void VectorSymbolListSiteContainer::addSequence(std::shared_ptr<CoreSequenceS> sequence, bool checkName)
 {
   // if the container has no sequence, we set the size to the size of this sequence :
   if(getNumberOfSequences() == 0)
@@ -110,6 +110,7 @@ void VectorSymbolListSiteContainer::addSequence(std::shared_ptr<CoreSequence> se
   for(size_t i = 0; i < getNumberOfSites(); ++i)
   {
     if (!getSite(i))
+    {
       addSite(std::shared_ptr<BasicSymbolListSite>(new BasicSymbolListSite(sequence->getAlphabet(), (int)(i+1))));
 
     BasicSymbolListSite bpl(sequence->getAlphabet(), (int)(i+1));

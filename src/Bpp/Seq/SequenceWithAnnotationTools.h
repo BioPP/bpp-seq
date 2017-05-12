@@ -125,14 +125,14 @@ namespace bpp {
 
       bool isRemovable() const { return removable_; }
       bool isShared() const { return false; }
-      void beforeSequenceChanged(const SymbolListEditionEvent& event) {}
-      void afterSequenceChanged(const SymbolListEditionEvent& event);
-      void beforeSequenceInserted(const SymbolListInsertionEvent& event) {}
-      void afterSequenceInserted(const SymbolListInsertionEvent& event);
-      void beforeSequenceDeleted(const SymbolListDeletionEvent& event) {}
-      void afterSequenceDeleted(const SymbolListDeletionEvent& event);
-      void beforeSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
-      void afterSequenceSubstituted(const SymbolListSubstitutionEvent& event) {}
+      void beforeSequenceChanged(const IntSymbolListEditionEvent& event) {}
+      void afterSequenceChanged(const IntSymbolListEditionEvent& event);
+      void beforeSequenceInserted(const IntSymbolListInsertionEvent& event) {}
+      void afterSequenceInserted(const IntSymbolListInsertionEvent& event);
+      void beforeSequenceDeleted(const IntSymbolListDeletionEvent& event) {}
+      void afterSequenceDeleted(const IntSymbolListDeletionEvent& event);
+      void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
+      void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
 
       size_t getSize() const { return mask_.size(); }
 

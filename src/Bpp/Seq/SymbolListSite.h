@@ -67,6 +67,27 @@ namespace bpp
     virtual ~SymbolListSite() {}
 
   };
+
+  class BasicSymbolListSite: 
+    public virtual SymbolListSite,
+    public virtual AbstractCoreSite,
+    public virtual BasicSymbolList
+  {
+
+  public: 
+    /**
+     * @name The Clonable interface
+     *
+     * @{
+     */
+    BasicSymbolListSite* clone() const = 0;
+    /** @} */
+    
+    // Class destructor
+    virtual ~BasicSymbolListSite() {}
+
+  };
+
 } //end of namespace bpp.
 
 #endif // _SYMBOLLIST_SITE_H_
