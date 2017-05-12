@@ -483,7 +483,7 @@ namespace bpp {
        */
       SequenceWithQuality(const Sequence& s) :
         EdSymbolList<int>(s.getAlphabet()),
-        EdIntSymbolList(s),
+        EdIntSymbolList(s.getAlphabet()),
         SequenceWithAnnotation(s), qualScores_(new SequenceQuality(s.size(), false))
     {
       addAnnotation(qualScores_);
@@ -505,8 +505,8 @@ namespace bpp {
           const Sequence& s,
           const std::vector<int>& sc)
         throw (DimensionException):
-        EdSymbolList<int>(s),
-        EdIntSymbolList(s),
+        EdSymbolList<int>(sc, s.getAlphabet()),
+        EdIntSymbolList(sc, s.getAlphabet()),
         SequenceWithAnnotation(s),
         qualScores_(new SequenceQuality(sc, false))
       {

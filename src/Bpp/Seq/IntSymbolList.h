@@ -121,18 +121,18 @@ namespace bpp
      *
      * @param pos The position of the character to retrieve.
      */
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException) = 0;
+    virtual std::string getChar(size_t pos) const = 0;
 
-    /**
-     * @brief Get the element at position 'pos' as an int.
-     *
-     * @param pos The position of the character to retrieve.
-     */
+    // /**
+    //  * @brief Get the element at position 'pos' as an int.
+    //  *
+    //  * @param pos The position of the character to retrieve.
+    //  */
 
-    virtual int getValue(size_t pos) const
-    {
-      return getElement(pos);
-    }
+    // virtual int getValue(size_t pos) const
+    // {
+    //   return getElement(pos);
+    // }
 
     /** @} */
 
@@ -215,7 +215,7 @@ namespace bpp
   public:
 
     void setContent(const std::vector<int>& list);
-
+    
     void setContent(const std::vector<std::string>& list) throw (BadCharException);
 
     std::string toString() const;
@@ -226,7 +226,7 @@ namespace bpp
 
     virtual void setElement(size_t pos, const std::string& c);
 
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException);
+    virtual std::string getChar(size_t pos) const;
 
   };
 
@@ -323,6 +323,8 @@ namespace bpp
 
     virtual void setContent(const std::vector<std::string>& list) throw (BadCharException);
 
+    void setContent(const std::vector<int>& list);
+
     virtual std::string toString() const;
 
     virtual void addElement(const std::string& c);
@@ -331,7 +333,7 @@ namespace bpp
 
     virtual void setElement(size_t pos, const std::string& c);
 
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException);
+    virtual std::string getChar(size_t pos) const;
 
     // virtual const IntSymbolListListener& getListener(size_t i) const {
     //   return dynamic_cast<const IntSymbolListListener&>(EdSymbolList<int>::getListener(i));

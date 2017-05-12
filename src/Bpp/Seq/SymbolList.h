@@ -222,6 +222,13 @@ namespace bpp
       return content_[pos];
     }
 
+    virtual const T& getValue(size_t pos) const
+    {
+      if (pos >= content_.size())
+        throw IndexOutOfBoundsException("SymbolList::getValue. Invalid position.", pos, 0, size() - 1);
+      return content_[pos];
+    }
+
     virtual const T& operator[](size_t i) const { return content_[i]; }
 		
     virtual T& operator[](size_t i) { return content_[i]; }
@@ -407,13 +414,6 @@ namespace bpp
       fireAfterSequenceSubstituted(event);
     }
     
-    // const T& getValue(size_t pos) const
-    // {
-    //   if (pos >= content_.size())
-    //     throw IndexOutOfBoundsException("EdSymbolList::getValue. Invalid position.", pos, 0, size() - 1);
-    //   return content_[pos];
-    // }
-
     /**
      * @name Events handling
      *

@@ -118,7 +118,7 @@ namespace bpp
  * @see BasicSequence
  */
   class SequenceWithAnnotation :
-    public virtual intCoreSequenceSL,
+    public virtual Sequence,
     public virtual AbstractCoreSequence,
     public virtual EdIntSymbolList
   {
@@ -260,10 +260,20 @@ namespace bpp
      */
     virtual void setContent(const std::string& sequence) throw (BadCharException);
 
-    // void setContent(const std::vector<std::string>& list) throw (BadCharException)
-    // {
-    //   EdIntSymbolList::setContent(list);
-    // }
+    void setContent(const std::vector<std::string>& list) throw (BadCharException)
+    {
+      EdIntSymbolList::setContent(list);
+    }
+
+    void setContent(const std::vector<int>& list)
+    {
+      EdIntSymbolList::setContent(list);
+    }
+
+    std::string getChar(size_t pos) const
+    {
+      return EdIntSymbolList::getChar(pos);
+    }
 
     void setToSizeR(size_t newSize);
     

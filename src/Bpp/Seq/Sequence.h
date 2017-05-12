@@ -66,7 +66,7 @@ namespace bpp
  */
 
   class Sequence:
-    public virtual intCoreSequenceSL
+    public virtual IntCoreSequenceSL
   {
   public:
     virtual ~Sequence() {}
@@ -94,6 +94,8 @@ namespace bpp
     virtual void setContent(const std::vector<std::string>& list) throw (BadCharException) = 0;
 
     virtual void setContent(const std::vector<int>& list) = 0;
+
+    virtual  std::string getChar(size_t pos) const = 0;
 
     /**
      * @brief Set up the size of a sequence from the right side.
@@ -174,9 +176,6 @@ namespace bpp
   {
   public:
 
-    // using intAbstractSequenceSL::setElement;
-    // using intAbstractSequenceSL::addElement;
-    
     /**
      * @brief Empty constructor: build a void Sequence with just an Alphabet
      *
@@ -305,14 +304,30 @@ namespace bpp
      
     void setContent(const std::string& sequence) throw (BadCharException);
     
-    void setContent(const std::vector<int>& list)
+    void addElement(int elem)
     {
-      BasicIntSymbolList::setContent(list);
+      SymbolList<int>::addElement(elem);
     }
-    
+
+    void setElement(size_t pos, int elem)
+    {
+      SymbolList<int>::setElement(pos, elem);
+    }
+
     void setContent(const std::vector<std::string>& list) throw (BadCharException)
     {
       BasicIntSymbolList::setContent(list);
+    }
+
+    void setContent(const std::vector<int>& list) throw (BadCharException)
+    {
+      BasicIntSymbolList::setContent(list);
+    }
+
+
+    std::string getChar(size_t pos) const
+    {
+       return BasicIntSymbolList::getChar(pos);
     }
 
     void setToSizeR(size_t newSize);

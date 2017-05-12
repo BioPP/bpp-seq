@@ -185,17 +185,27 @@ namespace bpp
      */
 
     /**
+     * @brief checked access to a character in list.
+     *
+     * @param i The position to retrieve.
+     * @return The T value of character at position i.
+     */
+    
+    virtual const T& getValue(size_t pos) const = 0;
+    
+    /**
      * @brief Operator [] overloaded for quick access to a character in list.
      *
      * @param i The position to retrieve.
-     * @return The integer value of character at position i.
+     * @return The T value of character at position i.
      */
+
     virtual const T& operator[](size_t i) const = 0;
     /**
      * @brief Operator [] overloaded for quick access to a character in list.
      *
      * @param i The position to retrieve.
-     * @return The integer value of character at position i.
+     * @return The T value of character at position i.
      */
     virtual T& operator[](size_t i) = 0;
 
@@ -315,7 +325,7 @@ namespace bpp
    * The states that allowed to be present in the list are defined by an alphabet object,
    * which is passed to the list constructor by a pointer.
    *
-   * For programming convenience, the states are stored as integers, but the translation toward
+   * For programming convenience, the states are stored as Ts, but the translation toward
    * and from a char description is easily performed with the Alphabet classes.
    *
    * @see Alphabet
@@ -340,13 +350,6 @@ namespace bpp
     }
 
   public:
-
-    // const T& getValue(size_t pos) const
-    // {
-    //   if (pos >= content_.size())
-    //     throw IndexOutOfBoundsException("EdCoreSymbolList::getValue. Invalid position.", pos, 0, size() - 1);
-    //   return content_[pos];
-    // }
 
     /**
      * @name Events handling

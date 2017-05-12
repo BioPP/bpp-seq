@@ -73,7 +73,7 @@ namespace bpp
      * @throw Exception IOExecption and Sequence related Exceptions.
      */
     
-    virtual bool nextSequence(std::istream& input, CoreSequenceSymbolList<int>& seq) const throw (Exception) = 0;
+    virtual bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
 
   };
 

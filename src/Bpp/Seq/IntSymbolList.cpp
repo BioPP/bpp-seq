@@ -147,7 +147,7 @@ void BasicIntSymbolList::setElement(size_t pos, const string& c)
 
 /****************************************************************************************/
 
-string BasicIntSymbolList::getChar(size_t pos) const throw (IndexOutOfBoundsException)
+string BasicIntSymbolList::getChar(size_t pos) const
 {
   if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicIntSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
@@ -246,7 +246,7 @@ void EdIntSymbolList::setElement(size_t pos, const string& c)
 
 /****************************************************************************************/
 
-string EdIntSymbolList::getChar(size_t pos) const throw (IndexOutOfBoundsException)
+string EdIntSymbolList::getChar(size_t pos) const
 {
   if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdIntSymbolList::getChar. Invalid position.", pos, 0, size() - 1);

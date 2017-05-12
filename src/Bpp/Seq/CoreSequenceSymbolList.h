@@ -78,8 +78,8 @@ namespace bpp
     
   };
 
-  typedef CoreSequenceSymbolList<int> intCoreSequenceSL;
-  typedef CoreSequenceSymbolList<std::vector<double> > probaCoreSequenceSL;
+  typedef CoreSequenceSymbolList<int> IntCoreSequenceSL;
+  typedef CoreSequenceSymbolList<std::vector<double> > ProbaCoreSequenceSL;
   
 
   /**

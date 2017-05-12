@@ -214,6 +214,11 @@ public :
 
   const DataTable& getTable() const { return content_; }
 
+  const std::vector<double>& getValue(size_t pos) const
+  {
+    return getElement(pos);
+  }
+
   const std::vector<double>& operator[](size_t i) const
   {
     return content_.getColumn(i);
