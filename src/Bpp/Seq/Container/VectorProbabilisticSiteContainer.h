@@ -67,8 +67,8 @@ namespace bpp
  */
   
 class VectorProbabilisticSiteContainer :
-    public VectorPositionedContainer<ProbabilisticSite>,
-    public VectorMappedContainer<ProbabilisticSequence>,
+    virtual public VectorPositionedContainer<ProbabilisticSite>,
+    virtual public VectorMappedContainer<BasicProbabilisticSequence>,
     public Commentable
 {
 private:
@@ -91,7 +91,7 @@ public :
 
   VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc) :
     VectorPositionedContainer<ProbabilisticSite>(vpsc),
-    VectorMappedContainer<ProbabilisticSequence>(vpsc),
+    VectorMappedContainer<BasicProbabilisticSequence>(vpsc),
     Commentable(vpsc),
     alphabet_(vpsc.alphabet_)
   {
@@ -101,7 +101,7 @@ public :
   {
     alphabet_ = vpsc.alphabet_;
     VectorPositionedContainer<ProbabilisticSite>::operator=(vpsc);
-    VectorMappedContainer<ProbabilisticSequence>::operator=(vpsc);
+    VectorMappedContainer<BasicProbabilisticSequence>::operator=(vpsc);
     Commentable::operator=(vpsc);
     
     return *this;
@@ -125,7 +125,7 @@ public :
 
   size_t getNumberOfSites() const { return VectorPositionedContainer<ProbabilisticSite>::getSize(); }
   
-  size_t getNumberOfSequences() const { return VectorMappedContainer<ProbabilisticSequence>::getSize(); }
+  size_t getNumberOfSequences() const { return VectorMappedContainer<BasicProbabilisticSequence>::getSize(); }
 
   /*
    * @brief get Objects
@@ -149,14 +149,14 @@ public :
     return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
   }
 
-  const std::shared_ptr<ProbabilisticSequence> getSequence(std::size_t i) const
+  const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const
   {
-    return VectorMappedContainer<ProbabilisticSequence>::getObject(i);
+    return VectorMappedContainer<BasicProbabilisticSequence>::getObject(i);
   }
 
-  std::shared_ptr<ProbabilisticSequence> getSequence(std::size_t i)
+  std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i)
   {
-    return VectorMappedContainer<ProbabilisticSequence>::getObject(i);
+    return VectorMappedContainer<BasicProbabilisticSequence>::getObject(i);
   }
 
   /*
@@ -171,7 +171,7 @@ public :
   
   void addSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false);
   
-  void addSequence(std::shared_ptr<ProbabilisticSequence> sequence, bool checkName = true);
+  void addSequence(std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true);
 
   void clear();
 

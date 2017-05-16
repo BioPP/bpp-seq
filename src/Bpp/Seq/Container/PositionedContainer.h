@@ -73,7 +73,7 @@ namespace bpp
 
     virtual size_t getSize() const = 0;
          
-    virtual void setSize(size_t size) = 0;
+    virtual void setSize(size_t size) {};
 
     virtual void clear() = 0;
     
@@ -96,7 +96,7 @@ namespace bpp
      * @param checkPosition Look if the position is empty.
      */
 
-    virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false) = 0;
+    virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false) {};
 
     /**
      * @brief Extract (and remove) a object from the container.
@@ -112,7 +112,7 @@ namespace bpp
      * @param object          The object to add.
      */
 
-    virtual void appendObject(std::shared_ptr<T> object) = 0;
+    virtual void appendObject(std::shared_ptr<T> object) {};
 
   };
 

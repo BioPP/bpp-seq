@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _CORESITE_H_
 #define _CORESITE_H_
 
+#include <Bpp/Clonable.h>
+
 namespace bpp
 {
 

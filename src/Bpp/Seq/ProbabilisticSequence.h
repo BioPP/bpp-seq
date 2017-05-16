@@ -62,25 +62,6 @@ namespace bpp
  * @see Alphabet
  */
 
-  // class ProbabilisticSequence:
-  //   public virtual probaCoreSequenceSL,
-  //   public virtual ProbabilisticSymbolList
-  // {
-  // public: 
-  //   /**
-  //    * @name The Clonable interface
-  //    *
-  //    * @{
-  //    */
-  //   ProbabilisticSequence* clone() const = 0;
-  //   /** @} */
-
-  //   // Class destructor
-  //   virtual ~ProbabilisticSequence() {}
-    
-
-  // };
-  
   typedef ProbaCoreSequenceSL ProbabilisticSequence;
 
 /**
@@ -141,21 +122,9 @@ namespace bpp
     BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Comments & comments, const Alphabet * alpha) throw (Exception);
 
     /**
-     * @brief The ProbabilisticSequence generic copy constructor.  This does not perform a hard copy of the alphabet object.
-     */
-    BasicProbabilisticSequence(const ProbabilisticSequence & s);
-
-    /**
      * @brief The copy constructor.  This does not perform a hard copy of the alphabet object.
      */
     BasicProbabilisticSequence(const BasicProbabilisticSequence & s);
-
-    /**
-     * @brief The ProbabilisticSequence generic assignment operator.  This does not perform a hard copy of the alphabet object.
-     *
-     * @return a reference to the assigned BasicProbabilisticSequence.
-     */
-    BasicProbabilisticSequence & operator=(const ProbabilisticSequence & s);
 
     /**
      * @brief The assignment operator.  This does not perform a hard cop of the alphabet object.

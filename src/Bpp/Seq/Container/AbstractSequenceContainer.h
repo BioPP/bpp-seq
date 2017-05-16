@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _ABSTRACTSEQUENCECONTAINER_H_
 
 #include "../Alphabet/Alphabet.h"
+#include "../Commentable.h"
 #include "../Sequence.h"
 #include "SequenceContainer.h"
 #include "OrderedSequenceContainer.h"
@@ -55,7 +56,8 @@ namespace bpp
  * This abstract class provides an alphabet and comments, with associated methods.
  */
   class AbstractSequenceContainer:
-    public virtual OrderedSequenceContainer
+    public virtual OrderedSequenceContainer,
+    public Commentable
   {
   private:
 
@@ -63,11 +65,6 @@ namespace bpp
      * @brief The container's alphabet.
      */
     const Alphabet* alphabet_;
-
-    /**
-     * @brief The container's comments.
-     */
-    Comments comments_;
 
   public:
 
@@ -79,15 +76,15 @@ namespace bpp
      * @param alpha The alphabet to be associated to this container.
      */
     AbstractSequenceContainer(const Alphabet* alpha):
-      alphabet_(alpha), comments_() {}
+      Commentable(), alphabet_(alpha) {}
 		
     AbstractSequenceContainer(const AbstractSequenceContainer& sc):
-      alphabet_(sc.alphabet_), comments_(sc.comments_) {}
+      Commentable(sc), alphabet_(sc.alphabet_) {}
     
     AbstractSequenceContainer& operator=(const AbstractSequenceContainer& sc)
     {
+      Commentable::operator=(sc);
       alphabet_ = sc.alphabet_;
-      comments_ = sc.comments_;
       return *this;
     }
 
@@ -97,17 +94,21 @@ namespace bpp
      * @param sc Another sequence container.
      */
     AbstractSequenceContainer(const SequenceContainer& sc):
-      alphabet_(sc.getAlphabet()), comments_(sc.getGeneralComments()) {}
+      Commentable(sc.getGeneralComments()),
+      alphabet_(sc.getAlphabet()) {}
 
     /**
      * @brief Assignation operator from any SequenceContainer object.
      *
      * @param sc Another sequence container.
      */
+    using Commentable::setComments;
+    using Commentable::getComments;
+    
     AbstractSequenceContainer& operator=(const SequenceContainer& sc)
     {
       alphabet_ = sc.getAlphabet();
-      comments_ = sc.getGeneralComments();
+      setComments(sc.getGeneralComments());
       return *this;
     }
 
@@ -133,6 +134,7 @@ namespace bpp
     }
 
     void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException);
+
     const Comments& getGeneralComments() const
     {
       return comments_;
@@ -140,12 +142,12 @@ namespace bpp
 
     void setGeneralComments(const Comments& comments)
     {
-      comments_ = comments;
+      setComments(comments);
     }
 
     void deleteGeneralComments()
     {
-      comments_.clear();
+      clearComments();
     }
 
     /** @} */

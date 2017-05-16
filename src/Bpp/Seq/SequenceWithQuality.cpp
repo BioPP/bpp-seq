@@ -55,7 +55,7 @@ const int SequenceQuality::DEFAULT_QUALITY_VALUE = 20;
 void SequenceQuality::afterSequenceChanged(const IntSymbolListEditionEvent& event)
 {
   qualScores_.clear();
-  qualScores_.insert(qualScores_.begin(), event.getIntSymbolList()->size(), DEFAULT_QUALITY_VALUE);
+  qualScores_.insert(qualScores_.begin(), event.getCoreSymbolList()->size(), DEFAULT_QUALITY_VALUE);
 }
 
 /******************************************************************************/

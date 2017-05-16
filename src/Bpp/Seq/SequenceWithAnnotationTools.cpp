@@ -50,7 +50,7 @@ const string SequenceMask::MASK = "Boolean mask";
 void SequenceMask::afterSequenceChanged(const IntSymbolListEditionEvent& event)
 {
   mask_.clear();
-  mask_.insert(mask_.begin(), event.getIntSymbolList()->size(), false);
+  mask_.insert(mask_.begin(), event.getCoreSymbolList()->size(), false);
 }
 
 /******************************************************************************/

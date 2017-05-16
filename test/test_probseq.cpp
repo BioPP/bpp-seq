@@ -179,7 +179,7 @@ int main() {
 
   // site
   cerr << endl << "init binary probabilistic site with its content and position 3..." << endl;
-  BasicProbabilisticSite p_site(*data,a,3);
+  ProbabilisticSite p_site(*data,a,3);
   cerr << "OK." << endl;
 
   cerr << "site has position : " << p_site.getPosition() << endl;
@@ -236,7 +236,7 @@ int main() {
 
   // site
   cerr << endl << "init DNA probabilistic site with its content...";
-  BasicProbabilisticSite dna_p_site(*dna_data,dna,5);
+  ProbabilisticSite dna_p_site(*dna_data,dna,5);
   cerr << "OK." << endl;
 
   cerr << "site has position : " << dna_p_site.getPosition() << endl;

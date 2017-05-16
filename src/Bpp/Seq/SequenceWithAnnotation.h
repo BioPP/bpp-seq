@@ -285,13 +285,13 @@ namespace bpp
      * @param seq The sequence to append. Only the raw content is appended, not additional fields such as annotations if any.
      * @throw AlphabetMismatchException In case the alphabet does not match the current one.
      */
-    void append(const Sequence& seq) throw (AlphabetMismatchException);
+    void append(const Sequence& seq);
     
-    void append(const std::vector<int>& content) throw (BadIntException);
+    void append(const std::vector<int>& content);
 
-    void append(const std::vector<std::string>& content) throw (BadCharException);
+    void append(const std::vector<std::string>& content);
 
-    void append(const std::string& content) throw (BadCharException);
+    void append(const std::string& content);
 
     /** @} */
 

@@ -123,7 +123,7 @@ namespace bpp
      * @param seq The sequence to append.
      * @throw AlphabetMismatchException If the alphabet of the specified sequence does not match the current alphabet.
      */
-    virtual void append(const Sequence& seq) throw (AlphabetMismatchException) = 0;
+    virtual void append(const Sequence& seq) = 0;
 
     /**
      * @brief Append the specified content to the sequence.
@@ -131,7 +131,7 @@ namespace bpp
      * @param content The content to append to the sequence.
      * @throw BadIntException If the content does not match the current alphabet.
      */
-    virtual void append(const std::vector<int>& content) throw (BadIntException) = 0;
+    virtual void append(const std::vector<int>& content) = 0;
 
     /**
      * @brief Append the specified content to the sequence.
@@ -139,7 +139,7 @@ namespace bpp
      * @param content The content to append to the sequence.
      * @throw BadCharException If the content does not match the current alphabet.
      */
-    virtual void append(const std::vector<std::string>& content) throw (BadCharException) = 0;
+    virtual void append(const std::vector<std::string>& content) = 0;
 
     /**
      * @brief Append the specified content to the sequence.
@@ -147,7 +147,7 @@ namespace bpp
      * @param content The content to append to the sequence.
      * @throw BadCharException If the content does not match the current alphabet.
      */
-    virtual void append(const std::string& content) throw (BadCharException) = 0;
+    virtual void append(const std::string& content) = 0;
 
     /** @} */
 
@@ -334,13 +334,13 @@ namespace bpp
     
     void setToSizeL(size_t newSize);
 
-    void append(const Sequence& seq) throw (AlphabetMismatchException);
+    void append(const Sequence& seq);
     
-    void append(const std::vector<int>& content) throw (BadIntException);
+    void append(const std::vector<int>& content);
 
-    void append(const std::vector<std::string>& content) throw (BadCharException);
+    void append(const std::vector<std::string>& content);
 
-    void append(const std::string& content) throw (BadCharException);
+    void append(const std::string& content);
 
     /** @} */
 

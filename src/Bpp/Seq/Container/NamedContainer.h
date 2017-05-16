@@ -94,7 +94,7 @@ namespace bpp
      * it.
      */
     
-    virtual void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = true) = 0;
+    virtual void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = false) {};
 
     /**
      * @brief Extract (and remove) a object from the container.
@@ -102,7 +102,7 @@ namespace bpp
      * @param name The name of the object.
      */
     
-    virtual std::shared_ptr<T> removeObject(const std::string& name) = 0;
+    virtual std::shared_ptr<T> removeObject(const std::string& name) {return 0;};
 		
     /**
      * @brief Get the number of objects in the container.
@@ -118,7 +118,7 @@ namespace bpp
      * @return A vector of strings with all object names.
      */
 
-    virtual std::vector<std::string> getObjectsNames() const = 0;
+    virtual std::vector<std::string> getObjectsNames() const { std::vector<std::string> v; return v;};
 		
     /**
      * @brief Delete all objects in the container.

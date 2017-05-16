@@ -48,7 +48,7 @@ using namespace std;
 
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const Alphabet * alpha) :
   VectorPositionedContainer<ProbabilisticSite>(),
-  VectorMappedContainer<ProbabilisticSequence>(),
+  VectorMappedContainer<BasicProbabilisticSequence>(),
   Commentable(),
   alphabet_(alpha)
 {}
@@ -88,7 +88,7 @@ void VectorProbabilisticSiteContainer::addSite(std::shared_ptr<ProbabilisticSite
 
 /********************************************************************************/
 
-void VectorProbabilisticSiteContainer::addSequence(std::shared_ptr<ProbabilisticSequence> sequence, bool checkName)
+void VectorProbabilisticSiteContainer::addSequence(std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName)
 {
   // if the container has no sequence, we set the size to the size of this sequence :
   if(getNumberOfSequences() == 0)
@@ -116,7 +116,7 @@ void VectorProbabilisticSiteContainer::addSequence(std::shared_ptr<Probabilistic
   }
 
   // append :
-  VectorMappedContainer<ProbabilisticSequence>::appendObject(sequence, sequence->getName());
+  VectorMappedContainer<BasicProbabilisticSequence>::appendObject(sequence, sequence->getName());
   
   // append elements at each site :
     
@@ -132,7 +132,7 @@ void VectorProbabilisticSiteContainer::addSequence(std::shared_ptr<Probabilistic
 void VectorProbabilisticSiteContainer::clear()
 {
   VectorPositionedContainer<ProbabilisticSite>::clear(); // call VectorSiteContainer clear
-  VectorMappedContainer<ProbabilisticSequence>::clear();
+  VectorMappedContainer<BasicProbabilisticSequence>::clear();
 }  
 
 /********************************************************************************/

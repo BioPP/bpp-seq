@@ -57,18 +57,8 @@ BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name,
 
 /****************************************************************************************/
 
-BasicProbabilisticSequence::BasicProbabilisticSequence(const ProbabilisticSequence & sequence) :
-  AbstractCoreSequence(sequence), BasicProbabilisticSymbolList(sequence) {}
-
 BasicProbabilisticSequence::BasicProbabilisticSequence(const BasicProbabilisticSequence & sequence) :
   AbstractCoreSequence(sequence), BasicProbabilisticSymbolList(sequence) {}
-
-BasicProbabilisticSequence & BasicProbabilisticSequence::operator=(const ProbabilisticSequence & sequence)
-{
-  AbstractCoreSequence::operator=(sequence);
-  BasicProbabilisticSymbolList::operator=(sequence);
-  return *this;
-}
 
 BasicProbabilisticSequence & BasicProbabilisticSequence::operator=(const BasicProbabilisticSequence & sequence)
 {

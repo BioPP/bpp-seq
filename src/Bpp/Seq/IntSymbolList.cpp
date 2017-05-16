@@ -92,10 +92,10 @@ void BasicIntSymbolList::setContent(const vector<string>& list) throw (BadCharEx
   // Check list for incorrect characters
   vector<int> coded(list.size());
   for (size_t i = 0; i < list.size(); i++)
-    if(!alphabet_->isCharInAlphabet(list[i])) throw BadCharException(list[i], "BasicIntSymbolList::setContent", alphabet_);
+    if(!getAlphabet()->isCharInAlphabet(list[i])) throw BadCharException(list[i], "BasicIntSymbolList::setContent", getAlphabet());
   
   for (size_t i = 0; i < list.size(); i++) 
-    coded[i] = alphabet_->charToInt(list[i]);
+    coded[i] = getAlphabet()->charToInt(list[i]);
 	
   //BasicIntSymbolList is valid:
   SymbolList<int>::setContent(coded);
@@ -107,25 +107,25 @@ void BasicIntSymbolList::setContent(const vector<int>& list)
 {
   // Check list for incorrect characters
   for (size_t i = 0; i < list.size(); i++)
-    if(!alphabet_->isIntInAlphabet(list[i]))
-      throw BadIntException(list[i], "BasicIntSymbolList::setContent", alphabet_);
+    if(!getAlphabet()->isIntInAlphabet(list[i]))
+      throw BadIntException(list[i], "BasicIntSymbolList::setContent", getAlphabet());
 	
   //Sequence is valid:
-  SymbolList<int>::setContent(coded);
+  SymbolList<int>::setContent(list);
 }
 
 /****************************************************************************************/
 
 string BasicIntSymbolList::toString() const
 {
-  return StringSequenceTools::decodeSequence(content_, alphabet_);
+  return StringSequenceTools::decodeSequence(content_, getAlphabet());
 };
 
 /****************************************************************************************/
 
 void BasicIntSymbolList::addElement(const string& c)
 {
-  content_.push_back(alphabet_->charToInt(c));
+  content_.push_back(getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
@@ -133,7 +133,7 @@ void BasicIntSymbolList::addElement(const string& c)
 void BasicIntSymbolList::addElement(size_t pos, const string& c)
 {
   if(pos >= content_.size()) throw IndexOutOfBoundsException("BasicIntSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-  content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), alphabet_->charToInt(c));
+  content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
@@ -142,7 +142,7 @@ void BasicIntSymbolList::setElement(size_t pos, const string& c)
 {
   if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicIntSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-  content_[pos] = alphabet_->charToInt(c);
+  content_[pos] = getAlphabet()->charToInt(c);
 }
 
 /****************************************************************************************/
@@ -154,7 +154,7 @@ string BasicIntSymbolList::getChar(size_t pos) const
   string c = "";
   try
   {
-    c = alphabet_->intToChar(content_[pos]);
+    c = getAlphabet()->intToChar(content_[pos]);
   }
   catch(BadIntException bie)
   {
@@ -196,10 +196,10 @@ void EdIntSymbolList::setContent(const vector<string>& list) throw (BadCharExcep
   // Check list for incorrect characters
   vector<int> coded(list.size());
   for (size_t i = 0; i < list.size(); i++)
-    if (!alphabet_->isCharInAlphabet(list[i])) throw BadCharException(list[i], "EdIntSymbolList::setContent", alphabet_);
+    if (!getAlphabet()->isCharInAlphabet(list[i])) throw BadCharException(list[i], "EdIntSymbolList::setContent", getAlphabet());
 	
   for (size_t i = 0; i < list.size(); i++) 
-    coded[i] = alphabet_->charToInt(list[i]);
+    coded[i] = getAlphabet()->charToInt(list[i]);
 
   EdSymbolList<int>::setContent(coded);
 };
@@ -210,8 +210,8 @@ void EdIntSymbolList::setContent(const vector<int>& list)
 {
   // Check list for incorrect characters
   for (size_t i = 0; i < list.size(); i++)
-    if(!alphabet_->isIntInAlphabet(list[i]))
-      throw BadIntException(list[i], "EdIntSymbolList::setContent", alphabet_);
+    if(!getAlphabet()->isIntInAlphabet(list[i]))
+      throw BadIntException(list[i], "EdIntSymbolList::setContent", getAlphabet());
 
   EdSymbolList<int>::setContent(list);
 };
@@ -220,28 +220,28 @@ void EdIntSymbolList::setContent(const vector<int>& list)
 
 string EdIntSymbolList::toString() const
 {
-  return StringSequenceTools::decodeSequence(content_, alphabet_);
+  return StringSequenceTools::decodeSequence(content_, getAlphabet());
 };
 
 /****************************************************************************************/
 
 void EdIntSymbolList::addElement(const string& c)
 {
-  EdSymbolList<int>::addElement(alphabet_->charToInt(c));
+  EdSymbolList<int>::addElement(getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
 
 void EdIntSymbolList::addElement(size_t pos, const string& c)
 {
-  EdSymbolList<int>::addElement(pos, alphabet_->charToInt(c));
+  EdSymbolList<int>::addElement(pos, getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
 
 void EdIntSymbolList::setElement(size_t pos, const string& c) 
 {
-  EdSymbolList<int>::setElement(pos, alphabet_->charToInt(c));
+  EdSymbolList<int>::setElement(pos, getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
@@ -252,7 +252,7 @@ string EdIntSymbolList::getChar(size_t pos) const
     throw IndexOutOfBoundsException("EdIntSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
   string c = "";
   try {
-    c = alphabet_->intToChar(content_[pos]);
+    c = getAlphabet()->intToChar(content_[pos]);
   } catch(BadIntException bie) {
     //This should never happen!
   }

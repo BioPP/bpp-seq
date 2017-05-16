@@ -54,11 +54,13 @@ using namespace std;
 
 SequenceWithAnnotation::SequenceWithAnnotation(const Alphabet* alpha):
   AbstractCoreSequence(""),
+  EdSymbolList<int>(alpha),
   EdIntSymbolList(alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException) :
   AbstractCoreSequence(name),
+  EdSymbolList<int>(alpha),
   EdIntSymbolList(alpha)
 {
   if (sequence!="")
@@ -68,6 +70,7 @@ SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const st
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadCharException) :
   AbstractCoreSequence(name, comments),
+  EdSymbolList<int>(alpha),
   EdIntSymbolList(alpha)
 {
   if (sequence != "")
@@ -77,24 +80,28 @@ SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const st
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha)
   throw (BadCharException) :
   AbstractCoreSequence(name),
+  EdSymbolList<int>(alpha),
   EdIntSymbolList(sequence, alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadCharException) :
   AbstractCoreSequence(name, comments),
-  EdIntSymbolList(sequence, alpha),
+  EdSymbolList<int>(alpha),
+  EdIntSymbolList(sequence, alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha)
   throw (BadIntException) :
   AbstractCoreSequence(name),
+  EdSymbolList<int>(sequence, alpha),
   EdIntSymbolList(sequence, alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha)
   throw (BadIntException) :
   AbstractCoreSequence(name, comments),
+  EdSymbolList<int>(sequence, alpha),
   EdIntSymbolList(sequence, alpha)
 {}
 
@@ -102,19 +109,22 @@ SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const st
 
 SequenceWithAnnotation::SequenceWithAnnotation(const Sequence& s) :
   AbstractCoreSequence(s.getName(), s.getComments()),
-  EdIntSymbolList(s)
+  EdSymbolList<int>(s.getContent(),s.getAlphabet()),
+  EdIntSymbolList(s.getContent(),s.getAlphabet())
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const SequenceWithAnnotation& s) :
   AbstractCoreSequence(s.getName(), s.getComments()),
-  EdIntSymbolList(s)
+  EdSymbolList<int>(s.getContent(),s.getAlphabet()),
+  EdIntSymbolList(s.getContent(),s.getAlphabet())
 {}
 
 /* Assignation operator: ******************************************************/
 
 SequenceWithAnnotation& SequenceWithAnnotation::operator=(const Sequence& s)
 {
-  EdIntSymbolList::operator=(s);
+  setContent(s.getContent());
+  
   setName(s.getName());
   setComments(s.getComments());
   return *this;
@@ -192,7 +202,7 @@ void SequenceWithAnnotation::setToSizeL(size_t newSize)
 
 /******************************************************************************/
 
-void SequenceWithAnnotation::append(const CoreSequence& seq) throw (AlphabetMismatchException)
+void SequenceWithAnnotation::append(const Sequence& seq)
 {
   if (seq.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SequenceWithAnnotation::append");
@@ -204,7 +214,7 @@ void SequenceWithAnnotation::append(const CoreSequence& seq) throw (AlphabetMism
   fireAfterSequenceInserted(event);
 }
 
-void SequenceWithAnnotation::append(const std::vector<int>& content) throw (BadIntException)
+void SequenceWithAnnotation::append(const std::vector<int>& content)
 {
   IntSymbolListInsertionEvent event(this, content_.size(), content.size());
   fireBeforeSequenceInserted(event);
@@ -219,7 +229,7 @@ void SequenceWithAnnotation::append(const std::vector<int>& content) throw (BadI
   fireAfterSequenceInserted(event);
 }
 
-void SequenceWithAnnotation::append(const std::vector<std::string>& content) throw (BadCharException)
+void SequenceWithAnnotation::append(const std::vector<std::string>& content)
 {
   IntSymbolListInsertionEvent event(this, content_.size(), content.size());
   fireBeforeSequenceInserted(event);
@@ -235,7 +245,7 @@ void SequenceWithAnnotation::append(const std::vector<std::string>& content) thr
   fireAfterSequenceInserted(event);
 }
 
-void SequenceWithAnnotation::append(const std::string& content) throw (BadCharException)
+void SequenceWithAnnotation::append(const std::string& content)
 {
   append(StringSequenceTools::codeSequence(content, getAlphabet()));
 }

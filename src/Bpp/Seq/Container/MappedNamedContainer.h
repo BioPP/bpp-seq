@@ -145,7 +145,7 @@ namespace bpp
      * @param checkName Tell is the object name must be checked.
      */
     
-    void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = true)
+    void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = false)
     {
       if (mObjects_.find(name)!=mObjects_.end())
         throw Exception("MappedNamedContainer::setObject : Object's name already exists in container : " + name);

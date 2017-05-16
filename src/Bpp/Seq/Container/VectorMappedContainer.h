@@ -41,6 +41,7 @@
 #define VECTOR_MAPPED_CONTAINER_H_
 
 #include "MappedNamedContainer.h"
+#include "PositionedNamedContainer.h"
 #include "VectorPositionedContainer.h"
 
 // From the STL library:
@@ -63,8 +64,9 @@ namespace bpp
 
   template<class T>
   class VectorMappedContainer :
-    private MappedNamedContainer<T>,
-    private VectorPositionedContainer<T>
+    virtual public PositionedNamedContainer<T>,
+    virtual public MappedNamedContainer<T>,
+    virtual public VectorPositionedContainer<T>
   {
   private:
     /*
@@ -73,12 +75,20 @@ namespace bpp
      */
     
     std::vector<std::string> vNames_;
+
+    /*
+     * @brief map <string, size_t> for the positions of the names
+     *
+     */
     
+    std::map<std::string, size_t> mNames_;
+
   public:
     VectorMappedContainer() :
       MappedNamedContainer<T>(),
       VectorPositionedContainer<T>(),
-      vNames_()
+      vNames_(),
+      mNames_()
     {
     }
 
@@ -86,7 +96,8 @@ namespace bpp
     VectorMappedContainer(const VectorMappedContainer& vsc) :
       MappedNamedContainer<T>(vsc),
       VectorPositionedContainer<T>(vsc),
-      vNames_(vsc.vNames_)
+      vNames_(vsc.vNames_),
+      mNames_(vsc.mNames_)      
     {
     }
     
@@ -96,6 +107,7 @@ namespace bpp
       MappedNamedContainer<T>::operator=(vsc);
       VectorPositionedContainer<T>::operator=(vsc);
       vNames_=vsc.vNames_;
+      mNames_=vsc.mNames_;
       
       return *this;
     }
@@ -172,6 +184,7 @@ namespace bpp
       VectorPositionedContainer<T>::addObject(object, objectIndex, check);
       MappedNamedContainer<T>::addObject(object, name, check);
       vNames_[objectIndex]=name;
+      mNames_[name]=objectIndex;
       
     }
     
@@ -181,22 +194,36 @@ namespace bpp
       VectorPositionedContainer<T>::appendObject(object);
       
       vNames_.push_back(name);
+      mNames_[name]=vNames_.size()-1;
     }
 
     std::shared_ptr<T> removeObject(size_t objectIndex)
     {
       std::shared_ptr<T> obj= VectorPositionedContainer<T>::removeObject(objectIndex);
       MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
+      mNames_.erase(vNames_[objectIndex]);
+      vNames_[objectIndex]="";
+      return obj;
+    }
+
+    std::shared_ptr<T> removeObject(std::string& name)
+    {
+      std::shared_ptr<T> obj= MappedNamedContainer<T>::removeObject(name);
+      size_t objectIndex=mNames_[name];
+      
+      VectorPositionedContainer<T>::removeObject(name);
+      mNames_.erase(name);
       vNames_[objectIndex]="";
       
       return obj;
     }
-    
+
     void clear()
     {
       MappedNamedContainer<T>::clear();
       VectorPositionedContainer<T>::clear();
       vNames_.clear();
+      mNames_.clear();
     }
       
   };

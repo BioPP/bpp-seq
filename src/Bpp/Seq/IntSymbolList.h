@@ -98,6 +98,7 @@ namespace bpp
      *
      * @param c The character to add, given as a string.
      */
+
     virtual void addElement(const std::string& c) = 0;
 
     /**
@@ -122,17 +123,6 @@ namespace bpp
      * @param pos The position of the character to retrieve.
      */
     virtual std::string getChar(size_t pos) const = 0;
-
-    // /**
-    //  * @brief Get the element at position 'pos' as an int.
-    //  *
-    //  * @param pos The position of the character to retrieve.
-    //  */
-
-    // virtual int getValue(size_t pos) const
-    // {
-    //   return getElement(pos);
-    // }
 
     /** @} */
 
@@ -180,11 +170,6 @@ namespace bpp
      * @throw BadIntException If the content does not match the specified alphabet.
      */
     BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException);
-
-    /**
-     * @brief The generic copy constructor.
-     */
-//    BasicIntSymbolList(const IntSymbolList& list);
 
     /**
      * @brief The copy constructor.
@@ -335,26 +320,11 @@ namespace bpp
 
     virtual std::string getChar(size_t pos) const;
 
-    // virtual const IntSymbolListListener& getListener(size_t i) const {
-    //   return dynamic_cast<const IntSymbolListListener&>(EdSymbolList<int>::getListener(i));
-    // }
-    
-    // virtual IntSymbolListListener& getListener(size_t i) {
-    //   return dynamic_cast<IntSymbolListListener&>(EdSymbolList<int>::getListener(i));
-    // }
-
     void addIntSymbolListListener(IntSymbolListListener* listener)
     {
       addCoreSymbolListListener(listener);
     }
 
-    // virtual void removeIntSymbolListListener(IntSymbolListListener* listener) {
-    //   if (listener->isRemovable())
-    //     listeners_.erase(remove(listeners_.begin(), listeners_.end(), listener), listeners_.end());
-    //   else
-    //     throw Exception("EdIntSymbolList::removeIntSymbolListListener. Listener is not removable.");
-    // } 
- 
   protected:
     virtual void beforeSequenceChanged(const IntSymbolListEditionEvent& event) {};
     virtual void afterSequenceChanged(const IntSymbolListEditionEvent& event) {};
@@ -364,67 +334,6 @@ namespace bpp
     virtual void afterSequenceDeleted(const IntSymbolListDeletionEvent& event) {};
     virtual void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {};
     virtual void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {};
-
-  //   void fireBeforeSequenceChanged(const IntSymbolListEditionEvent& event) {
-  //     beforeSequenceChanged(event);
-  //     if (propagateEvents_)
-  //       for (size_t i = 0; i < listeners_.size(); ++i)
-  //         listeners_[i]->beforeSequenceChanged(event);
-  //   }
-
-  //   void fireAfterSequenceChanged(const IntSymbolListEditionEvent& event) {
-  //     afterSequenceChanged(event);
-  //     if (propagateEvents_)
-  //       for (size_t i = 0; i < listeners_.size(); ++i)
-  //         listeners_[i]->afterSequenceChanged(event);
-  //   }
-   
-  //   void fireBeforeSequenceInserted(const IntSymbolListInsertionEvent& event) {
-  //     beforeSequenceInserted(event);
-  //     if (propagateEvents_)
-  //       for (size_t i = 0; i < listeners_.size(); ++i)
-  //         listeners_[i]->beforeSequenceInserted(event);
-  //   }
-
-  //   void fireAfterSequenceInserted(const IntSymbolListInsertionEvent& event) {
-  //     afterSequenceInserted(event);
-  //     if (propagateEvents_)
-  //       for (size_t i = 0; i < listeners_.size(); ++i)
-  //         listeners_[i]->afterSequenceInserted(event);
-  //   }
-
-  //   void fireBeforeSequenceDeleted(const IntSymbolListDeletionEvent& event) {
-  //     beforeSequenceDeleted(event);
-  //     if (propagateEvents_)
-  //       for (size_t i = 0; i < listeners_.size(); ++i)
-  //         listeners_[i]->beforeSequenceDeleted(event);
-  //   }
-
-  //   void fireAfterSequenceDeleted(const IntSymbolListDeletionEvent& event) {
-  //     afterSequenceDeleted(event);
-  //     if (propagateEvents_)
-  //       for (size_t i = 0; i < listeners_.size(); ++i)
-  //         listeners_[i]->afterSequenceDeleted(event);
-  //   }
-
-  //   void fireBeforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {
-  //     beforeSequenceSubstituted(event);
-  //     if (propagateEvents_)
-  //       for (size_t i = 0; i < listeners_.size(); ++i)
-  //         listeners_[i]->beforeSequenceSubstituted(event);
-  //   }
-
-  //   void fireAfterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {
-  //     afterSequenceSubstituted(event);
-  //     if (propagateEvents_)
-  //       for (size_t i = 0; i < listeners_.size(); ++i)
-  //         listeners_[i]->afterSequenceSubstituted(event);
-  //   }
-  //   /** @} */
-
-  // protected:
-  //   void propagateEvents(bool yn) { propagateEvents_ = yn; }
-  //   bool propagateEvents() const { return propagateEvents_; }
 
   };
 

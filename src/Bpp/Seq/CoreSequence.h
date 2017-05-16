@@ -45,66 +45,12 @@
 #include <string>
 #include <vector>
 
+#include <Bpp/Clonable.h>
+#include "Commentable.h"
+
 namespace bpp
 {
 
-/**
- * @brief Declaration of Comments type.
- *
- * Comments are defined as a std::vector of std::strings to allow the later creation of a
- * full Comments class.
- */
-  typedef std::vector<std::string> Comments;
-
-  class Commentable
-  {
-  private:
-    Comments comments_;
-    
-  public:
-    Commentable() :
-      comments_()
-    {
-    }
-
-    Commentable(const Comments& comments) :
-      comments_(comments)
-    {
-    }
-
-    Commentable(const Commentable& com) :
-      comments_(com.comments_)
-    {
-    }
-
-    Commentable& operator=(const Commentable& com)
-    {
-      comments_=com.comments_;
-      return *this;
-    }
-
-    virtual ~Commentable() 
-    {
-    }
-
-    /**
-     * @brief Get the comments.
-     *
-     * @return The comments.
-     */
-     
-    const Comments& getComments() const { return comments_; }
-
-    /**
-     * @brief Set the comments.
-     *
-     * @param comments The new comments.
-     */
-
-    void setComments(const Comments& comments) { comments_ = comments; }    
-  };
-  
-    
 /**
  * @brief The core sequence interface. 
  *

@@ -107,8 +107,6 @@ namespace bpp {
         removable_(removable),
         qualScores_(quality)
       {
-      //    if (size() != qualScores_.size())
-      //      throw DimensionException("SequenceWithQuality constructor: sequence and quality must have the same length", qualScores_.size(), size());
       }
 
       /** @} */
@@ -559,9 +557,6 @@ namespace bpp {
        * sequence size
        */
       void setQuality(size_t pos, int quality) throw (IndexOutOfBoundsException) {
-        //if (pos >= qualScores_->getSize())
-        //  throw IndexOutOfBoundsException("SequenceWithQuality::setQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
-        //qualScores_[pos] = quality;
         qualScores_->setScore(pos, quality);
       }
       
@@ -617,10 +612,7 @@ namespace bpp {
        * @throw DimensionException if qualities does not have the same size as
        * content
        */
-      virtual void append(
-          const std::vector<int>& content,
-          const std::vector<int>& qualities)
-        throw (BadIntException, DimensionException)
+      virtual void append(const std::vector<int>& content, const std::vector<int>& qualities)
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
@@ -641,10 +633,7 @@ namespace bpp {
        * @throw DimensionException if qualities does not have the same size as
        * content
        */
-      virtual void append(
-          const std::vector<std::string>& content,
-          const std::vector<int>& qualities)
-        throw (BadCharException, DimensionException)
+      virtual void append(const std::vector<std::string>& content, const std::vector<int>& qualities)
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
@@ -665,10 +654,7 @@ namespace bpp {
        * @throw DimensionException if qualities does not have the same size as
        * content
        */
-      virtual void append(
-          const std::string& content,
-          const std::vector<int>& qualities)
-        throw (BadCharException, DimensionException)
+      virtual void append(const std::string& content, const std::vector<int>& qualities)
       {
         if (content.size() / this->getAlphabet()->getStateCodingSize()
             != qualities.size())
