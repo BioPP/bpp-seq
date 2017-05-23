@@ -239,6 +239,7 @@ namespace bpp
     }
   };
 
+  
   template<class T>
   class EdSymbolList:
     public SymbolList<T>,

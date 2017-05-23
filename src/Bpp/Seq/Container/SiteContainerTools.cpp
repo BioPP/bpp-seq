@@ -103,7 +103,7 @@ SiteContainer* SiteContainerTools::getSelectedSites(
     // We do not check positions, we suppose that the container passed as an argument is correct.
     // WARNING: what if selection contains many times the same indice? ...
   }
-  sc->setGeneralComments(sequences.getGeneralComments());
+  sc->AbstractSequenceContainer::setComments(sequences.getComments());
   return sc;
 }
 
@@ -223,9 +223,9 @@ SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites
   noGapCont->setSequencesNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
-    const Site* site = &sites.getSite(i);
-    if (!SiteTools::isGapOnly(*site))
-      noGapCont->addSite(*site);
+    const Site& site = sites.getSite(i);
+    if (!SiteTools::isGapOnly(site))
+      noGapCont->addSite(site);
   }
   return noGapCont;
 }
@@ -256,8 +256,8 @@ void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
     }
   }
   ApplicationTools::displayGauge(n, n);
-  const Site* site = &sites.getSite(0);
-  if (SiteTools::isGapOnly(*site))
+  const Site& site = sites.getSite(0);
+  if (SiteTools::isGapOnly(site))
     sites.deleteSite(0);
 }
 
@@ -270,9 +270,9 @@ SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCont
   noGapCont->setSequencesNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
-    const Site* site = &sites.getSite(i);
-    if (!SiteTools::isGapOrUnresolvedOnly(*site))
-      noGapCont->addSite(*site, false);
+    const Site& site = sites.getSite(i);
+    if (!SiteTools::isGapOrUnresolvedOnly(site))
+      noGapCont->addSite(site, false);
   }
   return noGapCont;
 }
@@ -303,8 +303,8 @@ void SiteContainerTools::removeGapOrUnresolvedOnlySites(SiteContainer& sites)
     }
   }
   ApplicationTools::displayGauge(n, n);
-  const Site* site = &sites.getSite(0);
-  if (SiteTools::isGapOrUnresolvedOnly(*site))
+  const Site& site = sites.getSite(0);
+  if (SiteTools::isGapOrUnresolvedOnly(site))
     sites.deleteSite(0);
 }
 
@@ -411,11 +411,11 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
   for (unsigned int i = 0; i < m; ++i)
   {
     string resolved = refSeq->getChar(i);
-    const Site* site = &dottedAln.getSite(i);
-    Site resolvedSite(resolvedAlphabet, site->getPosition());
+    const Site& site = dottedAln.getSite(i);
+    Site resolvedSite(resolvedAlphabet, site.getPosition());
     for (unsigned int j = 0; j < n; j++)
     {
-      state = site->getChar(j);
+      state = site.getChar(j);
       if (state == ".")
       {
         state = resolved;

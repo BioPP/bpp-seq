@@ -152,7 +152,7 @@ SiteContainer* MaseTools::getSelectedSites(
   const SiteContainer& sequences,
   const string& setName) throw (IOException)
 {
-  SiteSelection ss = getSiteSet(sequences.getGeneralComments(), setName);
+  SiteSelection ss = getSiteSet(sequences.getComments(), setName);
   return SiteContainerTools::getSelectedPositions(sequences, ss);
 }
 
@@ -162,7 +162,7 @@ SequenceContainer* MaseTools::getSelectedSequences(
   const OrderedSequenceContainer& sequences,
   const std::string& setName) throw (IOException)
 {
-  SequenceSelection ss = getSequenceSet(sequences.getGeneralComments(), setName);
+  SequenceSelection ss = getSequenceSet(sequences.getComments(), setName);
   VectorSequenceContainer* cont = new VectorSequenceContainer(sequences.getAlphabet());
   SequenceContainerTools::getSelectedSequences(sequences, ss, *cont);
   return cont;

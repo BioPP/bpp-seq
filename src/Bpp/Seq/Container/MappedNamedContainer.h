@@ -113,7 +113,7 @@ namespace bpp
      * @return The object associated to the given key.
      */
 
-    std::shared_ptr<T> getObject(const std::string& name) const
+    const std::shared_ptr<T> getObject(const std::string& name) const
     {
       const auto it=mObjects_.find(name);
       if (it==mObjects_.end())
@@ -147,7 +147,7 @@ namespace bpp
     
     void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = false)
     {
-      if (mObjects_.find(name)!=mObjects_.end())
+      if (checkName && mObjects_.find(name)!=mObjects_.end())
         throw Exception("MappedNamedContainer::setObject : Object's name already exists in container : " + name);
 
       mObjects_[name] = object;
@@ -172,10 +172,27 @@ namespace bpp
     }
 
     /**
+     * @brief change the key of an object.
+     * 
+     * @param okey The present key of the object.
+     * @param nkey The next key of the object.
+     */
+    
+    void changeName(const std::string& okey, const std::string& nkey)
+    {
+      if (mObjects_.find(okey)!=mObjects_.end())
+        throw Exception("MappedNamedContainer::changeName : Object's name does bot exist in container : " + okey);
+      
+      std::shared_ptr<T> obj = mObjects_[okey];
+      mObjects_.erase(okey);
+      mObjects_[nkey]=obj;
+    }
+
+    /**
      * @return All objects keys.
      */
 
-    std::vector<std::string> getObjectsNames() const
+    virtual std::vector<std::string> getObjectsNames() const
     {
       std::vector<std::string> vNames;
       
@@ -191,7 +208,16 @@ namespace bpp
     {
       mObjects_.clear();
     }
-    
+
+  protected:
+    void addObject_(std::shared_ptr<T> object, const std::string& name, bool checkName = false) const
+    {
+      if (checkName && mObjects_.find(name)!=mObjects_.end())
+        throw Exception("MappedNamedContainer::setObject : Object's name already exists in container : " + name);
+
+      const_cast<std::map<std::string, std::shared_ptr<T> >& >(mObjects_)[name] = object;
+    }
+
 
   }; 
 } //end of namespace bpp.

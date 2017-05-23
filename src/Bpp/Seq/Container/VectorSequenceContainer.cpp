@@ -51,12 +51,10 @@ VectorSequenceContainer::VectorSequenceContainer(
   const Alphabet* alpha)
 throw (AlphabetMismatchException) :
   AbstractSequenceContainer(alpha),
-  sequences_()
+  VectorMappedContainer<Sequence>()
 {
-  for (std::vector<const Sequence*>::const_iterator i = vs.begin(); i < vs.end(); i++)
-  {
+  for (auto i = vs.begin(); i < vs.end(); i++)
     addSequence(**i);
-  }
 }
 
 /** Copy constructors: ********************************************************/
@@ -64,7 +62,7 @@ throw (AlphabetMismatchException) :
 VectorSequenceContainer::VectorSequenceContainer(
   const VectorSequenceContainer& vsc) :
   AbstractSequenceContainer(vsc),
-  sequences_()
+  VectorMappedContainer<Sequence>()
 {
   size_t max = vsc.getNumberOfSequences();
   for (size_t i = 0; i < max; i++)
@@ -76,7 +74,7 @@ VectorSequenceContainer::VectorSequenceContainer(
 VectorSequenceContainer::VectorSequenceContainer(
   const OrderedSequenceContainer& osc) :
   AbstractSequenceContainer(osc.getAlphabet()),
-  sequences_()
+  VectorMappedContainer<Sequence>()
 {
   // Sequences insertion
   for (unsigned int i = 0; i < osc.getNumberOfSequences(); i++)
@@ -88,7 +86,7 @@ VectorSequenceContainer::VectorSequenceContainer(
 VectorSequenceContainer::VectorSequenceContainer(
   const SequenceContainer& sc) :
   AbstractSequenceContainer(sc.getAlphabet()),
-  sequences_()
+  VectorMappedContainer<Sequence>()
 {
   // Sequences insertion
   std::vector<std::string> names = sc.getSequencesNames();
@@ -97,7 +95,7 @@ VectorSequenceContainer::VectorSequenceContainer(
     addSequence(sc.getSequence(names[i]), false);
   }
 
-  setGeneralComments(sc.getGeneralComments());
+  AbstractSequenceContainer::setComments(sc.getComments());
 }
 
 /** Assignation operator: *****************************************************/
@@ -107,13 +105,7 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
 {
   clear();
   AbstractSequenceContainer::operator=(vsc);
-
-  // Sequences insertion
-  size_t max = vsc.getNumberOfSequences();
-  for (size_t i = 0; i < max; i++)
-  {
-    addSequence(vsc.getSequence(i), false);
-  }
+  VectorMappedContainer::operator=(vsc);
 
   return *this;
 }
@@ -155,192 +147,6 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
 
 /******************************************************************************/
 
-const Sequence& VectorSequenceContainer::getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
-{
-  // Specified sequence existence verification
-  if (sequenceIndex < sequences_.size())
-    return *sequences_[sequenceIndex];
-  throw IndexOutOfBoundsException("VectorSequenceContainer::getSequence.", sequenceIndex, 0, sequences_.size() - 1);
-}
-
-/******************************************************************************/
-
-bool VectorSequenceContainer::hasSequence(const string& name) const
-{
-  // Specified sequence name research into all sequences
-  for (size_t i = 0; i < sequences_.size(); i++)
-  {
-    if (sequences_[i]->getName() == name)
-      return true;
-  }
-  return false;
-}
-
-/******************************************************************************/
-
-const Sequence& VectorSequenceContainer::getSequence(const string& name) const throw (SequenceNotFoundException)
-{
-  // Specified sequence name research into all sequences
-  for (size_t i = 0; i < sequences_.size(); i++)
-  {
-    if (sequences_[i]->getName() == name)
-      return *sequences_[i];
-  }
-  throw SequenceNotFoundException("VectorSequenceContainer::getSequence : Specified sequence doesn't exist", name);
-}
-
-/******************************************************************************/
-
-Sequence& VectorSequenceContainer::getSequence_(size_t sequenceIndex) throw (IndexOutOfBoundsException)
-{
-  // Specified sequence existence verification
-  if (sequenceIndex < sequences_.size())
-    return *sequences_[sequenceIndex];
-  throw IndexOutOfBoundsException("VectorSequenceContainer::getSequence.", sequenceIndex, 0, sequences_.size() - 1);
-}
-
-/******************************************************************************/
-
-Sequence& VectorSequenceContainer::getSequence_(const string& name) throw (SequenceNotFoundException)
-{
-  // Specified sequence name research into all sequences
-  for (size_t i = 0; i < sequences_.size(); i++)
-  {
-    if (sequences_[i]->getName() == name)
-      return *sequences_[i];
-  }
-  throw SequenceNotFoundException("VectorSequenceContainer::getSequence : Specified sequence doesn't exist", name);
-}
-
-/******************************************************************************/
-
-size_t VectorSequenceContainer::getSequencePosition(const string& name) const throw (SequenceNotFoundException)
-{
-  // Specified sequence name research into all sequences
-  for (size_t i = 0; i < sequences_.size(); i++)
-  {
-    if (sequences_[i]->getName() == name)
-      return i;
-  }
-  throw SequenceNotFoundException("VectorSequenceContainer::getSequencePosition : Specified sequence doesn't exist", name);
-}
-
-/******************************************************************************/
-
-void VectorSequenceContainer::setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception)
-{
-  // Sequence's name existence checking
-  if (checkName)
-  {
-    // For all names in vector : throw exception if name already exists
-    for (size_t j = 0; j < sequences_.size(); j++)
-    {
-      if (sequences_[j]->getName() == sequence.getName())
-        if (j != sequenceIndex)
-          throw Exception("VectorSequenceContainer::setSequence : Sequence's name already exists in container");
-    }
-  }
-
-  // New sequence's alphabet and sequence container's alphabet matching verification
-  if (sequence.getAlphabet()->getAlphabetType() == getAlphabet()->getAlphabetType())
-  {
-    // Delete old sequence
-    delete sequences_[sequenceIndex];
-    // New sequence insertion in sequence container
-    sequences_[sequenceIndex] = dynamic_cast<Sequence*>(sequence.clone());
-  }
-  else
-    throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
-}
-
-/******************************************************************************/
-
-Sequence* VectorSequenceContainer::removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException)
-{
-  // Copy sequence:
-  if (sequenceIndex >= sequences_.size())
-    throw IndexOutOfBoundsException("VectorSequenceContainer::removeSequence.", sequenceIndex, 0, sequences_.size() - 1);
-  Sequence* old = sequences_[sequenceIndex];
-  // Remove pointer toward old sequence:
-  sequences_.erase(sequences_.begin() + static_cast<ptrdiff_t>(sequenceIndex));
-  // Send copy:
-  return old;
-}
-
-/******************************************************************************/
-
-void VectorSequenceContainer::deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException)
-{
-  // Delete sequence
-  if (sequenceIndex >= sequences_.size())
-    throw IndexOutOfBoundsException("VectorSequenceContainer::deleteSequence.", sequenceIndex, 0, sequences_.size() - 1);
-  delete sequences_[sequenceIndex];
-  // Remove pointer toward old sequence:
-  sequences_.erase(sequences_.begin() + static_cast<ptrdiff_t>(sequenceIndex));
-}
-
-/******************************************************************************/
-
-void VectorSequenceContainer::addSequence(const Sequence& sequence, bool checkName) throw (Exception)
-{
-  // Sequence's name existence checking
-  if (checkName)
-  {
-    // For all names in vector : throw exception if name already exists
-    for (size_t i = 0; i < sequences_.size(); i++)
-    {
-      if (sequences_[i]->getName() == sequence.getName())
-        throw Exception("VectorSequenceContainer::addSequence : Sequence '" + sequence.getName() + "' already exists in container");
-    }
-  }
-
-  // New sequence's alphabet and sequence container's alphabet matching verification
-  if (sequence.getAlphabet()->getAlphabetType() == getAlphabet()->getAlphabetType())
-  {
-    // push_back(new Sequence(sequence.getName(), sequence.getContent(), alphabet));
-    sequences_.push_back(dynamic_cast<Sequence*>(sequence.clone()));
-  }
-  else
-    throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
-}
-
-void VectorSequenceContainer::addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName) throw (Exception)
-{
-  // Sequence's name existence checking
-  if (checkName)
-  {
-    // For all names in vector : throw exception if name already exists
-    for (size_t i = 0; i < sequences_.size(); i++)
-    {
-      if (sequences_[i]->getName() == sequence.getName())
-        throw Exception("VectorSequenceContainer::addSequence : Sequence '" + sequence.getName() + "' already exists in container");
-    }
-  }
-
-  // New sequence's alphabet and sequence container's alphabet matching verification
-  if (sequence.getAlphabet()->getAlphabetType() == getAlphabet()->getAlphabetType())
-  {
-    // insert(begin() + pos, new Sequence(sequence.getName(), sequence.getContent(), alphabet));
-    sequences_.insert(sequences_.begin() + static_cast<ptrdiff_t>(sequenceIndex), dynamic_cast<Sequence*>(sequence.clone()));
-  }
-  else
-    throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
-}
-
-/******************************************************************************/
-
-std::vector<std::string> VectorSequenceContainer::getSequencesNames() const
-{
-  std::vector<std::string> names;
-  for (size_t i = 0; i < sequences_.size(); i++)
-  {
-    names.push_back(sequences_[i]->getName());
-  }
-  return names;
-}
-
-/******************************************************************************/
-
 void VectorSequenceContainer::setSequencesNames(
   const std::vector<std::string>& names,
   bool checkNames)
@@ -362,36 +168,18 @@ throw (Exception)
   }
   for (size_t i = 0; i < names.size(); i++)
   {
-    sequences_[i]->setName(names[i]);
+    changeName(getSequence(i).getName(),names[i]);
+    getSequence_(i).setName(names[i]);
   }
 }
 
-/******************************************************************************/
-
-void VectorSequenceContainer::clear()
-{
-  // Delete sequences
-  for (size_t i = 0; i < sequences_.size(); i++)
-  {
-    delete sequences_[i];
-  }
-  // Delete all sequence pointers
-  sequences_.clear();
-}
-
-/******************************************************************************/
-
-void VectorSequenceContainer::setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException)
-{
-  sequences_[sequenceIndex]->setComments(comments);
-}
 
 /******************************************************************************/
 
 VectorSequenceContainer* VectorSequenceContainer::createEmptyContainer() const
 {
   VectorSequenceContainer* vsc = new VectorSequenceContainer(getAlphabet());
-  vsc->setGeneralComments(getGeneralComments());
+  vsc->AbstractSequenceContainer::setComments(getComments());
   return vsc;
 }
 

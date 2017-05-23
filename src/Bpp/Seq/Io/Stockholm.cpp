@@ -58,9 +58,9 @@ void Stockholm::writeAlignment(ostream& output, const SiteContainer& sc) const t
 
   output << "# STOCKHOLM 1.0" << endl; 
   // Loop for all general comments
-  for (size_t i = 0; i < sc.getGeneralComments().size(); ++i)
+  for (size_t i = 0; i < sc.getComments().size(); ++i)
   {
-    output << "#=GF CC " << sc.getGeneralComments()[i] << endl;
+    output << "#=GF CC " << sc.getComments()[i] << endl;
   }
 
 	// Main loop : for all sequences in vector container

@@ -94,7 +94,7 @@ namespace bpp
      * @param sc Another sequence container.
      */
     AbstractSequenceContainer(const SequenceContainer& sc):
-      Commentable(sc.getGeneralComments()),
+      Commentable(sc.getComments()),
       alphabet_(sc.getAlphabet()) {}
 
     /**
@@ -102,13 +102,11 @@ namespace bpp
      *
      * @param sc Another sequence container.
      */
-    using Commentable::setComments;
-    using Commentable::getComments;
-    
+
     AbstractSequenceContainer& operator=(const SequenceContainer& sc)
     {
       alphabet_ = sc.getAlphabet();
-      setComments(sc.getGeneralComments());
+      setComments(sc.getComments());
       return *this;
     }
 
@@ -128,26 +126,30 @@ namespace bpp
       return getSequence(name).toString();
     }
 
+    const Comments& getComments() const
+    {
+      return Commentable::getComments();
+    }
+
+    void setComments(const Comments& comments)
+    {
+      Commentable::setComments(comments);
+    }
+
+    void clearComments()
+    {
+      Commentable::clearComments();
+    }
+
     const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException)
     {
       return getSequence(name).getComments();
     }
 
-    void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException);
-
-    const Comments& getGeneralComments() const
+    void setComments(const std::string& name, const Comments& comments)
     {
-      return comments_;
-    }
-
-    void setGeneralComments(const Comments& comments)
-    {
-      setComments(comments);
-    }
-
-    void deleteGeneralComments()
-    {
-      clearComments();
+      size_t pos = getSequencePosition(name);
+      setComments(pos, comments);
     }
 
     /** @} */
@@ -172,7 +174,7 @@ namespace bpp
       return getSequence(sequenceIndex).getComments();
     }
 
-    virtual void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException) = 0;
+    virtual void setComments(size_t sequenceIndex, const Comments& comments) = 0;
     /** @} */
 
   };

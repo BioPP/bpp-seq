@@ -128,7 +128,7 @@ void SequenceContainerTools::keepOnlySelectedSequences(
       test = (selection[j] == i);
     }
     if (!test)
-      sequences.deleteSequence(names[i]);
+      sequences.removeSequence(names[i]);
     // WARNING: what if selection contains several times the same indice? ...
   }
 }

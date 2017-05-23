@@ -362,7 +362,15 @@ namespace bpp
     virtual void merge(const SequenceWithAnnotation& swa)
       throw (AlphabetMismatchException, Exception);
 
+    const Comments& getComments() const { return Commentable::getComments(); }
 
+    void setComments(const Comments& comments) { Commentable::setComments(comments); }    
+
+    void clearComments() { Commentable::clearComments(); }    
+
+    const std::string& getName() const { return AbstractCoreSequence::getName(); }
+    
+    void setName(const std::string& name) { AbstractCoreSequence::setName(name); }
   };
 
 } //end of namespace bpp.

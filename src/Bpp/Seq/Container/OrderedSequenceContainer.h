@@ -79,7 +79,7 @@ namespace bpp
      * @return A reference toward the Sequence object with corresponding name.
      * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
      */
-    virtual const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const Sequence& getSequence(size_t sequenceIndex) const = 0;
 
     /**
      * @brief Replace a sequence in the container.
@@ -100,16 +100,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If the name does not match any sequence in
      * the container.
      */
-    virtual Sequence* removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException, Exception) = 0;
-
-    /**
-     * @brief Delete a sequence of the container.
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in
-     * the container.
-     */
-    virtual void deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException, Exception) = 0;
+    virtual Sequence* removeSequence(size_t sequenceIndex) = 0;
 
     /**
      * @brief Get the name of a particular sequence.
@@ -139,7 +130,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If the position does not match any sequence in
      * the container.
      */
-    virtual void setComments(size_t sequenceIndex, const Comments & comments) throw (IndexOutOfBoundsException) = 0;
+    virtual void setComments(size_t sequenceIndex, const Comments & comments) = 0;
 		
     /**
      * @brief Get the position of a sequence in sequence container from its name.
@@ -148,7 +139,7 @@ namespace bpp
      * @return The position of the sequence with name 'name', if it exists.
      * @throw SequenceNotFoundException If no sequence with name 'name' could be found.
      */
-    virtual size_t getSequencePosition(const std::string & name) const throw (SequenceNotFoundException) = 0;
+    virtual size_t getSequencePosition(const std::string & name) const = 0;
 
     /**
      * @name Provide direct access to sequences content.
@@ -219,15 +210,16 @@ namespace bpp
      * @{
      */
     virtual std::string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
-    virtual const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) = 0;
+    virtual const Sequence& getSequence(const std::string& name) const = 0;
     virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;
-    virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
-    virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
+    virtual Sequence* removeSequence(const std::string& name) = 0;
     virtual size_t getNumberOfSequences() const = 0;
     virtual std::vector<std::string> getSequencesNames() const = 0;
     virtual void setSequencesNames(const std::vector<std::string> & names, bool checkNames) throw (Exception) = 0;
+    virtual const Comments& getComments() const = 0;
+    virtual void setComments(const Comments& comments) = 0;
     virtual const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException) = 0;
-    virtual void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException) = 0;
+    virtual void setComments(const std::string& name, const Comments& comments) = 0;
     /** @} */
   };
 

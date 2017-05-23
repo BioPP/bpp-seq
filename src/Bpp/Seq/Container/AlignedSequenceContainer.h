@@ -6,36 +6,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _ALIGNEDSEQUENCECONTAINER_H_
@@ -46,6 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "OrderedSequenceContainer.h"
 #include "VectorSequenceContainer.h"
 #include <Bpp/Exceptions.h>
+#include "VectorPositionedContainer.h"
 
 // From the STL:
 #include <string>
@@ -61,31 +62,23 @@ namespace bpp
  * Sequence access is in \f$O(1)\f$, and site access in \f$O(n)\f$, where
  * \f$n\f$ is the number of sequences in the container.
  *
+ * Sites are built on the fly when needed, otherwise they are only nullptr
+ *
  * See VectorSiteContainer for an alternative implementation.
  * 
  * @see VectorSequenceContainer, Sequence, Site, VectorSiteContainer
  */
-class AlignedSequenceContainer:
-  public virtual VectorSequenceContainer,
-  public virtual SiteContainer
-{
+  class AlignedSequenceContainer:
+    public virtual VectorSequenceContainer,
+    public virtual SiteContainer,
+    public virtual VectorPositionedContainer<Site>
+  {
   private:
-    // Integer std::vector that contains sites's positions
+    // // Integer std::vector that contains sites's positions
     std::vector<int> positions_;
     
     size_t length_; // Number of sites for verifications before sequence's insertion in sequence container
   
-    /**
-     * This is used in order to implement the SiteContainer interface.
-     * A SiteContainer is expected to work on Site objects, but this class
-     * -- since it is a VectorSequenceContainer -- has its data sored as
-     * Sequence object. When the SiteContainer method getSite() is invoked
-     * it creates a new Site object and send the address of it.
-     * To avoid memory leaks, this object is put into a std::vector so that it can be
-     * destroyed when the container is destroyed.
-     */
-    mutable std::vector<Site*> sites_;
-    
   public:
     /**
      * @brief Build a new empty container with the specified alphabet.
@@ -93,10 +86,11 @@ class AlignedSequenceContainer:
      * @param alpha The alphabet to use.
      */
     AlignedSequenceContainer(const Alphabet* alpha):
+      AbstractSequenceContainer(alpha),
       VectorSequenceContainer(alpha),
+      VectorPositionedContainer<Site>(),
       positions_(),
-      length_(0),
-      sites_()
+      length_(0)
     {
       reindexSites();
     }
@@ -107,10 +101,11 @@ class AlignedSequenceContainer:
      * @param asc The container to copy.
      */
     AlignedSequenceContainer(const AlignedSequenceContainer& asc):
+      AbstractSequenceContainer(asc),
       VectorSequenceContainer(asc),
+      VectorPositionedContainer<Site>(asc),
       positions_(asc.getSitePositions()),
-      length_(asc.getNumberOfSites()),
-      sites_(asc.getNumberOfSites())
+      length_(asc.getNumberOfSites())
     {}
 
     /**
@@ -119,10 +114,11 @@ class AlignedSequenceContainer:
      * @param sc The container to copy.
      */
     AlignedSequenceContainer(const SiteContainer& sc):
+      AbstractSequenceContainer(sc),
       VectorSequenceContainer(sc),
+      VectorPositionedContainer<Site>(sc.getNumberOfSites()),
       positions_(sc.getSitePositions()),
-      length_(sc.getNumberOfSites()),
-      sites_(sc.getNumberOfSites())
+      length_(sc.getNumberOfSites())
     {}
 
     /**
@@ -139,7 +135,8 @@ class AlignedSequenceContainer:
     AlignedSequenceContainer& operator=(const            SiteContainer&  sc);
     AlignedSequenceContainer& operator=(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException);
 
-    virtual ~AlignedSequenceContainer();
+    virtual ~AlignedSequenceContainer() {};
+    
 
   public:
 
@@ -157,10 +154,10 @@ class AlignedSequenceContainer:
      * @{
      */
     const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException);
+    Site& getSite(size_t siteIndex) throw (IndexOutOfBoundsException);
     void        setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
-    Site *   removeSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-    void     deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-    void    deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException, Exception);
+    std::shared_ptr<Site>   deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
+   void    deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException, Exception);
     void addSite(const Site& site, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, int position, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, size_t siteIndex, bool checkPosition = true) throw (Exception);
@@ -180,8 +177,8 @@ class AlignedSequenceContainer:
     void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception);
     void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (Exception);
 
-    void addSequence(const Sequence& sequence, bool checkName = true) throw (Exception);
-    void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true) throw (Exception);
+    void addSequence(const Sequence& sequence, bool checkName = true);
+    void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
     /** @} */
     
   
@@ -194,7 +191,7 @@ class AlignedSequenceContainer:
      */
     bool checkSize_(const Sequence& sequence) { return (sequence.size() == length_); }
 
-};
+  };
 
 } //end of namespace bpp.
 

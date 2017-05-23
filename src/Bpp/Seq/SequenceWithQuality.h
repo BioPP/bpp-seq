@@ -762,6 +762,13 @@ namespace bpp {
 
       /** @} */
 
+    const Comments& getComments() const { return Commentable::getComments(); }
+
+    void setComments(const Comments& comments) { Commentable::setComments(comments); }    
+
+    void clearComments() { Commentable::clearComments(); }    
+
+
   };
 
 } // end of namespace bpp.

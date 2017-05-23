@@ -108,7 +108,7 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SiteContainer & sc)
 
   for (unsigned int i = 0; i < countSequences; ++i)
     sc.addSequence(sequences[i], checkNames_);
-  sc.setGeneralComments(comments);
+  sc.setComments(comments);
 }
 
 void Clustal::writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception)

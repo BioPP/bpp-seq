@@ -99,12 +99,32 @@ namespace bpp
     virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false) {};
 
     /**
-     * @brief Extract (and remove) a object from the container.
+     * @brief Insert an object in the container.
+     *
+     * @param object          The object to add.
+     * @param position The new position of the object
+     */
+
+    virtual void insertObject(std::shared_ptr<T> object, size_t objectIndex) {};
+
+    /**
+     * @brief Extract and remove a object from the container.
+     * The container size is unchanged, the positioned is set to null.
      *
      * @param objectIndex The position of the object.
      */
     
     virtual std::shared_ptr<T> removeObject(size_t objectIndex) = 0;
+
+    /**
+     * @brief Extract and remove a object from the container.
+     * The container is then shortened
+     *
+     * @param name The name of the object.
+     */
+    
+    virtual std::shared_ptr<T> deleteObject(const std::string& name) {return 0;};
+
 
     /**
      * @brief Add a object at the end of the container.

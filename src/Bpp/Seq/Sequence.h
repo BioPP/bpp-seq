@@ -149,6 +149,47 @@ namespace bpp
      */
     virtual void append(const std::string& content) = 0;
 
+    
+    /** @} */
+
+    /**
+     * @name Setting/getting the name of the sequence.
+     *
+     * @{
+     */
+     
+    /**
+     * @brief Get the name of this sequence.
+     *
+     * @return This sequence name.
+     */
+    virtual const std::string& getName() const = 0;
+    
+    /**
+     * @brief Set the name of this sequence.
+     *
+     * @param name The new name of the sequence.
+     */
+    virtual void setName(const std::string& name) = 0;    
+    /** @} */
+    
+
+    /** 
+     * Comments @{
+     */
+    
+    virtual const Comments& getComments() const =0;
+
+    /**
+     * @brief Set the comments.
+     *
+     * @param comments The new comments.
+     */
+
+    virtual void setComments(const Comments& comments) = 0;
+
+    virtual void clearComments() = 0;
+
     /** @} */
 
   };
@@ -341,6 +382,16 @@ namespace bpp
     void append(const std::vector<std::string>& content);
 
     void append(const std::string& content);
+
+    const Comments& getComments() const { return Commentable::getComments(); }
+
+    void setComments(const Comments& comments) { Commentable::setComments(comments); }    
+
+    void clearComments() { Commentable::clearComments(); }    
+
+    const std::string& getName() const { return AbstractCoreSequence::getName(); }
+    
+    void setName(const std::string& name) { AbstractCoreSequence::setName(name); }
 
     /** @} */
 

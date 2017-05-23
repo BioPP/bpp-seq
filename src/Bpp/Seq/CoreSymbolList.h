@@ -150,17 +150,17 @@ namespace bpp
     virtual void setElement(size_t pos, const T& c) = 0;
 
     /**
-     * @brief Delete the element at position 'pos'.
+     * @brief Remove the element at position 'pos'.
      *
-     * @param pos The position of the element to delete.
+     * @param pos The position of the element to remove.
      */
     virtual void deleteElement(size_t pos) = 0;
 
     /**
-     * @brief Delete the elements at position 'pos'.
+     * @brief Remove the elements at position 'pos'.
      *
-     * @param pos The position of the first element to delete.
-     * @param len The length of the region to delete.
+     * @param pos The position of the first element to remove.
+     * @param len The length of the region to remove.
      */
     virtual void deleteElements(size_t pos, size_t len) = 0;
 

@@ -70,7 +70,7 @@ namespace bpp
  * because these methods take sequence container's type specific parameters
  * (i.e. a key for map sequence containers);
  * 2. to delete a sequence from a container, one must use the appropriate method
- * (removeSequence() and deleteSequence()).
+ * (removeSequence()).
  * These methods performs a few check, and properly update pointers.
  * You should never delete a sequence from a container by yourself.
  *
@@ -108,7 +108,7 @@ namespace bpp
      * @return A reference toward the Sequence with corresponding name.
      * @throw SequenceNotFoundException If the name does not match any sequence in the container.
      */
-    virtual const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException) = 0;
+    virtual const Sequence& getSequence(const std::string& name) const = 0;
 
     /**
      * @brief Check if a sequence with a given name is present in the container.
@@ -127,7 +127,7 @@ namespace bpp
      * @throw Exception Any other kind of exception, if the name of the sequence is
      * already used, are whatever else depending on the implementation.
      */
-    virtual void addSequence(const Sequence& sequence, bool checkName) throw (Exception) = 0;
+    virtual void addSequence(const Sequence& sequence, bool checkName) = 0;
 
     /**
      * @brief Replace a sequence in the container.
@@ -150,17 +150,8 @@ namespace bpp
      * @throw SequenceNotFoundException If the name does not match any sequence in
      * the container.
      */
-    virtual Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
+    virtual Sequence* removeSequence(const std::string& name) = 0;
 		
-    /**
-     * @brief Delete a sequence of the container.
-     *
-     * @param name The name of the sequence.
-     * @throw SequenceNotFoundException If the name does not match any sequence in
-     * the container.
-     */
-    virtual void deleteSequence(const std::string& name) throw (SequenceNotFoundException, Exception) = 0;
-
     /**
      * @brief Get the number of sequences in the container.
      *
@@ -205,26 +196,26 @@ namespace bpp
      * @throw SequenceNotFoundException If the name does not match any sequence in
      * the container.
      */
-    virtual void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException) = 0;
+    virtual void setComments(const std::string& name, const Comments& comments) = 0;
 		
     /**
      * @brief Get the comments of this container.
      *
      * @return The comments associated to this container.
      */
-    virtual const Comments& getGeneralComments() const = 0;
+    virtual const Comments& getComments() const = 0;
 
     /**
      * @brief Set the comments of this container.
      *
      * @param comments The comments to be associated to this container.
      */
-    virtual void setGeneralComments(const Comments& comments) = 0;
+    virtual void setComments(const Comments& comments) = 0;
 		
     /**
      * @brief Delete the comments associated to this container.
      */
-    virtual void deleteGeneralComments() = 0;
+    virtual void clearComments() = 0;
 
     /**
      * @brief Delete all sequences in the container.

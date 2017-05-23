@@ -52,11 +52,12 @@ using namespace std;
 /***************************************************************************/
 
 AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException) :
+  AbstractSequenceContainer(osc.getAlphabet()),
   VectorSequenceContainer(osc.getAlphabet()),
+  VectorPositionedContainer<Site>(),
   // We can't call the copy constructor because we want to use the overloaded addSequence method !!!
   positions_(),
-  length_(),
-  sites_()
+  length_()
 {
   // Initializing
   for (unsigned int i = 0; i < osc.getNumberOfSequences(); i++)
@@ -70,8 +71,8 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
     length_ = 0;
 
   reindexSites();
-  sites_.resize(length_);
-  setGeneralComments(osc.getGeneralComments());
+  VectorPositionedContainer<Site>::setSize(length_);
+  AbstractSequenceContainer::setComments(osc.getComments());
 }
 
 /***************************************************************************/
@@ -79,11 +80,11 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
 AlignedSequenceContainer& AlignedSequenceContainer::operator=(const AlignedSequenceContainer& asc)
 {
   VectorSequenceContainer::operator=(asc);
+  VectorPositionedContainer<Site>::operator=(asc);
 
   // Initializing
   length_    = asc.getNumberOfSites();
   positions_ = asc.getSitePositions();
-  sites_.resize(length_);
 
   return *this;
 }
@@ -97,7 +98,7 @@ AlignedSequenceContainer& AlignedSequenceContainer::operator=(const SiteContaine
   // Initializing
   length_    = sc.getNumberOfSites();
   positions_ = sc.getSitePositions();
-  sites_.resize(length_);
+  VectorPositionedContainer<Site>::setSize(length_);
 
   return *this;
 }
@@ -111,22 +112,9 @@ AlignedSequenceContainer& AlignedSequenceContainer::operator=(const OrderedSeque
   // Initializing
   length_ = 0;
   reindexSites();
-  sites_.resize(length_);
+  VectorPositionedContainer<Site>::setSize(length_);
 
   return *this;
-}
-
-/** Class destructor: *********************************************************/
-
-AlignedSequenceContainer::~AlignedSequenceContainer()
-{
-  // delete all sites:
-
-  for (unsigned int i = 0; i < sites_.size(); i++)
-  {
-    if (sites_[i])
-      delete sites_[i];
-  }
 }
 
 /***************************************************************************/
@@ -138,16 +126,31 @@ const Site& AlignedSequenceContainer::getSite(size_t i) const throw (IndexOutOfB
 
   // Main loop : for all sequences
   size_t n = getNumberOfSequences();
-  std::vector<int> site(n);
+  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)i));
   for (size_t j = 0; j < n; j++)
   {
-    site[j] = getSequence(j)[i];
+    site->addElement(getSequence(j)[i]);
   }
 
-  if (sites_[i])
-    delete sites_[i];
-  sites_[i] = new Site(site, getAlphabet(), positions_[i]);
-  return *sites_[i];
+  VectorPositionedContainer<Site>::addObject_(site,i);
+  return *VectorPositionedContainer<Site>::getObject(i);
+}
+
+Site& AlignedSequenceContainer::getSite(size_t i) throw (IndexOutOfBoundsException)
+{
+  if (i >= length_)
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites() - 1);
+
+  // Main loop : for all sequences
+  size_t n = getNumberOfSequences();
+  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)i));
+  for (size_t j = 0; j < n; j++)
+  {
+    site->addElement(getSequence(j)[i]);
+  }
+
+  VectorPositionedContainer<Site>::addObject(site,i);
+  return *VectorPositionedContainer<Site>::getObject(i);
 }
 
 /******************************************************************************/
@@ -166,16 +169,12 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
 
   // Check position:
   int position = site.getPosition();
-  if (checkPositions)
+  for (auto poss : positions_)
   {
-    // For all positions in vector : throw exception if position already exists
-    for (size_t i = 0; i < positions_.size(); i++)
-    {
-      if (positions_[i] == position)
-        throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
-    }
+    if (poss == position)
+      throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
   }
-
+   
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
   {
@@ -186,41 +185,14 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
 
 /******************************************************************************/
 
-Site* AlignedSequenceContainer::removeSite(size_t pos) throw (IndexOutOfBoundsException)
-{
-  if (pos >= getNumberOfSites())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::removeSite", pos, 0, getNumberOfSites() - 1);
-
-  // Get old site
-  getSite(pos); // Creates the site!
-  Site* old = sites_[pos];
-
-  // For all sequences
-  for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
-    getSequence_(j).deleteElement(pos);
-  }
-
-  // Delete site's position
-  positions_.erase(positions_.begin() + static_cast<ptrdiff_t>(pos));
-  length_--;
-
-  // Actualizes the 'sites' vector:
-  if (sites_[pos])
-    delete sites_[pos];
-  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(pos));
-
-  // Send result
-  return old;
-}
-
-/******************************************************************************/
-
-void AlignedSequenceContainer::deleteSite(size_t pos) throw (IndexOutOfBoundsException)
+std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos) throw (IndexOutOfBoundsException)
 {
   if (pos >= getNumberOfSites())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites() - 1);
 
+  // Get old site
+  getSite(pos); // Creates the site!
+
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
   {
@@ -232,10 +204,9 @@ void AlignedSequenceContainer::deleteSite(size_t pos) throw (IndexOutOfBoundsExc
   length_--;
 
   // Actualizes the 'sites' vector:
-  if (sites_[pos])
-    delete sites_[pos];
-  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(pos));
+  return VectorPositionedContainer<Site>::deleteObject(pos);
 }
+
 
 /******************************************************************************/
 
@@ -256,13 +227,7 @@ void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length) thro
   length_ -= length;
 
   // Actualizes the 'sites' vector:
-  for (size_t i = siteIndex; i < siteIndex + length; ++i)
-  {
-    if (sites_[i])
-      delete sites_[i];
-  }
-  sites_.erase(sites_.begin() + static_cast<ptrdiff_t>(siteIndex),
-      sites_.begin() + static_cast<ptrdiff_t>(siteIndex + length));
+  VectorPositionedContainer<Site>::deleteObjects(siteIndex, length);
 }
 
 /******************************************************************************/
@@ -299,7 +264,7 @@ void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions) th
   positions_.push_back(position);
 
   // Actualizes the 'sites' vector:
-  sites_.push_back(0);
+  VectorPositionedContainer<Site>::appendObject(nullptr);
 }
 
 /******************************************************************************/
@@ -335,7 +300,7 @@ void AlignedSequenceContainer::addSite(const Site& site, int position, bool chec
   positions_.push_back(position);
 
   // Actualizes the 'sites' vector:
-  sites_.push_back(0);
+  VectorPositionedContainer<Site>::appendObject(nullptr);
 }
 
 /******************************************************************************/
@@ -375,7 +340,7 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool 
   positions_.insert(positions_.begin() + static_cast<ptrdiff_t>(siteIndex), position);
 
   // Actualizes the 'sites' vector:
-  sites_.insert(sites_.begin() + static_cast<ptrdiff_t>(siteIndex), 0);
+  VectorPositionedContainer<Site>::insertObject(nullptr, siteIndex);
 }
 
 /******************************************************************************/
@@ -414,7 +379,7 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, int p
   positions_.insert(positions_.begin() + static_cast<ptrdiff_t>(siteIndex), position);
 
   // Actualizes the 'sites' vector:
-  sites_.insert(sites_.begin() + static_cast<ptrdiff_t>(siteIndex), 0);
+  VectorPositionedContainer<Site>::insertObject(0, siteIndex);
 }
 
 /******************************************************************************/
@@ -458,13 +423,12 @@ void AlignedSequenceContainer::setSequence(const string& name, const Sequence& s
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::addSequence(const Sequence& sequence, bool checkName) throw (Exception)
+void AlignedSequenceContainer::addSequence(const Sequence& sequence, bool checkName)
 {
   // if container has only one sequence
   if (length_ == 0)
   {
     length_ = sequence.size();
-    sites_.resize(length_);
     reindexSites();
   }
   if (checkSize_(sequence))
@@ -475,7 +439,7 @@ void AlignedSequenceContainer::addSequence(const Sequence& sequence, bool checkN
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::addSequence(const Sequence& sequence, size_t i, bool checkName) throw (Exception)
+void AlignedSequenceContainer::addSequence(const Sequence& sequence, size_t i, bool checkName)
 {
   if (i >= getNumberOfSequences())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences() - 1);
@@ -501,7 +465,7 @@ void AlignedSequenceContainer::clear()
 AlignedSequenceContainer* AlignedSequenceContainer::createEmptyContainer() const
 {
   AlignedSequenceContainer* asc = new AlignedSequenceContainer(getAlphabet());
-  asc->setGeneralComments(getGeneralComments());
+  asc->AbstractSequenceContainer::setComments(getComments());
   return asc;
 }
 

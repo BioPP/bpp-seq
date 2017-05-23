@@ -58,7 +58,6 @@ namespace bpp
  * This interface provides methods to retrieve, add or set sites in the alignment.
  * As for SequenceContainers, the maintenance of Sites is up to the container.
  * All site objects are cloned befored being added and retrieved.
- * All sites stored are deleted in the destructor of the container or after having called the deleteSite() method.
  */
 class SiteContainer :
   public virtual OrderedSequenceContainer
@@ -78,6 +77,7 @@ public:
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
   virtual const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException) = 0;
+  virtual Site& getSite(size_t siteIndex) throw (IndexOutOfBoundsException) = 0;
 
   /**
    * @brief Set a site in the container.
@@ -132,24 +132,18 @@ public:
   /**
    * @brief Remove a site from the container.
    *
-   * The site is not deleted, a pointer toward it is returned.
+   * The site is deleted (ie the container is shortened) and a pointer
+   * toward it is returned.
    *
    * @param siteIndex The position of the site in the container.
    * @return A pointer toward site i in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual Site* removeSite(size_t siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
+  
+  virtual std::shared_ptr<Site> deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
 
   /**
-   * @brief Delete a site in the container.
-   *
-   * @param siteIndex The position of the site in the container.
-   * @throw IndexOutOfBoundsException If the specified site does not exists.
-   */
-  virtual void deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
-
-  /**
-   * @brief Delete a continuous range of sites in the container.
+   * @brief Remove a continuous range of sites in the container.
    *
    * @param siteIndex The position of the first site in the container.
    * @param length The length of the region to delete, starting at pposition siteIndex.

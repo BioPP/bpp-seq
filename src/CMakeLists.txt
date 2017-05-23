@@ -35,10 +35,9 @@ SET(CPP_FILES
   Bpp/Seq/AlphabetIndex/__MiyataMatrixCode
   Bpp/Seq/App/SequenceApplicationTools.cpp
   Bpp/Seq/CodonSiteTools.cpp
-  Bpp/Seq/Container/AbstractSequenceContainer.cpp
   Bpp/Seq/Container/AlignedSequenceContainer.cpp
   Bpp/Seq/Container/CompressedVectorSiteContainer.cpp
-  Bpp/Seq/Container/MapSequenceContainer.cpp
+#  Bpp/Seq/Container/MapSequenceContainer.cpp
   Bpp/Seq/Container/SequenceContainerIterator.cpp
   Bpp/Seq/Container/SequenceContainerTools.cpp
   Bpp/Seq/Container/SiteContainerExceptions.cpp

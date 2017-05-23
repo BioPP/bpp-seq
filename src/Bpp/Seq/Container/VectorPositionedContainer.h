@@ -70,13 +70,13 @@ namespace bpp
   protected:
     std::vector<std::shared_ptr<T> > positions_;
     
-public:
-  /**
-   * @brief Build a new container from a set of positions.
-   *
-   * @param vs A std::vector of objects.
-   */
-
+  public:
+    /**
+     * @brief Build a new container from a set of positions.
+     *
+     * @param vs A std::vector of objects.
+     */
+    
     VectorPositionedContainer(const std::vector<std::shared_ptr<T> >& vs) :
       positions_(vs)
     {
@@ -95,13 +95,17 @@ public:
     }
     
     
-    VectorPositionedContainer(const VectorPositionedContainer& vsc) :
+    VectorPositionedContainer(const VectorPositionedContainer<T>& vsc) :
       positions_(vsc.positions_)
     {
     }
     
-
-    VectorPositionedContainer<T>& operator=(const VectorPositionedContainer& vsc)
+    /**
+     * @brief copy where shared_ptr elements are shared
+     *
+     */
+    
+    VectorPositionedContainer<T>& operator=(const VectorPositionedContainer<T>& vsc)
     {
       positions_=vsc.positions_;
       return *this;
@@ -121,7 +125,7 @@ public:
     
     VectorPositionedContainer<T>* clone() const
     {
-      return new VectorPositionedContainer(*this);
+      return new VectorPositionedContainer<T>(*this);
     }
     
     /** @} */
@@ -145,31 +149,6 @@ public:
       return positions_[objectIndex];
     }
     
-
-    /*
-     * Iterator
-     *
-     */
-
-    class Iterator : public std::iterator<std::input_iterator_tag, std::shared_ptr<T> >
-    {
-    private:
-      typename std::vector<std::shared_ptr<T> >::iterator it;
-    public:
-      Iterator(VectorPositionedContainer<T>& vpc, size_t pos = 0) : it(vpc.positions_.begin()+pos) {}
-      Iterator(const Iterator& mit) : it(mit.it) {}
-      Iterator& operator++() {++it;return *this;}
-      Iterator operator++(int) {Iterator tmp(*this); operator++(); return tmp;}
-      bool operator==(const Iterator& rhs) {return it==rhs.it;}
-      bool operator!=(const Iterator& rhs) {return it!=rhs.it;}
-      std::shared_ptr<T> operator*() {return *it;}
-    };
-
-    // Iterator& iterator(size_t pos = 0)
-    // {
-    //   return *std::shared_ptr<Iterator>(new Iterator(*this, pos));
-    // }
-    
     /*
      * @brief Fill container
      *
@@ -186,10 +165,24 @@ public:
       positions_[objectIndex] = object;
     }
 
+    void insertObject(std::shared_ptr<T> object, size_t objectIndex)
+    {
+      if (objectIndex > getSize())
+        throw IndexOutOfBoundsException("VectorPositionedContainer::insertObject.", objectIndex, 0, getSize());
+
+      positions_.insert(positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex), object);
+    }
+
+
+    bool isAvailablePosition(size_t objectIndex) const
+    {
+      return (objectIndex < getSize() && positions_[objectIndex]==nullptr);
+    }
+
     std::shared_ptr<T> removeObject(size_t objectIndex)
     {
       if (objectIndex >= getSize())
-        throw IndexOutOfBoundsException("VectorPositionedContainer::removeSite.", objectIndex, 0, getSize() - 1);
+        throw IndexOutOfBoundsException("VectorPositionedContainer::removeObject.", objectIndex, 0, getSize() - 1);
 
       std::shared_ptr<T> ret = positions_[objectIndex];
 
@@ -198,6 +191,26 @@ public:
       return ret;
     }
     
+    std::shared_ptr<T> deleteObject(size_t objectIndex)
+    {
+      if (objectIndex >= getSize())
+        throw IndexOutOfBoundsException("VectorPositionedContainer::deleteObject.", objectIndex, 0, getSize() - 1);
+
+      std::shared_ptr<T> ret = positions_[objectIndex];
+
+      positions_.erase(positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
+
+      return ret;
+    }
+
+    void deleteObjects(size_t objectIndex, size_t length)
+    {
+      if (objectIndex + length > getSize())
+        throw IndexOutOfBoundsException("VectorPositionedContainer::deleteObjects.", objectIndex + length, 0, getSize() - 1);
+
+      positions_.erase(positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex), positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex+length));
+    }
+
     void appendObject(std::shared_ptr<T> object)
     {
       positions_.push_back(object);
@@ -215,8 +228,28 @@ public:
     {
       positions_.clear();
     }
-          
+
+  protected:
+  
+    std::shared_ptr<T> getObject_(size_t objectIndex) const
+    {
+      if (objectIndex >= VectorPositionedContainer<T>::getSize())
+        throw IndexOutOfBoundsException("VectorPositionedContainer::getObject.", objectIndex, 0, VectorPositionedContainer<T>::getSize() - 1);
+      return positions_[objectIndex];
+    }
+
+    void addObject_(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false) const
+    {
+      if (objectIndex >= VectorPositionedContainer<T>::getSize())
+        throw IndexOutOfBoundsException("VectorPositionedContainer::addObject.", objectIndex, 0, VectorPositionedContainer<T>::getSize() - 1);
+
+      if (checkPosition && positions_[objectIndex]!=nullptr)
+        throw BadIntegerException("VectorPositionedContainer::setObject: object position already occupied in container ", (int)objectIndex);
+
+      const_cast<std::vector<std::shared_ptr<T> >& >(positions_)[objectIndex] = object;
+    }
   };
+
 } // end of namespace bpp.
 
 #endif  // VECTOR_ORDERED_CONTAINER_H_

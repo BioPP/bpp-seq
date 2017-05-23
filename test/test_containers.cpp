@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <Bpp/Seq/Alphabet/RNA.h>
 #include <Bpp/Seq/Container/VectorSiteContainer.h>
+#include <Bpp/Seq/Container/CompressedVectorSiteContainer.h>
 #include <Bpp/Seq/Container/SiteContainerTools.h>
 #include <iostream>
 
@@ -49,11 +50,11 @@ int main() {
   //ProteicAlphabet* alpha = new ProteicAlphabet;
   RNA* alpha = new RNA();
   SiteContainer* sites = new VectorSiteContainer(alpha);
+
   BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
   BasicSequence seq2("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
   sites->addSequence(seq1, false);
   sites->addSequence(seq2, false);
-
   cout << sites->getNumberOfSites() << endl;
   cout << sites->toString("seq1") << endl;
   cout << sites->toString("seq2") << endl;
@@ -64,5 +65,32 @@ int main() {
   cout << sites->toString("seq1") << endl;
   cout << sites->toString("seq2") << endl;
 
-  return (sites->getNumberOfSites() == 30 ? 0 : 1);
+  if (sites->getNumberOfSites() != 30)
+    throw Exception("Bad removal of gap only sites");
+
+  SiteContainerTools::removeGapSites(*sites, 0.);
+  cout << endl;
+  
+  cout << sites->getNumberOfSites() << endl;
+  cout << sites->toString("seq1") << endl;
+  cout << sites->toString("seq2") << endl;
+  
+  if (sites->getNumberOfSites() != 24)
+    throw Exception("Bad removal of gap sites");
+
+  cout << endl;
+  
+  CompressedVectorSiteContainer cvs(*sites);
+
+  cout << "Compressed sequence" << endl;
+  
+  cout << "Number of unique sites : " << cvs.getNumberOfUniqueSites() << endl;
+  if (cvs.getNumberOfUniqueSites() != 6)
+    throw Exception("Bad compression of sites");
+
+  cout << cvs.getNumberOfSites() << endl;
+  cout << cvs.toString("seq1") << endl;
+  cout << cvs.toString("seq2") << endl;
+
+  return (sites->getNumberOfSites()==24? 0 : 1);
 }

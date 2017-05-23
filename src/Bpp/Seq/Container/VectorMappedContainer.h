@@ -144,7 +144,12 @@ namespace bpp
 
     size_t getNumberOfObjects() const
     {
-      return VectorMappedContainer<T>::getSize();
+      return MappedNamedContainer<T>::getSize();
+    }
+
+    size_t getObjectPosition(const std::string& name) const
+    {
+      return mNames_.find(name)->second;
     }
 
     const std::shared_ptr<T> getObject(size_t objectIndex) const
@@ -164,14 +169,14 @@ namespace bpp
      * @return The object associated to the given key.
      */
 
-    std::shared_ptr<T> getObject(const std::string& name) const
+    const std::shared_ptr<T> getObject(const std::string& name) const
     {
       return MappedNamedContainer<T>::getObject(name);
     }
 
     std::shared_ptr<T> getObject(const std::string& name) 
     {
-      return MappedNamedContainer<T>::getObject(name);
+       return MappedNamedContainer<T>::getObject(name);
     }
     
     bool hasObject(const std::string& name) const
@@ -179,15 +184,54 @@ namespace bpp
       return MappedNamedContainer<T>::hasObject(name);
     }
 
+    std::vector<std::string> getObjectsNames() const
+    {
+      return vNames_;
+    }
+
+    void setObjectsNames(const std::vector<std::string>& names)
+    {
+      if (names.size()!=vNames_.size())
+        throw BadSizeException("VectorMappedContainer::setObjectsNames: bad number of new names", vNames_.size(), names.size());
+
+      mNames_.clear();
+      
+      for (size_t i=0;i<names.size();i++)
+      {
+        MappedNamedContainer<T>::changeName(vNames_[i], names[i]);
+        mNames_[names[i]]=i;
+      }
+      
+      vNames_=names;
+    }
+
+    void setObjectName(size_t pos, const std::string& name)
+    {
+      MappedNamedContainer<T>::changeName(vNames_[pos], name);
+      mNames_[name]=pos;
+      vNames_[pos]=name;
+     }
+
     void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false)
     {
       VectorPositionedContainer<T>::addObject(object, objectIndex, check);
       MappedNamedContainer<T>::addObject(object, name, check);
       vNames_[objectIndex]=name;
       mNames_[name]=objectIndex;
-      
     }
-    
+
+    void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name)
+    {
+      MappedNamedContainer<T>::addObject(object, name, true);
+      VectorPositionedContainer<T>::insertObject(object, objectIndex);
+      vNames_.insert(vNames_.begin()+ static_cast<std::ptrdiff_t>(objectIndex), name);
+      for (auto it : mNames_)
+        if (it.second>=objectIndex)
+          it.second++;
+      
+      mNames_[name]=objectIndex;      
+    }
+
     void appendObject(std::shared_ptr<T> object, const std::string& name, bool check = true)
     {
       MappedNamedContainer<T>::addObject(object,name, check);
@@ -206,16 +250,23 @@ namespace bpp
       return obj;
     }
 
-    std::shared_ptr<T> removeObject(std::string& name)
+    std::shared_ptr<T> deleteObject(size_t objectIndex)
     {
-      std::shared_ptr<T> obj= MappedNamedContainer<T>::removeObject(name);
-      size_t objectIndex=mNames_[name];
+      std::shared_ptr<T> obj= VectorPositionedContainer<T>::deleteObject(objectIndex);
+      MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
       
-      VectorPositionedContainer<T>::removeObject(name);
-      mNames_.erase(name);
-      vNames_[objectIndex]="";
-      
+      mNames_.erase(vNames_[objectIndex]);
+      for (auto it : mNames_)
+        if (it.second>objectIndex)
+          it.second--;
+      vNames_.erase(vNames_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
       return obj;
+    }
+
+
+    std::shared_ptr<T> removeObject(const std::string& name)
+    {
+      return removeObject(mNames_[name]);
     }
 
     void clear()
@@ -225,7 +276,18 @@ namespace bpp
       vNames_.clear();
       mNames_.clear();
     }
-      
+
+  protected:
+
+    void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
+    {
+      VectorPositionedContainer<T>::addObject_(object, objectIndex, check);
+      MappedNamedContainer<T>::addObject_(object, name, check);
+      const_cast<std::vector<std::string>& >(vNames_)[objectIndex]=name;
+      const_cast<std::map<std::string, size_t>&>(mNames_)[name]=objectIndex;
+    }
+
+
   };
 } // end of namespace bpp.
 

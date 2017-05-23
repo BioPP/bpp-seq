@@ -195,7 +195,7 @@ void Fasta::appendSequencesFromStream(istream& input, SequenceContainer& vsc) co
     }
   }
   if (extended_ && cmts.size()) {
-    vsc.setGeneralComments(cmts);
+    vsc.setComments(cmts);
   }
 }
 
@@ -209,9 +209,9 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const t
   if (extended_)
   {
     // Loop for all general comments
-    for (unsigned int i = 0 ; i < sc.getGeneralComments().size() ; i++)
+    for (unsigned int i = 0 ; i < sc.getComments().size() ; i++)
     {
-      output << "#\\" << sc.getGeneralComments()[i] << endl;
+      output << "#\\" << sc.getComments()[i] << endl;
     }
     output << endl;
   }
