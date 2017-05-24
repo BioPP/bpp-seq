@@ -122,6 +122,12 @@ namespace bpp
      */
     virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
 
+    virtual const Comments& getGeneralComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+    {
+      return getComments(sequenceIndex);
+    }
+    
+
     /**
      * @brief Set the comments of a particular sequence.
      *
@@ -131,7 +137,13 @@ namespace bpp
      * the container.
      */
     virtual void setComments(size_t sequenceIndex, const Comments & comments) = 0;
-		
+
+    virtual void setGeneralComments(size_t sequenceIndex, const Comments & comments)
+    {
+      return setComments(sequenceIndex, comments);
+    }
+    
+
     /**
      * @brief Get the position of a sequence in sequence container from its name.
      *
