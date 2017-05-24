@@ -112,7 +112,9 @@ class SequenceContainerTools
     static void convertContainer(const ContFrom& input, ContTo& output) {
       for (size_t i = 0; i < input.getNumberOfSequences(); ++i) {
         std::unique_ptr<Seq> seq(new Seq(input.getSequence(i)));
-        output.addSequence(*seq);
+        output.addSequence(*seq, false); //We do not check sequence name here.
+                                         //If names were duplicated in the original container,
+                                         //they will also be in the converted one.
       }
     }
 

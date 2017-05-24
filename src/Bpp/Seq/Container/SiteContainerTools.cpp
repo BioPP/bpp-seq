@@ -389,7 +389,7 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
   {
     const Sequence* seq = &dottedAln.getSequence(i);
     bool isRef = true;
-    for (unsigned int j = 0; isRef && j < seq->size(); ++j) // For each site in the sequence
+    for (size_t j = 0; isRef && j < seq->size(); ++j) // For each site in the sequence
     {
       if (seq->getChar(j) == ".")
         isRef = false;
@@ -408,12 +408,12 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
   // We add each site one by one:
   size_t m = dottedAln.getNumberOfSites();
   string state;
-  for (unsigned int i = 0; i < m; ++i)
+  for (size_t i = 0; i < m; ++i)
   {
     string resolved = refSeq->getChar(i);
     const Site& site = dottedAln.getSite(i);
     Site resolvedSite(resolvedAlphabet, site.getPosition());
-    for (unsigned int j = 0; j < n; j++)
+    for (unsigned int j = 0; j < n; ++j)
     {
       state = site.getChar(j);
       if (state == ".")

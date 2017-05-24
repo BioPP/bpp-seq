@@ -6,7 +6,7 @@ Sylvain Glémin <glemin@univ-montp2.fr>
 Guillaume Deuchst
 Eric Bazin
 Vincent Cahais
-François Gindraud <francois.gindraud@gmail.com>
+François Gindraud  <francois.gindraud@gmail.com>
 
 Contributed code to Bio++ was enabled thanks to the following institutions and resources:
 

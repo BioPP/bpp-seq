@@ -1,3 +1,5 @@
+10/05/17 -*- Version 2.3.0 -*-
+
 18/12/16 Julien Dutheil
 * Removed exception specifications in Transliterators
 
@@ -5,6 +7,9 @@
 * new function SiteTools::isDoubleton
 * new function SiteTools::getMinoralleleFrequency
 * new function SequenceTools::areSequencesIdentical
+
+19/09/16 Murray Patterson
+* Started integration of probabilistic sequences
 
 07/03/16 Julien Dutheil
 * Much faster getCompleteSites (does not check for positions)
