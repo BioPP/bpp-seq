@@ -458,7 +458,6 @@ void MapSequenceContainer::clear()
 MapSequenceContainer* MapSequenceContainer::createEmptyContainer() const
 { 
   MapSequenceContainer* msc = new MapSequenceContainer(getAlphabet());
-  msc->setGeneralComments(getGeneralComments());
   return msc;
 }
 

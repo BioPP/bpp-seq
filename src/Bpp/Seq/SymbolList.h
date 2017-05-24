@@ -86,7 +86,7 @@ namespace bpp
 
   public: 
     /**
-     * @brief Build a new void BasicSymbolList object with the specified alphabet.
+     * @brief Build a new void SymbolList object with the specified alphabet.
      *
      * @param alpha The alphabet to use.
      */

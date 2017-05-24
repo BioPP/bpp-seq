@@ -37,7 +37,7 @@ SET(CPP_FILES
   Bpp/Seq/CodonSiteTools.cpp
   Bpp/Seq/Container/AlignedSequenceContainer.cpp
   Bpp/Seq/Container/CompressedVectorSiteContainer.cpp
-#  Bpp/Seq/Container/MapSequenceContainer.cpp
+  Bpp/Seq/Container/MapSequenceContainer.cpp
   Bpp/Seq/Container/SequenceContainerIterator.cpp
   Bpp/Seq/Container/SequenceContainerTools.cpp
   Bpp/Seq/Container/SiteContainerExceptions.cpp
@@ -46,7 +46,6 @@ SET(CPP_FILES
   Bpp/Seq/Container/VectorProbabilisticSiteContainer.cpp
   Bpp/Seq/Container/VectorSequenceContainer.cpp
   Bpp/Seq/Container/VectorSiteContainer.cpp
-  Bpp/Seq/Container/VectorIntSiteContainer.cpp
   Bpp/Seq/DNAToRNA.cpp
   Bpp/Seq/DistanceMatrix.cpp
   Bpp/Seq/GeneticCode/AscidianMitochondrialGeneticCode.cpp
