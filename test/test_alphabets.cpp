@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Bpp/Seq/Alphabet/ProteicAlphabet.h>
 #include <Bpp/Seq/Alphabet/DefaultAlphabet.h>
 #include <Bpp/Seq/Alphabet/CodonAlphabet.h>
+#include <Bpp/Seq/Alphabet/AlphabetTools.h>
 #include <iostream>
 
 using namespace bpp;
@@ -54,6 +55,14 @@ int main() {
   Alphabet* pro = new ProteicAlphabet;
   Alphabet* def = new DefaultAlphabet;
   Alphabet* cdn = new CodonAlphabet(rna);
+
+  //Testing functions:
+  if (!AlphabetTools::isDNAAlphabet(dna)) return 1;
+  if (!AlphabetTools::isRNAAlphabet(rna)) return 1;
+  if (!AlphabetTools::isNucleicAlphabet(dna)) return 1;
+  if (!AlphabetTools::isNucleicAlphabet(rna)) return 1;
+  if (!AlphabetTools::isProteicAlphabet(pro)) return 1;
+  if (!AlphabetTools::isCodonAlphabet(cdn)) return 1;
 
   delete dna;
   delete rna;

@@ -221,7 +221,7 @@ private:
     try
     {
       const Y* t = dynamic_cast<const Y*>(alphabet);
-      return t != 0; // Solves strange behavior in new gcc?
+      return t != nullptr;
     }
     catch (std::exception& e)
     {
