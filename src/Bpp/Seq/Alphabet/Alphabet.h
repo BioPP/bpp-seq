@@ -154,7 +154,7 @@ namespace bpp
      * @return The name of the state.
      * @throw BadIntException When state is not a valid integer.
      */
-    virtual std::string getName(int state) const throw (BadIntException)  = 0;
+    virtual std::string getName(int state) const  = 0;
         
     /**
      * @brief Get the complete name of a state given its string description.
@@ -166,29 +166,29 @@ namespace bpp
      * @return The name of the state.
      * @throw BadCharException When state is not a valid char description.
      */
-    virtual std::string getName(const std::string& state) const throw (BadCharException) = 0;
+    virtual std::string getName(const std::string& state) const = 0;
 
     /**
      * @return The int code of a given state.
      * @param stateIndex The index of the state to fetch.
      */
-    virtual int getIntCodeAt(size_t stateIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual int getIntCodeAt(size_t stateIndex) const = 0;
 
     /**
      * @return The char code of a given state.
      * @param stateIndex The index of the state to fetch.
      */
-    virtual const std::string& getCharCodeAt(size_t stateIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const std::string& getCharCodeAt(size_t stateIndex) const = 0;
 
     /**
      * @return The indices of the states with corresponding int code.
      */
-    virtual size_t getStateIndex(int state) const throw (BadIntException) = 0;
+    virtual size_t getStateIndex(int state) const = 0;
     
     /**
      * @return The index of the state with corresponding char code.
      */
-    virtual size_t getStateIndex(const std::string& state) const throw (BadCharException) = 0;
+    virtual size_t getStateIndex(const std::string& state) const = 0;
 
     /**
      * @name Tests
@@ -228,7 +228,7 @@ namespace bpp
      * @return The AlphabetState.
      * @throw IndexOutOfBoundsException When index is not a valid.
      */
-    virtual const AlphabetState& getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const AlphabetState& getStateAt(size_t stateIndex) const = 0;
 
     /**
      * @brief Get a state given its int description.
@@ -239,7 +239,7 @@ namespace bpp
      * @return The AlphabetState.
      * @throw BadIntException When state is not a valid integer.
      */
-    virtual const AlphabetState& getState(int state) const throw (BadIntException) = 0;
+    virtual const AlphabetState& getState(int state) const = 0;
 
     /**
      * @brief Get a state given its string description.
@@ -248,7 +248,7 @@ namespace bpp
      * @return The AlphabetState.
      * @throw BadCharException When state is not a valid string.
      */
-    virtual const AlphabetState& getState(const std::string& state) const throw (BadCharException) = 0;
+    virtual const AlphabetState& getState(const std::string& state) const = 0;
 
     /** @} */
         
@@ -265,7 +265,7 @@ namespace bpp
      * @return The string description.
      * @throw BadIntException When state is not a valid integer.
      */
-    virtual std::string intToChar(int state) const throw (BadIntException) = 0;
+    virtual std::string intToChar(int state) const = 0;
         
     /**
      * @brief Give the int description of a state given its string description.
@@ -274,7 +274,7 @@ namespace bpp
      * @return The int description.
      * @throw BadCharException When state is not a valid char description.
      */
-    virtual int charToInt(const std::string& state) const throw (BadCharException) = 0;
+    virtual int charToInt(const std::string& state) const = 0;
     /** @} */
         
     /**
@@ -332,7 +332,7 @@ namespace bpp
      * @return A vector of resolved states.
      * @throw BadIntException When state is not a valid integer.
      */
-    virtual std::vector<int> getAlias(int state) const throw (BadIntException) = 0;
+    virtual std::vector<int> getAlias(int state) const = 0;
     
     /**
      * @brief Get all resolved states that match a generic state.
@@ -343,7 +343,7 @@ namespace bpp
      * @return A vector of resolved states.
      * @throw BadCharException When state is not a valid char description.
      */
-    virtual std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException) = 0;
+    virtual std::vector<std::string> getAlias(const std::string& state) const = 0;
 
     /**
      * @brief Get the generic state that match a set of states.
@@ -355,7 +355,7 @@ namespace bpp
      * @return A int code for the computed state.
      * @throw BadIntException When a state is not a valid integer.
      */
-    virtual int getGeneric(const std::vector<int>& states) const throw (BadIntException) = 0;
+    virtual int getGeneric(const std::vector<int>& states) const = 0;
 
     /**
      * @brief Get the generic state that match a set of states.
@@ -368,7 +368,7 @@ namespace bpp
      * @throw BadCharException when a state is not a valid char description.
      * @throw CharStateNotSupportedException when the alphabet does not support Char state for unresolved state.
      */
-    virtual std::string getGeneric(const std::vector<std::string>& states) const throw (AlphabetException) = 0;
+    virtual std::string getGeneric(const std::vector<std::string>& states) const = 0;
 
     /**
      * @return A list of all supported int codes.

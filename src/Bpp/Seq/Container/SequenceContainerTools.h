@@ -93,8 +93,7 @@ class SequenceContainerTools
      */
     static SequenceContainer* createContainerWithSequenceNames(
       const Alphabet* alphabet,
-      const std::vector<std::string>& seqNames)
-      throw (Exception);
+      const std::vector<std::string>& seqNames);
  
     /**
      * @brief Generic function which creates a new container from another one,
@@ -133,7 +132,7 @@ class SequenceContainerTools
      * @param outputCont A container where the selection should be added.
      * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
      */
-    static void getSelectedSequences(const OrderedSequenceContainer& sequences, const SequenceSelection& selection, SequenceContainer& outputCont) throw (Exception);
+    static void getSelectedSequences(const OrderedSequenceContainer& sequences, const SequenceSelection& selection, SequenceContainer& outputCont);
 
     /**
      * @brief Add a specified set of sequences from a container to another.
@@ -152,7 +151,7 @@ class SequenceContainerTools
      * will raise an exception. If no, only available sequence will be added.
      * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
      */
-    static void getSelectedSequences(const SequenceContainer& sequences, const std::vector<std::string>& selection, SequenceContainer& outputCont, bool strict = true) throw (Exception);
+    static void getSelectedSequences(const SequenceContainer& sequences, const std::vector<std::string>& selection, SequenceContainer& outputCont, bool strict = true);
 
     /**
      * @brief Remove all sequences that are not in a given selection from a given container.
@@ -214,7 +213,6 @@ class SequenceContainerTools
      * @param checkNames Tell if the sequence names should be check for unicity.
      */
     static void append(SequenceContainer& seqCont1, const SequenceContainer& seqCont2, bool checkNames = true)
-    throw (Exception)
     {
       std::vector<std::string> seqNames = seqCont2.getSequencesNames();
       for (size_t i = 0; i < seqNames.size(); i++)
@@ -228,7 +226,6 @@ class SequenceContainerTools
      * @param checkNames Tell if the sequence names should be check for unicity.
      */
     static void append(SequenceContainer& seqCont1, const OrderedSequenceContainer& seqCont2, bool checkNames=true)
-    throw (Exception)
     {
       for (size_t i = 0; i < seqCont2.getNumberOfSequences(); i++)
         seqCont1.addSequence(seqCont2.getSequence(i), checkNames);
@@ -249,7 +246,6 @@ class SequenceContainerTools
      * @throw AlphabetMismatchException If the alphabet in the 3 containers do not match.
      */
     static void merge(const SequenceContainer& seqCont1, const SequenceContainer& seqCont2, SequenceContainer& outputCont)
-    throw (Exception)
     {
       if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
         throw AlphabetMismatchException("SequenceContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
@@ -272,7 +268,6 @@ class SequenceContainerTools
      * @param outputCont A container (most likely empty) with an alphabet into which the container will be converted.
      */
     static void convertAlphabet(const SequenceContainer& seqCont, SequenceContainer& outputCont)
-    throw (Exception)
     {  
       std::vector<std::string> seqNames = seqCont.getSequencesNames();
       bool checkNames = outputCont.getNumberOfSequences() > 0;
@@ -291,7 +286,7 @@ class SequenceContainerTools
      * @return          A SequenceContainer with a nucleotide alphabet.
      * @throw AlphabetException If input sequences are not registered with a codon alphabet.
      */
-    static SequenceContainer* getCodonPosition(const SequenceContainer& sequences, size_t pos) throw (AlphabetException);
+    static SequenceContainer* getCodonPosition(const SequenceContainer& sequences, size_t pos);
 
 };
 

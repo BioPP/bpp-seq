@@ -78,24 +78,24 @@ namespace bpp
     }
   
   public:
-    void setState(size_t pos, AlphabetState* st) throw (Exception);
-    void registerState(AlphabetState* st) throw (Exception);
+    void setState(size_t pos, AlphabetState* st);
+    void registerState(AlphabetState* st);
   
-    bool containsGap(const std::string& state) const throw (BadCharException);
+    bool containsGap(const std::string& state) const;
 
     unsigned int getSize() const;
     unsigned int getNumberOfTypes() const;
     int getUnknownCharacterCode() const { return -1; }
     bool isGap(int state) const;
-    std::vector<int> getAlias(int state) const throw (BadIntException);
-    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+    std::vector<int> getAlias(int state) const;
+    std::vector<std::string> getAlias(const std::string& state) const;
     bool isUnresolved(int state) const;
     bool isUnresolved(const std::string& state) const;
 
     std::string getAlphabetType() const { return "Numeric"; }
 
-    AlphabetNumericState& getStateAt(size_t stateIndex)  throw (IndexOutOfBoundsException);
-    const AlphabetNumericState& getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException);
+    AlphabetNumericState& getStateAt(size_t stateIndex);
+    const AlphabetNumericState& getStateAt(size_t stateIndex) const;
     
     /**
      * @ brief Specific methods
@@ -112,7 +112,7 @@ namespace bpp
      * @brief Returns the value for the character number 
      *
      */
-    double intToValue(int state) const throw (BadIntException);
+    double intToValue(int state) const;
 
     /**
      * @brief Returns the CategoryIndex of the category to which the value belongs.

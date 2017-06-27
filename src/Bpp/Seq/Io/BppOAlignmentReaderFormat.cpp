@@ -53,7 +53,7 @@
 using namespace bpp;
 using namespace std;
 
-IAlignment* BppOAlignmentReaderFormat::read(const std::string& description) throw (Exception)
+IAlignment* BppOAlignmentReaderFormat::read(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";

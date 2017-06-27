@@ -53,7 +53,7 @@ using namespace std;
 
 /******************************************************************************/
 
-bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
+bool Fasta::nextSequence(istream& input, Sequence& seq) const {
   if (!input)
     throw IOException("Fasta::nextSequence: can't read from istream input");
   string seqname = "";
@@ -113,7 +113,7 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) 
 
 /******************************************************************************/
 
-void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exception)
+void Fasta::writeSequence(ostream& output, const Sequence& seq) const
 {
   if (!output)
     throw IOException("Fasta::writeSequence: can't write to ostream output");
@@ -144,7 +144,7 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const throw (Exc
 
 /******************************************************************************/
 
-void Fasta::appendSequencesFromStream(istream& input, SequenceContainer& vsc) const throw (Exception)
+void Fasta::appendSequencesFromStream(istream& input, SequenceContainer& vsc) const
 {
   if (!input)
     throw IOException("Fasta::appendFromStream: can't read from istream input");
@@ -201,7 +201,7 @@ void Fasta::appendSequencesFromStream(istream& input, SequenceContainer& vsc) co
 
 /******************************************************************************/
 
-void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const throw (Exception)
+void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const
 {
 	if (!output)
     throw IOException("Fasta::write: can't write to ostream output");
@@ -228,7 +228,7 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const t
 
 // FileIndex class
 
-void Fasta::FileIndex::build(const std::string& path, const bool strictSequenceNames) throw (Exception) {
+void Fasta::FileIndex::build(const std::string& path, const bool strictSequenceNames) {
   // open the file
   std::ifstream f_in(path.c_str());
   // get the size of the file
@@ -252,7 +252,7 @@ void Fasta::FileIndex::build(const std::string& path, const bool strictSequenceN
   f_in.close();
 }
 
-streampos Fasta::FileIndex::getSequencePosition(const std::string& id) const throw (Exception) {
+streampos Fasta::FileIndex::getSequencePosition(const std::string& id) const {
   std::map<std::string, streampos>::const_iterator it = index_.find(id);
   if (it != index_.end()) {
     return it->second;
@@ -260,7 +260,7 @@ streampos Fasta::FileIndex::getSequencePosition(const std::string& id) const thr
   throw Exception("Sequence not found: " + id);
 }
 
-void Fasta::FileIndex::read(const std::string& path) throw (Exception) {
+void Fasta::FileIndex::read(const std::string& path) {
   std::ifstream f_in(path.c_str());
   std::string line_buffer = "";
   while (!f_in.eof()) {
@@ -274,7 +274,7 @@ void Fasta::FileIndex::read(const std::string& path) throw (Exception) {
   f_in.close();
 }
 
-void Fasta::FileIndex::write(const std::string& path) throw (Exception) {
+void Fasta::FileIndex::write(const std::string& path) {
   std::ofstream f_out(path.c_str());
   for (std::map<std::string, streampos>::const_iterator it = index_.begin() ; it != index_.end() ; ++it) {
     f_out << it->first << "\t" << bpp::TextTools::toString(it->second) << std::endl;

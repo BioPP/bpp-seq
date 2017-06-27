@@ -56,7 +56,6 @@ BLOSUM50::BLOSUM50() :
 }
 
 double BLOSUM50::getIndex(int state1, int state2) const
-throw (BadIntException)
 {
   size_t stateIndex1 = alpha_->getStateIndex(state1);
   size_t stateIndex2 = alpha_->getStateIndex(state2);
@@ -64,7 +63,6 @@ throw (BadIntException)
 }
 
 double BLOSUM50::getIndex(const std::string& state1, const std::string& state2) const
-throw (BadCharException)
 {
   return distanceMatrix_(
       static_cast<size_t>(alpha_->charToInt(state1)),

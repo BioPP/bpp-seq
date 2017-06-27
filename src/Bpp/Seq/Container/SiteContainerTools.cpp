@@ -338,7 +338,7 @@ void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps
 
 /******************************************************************************/
 
-SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sites, const GeneticCode& gCode)  throw (AlphabetException)
+SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sites, const GeneticCode& gCode)
 {
   const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
   if (!pca)
@@ -357,7 +357,7 @@ SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sit
 
 /******************************************************************************/
 
-void SiteContainerTools::removeStopCodonSites(SiteContainer& sites, const GeneticCode& gCode)  throw (AlphabetException)
+void SiteContainerTools::removeStopCodonSites(SiteContainer& sites, const GeneticCode& gCode)
 {
   const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
   if (!pca)
@@ -374,7 +374,7 @@ void SiteContainerTools::removeStopCodonSites(SiteContainer& sites, const Geneti
 
 SiteContainer* SiteContainerTools::resolveDottedAlignment(
   const SiteContainer& dottedAln,
-  const Alphabet* resolvedAlphabet) throw (AlphabetException, Exception)
+  const Alphabet* resolvedAlphabet)
 {
   if (!AlphabetTools::isDefaultAlphabet(dottedAln.getAlphabet()))
     throw AlphabetException("SiteContainerTools::resolveDottedAlignment. Alignment alphabet should of class 'DefaultAlphabet'.", dottedAln.getAlphabet());
@@ -477,7 +477,6 @@ std::map<size_t, size_t> SiteContainerTools::getAlignmentPositions(const Sequenc
 /******************************************************************************/
 
 std::map<size_t, size_t> SiteContainerTools::translateAlignment(const Sequence& seq1, const Sequence& seq2)
-throw (AlphabetMismatchException, Exception)
 {
   if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::translateAlignment", seq1.getAlphabet(), seq2.getAlphabet());
@@ -576,7 +575,6 @@ AlignedSequenceContainer* SiteContainerTools::alignNW(
   const Sequence& seq2,
   const AlphabetIndex2& s,
   double gap)
-throw (AlphabetMismatchException)
 {
   if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), seq2.getAlphabet());
@@ -677,7 +675,6 @@ AlignedSequenceContainer* SiteContainerTools::alignNW(
   const AlphabetIndex2& s,
   double opening,
   double extending)
-throw (AlphabetMismatchException)
 {
   if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::alignNW", seq1.getAlphabet(), seq2.getAlphabet());
@@ -838,7 +835,7 @@ const string SiteContainerTools::SIMILARITY_NOGAP       = "no gap";
 
 /******************************************************************************/
 
-double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequence& seq2, bool dist, const std::string& gapOption, bool unresolvedAsGap) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception)
+double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequence& seq2, bool dist, const std::string& gapOption, bool unresolvedAsGap)
 {
   if (seq1.size() != seq2.size())
     throw SequenceNotAlignedException("SiteContainerTools::computeSimilarity.", &seq2);
@@ -937,7 +934,6 @@ DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer&
 /******************************************************************************/
 
 void SiteContainerTools::merge(SiteContainer& seqCont1, const SiteContainer& seqCont2, bool leavePositionAsIs)
-throw (AlphabetMismatchException, Exception)
 {
   if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SiteContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());

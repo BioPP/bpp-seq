@@ -66,7 +66,6 @@ CaseMaskedAlphabet::CaseMaskedAlphabet(const LetterAlphabet* nocaseAlphabet) :
 }
 
 int CaseMaskedAlphabet::getMaskedEquivalentState(int state) const
-  throw (BadIntException)
 {
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. Unsupported state code.");
@@ -80,7 +79,6 @@ int CaseMaskedAlphabet::getMaskedEquivalentState(int state) const
 }
 
 const string CaseMaskedAlphabet::getMaskedEquivalentState(const string& state) const
-  throw (BadCharException, BadIntException)
 {
   if (!isCharInAlphabet(state))
     throw BadCharException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. Unsupported state code.");

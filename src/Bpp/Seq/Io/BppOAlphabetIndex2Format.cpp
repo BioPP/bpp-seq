@@ -56,7 +56,7 @@
 using namespace bpp;
 using namespace std;
 
-AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description) throw (Exception)
+AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
 {
   if (description != "None")
   {

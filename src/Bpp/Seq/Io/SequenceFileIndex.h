@@ -58,17 +58,17 @@ namespace bpp {
       /**
        * @brief Build the index given a path to the file.
        */
-      virtual void build(const std::string& path) throw (Exception) = 0;
+      virtual void build(const std::string& path) = 0;
 
       /**
        * @brief Get the position of a Sequence given its ID.
        */
-      virtual std::streampos getSequencePosition(const std::string& id) const throw (Exception) = 0;
+      virtual std::streampos getSequencePosition(const std::string& id) const = 0;
 
       /**
        * @brief Get the number of sequences
        */
-      virtual size_t getNumberOfSequences() const throw (Exception) = 0;
+      virtual size_t getNumberOfSequences() const = 0;
   };
 }
 

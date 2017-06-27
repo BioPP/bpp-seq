@@ -66,7 +66,7 @@ void SymbolListTools::getCounts(const SymbolList& list, map<int, double>& counts
   }
 }
 
-void SymbolListTools::getCounts(const SymbolList& list1, const SymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getCounts(const SymbolList& list1, const SymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns)
 {
   if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
   if (!resolveUnknowns)
@@ -100,7 +100,7 @@ void SymbolListTools::getFrequencies(const SymbolList& list, map<int, double>& f
   }
 }
 
-void SymbolListTools::getFrequencies(const SymbolList& list1, const SymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getFrequencies(const SymbolList& list1, const SymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns)
 {
 	double n2 = (double)list1.size() * (double)list1.size();
   map<int, map<int, double> > counts;
@@ -112,7 +112,7 @@ void SymbolListTools::getFrequencies(const SymbolList& list1, const SymbolList& 
   }
 }
 
-double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
+double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolved, bool ignoreGap)
 {
   const Alphabet * alphabet = list.getAlphabet();
   if (!AlphabetTools::isNucleicAlphabet(alphabet))
@@ -151,7 +151,7 @@ double SymbolListTools::getGCContent(const SymbolList& list, bool ignoreUnresolv
   return total != 0 ? gc/total : 0;
 }
 
-size_t SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const SymbolList& l2)
 {
 	if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	size_t n = min(l1.size(), l2.size());
@@ -162,7 +162,7 @@ size_t SymbolListTools::getNumberOfDistinctPositions(const SymbolList& l1, const
 	return count;
 }
 
-size_t SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfPositionsWithoutGap(const SymbolList& l1, const SymbolList& l2)
 {
 	if (l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 	size_t n = min(l1.size(), l2.size());

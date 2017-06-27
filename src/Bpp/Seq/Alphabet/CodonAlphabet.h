@@ -111,7 +111,7 @@ public:
    * @param pos3 Int description for position 3.
    * @return The int code of the codon.
    */
-  virtual int getCodon(int pos1, int pos2, int pos3) const throw (BadIntException);
+  virtual int getCodon(int pos1, int pos2, int pos3) const;
   
   /**
    * @brief Get the char code for a codon given the char code of the three underlying positions.
@@ -123,7 +123,7 @@ public:
    * @param pos3 Char description for position 3.
    * @return The Char code of the codon.
    */
-  virtual std::string getCodon(const std::string& pos1, const std::string& pos2, const std::string& pos3) const throw (BadCharException);
+  virtual std::string getCodon(const std::string& pos1, const std::string& pos2, const std::string& pos3) const;
   
   /**
    * @brief Get the int code of the first position of a codon given its int description.
@@ -131,7 +131,7 @@ public:
    * @param codon The int description of the codon.
    * @return The int description of the first position of the codon.
    */
-  virtual int getFirstPosition(int codon) const throw (BadIntException);
+  virtual int getFirstPosition(int codon) const;
   
   /**
    * @brief Get the int code of the second position of a codon given its int description.
@@ -139,7 +139,7 @@ public:
    * @param codon The int description of the codon.
    * @return The int description of the second position of the codon.
    */
-  virtual int getSecondPosition(int codon) const throw (BadIntException);
+  virtual int getSecondPosition(int codon) const;
   
   /**
    * @brief Get the int code of the third position of a codon given its int description.
@@ -147,7 +147,7 @@ public:
    * @param codon The int description of the codon.
    * @return The int description of the third position of the codon.
    */
-  virtual int getThirdPosition(int codon) const throw (BadIntException);
+  virtual int getThirdPosition(int codon) const;
   
   /**
    * @brief Get the char code of the first position of a codon given its char description.
@@ -155,7 +155,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the first position of the codon.
    */
-  virtual std::string getFirstPosition (const std::string& codon) const throw (BadCharException);
+  virtual std::string getFirstPosition (const std::string& codon) const;
   
   /**
    * @brief Get the char code of the second position of a codon given its char description.
@@ -163,7 +163,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the second position of the codon.
    */
-  virtual std::string getSecondPosition(const std::string& codon) const throw (BadCharException);
+  virtual std::string getSecondPosition(const std::string& codon) const;
   
   /**
    * @brief Get the char code of the third position of a codon given its char description.
@@ -171,7 +171,7 @@ public:
    * @param codon The char description of the codon.
    * @return The char description of the third position of the codon.
    */
-  virtual std::string getThirdPosition(const std::string& codon) const throw (BadCharException);
+  virtual std::string getThirdPosition(const std::string& codon) const;
   
   /**
    * @return The nucleic alphabet associated to this codon alphabet.

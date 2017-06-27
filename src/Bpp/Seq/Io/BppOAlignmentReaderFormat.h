@@ -79,7 +79,7 @@ namespace bpp
      * @return A new IAlignment object according to options specified.
      * @throw Exception if an error occured.
      */
-    IAlignment* read(const std::string& description) throw (Exception);
+    IAlignment* read(const std::string& description);
 
     /**
      * @return The arguments and their unparsed values from the last call of the read function, if there are any.

@@ -47,7 +47,7 @@ using namespace std;
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Text/StringTokenizer.h>
 
-AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) throw (IOException) :
+AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) :
   property_(20, 20),
   alpha_(&AlphabetTools::PROTEIN_ALPHABET),
   sym_(sym)

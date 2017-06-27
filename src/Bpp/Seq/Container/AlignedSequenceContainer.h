@@ -133,11 +133,11 @@ class AlignedSequenceContainer:
      * @param osc The ordered container to coerce.
      * @throw SequenceNotAlignedException If sequences in osc do not have the same length.
      */
-    AlignedSequenceContainer(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException);
+    AlignedSequenceContainer(const OrderedSequenceContainer& osc);
 
     AlignedSequenceContainer& operator=(const AlignedSequenceContainer& asc);
     AlignedSequenceContainer& operator=(const            SiteContainer&  sc);
-    AlignedSequenceContainer& operator=(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException);
+    AlignedSequenceContainer& operator=(const OrderedSequenceContainer& osc);
 
     virtual ~AlignedSequenceContainer();
 
@@ -156,15 +156,15 @@ class AlignedSequenceContainer:
      *
      * @{
      */
-    const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException);
-    void        setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
-    Site *   removeSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-    void     deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-    void    deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException, Exception);
-    void addSite(const Site& site, bool checkPosition = true) throw (Exception);
-    void addSite(const Site& site, int position, bool checkPosition = true) throw (Exception);
-    void addSite(const Site& site, size_t siteIndex, bool checkPosition = true) throw (Exception);
-    void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true) throw (Exception);
+    const Site& getSite(size_t siteIndex) const;
+    void        setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
+    Site *   removeSite(size_t siteIndex);
+    void     deleteSite(size_t siteIndex);
+    void    deleteSites(size_t siteIndex, size_t length);
+    void addSite(const Site& site, bool checkPosition = true);
+    void addSite(const Site& site, int position, bool checkPosition = true);
+    void addSite(const Site& site, size_t siteIndex, bool checkPosition = true);
+    void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true);
     size_t getNumberOfSites() const { return length_; }
     Vint getSitePositions() const { return positions_; }
     void reindexSites();
@@ -177,11 +177,11 @@ class AlignedSequenceContainer:
      *
      * @{
      */
-    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception);
-    void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (Exception);
+    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true);
+    void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true);
 
-    void addSequence(const Sequence& sequence, bool checkName = true) throw (Exception);
-    void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true) throw (Exception);
+    void addSequence(const Sequence& sequence, bool checkName = true);
+    void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
     /** @} */
     
   

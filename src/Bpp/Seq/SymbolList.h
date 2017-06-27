@@ -102,7 +102,7 @@ namespace bpp
      * @param list The new content of the list.
      * @see The list constructor for information about the way lists are internaly stored.
      */
-    virtual void setContent(const std::vector<int>& list) throw (BadIntException) = 0;
+    virtual void setContent(const std::vector<int>& list) = 0;
 
     /**
      * @brief Set the whole content of the list.
@@ -110,7 +110,7 @@ namespace bpp
      * @param list The new content of the list.
      * @see The list constructor for information about the way lists are internaly stored.
      */
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException) = 0;
+    virtual void setContent(const std::vector<std::string>& list) = 0;
 
     /** @} */
 
@@ -134,7 +134,7 @@ namespace bpp
      *
      * @param c The character to add, given as a string.
      */
-    virtual void addElement(const std::string& c) throw (BadCharException) = 0;
+    virtual void addElement(const std::string& c) = 0;
 
     /**
      * @brief Add a character at a certain position in the list.
@@ -142,7 +142,7 @@ namespace bpp
      * @param pos The postion where to insert the element.
      * @param c   The character to add, given as a string.
      */
-    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
+    virtual void addElement(size_t pos, const std::string& c) = 0;
 
     /**
      * @brief Set the element at position 'pos' to character 'c'.
@@ -150,14 +150,14 @@ namespace bpp
      * @param pos The position of the character to set.
      * @param c   The value of the element, given as a string.
      */
-    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException) = 0;
+    virtual void setElement(size_t pos, const std::string& c) = 0;
 
     /**
      * @brief Delete the element at position 'pos'.
      *
      * @param pos The position of the element to delete.
      */
-    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException) = 0;
+    virtual void deleteElement(size_t pos) = 0;
 
     /**
      * @brief Delete the elements at position 'pos'.
@@ -165,7 +165,7 @@ namespace bpp
      * @param pos The position of the first element to delete.
      * @param len The length of the region to delete.
      */
-    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException) = 0;
+    virtual void deleteElements(size_t pos, size_t len) = 0;
 
 
     /**
@@ -173,14 +173,14 @@ namespace bpp
      *
      * @param pos The position of the character to retrieve.
      */
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException) = 0;
+    virtual std::string getChar(size_t pos) const = 0;
 
     /**
      * @brief Add a character to the end of the list.
      *
      * @param v The character to add, given as an int.
      */
-    virtual void addElement(int v) throw (BadIntException) = 0;
+    virtual void addElement(int v) = 0;
 
     /**
      * @brief Add a character at a certain position in the list.
@@ -188,7 +188,7 @@ namespace bpp
      * @param pos The postion where to insert the element.
      * @param v   The character to add, given as an int.
      */
-    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException) = 0;
+    virtual void addElement(size_t pos, int v) = 0;
 
     /**
      * @brief Set the element at position 'pos' to character 'v'.
@@ -196,14 +196,14 @@ namespace bpp
      * @param pos The position of the character to set.
      * @param v   The value of the element, given as an int.
      */
-    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException) = 0;
+    virtual void setElement(size_t pos, int v) = 0;
 
     /**
      * @brief Get the element at position 'pos' as an int.
      *
      * @param pos The position of the character to retrieve.
      */
-    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException) = 0;
+    virtual int getValue(size_t pos) const = 0;
 
     /** @} */
 
@@ -286,7 +286,7 @@ namespace bpp
      * @param alpha    The alphabet to use.
      * @throw BadCharException If the content does not match the specified alphabet.
      */
-    BasicSymbolList(const std::vector<std::string>& list, const Alphabet* alpha) throw (BadCharException);
+    BasicSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
 
     /**
      * @brief Build a new BasicSymbolList object with the specified alphabet.
@@ -296,7 +296,7 @@ namespace bpp
      * @param alpha    The alphabet to use.
      * @throw BadIntException If the content does not match the specified alphabet.
      */
-    BasicSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException);
+    BasicSymbolList(const std::vector<int>& list, const Alphabet* alpha);
 
     /**
      * @brief The generic copy constructor.
@@ -335,31 +335,31 @@ namespace bpp
 
     virtual size_t size() const { return static_cast<size_t>(content_.size()); }
 
-    virtual void setContent(const std::vector<int>& list) throw (BadIntException);
+    virtual void setContent(const std::vector<int>& list);
 
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException);
+    virtual void setContent(const std::vector<std::string>& list);
 
     virtual std::string toString() const;
 
-    virtual void addElement(const std::string& c) throw (BadCharException);
+    virtual void addElement(const std::string& c);
 
-    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
+    virtual void addElement(size_t pos, const std::string& c);
 
-    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
+    virtual void setElement(size_t pos, const std::string& c);
 
-    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException);
+    virtual void deleteElement(size_t pos);
 		
-    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException);
+    virtual void deleteElements(size_t pos, size_t len);
 
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException);
+    virtual std::string getChar(size_t pos) const;
 
-    virtual void addElement(int v) throw (BadIntException);
+    virtual void addElement(int v);
 
-    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual void addElement(size_t pos, int v);
 
-    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual void setElement(size_t pos, int v);
 
-    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException);
+    virtual int getValue(size_t pos) const;
 
     virtual const int& operator[](size_t i) const { return content_[i]; }
 		
@@ -521,7 +521,7 @@ namespace bpp
      * @param alpha    The alphabet to use.
      * @throw BadCharException If the content does not match the specified alphabet.
      */
-    EdSymbolList(const std::vector<std::string>& list, const Alphabet* alpha) throw (BadCharException);
+    EdSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
 
     /**
      * @brief Build a new BasicSymbolList object with the specified alphabet.
@@ -531,7 +531,7 @@ namespace bpp
      * @param alpha    The alphabet to use.
      * @throw BadIntException If the content does not match the specified alphabet.
      */
-    EdSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException);
+    EdSymbolList(const std::vector<int>& list, const Alphabet* alpha);
 
     /**
      * @brief The generic copy constructor.
@@ -579,31 +579,31 @@ namespace bpp
 
     virtual const std::vector<int>& getContent() const { return content_; }
 		
-    virtual void setContent(const std::vector<int>& list) throw (BadIntException);
+    virtual void setContent(const std::vector<int>& list);
 
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException);
+    virtual void setContent(const std::vector<std::string>& list);
 
     virtual std::string toString() const;
 
-    virtual void addElement(const std::string& c) throw (BadCharException);
+    virtual void addElement(const std::string& c);
 
-    virtual void addElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
+    virtual void addElement(size_t pos, const std::string& c);
 
-    virtual void setElement(size_t pos, const std::string& c) throw (BadCharException, IndexOutOfBoundsException);
+    virtual void setElement(size_t pos, const std::string& c);
 
-    virtual void deleteElement(size_t pos) throw (IndexOutOfBoundsException);
+    virtual void deleteElement(size_t pos);
 		
-    virtual void deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException);
+    virtual void deleteElements(size_t pos, size_t len);
 
-    virtual std::string getChar(size_t pos) const throw (IndexOutOfBoundsException);
+    virtual std::string getChar(size_t pos) const;
 
-    virtual void addElement(int v) throw (BadIntException);
+    virtual void addElement(int v);
 
-    virtual void addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual void addElement(size_t pos, int v);
 
-    virtual void setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException);
+    virtual void setElement(size_t pos, int v);
 
-    virtual int getValue(size_t pos) const throw (IndexOutOfBoundsException);
+    virtual int getValue(size_t pos) const;
 
     virtual const int& operator[](size_t i) const { return content_[i]; }
 		

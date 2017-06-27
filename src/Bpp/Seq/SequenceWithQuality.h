@@ -191,7 +191,7 @@ namespace bpp {
         }
       }
 
-      SequenceQuality* getPartAnnotation(size_t pos, size_t len) const throw (Exception) {
+      SequenceQuality* getPartAnnotation(size_t pos, size_t len) const {
         return new SequenceQuality(
             std::vector<int>(
               qualScores_.begin() + static_cast<ptrdiff_t>(pos),
@@ -255,7 +255,7 @@ namespace bpp {
           const std::string& name,
           const std::string& sequence,
           const Alphabet* alpha
-          ) throw (BadCharException):
+          ):
         SequenceWithAnnotation(name, sequence, alpha),
         qualScores_(new SequenceQuality(sequence.size(), false))
       {
@@ -282,7 +282,7 @@ namespace bpp {
           const std::string& sequence,
           const Comments& comments,
           const Alphabet* alpha
-          ) throw (BadCharException):
+          ):
         SequenceWithAnnotation(name, sequence, comments, alpha),
         qualScores_(new SequenceQuality(sequence.size(), false))
       {
@@ -308,8 +308,7 @@ namespace bpp {
           const std::string& name,
           const std::string& sequence,
           const std::vector<int>& quality,
-          const Alphabet* alpha)
-        throw (BadCharException, DimensionException):
+          const Alphabet* alpha):
         SequenceWithAnnotation(name, sequence, alpha),
         qualScores_(new SequenceQuality(quality, false))
       {
@@ -339,8 +338,7 @@ namespace bpp {
           const std::string& sequence,
           const std::vector<int>& quality,
           const Comments& comments,
-          const Alphabet* alpha)
-        throw (BadCharException, DimensionException):
+          const Alphabet* alpha):
         SequenceWithAnnotation(name, sequence, comments, alpha),
         qualScores_(new SequenceQuality(quality, false))
       {
@@ -362,8 +360,7 @@ namespace bpp {
       SequenceWithQuality(
           const std::string& name,
           const std::vector<int>& sequence,
-          const Alphabet* alpha)
-        throw (BadIntException):
+          const Alphabet* alpha):
         SequenceWithAnnotation(name, sequence, alpha),
         qualScores_(new SequenceQuality(sequence.size(), false))
       {
@@ -389,8 +386,7 @@ namespace bpp {
           const std::string& name,
           const std::vector<int>& sequence,
           const Comments& comments,
-          const Alphabet* alpha)
-        throw (BadIntException):
+          const Alphabet* alpha):
         SequenceWithAnnotation(name, sequence, comments, alpha),
         qualScores_(new SequenceQuality(sequence.size(), false))
       {
@@ -416,8 +412,7 @@ namespace bpp {
           const std::string& name,
           const std::vector<int>& sequence,
           const std::vector<int>& quality,
-          const Alphabet* alpha)
-        throw (BadIntException, DimensionException):
+          const Alphabet* alpha):
         SequenceWithAnnotation(name, sequence, alpha),
         qualScores_(new SequenceQuality(quality, false))
       {
@@ -447,8 +442,7 @@ namespace bpp {
           const std::vector<int>& sequence,
           const std::vector<int>& quality,
           const Comments& comments,
-          const Alphabet* alpha)
-        throw (BadIntException, DimensionException):
+          const Alphabet* alpha):
         SequenceWithAnnotation(name, sequence, comments, alpha),
         qualScores_(new SequenceQuality(quality, false))
       {
@@ -483,8 +477,7 @@ namespace bpp {
        */
       SequenceWithQuality(
           const Sequence& s,
-          const std::vector<int>& sc)
-        throw (DimensionException):
+          const std::vector<int>& sc):
         SequenceWithAnnotation(s),
         qualScores_(new SequenceQuality(sc, false))
       {
@@ -534,7 +527,7 @@ namespace bpp {
        * @throw IndexOutOfBoundsException if pos is greater than the
        * sequence size
        */
-      void setQuality(size_t pos, int quality) throw (IndexOutOfBoundsException) {
+      void setQuality(size_t pos, int quality) {
         //if (pos >= qualScores_->getSize())
         //  throw IndexOutOfBoundsException("SequenceWithQuality::setQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
         //qualScores_[pos] = quality;
@@ -551,7 +544,7 @@ namespace bpp {
        * @throw IndexOutOfBoundsException if pos is greater than the
        * sequence size
        */
-      int getQuality(size_t pos) const throw (IndexOutOfBoundsException) {
+      int getQuality(size_t pos) const {
         if (pos >= qualScores_->getSize())
           throw IndexOutOfBoundsException("SequenceWithQuality::getQuality: pos out of bounds", pos, 0, qualScores_->getSize() - 1);
         return (*qualScores_)[pos];
@@ -565,7 +558,7 @@ namespace bpp {
        * @throw DimensionException if the quality vector does not feet the
        * sequence size
        */
-      void setQualities(const std::vector<int>& quality) throw (DimensionException) {
+      void setQualities(const std::vector<int>& quality) {
         if (quality.size() != qualScores_->getSize())
           throw DimensionException("SequenceWithQuality::setQualities: quality must fit sequence size", quality.size(), qualScores_->getSize());
         qualScores_->setScores(quality);
@@ -596,7 +589,6 @@ namespace bpp {
       virtual void append(
           const std::vector<int>& content,
           const std::vector<int>& qualities)
-        throw (BadIntException, DimensionException)
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
@@ -620,7 +612,6 @@ namespace bpp {
       virtual void append(
           const std::vector<std::string>& content,
           const std::vector<int>& qualities)
-        throw (BadCharException, DimensionException)
       {
         if (content.size() != qualities.size())
           throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
@@ -644,7 +635,6 @@ namespace bpp {
       virtual void append(
           const std::string& content,
           const std::vector<int>& qualities)
-        throw (BadCharException, DimensionException)
       {
         if (content.size() / this->getAlphabet()->getStateCodingSize()
             != qualities.size())
@@ -657,7 +647,6 @@ namespace bpp {
 
       void addElement(
           const std::string& c)
-        throw (BadCharException)
       {
         SequenceWithAnnotation::addElement(c);
       }
@@ -673,14 +662,12 @@ namespace bpp {
        */
       void addElement(
           const std::string& c, int q)
-        throw (BadCharException)
       {
         SequenceWithAnnotation::addElement(c);
         qualScores_->setScore(size() - 1, q);
       }
 
       void addElement(size_t pos, const std::string& c)
-        throw (BadCharException, IndexOutOfBoundsException)
       {
         SequenceWithAnnotation::addElement(pos, c);
       }
@@ -699,14 +686,12 @@ namespace bpp {
        */
       void addElement(
           size_t pos, const std::string& c, int q)
-        throw (BadCharException, IndexOutOfBoundsException)
       {
         SequenceWithAnnotation::addElement(pos, c);
         qualScores_->setScore(pos, q);
       }
 
       void addElement(int v)
-        throw (BadIntException)
       {
         SequenceWithAnnotation::addElement(v);
       }
@@ -720,14 +705,12 @@ namespace bpp {
        * @throw BadIntException if the value does not match the current Alphabet
        */
       void addElement(int v, int q)
-        throw (BadIntException)
       {
         SequenceWithAnnotation::addElement(v);
         qualScores_->setScore(size() - 1, q);
       }
 
       void addElement(size_t pos, int v)
-        throw (BadIntException, IndexOutOfBoundsException)
       {
         SequenceWithAnnotation::addElement(pos, v);
       }
@@ -744,7 +727,6 @@ namespace bpp {
        * size
        */
       void addElement(size_t pos, int v, int q)
-        throw (BadCharException, IndexOutOfBoundsException)
       {
         SequenceWithAnnotation::addElement(pos, v);
         qualScores_->setScore(pos, q);

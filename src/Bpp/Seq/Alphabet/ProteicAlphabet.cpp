@@ -87,7 +87,7 @@ ProteicAlphabet::ProteicAlphabet()
 
 /******************************************************************************/
 
-string ProteicAlphabet::getAbbr(const string& aa) const throw (AlphabetException)
+string ProteicAlphabet::getAbbr(const string& aa) const
 {
   string AA = TextTools::toUpper(aa);
   return getState(aa).getAbbreviation();
@@ -95,14 +95,14 @@ string ProteicAlphabet::getAbbr(const string& aa) const throw (AlphabetException
 
 /******************************************************************************/
 
-string ProteicAlphabet::getAbbr(int aa) const throw (AlphabetException)
+string ProteicAlphabet::getAbbr(int aa) const
 {
   return getState(aa).getAbbreviation();
 }
 
 /******************************************************************************/
 
-vector<int> ProteicAlphabet::getAlias(int state) const throw (BadIntException)
+vector<int> ProteicAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "ProteicAlphabet::getAlias(int): Specified base unknown.");
@@ -132,7 +132,7 @@ vector<int> ProteicAlphabet::getAlias(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-vector<string> ProteicAlphabet::getAlias(const string& state) const throw (BadCharException)
+vector<string> ProteicAlphabet::getAlias(const string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
@@ -166,7 +166,7 @@ vector<string> ProteicAlphabet::getAlias(const string& state) const throw (BadCh
 
 /******************************************************************************/
 
-int ProteicAlphabet::getGeneric(const vector<int>& states) const throw (BadIntException)
+int ProteicAlphabet::getGeneric(const vector<int>& states) const
 {
   map<int, int> m;
   for (unsigned int i = 0; i < states.size(); ++i)
@@ -208,7 +208,7 @@ int ProteicAlphabet::getGeneric(const vector<int>& states) const throw (BadIntEx
 
 /******************************************************************************/
 
-string ProteicAlphabet::getGeneric(const vector<string>& states) const throw (BadCharException)
+string ProteicAlphabet::getGeneric(const vector<string>& states) const
 {
   map<string, int> m;
   for (unsigned int i = 0; i < states.size(); ++i)

@@ -72,7 +72,6 @@ DefaultNucleotideScore::DefaultNucleotideScore(const NucleicAlphabet* alphabet) 
 }
 
 double DefaultNucleotideScore::getIndex(int state1, int state2) const
-throw (BadIntException)
 {
   if (alpha_->isGap(state1) || !alpha_->isIntInAlphabet(state1))
     throw BadIntException(state1, "DefaultNucleotideScore::getIndex(). Invalid state1.", alpha_);
@@ -99,7 +98,6 @@ throw (BadIntException)
 }
 
 double DefaultNucleotideScore::getIndex(const std::string& state1, const std::string& state2) const
-throw (BadCharException)
 {
   return distanceMatrix_(
       static_cast<size_t>(alpha_->charToInt(state1)),

@@ -71,7 +71,7 @@ void SequenceMask::afterSequenceDeleted(const SymbolListDeletionEvent& event)
 
 /******************************************************************************/
 
-SequenceWithAnnotation* SequenceWithAnnotationTools::createMaskAnnotation(const Sequence& seq) throw (AlphabetException)
+SequenceWithAnnotation* SequenceWithAnnotationTools::createMaskAnnotation(const Sequence& seq)
 {
   const CaseMaskedAlphabet* cma = dynamic_cast<const CaseMaskedAlphabet*>(seq.getAlphabet());
   if (cma) {

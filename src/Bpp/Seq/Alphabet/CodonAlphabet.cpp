@@ -50,7 +50,6 @@ using namespace std;
 /******************************************************************************/
 
 int CodonAlphabet::getCodon(int pos1, int pos2, int pos3) const
-throw (BadIntException)
 {
   vector<int> vint;
   vint.push_back(pos1);
@@ -63,7 +62,6 @@ throw (BadIntException)
 /******************************************************************************/
 
 string CodonAlphabet::getCodon(const string & pos1, const string & pos2, const string & pos3) const
-throw (BadCharException)
 {
   vector<string> vint;
   vint.push_back(pos1);
@@ -75,21 +73,21 @@ throw (BadCharException)
 
 /******************************************************************************/
 
-int CodonAlphabet::getFirstPosition (int codon) const throw (BadIntException)
+int CodonAlphabet::getFirstPosition (int codon) const
 {
   return getNPosition(codon,0);
 }
 
 /******************************************************************************/
 
-int CodonAlphabet::getSecondPosition(int codon) const throw (BadIntException)
+int CodonAlphabet::getSecondPosition(int codon) const
 {
   return getNPosition(codon,1);
 }
 
 /******************************************************************************/
 
-int CodonAlphabet::getThirdPosition (int codon) const throw (BadIntException)
+int CodonAlphabet::getThirdPosition (int codon) const
 {
   return getNPosition(codon,2);
 }
@@ -97,7 +95,6 @@ int CodonAlphabet::getThirdPosition (int codon) const throw (BadIntException)
 /******************************************************************************/
 
 string CodonAlphabet::getFirstPosition (const string & codon) const
-throw (BadCharException)
 {
   return getNPosition(codon,0);
 }
@@ -105,7 +102,6 @@ throw (BadCharException)
 /******************************************************************************/
 
 string CodonAlphabet::getSecondPosition(const string & codon) const
-throw (BadCharException)
 {
   return getNPosition(codon,1);
 }
@@ -113,7 +109,6 @@ throw (BadCharException)
 /******************************************************************************/
 
 string CodonAlphabet::getThirdPosition (const string & codon) const
-throw (BadCharException)
 {
   return getNPosition(codon,2);
 }

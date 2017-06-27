@@ -122,9 +122,9 @@ public:
    * @return The name of the state.
    * @throw BadCharException When state is not a valid char description.
    */
-  std::string getName(const std::string& state) const throw (BadCharException);
+  std::string getName(const std::string& state) const;
 
-  int charToInt(const std::string& state) const throw (BadCharException)
+  int charToInt(const std::string& state) const
   {
     if (state.size() != vAbsAlph_.size())
       throw BadCharException(state, "WordAlphabet::charToInt", this);
@@ -178,10 +178,10 @@ public:
   bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
   bool isUnresolved(const std::string& state) const { return charToInt(state) == getUnknownCharacterCode(); }
 
-  std::vector<int> getAlias(int state) const throw (BadIntException);
-  std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
-  int getGeneric(const std::vector<int>& states) const throw (BadIntException);
-  std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
+  std::vector<int> getAlias(int state) const;
+  std::vector<std::string> getAlias(const std::string& state) const;
+  int getGeneric(const std::vector<int>& states) const;
+  std::string getGeneric(const std::vector<std::string>& states) const;
 
 private:
   /**
@@ -189,8 +189,8 @@ private:
    *
    * @{
    */
-  bool containsUnresolved(const std::string& state) const throw (BadCharException);
-  bool containsGap(const std::string& state) const throw (BadCharException);
+  bool containsUnresolved(const std::string& state) const;
+  bool containsGap(const std::string& state) const;
   void build_();
   /** @} */
 
@@ -224,7 +224,7 @@ public:
    * @return The int code of the word.
    * @throw IndexOutOfBoundsException In case of wrong position.
    */
-  virtual int getWord(const Sequence& seq, size_t pos = 0) const throw (IndexOutOfBoundsException);
+  virtual int getWord(const Sequence& seq, size_t pos = 0) const;
 
 
   /**
@@ -236,7 +236,7 @@ public:
    * @return The int code of the word.
    * @throw IndexOutOfBoundsException In case of wrong position.
    */
-  virtual int getWord(const std::vector<int>& vint, size_t pos = 0) const throw (IndexOutOfBoundsException);
+  virtual int getWord(const std::vector<int>& vint, size_t pos = 0) const;
 
   /**
    * @brief Get the char code for a word given the char code of the
@@ -248,7 +248,7 @@ public:
    * @return The string of the word.
    * @throw IndexOutOfBoundsException In case of wrong position.
    */
-  virtual std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const throw (IndexOutOfBoundsException, BadCharException);
+  virtual std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const;
 
   /**
    * @brief Get the int code of the n-position of a word given its int description.
@@ -257,7 +257,7 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The int description of the n-position of the word.
    */
-  int getNPosition(int word, size_t n) const throw (BadIntException)
+  int getNPosition(int word, size_t n) const
   {
     if (n >= vAbsAlph_.size())
       throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
@@ -273,7 +273,7 @@ public:
    * @return The int description of the positions of the codon.
    */
 
-  std::vector<int> getPositions(int word) const throw (BadIntException)
+  std::vector<int> getPositions(int word) const
   {
     std::string s = intToChar(word);
     std::vector<int> positions;
@@ -291,7 +291,7 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The char description of the n-position of the word.
    */
-  std::string getNPosition(const std::string& word, size_t n) const throw (BadCharException)
+  std::string getNPosition(const std::string& word, size_t n) const
   {
     if (n > vAbsAlph_.size())
       throw BadCharException("", "WordAlphabet::getNPosition", this);
@@ -309,7 +309,7 @@ public:
    * @return The char description of the three positions of the word.
    */
 
-  std::vector<std::string> getPositions(const std::string& word) const throw (BadCharException)
+  std::vector<std::string> getPositions(const std::string& word) const
   {
     charToInt(word);
     std::vector<std::string> positions;
@@ -330,7 +330,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence* translate(const Sequence &sequence, size_t = 0) const throw (AlphabetMismatchException, Exception);
+  Sequence* translate(const Sequence &sequence, size_t = 0) const;
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -340,7 +340,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence* reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception);
+  Sequence* reverse(const Sequence& sequence) const;
 
   /** @} */
 

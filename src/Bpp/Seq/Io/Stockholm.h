@@ -80,8 +80,8 @@ class Stockholm:
      *
      * @{
      */
-    void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception);
-    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const throw (Exception)
+    void writeAlignment(std::ostream& output, const SiteContainer& sc) const;
+    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const
     {
       AbstractOAlignment::writeAlignment(path, sc, overwrite);
     }

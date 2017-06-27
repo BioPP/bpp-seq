@@ -55,7 +55,7 @@ namespace bpp
     public LetterAlphabet
   {
   protected:
-    void registerState(AlphabetState* st) throw (Exception) {
+    void registerState(AlphabetState* st) {
       AbstractAlphabet::registerState(st);
     }
     std::string chars_;

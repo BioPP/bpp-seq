@@ -49,7 +49,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-void DCSE::appendAlignmentFromStream(istream& input, SiteContainer& sc) const throw (Exception)
+void DCSE::appendAlignmentFromStream(istream& input, SiteContainer& sc) const
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("DCSE::read : fail to open file"); }

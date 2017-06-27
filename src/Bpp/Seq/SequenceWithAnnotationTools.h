@@ -171,7 +171,7 @@ namespace bpp {
         }
       }
  
-      SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const throw (Exception) {
+      SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const {
         return new SequenceMask(std::vector<bool>(mask_.begin() + static_cast<ptrdiff_t>(pos), mask_.begin() + static_cast<ptrdiff_t>(pos + len)), removable_);
       }
   };
@@ -194,7 +194,7 @@ namespace bpp {
        * @return A new SequenceWithAnnotation object.
        * @throw AlphabetException if the input sequence does not have a CaseMaskedAlphabet.
        */
-      SequenceWithAnnotation* createMaskAnnotation(const Sequence& seq) throw (AlphabetException);
+      SequenceWithAnnotation* createMaskAnnotation(const Sequence& seq);
 
   };
 }

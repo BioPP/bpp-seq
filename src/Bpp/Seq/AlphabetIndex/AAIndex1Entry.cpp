@@ -46,7 +46,7 @@
 using namespace bpp;
 using namespace std;
 
-AAIndex1Entry::AAIndex1Entry(std::istream& input) throw (IOException) :
+AAIndex1Entry::AAIndex1Entry(std::istream& input) :
   property_(20),
   alpha_(&AlphabetTools::PROTEIN_ALPHABET)
 {

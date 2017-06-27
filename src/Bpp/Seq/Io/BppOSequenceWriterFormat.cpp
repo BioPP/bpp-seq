@@ -49,7 +49,7 @@
 using namespace bpp;
 using namespace std;
 
-OSequence* BppOSequenceWriterFormat::read(const std::string& description) throw (Exception)
+OSequence* BppOSequenceWriterFormat::read(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";

@@ -62,7 +62,7 @@ public:
    * @param input The input stream to use.
    * @throw IOException if the stream content does not follow the AAIndex1 database entry format.
    */
-  AAIndex1Entry(std::istream& input) throw (IOException);
+  AAIndex1Entry(std::istream& input);
 
   AAIndex1Entry(const AAIndex1Entry& index) :
     property_(index.property_),
@@ -81,13 +81,13 @@ public:
   AAIndex1Entry* clone() const { return new AAIndex1Entry(*this); }
 
 public:
-  double getIndex(int state) const throw (BadIntException)
+  double getIndex(int state) const
   {
     if (state < 0 || state > 19) throw BadIntException(state, "KleinAANetChargeIndex::getIndex(). Invalid state.", alpha_);
     return property_[static_cast<size_t>(state)];
   }
 
-  double getIndex(const std::string& state) const throw (BadCharException)
+  double getIndex(const std::string& state) const
   {
     return property_[static_cast<size_t>(alpha_->charToInt(state))];
   }

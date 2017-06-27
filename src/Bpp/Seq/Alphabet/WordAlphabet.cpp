@@ -157,7 +157,7 @@ bool WordAlphabet::hasUniqueAlphabet() const
   return true;
 }
 
-bool WordAlphabet::containsUnresolved(const std::string& state) const throw (BadCharException)
+bool WordAlphabet::containsUnresolved(const std::string& state) const
 {
   size_t s = vAbsAlph_.size();
   if (state.length() != s)
@@ -175,7 +175,7 @@ bool WordAlphabet::containsUnresolved(const std::string& state) const throw (Bad
 
 /******************************************************************************/
 
-bool WordAlphabet::containsGap(const std::string& state) const throw (BadCharException)
+bool WordAlphabet::containsGap(const std::string& state) const
 {
   size_t s = vAbsAlph_.size();
   if (state.length() != s)
@@ -192,7 +192,7 @@ bool WordAlphabet::containsGap(const std::string& state) const throw (BadCharExc
 
 /******************************************************************************/
 
-std::string WordAlphabet::getName(const std::string& state) const throw (BadCharException)
+std::string WordAlphabet::getName(const std::string& state) const
 {
   if (state.size() != vAbsAlph_.size())
     throw BadCharException(state, "WordAlphabet::getName", this);
@@ -206,7 +206,7 @@ std::string WordAlphabet::getName(const std::string& state) const throw (BadChar
 
 /******************************************************************************/
 
-std::vector<int> WordAlphabet::getAlias(int state) const throw (BadIntException)
+std::vector<int> WordAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
@@ -230,7 +230,7 @@ std::vector<int> WordAlphabet::getAlias(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const throw (BadCharException)
+std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
@@ -262,21 +262,21 @@ std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const 
 
 /******************************************************************************/
 
-int WordAlphabet::getGeneric(const std::vector<int>& states) const throw (BadIntException)
+int WordAlphabet::getGeneric(const std::vector<int>& states) const
 {
   return states[0];
 }
 
 /******************************************************************************/
 
-std::string WordAlphabet::getGeneric(const std::vector<std::string>& states) const throw (BadCharException)
+std::string WordAlphabet::getGeneric(const std::vector<std::string>& states) const
 {
   return states[0];
 }
 
 /******************************************************************************/
 
-int WordAlphabet::getWord(const Sequence& seq, size_t pos) const throw (IndexOutOfBoundsException)
+int WordAlphabet::getWord(const Sequence& seq, size_t pos) const
 {
   if (seq.size() < pos + vAbsAlph_.size())
     throw IndexOutOfBoundsException("WordAlphabet::getWord", pos, 0, seq.size() - vAbsAlph_.size());
@@ -293,7 +293,7 @@ int WordAlphabet::getWord(const Sequence& seq, size_t pos) const throw (IndexOut
 
 /******************************************************************************/
 
-int WordAlphabet::getWord(const std::vector<int>& vint, size_t pos) const throw (IndexOutOfBoundsException)
+int WordAlphabet::getWord(const std::vector<int>& vint, size_t pos) const
 {
   if (vint.size() < pos + vAbsAlph_.size())
     throw IndexOutOfBoundsException("WordAlphabet::getWord", pos, 0, vint.size() - vAbsAlph_.size());
@@ -309,7 +309,7 @@ int WordAlphabet::getWord(const std::vector<int>& vint, size_t pos) const throw 
 
 /****************************************************************************************/
 
-std::string WordAlphabet::getWord(const std::vector<string>& vpos, size_t pos) const throw (IndexOutOfBoundsException, BadCharException)
+std::string WordAlphabet::getWord(const std::vector<string>& vpos, size_t pos) const
 {
   if (vpos.size() < pos + vAbsAlph_.size())
     throw IndexOutOfBoundsException("WordAlphabet::getWord", pos, 0, vpos.size() - vAbsAlph_.size());
@@ -326,7 +326,7 @@ std::string WordAlphabet::getWord(const std::vector<string>& vpos, size_t pos) c
 
 /****************************************************************************************/
 
-Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const throw (AlphabetMismatchException, Exception)
+Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const
 {
   if ((!hasUniqueAlphabet()) or
       (sequence.getAlphabet()->getAlphabetType() != vAbsAlph_[0]->getAlphabetType()))
@@ -349,7 +349,7 @@ Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const th
 
 /****************************************************************************************/
 
-Sequence* WordAlphabet::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* WordAlphabet::reverse(const Sequence& sequence) const
 {
   if ((!hasUniqueAlphabet()) or
       (sequence.getAlphabet()->getAlphabetType() != getAlphabetType()))

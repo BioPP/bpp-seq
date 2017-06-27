@@ -71,7 +71,7 @@ class OSequenceStream: public virtual IOSequenceStream
      * @param seq The sequence to write.
      * @throw Exception IOExecption.
      */
-    virtual void writeSequence(std::ostream& output, const Sequence& seq) const throw (Exception) = 0;
+    virtual void writeSequence(std::ostream& output, const Sequence& seq) const = 0;
 
 };
 

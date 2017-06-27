@@ -44,7 +44,7 @@ using namespace std;
 
 /******************************************************************************/
 
-int DNAToRNA::translate(int state) const throw (BadIntException)
+int DNAToRNA::translate(int state) const
 {
 	dna_->intToChar(state);
 	return state;
@@ -52,7 +52,7 @@ int DNAToRNA::translate(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-string DNAToRNA::translate(const std::string& state) const throw (BadCharException)
+string DNAToRNA::translate(const std::string& state) const
 {
 	int i = dna_->charToInt(state);
 	return rna_->intToChar(i);
@@ -60,7 +60,7 @@ string DNAToRNA::translate(const std::string& state) const throw (BadCharExcepti
 
 /******************************************************************************/
 
-int DNAToRNA::reverse(int state) const throw (BadIntException) 
+int DNAToRNA::reverse(int state) const 
 {
 	rna_->intToChar(state);
 	return state;
@@ -68,7 +68,7 @@ int DNAToRNA::reverse(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-string DNAToRNA::reverse(const std::string& state) const throw (BadCharException)
+string DNAToRNA::reverse(const std::string& state) const
 {
 	int i = rna_->charToInt(state);
 	return dna_->intToChar(i);

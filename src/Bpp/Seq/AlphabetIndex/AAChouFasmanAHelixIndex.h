@@ -89,13 +89,13 @@ public:
   AAChouFasmanAHelixIndex* clone() const { return new AAChouFasmanAHelixIndex(); }
 
 public:
-  double getIndex(int state) const throw (BadIntException)
+  double getIndex(int state) const
   {
     if (state < 0 || state > 19) throw BadIntException(state, "AAChouFasmanAHelixIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
     return aHelix_[static_cast<size_t>(state)];
   }
 
-  double getIndex(const std::string& state) const throw (BadCharException)
+  double getIndex(const std::string& state) const
   {
     return aHelix_[static_cast<size_t>(AlphabetTools::PROTEIN_ALPHABET.charToInt(state))];
   }

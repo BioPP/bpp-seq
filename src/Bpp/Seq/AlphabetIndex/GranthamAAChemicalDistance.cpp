@@ -62,7 +62,6 @@ GranthamAAChemicalDistance::GranthamAAChemicalDistance() :
 GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
 
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
-throw (BadIntException)
 {
   size_t stateIndex1 = alpha_->getStateIndex(state1);
   size_t stateIndex2 = alpha_->getStateIndex(state2);
@@ -75,7 +74,6 @@ throw (BadIntException)
 }
 
 double GranthamAAChemicalDistance::getIndex(const std::string& state1, const std::string& state2) const
-throw (BadCharException)
 {
   return getIndex(alpha_->charToInt(state1), alpha_->charToInt(state2));
 }

@@ -98,13 +98,13 @@ class VectorProbabilisticSiteContainer :
 
  public :
 
-  const ProbabilisticSite & getProbabilisticSite(std::size_t i) const throw (IndexOutOfBoundsException);
+  const ProbabilisticSite & getProbabilisticSite(std::size_t i) const;
 
-  void addSite(const ProbabilisticSite & site, bool checkPosition = true) throw (Exception);
+  void addSite(const ProbabilisticSite & site, bool checkPosition = true);
 
-  const ProbabilisticSequence & getProbabilisticSequence(std::size_t i) const throw (IndexOutOfBoundsException);
+  const ProbabilisticSequence & getProbabilisticSequence(std::size_t i) const;
 
-  void addSequence(const ProbabilisticSequence & sequence, bool checkName = true) throw (Exception);
+  void addSequence(const ProbabilisticSequence & sequence, bool checkName = true);
 
   std::size_t getNumberOfProbabilisticSites() const { return p_sites_.size(); }
   std::size_t getNumberOfProbabilisticSequences() const { return p_sequences_.size(); }

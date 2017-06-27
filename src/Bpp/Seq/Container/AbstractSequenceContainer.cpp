@@ -46,7 +46,6 @@ using namespace std;
 /**************************************************************************************************/
 
 void AbstractSequenceContainer::setComments(const string& name, const Comments& comments)
-throw (SequenceNotFoundException)
 { 
 	size_t pos = getSequencePosition(name);
 	setComments(pos, comments);

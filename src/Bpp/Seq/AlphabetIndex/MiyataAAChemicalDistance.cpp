@@ -57,7 +57,6 @@ MiyataAAChemicalDistance::MiyataAAChemicalDistance() :
 }
 
 double MiyataAAChemicalDistance::getIndex(int state1, int state2) const
-throw (BadIntException)
 {
   size_t stateIndex1 = alpha_->getStateIndex(state1);
   size_t stateIndex2 = alpha_->getStateIndex(state2);
@@ -66,7 +65,6 @@ throw (BadIntException)
 }
 
 double MiyataAAChemicalDistance::getIndex(const string& state1, const string& state2) const
-throw (BadCharException)
 {
   double d = distanceMatrix_(
       static_cast<size_t>(alpha_->charToInt(state1)),

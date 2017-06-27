@@ -95,7 +95,7 @@ class SequenceAnnotation :
      * @param pos Starting point of the region.
      * @param len The length of the region, in number of positions.
      */
-    virtual SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const throw (Exception) = 0;
+    virtual SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const = 0;
 };
 
 /**
@@ -155,7 +155,7 @@ class SequenceWithAnnotation :
      * @param sequence The whole sequence to be parsed as a std::string.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha);
   
     /**
      * @brief Direct constructor: build a Sequence object from a std::string.
@@ -171,7 +171,7 @@ class SequenceWithAnnotation :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -183,7 +183,7 @@ class SequenceWithAnnotation :
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -196,7 +196,7 @@ class SequenceWithAnnotation :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -205,7 +205,7 @@ class SequenceWithAnnotation :
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) throw (BadIntException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -215,7 +215,7 @@ class SequenceWithAnnotation :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadIntException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha);
 
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
@@ -311,12 +311,12 @@ class SequenceWithAnnotation :
      * @param sequence The new content of the sequence.
      * @see The Sequence constructor for information about the way sequences are internaly stored.
      */
-    virtual void setContent(const std::string& sequence) throw (BadCharException);
-    void setContent(const std::vector<int>& list) throw (BadIntException)
+    virtual void setContent(const std::string& sequence);
+    void setContent(const std::vector<int>& list)
     {
       EdSymbolList::setContent(list);
     }
-    void setContent(const std::vector<std::string>& list) throw (BadCharException)
+    void setContent(const std::vector<std::string>& list)
     {
       EdSymbolList::setContent(list);
     }
@@ -332,13 +332,13 @@ class SequenceWithAnnotation :
      * @param seq The sequence to append. Only the raw content is appended, not additional fields such as annotations if any.
      * @throw AlphabetMismatchException In case the alphabet does not match the current one.
      */
-    void append(const Sequence& seq) throw (AlphabetMismatchException);
+    void append(const Sequence& seq);
     
-    void append(const std::vector<int>& content) throw (BadIntException);
+    void append(const std::vector<int>& content);
 
-    void append(const std::vector<std::string>& content) throw (BadCharException);
+    void append(const std::vector<std::string>& content);
 
-    void append(const std::string& content) throw (BadCharException);
+    void append(const std::string& content);
 
     /** @} */
 
@@ -351,7 +351,7 @@ class SequenceWithAnnotation :
      * @throw Exception If the annotation is not valid for this sequence.
      * @see SequenceWithAnnotation::isValidWith
      */
-    virtual void addAnnotation(SequenceAnnotation* anno) throw (Exception)
+    virtual void addAnnotation(SequenceAnnotation* anno)
     {
       anno->isValidWith(*this);
       addSymbolListListener(anno);
@@ -405,8 +405,7 @@ class SequenceWithAnnotation :
      * @throw AlphabetMismatchException If the two alphabets do not match.
      * @throw Exception If the sequence names do not match.
      */
-    virtual void merge(const SequenceWithAnnotation& swa)
-        throw (AlphabetMismatchException, Exception);
+    virtual void merge(const SequenceWithAnnotation& swa);
 
 
 };

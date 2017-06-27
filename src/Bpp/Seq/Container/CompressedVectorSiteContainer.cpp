@@ -50,8 +50,7 @@ using namespace bpp;
 
 CompressedVectorSiteContainer::CompressedVectorSiteContainer(
   const std::vector<const Site*>& vs,
-  const Alphabet* alpha)
-throw (Exception) :
+  const Alphabet* alpha) :
   AbstractSequenceContainer(alpha),
   sites_(0),
   index_(0),
@@ -227,7 +226,7 @@ CompressedVectorSiteContainer& CompressedVectorSiteContainer::operator=(const Si
 
 /******************************************************************************/
 
-const Site& CompressedVectorSiteContainer::getSite(size_t i) const throw (IndexOutOfBoundsException)
+const Site& CompressedVectorSiteContainer::getSite(size_t i) const
 {
   if (i >= getNumberOfSites())
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::getSite.", i, 0, getNumberOfSites() - 1);
@@ -236,7 +235,7 @@ const Site& CompressedVectorSiteContainer::getSite(size_t i) const throw (IndexO
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositions) throw (Exception)
+void CompressedVectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositions)
 {
   if (pos >= getNumberOfSites()) throw IndexOutOfBoundsException("CompressedVectorSiteContainer::setSite.", pos, 0, getNumberOfSites() - 1);
 
@@ -313,7 +312,7 @@ void CompressedVectorSiteContainer::setSite(size_t pos, const Site& site, bool c
 
 /******************************************************************************/
 
-Site* CompressedVectorSiteContainer::removeSite(size_t i) throw (IndexOutOfBoundsException)
+Site* CompressedVectorSiteContainer::removeSite(size_t i)
 {
   if (i >= getNumberOfSites()) throw IndexOutOfBoundsException("CompressedVectorSiteContainer::removeSite.", i, 0, getNumberOfSites() - 1);
   //Here we return a copy of the site, as it will not necessarily be removed from the set, so we don't want to delete it.
@@ -324,7 +323,7 @@ Site* CompressedVectorSiteContainer::removeSite(size_t i) throw (IndexOutOfBound
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException)
+void CompressedVectorSiteContainer::deleteSite(size_t siteIndex)
 {
   if (siteIndex >= getNumberOfSites())
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::deleteSite.", siteIndex, 0, getNumberOfSites() - 1);
@@ -355,7 +354,7 @@ void CompressedVectorSiteContainer::deleteSite(size_t siteIndex) throw (IndexOut
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException)
+void CompressedVectorSiteContainer::deleteSites(size_t siteIndex, size_t length)
 {
   //This may be optimized later:
   for (size_t i = 0; i < length; ++i) {
@@ -365,7 +364,7 @@ void CompressedVectorSiteContainer::deleteSites(size_t siteIndex, size_t length)
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::addSite(const Site& site, bool checkPositions) throw (Exception)
+void CompressedVectorSiteContainer::addSite(const Site& site, bool checkPositions)
 {
   // Check size:
   if (site.size() != getNumberOfSequences()) throw SiteException("CompressedVectorSiteContainer::addSite. Site does not have the appropriate length", &site);
@@ -388,7 +387,7 @@ void CompressedVectorSiteContainer::addSite(const Site& site, bool checkPosition
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions) throw (Exception)
+void CompressedVectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions)
 {
   if (siteIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("CompressedVectorSiteContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
 
@@ -437,7 +436,7 @@ Vint CompressedVectorSiteContainer::getSitePositions() const
 
 /******************************************************************************/
 
-const Sequence& CompressedVectorSiteContainer::getSequence(size_t i) const throw (IndexOutOfBoundsException)
+const Sequence& CompressedVectorSiteContainer::getSequence(size_t i) const
 {
   if (i >= getNumberOfSequences()) throw IndexOutOfBoundsException("CompressedVectorSiteContainer::getSequence.", i, 0, getNumberOfSequences() - 1);
 
@@ -455,7 +454,7 @@ const Sequence& CompressedVectorSiteContainer::getSequence(size_t i) const throw
 
 /******************************************************************************/
 
-const Sequence& CompressedVectorSiteContainer::getSequence(const std::string& name) const throw (SequenceNotFoundException)
+const Sequence& CompressedVectorSiteContainer::getSequence(const std::string& name) const
 {
   // Look for sequence name:
   size_t pos = getSequencePosition(name);
@@ -475,7 +474,7 @@ bool CompressedVectorSiteContainer::hasSequence(const string& name) const
 
 /******************************************************************************/
 
-size_t CompressedVectorSiteContainer::getSequencePosition(const std::string& name) const throw (SequenceNotFoundException)
+size_t CompressedVectorSiteContainer::getSequencePosition(const std::string& name) const
 {
   // Look for sequence name:
   for (size_t pos = 0; pos < names_.size(); pos++)
@@ -532,7 +531,6 @@ vector<string> CompressedVectorSiteContainer::getSequencesNames() const
 void CompressedVectorSiteContainer::setSequencesNames(
   const vector<string>& names,
   bool checkNames)
-throw (Exception)
 {
   if (names.size() != getNumberOfSequences())
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::setSequenceNames: bad number of names.", names.size(), getNumberOfSequences(), getNumberOfSequences());
@@ -556,7 +554,7 @@ throw (Exception)
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException)
+void CompressedVectorSiteContainer::setComments(size_t sequenceIndex, const Comments& comments)
 {
   comments_[sequenceIndex] = new Comments(comments);
 }

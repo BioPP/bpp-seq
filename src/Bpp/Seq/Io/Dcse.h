@@ -73,7 +73,7 @@ class DCSE :
      *
      * @{
      */
-    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const;
     /** @} */
 
     /**
@@ -84,10 +84,10 @@ class DCSE :
      *
      * @{
      */
-    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const throw (Exception) {
+    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const {
       return readAlignment(input, alpha);
     }
-    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const throw (Exception) {
+    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const {
       return readAlignment(path, alpha);
     }
     /** @} */

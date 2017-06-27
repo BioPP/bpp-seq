@@ -54,7 +54,7 @@
 using namespace bpp;
 using namespace std;
 
-ISequence* BppOSequenceReaderFormat::read(const std::string& description) throw (Exception)
+ISequence* BppOSequenceReaderFormat::read(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";

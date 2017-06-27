@@ -85,7 +85,7 @@ bool SequenceTools::areSequencesIdentical(const Sequence& seq1, const Sequence& 
 
 /******************************************************************************/
 
-Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception)
+Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2)
 {
   // Sequence's alphabets matching verification
   if ((seq1.getAlphabet()->getAlphabetType()) != (seq2.getAlphabet()->getAlphabetType()))
@@ -105,7 +105,7 @@ Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2)
 
 /******************************************************************************/
 
-Sequence& SequenceTools::complement(Sequence& seq) throw (AlphabetException)
+Sequence& SequenceTools::complement(Sequence& seq)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
@@ -130,7 +130,7 @@ Sequence& SequenceTools::complement(Sequence& seq) throw (AlphabetException)
 
 /******************************************************************************/
 
-Sequence* SequenceTools::getComplement(const Sequence& sequence) throw (AlphabetException)
+Sequence* SequenceTools::getComplement(const Sequence& sequence)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
@@ -152,7 +152,7 @@ Sequence* SequenceTools::getComplement(const Sequence& sequence) throw (Alphabet
 
 /******************************************************************************/
 
-Sequence* SequenceTools::transcript(const Sequence& sequence) throw (AlphabetException)
+Sequence* SequenceTools::transcript(const Sequence& sequence)
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "DNA alphabet")
@@ -165,7 +165,7 @@ Sequence* SequenceTools::transcript(const Sequence& sequence) throw (AlphabetExc
 
 /******************************************************************************/
 
-Sequence* SequenceTools::reverseTranscript(const Sequence& sequence) throw (AlphabetException)
+Sequence* SequenceTools::reverseTranscript(const Sequence& sequence)
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "RNA alphabet")
@@ -242,7 +242,7 @@ Sequence& SequenceTools::invertComplement(Sequence& seq)
 
 /******************************************************************************/
 
-double SequenceTools::getPercentIdentity(const Sequence& seq1, const Sequence& seq2, bool ignoreGaps) throw (AlphabetMismatchException, SequenceNotAlignedException)
+double SequenceTools::getPercentIdentity(const Sequence& seq1, const Sequence& seq2, bool ignoreGaps)
 {
   if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SequenceTools::getPercentIdentity", seq1.getAlphabet(), seq2.getAlphabet());
@@ -362,7 +362,7 @@ void SequenceTools::removeGaps(Sequence& seq)
 
 /******************************************************************************/
 
-Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode) throw (Exception)
+Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode)
 {
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
   if (!calpha)
@@ -380,7 +380,7 @@ Sequence* SequenceTools::getSequenceWithoutStops(const Sequence& seq, const Gene
 
 /******************************************************************************/
 
-void SequenceTools::removeStops(Sequence& seq, const GeneticCode& gCode) throw (Exception)
+void SequenceTools::removeStops(Sequence& seq, const GeneticCode& gCode)
 {
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
   if (!calpha)
@@ -394,7 +394,7 @@ void SequenceTools::removeStops(Sequence& seq, const GeneticCode& gCode) throw (
 
 /******************************************************************************/
 
-void SequenceTools::replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode) throw (Exception)
+void SequenceTools::replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode)
 {
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(seq.getAlphabet());
   if (!calpha)
@@ -410,7 +410,6 @@ void SequenceTools::replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode
 /******************************************************************************/
 
 BowkerTest* SequenceTools::bowkerTest(const Sequence& seq1, const Sequence& seq2)
-throw (SequenceNotAlignedException)
 {
   if (seq1.size() != seq2.size())
     throw SequenceNotAlignedException("SequenceTools::bowkerTest.", &seq2);
@@ -515,7 +514,7 @@ void SequenceTools::getPutativeHaplotypes(const Sequence& seq, std::vector<Seque
 
 /******************************************************************************/
 
-Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2) throw (AlphabetMismatchException)
+Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2)
 {
   if (s1.getAlphabet()->getAlphabetType() != s2.getAlphabet()->getAlphabetType())
   {
@@ -540,7 +539,7 @@ Sequence* SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2
 
 /******************************************************************************/
 
-Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h, string name, unsigned int level) throw (SequenceNotAlignedException)
+Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h, string name, unsigned int level)
 {
   const Alphabet* alpha = s.getAlphabet();
   if (name.size() == 0)
@@ -574,7 +573,7 @@ Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h,
 
 /******************************************************************************/
 
-Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetException)
+Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph)
 {
   // Alphabet type checking
   if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")
@@ -616,7 +615,7 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
   return sq;
 }
 
-Sequence* SequenceTools::RNYslice(const Sequence& seq) throw (AlphabetException)
+Sequence* SequenceTools::RNYslice(const Sequence& seq)
 {
   // Alphabet type checking
   if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")

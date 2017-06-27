@@ -71,7 +71,7 @@ namespace bpp
        * @param sc        The container to write.
        * @throw Exception If the file is not in the specified format.
        */
-      virtual void writeSequences(std::ostream& output, const SequenceContainer& sc) const throw (Exception) = 0;
+      virtual void writeSequences(std::ostream& output, const SequenceContainer& sc) const = 0;
 
       /**
        * @brief Write a container to a file.
@@ -82,7 +82,7 @@ namespace bpp
        *                  Any previous content will be lost.
        * @throw Exception If the file is not in the specified format.
        */
-      virtual void writeSequences(const std::string& path, const SequenceContainer & sc, bool overwrite) const throw (Exception) = 0;
+      virtual void writeSequences(const std::string& path, const SequenceContainer & sc, bool overwrite) const = 0;
 
   };
 
@@ -108,7 +108,7 @@ namespace bpp
        * @param sc        The container to write.
        * @throw Exception If the file is not in the specified format.
        */
-      virtual void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception) = 0;
+      virtual void writeAlignment(std::ostream& output, const SiteContainer& sc) const = 0;
 
       /**
        * @brief Write a container to a file.
@@ -119,7 +119,7 @@ namespace bpp
        *                  Any previous content will be lost.
        * @throw Exception If the file is not in the specified format.
        */
-      virtual void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite) const throw (Exception) = 0;
+      virtual void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite) const = 0;
 
   };
 } //end of namespace bpp.

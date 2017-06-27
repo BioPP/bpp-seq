@@ -87,13 +87,13 @@ public:
   AASurfaceIndex* clone() const { return new AASurfaceIndex(); }
 
 public:
-  double getIndex(int state) const throw (BadIntException)
+  double getIndex(int state) const
   {
     if (state < 0 || state > 19) throw BadIntException(state, "AASurfaceIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
     return surface_[static_cast<size_t>(state)];
   }
 
-  double getIndex(const std::string& state) const throw (BadCharException)
+  double getIndex(const std::string& state) const
   {
     return surface_[static_cast<size_t>(AlphabetTools::PROTEIN_ALPHABET.charToInt(state))];
   }

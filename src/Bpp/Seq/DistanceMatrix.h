@@ -137,7 +137,7 @@ namespace bpp
      * @param i Name index.
      * @throw IndexOutOfBoundsException If i is not a valid index.
      */
-    const std::string& getName(std::size_t i) const throw(IndexOutOfBoundsException)
+    const std::string& getName(std::size_t i) const
     {
       if (i >= size())
         throw IndexOutOfBoundsException("DistanceMatrix::getName. Invalid indice.", i, 0, size());
@@ -151,7 +151,7 @@ namespace bpp
      * @param name The new name.
      * @throw IndexOutOfBoundsException If i is not a valid index.
      */
-    void setName(std::size_t i, const std::string& name) throw(IndexOutOfBoundsException)
+    void setName(std::size_t i, const std::string& name)
     {
       if (i >= size())
         throw IndexOutOfBoundsException("DistanceMatrix::setName. Invalid indice.", i, 0, size());
@@ -164,7 +164,7 @@ namespace bpp
      * @param names Matrix names.
      * @throw DimensionException If 'names' have not the same size as the matrix.
      */
-    void setNames(const std::vector<std::string>& names) throw(DimensionException)
+    void setNames(const std::vector<std::string>& names)
     {
       if (names.size() != names_.size())
         throw DimensionException("DistanceMatrix::setNames. Invalid number of names.", names.size(), names_.size());
@@ -178,7 +178,7 @@ namespace bpp
      * @return The position of the name.
      * @throw Exception If no names are attached to this matrix, or if the name was not found.
      */
-    std::size_t getNameIndex(const std::string& name) const throw(Exception);
+    std::size_t getNameIndex(const std::string& name) const;
 
     /**
      * @brief Change the dimension of the matrix.
@@ -203,7 +203,7 @@ namespace bpp
      * @return A reference toward the specified distance.
      * @throw Exception if the matrix has no name of if one of the name do not match existing names.
      */
-    virtual const double& operator()(const std::string& iName, const std::string& jName) const throw(Exception)
+    virtual const double& operator()(const std::string& iName, const std::string& jName) const
     {
       std::size_t i = getNameIndex(iName);
       std::size_t j = getNameIndex(jName);
@@ -219,7 +219,7 @@ namespace bpp
      * @return A reference toward the specified distance.
      * @throw Exception if the matrix has no name of if one of the name do not match existing names.
      */
-    virtual double& operator()(const std::string& iName, const std::string& jName) throw(Exception)
+    virtual double& operator()(const std::string& iName, const std::string& jName)
     {
       std::size_t i = getNameIndex(iName);
       std::size_t j = getNameIndex(jName);

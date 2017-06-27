@@ -186,7 +186,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
 /****************************************************************************************/
 
-vector<int> RNY::getAlias(int state) const throw (BadIntException)
+vector<int> RNY::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "RNY::getAlias(int): Specified base unknown.");
@@ -277,7 +277,7 @@ const NucleicAlphabet& RNY::getLetterAlphabet() const
 
 /****************************************************************************************/
 
-vector<string> RNY::getAlias(const string& state) const throw (BadCharException)
+vector<string> RNY::getAlias(const string& state) const
 {
   if (!isCharInAlphabet(state))
     throw BadCharException(state, "RNY::getAlias(int): Specified base unknown.");
@@ -296,7 +296,7 @@ vector<string> RNY::getAlias(const string& state) const throw (BadCharException)
 
 /****************************************************************************************/
 
-string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) const throw (BadCharException)
+string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) const
 {
   string tr;
 
@@ -318,7 +318,7 @@ string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) c
 }
 
 /**************************************************************************************/
-int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const throw (BadCharException)
+int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
 {
   if (! AlphabetTools::isNucleicAlphabet(&alph))
   {
@@ -413,7 +413,7 @@ bool RNY::isGap(int state) const
   return state == 350;
 }
 
-bool RNY::containsGap(const string& state) const throw (BadCharException)
+bool RNY::containsGap(const string& state) const
 {
   return state.find("-") != string::npos;
 }
@@ -430,7 +430,7 @@ bool RNY::isUnresolved(int state) const
 
 /****************************************************************************************/
 
-int RNY::charToInt(const string& state) const throw (BadCharException)
+int RNY::charToInt(const string& state) const
 {
   if (state.size() != 3)
     throw BadCharException(state, "RNY::charToInt", this);
@@ -441,7 +441,7 @@ int RNY::charToInt(const string& state) const throw (BadCharException)
 
 /************************************************************/
 
-string RNY::intToChar(int state) const throw (BadIntException)
+string RNY::intToChar(int state) const
 {
   int i, j, k, l;
   for (i = 0; i < 3; ++i)

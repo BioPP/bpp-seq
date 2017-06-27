@@ -54,7 +54,7 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const Alphabe
 
 /********************************************************************************/
 
-const ProbabilisticSite & VectorProbabilisticSiteContainer::getProbabilisticSite(std::size_t i) const throw (IndexOutOfBoundsException)
+const ProbabilisticSite & VectorProbabilisticSiteContainer::getProbabilisticSite(std::size_t i) const
 {
   if(i >= getNumberOfProbabilisticSites())
     throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getProbabilisticSite.", i, 0, getNumberOfProbabilisticSites() - 1);
@@ -64,7 +64,7 @@ const ProbabilisticSite & VectorProbabilisticSiteContainer::getProbabilisticSite
 
 /********************************************************************************/
 
-void VectorProbabilisticSiteContainer::addSite(const ProbabilisticSite & site, bool checkPosition) throw (Exception)
+void VectorProbabilisticSiteContainer::addSite(const ProbabilisticSite & site, bool checkPosition)
 {
   // check size :
   if(site.size() != getNumberOfProbabilisticSequences())
@@ -89,7 +89,7 @@ void VectorProbabilisticSiteContainer::addSite(const ProbabilisticSite & site, b
 
 /********************************************************************************/
 
-const ProbabilisticSequence & VectorProbabilisticSiteContainer::getProbabilisticSequence(std::size_t i) const throw (IndexOutOfBoundsException)
+const ProbabilisticSequence & VectorProbabilisticSiteContainer::getProbabilisticSequence(std::size_t i) const
 {
 
   if(i >= getNumberOfProbabilisticSequences())
@@ -111,7 +111,7 @@ const ProbabilisticSequence & VectorProbabilisticSiteContainer::getProbabilistic
 
 /********************************************************************************/
 
-void VectorProbabilisticSiteContainer::addSequence(const ProbabilisticSequence & sequence, bool checkName) throw (Exception)
+void VectorProbabilisticSiteContainer::addSequence(const ProbabilisticSequence & sequence, bool checkName)
 {
 
   // if the container has no sequence, we set the size to the size of this sequence :
