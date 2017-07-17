@@ -115,7 +115,7 @@ namespace bpp
      *
      */
     
-    void clearGeneralComments()
+    void deleteGeneralComments()
     {
       Commentable::clearComments();
     }

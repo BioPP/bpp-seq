@@ -140,21 +140,6 @@ namespace bpp
       return getSequence(sequenceIndex).toString();
     }
 
-    // const Comments& getGeneralComments() const
-    // {
-    //   return Commentable::getComments();
-    // }
-
-    // void setGeneralComments(const Comments& comments)
-    // {
-    //   Commentable::setComments(comments);
-    // }
-
-    // void clearGeneralComments()
-    // {
-    //   Commentable::clearComments();
-    // }
-    
     virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
     {
       return getSequence(sequenceIndex).getComments();

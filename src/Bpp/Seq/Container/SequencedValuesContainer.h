@@ -170,7 +170,7 @@ namespace bpp
     /**
      * @brief Delete the comments associated to this container.
      */
-    virtual void clearGeneralComments() = 0;
+    virtual void deleteGeneralComments() = 0;
 
     /**
      * @brief Delete all data in the container.

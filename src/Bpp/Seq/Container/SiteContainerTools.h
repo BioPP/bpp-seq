@@ -226,11 +226,16 @@ namespace bpp
     /**
      * @brief Change all gaps to unknown state in a container, according to its alphabet.
      *
+     * For ProbabilisticSites, this changes in each sequence all sites
+     * that sum to 0 into sites where all values equal 1.
+     *
      * For DNA alphabets, this change all '-' to 'N'.
+     *
      *
      * @param sites The container to be modified.
      */
-    static void changeGapsToUnknownCharacters(SiteContainer& sites);
+
+    static void changeGapsToUnknownCharacters(AlignedValuesContainer& sites);
 
     /**
      * @brief Change all unresolved characters to gaps in a container, according to its alphabet.
@@ -386,7 +391,8 @@ namespace bpp
      * @param index [out] If non-null the underlying vector will be appended with the original site indices.
      * @return A sampled alignment with nbSites sites taken from the input one.
      */
-    static VectorSiteContainer* sampleSites(const SiteContainer& sites, size_t nbSites, std::vector<size_t>* index = 0);
+    
+    static AlignedValuesContainer* sampleSites(const AlignedValuesContainer& sites, size_t nbSites, std::vector<size_t>* index = 0);
 
     /**
      * @brief Bootstrap sites in an alignment.
@@ -399,7 +405,8 @@ namespace bpp
      * @param sites An input alignment to sample.
      * @return A sampled alignment with the same number of sites than the input one.
      */
-    static VectorSiteContainer* bootstrapSites(const SiteContainer& sites);
+    
+    static AlignedValuesContainer* bootstrapSites(const AlignedValuesContainer& sites);
 
     /**
      * @brief Compute the similarity/distance score between two aligned sequences.

@@ -243,19 +243,38 @@ Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::s
 
 /******************************************************************************/
 
-void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainer& sites)
+void SiteContainerTools::changeGapsToUnknownCharacters(AlignedValuesContainer& sites)
 {
+  VectorSiteContainer* vsc=dynamic_cast<VectorSiteContainer*>(&sites);
+  VectorProbabilisticSiteContainer* vpsc=dynamic_cast<VectorProbabilisticSiteContainer*>(&sites);
+
   // NB: use iterators for a better algorithm?
   int unknownCode = sites.getAlphabet()->getUnknownCharacterCode();
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
-    for (unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
-    {
-      int* element = &sites(j, i);
-      if (sites.getAlphabet()->isGap(*element))
-        *element = unknownCode;
+    if (SymbolListTools::hasGap(sites.getSymbolListSite(i))){
+      if (vsc)
+      {
+        Site& site=vsc->getSite(i);
+        for (unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
+        {
+          int& element = site[j];
+          if (sites.getAlphabet()->isGap(element))
+            element = unknownCode;
+        }
+      }
+      else
+      {
+        shared_ptr<ProbabilisticSite> psite=vpsc->getSite(i);
+        for (unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
+        {
+          vector<double>& element = (*psite)[j];
+          if (VectorTools::sum(element) <= NumConstants::TINY())
+            VectorTools::fill(element, 1.);
+        }
+      }
     }
-  }
+   }
 }
 
 /******************************************************************************/
@@ -870,22 +889,36 @@ throw (AlphabetMismatchException)
 
 /******************************************************************************/
 
-VectorSiteContainer* SiteContainerTools::sampleSites(const SiteContainer& sites, size_t nbSites, vector<size_t>* index)
+AlignedValuesContainer* SiteContainerTools::sampleSites(const AlignedValuesContainer& sites, size_t nbSites, vector<size_t>* index)
 {
-  VectorSiteContainer* sample = new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet());
+  const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&sites);
+  const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
+
+  VectorSiteContainer* nvsc=vsc?new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet()):0;
+  VectorProbabilisticSiteContainer* nvpsc=vpsc?new VectorProbabilisticSiteContainer(sites.getSequencesNames(), sites.getAlphabet()):0;
+  
+    
   for (size_t i = 0; i < nbSites; i++)
   {
     size_t pos = static_cast<size_t>(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(static_cast<int>(sites.getNumberOfSites())));
-    sample->addSite(sites.getSite(pos), false);
+    if (vsc)
+      nvsc->addSite(vsc->getSite(pos), false);
+    else
+      nvpsc->appendSite(vpsc->getSite(pos), false);
+    
     if (index)
       index->push_back(pos);
   }
-  return sample;
+  
+  if (vsc)
+    return nvsc;
+  else
+    return nvpsc;
 }
 
 /******************************************************************************/
 
-VectorSiteContainer* SiteContainerTools::bootstrapSites(const SiteContainer& sites)
+AlignedValuesContainer* SiteContainerTools::bootstrapSites(const AlignedValuesContainer& sites)
 {
   return sampleSites(sites, sites.getNumberOfSites());
 }

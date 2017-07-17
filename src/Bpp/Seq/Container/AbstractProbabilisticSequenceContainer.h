@@ -159,7 +159,7 @@ namespace bpp
       Commentable::setComments(comments);
     }
 
-    void clearGeneralComments()
+    void deleteGeneralComments()
     {
       Commentable::clearComments();
     }
