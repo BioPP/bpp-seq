@@ -109,11 +109,11 @@ Sequence& SequenceTools::complement(Sequence& seq) throw (AlphabetException)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet")
+  if (AlphabetTools::isDNAAlphabet(seq.getAlphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (seq.getAlphabet()->getAlphabetType() == "RNA alphabet")
+  else if (AlphabetTools::isRNAAlphabet(seq.getAlphabet()))
   {
     NAR = &RNARep_;
   }
@@ -134,11 +134,11 @@ Sequence* SequenceTools::getComplement(const Sequence& sequence) throw (Alphabet
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (sequence.getAlphabet()->getAlphabetType() == "DNA alphabet")
+  if (AlphabetTools::isDNAAlphabet(sequence.getAlphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (sequence.getAlphabet()->getAlphabetType() == "RNA alphabet")
+  else if (AlphabetTools::isRNAAlphabet(sequence.getAlphabet()))
   {
     NAR = &RNARep_;
   }
@@ -155,7 +155,7 @@ Sequence* SequenceTools::getComplement(const Sequence& sequence) throw (Alphabet
 Sequence* SequenceTools::transcript(const Sequence& sequence) throw (AlphabetException)
 {
   // Alphabet type checking
-  if (sequence.getAlphabet()->getAlphabetType() != "DNA alphabet")
+  if (AlphabetTools::isDNAAlphabet(sequence.getAlphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
   }
@@ -168,7 +168,7 @@ Sequence* SequenceTools::transcript(const Sequence& sequence) throw (AlphabetExc
 Sequence* SequenceTools::reverseTranscript(const Sequence& sequence) throw (AlphabetException)
 {
   // Alphabet type checking
-  if (sequence.getAlphabet()->getAlphabetType() != "RNA alphabet")
+  if (AlphabetTools::isRNAAlphabet(sequence.getAlphabet()))
   {
     throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
   }
@@ -208,17 +208,17 @@ Sequence& SequenceTools::invertComplement(Sequence& seq)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (seq.getAlphabet()->getAlphabetType() == "DNA alphabet")
+  if (AlphabetTools::isDNAAlphabet(seq.getAlphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (seq.getAlphabet()->getAlphabetType() == "RNA alphabet")
+  else if (AlphabetTools::isRNAAlphabet(seq.getAlphabet()))
   {
     NAR = &RNARep_;
   }
   else
   {
-    throw AlphabetException("SequenceTools::complement: Sequence must be nucleic.", seq.getAlphabet());
+    throw AlphabetException("SequenceTools::invertComplement: Sequence must be nucleic.", seq.getAlphabet());
   }
   // for (size_t i = 0 ; i < seq.size() ; i++) {
   //  seq.setElement(i, NAR->translate(seq.getValue(i)));
@@ -577,7 +577,7 @@ Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h,
 Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetException)
 {
   // Alphabet type checking
-  if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")
+  if (AlphabetTools::isDNAAlphabet(seq.getAlphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
   }
@@ -619,7 +619,7 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph) throw (AlphabetEx
 Sequence* SequenceTools::RNYslice(const Sequence& seq) throw (AlphabetException)
 {
   // Alphabet type checking
-  if (seq.getAlphabet()->getAlphabetType() != "DNA alphabet")
+  if (AlphabetTools::isDNAAlphabet(seq.getAlphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
   }
