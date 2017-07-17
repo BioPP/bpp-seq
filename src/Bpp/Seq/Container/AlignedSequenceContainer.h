@@ -155,18 +155,33 @@ namespace bpp
      */
     const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException);
     Site& getSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-    void        setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
-    std::shared_ptr<Site>   deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-   void    deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException, Exception);
+    void  setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
+    std::shared_ptr<Site> deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
     void addSite(const Site& site, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, int position, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, size_t siteIndex, bool checkPosition = true) throw (Exception);
     void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true) throw (Exception);
+ 
+    void clear();
+
+    AlignedSequenceContainer* createEmptyContainer() const;
+
+    /** @} */
+
+    /*
+     * @name From AlignedValuesContainer interface
+     *
+     * @{
+     */
+
+    void deleteSites(size_t siteIndex, size_t length);
+    
     size_t getNumberOfSites() const { return length_; }
     Vint getSitePositions() const { return positions_; }
+    void setSitePositions(Vint vPositions);
+
     void reindexSites();
-    void clear();
-    AlignedSequenceContainer* createEmptyContainer() const;
+
     /** @} */
 
     /**

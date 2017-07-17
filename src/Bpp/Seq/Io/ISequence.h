@@ -46,6 +46,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../Sequence.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/SiteContainer.h"
+#include "../Container/ProbabilisticSequenceContainer.h"
+#include "../Container/ProbabilisticSiteContainer.h"
 #include <Bpp/Exceptions.h>
 
 //From the STL:
@@ -90,15 +92,15 @@ class ISequence :
     virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
 
 };
-
-/**
- * @brief The IAlignment interface.
- *
- * This interface defines the basic methods for reading aligned sequences from a file.
- */
-class IAlignment:
-  public virtual IOSequence
-{
+  
+  /**
+   * @brief The IAlignment interface.
+   *
+   * This interface defines the basic methods for reading aligned sequences from a file.
+   */
+  class IAlignment:
+    public virtual IOSequence
+  {
   public:
     IAlignment() {}
     virtual ~IAlignment() {}
@@ -114,6 +116,7 @@ class IAlignment:
      * @throw Exception If the file is not in the specified format.
      */
     virtual SiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
+
     /**
      * @brief Create a new container from a file.
      *
@@ -124,7 +127,82 @@ class IAlignment:
      */
     virtual SiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
 
-};
+  };
+
+  /**
+   * @brief The IProbabilisticSequence interface.
+   *
+   * This interface defines the basic methods for reading aligned values from a file.
+   */
+  
+  class IProbabilisticSequence:
+    public virtual IOProbabilisticSequence
+  {
+  public:
+    IProbabilisticSequence() {}
+    virtual ~IProbabilisticSequence() {}
+
+  public:
+  
+    /**
+     * @brief Create a new container from a stream.
+     *
+     * @param input  The input stream to read.
+     * @param alpha The alphabet to be associated to the container.
+     * @return A new ProbabilisticSequenceContainer object.
+     */
+    
+    virtual ProbabilisticSequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) = 0;
+    
+    /**
+     * @brief Create a new container from a file.
+     *
+     * @param path  The path to the file to read.
+     * @param alpha The alphabet to be associated to the container.
+     * @return A new ProbabilisticSequenceContainer object.
+     */
+    
+    virtual ProbabilisticSequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) = 0;
+
+  };
+
+  /**
+   * @brief The IProbabilisticSequence interface.
+   *
+   * This interface defines the basic methods for reading aligned sequences from a file.
+   */
+  
+  class IProbabilisticAlignment:
+    public virtual IOProbabilisticSequence
+  {
+  public:
+    IProbabilisticAlignment() {}
+    virtual ~IProbabilisticAlignment() {}
+
+  public:
+  
+    /**
+     * @brief Create a new container from a stream.
+     *
+     * @param input  The input stream to read.
+     * @param alpha The alphabet to be associated to the container.
+     * @return A new ProbabilisticSiteContainer object.
+     */
+
+    virtual ProbabilisticSiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const = 0;
+
+    /**
+     * @brief Create a new container from a file.
+     *
+     * @param path  The path to the file to read.
+     * @param alpha The alphabet to be associated to the container.
+     * @return A new ProbabilisticSiteContainer object.
+     */
+    
+    virtual ProbabilisticSiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const = 0;
+
+  };
+
 
 } //end of namespace bpp.
 

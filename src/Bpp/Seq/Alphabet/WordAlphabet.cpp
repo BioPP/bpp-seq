@@ -206,6 +206,22 @@ std::string WordAlphabet::getName(const std::string& state) const throw (BadChar
 
 /******************************************************************************/
 
+bool WordAlphabet::isResolvedIn(int state1, int state2) const throw (BadIntException)
+{
+  if (!isIntInAlphabet(state1))
+    throw BadIntException(state1, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.");
+
+  if (!isIntInAlphabet(state2))
+    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.");
+
+  if (isUnresolved(state2))
+    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Unresolved base.");
+
+  return (state1 == (int)getSize())?(state2 >= 0):(state1==state2);
+}
+
+/******************************************************************************/
+
 std::vector<int> WordAlphabet::getAlias(int state) const throw (BadIntException)
 {
   if (!isIntInAlphabet(state))

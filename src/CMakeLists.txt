@@ -93,7 +93,6 @@ SET(CPP_FILES
   Bpp/Seq/SequenceWithQualityTools.cpp
   Bpp/Seq/Site.cpp
   Bpp/Seq/SiteExceptions.cpp
-  Bpp/Seq/SiteTools.cpp
   Bpp/Seq/StringSequenceTools.cpp
   Bpp/Seq/IntSymbolList.cpp
   Bpp/Seq/SymbolListTools.cpp

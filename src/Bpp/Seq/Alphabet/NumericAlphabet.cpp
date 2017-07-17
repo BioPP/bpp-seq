@@ -102,18 +102,17 @@ void NumericAlphabet::registerState(AlphabetState* st) throw (Exception)
   }
 }
 
-
 vector<int> NumericAlphabet::getAlias(int state) const throw (BadIntException)
 {
-  vector<int> v;
-  v.push_back(state);
+  vector<int> v(1);
+  v[0] = state;
   return v;
 }
 
 vector<string> NumericAlphabet::getAlias(const string& state) const throw (BadCharException)
 {
-  vector<string> v;
-  v.push_back(state);
+  vector<string> v(1);
+  v[0] = state;
   return v;
 }
 

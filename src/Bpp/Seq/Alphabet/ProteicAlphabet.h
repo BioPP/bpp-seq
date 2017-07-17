@@ -123,6 +123,7 @@ namespace bpp
     unsigned int getSize() const { return 20; }
     unsigned int getNumberOfTypes() const { return 23; }
     int getUnknownCharacterCode() const { return 22; }
+    bool isResolvedIn(int state1, int state2) const throw (BadIntException) ;
     std::vector<int> getAlias(int state) const throw (BadIntException);
     std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
     int getGeneric(const std::vector<int>& states) const throw (BadIntException);

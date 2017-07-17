@@ -95,7 +95,7 @@ VectorSequenceContainer::VectorSequenceContainer(
     addSequence(sc.getSequence(names[i]), false);
   }
 
-  AbstractSequenceContainer::setComments(sc.getComments());
+  setGeneralComments(sc.getGeneralComments());
 }
 
 /** Assignation operator: *****************************************************/
@@ -179,7 +179,7 @@ throw (Exception)
 VectorSequenceContainer* VectorSequenceContainer::createEmptyContainer() const
 {
   VectorSequenceContainer* vsc = new VectorSequenceContainer(getAlphabet());
-  vsc->AbstractSequenceContainer::setComments(getComments());
+  vsc->setGeneralComments(getGeneralComments());
   return vsc;
 }
 

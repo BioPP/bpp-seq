@@ -277,6 +277,7 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << endl << "add binary probabilistic sequence to binary probabilistic container...";
+
   p_container.addSequence(std::make_shared<BasicProbabilisticSequence>(p_seq));
   cerr << "OK." << endl;
 
@@ -333,16 +334,16 @@ int main() {
 
   cerr << "binary probabilistic 1st site contains :" << endl << endl;
   cerr << p_container.getSite(0)->toString();
-  cerr << endl;
+  cerr << endl << endl;
 
   cerr << "=========================" << endl;
   cerr << "     DNA " << endl;
 
   Fasta * dna_fasta = new Fasta();
   cerr << endl << "created a handler of type : " << fasta->getFormatName() << endl;
-  string dna_fasta_in = ">another dna sequence\nACG\n";
+  string dna_fasta_in = ">a dna sequence\nACG\n";
   istringstream dna_fasta_iss(dna_fasta_in);
-  cerr << "read the following into binary container..." << endl;
+  cerr << "read the following into dna container..." << endl;
   cerr << endl << dna_fasta_in << endl;
   dna_fasta->appendSequencesFromStream(dna_fasta_iss, dna_container);
   cerr << "OK." << endl;
@@ -363,7 +364,7 @@ int main() {
   dna_pasta->appendSequencesFromStream(dna_pasta_iss, dna_p_container);
   cerr << "OK." << endl;
 
-  string dna_pasta_in2 = "C T A G\n>another dna prob. sequence\n0.1885256 0.2023275 0.570924031 0.03822292\n0.1122945 0.2366416 0.004093129 0.64697079\n";
+  string dna_pasta_in2 = "C T A G\n>another dna prob. sequence\n0.1885256 0.2023275 0.570924031 0.03822292\n0.1122945 0.2366416 0.004093129 0.64697079";
   istringstream dna_pasta_iss2(dna_pasta_in2);
   cerr << "read the following (permuted) sequence into dna prob. container" << endl;
   cerr << endl << dna_pasta_in2 << endl;
@@ -376,9 +377,24 @@ int main() {
     cerr << endl;
   }
 
+  
+
   cerr << "String of the 1st site:" << endl;
   
-  cerr << dna_p_container.getSite(0)->toString() << endl;
+  cerr << dna_p_container.getSite(0)->toString() << endl << endl;
+  cerr << "*******************************" << endl << endl;
+  
+  cerr << "DNA PASTA OUTPUT: " << endl << endl;
+  cerr << "Regular container: " << endl << endl;
+
+  dna_pasta->writeAlignedValues(cerr, dna_container);
+
+  cerr << endl << "Probabilistic container: " << endl << endl;
+
+  dna_pasta->writeSequences(cerr, dna_p_container);
+
   // the end
+
+
   return 0;
 }

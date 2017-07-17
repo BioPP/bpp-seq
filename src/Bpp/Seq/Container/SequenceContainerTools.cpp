@@ -38,7 +38,9 @@
  */
 
 #include "SequenceContainerTools.h"
+#include "../SymbolListTools.h"
 #include "VectorSequenceContainer.h"
+#include "ProbabilisticSequenceContainer.h"
 #include "../Alphabet/CodonAlphabet.h"
 
 // From bpp-core:
@@ -151,20 +153,30 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer&
 
 /******************************************************************************/
 
-void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, double pseudoCount)
+void SequenceContainerTools::getFrequencies(const SequencedValuesContainer& sequences, std::map<int, double>& f, double pseudoCount)
 {
   double n = 0;
   vector<string> names = sequences.getSequencesNames();
+
+  const SequenceContainer* sc=dynamic_cast<const SequenceContainer*>(&sequences);
+  const ProbabilisticSequenceContainer* psc=dynamic_cast<const ProbabilisticSequenceContainer*>(&sequences);
+
   for (size_t j = 0; j < names.size(); j++)
   {
-    const Sequence& seq = sequences.getSequence(names[j]);
-    for (size_t i = 0; i < seq.size(); i++)
+    if (sc)
     {
-      f[seq[i]]++;
+      const Sequence& seq=sc->getSequence(names[j]);
+      SymbolListTools::getCounts(seq, f, true);
+      n += (double)seq.size();
     }
-    n += static_cast<double>(seq.size());
+    else
+    {
+      const ProbabilisticSequence& seq=*psc->getSequence(names[j]);
+      SymbolListTools::getCounts(seq, f, true);
+      n += (double)seq.size();
+    }
   }
-
+  
   if (pseudoCount != 0)
   {
     const Alphabet* pA = sequences.getAlphabet();
@@ -176,10 +188,9 @@ void SequenceContainerTools::getFrequencies(const SequenceContainer& sequences, 
     n += pseudoCount * static_cast<double>(pA->getSize());
   }
 
-  for (map<int, double>::iterator i = f.begin(); i != f.end(); i++)
-  {
-    i->second = i->second / n;
-  }
+  for (auto& i : f)
+    i.second = i.second / n;
+
 }
 
 /******************************************************************************/

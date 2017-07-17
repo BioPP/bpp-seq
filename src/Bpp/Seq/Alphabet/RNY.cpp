@@ -270,6 +270,45 @@ vector<int> RNY::getAlias(int state) const throw (BadIntException)
   return v;
 }
 
+/****************************************************************************************/
+
+bool RNY::isResolvedIn(int state1, int state2) const throw (BadIntException)
+{
+  if (!isIntInAlphabet(state1))
+    throw BadIntException(state1, "RNY::isResolvedIn(int, int): Specified base unknown.");
+
+  if (!isIntInAlphabet(state2))
+    throw BadIntException(state2, "RNY::isResolvedIn(int, int): Specified base unknown.");
+
+  if (isUnresolved(state2))
+    throw BadIntException(state2, "RNY::isResolvedIn(int, int): Unresolved base.");
+
+  int qs = state1 / 50;
+  int rs = state1 % 50;
+
+  switch (qs)
+  {
+  case 0: // NNN
+    return state2==rs;
+  case 1: // NN-
+    return ((state2 < rs + 3) && (state2 >= rs));
+  case 2: // N-N
+    return ((state2 - rs)%3 == 0 && (state2 >= rs) && (state2 <  rs + 12));
+  case 3: // N--
+    return ((state2 >= rs) && (state2 < rs + 12));
+  case 4: // -NN
+    return ((state2 - rs)%12 == 0 && (state2 >= rs) &&  (state2 < rs + 36));
+  case 5: // -N-
+    return ((state2 - rs)%12 < 3 && (state2 >= rs) &&  (state2 < rs + 27));
+  case 6: // --N
+    return ((state2 - rs)%3 == 0 && (state2 >= rs) &&  (state2 < rs + 36));
+  case 7: // ---
+    return (state2>=0);
+  default:
+    throw BadIntException(state1, "RNY:isResolvedIn : this sould not happen.");
+  }
+}
+
 const NucleicAlphabet& RNY::getLetterAlphabet() const
 {
   return nuclalph_;

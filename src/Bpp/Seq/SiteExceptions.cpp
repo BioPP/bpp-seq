@@ -36,7 +36,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "SiteExceptions.h"
-#include "Site.h"
+#include "CoreSite.h"
 #include <Bpp/Text/TextTools.h>
 
 using namespace bpp;
@@ -44,7 +44,7 @@ using namespace std;
 
 /***************************************************************************/
 
-SiteException::SiteException(const std::string& text, const Site* s) :
+SiteException::SiteException(const std::string& text, const CoreSite* s) :
 	Exception(text + (s != 0 ? "(" + TextTools::toString(s->getPosition()) + ")" : string(""))),
 	site_(s) {};
     

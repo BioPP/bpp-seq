@@ -42,7 +42,7 @@
 
 #include "../Site.h"
 #include "SiteContainer.h"
-#include "AbstractSequenceContainer.h"
+#include "AbstractValuesContainer.h"
 #include "AlignedSequenceContainer.h"
 #include "OrderedSequenceContainer.h"
 #include <Bpp/Numeric/VectorTools.h>
@@ -82,7 +82,10 @@ public:
    * @param checkPositions Check for the redundancy of site position tag. This may turn to be very time consuming!
    * @throw Exception If sites differ in size or in alphabet.
    */
+
+  VectorSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
   VectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
+
   /**
    * @brief Build a new empty container with specified size.
    *
@@ -90,6 +93,7 @@ public:
    * @param alpha The alphabet for this container.
    */
   VectorSiteContainer(size_t size, const Alphabet* alpha);
+
   /**
    * @brief Build a new empty container with specified sequence names.
    *
@@ -109,6 +113,8 @@ public:
   VectorSiteContainer(const SiteContainer&  sc);
   VectorSiteContainer(const OrderedSequenceContainer& osc);
   VectorSiteContainer(const SequenceContainer&  sc);
+  
+  VectorSiteContainer(const AlignedValuesContainer& avc);
 
   VectorSiteContainer& operator=(const VectorSiteContainer& vsc);
   VectorSiteContainer& operator=(const SiteContainer&  sc);
@@ -147,16 +153,24 @@ public:
   {
     return VectorPositionedContainer<Site>::deleteObject(siteIndex);
   }
-  
-  void deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException)
-  {
-    VectorPositionedContainer<Site>::deleteObjects(siteIndex, length);
-  }
 
   void        addSite(const Site& site,                                 bool checkPosition = true) throw (Exception);
   void        addSite(const Site& site,                   int position, bool checkPosition = true) throw (Exception);
   void        addSite(const Site& site, size_t siteIndex,               bool checkPosition = true) throw (Exception);
   void        addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true) throw (Exception);
+
+  /** @} */
+
+  /*
+   * @name From AlignedValuesContainer interface
+   *
+   * @{
+   */
+
+  void deleteSites(size_t siteIndex, size_t length)
+  {
+    VectorPositionedContainer<Site>::deleteObjects(siteIndex, length);
+  }
 
   size_t getNumberOfSites() const
   {
@@ -164,11 +178,15 @@ public:
   }
   
   void reindexSites();
+
   Vint getSitePositions() const;
+
   void setSitePositions(Vint vPositions);
+
+  
   /** @} */
 
-  // Theses methods are implemented for this class:
+  // These methods are implemented for this class:
 
   /**
    * @name The SequenceContainer interface.
@@ -191,7 +209,7 @@ public:
 
   // Methods to get position of a sequence in sequence container from his name
   // This method is used by delete and remove methods
-  size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException)
+  size_t getSequencePosition(const std::string& name) const
   {
     // Look for sequence name:
     return VectorMappedContainer<Sequence>::getObjectPosition(name);
@@ -260,6 +278,61 @@ public:
   {
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[sequenceIndex];
   }
+
+  /**
+   * @name SequencedValuesContainer methods.
+   *
+   * @{
+   */
+  
+  double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
+  {
+    if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
+    
+    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex),state)?1.:0.;
+  }
+  
+  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const{
+    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex),state)?1.:0.;
+  }
+
+  /*
+   *
+   * @}
+   *
+   */
+  
+  /**
+   * @name OrderedValuesContainer methods.
+   *
+   * @{
+   */
+
+  /*
+   * @brief get value of a state at a position
+   * @param siteIndex  index of the site in the container
+   * @param sequenceIndex index of the looked value in the site
+   * @param state  state in the alphabet
+   */
+  
+  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const 
+  {
+    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
+    if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
+
+    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
+  }
+  
+  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const 
+  {
+    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
+  }
+
+  /*
+   * @}
+   *
+   */
+
   /** @} */
 
   void addSequence(const Sequence& sequence, bool checkName = true);

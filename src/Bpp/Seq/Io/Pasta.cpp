@@ -51,7 +51,7 @@ using namespace std;
 
 /********************************************************************************/
 
-bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasLabels, vector<int> & permutationMap) const throw (Exception) {
+bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasLabels, vector<int> & permutationMap) const {
 
   if(!input)
     throw IOException("Pasta::nextSequence : can't read from istream input");
@@ -153,7 +153,6 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
   // o.w., we assume that each probability is that a (binary)
   // character is 1
   else {
-
     DataTable content(2,0);
 
     // fill in pairs of probabilities that (binary) character is 0,
@@ -181,47 +180,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
 
 /********************************************************************************/
 
-void Pasta::writeSequence(ostream & output, const ProbabilisticSequence & seq) const throw (Exception) {
-
-  if(!output)
-    throw IOException("Pasta::writeSequence : can't write to ostream output");
-
-  // sequence name
-  output << ">" << seq.getName();
-
-  // sequence comments
-  if(extended_) {
-    for(unsigned int i = 0; i < seq.getComments().size(); ++i) {
-      output << " \\" << seq.getComments()[i];
-    }
-  }
-  output << endl;
-
-  /*
-    Again, here is where we radically diverge from the Fasta way : in
-    the sequence content handling.  For now we assume that the
-    DataTable (within the ProbabilisticSequence) contains exactly one
-    column, pertaining to the probability that the binary character is
-    1.  We output this column as a single (pasta-style) row
-
-    again, extending this to other alphabets is future work
-  */
-
-  // sequence content
-  const vector<vector<double> >& data = seq.getContent();
-
-  for (auto i : data)
-  {
-    output << i[1];
-    output << " ";
-  }
-  
-  output << endl;
-}
-
-/********************************************************************************/
-
-void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteContainer & container) const throw (Exception) {
+void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteContainer & container) const {
 
   if(!input)
     throw IOException("Pasta::appendFromStream: can't read from istream input");
@@ -320,6 +279,105 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
     }
   }
   if(extended_ && cmts.size()) {
-    container.setComments(cmts);
+    container.setGeneralComments(cmts);
+  }
+}
+
+
+/********************************************************************************/
+
+void Pasta::writeSequence(ostream & output, const ProbabilisticSequence & seq) const
+{
+  if(!output)
+    throw IOException("Pasta::writeSequence : can't write to ostream output");
+
+  // sequence name
+  output << ">" << seq.getName();
+
+  // sequence comments
+  if(extended_) {
+    for(unsigned int i = 0; i < seq.getComments().size(); ++i) {
+      output << " \\" << seq.getComments()[i];
+    }
+  }
+  output << endl;
+
+  StlOutputStreamWrapper outs(&output);
+
+  // sequence content
+  const vector<vector<double> >& data = seq.getContent();
+  
+  for (auto i : data)
+  {
+    VectorTools::print(i,outs,"\t");
+  }
+}
+
+/********************************************************************************/
+
+void Pasta::writeSequence(ostream & output, const Sequence & seq) const
+{
+  if(!output)
+    throw IOException("Pasta::writeSequence : can't write to ostream output");
+
+  // sequence name
+  output << ">" << seq.getName();
+
+  // sequence comments
+  if(extended_) {
+    for(unsigned int i = 0; i < seq.getComments().size(); ++i) {
+      output << " \\" << seq.getComments()[i];
+    }
+  }
+  output << endl;
+
+  // sequence content
+
+  int nbc=(int)seq.getAlphabet()->getResolvedChars().size();
+  
+  for (size_t i=0; i<seq.size(); i++)
+  {
+    for (int s=0; s<nbc; s++)
+    {
+      output << seq.getStateValueAt(i,(int)s);
+      output << "\t";
+    }
+    output << endl;
+  }
+}
+
+void Pasta::writeAlignedValues(ostream& output, const AlignedValuesContainer& avc) const
+{
+  if (!output)
+    throw IOException("Pasta::write: can't write to ostream output");
+
+  // The alphabet
+
+  vector<string> resolved_chars = avc.getAlphabet()->getResolvedChars();
+  for (auto state : resolved_chars)
+  {
+    output << state << " ";
+  }
+  output << endl;
+
+  
+  // Main loop : for all sequences in vector container
+
+  const AbstractProbabilisticSequenceContainer* vpsc=dynamic_cast<const AbstractProbabilisticSequenceContainer*>(&avc);
+
+  if (vpsc)
+    for (auto name : vpsc->getSequencesNames())
+    {
+      writeSequence(output, *vpsc->getSequence(name));
+    }
+  else
+  {
+    const SequenceContainer* sc=dynamic_cast<const SiteContainer*>(&avc);
+
+    if (sc)
+      for (auto name : sc->getSequencesNames())
+      {
+        writeSequence(output, sc->getSequence(name));
+      }
   }
 }

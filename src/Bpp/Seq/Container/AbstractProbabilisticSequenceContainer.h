@@ -1,7 +1,6 @@
 //
-// File AbstractSequenceContainer.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// File AbstractProbabilisticSequenceContainer.h
+// Created by: Laurent Guéguen
 //
 
 /*
@@ -37,12 +36,13 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ABSTRACTSEQUENCECONTAINER_H_
-#define _ABSTRACTSEQUENCECONTAINER_H_
+#ifndef _ABSTRACT_PROB_SEQUENCECONTAINER_H_
+#define _ABSTRACT_PROB_SEQUENCECONTAINER_H_
 
-#include "../Sequence.h"
-#include "OrderedSequenceContainer.h"
+#include "../ProbabilisticSequence.h"
 #include "AbstractValuesContainer.h"
+#include "ProbabilisticSequenceContainer.h"
+#include <Bpp/Exceptions.h>
 
 namespace bpp
 {
@@ -52,9 +52,9 @@ namespace bpp
  *
  * This abstract class provides an alphabet and comments, with associated methods.
  */
-  class AbstractSequenceContainer:
-    public virtual OrderedSequenceContainer,
-    public AbstractValuesContainer
+  class AbstractProbabilisticSequenceContainer:
+    virtual public AbstractValuesContainer,
+    virtual public ProbabilisticSequenceContainer
   {
   public:
 
@@ -65,56 +65,64 @@ namespace bpp
      *
      * @param alpha The alphabet to be associated to this container.
      */
-    AbstractSequenceContainer(const Alphabet* alpha):
+    AbstractProbabilisticSequenceContainer(const Alphabet* alpha):
       AbstractValuesContainer(alpha) {}
 		
-    AbstractSequenceContainer(const AbstractSequenceContainer& sc):
-      AbstractValuesContainer(sc)
-    {
-    }
+    AbstractProbabilisticSequenceContainer(const AbstractProbabilisticSequenceContainer& sc):
+      AbstractValuesContainer(sc) {}
     
-    AbstractSequenceContainer& operator=(const AbstractSequenceContainer& sc)
+    AbstractProbabilisticSequenceContainer& operator=(const AbstractProbabilisticSequenceContainer& sc)
     {
       AbstractValuesContainer::operator=(sc);
       return *this;
     }
 
-    /**
-     * @brief Copy constructor from any SequenceContainer object.
-     *
-     * @param sc Another sequence container.
-     */
-    AbstractSequenceContainer(const SequenceContainer& sc):
-      AbstractValuesContainer(sc.getGeneralComments(), sc.getAlphabet())
-    {
-    }
-
-    /**
-     * @brief Assignation operator from any SequenceContainer object.
-     *
-     * @param sc Another sequence container.
-     */
-
-    AbstractSequenceContainer& operator=(const SequenceContainer& sc)
-    {
-      alphabet_ = sc.getAlphabet();
-      setGeneralComments(sc.getGeneralComments());
-      
-      return *this;
-    }
-
-    virtual ~AbstractSequenceContainer() {}
+    virtual ~AbstractProbabilisticSequenceContainer() {}
 		
   public:
 	
+    virtual const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const = 0;
+
+    virtual const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const = 0;
+
+    /**
+     * @brief Add a probabilistic sequence to the container.
+     *
+     * @param sequence  The sequence to add.
+     * @param checkName Tell if the container must check if the name of the sequence
+     * is already used in the container before adding it.
+     * @throw Exception Any other kind of exception, if the name of the sequence is
+     * already used, are whatever else depending on the implementation.
+     */
+
+    virtual void addSequence(const std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true) = 0;
+
+    /**
+     * @brief Add a basic sequence to the container, through
+     * conversion to a probabilistic sequence.
+     *
+     * @param sequence  The sequence to add.
+     * @param checkName Tell if the container must check if the name of the sequence
+     * is already used in the container before adding it.
+     * @throw Exception Any other kind of exception, if the name of the sequence is
+     * already used, are whatever else depending on the implementation.
+     */
+    
+    virtual void addSequence(const Sequence& sequence, bool checkName = true) = 0;
+
+    /**
+     * @brief Output to string
+     *
+     **/
+    
     std::string toString(const std::string& name) const throw (SequenceNotFoundException)
     {
-      return getSequence(name).toString();
+      return getSequence(name)->toString();
     }
 
     const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException)
     {
-      return getSequence(name).getComments();
+      return getSequence(name)->getComments();
     }
 
     void setComments(const std::string& name, const Comments& comments)
@@ -130,34 +138,35 @@ namespace bpp
      *
      * @{
      */
+
     virtual const std::string& getName(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
     {
-      return getSequence(sequenceIndex).getName();
+      return getSequence(sequenceIndex)->getName();
     }
     
     virtual std::string toString(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
     {
-      return getSequence(sequenceIndex).toString();
+      return getSequence(sequenceIndex)->toString();
     }
 
-    // const Comments& getGeneralComments() const
-    // {
-    //   return Commentable::getComments();
-    // }
+    const Comments& getGeneralComments() const
+    {
+      return Commentable::getComments();
+    }
 
-    // void setGeneralComments(const Comments& comments)
-    // {
-    //   Commentable::setComments(comments);
-    // }
+    void setGeneralComments(const Comments& comments)
+    {
+      Commentable::setComments(comments);
+    }
 
-    // void clearGeneralComments()
-    // {
-    //   Commentable::clearComments();
-    // }
+    void clearGeneralComments()
+    {
+      Commentable::clearComments();
+    }
     
     virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
     {
-      return getSequence(sequenceIndex).getComments();
+      return getSequence(sequenceIndex)->getComments();
     }
 
     virtual void setComments(size_t sequenceIndex, const Comments& comments) = 0;
@@ -167,5 +176,5 @@ namespace bpp
 
 } //end of namespace bpp.
 
-#endif // _ABSTRACTSEQUENCECONTAINER_H_
+#endif // _ABSTRACT_PROB_SEQUENCECONTAINER_H_
 

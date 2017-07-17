@@ -80,6 +80,8 @@ namespace bpp
     bool isUnresolved(int state) const { return state > 1; }
     bool isUnresolved(const std::string& state) const { return charToInt(state) > 1; }
 
+    bool isResolvedIn(int state1, int state2) const throw (BadIntException);
+    
     std::vector<int> getAlias(int state) const throw (BadIntException);
     std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
   

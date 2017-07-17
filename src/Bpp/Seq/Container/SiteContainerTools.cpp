@@ -41,8 +41,9 @@
 #include "SiteContainerTools.h"
 #include "SequenceContainerTools.h"
 #include "VectorSiteContainer.h"
+#include "VectorProbabilisticSiteContainer.h"
 #include "SiteContainerIterator.h"
-#include "../SiteTools.h"
+#include "../SymbolListTools.h"
 #include "../CodonSiteTools.h"
 #include "../Alphabet/AlphabetTools.h"
 #include "../SequenceTools.h"
@@ -59,57 +60,117 @@ using namespace std;
 
 /******************************************************************************/
 
-SiteContainer* SiteContainerTools::getSitesWithoutGaps(const SiteContainer& sites)
+AlignedValuesContainer* SiteContainerTools::getSitesWithoutGaps(const AlignedValuesContainer& sites)
 {
+  const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&sites);
+  const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
+
   vector<string> seqNames = sites.getSequencesNames();
-  VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+
+  VectorSiteContainer* ngc=vsc?new VectorSiteContainer(seqNames, sites.getAlphabet()):0;
+  
+  VectorProbabilisticSiteContainer* ngcp=vpsc?new VectorProbabilisticSiteContainer(seqNames, sites.getAlphabet()):0;
+
+
+  AlignedValuesContainer* noGapCont=vsc?
+    dynamic_cast<AlignedValuesContainer*>(ngc):
+    dynamic_cast<AlignedValuesContainer*>(ngcp);
+  
   noGapCont->setSequencesNames(seqNames, false);
-  NoGapSiteContainerIterator ngsi(sites);
-  while (ngsi.hasMoreSites())
+  for (size_t i=0; i < sites.getNumberOfSites(); i++)
   {
-    noGapCont->addSite(*ngsi.nextSite());
+    if (!SymbolListTools::hasGap(sites.getSymbolListSite(i)))
+    {
+      if (vsc)
+        ngc->addSite(vsc->getSite(i));
+      else
+        ngcp->appendSite(vpsc->getSite(i));
+    }
   }
   return noGapCont;
 }
 
 /******************************************************************************/
 
-SiteContainer* SiteContainerTools::getCompleteSites(const SiteContainer& sites)
+AlignedValuesContainer* SiteContainerTools::getCompleteSites(const AlignedValuesContainer& sites)
 {
+  const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&sites);
+  const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
+
   vector<string> seqNames = sites.getSequencesNames();
-  VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
+
+  VectorSiteContainer* ngc=vsc?new VectorSiteContainer(seqNames, sites.getAlphabet()):0;
+  
+  VectorProbabilisticSiteContainer* ngcp=vpsc?new VectorProbabilisticSiteContainer(seqNames, sites.getAlphabet()):0;
+  
+  AlignedValuesContainer* noGapCont=vsc?
+    dynamic_cast<AlignedValuesContainer*>(ngc):
+    dynamic_cast<AlignedValuesContainer*>(ngcp);
+  
   noGapCont->setSequencesNames(seqNames, false);
-  CompleteSiteContainerIterator csi(sites);
-  while (csi.hasMoreSites())
+  for (size_t i=0; i < sites.getNumberOfSites(); i++)
   {
-    noGapCont->addSite(*csi.nextSite(), false);
-    // We do not check positions, we suppose that the container passed as an argument is correct.
+    if (SymbolListTools::isComplete(sites.getSymbolListSite(i)))
+    {
+      if (vsc)
+        ngc->addSite(vsc->getSite(i));
+      else
+        ngcp->appendSite(vpsc->getSite(i));
+    }
   }
+  
   return noGapCont;
 }
 
 /******************************************************************************/
 
-SiteContainer* SiteContainerTools::getSelectedSites(
-  const SiteContainer& sequences,
+AlignedValuesContainer* SiteContainerTools::getSelectedSites(
+  const AlignedValuesContainer& sequences,
   const SiteSelection& selection)
 {
   vector<string> seqNames = sequences.getSequencesNames();
-  VectorSiteContainer* sc = new VectorSiteContainer(seqNames.size(), sequences.getAlphabet());
-  sc->setSequencesNames(seqNames, false);
-  for (size_t i = 0; i < selection.size(); i++)
+
+  const SiteContainer* sc=dynamic_cast<const SiteContainer*>(&sequences);
+  if (sc)
   {
-    sc->addSite(sequences.getSite(selection[i]), false);
-    // We do not check positions, we suppose that the container passed as an argument is correct.
-    // WARNING: what if selection contains many times the same indice? ...
+    VectorSiteContainer* nsc=new VectorSiteContainer(seqNames.size(), sequences.getAlphabet());
+    nsc->setSequencesNames(seqNames, false);
+  
+    for (size_t i = 0; i < selection.size(); i++)
+    {
+      nsc->addSite(sc->getSite(selection[i]), false);
+      // We do not check positions, we suppose that the container passed as an argument is correct.
+      // WARNING: what if selection contains many times the same indice? ...
+    }
+    nsc->setGeneralComments(sc->getGeneralComments());
+    return nsc;    
   }
-  sc->AbstractSequenceContainer::setComments(sequences.getComments());
-  return sc;
+  else 
+  {
+    const VectorProbabilisticSiteContainer* psc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sequences);
+    if (psc)
+    {
+      VectorProbabilisticSiteContainer* nsc=new VectorProbabilisticSiteContainer(sequences.getAlphabet());
+  
+      for (size_t i = 0; i < selection.size(); i++)
+      {
+        nsc->appendSite(psc->getSite(selection[i]), false);
+        // We do not check positions, we suppose that the container passed as an argument is correct.
+        // WARNING: what if selection contains many times the same indice? ...
+      }
+      nsc->setSequencesNames(seqNames, false);
+      nsc->AbstractValuesContainer::setGeneralComments(psc->getGeneralComments());
+      return nsc;
+    }
+    else
+      throw Exception("SiteContainerTools::getSelectedSites : this should not happen");
+  }
+  
 }
 
 /******************************************************************************/
-SiteContainer* SiteContainerTools::getSelectedPositions(
-  const SiteContainer& sequences,
+AlignedValuesContainer* SiteContainerTools::getSelectedPositions(
+  const AlignedValuesContainer& sequences,
   const SiteSelection& selection)
 {
   size_t wsize = sequences.getAlphabet()->getStateCodingSize();
@@ -149,7 +210,7 @@ Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::s
   {
     site = ssi.nextSite();
     map<int, double> freq;
-    SiteTools::getFrequencies(*site, freq, resolveUnknown);
+    SymbolListTools::getFrequencies(*site, freq, resolveUnknown);
     double max = 0;
     int cons = -1; // default result
     if (ignoreGap)
@@ -224,7 +285,7 @@ SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     const Site& site = sites.getSite(i);
-    if (!SiteTools::isGapOnly(site))
+    if (!SymbolListTools::isGapOnly(site))
       noGapCont->addSite(site);
   }
   return noGapCont;
@@ -240,10 +301,10 @@ void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
   {
     ApplicationTools::displayGauge(n - i + 1, n);
     const Site* site = &sites.getSite(i - 1);
-    if (SiteTools::isGapOnly(*site))
+    if (SymbolListTools::isGapOnly(*site))
     {
       size_t end = i;
-      while (SiteTools::isGapOnly(*site) && i > 1)
+      while (SymbolListTools::isGapOnly(*site) && i > 1)
       {
         --i;
         site = &sites.getSite(i - 1);
@@ -257,7 +318,7 @@ void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
   }
   ApplicationTools::displayGauge(n, n);
   const Site& site = sites.getSite(0);
-  if (SiteTools::isGapOnly(site))
+  if (SymbolListTools::isGapOnly(site))
     sites.deleteSite(0);
 }
 
@@ -271,7 +332,7 @@ SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCont
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     const Site& site = sites.getSite(i);
-    if (!SiteTools::isGapOrUnresolvedOnly(site))
+    if (!SymbolListTools::isGapOrUnresolvedOnly(site))
       noGapCont->addSite(site, false);
   }
   return noGapCont;
@@ -287,10 +348,10 @@ void SiteContainerTools::removeGapOrUnresolvedOnlySites(SiteContainer& sites)
   {
     ApplicationTools::displayGauge(n - i + 1, n);
     const Site* site = &sites.getSite(i - 1);
-    if (SiteTools::isGapOnly(*site))
+    if (SymbolListTools::isGapOnly(*site))
     {
       size_t end = i;
-      while (SiteTools::isGapOrUnresolvedOnly(*site) && i > 1)
+      while (SymbolListTools::isGapOrUnresolvedOnly(*site) && i > 1)
       {
         --i;
         site = &sites.getSite(i - 1);
@@ -304,7 +365,7 @@ void SiteContainerTools::removeGapOrUnresolvedOnlySites(SiteContainer& sites)
   }
   ApplicationTools::displayGauge(n, n);
   const Site& site = sites.getSite(0);
-  if (SiteTools::isGapOrUnresolvedOnly(site))
+  if (SymbolListTools::isGapOrUnresolvedOnly(site))
     sites.deleteSite(0);
 }
 
@@ -317,7 +378,7 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
   noGapCont->setSequencesNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
     map<int, double> freq;
-    SiteTools::getFrequencies(sites.getSite(i), freq);
+    SymbolListTools::getFrequencies(sites.getSite(i), freq);
     if (freq[-1] <= maxFreqGaps)
       noGapCont->addSite(sites.getSite(i), false);
   }
@@ -330,7 +391,7 @@ void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps
 {
   for (size_t i = sites.getNumberOfSites(); i > 0; --i) {
     map<int, double> freq;
-    SiteTools::getFrequencies(sites.getSite(i - 1), freq);
+    SymbolListTools::getFrequencies(sites.getSite(i - 1), freq);
     if (freq[-1] > maxFreqGaps)
       sites.deleteSite(i - 1);
   }

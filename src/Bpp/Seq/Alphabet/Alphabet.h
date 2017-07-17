@@ -6,36 +6,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _ALPHABET_H_
@@ -89,7 +89,7 @@ knowledge of the CeCILL license and that you accept its terms.
  *   Sequence access is hence in @f$o(1)@f$ and site access in @f$o(n)@f$, n being the total number of sites.
  * - bpp::VectorSiteContainer is a symmetric implementation, storing the data as a vector of bpp::Site objects,
  *   providing site access in @f$o(1)@f$ but sequence access in @f$o(m)@f$, m being the total number of sequences.
- * The static classes bpp::SiteTools and bpp::SiteContainerTools provide some tools (for instance: pairwise alignment) to deal respectively with
+ * The static classes bpp::SymbolListTools and bpp::SiteContainerTools provide some tools (for instance: pairwise alignment) to deal respectively with
  * bpp::Site and bpp::SiteContainer objects. I/O is provided for several formats, including Clustal (bpp::Clustal) and Phylip (bpp::Phylip).
  *
  * @par
@@ -129,18 +129,18 @@ namespace bpp
  */
   class Alphabet:
     public virtual Clonable
-{
+  {
   public:
     Alphabet() {}
     virtual ~Alphabet() {}
 
-  /**
-   * @name The Clonable interface
-   *
-   * @{
-   */
-  Alphabet* clone() const = 0;
-  /** @} */
+    /**
+     * @name The Clonable interface
+     *
+     * @{
+     */
+    Alphabet* clone() const = 0;
+    /** @} */
 
   public:
     
@@ -324,6 +324,18 @@ namespace bpp
      */
     
     /**
+     * @brief Tells if a given (potentially unresolved) state can be
+     * resolved in another resolved state.
+     *
+     * @param state1 The alias to resolve.
+     * @param state2 The candidate for resolution.
+     * @return A boolean
+     * @throw BadIntException When state is not a valid integer.
+     */
+
+    virtual bool isResolvedIn(int state1, int state2) const throw (BadIntException) = 0;
+    
+    /**
      * @brief Get all resolved states that match a generic state.
      *
      * If the given state is not a generic code then the output vector will contain this unique code.
@@ -457,7 +469,7 @@ namespace bpp
      * @return true If the two instances are of the same class.
      */
     virtual bool equals(const Alphabet& alphabet) const = 0;
-};
+  };
 
 } //end of namespace bpp.
 

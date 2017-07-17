@@ -41,7 +41,7 @@
 #include "Alphabet/CodonAlphabet.h"
 #include "Alphabet/DNA.h"
 #include "Alphabet/AlphabetTools.h"
-#include "SiteTools.h"
+#include "SymbolListTools.h"
 #include "GeneticCode/GeneticCode.h"
 #include "GeneticCode/StandardGeneticCode.h"
 #include <Bpp/Utils/MapTools.h>
@@ -97,7 +97,7 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
     throw EmptySiteException("CodonSiteTools::isMonoSitePolymorphic: Incorrect specified site", &site);
 
   // Global polymorphism checking
-  if (SiteTools::isConstant(site))
+  if (SymbolListTools::isConstant(site))
     return false;
   // initialisation of the 3 sub-sites ot the codon
   vector<int> pos1, pos2, pos3;
@@ -112,11 +112,11 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
   Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
   // polymorphism checking for each sub-sites
   size_t nbpol = 0;
-  if (!SiteTools::isConstant(s1))
+  if (!SymbolListTools::isConstant(s1))
     nbpol++;
-  if (!SiteTools::isConstant(s2))
+  if (!SymbolListTools::isConstant(s2))
     nbpol++;
-  if (!SiteTools::isConstant(s3))
+  if (!SymbolListTools::isConstant(s3))
     nbpol++;
   if (nbpol > 1)
     return false;
@@ -137,7 +137,7 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode
     throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic: Incorrect specified site", &site);
 
   // Global polymorphism checking
-  if (SiteTools::isConstant(site))
+  if (SymbolListTools::isConstant(site))
     return false;
 
   // Synonymous polymorphism checking
@@ -163,7 +163,7 @@ Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, cons
   if (site.size() == 0)
     throw EmptySiteException("CodonSiteTools::generateCodonSiteWithoutRareVariant: Incorrect specified site", &site);
 
-  if (SiteTools::isConstant(site))
+  if (SymbolListTools::isConstant(site))
   {
     Site* noRareVariant = new Site(site);
     return noRareVariant;
@@ -172,7 +172,7 @@ Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, cons
   {
     // Computation
     map<int, double> freqcodon;
-    SiteTools::getFrequencies(site, freqcodon);
+    SymbolListTools::getFrequencies(site, freqcodon);
     const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
     const NucleicAlphabet* na = ca->getNucleicAlphabet();
     int newcodon = -1;
@@ -193,11 +193,11 @@ Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, cons
     }
     Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
     map<int, double> freq1;
-    SiteTools::getFrequencies(s1, freq1);
+    SymbolListTools::getFrequencies(s1, freq1);
     map<int, double> freq2;
-    SiteTools::getFrequencies(s2, freq2);
+    SymbolListTools::getFrequencies(s2, freq2);
     map<int, double> freq3;
-    SiteTools::getFrequencies(s3, freq3);
+    SymbolListTools::getFrequencies(s3, freq3);
     vector<int> codon;
     for (size_t i = 0; i < site.size(); i++)
     {
@@ -460,11 +460,11 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
     throw EmptySiteException("CodonSiteTools::piSynonymous: Incorrect specified site", &site);
 
   // General polymorphism checking
-  if (SiteTools::isConstant(site))
+  if (SymbolListTools::isConstant(site))
     return 0;
   // Computation
   map<int, double> freq;
-  SiteTools::getFrequencies(site, freq);
+  SymbolListTools::getFrequencies(site, freq);
   double pi = 0;
   for (map<int, double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++)
   {
@@ -491,13 +491,13 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
     throw EmptySiteException("CodonSiteTools::piSynonymous: Incorrect specified site", &site);
 
   // General polymorphism checking
-  if (SiteTools::isConstant(site))
+  if (SymbolListTools::isConstant(site))
     return 0;
   if (isSynonymousPolymorphic(site, gCode))
     return 0;
   // Computation
   map<int, double> freq;
-  SiteTools::getFrequencies(site, freq);
+  SymbolListTools::getFrequencies(site, freq);
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
   double pi = 0;
   for (map<int, double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++)
@@ -570,7 +570,7 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
   // Computation
   double NbSyn = 0;
   map<int, double> freq;
-  SiteTools::getFrequencies(site, freq);
+  SymbolListTools::getFrequencies(site, freq);
   for (map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
   {
     NbSyn += (it->second) * numberOfSynonymousPositions(it->first, gCode, ratio);
@@ -589,7 +589,7 @@ size_t CodonSiteTools::numberOfSubsitutions(const Site& site, const GeneticCode&
   if (site.size() == 0)
     throw EmptySiteException("CodonSiteTools::numberOfSubsitutions: Incorrect specified site", &site);
 
-  if (SiteTools::isConstant(site))
+  if (SymbolListTools::isConstant(site))
     return 0;
   Site* newsite;
   if (freqmin > 1. / static_cast<double>(site.size()))
@@ -597,7 +597,7 @@ size_t CodonSiteTools::numberOfSubsitutions(const Site& site, const GeneticCode&
   else
     newsite = new Site(site);
   // Computation
-  if (SiteTools::hasGap(*newsite))
+  if (SymbolListTools::hasGap(*newsite))
     return 0;
   vector<int> pos1, pos2, pos3;
 
@@ -613,8 +613,8 @@ size_t CodonSiteTools::numberOfSubsitutions(const Site& site, const GeneticCode&
   const NucleicAlphabet* na = ca->getNucleicAlphabet();
 
   Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
-  size_t Scodon = SiteTools::getNumberOfDistinctCharacters(*newsite) - 1;
-  size_t Sbase = SiteTools::getNumberOfDistinctCharacters(s1) + SiteTools::getNumberOfDistinctCharacters(s2) + SiteTools::getNumberOfDistinctCharacters(s3) - 3;
+  size_t Scodon = SymbolListTools::getNumberOfDistinctCharacters(*newsite) - 1;
+  size_t Sbase = SymbolListTools::getNumberOfDistinctCharacters(s1) + SymbolListTools::getNumberOfDistinctCharacters(s2) + SymbolListTools::getNumberOfDistinctCharacters(s3) - 3;
   delete newsite;
   if (Scodon >= Sbase)
     return Scodon;
@@ -635,18 +635,18 @@ size_t CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, cons
   if (site.size() == 0)
     throw EmptySiteException("CodonSiteTools::numberOfNonSynonymousSubstitutions: Incorrect specified site", &site);
 
-  if (SiteTools::isConstant(site))
+  if (SymbolListTools::isConstant(site))
     return 0;
   Site* newsite;
   if (freqmin > 1. / static_cast<double>(site.size()))
     newsite = generateCodonSiteWithoutRareVariant(site, gCode, freqmin);
   else
     newsite = new Site(site);
-  if (SiteTools::hasGap(*newsite))
+  if (SymbolListTools::hasGap(*newsite))
     return 0;
   // computation
   map<int, size_t> count;
-  SiteTools::getCounts(*newsite, count);
+  SymbolListTools::getCounts(*newsite, count);
   size_t NaSup = 0;
   size_t Nminmin = 10;
 
@@ -713,17 +713,17 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
   bool test1 = false;
   bool test2 = false;
   bool test3 = false;
-  if ( (!SiteTools::isConstant(s1in) || !SiteTools::isConstant(s1out)) && ca->getFirstPosition(i) != ca->getFirstPosition(j) )
+  if ( (!SymbolListTools::isConstant(s1in) || !SymbolListTools::isConstant(s1out)) && ca->getFirstPosition(i) != ca->getFirstPosition(j) )
   {
     test1 = true;
     Nfix--;
   }
-  if ( (!SiteTools::isConstant(s2in) || !SiteTools::isConstant(s2out)) && ca->getSecondPosition(i) != ca->getSecondPosition(j) )
+  if ( (!SymbolListTools::isConstant(s2in) || !SymbolListTools::isConstant(s2out)) && ca->getSecondPosition(i) != ca->getSecondPosition(j) )
   {
     test2 = true;
     Nfix--;
   }
-  if ( (!SiteTools::isConstant(s3in) || !SiteTools::isConstant(s3out)) && ca->getThirdPosition(i) != ca->getThirdPosition(j) )
+  if ( (!SymbolListTools::isConstant(s3in) || !SymbolListTools::isConstant(s3out)) && ca->getThirdPosition(i) != ca->getThirdPosition(j) )
   {
     test3 = true;
     Nfix--;
@@ -802,7 +802,7 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
 
 bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& gCode)
 {
-  if (!SiteTools::isConstant(site, true))
+  if (!SymbolListTools::isConstant(site, true))
   {
     /** If non-synonymous mutation **/
     if (!(CodonSiteTools::isSynonymousPolymorphic(site, gCode)))

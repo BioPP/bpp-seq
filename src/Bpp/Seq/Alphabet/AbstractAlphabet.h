@@ -148,6 +148,7 @@ namespace bpp
     std::string intToChar(int state) const throw (BadIntException);
     bool isIntInAlphabet(int state) const;
     bool isCharInAlphabet(const std::string& state) const;
+    bool isResolvedIn(int state1, int state2) const throw (BadIntException);
     std::vector<int> getAlias(int state) const throw (BadIntException);
     std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
     int getGeneric(const std::vector<int>& states) const throw (BadIntException);

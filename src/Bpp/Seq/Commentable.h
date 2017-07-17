@@ -1,7 +1,7 @@
 //
-// File IoSequence.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
+// File: Commentable.h
+// Created by: Laurent Guéguen
+// Created on: lundi 15 mai 2017, à 00h 03
 //
 
 /*
@@ -37,53 +37,74 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _IOSEQUENCE_H_
-#define _IOSEQUENCE_H_
+#ifndef _COMMENTABLE_H_
+#define _COMMENTABLE_H_
 
-#include <Bpp/Exceptions.h>
-#include <Bpp/Io/IoFormat.h>
-
-// From STL:
+// From the STL:
 #include <string>
 
 namespace bpp
 {
 
 /**
- * @brief The IOSequence interface.
+ * @brief Declaration of Comments type.
  *
- * Interface for sequences input/ouput.
+ * Comments are defined as a std::vector of std::strings to allow the later creation of a
+ * full Comments class.
  */
-  class IOSequence: public virtual IOFormat
+  typedef std::vector<std::string> Comments;
+
+  class Commentable
   {
+  protected:
+    Comments comments_;
+    
   public:
-    IOSequence() {}
-    virtual ~IOSequence() {}
+    Commentable() :
+      comments_()
+    {
+    }
 
-  public:
+    Commentable(const Comments& comments) :
+      comments_(comments)
+    {
+    }
 
-    const std::string getDataType() const { return "Sequence container"; }
+    Commentable(const Commentable& com) :
+      comments_(com.comments_)
+    {
+    }
 
+    Commentable& operator=(const Commentable& com)
+    {
+      comments_=com.comments_;
+      return *this;
+    }
+
+    virtual ~Commentable() 
+    {
+    }
+
+    /**
+     * @brief Get the comments.
+     *
+     * @return The comments.
+     */
+     
+    const Comments& getComments() const { return comments_; }
+
+    /**
+     * @brief Set the comments.
+     *
+     * @param comments The new comments.
+     */
+
+    void setComments(const Comments& comments) { comments_ = comments; }    
+
+    void clearComments() { comments_.clear(); }    
   };
-
-  /**
-   * @brief The IOProbabislisticSequence interface.
-   *
-   * Interface for probabilistic sequences input/ouput.
-   */
-  class IOProbabilisticSequence: public virtual IOFormat
-  {
-  public:
-    IOProbabilisticSequence() {}
-    virtual ~IOProbabilisticSequence() {}
-
-  public:
-
-    const std::string getDataType() const { return "Probabilistic sequence container"; }
-
-  };
-
+  
 } //end of namespace bpp.
 
-#endif	// _IOSEQUENCE_H_
+#endif // _COMMENTABLE_H_
 

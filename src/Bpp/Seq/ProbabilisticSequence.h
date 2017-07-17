@@ -62,7 +62,7 @@ namespace bpp
  * @see Alphabet
  */
 
-  typedef ProbaCoreSequenceSL ProbabilisticSequence;
+  typedef ProbaCoreSequenceSymbolList ProbabilisticSequence;
 
 /**
  * @brief A basic implementation of the ProbabilisticSequence interface.
@@ -106,6 +106,7 @@ namespace bpp
      * @param alpha A pointer to the alphabet associated with this sequence.
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
+    
     BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Alphabet * alpha) throw (Exception);
 
     /**

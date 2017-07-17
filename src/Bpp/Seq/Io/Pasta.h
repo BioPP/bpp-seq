@@ -43,6 +43,10 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../ProbabilisticSequence.h"
 #include "../Container/VectorProbabilisticSiteContainer.h"
 
+#include "AbstractISequence.h"
+#include "AbstractIAlignment.h"
+#include "AbstractOSequence.h"
+
 #include <Bpp/Numeric/Table.h>
 
 namespace bpp
@@ -59,6 +63,8 @@ namespace bpp
  * site.  See implementation of methods below for more details
  */
 class Pasta
+  : public AbstractIProbabilisticAlignment,
+    public AbstractOProbabilisticAlignment
 {
 
  protected :
@@ -96,35 +102,49 @@ class Pasta
    * @return format name
    */
   const std::string getFormatName() const { return "PASTA file"; }
+  const std::string getFormatDescription() const
+  {
+    return "By rows: alphabet, then Sequence name (preceded by >) in one line, and rows of sequence content.";
+  }
 
   /**
    * @name The "ISequenceStream interface"
    *
    * @{
    */
-  bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, std::vector<int> & permutationMap) const throw (Exception);
+  bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, std::vector<int> & permutationMap) const;
+
   /**
    * @}
    */
 
+  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq) const;
+
+  void writeSequence(std::ostream & output, const Sequence & seq) const;
+
   /**
-   * @name The "OSequenceStream interface"
+   * @name The "IOProbabilisticSequence interface"
    *
    * @{
    */
-  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq) const throw (Exception);
+  
+  void appendAlignmentFromStream(std::istream& input, ProbabilisticSiteContainer& psc) const {
+    appendSequencesFromStream(input, dynamic_cast<VectorProbabilisticSiteContainer&>(psc)); //This may raise an exception if sequences are not aligned!
+  }
+
+  void appendSequencesFromStream(std::istream& input, VectorProbabilisticSiteContainer& container) const;
+  
+  void writeSequences(std::ostream& output, const ProbabilisticSequenceContainer& psc) const
+  {
+    writeAlignedValues(output, dynamic_cast<const AlignedValuesContainer&>(psc));
+  }
+  
+  void writeAlignedValues(std::ostream& output, const AlignedValuesContainer& avc) const;
+  
   /**
    * @}
    */
 
-  /**
-   * @name The "AbstractISequence interface"
-   *
-   */
-  void appendSequencesFromStream(std::istream& input, VectorProbabilisticSiteContainer& container) const throw (Exception);
-  /**
-   * @}
-   */
 
 };
 

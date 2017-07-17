@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "../Container/SequenceContainer.h"
 #include "../Container/SiteContainer.h"
+#include "../Container/ProbabilisticSequenceContainer.h"
+#include "../Container/ProbabilisticSiteContainer.h"
 #include "IoSequence.h"
 
 #include <Bpp/Exceptions.h>
@@ -122,6 +124,85 @@ namespace bpp
       virtual void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite) const throw (Exception) = 0;
 
   };
+
+
+  /**
+   * @brief The OProbabilisticSequence interface.
+   * 
+   * This interface defines the basic methods for writing proba
+   * sequence to a file.
+   */
+  
+  class OProbabilisticSequence:
+    public virtual IOProbabilisticSequence
+  {
+  public:
+    OProbabilisticSequence() {}
+    virtual ~OProbabilisticSequence() {}
+
+  public:
+
+    /**
+     * @brief Write a container to a stream.
+     *
+     * @param output The output stream where to write.
+     * @param sc        The container to write.
+     */
+    
+    virtual void writeSequences(std::ostream& output, const ProbabilisticSequenceContainer& sc) const = 0;
+
+    /**
+     * @brief Write a container to a file.
+     *
+     * @param path      The path to the file to write.
+     * @param sc        The container to write.
+     * @param overwrite If true the sequences are written at the beginning of the file instead of being appended.
+     *                  Any previous content will be lost.
+     */
+    
+    virtual void writeSequences(const std::string& path, const ProbabilisticSequenceContainer& sc, bool overwrite) const = 0;
+
+  };
+
+  /**
+   * @brief The OProbabilisticAlignment interface.
+   * 
+   * This interface defines the basic methods for writing alignments to a file.
+   */
+  
+  class OProbabilisticAlignment:
+    public virtual IOProbabilisticSequence
+  {
+  public:
+    OProbabilisticAlignment() {}
+    virtual ~OProbabilisticAlignment() {}
+
+  public:
+
+    /**
+     * @brief Write a container to a stream.
+     *
+     * @param output The output stream where to write.
+     * @param sc        The container to write.
+     */
+
+    virtual void writeAlignment(std::ostream& output, const ProbabilisticSiteContainer& sc) = 0;
+
+    /**
+     * @brief Write a container to a file.
+     *
+     * @param path      The path to the file to write.
+     * @param sc        The container to write.
+     * @param overwrite If true the sequences are written at the beginning of the file instead of being appended.
+     *                  Any previous content will be lost.
+     */
+
+    virtual void writeAlignment(const std::string& path, const ProbabilisticSiteContainer& sc, bool overwrite) = 0;
+
+  };
+
+
+
 } //end of namespace bpp.
 
 #endif	// _OSEQUENCE_H_

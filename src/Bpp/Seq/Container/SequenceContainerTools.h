@@ -6,36 +6,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use,
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info".
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability.
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or
-data to be ensured and,  more generally, to use and operate it in the
-same conditions as regards security.
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and,  more generally, to use and operate it in the
+  same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _SEQUENCECONTAINERTOOLS_H_
@@ -58,12 +58,12 @@ namespace bpp
 /**
  * @brief Utilitary methods dealing with sequence containers.
  */
-class SequenceContainerTools
-{
+  class SequenceContainerTools
+  {
 
   public:
     SequenceContainerTools() {}
-     virtual ~SequenceContainerTools() {}
+    virtual ~SequenceContainerTools() {}
   
   public:
     /**
@@ -189,22 +189,22 @@ class SequenceContainerTools
      * States are stored as their int code.
      */
 
-  static void getCounts(const SequenceContainer& sequences, std::map<int, int>&);
+    static void getCounts(const SequenceContainer& sequences, std::map<int, int>&);
 
-  /**
-   * @brief Compute base frequencies.
-   *
-   * Example of usage: getting the GC content from a sequence container.
-   * <code>
-   *  map<int, double> freqs;
-   *  SequenceContainerTools::getFrequencies(myContainer, freqs); //My container is previously defined.
-   *   double GCcontent = (freqs[1] + freqs[2]) / (freqs[0] + freqs[1] + freqs[2] + freqs[3]);
-   * </code>
-   *
-   * States are stored as their int code.
-   */
+    /**
+     * @brief Compute base frequencies.
+     *
+     * Example of usage: getting the GC content from a sequence container.
+     * <code>
+     *  map<int, double> freqs;
+     *  SequenceContainerTools::getFrequencies(myContainer, freqs); //My container is previously defined.
+     *   double GCcontent = (freqs[1] + freqs[2]) / (freqs[0] + freqs[1] + freqs[2] + freqs[3]);
+     * </code>
+     *
+     * States are stored as their int code.
+     */
   
-  static void  getFrequencies(const SequenceContainer& sequences, std::map<int, double>& f, double pseudoCount = 0);
+    static void  getFrequencies(const SequencedValuesContainer& sequences, std::map<int, double>& f, double pseudoCount = 0);
   
     /**
      * @brief Append all the sequences of a SequenceContainer to the end of another.
@@ -214,7 +214,7 @@ class SequenceContainerTools
      * @param checkNames Tell if the sequence names should be check for unicity.
      */
     static void append(SequenceContainer& seqCont1, const SequenceContainer& seqCont2, bool checkNames = true)
-    throw (Exception)
+      throw (Exception)
     {
       std::vector<std::string> seqNames = seqCont2.getSequencesNames();
       for (size_t i = 0; i < seqNames.size(); i++)
@@ -228,7 +228,7 @@ class SequenceContainerTools
      * @param checkNames Tell if the sequence names should be check for unicity.
      */
     static void append(SequenceContainer& seqCont1, const OrderedSequenceContainer& seqCont2, bool checkNames=true)
-    throw (Exception)
+      throw (Exception)
     {
       for (size_t i = 0; i < seqCont2.getNumberOfSequences(); i++)
         seqCont1.addSequence(seqCont2.getSequence(i), checkNames);
@@ -249,7 +249,7 @@ class SequenceContainerTools
      * @throw AlphabetMismatchException If the alphabet in the 3 containers do not match.
      */
     static void merge(const SequenceContainer& seqCont1, const SequenceContainer& seqCont2, SequenceContainer& outputCont)
-    throw (Exception)
+      throw (Exception)
     {
       if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
         throw AlphabetMismatchException("SequenceContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
@@ -272,7 +272,7 @@ class SequenceContainerTools
      * @param outputCont A container (most likely empty) with an alphabet into which the container will be converted.
      */
     static void convertAlphabet(const SequenceContainer& seqCont, SequenceContainer& outputCont)
-    throw (Exception)
+      throw (Exception)
     {  
       std::vector<std::string> seqNames = seqCont.getSequencesNames();
       bool checkNames = outputCont.getNumberOfSequences() > 0;
@@ -293,7 +293,7 @@ class SequenceContainerTools
      */
     static SequenceContainer* getCodonPosition(const SequenceContainer& sequences, size_t pos) throw (AlphabetException);
 
-};
+  };
 
 } //end of namespace bpp.
 

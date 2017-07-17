@@ -43,6 +43,7 @@
 #include "IntSymbolList.h"
 #include "CoreSite.h"
 #include "SiteExceptions.h"
+#include "CruxSymbolListSite.h"
 
 namespace bpp
 {
@@ -60,6 +61,7 @@ namespace bpp
  * This should not be a constraint, since you never read sites directly from a file.
  */
   class Site:
+    virtual public CruxSymbolListSite,
     public AbstractCoreSite,
     public BasicIntSymbolList 
   {  

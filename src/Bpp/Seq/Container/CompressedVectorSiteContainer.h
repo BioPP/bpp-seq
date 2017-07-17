@@ -152,7 +152,6 @@ namespace bpp
       
     std::shared_ptr<Site> deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
 
-    void deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException);
     
     void addSite(const Site& site, bool checkPosition = false) throw (Exception);
     void addSite(const Site& site, int position, bool checkPosition = false) throw (Exception)
@@ -164,8 +163,26 @@ namespace bpp
     {
       addSite(site, siteIndex, checkPosition);
     }
+    
+    /*
+     * @name From AlignedValuesContainer interface
+     *
+     * @{
+     */
+    
+    void deleteSites(size_t siteIndex, size_t length);
+    
     size_t getNumberOfSites() const { return index_.size(); }
+    
+    void reindexSites();
+    
+    Vint getSitePositions() const;
+    
+    void setSitePositions(Vint vPositions);
 
+  
+    /** @} */
+  
     /**
      * @return The number of site instances
      *
@@ -177,8 +194,6 @@ namespace bpp
     }
     
 
-    void reindexSites();
-    Vint getSitePositions() const;
     /** @} */
 
     // Theses methods are implemented for this class:
@@ -201,12 +216,18 @@ namespace bpp
 
     // Methods to get position of a sequence in sequence container from his name
     // This method is used by delete and remove methods
-    size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException)
+    size_t getSequencePosition(const std::string& name) const
     {
-      // Look for sequence name:
-      return VectorMappedContainer<Sequence>::getObjectPosition(name);
+      try {
+        // Look for sequence name:
+        return VectorMappedContainer<Sequence>::getObjectPosition(name);
+      }
+      catch (Exception& e)
+      {
+        throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", name);
+      }
     }
-
+    
     Sequence* removeSequence(size_t sequenceIndex)
     {
       //Implementing this function would involve (partially) decompressing the data...
@@ -306,6 +327,55 @@ namespace bpp
       //Implementing this function would involve (partially) decompressing the data...
       throw NotImplementedException("CompressedVectorSiteContainer::setSequence.");
     }
+
+    /**
+     * @name SequencedValuesContainer methods.
+     *
+     * @{
+     */
+    
+    double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
+    {
+      if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
+      
+      return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex),state)?1.:0.;
+    }
+    
+    double operator()(size_t siteIndex, const std::string& sequenceName, int state) const{
+      return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex),state)?1.:0.;
+    }
+
+    /*
+     *
+     * @}
+     *
+     */
+    
+    /**
+     * @name OrderedValuesContainer methods.
+     *
+     * @{
+     */
+    
+    double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
+    {
+      if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("CompressedVectorSequenceContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
+
+      if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
+      
+      return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
+    }
+    
+    double operator()(size_t siteIndex, size_t sequenceIndex, int state) const{
+      return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
+    }
+
+    /*
+     *
+     * @}
+     *
+     */
+    
 
   protected:
     /**

@@ -149,7 +149,19 @@ namespace bpp
 
     size_t getObjectPosition(const std::string& name) const
     {
-      return mNames_.find(name)->second;
+      auto it = mNames_.find(name);
+      if (it == mNames_.end())
+        throw Exception("VectorMappedContainer::getObjectPosition : Not found object with name " + name);
+      
+      return it->second;
+    }
+
+    std::string getObjectName(size_t objectIndex) const
+    {
+      if (objectIndex >= getSize())
+        throw IndexOutOfBoundsException("VectorMappedContainer::getObjectName.", objectIndex, 0, getSize() - 1);
+
+      return vNames_[objectIndex];
     }
 
     const std::shared_ptr<T> getObject(size_t objectIndex) const

@@ -78,8 +78,11 @@ namespace bpp
     
   };
 
-  typedef CoreSequenceSymbolList<int> IntCoreSequenceSL;
-  typedef CoreSequenceSymbolList<std::vector<double> > ProbaCoreSequenceSL;
+  typedef CoreSymbolList<int> IntCoreSymbolList;
+  typedef CoreSymbolList<std::vector<double> > ProbaCoreSymbolList;
+  
+  typedef CoreSequenceSymbolList<int> IntCoreSequenceSymbolList;
+  typedef CoreSequenceSymbolList<std::vector<double> > ProbaCoreSequenceSymbolList;
   
 
   /**
@@ -108,8 +111,8 @@ namespace bpp
     
   };
 
-  typedef AbstractSequenceSymbolList<int> intAbstractSequenceSL;
-  typedef AbstractSequenceSymbolList<std::vector<double> > probaAbstractSequenceSL;
+  typedef AbstractSequenceSymbolList<int> intAbstractSequenceSymbolList;
+  typedef AbstractSequenceSymbolList<std::vector<double> > probaAbstractSequenceSymbolList;
 
 } //end of namespace bpp.
 

@@ -295,7 +295,7 @@ std::shared_ptr<Site> CompressedVectorSiteContainer::deleteSite(size_t siteIndex
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException)
+void CompressedVectorSiteContainer::deleteSites(size_t siteIndex, size_t length)
 {
   //This may be optimized later:
   for (size_t i = 0; i < length; ++i) {
@@ -366,6 +366,17 @@ void CompressedVectorSiteContainer::reindexSites()
 
 /******************************************************************************/
 
+void CompressedVectorSiteContainer::setSitePositions(Vint vPositions)
+{
+  if (vPositions.size() != getNumberOfSites())
+    throw BadSizeException("CompressedVectorSiteContainer::setSitePositions bad size of positions vector", vPositions.size(), getNumberOfSites());
+
+  for (size_t i=0; i< vPositions.size(); i++)
+    getSite(i).setPosition(vPositions[i]);
+}
+
+/******************************************************************************/
+
 Vint CompressedVectorSiteContainer::getSitePositions() const
 {
   size_t n = getNumberOfSites();
@@ -394,7 +405,7 @@ const Sequence& CompressedVectorSiteContainer::getSequence(size_t i) const
 
   shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(VectorMappedContainer<Sequence>::getObject(i)->getName(), sequence, VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet())));
 
-  VectorMappedContainer<Sequence>::addObject_(ns,i,VectorMappedContainer<Sequence>::getObject(i)->getName());
+  VectorMappedContainer<Sequence>::addObject_(ns,i,ns->getName());
 
   return *ns;
 }
@@ -430,7 +441,7 @@ void CompressedVectorSiteContainer::setComments(size_t sequenceIndex, const Comm
 CompressedVectorSiteContainer* CompressedVectorSiteContainer::createEmptyContainer() const
 {
    CompressedVectorSiteContainer* vsc = new CompressedVectorSiteContainer(getAlphabet());
-   vsc->AbstractSequenceContainer::setComments(getComments());
+   vsc->setGeneralComments(getGeneralComments());
   return vsc;
 }
 

@@ -215,7 +215,7 @@ namespace bpp
      * @{
      */
     const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException);
-    size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
+    size_t getSequencePosition(const std::string& name) const;
     void            setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (IndexOutOfBoundsException);
     Sequence*    removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
     void         deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
@@ -232,6 +232,57 @@ namespace bpp
     Sequence& getSequence_(size_t i) throw (IndexOutOfBoundsException);
     Sequence& getSequence_(const std::string& name) throw (SequenceNotFoundException);
     /** @} */
+
+    /**
+     * @name SequencedValuesContainer methods.
+     *
+     * @{
+     */
+    
+    double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
+    {
+      return getSequence(sequenceName).getStateValueAt(siteIndex, state);
+    }
+    
+    double operator()(size_t siteIndex, const std::string& sequenceName, int state) const
+    {
+      return getSequence(sequenceName)(siteIndex, state);
+    }
+
+    /*
+     *
+     * @}
+     *
+     */
+
+    /**
+     * @name OrderedValuesContainer methods.
+     *
+     * @{
+     */
+    
+    double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
+    {
+      if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSequenceContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
+      const Sequence& seq=getSequence(sequenceIndex);
+      
+      if (siteIndex >= seq.size())
+        throw IndexOutOfBoundsException("VectorSequenceContainer::getStateValueAt.", siteIndex, 0, seq.size() - 1);
+      
+      return getAlphabet()->isResolvedIn(seq[siteIndex],state)?1.:0.;
+    }
+    
+    double operator()(size_t siteIndex, size_t sequenceIndex, int state) const{
+      return getAlphabet()->isResolvedIn(getSequence(sequenceIndex)[siteIndex],state)?1.:0.;
+    }
+
+    /*
+     *
+     * @}
+     *
+     */
+    
+
   };
 
 } //end of namespace bpp.

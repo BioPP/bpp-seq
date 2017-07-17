@@ -86,6 +86,38 @@ DNA::DNA(bool exclamationMarkCountsAsGap)
 
 /******************************************************************************/
 
+bool DNA::isResolvedIn(int state1, int state2) const throw (BadIntException) 
+{
+  if (!isIntInAlphabet(state1))
+    throw BadIntException(state1, "DNA::isResolvedIn(int, int): Specified base unknown.");
+
+  if (!isIntInAlphabet(state2))
+    throw BadIntException(state2, "DNA::isResolvedIn(int, int): Specified base unknown.");
+
+  if (isUnresolved(state2))
+    throw BadIntException(state2, "DNA::isResolvedIn(int, int): Unresolved base.");  
+
+  if (state1 == -1)
+    return (state2==-1);
+
+  const NucleicAlphabetState& st1 = getState(state1);
+
+  switch(state2){
+  case 0:
+    return st1.getBinaryCode() & 1;
+  case 1:
+    return st1.getBinaryCode() & 2;
+  case 2:
+    return st1.getBinaryCode() & 4;
+  case 3:
+    return st1.getBinaryCode() & 8;
+  default:
+    throw BadIntException(state2, "DNA::isResolvedIn : this should not happen");
+  }
+}
+
+/******************************************************************************/
+
 std::vector<int> DNA::getAlias(int state) const throw (BadIntException) 
 {
   if (!isIntInAlphabet(state))

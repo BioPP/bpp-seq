@@ -45,6 +45,7 @@
 #include <Bpp/Numeric/Table.h>
 
 #include "CoreSymbolList.h"
+#include "CruxSymbolListSite.h"
 
 // From the STL :
 #include <string>
@@ -141,6 +142,8 @@ public :
    */
   BasicProbabilisticSymbolList(const ProbabilisticSymbolList & list);
 
+  BasicProbabilisticSymbolList(const CruxSymbolList& list);
+
   /**
    * @brief The copy constructor.
    */
@@ -229,7 +232,20 @@ public :
     return content_.getColumn(i);
   }
 
-
+  double getStateValueAt(size_t siteIndex, int state) const
+  {
+    if (siteIndex >= content_.getNumberOfColumns())
+      throw IndexOutOfBoundsException("ProbabilisticSymbolList::getStateValueAt.", siteIndex, 0, content_.getNumberOfColumns() - 1);
+      
+    return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state)-1];
+    
+  }
+    
+  double operator()(size_t siteIndex, int state) const 
+  {
+    return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state)-1];
+  }
+  
   void shuffle(){};
 };
 

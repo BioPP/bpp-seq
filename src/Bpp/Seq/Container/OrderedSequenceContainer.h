@@ -43,6 +43,7 @@
 
 #include "../Sequence.h"
 #include "SequenceContainer.h"
+#include "OrderedValuesContainer.h"
 
 namespace bpp
 {
@@ -54,7 +55,8 @@ namespace bpp
  * Sequences may be accessed via their indice, <i>i.e.</i> their position in the container.
  */
   class OrderedSequenceContainer:
-    public virtual SequenceContainer
+    public virtual SequenceContainer,
+    public virtual OrderedValuesContainer
   {
   public:
     OrderedSequenceContainer() {}
@@ -62,15 +64,6 @@ namespace bpp
 
   public:
 		
-    /**
-     * @brief Convert a particular sequence to a string.
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @return A string describing the content of the sequence.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
-     */
-    virtual std::string toString(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
-
     /**
      * @brief Retrieve a sequence object from the container.
 
@@ -91,6 +84,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
      * @throw Exception Any other kind of exception.
      */
+
     virtual void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception) = 0;
 
     /**
@@ -100,58 +94,8 @@ namespace bpp
      * @throw IndexOutOfBoundsException If the name does not match any sequence in
      * the container.
      */
+
     virtual Sequence* removeSequence(size_t sequenceIndex) = 0;
-
-    /**
-     * @brief Get the name of a particular sequence.
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @return The name of the sequence at position 'sequenceIndex'.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in
-     * the container.
-     */
-    virtual const std::string& getName(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Get comments of a particular sequence.
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @return The comments associated to sequence at position 'sequenceIndex'.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in
-     * the container.
-     */
-    virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
-
-    virtual const Comments& getGeneralComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
-    {
-      return getComments(sequenceIndex);
-    }
-    
-
-    /**
-     * @brief Set the comments of a particular sequence.
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @param comments      The comments to set to sequence with position 'i'.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in
-     * the container.
-     */
-    virtual void setComments(size_t sequenceIndex, const Comments & comments) = 0;
-
-    virtual void setGeneralComments(size_t sequenceIndex, const Comments & comments)
-    {
-      return setComments(sequenceIndex, comments);
-    }
-    
-
-    /**
-     * @brief Get the position of a sequence in sequence container from its name.
-     *
-     * @param name The name of the sequence.
-     * @return The position of the sequence with name 'name', if it exists.
-     * @throw SequenceNotFoundException If no sequence with name 'name' could be found.
-     */
-    virtual size_t getSequencePosition(const std::string & name) const = 0;
 
     /**
      * @name Provide direct access to sequences content.
@@ -187,6 +131,7 @@ namespace bpp
      * @param elementIndex The element position within the sequence.
      * @throw IndexOutOfBoundsException If a position is not valid.
      */
+
     virtual const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException) = 0;
 
     /**
@@ -199,6 +144,7 @@ namespace bpp
      * @param sequenceIndex The sequence position.
      * @param elementIndex The element position within the sequence.
      */
+
     virtual int& operator()(size_t sequenceIndex, size_t elementIndex) = 0;
     
     /**
@@ -211,6 +157,7 @@ namespace bpp
      * @param sequenceIndex The sequence position.
      * @param elementIndex The element position within the sequence.
      */
+
     virtual const int& operator()(size_t sequenceIndex, size_t elementIndex) const = 0;
     /** @} */
 	
@@ -228,11 +175,16 @@ namespace bpp
     virtual size_t getNumberOfSequences() const = 0;
     virtual std::vector<std::string> getSequencesNames() const = 0;
     virtual void setSequencesNames(const std::vector<std::string> & names, bool checkNames) throw (Exception) = 0;
-    virtual const Comments& getComments() const = 0;
-    virtual void setComments(const Comments& comments) = 0;
+    
+    /*
+     * @brief For backward compatibility
+     *
+     */
+    
     virtual const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException) = 0;
     virtual void setComments(const std::string& name, const Comments& comments) = 0;
     /** @} */
+
   };
 
 } //end of namespace bpp.

@@ -72,7 +72,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
 
   reindexSites();
   VectorPositionedContainer<Site>::setSize(length_);
-  AbstractSequenceContainer::setComments(osc.getComments());
+  setGeneralComments(osc.getGeneralComments());
 }
 
 /***************************************************************************/
@@ -210,7 +210,7 @@ std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos) throw (In
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException, Exception)
+void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length)
 {
   if (siteIndex + length > getNumberOfSites())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSites", siteIndex + length, 0, getNumberOfSites() - 1);
@@ -393,6 +393,16 @@ void AlignedSequenceContainer::reindexSites()
   }
 }
 
+void AlignedSequenceContainer::setSitePositions(Vint vPositions)
+{
+  if (vPositions.size() != getNumberOfSites())
+    throw BadSizeException("AlignedSequenceContainer::setSitePositions bad size of positions vector", vPositions.size(), getNumberOfSites());
+  
+  for (size_t i = 0; i < vPositions.size(); i++)
+    positions_[i] = vPositions[i]; 
+}
+
+
 /******************************************************************************/
 
 void AlignedSequenceContainer::setSequence(size_t i, const Sequence& sequence, bool checkName) throw (Exception)
@@ -425,10 +435,11 @@ void AlignedSequenceContainer::setSequence(const string& name, const Sequence& s
 
 void AlignedSequenceContainer::addSequence(const Sequence& sequence, bool checkName)
 {
-  // if container has only one sequence
+// if container has only one sequence
   if (length_ == 0)
   {
     length_ = sequence.size();
+    VectorPositionedContainer<Site>::setSize(length_);
     reindexSites();
   }
   if (checkSize_(sequence))
@@ -445,7 +456,10 @@ void AlignedSequenceContainer::addSequence(const Sequence& sequence, size_t i, b
     throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences() - 1);
   // if container has only one sequence
   if (length_ == 0)
+  {
     length_ = sequence.size();
+    VectorPositionedContainer<Site>::setSize(length_);
+  }  
   if (checkSize_(sequence))
     VectorSequenceContainer::addSequence(sequence, i, checkName);
   else
@@ -465,7 +479,7 @@ void AlignedSequenceContainer::clear()
 AlignedSequenceContainer* AlignedSequenceContainer::createEmptyContainer() const
 {
   AlignedSequenceContainer* asc = new AlignedSequenceContainer(getAlphabet());
-  asc->AbstractSequenceContainer::setComments(getComments());
+  asc->setGeneralComments(getGeneralComments());
   return asc;
 }
 

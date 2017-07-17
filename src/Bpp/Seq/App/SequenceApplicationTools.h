@@ -203,7 +203,24 @@ namespace bpp
       bool verbose = true,
       int warn = 1);
 
+    static AlignedValuesContainer* getAlignedContainer(
+      const Alphabet* alpha,
+      std::map<std::string, std::string>& params,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
+
     static std::map<size_t, SiteContainer*> getSiteContainers(
+      const Alphabet* alpha,
+      std::map<std::string, std::string>& params,
+      const std::string& prefix = "input.",
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
+
+    static std::map<size_t, AlignedValuesContainer*> getAlignedContainers(
       const Alphabet* alpha,
       std::map<std::string, std::string>& params,
       const std::string& prefix = "input.",
@@ -240,8 +257,9 @@ namespace bpp
      * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
      * @return A new VectorSiteContainer object containing sites of interest.
      */
-    static VectorSiteContainer* getSitesToAnalyse(
-      const SiteContainer& allSites,
+    
+    static AlignedValuesContainer* getSitesToAnalyse(
+      const AlignedValuesContainer& allSites,
       std::map<std::string, std::string>& params,
       std::string suffix = "",
       bool suffixIsOptional = true,

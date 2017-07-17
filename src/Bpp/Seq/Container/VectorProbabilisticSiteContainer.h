@@ -44,7 +44,10 @@
 #include "VectorMappedContainer.h"
 
 #include "../ProbabilisticSite.h"
-#include "../ProbabilisticSequence.h"
+#include "ProbabilisticSiteContainer.h"
+#include "AbstractProbabilisticSequenceContainer.h"
+#include "AlignedValuesContainer.h"
+#include "OrderedSequenceContainer.h"
 
 // From the STL :
 #include <vector>
@@ -69,11 +72,9 @@ namespace bpp
 class VectorProbabilisticSiteContainer :
     virtual public VectorPositionedContainer<ProbabilisticSite>,
     virtual public VectorMappedContainer<BasicProbabilisticSequence>,
-    public Commentable
+    virtual public AbstractProbabilisticSequenceContainer,
+    virtual public ProbabilisticSiteContainer
 {
-private:
-  const Alphabet* alphabet_;
-  
 public :
 
   /**
@@ -84,28 +85,51 @@ public :
   VectorProbabilisticSiteContainer(const Alphabet * alpha);
 
   /**
+   * @brief Build a new container from a set of sites.
+   *
+   * @param vs A std::vector of sites. Those sites are cloned in the container.
+   * @param alpha The common alphabet for all sites.
+   * @param checkPositions Check for the redundancy of site position tag. This may turn to be very time consuming!
+   * @throw Exception If sites differ in size or in alphabet.
+   */
+
+  VectorProbabilisticSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
+
+  /**
+   * @brief Build a new container from an AlignedValuesContainer.
+   *
+   */
+
+  VectorProbabilisticSiteContainer(const AlignedValuesContainer& avc);
+
+  /**
+   * @brief Build a new empty container with specified sequence names.
+   *
+   * @param names Sequence names. This will set the number of sequences in the container.
+   * @param alpha The alphabet for this container.
+   */
+
+  VectorProbabilisticSiteContainer(const std::vector<std::string>& names, const Alphabet* alpha);
+
+  /**
    * @name The Clonable interface.
    *
    * @{
    */
 
-  VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc) :
-    VectorPositionedContainer<ProbabilisticSite>(vpsc),
-    VectorMappedContainer<BasicProbabilisticSequence>(vpsc),
-    Commentable(vpsc),
-    alphabet_(vpsc.alphabet_)
-  {
-  }
+  /**
+   * @bried Copy contructors
+   *
+   * Sites are cloned.
+   *
+   */
+  
+  VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc);
 
-  VectorProbabilisticSiteContainer& operator=(const VectorProbabilisticSiteContainer& vpsc)
-  {
-    alphabet_ = vpsc.alphabet_;
-    VectorPositionedContainer<ProbabilisticSite>::operator=(vpsc);
-    VectorMappedContainer<BasicProbabilisticSequence>::operator=(vpsc);
-    Commentable::operator=(vpsc);
-    
-    return *this;
-  }
+  VectorProbabilisticSiteContainer(const OrderedSequenceContainer& osc);
+
+
+  VectorProbabilisticSiteContainer& operator=(const VectorProbabilisticSiteContainer& vpsc);
   
   VectorProbabilisticSiteContainer* clone() const { return new VectorProbabilisticSiteContainer(*this); }
 
@@ -118,13 +142,6 @@ public :
   
  public :
 
-  const Alphabet* getAlphabet() const
-  {
-    return alphabet_;
-  }
-
-  size_t getNumberOfSites() const { return VectorPositionedContainer<ProbabilisticSite>::getSize(); }
-  
   size_t getNumberOfSequences() const { return VectorMappedContainer<BasicProbabilisticSequence>::getSize(); }
 
   /*
@@ -149,14 +166,97 @@ public :
     return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
   }
 
-  const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const
+  const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const;
+
+  const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const;
+
+  bool hasSequence(const std::string& name) const
   {
-    return VectorMappedContainer<BasicProbabilisticSequence>::getObject(i);
+    // Look for sequence name:
+    return VectorMappedContainer<BasicProbabilisticSequence>::hasObject(name);
   }
 
-  std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i)
+  size_t getSequencePosition(const std::string& name) const
   {
-    return VectorMappedContainer<BasicProbabilisticSequence>::getObject(i);
+    // Look for sequence name:
+    return VectorMappedContainer<BasicProbabilisticSequence>::getObjectPosition(name);
+  }
+
+  std::vector<std::string> getSequencesNames() const
+  {
+    return VectorMappedContainer<BasicProbabilisticSequence>::getObjectsNames();
+  }
+  
+  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception)
+  {
+    VectorMappedContainer<BasicProbabilisticSequence>::setObjectsNames(names);
+  }
+  
+
+  void setComments(size_t sequenceIndex, const Comments& comments)
+  {
+    VectorMappedContainer<BasicProbabilisticSequence>::getObject(sequenceIndex)->setComments(comments);
+  }
+
+
+  /*
+   * @}
+   *
+   */
+
+  
+  /**
+   * @name SequencedValuesContainer methods.
+   *
+   * @{
+   */
+
+  /*
+   * @brief get value of a state in a position
+   * @param siteIndex  index of the site in the container
+   * @param sequenceIndex index of the looked value in the site
+   * @param state  state alphabet
+   */
+  
+  double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const 
+  {
+    if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
+    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][getAlphabet()->getStateIndex(state)];
+  }
+  
+  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const 
+  {
+    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][getAlphabet()->getStateIndex(state)];
+  }
+
+  /*
+   * @}
+   *
+   */
+
+  /**
+   * @name OrderedValuesContainer methods.
+   *
+   * @{
+   */
+
+  /*
+   * @brief get value of a state in a position
+   * @param siteIndex  index of the site in the container
+   * @param sequenceIndex index of the looked value in the site
+   * @param state  state alphabet
+   */
+  
+  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const 
+  {
+    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
+    if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
+    return (*getSite(siteIndex))[sequenceIndex][getAlphabet()->getStateIndex(state)-1];
+  }
+  
+  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const 
+  {
+    return (*getSite(siteIndex))[sequenceIndex][getAlphabet()->getStateIndex(state)-1];
   }
 
   /*
@@ -168,14 +268,51 @@ public :
    * @brief Add elements
    *
    */
-  
-  void addSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false);
-  
+
+  /*
+   * @brief Append a Site. The shared_ptr is shared.
+   *
+   */
+
+  void appendSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false);
+
+  /*
+   * @brief Add a Sequence of sites. Sites are copied.
+   *
+   */
+
   void addSequence(std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true);
+
+  void addSequence(const Sequence& sequence, bool checkName = true);
 
   void clear();
 
+  VectorProbabilisticSiteContainer* createEmptyContainer() const;
+
+  /*
+   * @name From AlignedValuesContainer interface
+   *
+   * @{
+   */
+
+  void deleteSites(size_t siteIndex, size_t length)
+  {
+    VectorPositionedContainer<ProbabilisticSite>::deleteObjects(siteIndex, length);
+  }
+
+  size_t getNumberOfSites() const
+  {
+    return VectorPositionedContainer<ProbabilisticSite>::getSize();
+  }
+  
   void reindexSites();
+
+  Vint getSitePositions() const;
+
+  void setSitePositions(Vint vPositions);
+
+  
+  /** @} */
 
 };
 

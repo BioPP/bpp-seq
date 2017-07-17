@@ -50,6 +50,34 @@ using namespace bpp;
 /** Class constructors: *******************************************************/
 
 VectorSiteContainer::VectorSiteContainer(
+  const std::vector<const CruxSymbolListSite*>& vs,
+  const Alphabet* alpha,
+  bool checkPositions)
+  throw (Exception) :
+  VectorPositionedContainer<Site>(),
+  VectorMappedContainer<Sequence>(),
+  AbstractSequenceContainer(alpha)
+{
+  if (vs.size() == 0) throw Exception("VectorSiteContainer::VectorSiteContainer. Empty site set.");
+
+  size_t nbSeq=vs[0]->size();
+  
+  // Seq names and comments:
+  
+  for (size_t i = 0; i < nbSeq; i++)
+    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", alpha)), "Seq_" + TextTools::toString(i));
+
+  // Now try to add each site:
+  for (size_t i = 0; i < vs.size(); i++)
+  {
+    if (!dynamic_cast<const Site*>(vs[i]))
+      throw Exception("VectorSiteContainer::VectorSiteContainer : Not a Site in position " + TextTools::toString(i));
+    
+    addSite(dynamic_cast<const Site&>(*vs[i]), checkPositions); // This may throw an exception if position argument already exists or its size is not valid.
+  }
+}
+
+VectorSiteContainer::VectorSiteContainer(
   const std::vector<const Site*>& vs,
   const Alphabet* alpha,
   bool checkPositions)
@@ -58,7 +86,7 @@ VectorSiteContainer::VectorSiteContainer(
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(alpha)
 {
-  if (vs.size() == 0) throw Exception("VectorSiteContainer::CompressedVectorSiteContainer. Empty site set.");
+  if (vs.size() == 0) throw Exception("VectorSiteContainer::VectorSiteContainer. Empty site set.");
 
   size_t nbSeq=vs[0]->size();
   
@@ -94,8 +122,8 @@ VectorSiteContainer::VectorSiteContainer(const std::vector<std::string>& names, 
   AbstractSequenceContainer(alpha)
 {
   // Seq names and comments:
-  for (size_t i = 0; i < names.size(); i++)
-    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", alpha)), "Seq_" + TextTools::toString(i));
+  for (auto i : names)
+    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence(i, "", alpha)), i);
 }
 
 /******************************************************************************/
@@ -118,6 +146,7 @@ VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer& vsc) :
   {
     addSite(vsc.getSite(i), false); // We assume that positions are correct.
   }
+  setSequencesNames(vsc.getSequencesNames(), false);
 }
 
 /******************************************************************************/
@@ -132,6 +161,7 @@ VectorSiteContainer::VectorSiteContainer(const SiteContainer& sc) :
   {
     addSite(sc.getSite(i), false); // We assume that positions are correct.
   }
+  setSequencesNames(sc.getSequencesNames(), false);
 }
 
 /******************************************************************************/
@@ -165,6 +195,35 @@ VectorSiteContainer::VectorSiteContainer(const SequenceContainer& sc) :
 
 /******************************************************************************/
 
+VectorSiteContainer::VectorSiteContainer(const AlignedValuesContainer& avc) :
+  VectorPositionedContainer<Site>(), 
+  VectorMappedContainer<Sequence>(),
+  AbstractSequenceContainer(avc.getAlphabet())
+{
+  const Alphabet* alpha=avc.getAlphabet();
+
+  if (avc.getNumberOfSites() == 0)
+    throw Exception("VectorSiteContainer::VectorSiteContainer(AlignedValuesContainer): Empty site set.");
+
+  size_t nbSeq=avc.getNumberOfSequences();
+  
+  // Seq names and comments:
+  
+  for (size_t i = 0; i < nbSeq; i++)
+    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence(avc.getName(i), "", alpha)), avc.getName(i));
+
+  // Now try to add each site:
+  for (size_t i = 0; i < avc.getNumberOfSites(); i++)
+  {
+    if (!dynamic_cast<const Site*>(&avc.getSymbolListSite(i)))
+      throw Exception("VectorSiteContainer::VectorSiteContainer(AlignedValuesContainer) : Not a Site in position " + TextTools::toString(i));
+    
+    addSite(dynamic_cast<const Site&>(avc.getSymbolListSite(i))); 
+  }
+}
+
+/******************************************************************************/
+
 VectorSiteContainer& VectorSiteContainer::operator=(const VectorSiteContainer& vsc)
 {
   clear();
@@ -174,7 +233,7 @@ VectorSiteContainer& VectorSiteContainer::operator=(const VectorSiteContainer& v
   {
     addSite(vsc.getSite(i), false); // We assume that positions are correct.
   }
-
+  setSequencesNames(vsc.getSequencesNames(), false);
   return *this;
 }
 
@@ -189,6 +248,7 @@ VectorSiteContainer& VectorSiteContainer::operator=(const SiteContainer& sc)
   {
     addSite(sc.getSite(i), false); // We assume that positions are correct.
   }
+  setSequencesNames(sc.getSequencesNames(), false);
 
   return *this;
 }
@@ -430,9 +490,9 @@ const Sequence& VectorSiteContainer::getSequence(size_t i) const
     sequence[j] = getSite(j)[i];
   }
 
-  shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(VectorMappedContainer<Sequence>::getObject(i)->getName(), sequence, VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet())));
-  
-  VectorMappedContainer<Sequence>::addObject_(ns,i,VectorMappedContainer<Sequence>::getObject(i)->getName(), false);
+  shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(VectorMappedContainer<Sequence>::getObjectName(i), sequence, VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet())));
+
+  VectorMappedContainer<Sequence>::addObject_(ns,i,ns->getName(), false);
 
   return *ns;
 }
@@ -608,7 +668,7 @@ void VectorSiteContainer::setComments(size_t sequenceIndex, const Comments& comm
 VectorSiteContainer* VectorSiteContainer::createEmptyContainer() const
 {
   VectorSiteContainer* vsc = new VectorSiteContainer(getAlphabet());
-  vsc->AbstractSequenceContainer::setComments(getComments());
+  vsc->setGeneralComments(getGeneralComments());
   return vsc;
 }
 

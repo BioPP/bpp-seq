@@ -1,5 +1,5 @@
 //
-// File: SymbolListSite.h
+// File: CruxSymbolListSite.h
 // Created by: Laurent Guéguen
 // Created on: samedi 1 avril 2017, à 23h 34
 //
@@ -40,55 +40,36 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _SYMBOLLIST_SITE_H_
 #define _SYMBOLLIST_SITE_H_
 
-#include "SymbolList.h"
+#include "CoreSymbolList.h"
 #include "CoreSite.h"
 namespace bpp
 {
 
   /**
-   * @brief The SymbolListSite interface, from CoreSite and SymbolList
+   * @brief The CruxSymbolListSite interface, from CoreSite and CruxSymbolList
    *
    */
-  class SymbolListSite: 
+  
+  class CruxSymbolListSite: 
     public virtual CoreSite,
-    public virtual SymbolList
+    public virtual CruxSymbolList
   {
 
-  public: 
+  public:  
     /**
      * @name The Clonable interface
      *
      * @{
      */
-    SymbolListSite* clone() const = 0;
+    CruxSymbolListSite* clone() const = 0;
     /** @} */
     
     // Class destructor
-    virtual ~SymbolListSite() {}
-
-  };
-
-  class BasicSymbolListSite: 
-    public virtual SymbolListSite,
-    public virtual AbstractCoreSite,
-    public virtual BasicSymbolList
-  {
-
-  public: 
-    /**
-     * @name The Clonable interface
-     *
-     * @{
-     */
-    BasicSymbolListSite* clone() const = 0;
-    /** @} */
-    
-    // Class destructor
-    virtual ~BasicSymbolListSite() {}
+    virtual ~CruxSymbolListSite() {}
 
   };
 
 } //end of namespace bpp.
 
-#endif // _SYMBOLLIST_SITE_H_
+#endif // _CRUX_SYMBOLLIST_SITE_H_
 

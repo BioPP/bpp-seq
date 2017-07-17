@@ -38,7 +38,7 @@
 */
 
 #include "SiteContainerIterator.h"
-#include "../SiteTools.h"
+#include "../SymbolListTools.h"
 
 using namespace bpp;
 
@@ -92,7 +92,7 @@ bool NoGapSiteContainerIterator::hasMoreSites() const
 int NoGapSiteContainerIterator::nextSiteWithoutGapPosition(int current) const
 {
   size_t position = static_cast<size_t>(current + 1);
-  while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->getSite(position)))
+  while (position < sites_->getNumberOfSites() && SymbolListTools::hasGap(sites_->getSite(position)))
     position++;
   return static_cast<int>(position);
 }
@@ -100,7 +100,7 @@ int NoGapSiteContainerIterator::nextSiteWithoutGapPosition(int current) const
 int NoGapSiteContainerIterator::previousSiteWithoutGapPosition(int current) const
 {
   int position = current - 1;
-  while (position >= 0 && SiteTools::hasGap(sites_->getSite(static_cast<size_t>(position))))
+  while (position >= 0 && SymbolListTools::hasGap(sites_->getSite(static_cast<size_t>(position))))
     position--;
   return position;
 }
@@ -127,7 +127,7 @@ bool CompleteSiteContainerIterator::hasMoreSites() const
 int CompleteSiteContainerIterator::nextCompleteSitePosition(int current) const
 {
   size_t position = static_cast<size_t>(current + 1);
-  while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->getSite(position)))
+  while (position < sites_->getNumberOfSites() && !SymbolListTools::isComplete(sites_->getSite(position)))
     position++;
   return static_cast<int>(position);
 }
@@ -135,7 +135,7 @@ int CompleteSiteContainerIterator::nextCompleteSitePosition(int current) const
 int CompleteSiteContainerIterator::previousCompleteSitePosition(int current) const
 {
   int position = current - 1;
-  while (position >= 0 && !SiteTools::isComplete(sites_->getSite(static_cast<size_t>(position))))
+  while (position >= 0 && !SymbolListTools::isComplete(sites_->getSite(static_cast<size_t>(position))))
     position --;
   return position;
 }

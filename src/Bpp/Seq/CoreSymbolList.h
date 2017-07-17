@@ -53,12 +53,13 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
+
   /**
-   * @brief The CoreSymbolList interface.
+   * @brief The CruxSymbolList interface.
    *
    */
-  template<class T>
-  class CoreSymbolList: 
+  
+  class CruxSymbolList: 
     public virtual Clonable
   {
 
@@ -68,11 +69,11 @@ namespace bpp
      *
      * @{
      */
-    CoreSymbolList* clone() const = 0;
+    CruxSymbolList* clone() const = 0;
     /** @} */
 
     // Class destructor
-    virtual ~CoreSymbolList() {}
+    virtual ~CruxSymbolList() {}
 
   public:
 
@@ -92,6 +93,100 @@ namespace bpp
     virtual size_t size() const = 0;
 
     /**
+     * @brief Convert the list as a string.
+     *
+     * This method is useful for dumping a list to a file or to the screen for display.
+     *
+     * @return The whole list as a string.
+     */
+
+    virtual std::string toString() const = 0;
+
+    /**
+     * @name Edition methods.
+     *
+     * @{
+     */
+
+    /**
+     * @brief Remove the element at position 'pos'.
+     *
+     * @param pos The position of the element to remove.
+     */
+    virtual void deleteElement(size_t pos) = 0;
+
+    /**
+     * @brief Remove the elements at position 'pos'.
+     *
+     * @param pos The position of the first element to remove.
+     * @param len The length of the region to remove.
+     */
+    virtual void deleteElements(size_t pos, size_t len) = 0;
+
+    /** @} */
+
+    /**
+     * @name Provide direct access to the list content.
+     *
+     * @warning These operators allow you to modifiy the list content.
+     * No alphabet checking is performed for your modifications, so use with care, or
+     * consider using the setContent() method.
+     *
+     * @{
+     */
+
+    /**
+     * @brief Randomly shuffle the content of the list, with linear complexity.
+     */
+    virtual void shuffle() = 0;
+    /** @} */
+
+    /*
+     * @brief get value of a state in a position
+     * @param siteIndex  index of the site
+     * @param state  state in the alphabet
+     */
+
+    virtual double getStateValueAt(size_t siteIndex, int state) const  {
+      throw Exception("CruxSymbolList::getStateValueAt should not be called.");
+      return 0;
+    }
+    
+  
+    virtual double operator()(size_t siteIndex, int state) const
+    {
+      throw Exception("CruxSymbolList::operator() should not be called.");
+      return 0;
+    }
+  };
+
+
+
+  
+  /**
+   * @brief The CoreSymbolList interface.
+   *
+   */
+  template<class T>
+  class CoreSymbolList: 
+    public virtual CruxSymbolList
+  {
+
+  public: 
+    /**
+     * @name The Clonable interface
+     *
+     * @{
+     */
+    CoreSymbolList* clone() const = 0;
+    /** @} */
+
+    // Class destructor
+    virtual ~CoreSymbolList() {}
+
+  public:
+
+    /**
      * @name Acting on the content of the list.
      *
      * @{
@@ -108,16 +203,6 @@ namespace bpp
     virtual const std::vector<T>& getContent() const = 0;
 
     /** @} */
-
-    /**
-     * @brief Convert the list as a string.
-     *
-     * This method is useful for dumping a list to a file or to the screen for display.
-     *
-     * @return The whole list as a string.
-     */
-
-    virtual std::string toString() const = 0;
 
     /**
      * @name Edition methods.
@@ -148,22 +233,6 @@ namespace bpp
      */
 
     virtual void setElement(size_t pos, const T& c) = 0;
-
-    /**
-     * @brief Remove the element at position 'pos'.
-     *
-     * @param pos The position of the element to remove.
-     */
-    virtual void deleteElement(size_t pos) = 0;
-
-    /**
-     * @brief Remove the elements at position 'pos'.
-     *
-     * @param pos The position of the first element to remove.
-     * @param len The length of the region to remove.
-     */
-    virtual void deleteElements(size_t pos, size_t len) = 0;
-
 
     /**
      * @brief Get the element at position 'pos' as a character.
@@ -209,10 +278,6 @@ namespace bpp
      */
     virtual T& operator[](size_t i) = 0;
 
-    /**
-     * @brief Randomly shuffle the content of the list, with linear complexity.
-     */
-    virtual void shuffle() = 0;
     /** @} */
   };
 
@@ -350,6 +415,22 @@ namespace bpp
     }
 
   public:
+
+    /**
+     * @brief From CruxSymbolList
+     *
+     */
+    
+    double getStateValueAt(size_t siteIndex, int state) const
+    {
+      return CoreSymbolList<T>::getStateValueAt(siteIndex, state);
+    }
+    
+    double operator()(size_t siteIndex, int state) const 
+    {
+      return CoreSymbolList<T>::operator()(siteIndex, state);
+    }
+    
 
     /**
      * @name Events handling

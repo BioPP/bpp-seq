@@ -137,16 +137,6 @@ namespace bpp
     {
     }
 
-    const Comments& getComments() const
-    {
-      return AbstractSequenceContainer::getComments();
-    }
-
-    // void setComments(const Comments& comments)
-    // {
-    //   return AbstractSequenceContainer::setComments();
-    // }
-
     void clear() {
       VectorMappedContainer<Sequence>::clear();
     }
@@ -244,7 +234,7 @@ namespace bpp
      * @{
      */
 
-    size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException)
+    size_t getSequencePosition(const std::string& name) const
     {
       return getObjectPosition(name);
     }
@@ -342,8 +332,60 @@ namespace bpp
     {
       return *getObject(name);
     }
+
     
     /** @} */
+
+        /**
+     * @name SequencedValuesContainer methods.
+     *
+     * @{
+     */
+    
+    
+    double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
+    {
+      return getSequence(sequenceName).getStateValueAt(siteIndex, state);
+    }
+    
+    double operator()(size_t siteIndex, const std::string& sequenceName, int state) const
+    {
+      return getSequence(sequenceName)(siteIndex, state);
+    }
+
+    /*
+     *
+     * @}
+     *
+     */
+
+    /**
+     * @name OrderedValuesContainer methods.
+     *
+     * @{
+     */
+    
+    double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
+    {
+      if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSequenceContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
+      const Sequence& seq=getSequence(sequenceIndex);
+      
+      if (siteIndex >= seq.size())
+        throw IndexOutOfBoundsException("VectorSequenceContainer::getStateValueAt.", siteIndex, 0, seq.size() - 1);
+      
+      return getAlphabet()->isResolvedIn(seq[siteIndex],state)?1.:0.;
+    }
+    
+    double operator()(size_t siteIndex, size_t sequenceIndex, int state) const{
+      return getAlphabet()->isResolvedIn(getSequence(sequenceIndex)[siteIndex],state)?1.:0.;
+    }
+
+    /*
+     *
+     * @}
+     *
+     */
+    
   };
 
 } //end of namespace bpp.

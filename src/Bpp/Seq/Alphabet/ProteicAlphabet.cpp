@@ -102,6 +102,30 @@ string ProteicAlphabet::getAbbr(int aa) const throw (AlphabetException)
 
 /******************************************************************************/
 
+bool ProteicAlphabet::isResolvedIn(int state1, int state2) const throw (BadIntException) 
+{
+  if (!isIntInAlphabet(state1))
+    throw BadIntException(state1, "DNA::isResolvedIn(int, int): Specified base unknown.");
+
+  if (!isIntInAlphabet(state2))
+    throw BadIntException(state2, "DNA::isResolvedIn(int, int): Specified base unknown.");
+
+  if (isUnresolved(state2))
+    throw BadIntException(state2, "DNA::isResolvedIn(int, int): Unresolved base.");
+
+  if (state1==20)
+    return (state2==2 || state2==3);
+  else if (state1 == 21)
+    return (state2==5 || state2==6);
+  else if (state1==22)
+    return state2>0;
+  else
+    return state1==state2;
+}
+
+/******************************************************************************/
+
+
 vector<int> ProteicAlphabet::getAlias(int state) const throw (BadIntException)
 {
   if (!isIntInAlphabet(state))

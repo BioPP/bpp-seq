@@ -56,7 +56,7 @@ void Mase::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc
   bool comments = false;
 
   // Get current general comments is VectorSequenceContainer
-  fileComments = vsc.getComments();
+  fileComments = vsc.getGeneralComments();
 
   // Main loop : for all file lines
   while (!input.eof())
@@ -111,7 +111,7 @@ void Mase::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc
   }
 
   // Set new general comments in VectorSequenceContainer (old + new comments)
-  vsc.setComments(fileComments);
+  vsc.setGeneralComments(fileComments);
 }
 
 /****************************************************************************************/
@@ -121,7 +121,7 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const th
   // Checking the existence of specified file, and possibility to open it in write mode
   if (!output) { throw IOException ("Mase::write : failed to open file"); }
 
-  Comments comments = sc.getComments();
+  Comments comments = sc.getGeneralComments();
 
   // Writing all general comments in file
   if (comments.size() == 0) {

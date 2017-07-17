@@ -52,7 +52,7 @@ int main() {
   //[http://www.uhnresearch.ca/labs/tillier/simprotWEB/] in various file formats
   ProteicAlphabet* alpha = new ProteicAlphabet;
   Fasta fasta;
-  const SiteContainer* sites1 = fasta.readAlignment("example.fasta", alpha);
+  const AlignedValuesContainer* sites1 = fasta.readAlignment("example.fasta", alpha);
   //test number of seq
   cout << "example.fasta contains " << sites1->getNumberOfSequences() << " sequences" << endl;
   if (sites1->getNumberOfSequences() != 100) {
@@ -60,13 +60,13 @@ int main() {
   }
 
   Mase mase;
-  const SiteContainer* sites2 = mase.readAlignment("example.mase", alpha);
+  const AlignedValuesContainer* sites2 = mase.readAlignment("example.mase", alpha);
   Clustal clustal;
-  const SiteContainer* sites3 = clustal.readAlignment("example.aln", alpha);
+  const AlignedValuesContainer* sites3 = clustal.readAlignment("example.aln", alpha);
   Phylip phylip(true, false);
-  const SiteContainer* sites4 = phylip.readAlignment("example.ph", alpha);
+  const AlignedValuesContainer* sites4 = phylip.readAlignment("example.ph", alpha);
   Phylip phylip3(true, true);
-  const SiteContainer* sites5 = phylip3.readAlignment("example.ph3", alpha);
+  const AlignedValuesContainer* sites5 = phylip3.readAlignment("example.ph3", alpha);
 
   cout << sites1->getNumberOfSequences() << "\t" << sites1->getNumberOfSites() << endl;
   cout << sites2->getNumberOfSequences() << "\t" << sites2->getNumberOfSites() << endl;

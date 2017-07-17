@@ -77,7 +77,7 @@ namespace bpp
      * @param sites The container to analyse.
      * @return A pointer toward a new SiteContainer with only sites with no gaps.
      */
-    static SiteContainer* getSitesWithoutGaps(const SiteContainer& sites);
+    static AlignedValuesContainer* getSitesWithoutGaps(const AlignedValuesContainer& sites);
 
     /**
      * @brief Retrieves complete sites from SiteContainer.
@@ -89,7 +89,7 @@ namespace bpp
      * @param sites The container to analyse.
      * @return A pointer toward a new SiteContainer with only complete sites.
      */
-    static SiteContainer* getCompleteSites(const SiteContainer& sites);
+    static AlignedValuesContainer* getCompleteSites(const AlignedValuesContainer& sites);
 
     /**
      * @brief Get a site set without gap-only sites.
@@ -170,6 +170,7 @@ namespace bpp
      *
      * A new VectorSiteContainer is created with specified sites.
      * The destruction of the container is up to the user.
+     *
      * Sites are specified by their indice, beginning at 0.
      * No position verification is performed, based on the assumption that
      * the container passed as an argument is a correct one.
@@ -179,7 +180,13 @@ namespace bpp
      * @param selection The positions of all sites to retrieve.
      * @return A new container with all selected sites.
      */
-    static SiteContainer* getSelectedSites(const SiteContainer& sequences, const SiteSelection& selection);
+
+    static AlignedValuesContainer* getSelectedSites(const AlignedValuesContainer& sequences, const SiteSelection& selection);
+
+    static SiteContainer* getSelectedSites(const SiteContainer& sequences, const SiteSelection& selection)
+    {
+      return dynamic_cast<SiteContainer*>(getSelectedSites(dynamic_cast<const AlignedValuesContainer&>(sequences), selection));
+    }
 
     /**
      * @brief Create a new container with a specified set of positions.
@@ -200,7 +207,7 @@ namespace bpp
      * @return A new container with all selected sites.
      */
     
-    static SiteContainer* getSelectedPositions(const SiteContainer& sequences, const SiteSelection& selection);
+    static AlignedValuesContainer* getSelectedPositions(const AlignedValuesContainer& sequences, const SiteSelection& selection);
 
     /**
      * @brief create the consensus sequence of the alignment.

@@ -67,6 +67,16 @@ BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const ProbabilisticSy
 BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const BasicProbabilisticSymbolList & list) :
   alphabet_(list.alphabet_), content_(list.content_) {}
 
+BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const CruxSymbolList & list) :
+  alphabet_(list.getAlphabet()), content_(list.getAlphabet()->getResolvedChars().size(),list.size())
+{
+  int nbc=(int)getAlphabet()->getResolvedChars().size();
+  
+  for (size_t i=0; i<size(); i++)
+    for (int s=0; s<nbc; s++)
+      content_(s,i)=list.getStateValueAt(i,(int)s);
+}
+
 BasicProbabilisticSymbolList & BasicProbabilisticSymbolList::operator=(const ProbabilisticSymbolList & list)
 {
   alphabet_ = list.getAlphabet();
@@ -86,7 +96,6 @@ BasicProbabilisticSymbolList & BasicProbabilisticSymbolList::operator=(const Bas
 void BasicProbabilisticSymbolList::setContent(const DataTable & list)
 {
   if(list.hasRowNames()) {
-
     if(list.getRowNames().size() != alphabet_->getResolvedChars().size())
       throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list.getRowNames().size(), alphabet_->getResolvedChars().size());
 
@@ -96,12 +105,11 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list)
       if(column_names[i] != resolved_chars[i])
 	throw Exception("BasicProbabilisticSymbolList::setContent. Row names / resolved characters of alphabet mismatch at " + TextTools::toString(column_names[i]) + " and " + TextTools::toString(resolved_chars[i]) + ".");
   }
-  else { // DataTable has no column names
+  else { // DataTable has no row names
 
     if(list.getNumberOfRows() != alphabet_->getResolvedChars().size())
-      throw DimensionException("BasicProabilisticSymbolList::setContent. ", list.getNumberOfRows(), alphabet_->getResolvedChars().size());
+      throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list.getNumberOfRows(), alphabet_->getResolvedChars().size());
   }
-
 
   content_ = list; // final check passes, content_ becomes DataTable
 

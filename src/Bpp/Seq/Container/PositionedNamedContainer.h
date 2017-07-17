@@ -83,7 +83,8 @@ namespace bpp
 
     virtual size_t getObjectPosition(const std::string& name) const = 0;
 
-
+    virtual std::string getObjectName(size_t objectIndex) const = 0;
+    
   };
 } // end of namespace bpp.
 

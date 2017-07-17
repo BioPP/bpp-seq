@@ -147,7 +147,7 @@ namespace bpp
     
     void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = false)
     {
-      if (checkName && mObjects_.find(name)!=mObjects_.end())
+      if (checkName && hasObject(name))
         throw Exception("MappedNamedContainer::setObject : Object's name already exists in container : " + name);
 
       mObjects_[name] = object;
@@ -162,8 +162,8 @@ namespace bpp
     
     std::shared_ptr<T> removeObject(const std::string& name)
     {
-      if (mObjects_.find(name)!=mObjects_.end())
-        throw Exception("MappedNamedContainer::removeObject : Object's name does bot exist in container : " + name);
+      if (!hasObject(name))
+        throw Exception("MappedNamedContainer::removeObject : Object's name does not exist in container : " + name);
       
       std::shared_ptr<T> obj = mObjects_[name];
       mObjects_.erase(name);
@@ -180,9 +180,15 @@ namespace bpp
     
     void changeName(const std::string& okey, const std::string& nkey)
     {
-      if (mObjects_.find(okey)!=mObjects_.end())
-        throw Exception("MappedNamedContainer::changeName : Object's name does bot exist in container : " + okey);
+      if (okey==nkey)
+        return;
       
+      if (!hasObject(okey))
+        throw Exception("MappedNamedContainer::changeName : Object's name does not exist in container : " + okey);
+
+      if (hasObject(nkey))
+        throw Exception("MappedNamedContainer::changeName : Object's new name already exists in container : " + nkey);
+
       std::shared_ptr<T> obj = mObjects_[okey];
       mObjects_.erase(okey);
       mObjects_[nkey]=obj;
@@ -212,7 +218,7 @@ namespace bpp
   protected:
     void addObject_(std::shared_ptr<T> object, const std::string& name, bool checkName = false) const
     {
-      if (checkName && mObjects_.find(name)!=mObjects_.end())
+      if (checkName && hasObject(name))
         throw Exception("MappedNamedContainer::setObject : Object's name already exists in container : " + name);
 
       const_cast<std::map<std::string, std::shared_ptr<T> >& >(mObjects_)[name] = object;

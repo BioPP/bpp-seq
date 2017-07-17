@@ -209,6 +209,22 @@ bool AbstractAlphabet::isCharInAlphabet(const std::string& state) const
 
 /******************************************************************************/
 
+bool AbstractAlphabet::isResolvedIn(int state1, int state2) const throw (BadIntException) 
+{
+  if (!isIntInAlphabet(state1))
+    throw BadIntException(state1, "AbstractAlphabet::isResolvedIn(int, int): Specified base unknown.");
+
+  if (!isIntInAlphabet(state2))
+    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Specified base unknown.");
+
+  if (isUnresolved(state2))
+    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Unresolved base.");
+  
+  return state1==state2;
+}
+
+/******************************************************************************/
+
 std::vector<int> AbstractAlphabet::getAlias(int state) const throw (BadIntException) 
 {
   if (!isIntInAlphabet(state)) throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");

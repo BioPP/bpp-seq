@@ -42,6 +42,7 @@
 
 #include "ProbabilisticSymbolList.h"
 #include "CoreSite.h"
+#include "CruxSymbolListSite.h"
 
 namespace bpp
 {
@@ -63,6 +64,7 @@ namespace bpp
  */
   
   class ProbabilisticSite :
+    virtual public CruxSymbolListSite,
     public AbstractCoreSite,
     public BasicProbabilisticSymbolList
   {
@@ -109,6 +111,8 @@ namespace bpp
      * @brief The copy constructor.
      */
     ProbabilisticSite(const ProbabilisticSite & site);
+
+    ProbabilisticSite(const CruxSymbolListSite & site);
 
     /**
      * @brief The assignment operator.

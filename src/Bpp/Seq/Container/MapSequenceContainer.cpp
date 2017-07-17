@@ -160,8 +160,7 @@ const Sequence& MapSequenceContainer::getSequenceByKey(const string& key) const
 
 /******************************************************************************/
 
-size_t MapSequenceContainer::getSequencePosition(const string& name)
-  const throw (SequenceNotFoundException)
+size_t MapSequenceContainer::getSequencePosition(const string& name) const
 {
   // Specified sequence name research into all sequences
   size_t pos = 0;

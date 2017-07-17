@@ -58,8 +58,10 @@
 #include "../Io/BppOAlphabetIndex1Format.h"
 #include "../Io/BppOAlphabetIndex2Format.h"
 #include "../Io/MaseTools.h"
-#include "../SiteTools.h"
+#include "../SymbolListTools.h"
 #include "../SequenceTools.h"
+#include "../Container/VectorProbabilisticSiteContainer.h"
+#include "../Container/OrderedSequenceContainer.h"
 #include <Bpp/App/ApplicationTools.h>
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Text/KeyvalTools.h>
@@ -338,9 +340,95 @@ map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
       ApplicationTools::displayMessage("");
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
 
-      VectorSiteContainer* vsC = getSiteContainer(alpha, args2, "", true, verbose, warn);
+      VectorSiteContainer* vsC = dynamic_cast<VectorSiteContainer*>(getSiteContainer(alpha, args2, "", true, verbose, warn));
 
-      VectorSiteContainer* vsC2 = getSitesToAnalyse(*vsC, args2, "", true, false);
+      VectorSiteContainer* vsC2 = dynamic_cast<VectorSiteContainer*>(getSitesToAnalyse(*vsC, args2, "", true, false));
+
+      delete vsC;
+
+      if (mCont.find(num) != mCont.end())
+      {
+        ApplicationTools::displayWarning("Alignment " + TextTools::toString(num) + " already assigned, replaced by new one.");
+        delete mCont[num];
+      }
+      mCont[num] = vsC2;
+    }
+  }
+
+  return mCont;
+}
+
+map<size_t, AlignedValuesContainer*> SequenceApplicationTools::getAlignedContainers(
+  const Alphabet* alpha,
+  map<string, string>& params,
+  const string& prefix,
+  const string& suffix,
+  bool suffixIsOptional,
+  bool verbose,
+  int warn)
+{
+  vector<string> vContName = ApplicationTools::matchingParameters(prefix + "data*", params);
+
+  map<size_t, AlignedValuesContainer*> mCont;
+
+  for (size_t nT = 0; nT < vContName.size(); nT++)
+  {
+    size_t poseq = vContName[nT].find("=");
+    size_t num = 0;
+    size_t len = (prefix + "data").size();
+
+    string suff = vContName[nT].substr(len, poseq - len);
+
+    if (TextTools::isDecimalInteger(suff, '$'))
+      num = TextTools::to<size_t>(suff);
+    else
+      num = 1;
+
+    string contDesc = ApplicationTools::getStringParameter(vContName[nT], params, "", suffix, suffixIsOptional);
+
+    string contName;
+
+    map<string, string> args;
+
+    KeyvalTools::parseProcedure(contDesc, contName, args);
+
+    map<string, string> args2;
+
+    if (contName == "alignment")
+    {
+      string format;
+
+      if (args.find("file") != args.end())
+        args2["input.sequence.file"] = args["file"];
+      else
+        args2["input.sequence.file"] = "";
+
+      if (args.find("format") != args.end())
+        args2["input.sequence.format"] = args["format"];
+
+      if (args.find("selection") != args.end())
+        args2["input.site.selection"] = args["selection"];
+
+      if (args.find("sites_to_use") != args.end())
+        args2["input.sequence.sites_to_use"] = args["sites_to_use"];
+
+      if (args.find("max_gap_allowed") != args.end())
+        args2["input.sequence.max_gap_allowed"] = args["max_gap_allowed"];
+
+      if (args.find("max_unresolved_allowed") != args.end())
+        args2["input.sequence.max_unresolved_allowed"] = args["max_unresolved_allowed"];
+
+      if (args.find("remove_stop_codons") != args.end())
+        args2["input.sequence.remove_stop_codons"] = args["remove_stop_codons"];
+
+      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (dynamic_cast<const CodonAlphabet*>(alpha)?0:1));
+
+      ApplicationTools::displayMessage("");
+      ApplicationTools::displayMessage("Data " + TextTools::toString(num));
+
+      AlignedValuesContainer* vsC = getAlignedContainer(alpha, args2, "", true, verbose, warn);
+
+      AlignedValuesContainer* vsC2 = getSitesToAnalyse(*vsC, args2, "", true, false);
 
       delete vsC;
 
@@ -381,14 +469,14 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   else
     alpha2 = alpha;
 
-  const SequenceContainer* seqCont = iAln->readAlignment(sequenceFilePath, alpha2);
+  const SiteContainer* seqCont = iAln->readAlignment(sequenceFilePath, alpha2);
 
-  VectorSiteContainer* sites2 = new VectorSiteContainer(*dynamic_cast<const OrderedSequenceContainer*>(seqCont));
-
+  VectorSiteContainer* sites2 = new VectorSiteContainer(*seqCont);
+  
   delete seqCont;
-
+  
   VectorSiteContainer* sites;
-
+  
   if (AlphabetTools::isRNYAlphabet(alpha))
   {
     const SequenceTools ST;
@@ -396,12 +484,13 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
     for (unsigned int i = 0; i < sites2->getNumberOfSequences(); i++)
     {
       sites->addSequence(*(ST.RNYslice(sites2->getSequence(i))));
-    }
+     }
     delete sites2;
   }
   else
     sites = sites2;
-
+  
+  
   // Look for site selection:
   if (iAln->getFormatName() == "MASE file")
   {
@@ -499,10 +588,164 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   return sites;
 }
 
+AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
+  const Alphabet* alpha,
+  map<string, string>& params,
+  const string& suffix,
+  bool suffixIsOptional,
+  bool verbose,
+  int warn)
+{
+  string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
+  string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
+  BppOAlignmentReaderFormat bppoReader(warn);
+  unique_ptr<IAlignment> iAln(bppoReader.read(sequenceFormat));
+  map<string, string> args(bppoReader.getUnparsedArguments());
+  if (verbose)
+  {
+    ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
+    ApplicationTools::displayResult("Sequence format " + suffix, iAln->getFormatName());
+  }
+
+  const Alphabet* alpha2;
+  if (AlphabetTools::isRNYAlphabet(alpha))
+    alpha2 = &dynamic_cast<const RNY*>(alpha)->getLetterAlphabet();
+  else
+    alpha2 = alpha;
+
+  AlignedValuesContainer* avc2 = dynamic_cast<AlignedValuesContainer*>(iAln->readAlignment(sequenceFilePath, alpha2));
+
+
+  /// Look for RNY trnaslation
+  
+  VectorSiteContainer* sites;
+  
+  VectorSiteContainer* sites2=dynamic_cast<VectorSiteContainer*>(avc2);
+ 
+  if (sites2 && AlphabetTools::isRNYAlphabet(alpha))
+  {
+    sites = new VectorSiteContainer(alpha);
+    
+    const SequenceTools ST;
+    for (auto name : sites2->getSequencesNames())
+    {
+      sites->addSequence(*(ST.RNYslice(sites2->getSequence(name))), false);
+    }
+    delete sites2;
+  }
+  else
+    sites = sites2;
+
+  AlignedValuesContainer* avc;
+
+  // Look for site selection:
+  if (sites)
+  {
+    if (iAln->getFormatName() == "MASE file")
+    {
+      // getting site set:
+      string siteSet = ApplicationTools::getStringParameter("siteSelection", args, "none", suffix, suffixIsOptional, warn + 1);
+      if (siteSet != "none")
+      {
+        VectorSiteContainer* selectedSites;
+        try
+        {
+          selectedSites = dynamic_cast<VectorSiteContainer*>(MaseTools::getSelectedSites(*sites, siteSet));
+          if (verbose)
+            ApplicationTools::displayResult("Set found", TextTools::toString(siteSet) + " sites.");
+        }
+        catch (IOException& ioe)
+        {
+          throw ioe;
+        }
+        if (selectedSites->getNumberOfSites() == 0)
+        {
+          throw Exception("Site set '" + siteSet + "' is empty.");
+        }
+        delete sites;
+        sites = selectedSites;
+      }
+    }
+    
+    avc = new VectorProbabilisticSiteContainer(*dynamic_cast<const OrderedSequenceContainer*>(sites)); 
+  }
+  else
+    avc=avc2;
+  
+  
+  // getting site set:
+  size_t nbSites = avc->getNumberOfSites();
+  
+  string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
+  
+  AlignedValuesContainer* selectedSites = 0;
+  if (siteSet != "none")
+  {
+    vector<size_t> vSite;
+    try
+    {
+      vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet,",",":");
+      for (auto ps : vSite1)
+      {
+        int x = (ps >= 0 ? ps : static_cast<int>(nbSites) + ps + 1);
+        if (x<=(int)nbSites)
+        {
+          if (x > 0)
+            vSite.push_back(static_cast<size_t>(x - 1));
+          else
+            throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect null index: " + TextTools::toString(x));
+        }
+        else
+          throw Exception("SequenceApplicationTools::getSiteContainer(). Too large index: " + TextTools::toString(x));
+      }
+      selectedSites = SiteContainerTools::getSelectedSites(*avc, vSite);
+      selectedSites->reindexSites();
+    }
+    catch (Exception& e)
+    {
+      string seln;
+      map<string, string> selArgs;
+      KeyvalTools::parseProcedure(siteSet, seln, selArgs);
+      if (seln == "Sample")
+      {
+        size_t n = ApplicationTools::getParameter<size_t>("n", selArgs, nbSites, "", true, warn + 1);
+        bool replace = ApplicationTools::getBooleanParameter("replace", selArgs, false, "", true, warn + 1);
+        
+        vSite.resize(n);
+        vector<size_t> vPos;
+        for (size_t p = 0; p < nbSites; ++p)
+        {
+          vPos.push_back(p);
+        }
+        
+        RandomTools::getSample(vPos, vSite, replace);
+        
+        selectedSites = SiteContainerTools::getSelectedSites(*avc, vSite);
+        if (replace)
+          selectedSites->reindexSites();
+      }
+        else
+          throw Exception("Unknown site selection description: " + siteSet);
+    }
+    
+    if (verbose)
+      ApplicationTools::displayResult("Selected sites", TextTools::toString(siteSet));
+    
+    if (selectedSites && (selectedSites->getNumberOfSites() == 0))
+    {
+      throw Exception("Site set '" + siteSet + "' is empty.");
+    }
+    delete avc;
+    avc = selectedSites;
+  }
+
+  return avc;
+}
+
 /******************************************************************************/
 
-VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
-  const SiteContainer& allSites,
+AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
+  const AlignedValuesContainer& allSites,
   map<string, string>& params,
   string suffix,
   bool suffixIsOptional,
@@ -511,118 +754,77 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
   int warn)
 {
   // Fully resolved sites, i.e. without jokers and gaps:
-  SiteContainer* sitesToAnalyse;
-  VectorSiteContainer* sitesToAnalyse2;
+  AlignedValuesContainer* sitesToAnalyse;
+  AlignedValuesContainer* sitesToAnalyse2;
 
+  const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&allSites);
+  const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&allSites);
+  
+  size_t numSeq=allSites.getNumberOfSequences();
+                                              
   string option = ApplicationTools::getStringParameter("input.sequence.sites_to_use", params, "complete", suffix, suffixIsOptional, warn);
   if (verbose)
     ApplicationTools::displayResult("Sites to use", option);
   if (option == "all")
   {
-    sitesToAnalyse = new VectorSiteContainer(allSites);
+    sitesToAnalyse = vsc?dynamic_cast<AlignedValuesContainer*>(new VectorSiteContainer(*vsc)):dynamic_cast<AlignedValuesContainer*>(new VectorProbabilisticSiteContainer(*vpsc));
+
+    size_t nbSites=sitesToAnalyse->getNumberOfSites();
+    
     string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional, warn);
 
+    double gapCount=0;
+    
     if (maxGapOption[maxGapOption.size() - 1] == '%')
     {
-      double gapFreq = TextTools::toDouble(maxGapOption.substr(0, maxGapOption.size() - 1)) / 100.;
-      if (gapFreq < 1)
-      {
-        if (verbose)
-          ApplicationTools::displayTask("Remove sites with gaps", true);
-        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; --i)
-        {
-          if (verbose)
-            ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
-          map<int, double> freq;
-          SiteTools::getFrequencies(sitesToAnalyse->getSite(i - 1), freq);
-          if (freq[-1] > gapFreq)
-            sitesToAnalyse->deleteSite(i - 1);
-        }
-        if (verbose)
-          ApplicationTools::displayTaskDone();
-      }
+      double gapFreq = TextTools::toDouble(maxGapOption.substr(0, maxGapOption.size() - 1))/100;
+      gapCount = gapFreq*(int)numSeq;
     }
     else
+      gapCount = TextTools::to<int>(maxGapOption)-NumConstants::TINY();
+      
+    if (gapCount < (double)numSeq  - NumConstants::TINY())
     {
-      size_t gapNum = TextTools::to<size_t>(maxGapOption);
-      if (gapNum < sitesToAnalyse->getNumberOfSequences())
+      if (verbose)
+        ApplicationTools::displayTask("Remove sites with gaps", true);
+      for (size_t i = nbSites; i > 0; i--)
       {
         if (verbose)
-          ApplicationTools::displayTask("Remove sites with gaps", true);
-        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
-        {
-          if (verbose)
-            ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
-          map<int, size_t> counts;
-          SiteTools::getCounts(sitesToAnalyse->getSite(i - 1), counts);
-          if (counts[-1] > gapNum)
-            sitesToAnalyse->deleteSite(i - 1);
-        }
-        if (verbose)
-          ApplicationTools::displayTaskDone();
+          ApplicationTools::displayGauge(nbSites - i, nbSites - 1, '=');
+
+        if (SymbolListTools::numberOfGaps(sitesToAnalyse->getSymbolListSite(i - 1)) > gapCount)
+          sitesToAnalyse->deleteSites(i - 1, 1);
       }
+      if (verbose)
+        ApplicationTools::displayTaskDone();
     }
 
     string maxUnresolvedOption = ApplicationTools::getStringParameter("input.sequence.max_unresolved_allowed", params, "100%", suffix, suffixIsOptional, warn);
 
-    int sAlph = static_cast<int>(sitesToAnalyse->getAlphabet()->getSize());
+    double unresCount=0;
 
     if (maxUnresolvedOption[maxUnresolvedOption.size() - 1] == '%')
     {
-      double unresolvedFreq = TextTools::toDouble(maxUnresolvedOption.substr(0, maxUnresolvedOption.size() - 1)) / 100.;
-      if (unresolvedFreq < 1)
-      {
-        if (verbose)
-          ApplicationTools::displayTask("Remove unresolved sites", true);
-        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; --i)
-        {
-          if (verbose)
-            ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
-          map<int, double> freq;
-          SiteTools::getFrequencies(sitesToAnalyse->getSite(i - 1), freq);
-          double x = 0;
-          for (int l = 0; l < sAlph; ++l)
-          {
-            x += freq[l];
-          }
-          if (1 - x > unresolvedFreq)
-            sitesToAnalyse->deleteSite(i - 1);
-        }
-        if (verbose)
-          ApplicationTools::displayTaskDone();
-      }
+      double unresFreq = TextTools::toDouble(maxUnresolvedOption.substr(0, maxUnresolvedOption.size() - 1))/100;
+      unresCount = unresFreq*(int)numSeq;
     }
     else
+      unresCount = TextTools::to<double>(maxUnresolvedOption)-NumConstants::TINY();
+    
+    if (unresCount < (double)numSeq - NumConstants::TINY())
     {
-      size_t nbSeq = sitesToAnalyse->getNumberOfSequences();
-      size_t unresolvedNum = TextTools::to<size_t>(maxUnresolvedOption);
-      if (unresolvedNum < nbSeq)
+      if (verbose)
+        ApplicationTools::displayTask("Remove unresolved sites", true);
+      for (size_t i = nbSites; i > 0; i--)
       {
         if (verbose)
-          ApplicationTools::displayTask("Remove sites with gaps", true);
-        for (size_t i = sitesToAnalyse->getNumberOfSites(); i > 0; i--)
-        {
-          if (verbose)
-            ApplicationTools::displayGauge(sitesToAnalyse->getNumberOfSites() - i, sitesToAnalyse->getNumberOfSites() - 1, '=');
-          map<int, size_t> counts;
-          SiteTools::getCounts(sitesToAnalyse->getSite(i - 1), counts);
-          size_t x = 0;
-          for (int l = 0; l < sAlph; l++)
-          {
-            x += counts[l];
-          }
+          ApplicationTools::displayGauge(nbSites - i, nbSites - 1, '=');
 
-          if (nbSeq - x > unresolvedNum)
-            sitesToAnalyse->deleteSite(i - 1);
-        }
-        if (verbose)
-          ApplicationTools::displayTaskDone();
+        if (SymbolListTools::numberOfUnresolved(sitesToAnalyse->getSymbolListSite(i - 1)) > unresCount)
+          sitesToAnalyse->deleteSites(i - 1, 1);
       }
-    }
-
-    if (gapAsUnknown)
-    {
-      SiteContainerTools::changeGapsToUnknownCharacters(*sitesToAnalyse);
+      if (verbose)
+        ApplicationTools::displayTaskDone();
     }
   }
   else if (option == "complete")
@@ -644,8 +846,10 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     throw Exception("Option '" + option + "' unknown in parameter 'sequence.sites_to_use'.");
   }
 
+  vsc=dynamic_cast<const VectorSiteContainer*>(sitesToAnalyse);
+
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(sitesToAnalyse->getAlphabet());
-  if (ca)
+  if (vsc && ca)
   {
     option = ApplicationTools::getStringParameter("input.sequence.remove_stop_codons", params, "no", suffix, true, warn);
     if ((option != "") && verbose)
@@ -655,15 +859,15 @@ VectorSiteContainer* SequenceApplicationTools::getSitesToAnalyse(
     {
       string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, warn);
       unique_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet(), codeDesc));
-      const SiteContainer* constSites = sitesToAnalyse;
-      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::removeStopCodonSites(*constSites, *gCode));
+
+      sitesToAnalyse2 = SiteContainerTools::removeStopCodonSites(*vsc, *gCode);
       delete sitesToAnalyse;
     }
     else
-      sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(sitesToAnalyse);
+      sitesToAnalyse2 = sitesToAnalyse;
   }
   else
-    sitesToAnalyse2 = dynamic_cast<VectorSiteContainer*>(sitesToAnalyse);
+    sitesToAnalyse2 = sitesToAnalyse;
 
   return sitesToAnalyse2;
 }

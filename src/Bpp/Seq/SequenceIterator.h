@@ -56,7 +56,7 @@ namespace bpp
     virtual ~SequenceIterator() {}
 	
   public:
-    virtual IntCoreSequenceSL* nextSequence() = 0;
+    virtual IntCoreSequenceSymbolList* nextSequence() = 0;
     virtual bool hasMoreSequences() const = 0;
   };
 
@@ -70,7 +70,7 @@ namespace bpp
     virtual ~ConstSequenceIterator() {}
 	
   public:
-    virtual const IntCoreSequenceSL* nextSequence() = 0;
+    virtual const IntCoreSequenceSymbolList* nextSequence() = 0;
     virtual bool hasMoreSequences() const = 0;
   };
 

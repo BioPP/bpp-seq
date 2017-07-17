@@ -1,8 +1,7 @@
 //
-// File: SequenceContainer.h
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
-// Created on: Fri Jul 25 2003
+// File: ProbabilisticSequenceContainer.h
+// Created by: Laurent Guéguen
+// Created on: samedi 3 juin 2017, à 22h 40
 //
 
 /*
@@ -38,10 +37,10 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _SEQUENCECONTAINER_H_
-#define _SEQUENCECONTAINER_H_
+#ifndef _PROBABILISTIC_SEQUENCECONTAINER_H_
+#define _PROBABILISTIC_SEQUENCECONTAINER_H_
 
-#include "../Sequence.h"
+#include "../ProbabilisticSequence.h"
 #include "SequencedValuesContainer.h"
 
 // From the STL:
@@ -51,12 +50,12 @@ namespace bpp
 {
 
 /**
- * @brief The SequenceContainer interface.
+ * @brief The ProbabilisticSequenceContainer interface.
  *
  * This interface is the most general one in the container hierarchy
- * for sequences. No assumption is made on the sequences in the
- * container (no ordering, no alignment). Sequences may be retrieved
- * using their names, which must be unique.
+ * for probabilistic sequences. No assumption is made on the sequences
+ * in the container (no ordering, no alignment). Sequences may be
+ * retrieved using their names, which must be unique.
  *
  * The container is the only one responsible for the
  * allocation/destruction of sequences it contains. This means that
@@ -78,47 +77,56 @@ namespace bpp
  * @see Sequence
  */
 
-  class SequenceContainer:
+  class ProbabilisticSequenceContainer:
     public virtual SequencedValuesContainer
   {
   public:
-    SequenceContainer() {}
-    virtual ~SequenceContainer() {}
+    ProbabilisticSequenceContainer() {}
+    virtual ~ProbabilisticSequenceContainer() {}
 
   public:
 		
     /**
-     * @brief Retrieve a sequence object from the container.
+     * @brief Retrieve a probabilistic sequence object from the container.
      *
      * @param name The name of the sequence.
      * @return A reference toward the Sequence with corresponding name.
      * @throw SequenceNotFoundException If the name does not match any sequence in the container.
      */
-    virtual const Sequence& getSequence(const std::string& name) const = 0;
- 
+    virtual const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const = 0;
+
     /**
-     * @brief Replace a sequence in the container.
+     * @brief Add a probabilistic sequence to the container.
      *
-     * @param name      The name of the sequence.
      * @param sequence  The sequence to add.
      * @param checkName Tell if the container must check if the name of the sequence
      * is already used in the container before adding it.
-     * @throw SequenceNotFoundException If the name does not match any sequence in
-     * the container.
      * @throw Exception Any other kind of exception, if the name of the sequence is
      * already used, are whatever else depending on the implementation.
      */
-    virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;
+
+    virtual void addSequence(const std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true) = 0;
 
     /**
-     * @brief Extract (and remove) a sequence from the container.
+     * @brief Add a regular sequence to the container throw conversion
+     * in a probabilistic sequence.
      *
-     * @param name The name of the sequence.
-     * @throw SequenceNotFoundException If the name does not match any sequence in
-     * the container.
+     * @param sequence  The sequence to add.
+     * @param checkName Tell if the container must check if the name of the sequence
+     * is already used in the container before adding it.
+     * @throw Exception Any other kind of exception, if the name of the sequence is
+     * already used, are whatever else depending on the implementation.
      */
-    virtual Sequence* removeSequence(const std::string& name) = 0;
-		
+
+    virtual void addSequence(const Sequence& sequence, bool checkName = true) = 0;
+
+    /**
+     * @brief converts and outputs the sequence to a string
+     *
+     **/
+    
+    virtual std::string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;
+
     /**
      * @name Provide direct access to sequences content.
      *
@@ -129,57 +137,10 @@ namespace bpp
      * @{
      */
     
-    /**
-     * @brief Element access function.
-     *
-     * Allows direct access to the data stored in the container.
-     * 
-     * @param sequenceName The sequence name.
-     * @param elementIndex The element position within the sequence.
-     * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
-     * @throw IndexOutOfBoundsException If the element position is not valid.
-     */
-    virtual int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Element access function.
-     *
-     * Allows direct access to the data stored in the container.
-     * 
-     * @param sequenceName The sequence name.
-     * @param elementIndex The element position within the sequence.
-     * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
-     * @throw IndexOutOfBoundsException If the element position is not valid.
-     */
-    virtual const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
-
-    /**
-     * @brief Element access operator.
-     *
-     * Allows direct access to the data stored in the container.
-     * This method is faster then the valueAt function, but input
-     * parameters are not checked!
-     * 
-     * @param sequenceName The sequence name.
-     * @param elementIndex The element position within the sequence.
-     */
-    virtual int& operator()(const std::string& sequenceName, size_t elementIndex) = 0;
-
-    /**
-     * @brief Element access operator.
-     *
-     * Allows direct access to the data stored in the container.
-     * This method is faster then the valueAt function, but input
-     * parameters are not checked!
-     * 
-     * @param sequenceName The sequence name.
-     * @param elementIndex The element position within the sequence.
-     */
-    virtual const int& operator()(const std::string& sequenceName, size_t elementIndex) const = 0;
     /** @} */
   };
 
 } //end of namespace bpp.
 
-#endif	// _SEQUENCECONTAINER_H_
+#endif	// _PROBABILISTIC_SEQUENCECONTAINER_H_
 

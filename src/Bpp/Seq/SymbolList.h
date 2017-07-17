@@ -156,7 +156,8 @@ namespace bpp
      *
      * @{
      */
-    SymbolList<T>* clone() const { return new SymbolList<T>(* this); }
+
+    virtual SymbolList<T>* clone() const = 0;// return new SymbolList<T>(* this); }
     /** @} */
 
     // Class destructor
@@ -414,7 +415,7 @@ namespace bpp
       SymbolList<T>::setElement(pos, v);
       fireAfterSequenceSubstituted(event);
     }
-    
+
     /**
      * @name Events handling
      *
