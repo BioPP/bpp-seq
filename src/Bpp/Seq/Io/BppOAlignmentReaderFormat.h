@@ -70,7 +70,7 @@ namespace bpp
 
     const std::string getFormatDescription() const { return "Bpp Options format."; }
 
-		const std::string getDataType() const { return "Alignment reader"; }
+    const std::string getDataType() const { return "Alignment reader"; }
 
     /**
      * @brief Read a IAlignment object from a string.
@@ -80,6 +80,8 @@ namespace bpp
      * @throw Exception if an error occured.
      */
     IAlignment* read(const std::string& description) throw (Exception);
+
+    IProbabilisticAlignment* readProbabilistic(const std::string& description) throw (Exception);
 
     /**
      * @return The arguments and their unparsed values from the last call of the read function, if there are any.

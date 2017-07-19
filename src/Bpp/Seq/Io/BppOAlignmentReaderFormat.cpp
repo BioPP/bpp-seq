@@ -41,6 +41,7 @@
 #include "Mase.h"
 #include "Phylip.h"
 #include "Fasta.h"
+#include "Pasta.h"
 #include "Clustal.h"
 #include "Dcse.h"
 #include "NexusIoSequence.h"
@@ -116,6 +117,28 @@ IAlignment* BppOAlignmentReaderFormat::read(const std::string& description) thro
   else
   {
     throw Exception("Sequence format '" + format + "' unknown.");
+  }
+
+  return iAln.release();
+}
+
+
+IProbabilisticAlignment* BppOAlignmentReaderFormat::readProbabilistic(const std::string& description) throw (Exception)
+{
+  unparsedArguments_.clear();
+  string format = "";
+  KeyvalTools::parseProcedure(description, format, unparsedArguments_);
+  unique_ptr<IProbabilisticAlignment> iAln;
+
+  if (format == "Pasta")
+  {
+    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", unparsedArguments_, false, "", true, warningLevel_);
+    bool extended    = ApplicationTools::getBooleanParameter("extended", unparsedArguments_, false, "", true, warningLevel_);
+    iAln.reset(new Pasta(100, true, extended, strictNames));
+  }
+  else
+  {
+    throw Exception("Probabilistic Sequence format '" + format + "' unknown.");
   }
 
   return iAln.release();

@@ -221,12 +221,12 @@ public :
   double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const 
   {
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
-    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][getAlphabet()->getStateIndex(state)];
+    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][(size_t)state];
   }
   
   double operator()(size_t siteIndex, const std::string& sequenceName, int state) const 
   {
-    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][getAlphabet()->getStateIndex(state)];
+    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][(size_t)state];
   }
 
   /*
@@ -251,12 +251,12 @@ public :
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
-    return (*getSite(siteIndex))[sequenceIndex][getAlphabet()->getStateIndex(state)-1];
+    return (*getSite(siteIndex))[sequenceIndex][(size_t)state];
   }
   
   double operator()(size_t siteIndex, size_t sequenceIndex, int state) const 
   {
-    return (*getSite(siteIndex))[sequenceIndex][getAlphabet()->getStateIndex(state)-1];
+    return (*getSite(siteIndex))[sequenceIndex][(size_t)state];
   }
 
   /*

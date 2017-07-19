@@ -599,12 +599,23 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
   BppOAlignmentReaderFormat bppoReader(warn);
-  unique_ptr<IAlignment> iAln(bppoReader.read(sequenceFormat));
+
+  unique_ptr<IAlignment> iAln;
+  unique_ptr<IProbabilisticAlignment> iProbAln;
+
+  try{
+    iAln.reset(bppoReader.read(sequenceFormat));
+  }
+  catch (Exception& e)
+  {
+    iProbAln.reset(bppoReader.readProbabilistic(sequenceFormat));
+  }
+  
   map<string, string> args(bppoReader.getUnparsedArguments());
   if (verbose)
   {
     ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
-    ApplicationTools::displayResult("Sequence format " + suffix, iAln->getFormatName());
+    ApplicationTools::displayResult("Sequence format " + suffix, iAln?iAln->getFormatName():iProbAln->getFormatName());
   }
 
   const Alphabet* alpha2;
@@ -613,8 +624,8 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   else
     alpha2 = alpha;
 
-  AlignedValuesContainer* avc2 = dynamic_cast<AlignedValuesContainer*>(iAln->readAlignment(sequenceFilePath, alpha2));
-
+  
+  AlignedValuesContainer* avc2 = iAln?dynamic_cast<AlignedValuesContainer*>(iAln->readAlignment(sequenceFilePath, alpha2)):dynamic_cast<AlignedValuesContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2));
 
   /// Look for RNY trnaslation
   
