@@ -45,6 +45,7 @@
 #include "ProteicAlphabet.h"
 #include "DefaultAlphabet.h"
 #include "CodonAlphabet.h"
+#include "WordAlphabet.h"
 #include "RNY.h"
 #include "BinaryAlphabet.h"
 #include <Bpp/Numeric/VectorTools.h>
@@ -168,7 +169,7 @@ public:
    * @return True if the alphabet is an instanciation of the WordAlphabet class.
    * @param alphabet The alphabet to check.
    */
-  static bool isWordAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<WordAlphabet>(alphabet); }
+  static bool isWordAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<CoreWordAlphabet>(alphabet); }
 
   /**
    * @return True if the alphabet is an instanciation of the RNY class.

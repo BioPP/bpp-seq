@@ -226,7 +226,7 @@ class CodonSiteTools:
      * @param gCode a GeneticCode
      * @param freqmin a double          To exclude snp in frequency strictly lower than freqmin (by default freqmin = 0)
      */
-    static size_t numberOfSubsitutions(const Site& site, const GeneticCode& gCode, double freqmin = 0.);
+    static size_t numberOfSubstitutions(const Site& site, const GeneticCode& gCode, double freqmin = 0.);
 
     /**
      * @brief Return the number of Non Synonymous subsitutions per codon site.

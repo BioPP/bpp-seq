@@ -276,7 +276,7 @@ std::string WordAlphabet::getGeneric(const std::vector<std::string>& states) con
 
 /******************************************************************************/
 
-int WordAlphabet::getWord(const Sequence& seq, size_t pos) const throw (IndexOutOfBoundsException)
+int WordAlphabet::getWord(const Sequence& seq, size_t pos) const
 {
   if (seq.size() < pos + vAbsAlph_.size())
     throw IndexOutOfBoundsException("WordAlphabet::getWord", pos, 0, seq.size() - vAbsAlph_.size());
@@ -293,7 +293,7 @@ int WordAlphabet::getWord(const Sequence& seq, size_t pos) const throw (IndexOut
 
 /******************************************************************************/
 
-int WordAlphabet::getWord(const std::vector<int>& vint, size_t pos) const throw (IndexOutOfBoundsException)
+int WordAlphabet::getWord(const std::vector<int>& vint, size_t pos) const
 {
   if (vint.size() < pos + vAbsAlph_.size())
     throw IndexOutOfBoundsException("WordAlphabet::getWord", pos, 0, vint.size() - vAbsAlph_.size());
@@ -309,7 +309,7 @@ int WordAlphabet::getWord(const std::vector<int>& vint, size_t pos) const throw 
 
 /****************************************************************************************/
 
-std::string WordAlphabet::getWord(const std::vector<string>& vpos, size_t pos) const throw (IndexOutOfBoundsException, BadCharException)
+std::string WordAlphabet::getWord(const std::vector<string>& vpos, size_t pos) const
 {
   if (vpos.size() < pos + vAbsAlph_.size())
     throw IndexOutOfBoundsException("WordAlphabet::getWord", pos, 0, vpos.size() - vAbsAlph_.size());
@@ -326,7 +326,7 @@ std::string WordAlphabet::getWord(const std::vector<string>& vpos, size_t pos) c
 
 /****************************************************************************************/
 
-Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const throw (AlphabetMismatchException, Exception)
+Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const
 {
   if ((!hasUniqueAlphabet()) or
       (sequence.getAlphabet()->getAlphabetType() != vAbsAlph_[0]->getAlphabetType()))
@@ -349,7 +349,7 @@ Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const th
 
 /****************************************************************************************/
 
-Sequence* WordAlphabet::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* WordAlphabet::reverse(const Sequence& sequence) const
 {
   if ((!hasUniqueAlphabet()) or
       (sequence.getAlphabet()->getAlphabetType() != getAlphabetType()))

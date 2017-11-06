@@ -580,14 +580,14 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
 
 /******************************************************************************/
 
-size_t CodonSiteTools::numberOfSubsitutions(const Site& site, const GeneticCode& gCode, double freqmin)
+size_t CodonSiteTools::numberOfSubstitutions(const Site& site, const GeneticCode& gCode, double freqmin)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
-    throw AlphabetException("CodonSiteTools::numberOfSubsitutions: alphabet is not CodonAlphabet", site.getAlphabet());
+    throw AlphabetException("CodonSiteTools::numberOfSubstitutions: alphabet is not CodonAlphabet", site.getAlphabet());
   // Empty site checking
   if (site.size() == 0)
-    throw EmptySiteException("CodonSiteTools::numberOfSubsitutions: Incorrect specified site", &site);
+    throw EmptySiteException("CodonSiteTools::numberOfSubstitutions: Incorrect specified site", &site);
 
   if (SiteTools::isConstant(site))
     return 0;
