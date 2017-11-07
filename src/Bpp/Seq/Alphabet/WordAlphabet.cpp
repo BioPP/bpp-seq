@@ -157,7 +157,7 @@ bool WordAlphabet::hasUniqueAlphabet() const
   return true;
 }
 
-bool WordAlphabet::containsUnresolved(const std::string& state) const throw (BadCharException)
+bool WordAlphabet::containsUnresolved(const std::string& state) const
 {
   size_t s = vAbsAlph_.size();
   if (state.length() != s)
@@ -175,7 +175,7 @@ bool WordAlphabet::containsUnresolved(const std::string& state) const throw (Bad
 
 /******************************************************************************/
 
-bool WordAlphabet::containsGap(const std::string& state) const throw (BadCharException)
+bool WordAlphabet::containsGap(const std::string& state) const
 {
   size_t s = vAbsAlph_.size();
   if (state.length() != s)

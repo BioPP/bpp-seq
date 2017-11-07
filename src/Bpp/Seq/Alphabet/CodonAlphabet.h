@@ -67,8 +67,6 @@ namespace bpp
   protected:
     const NucleicAlphabet* nAlph_;
   
-    void build_();
-
   public: // Constructor and destructor.
 		
     /**
@@ -108,6 +106,20 @@ namespace bpp
       return "Codon(letter="+ nAlph_->getAlphabetType() + ")";
     }
 
+  private:
+    /**
+     * @name Inner utilitary functions
+     *
+     * @{
+     */
+    bool containsUnresolved(const std::string& state) const;
+    
+    bool containsGap(const std::string& state) const;
+
+    void build_();
+
+    /** @} */
+
   public:
 
     /**
@@ -116,7 +128,7 @@ namespace bpp
      * @{
      */
   
-    unsigned int getNumberOfTypes() const {return 66;}
+    unsigned int getNumberOfTypes() const {return 65;}
   
     unsigned int getSize() const 
     {
@@ -137,7 +149,31 @@ namespace bpp
     {
       return isUnresolved(charToInt(state));
     }
-  
+
+    std::vector<int> getAlias(int state) const throw (BadIntException);
+
+    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+    
+    int getGeneric(const std::vector<int>& states) const throw (BadIntException)
+    {
+      return states[0];
+    }
+
+    std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException)
+    {
+      return states[0];
+    }
+    
+    int charToInt(const std::string& state) const throw (BadCharException)
+    {
+      if (state.size() != 3)
+        throw BadCharException(state, "CodonAlphabet::charToInt", this);
+      if (containsUnresolved(state))
+        return static_cast<int>(getSize());
+      if (containsGap(state))
+        return -1;
+      else return AbstractAlphabet::charToInt(state);
+    }
 
     /**
      * @name Codon specific methods

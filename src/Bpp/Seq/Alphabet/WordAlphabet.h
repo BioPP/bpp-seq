@@ -160,6 +160,20 @@ namespace bpp
     
     virtual Sequence* reverse(const Sequence& sequence) const = 0;
 
+  private:
+    
+    /**
+     * @name Inner utilitary functions
+     *
+     * @{
+     */
+
+    virtual bool containsUnresolved(const std::string& state) const = 0;
+
+    virtual bool containsGap(const std::string& state) const = 0;
+
+    /** @} */
+
   };
     
 
@@ -299,6 +313,7 @@ namespace bpp
     std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
     
     int getGeneric(const std::vector<int>& states) const throw (BadIntException);
+
     std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
 
   private:
@@ -307,8 +322,8 @@ namespace bpp
      *
      * @{
      */
-    bool containsUnresolved(const std::string& state) const throw (BadCharException);
-    bool containsGap(const std::string& state) const throw (BadCharException);
+    bool containsUnresolved(const std::string& state) const;
+    bool containsGap(const std::string& state) const;
     void build_();
     /** @} */
 

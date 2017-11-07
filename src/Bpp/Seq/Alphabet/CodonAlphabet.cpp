@@ -54,7 +54,6 @@ void CodonAlphabet::build_()
 
   states[0] = new AlphabetState(-1, "---", "gap");
 
-
   size_t i=0;
   for (int i1 = 0; i1 < 4; ++i1)
     for (int i2 = 0; i2 < 4; ++i2)
@@ -71,6 +70,7 @@ void CodonAlphabet::build_()
   //Now register all states once for all:
   for (i = 0; i < states.size(); ++i) 
     registerState(states[i]);
+
 }
 
 int CodonAlphabet::getGCinCodon(int codon) const
@@ -87,6 +87,37 @@ int CodonAlphabet::getGCinCodon(int codon) const
     i++;
 
   return i;
+}
+
+bool CodonAlphabet::containsUnresolved(const std::string& state) const
+{
+  if (state.length() != 3)
+    throw BadCharException(state, "CodonAlphabet::containsUnresolved", this);
+
+  for (size_t i = 0; i < 3; i++)
+  {
+    if (nAlph_->isUnresolved(state.substr(i, 1)))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+/******************************************************************************/
+
+bool CodonAlphabet::containsGap(const std::string& state) const
+{
+  if (state.length() != 3)
+    throw BadCharException(state, "CodonAlphabet::containsGap", this);
+
+  for (size_t i = 0; i < 3; i++)
+  {
+    if (nAlph_->isGap(state.substr(i, 1)))
+      return true;
+  }
+
+  return false;
 }
 
 
@@ -124,3 +155,48 @@ Sequence* CodonAlphabet::reverse(const Sequence& sequence) const
 }
 
 /****************************************************************************************/
+
+std::vector<int> CodonAlphabet::getAlias(int state) const throw (BadIntException)
+{
+  if (!isIntInAlphabet(state))
+    throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
+  vector<int> v;
+
+  if (state == 64)
+  {
+    v.resize(64);
+    for (size_t i = 0; i < 64; ++i)
+    {
+      v[i] = static_cast<int>(i);
+    }
+  }
+  else
+  {
+    v.resize(1); v[0] = state;
+  }
+  return v;
+}
+
+/******************************************************************************/
+
+std::vector<std::string> CodonAlphabet::getAlias(const std::string& state) const throw (BadCharException)
+{
+  string locstate = TextTools::toUpper(state);
+  if (!isCharInAlphabet(locstate))
+    throw BadCharException(locstate, "CodonAlphabet::getAlias(string): Specified base unknown.");
+  vector<string> v;
+
+  if (locstate == "NNN")
+  {
+    v.resize(64);
+    for (size_t i = 0; i < 64; ++i)
+    {
+      v[i] = intToChar(static_cast<int>(i));
+    }
+  }
+  else
+  {
+    v.resize(1); v[0] = state;
+  }
+  return v;
+}
