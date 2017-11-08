@@ -91,7 +91,7 @@ void SymbolListTools::getCounts(const SymbolList& list1, const SymbolList& list2
 
 void SymbolListTools::getFrequencies(const SymbolList& list, map<int, double>& frequencies, bool resolveUnknowns)
 {
-	double n = (double)list.size();
+  double n = (double)list.size();
   map<int, double> counts;
   getCounts(list, counts, resolveUnknowns);
   for (map<int, double>::iterator i = counts.begin(); i != counts.end(); i++)
@@ -102,7 +102,7 @@ void SymbolListTools::getFrequencies(const SymbolList& list, map<int, double>& f
 
 void SymbolListTools::getFrequencies(const SymbolList& list1, const SymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns) throw (DimensionException)
 {
-	double n2 = (double)list1.size() * (double)list1.size();
+  double n2 = (double)list1.size() * (double)list1.size();
   map<int, map<int, double> > counts;
   getCounts(list1, list2, counts, resolveUnknowns);
   for (map<int, map<int, double> >::iterator i = counts.begin(); i != counts.end(); i++)

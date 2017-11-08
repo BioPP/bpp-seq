@@ -193,7 +193,10 @@ namespace bpp
 
     int getCodon(int pos1, int pos2, int pos3) const
     {
-      return pos3 + 4*pos2 + 16 * pos1;
+      return (nAlph_->isUnresolved(pos1)
+              || nAlph_->isUnresolved(pos2)
+              || nAlph_->isUnresolved(pos3))? getUnknownCharacterCode()
+        : pos3 + 4*pos2 + 16 * pos1;
     }
 
     /**
@@ -221,7 +224,7 @@ namespace bpp
     
     int getFirstPosition(int codon) const
     {
-      return codon / 16;
+      return isUnresolved(codon)?nAlph_->charToInt("N"):codon / 16;
     }
   
     /**
@@ -233,7 +236,7 @@ namespace bpp
 
     int getSecondPosition(int codon) const
     {
-      return (codon / 4) % 4;
+      return isUnresolved(codon)?nAlph_->charToInt("N"):(codon / 4) % 4;
     }
   
   
@@ -246,7 +249,7 @@ namespace bpp
 
     int getThirdPosition(int codon) const
     {
-      return codon % 4;
+      return isUnresolved(codon)?nAlph_->charToInt("N"):codon % 4;
     }
   
     /**
@@ -346,9 +349,12 @@ namespace bpp
     
     int getNPosition(int codon, size_t pos) const 
     {
-      return (pos==0 ? codon/16:
-              (pos==1? (codon/4)%4
-               : codon%4));
+      if (isUnresolved(codon))
+        return nAlph_->getUnknownCharacterCode();
+      else
+        return (pos==0 ? codon/16:
+                (pos==1? (codon/4)%4
+                 : codon%4));
     }
     
     /**
@@ -360,7 +366,13 @@ namespace bpp
 
     std::vector<int> getPositions(int word) const
     {
-      return std::vector<int>{word / 16, (word/4)%4, word%4};
+      if (isUnresolved(word))
+      {
+        int n=nAlph_->getUnknownCharacterCode();
+        return std::vector<int>{n,n,n};
+      }
+      else
+        return std::vector<int>{word / 16, (word/4)%4, word%4};
     }
 
 
