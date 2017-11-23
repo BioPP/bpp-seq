@@ -232,6 +232,7 @@ size_t CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet& ca
 double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const GeneticCode& gCode, bool minchange)
 {
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gCode.getSourceAlphabet());
+  
   vector<int> ci = ca->getPositions(i);
   vector<int> cj = ca->getPositions(j);
 
@@ -250,10 +251,12 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
       return 2;
     vector<double> path(2, 0); // Vector of number of synonymous changes per path (2 here)
     vector<double> weight(2, 1); // Weight to exclude path through stop codon
+
     if (ci[0] == cj[0])
     {
       int trans1 = ca->getCodon(ci[0], cj[1], ci[2]); // transitory codon between NcNiNi et NcNjNj: NcNjNi, Nc = identical site
       int trans2 = ca->getCodon(ci[0], ci[1], cj[2]); // transitory codon between NcNiNi et NcNjNj: NcNiNj, Nc = identical site
+      
       if (!gCode.isStop(trans1))
       {
         if (gCode.areSynonymous(i, trans1))
@@ -462,6 +465,7 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
   // General polymorphism checking
   if (SymbolListTools::isConstant(site))
     return 0;
+  
   // Computation
   map<int, double> freq;
   SymbolListTools::getFrequencies(site, freq);
@@ -470,6 +474,7 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
   {
     for (map<int, double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++)
     {
+      
       pi += (it1->second) * (it2->second) * (numberOfSynonymousDifferences(it1->first, it2->first, gCode, minchange));
     }
   }
@@ -509,6 +514,7 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
       pi += (it1->second) * (it2->second) * (nbtot - nbsyn);
     }
   }
+  
   size_t n = site.size();
   return pi * static_cast<double>(n / (n - 1));
 }
@@ -580,14 +586,14 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
 
 /******************************************************************************/
 
-size_t CodonSiteTools::numberOfSubsitutions(const Site& site, const GeneticCode& gCode, double freqmin)
+size_t CodonSiteTools::numberOfSubstitutions(const Site& site, const GeneticCode& gCode, double freqmin)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
-    throw AlphabetException("CodonSiteTools::numberOfSubsitutions: alphabet is not CodonAlphabet", site.getAlphabet());
+    throw AlphabetException("CodonSiteTools::numberOfSubstitutions: alphabet is not CodonAlphabet", site.getAlphabet());
   // Empty site checking
   if (site.size() == 0)
-    throw EmptySiteException("CodonSiteTools::numberOfSubsitutions: Incorrect specified site", &site);
+    throw EmptySiteException("CodonSiteTools::numberOfSubstitutions: Incorrect specified site", &site);
 
   if (SymbolListTools::isConstant(site))
     return 0;

@@ -272,7 +272,13 @@ double StringSequenceTools::getGCcontent(const string& sequence, size_t pos, siz
 vector<int> StringSequenceTools::codeSequence(const string& sequence, const Alphabet* alphabet)
 throw (BadCharException)
 {
-  unsigned int size = AlphabetTools::getAlphabetCodingSize(alphabet); // Warning, an exception may be casted here!
+  unsigned int size = AlphabetTools::getAlphabetCodingSize(alphabet); // Warning,
+                                                                      // an
+                                                                      // exception
+                                                                      // may
+                                                                      // be
+                                                                      // casted
+                                                                      // here!
   vector<int> code(static_cast<size_t>(floor(static_cast<double>(sequence.size()) / static_cast<double>(size))));
   size_t pos = 0;
   size_t count = 0;
