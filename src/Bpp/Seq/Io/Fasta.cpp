@@ -53,7 +53,8 @@ using namespace std;
 
 /******************************************************************************/
 
-bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
+bool Fasta::nextSequence(istream& input, Sequence& seq) const throw (Exception)
+{
   if (!input)
     throw IOException("Fasta::nextSequence: can't read from istream input");
   string seqname = "";

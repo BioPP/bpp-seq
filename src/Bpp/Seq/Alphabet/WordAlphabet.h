@@ -272,107 +272,15 @@ namespace bpp
 
     /** @} */
 
-// <<<<<<< HEAD
-//   int getUnknownCharacterCode() const
-//   {
-//     return static_cast<int>(getSize());
-//   }
-
-//   bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
-//   bool isUnresolved(const std::string& state) const { return charToInt(state) == getUnknownCharacterCode(); }
 
     bool isResolvedIn(int state1, int state2) const throw (BadIntException);
-//   std::vector<int> getAlias(int state) const throw (BadIntException);
-//   std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
-//   int getGeneric(const std::vector<int>& states) const throw (BadIntException);
-//   std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
 
-// private:
-//   /**
-//    * @name Inner utilitary functions
-//    *
-//    * @{
-//    */
-//   bool containsUnresolved(const std::string& state) const throw (BadCharException);
-//   bool containsGap(const std::string& state) const throw (BadCharException);
-//   void build_();
-//   /** @} */
-
-// public:
-//   /**
-//    * @name Word specific methods
-//    *
-//    * @{
-//    */
-
-//   /**
-//    * @brief Get the pointer to the Alphabet  of the n-position.
-//    *
-//    * @param n The position in the word (starting at 0).
-//    * @return The pointer to the Alphabet of the n-position.
-//    */
-//   const Alphabet* getNAlphabet(size_t n) const
-//   {
-//     if (n >= vAbsAlph_.size())
-//       throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
-
-//     return vAbsAlph_[n];
-//   }
-
-//   /**
-//    * @brief Get the int code for a word given the int code of the underlying positions.
-//    *
-//    * The int code of each position must match the corresponding alphabet specified at this position.
-//    * @param seq description for all the positions as a Sequence object.
-//    * @param pos the start position to match in the vector.
-//    * @return The int code of the word.
-//    * @throw IndexOutOfBoundsException In case of wrong position.
-//    */
-//   virtual int getWord(const Sequence& seq, size_t pos = 0) const throw (IndexOutOfBoundsException);
-
-
-//   /**
-//    * @brief Get the int code for a word given the int code of the underlying positions.
-//    *
-//    * The int code of each position must match the corresponding alphabet specified at this position.
-//    * @param vint description for all the positions.
-//    * @param pos the start position to match in the vector.
-//    * @return The int code of the word.
-//    * @throw IndexOutOfBoundsException In case of wrong position.
-//    */
-//   virtual int getWord(const std::vector<int>& vint, size_t pos = 0) const throw (IndexOutOfBoundsException);
-
-//   /**
-//    * @brief Get the char code for a word given the char code of the
-//    * underlying positions.
-//    *
-//    * The char code of each position must match the corresponding alphabet specified at this position.
-//    * @param vpos vector description for all the positions.
-//    * @param pos the start position to match in the vector.
-//    * @return The string of the word.
-//    * @throw IndexOutOfBoundsException In case of wrong position.
-//    */
-//   virtual std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const throw (IndexOutOfBoundsException, BadCharException);
-
-//   /**
-//    * @brief Get the int code of the n-position of a word given its int description.
-//    *
-//    * @param word The int description of the word.
-//    * @param n The position in the word (starting at 0).
-//    * @return The int description of the n-position of the word.
-//    */
-//   int getNPosition(int word, size_t n) const throw (BadIntException)
-//   {
-//     if (n >= vAbsAlph_.size())
-//       throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
-// =======
     /**
      * @brief Returns True if the Alphabet of the letters in the word
      * are the same type.
      *
      */
     bool hasUniqueAlphabet() const;
-//>>>>>>> master
 
     /**
      * @brief Returns the length of the word

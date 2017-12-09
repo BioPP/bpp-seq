@@ -97,7 +97,7 @@ namespace bpp
      * @return A new Alphabet object according to options specified.
      */
     static Alphabet* getAlphabet(
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
       bool verbose = true,
@@ -173,7 +173,7 @@ namespace bpp
 
     static SequenceContainer* getSequenceContainer(
       const Alphabet* alpha,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
       bool verbose = true,
@@ -195,9 +195,10 @@ namespace bpp
      * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
      * @return A new VectorSiteContainer object according to options specified.
      */
+    
     static VectorSiteContainer* getSiteContainer(
       const Alphabet* alpha,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
       bool verbose = true,
@@ -205,7 +206,7 @@ namespace bpp
 
     static AlignedValuesContainer* getAlignedContainer(
       const Alphabet* alpha,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
       bool verbose = true,
@@ -213,7 +214,7 @@ namespace bpp
 
     static std::map<size_t, SiteContainer*> getSiteContainers(
       const Alphabet* alpha,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       const std::string& prefix = "input.",
       const std::string& suffix = "",
       bool suffixIsOptional = true,
@@ -222,7 +223,7 @@ namespace bpp
 
     static std::map<size_t, AlignedValuesContainer*> getAlignedContainers(
       const Alphabet* alpha,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       const std::string& prefix = "input.",
       const std::string& suffix = "",
       bool suffixIsOptional = true,
@@ -260,7 +261,7 @@ namespace bpp
     
     static AlignedValuesContainer* getSitesToAnalyse(
       const AlignedValuesContainer& allSites,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       std::string suffix = "",
       bool suffixIsOptional = true,
       bool gapAsUnknown = true,
@@ -284,7 +285,7 @@ namespace bpp
      */
     static void writeSequenceFile(
       const SequenceContainer& sequences,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       const std::string& suffix = "",
       bool verbose = true,
       int warn = 1);
@@ -304,7 +305,7 @@ namespace bpp
      */
     static void writeAlignmentFile(
       const SiteContainer& sequences,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       const std::string& suffix = "",
       bool verbose = true,
       int warn = 1);

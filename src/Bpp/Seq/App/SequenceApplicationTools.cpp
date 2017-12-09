@@ -74,7 +74,7 @@ using namespace std;
 /******************************************************************************/
 
 Alphabet* SequenceApplicationTools::getAlphabet(
-  map<string, string>& params,
+  const map<string, string>& params,
   const string& suffix,
   bool suffixIsOptional,
   bool verbose,
@@ -249,7 +249,7 @@ throw (Exception)
 /******************************************************************************/
 SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   const Alphabet* alpha,
-  map<string, string>& params,
+  const map<string, string>& params,
   const string& suffix,
   bool suffixIsOptional,
   bool verbose,
@@ -274,7 +274,7 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
 
 map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
   const Alphabet* alpha,
-  map<string, string>& params,
+  const map<string, string>& params,
   const string& prefix,
   const string& suffix,
   bool suffixIsOptional,
@@ -360,7 +360,7 @@ map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
 
 map<size_t, AlignedValuesContainer*> SequenceApplicationTools::getAlignedContainers(
   const Alphabet* alpha,
-  map<string, string>& params,
+  const map<string, string>& params,
   const string& prefix,
   const string& suffix,
   bool suffixIsOptional,
@@ -429,7 +429,6 @@ map<size_t, AlignedValuesContainer*> SequenceApplicationTools::getAlignedContain
       AlignedValuesContainer* vsC = getAlignedContainer(alpha, args2, "", true, verbose, warn);
 
       AlignedValuesContainer* vsC2 = getSitesToAnalyse(*vsC, args2, "", true, false);
-
       delete vsC;
 
       if (mCont.find(num) != mCont.end())
@@ -438,15 +437,15 @@ map<size_t, AlignedValuesContainer*> SequenceApplicationTools::getAlignedContain
         delete mCont[num];
       }
       mCont[num] = vsC2;
-    }
+   }
+    
   }
-
   return mCont;
 }
 
 VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   const Alphabet* alpha,
-  map<string, string>& params,
+  const map<string, string>& params,
   const string& suffix,
   bool suffixIsOptional,
   bool verbose,
@@ -590,7 +589,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
 
 AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   const Alphabet* alpha,
-  map<string, string>& params,
+  const map<string, string>& params,
   const string& suffix,
   bool suffixIsOptional,
   bool verbose,
@@ -624,34 +623,41 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   else
     alpha2 = alpha;
 
-  
   AlignedValuesContainer* avc2 = iAln?dynamic_cast<AlignedValuesContainer*>(iAln->readAlignment(sequenceFilePath, alpha2)):dynamic_cast<AlignedValuesContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2));
 
-  /// Look for RNY trnaslation
-  
-  VectorSiteContainer* sites;
-  
-  VectorSiteContainer* sites2=dynamic_cast<VectorSiteContainer*>(avc2);
- 
-  if (sites2 && AlphabetTools::isRNYAlphabet(alpha))
-  {
-    sites = new VectorSiteContainer(alpha);
-    
-    const SequenceTools ST;
-    for (auto name : sites2->getSequencesNames())
-    {
-      sites->addSequence(*(ST.RNYslice(sites2->getSequence(name))), false);
-    }
-    delete sites2;
-  }
-  else
-    sites = sites2;
-
+  VectorSiteContainer* sites2;
   AlignedValuesContainer* avc;
 
-  // Look for site selection:
-  if (sites)
+  try
   {
+    sites2=new VectorSiteContainer(*avc2);
+  }
+  catch (Exception& e)
+  {
+    sites2=0;
+  }
+
+  if (sites2)
+  {
+    VectorSiteContainer* sites;
+    
+    /// Look for RNY translation
+    if (AlphabetTools::isRNYAlphabet(alpha))
+    {
+      sites = new VectorSiteContainer(alpha);
+      
+      const SequenceTools ST;
+      for (auto name : sites2->getSequencesNames())
+      {
+        sites->addSequence(*(ST.RNYslice(sites2->getSequence(name))), false);
+      }
+      delete sites2;
+    }
+    else
+      sites = sites2;
+
+    // Look for site selection:
+
     if (iAln->getFormatName() == "MASE file")
     {
       // getting site set:
@@ -677,18 +683,17 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
         sites = selectedSites;
       }
     }
-    
-    avc = new VectorProbabilisticSiteContainer(*dynamic_cast<const OrderedSequenceContainer*>(sites)); 
+    avc=sites;
   }
   else
-    avc=avc2;
-  
+    avc = new VectorProbabilisticSiteContainer(*avc2); 
+
   
   // getting site set:
   size_t nbSites = avc->getNumberOfSites();
   
   string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
-  
+
   AlignedValuesContainer* selectedSites = 0;
   if (siteSet != "none")
   {
@@ -757,7 +762,7 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
 
 AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
   const AlignedValuesContainer& allSites,
-  map<string, string>& params,
+  const map<string, string>& params,
   string suffix,
   bool suffixIsOptional,
   bool gapAsUnknown,
@@ -770,6 +775,9 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
 
   const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&allSites);
   const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&allSites);
+
+  if (!vsc && !vpsc)
+    throw Exception("SequenceApplicationTools::getSitesToAnalyse: unknown data container.");
   
   size_t numSeq=allSites.getNumberOfSequences();
                                               
@@ -781,7 +789,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
     sitesToAnalyse = vsc?dynamic_cast<AlignedValuesContainer*>(new VectorSiteContainer(*vsc)):dynamic_cast<AlignedValuesContainer*>(new VectorProbabilisticSiteContainer(*vpsc));
 
     size_t nbSites=sitesToAnalyse->getNumberOfSites();
-    
+
     string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional, warn);
 
     double gapCount=0;
@@ -821,6 +829,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
     }
     else
       unresCount = TextTools::to<double>(maxUnresolvedOption)-NumConstants::TINY();
+
     
     if (unresCount < (double)numSeq - NumConstants::TINY())
     {
@@ -887,7 +896,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
 
 void SequenceApplicationTools::writeSequenceFile(
   const SequenceContainer& sequences,
-  map<string, string>& params,
+  const map<string, string>& params,
   const string& suffix,
   bool verbose,
   int warn)
@@ -910,7 +919,7 @@ void SequenceApplicationTools::writeSequenceFile(
 
 void SequenceApplicationTools::writeAlignmentFile(
   const SiteContainer& sequences,
-  map<string, string>& params,
+  const map<string, string>& params,
   const string& suffix,
   bool verbose,
   int warn)

@@ -150,6 +150,8 @@ namespace bpp
       return isUnresolved(charToInt(state));
     }
 
+    bool isResolvedIn(int state1, int state2) const throw (BadIntException);
+
     std::vector<int> getAlias(int state) const throw (BadIntException);
 
     std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);

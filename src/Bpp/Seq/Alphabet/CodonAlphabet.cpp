@@ -200,3 +200,19 @@ std::vector<std::string> CodonAlphabet::getAlias(const std::string& state) const
   }
   return v;
 }
+
+
+bool CodonAlphabet::isResolvedIn(int state1, int state2) const throw (BadIntException)
+{
+  if (!isIntInAlphabet(state1))
+    throw BadIntException(state1, "CodonAlphabet::isResolvedIn(int, int): Specified base unknown.");
+
+  if (!isIntInAlphabet(state2))
+    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Specified base unknown.");
+
+  if (isUnresolved(state2))
+    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Unresolved base.");
+
+  return (state1 == 64)?(state2 >= 0):(state1==state2);
+}
+
