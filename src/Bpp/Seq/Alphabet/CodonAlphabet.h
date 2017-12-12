@@ -202,10 +202,15 @@ namespace bpp
     }
 
     /**
-     * @brief Get the char code for a codon given the char code of the three underlying positions.
+     * @brief Get the char code for a codon given the char code of the
+     * three underlying positions.
      *
-     * The char code of each position must match the nucleic alphabet specified for this alphabet.
-     * NB: This performs pos1 + pos2 + pos3 after checking for each position validity.
+     * The char code of each position must match the nucleic alphabet
+     * specified for this alphabet.
+     *
+     * NB: This performs pos1 + pos2 + pos3 after checking for each
+     * position validity.
+     *
      * @param pos1 Char description for position 1.
      * @param pos2 Char description for position 2.
      * @param pos3 Char description for position 3.
@@ -378,9 +383,17 @@ namespace bpp
     }
 
 
-    std::string getNPosition(const std::string& word, size_t n) const
+    /**
+     * @brief Get the char code of the Nth position of a codon given its char description.
+     * 
+     * @param codon The char description of the codon.
+     * @param pos the position in the codon (starting at 0)
+     * @return The char description of the position of the codon.
+     */
+
+    std::string getNPosition(const std::string& codon, size_t pos) const
     {
-      return word.substr(n,1);
+      return codon.substr(pos,1);
     }
 
     /**
@@ -418,20 +431,11 @@ namespace bpp
     
     Sequence* reverse(const Sequence& sequence) const;
 
-    /**
-     * @brief Get the char code of the Nth position of a codon given its char description.
-     * 
-     * @param codon The char description of the codon.
-     * @param pos the position in the codon (starting at 0)
-     * @return The char description of the position of the codon.
-     */
-
     /*
      *
      * @}
      */
-
-
+    
     /**
      * @brief Get the number of G+C in codon
      * @param codon The int description of the codon.
