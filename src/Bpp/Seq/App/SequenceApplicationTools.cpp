@@ -193,7 +193,6 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     else
       throw Exception("Alphabet not known in Codon : " + alphn);
 
-
     chars = new CodonAlphabet(pnalph);
   }
   else
@@ -688,6 +687,7 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   else
     avc = new VectorProbabilisticSiteContainer(*avc2); 
 
+  delete avc2;
   
   // getting site set:
   size_t nbSites = avc->getNumberOfSites();
@@ -878,7 +878,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
     if (option == "yes")
     {
       string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, warn);
-      unique_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet(), codeDesc));
+      unique_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet()->clone(), codeDesc));
 
       sitesToAnalyse2 = SiteContainerTools::removeStopCodonSites(*vsc, *gCode);
       delete sitesToAnalyse;

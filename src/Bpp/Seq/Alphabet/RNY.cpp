@@ -90,6 +90,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
         s[0] = s1[i];
         s[1] = s2[j];
         s[2] = s3[k];
+        delete states[l];        
         states[l] = new AlphabetState(static_cast<int>(l), s, s);
       }
     }
@@ -105,6 +106,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[i];
       s[1] = s2[j];
       s[2] = s3[3];
+      delete states[l];        
       states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
@@ -119,6 +121,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[i];
       s[1] = s2[4];
       s[2] = s3[k];
+      delete states[l];        
       states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
@@ -131,6 +134,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[i];
     s[1] = s2[4];
     s[2] = s3[3];
+    delete states[l];        
     states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
@@ -144,6 +148,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[3];
       s[1] = s2[j];
       s[2] = s3[k];
+      delete states[l];        
       states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
@@ -157,6 +162,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[3];
     s[1] = s2[j];
     s[2] = s3[3];
+    delete states[l];        
     states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
@@ -168,6 +174,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[3];
     s[1] = s2[4];
     s[2] = s3[k];
+    delete states[l];        
     states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
@@ -177,6 +184,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
   s[0] = s1[3];
   s[1] = s2[4];
   s[2] = s3[3];
+  delete states[350];        
   states[350] = new AlphabetState(350, s, s);
 
   // Register all states:

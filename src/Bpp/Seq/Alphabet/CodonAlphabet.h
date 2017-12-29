@@ -83,13 +83,14 @@ namespace bpp
 
     CodonAlphabet(const CodonAlphabet& bia) :
       AbstractAlphabet(bia),
-      nAlph_(bia.nAlph_)
-    {}
+      nAlph_(bia.nAlph_->clone())
+    {
+    }
 
     CodonAlphabet& operator=(const CodonAlphabet& bia)
     {
       AbstractAlphabet::operator=(bia);
-      nAlph_ = bia.nAlph_;
+      nAlph_ = bia.nAlph_->clone();
     
       return *this;
     }
@@ -99,7 +100,10 @@ namespace bpp
       return new CodonAlphabet(*this);
     }
 
-    virtual ~CodonAlphabet() {}
+    virtual ~CodonAlphabet()
+    {
+      delete nAlph_;
+    }
   
     std::string getAlphabetType() const
     {

@@ -107,7 +107,7 @@ namespace bpp
     AbstractAlphabet(const AbstractAlphabet& alph) : alphabet_(), letters_(alph.letters_), nums_(alph.nums_), charList_(alph.charList_), intList_(alph.intList_)
     {
       for (size_t i = 0; i < alph.alphabet_.size(); ++i)
-        alphabet_.push_back(new AlphabetState(*alph.alphabet_[i]));
+        alphabet_.push_back(alph.alphabet_[i]->clone());
     }
 
     AbstractAlphabet& operator=(const AbstractAlphabet& alph)
@@ -116,7 +116,7 @@ namespace bpp
         delete alphabet_[i];
 
       for (size_t i = 0; i < alph.alphabet_.size(); ++i)
-        alphabet_.push_back(new AlphabetState(*alph.alphabet_[i]));
+        alphabet_.push_back(alph.alphabet_[i]->clone());
 
       letters_  = alph.letters_;
       nums_     = alph.nums_;

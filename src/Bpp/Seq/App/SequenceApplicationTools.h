@@ -107,7 +107,8 @@ namespace bpp
     /**
      * @brief Build a GeneticCode object according to options.
      *
-     * @param alphabet pointer to the NucleicAlphabet
+     * @param alphabet pointer to the NucleicAlphabet.
+     *        !!! the pointer will be owned by the genetic code!!!
      * @param description for the name of the GeneticCode:
      *    [EchinodermMitochondrialGeneticCode
      *    | InvertebrateMitochondrialGeneticCode

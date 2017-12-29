@@ -56,8 +56,8 @@ using namespace std;
 
 DNA::DNA(bool exclamationMarkCountsAsGap)
 {
-	// Alphabet content definition
-	// all unresolved bases use n°14
+  // Alphabet content definition
+  // all unresolved bases use n°14
   registerState(new NucleicAlphabetState(-1, "-",  0, "Gap"));
   registerState(new NucleicAlphabetState( 0, "A",  1, "Adenine"));
   registerState(new NucleicAlphabetState( 1, "C",  2, "Cytosine"));

@@ -75,7 +75,6 @@ public:
   RNY& operator=(const RNY& bia)
   {
     AbstractAlphabet::operator=(bia);
-//  nuclalph_=bia.nuclalph_;
     return *this;
   }
 
