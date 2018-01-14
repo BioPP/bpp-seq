@@ -140,7 +140,7 @@ namespace bpp
      * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
      * @throw Exception                 Other kind of error, depending on the implementation.
      */
-    virtual Sequence* translate(const Sequence &sequence, size_t = 0) const = 0;
+    virtual Sequence* translate(const Sequence &sequence, size_t pos = 0) const = 0;
 
     /**
      * @brief Translate a whole sequence from words alphabet to letters alphabet.
