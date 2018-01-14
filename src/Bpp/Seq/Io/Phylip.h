@@ -108,7 +108,7 @@ class Phylip :
      *
      * @{
      */
-    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const;
     /** @} */
 
     /**
@@ -119,10 +119,10 @@ class Phylip :
      *
      * @{
      */
-    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const throw (Exception) {
+    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const {
       return readAlignment(input, alpha);
     }
-    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const throw (Exception) {
+    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const {
       return readAlignment(path, alpha);
     }
     /** @} */
@@ -133,15 +133,15 @@ class Phylip :
      * This methods parses the firt line of the phylip file.
      * @param path The path of the file to parse.
      */
-    unsigned int getNumberOfSequences(const std::string& path) const throw (IOException);
+    unsigned int getNumberOfSequences(const std::string& path) const;
 
     /**
      * @name The OSequence interface.
      *
      * @{
      */
-    void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception);
-    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite) const throw (Exception)
+    void writeAlignment(std::ostream& output, const SiteContainer& sc) const;
+    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite) const
     {
       AbstractOAlignment::writeAlignment(path, sc, overwrite);
     }
@@ -181,9 +181,9 @@ class Phylip :
      
   protected:
     //Reading tools:
-    const std::vector<std::string> splitNameAndSequence(const std::string& s) const throw (Exception); 
-    void readSequential (std::istream& in, SiteContainer& asc) const throw (Exception);
-    void readInterleaved(std::istream& in, SiteContainer& asc) const throw (Exception);
+    const std::vector<std::string> splitNameAndSequence(const std::string& s) const; 
+    void readSequential (std::istream& in, SiteContainer& asc) const;
+    void readInterleaved(std::istream& in, SiteContainer& asc) const;
     //Writing tools:
     std::vector<std::string> getSizedNames(const std::vector<std::string>& names) const;
     void writeSequential(std::ostream& out, const SequenceContainer& sc) const;

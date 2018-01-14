@@ -51,7 +51,7 @@ using namespace std;
 
 /******************************************************************************/
 
-void Stockholm::writeAlignment(ostream& output, const SiteContainer& sc) const throw (Exception)
+void Stockholm::writeAlignment(ostream& output, const SiteContainer& sc) const
 {
 	if (!output)
     throw IOException("Stockholm::writeAlignment: can't write to ostream output");

@@ -122,17 +122,17 @@ class AbstractSequenceContainer:
 		 */
 		const Alphabet* getAlphabet() const { return alphabet_; }
 
-    std::string toString(const std::string& name) const throw (SequenceNotFoundException)
+    std::string toString(const std::string& name) const
     {
       return getSequence(name).toString();
     }
 
-		const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException)
+		const Comments& getComments(const std::string& name) const
     {
       return getSequence(name).getComments();
     }
 
-		void setComments(const std::string& name, const Comments& comments) throw (SequenceNotFoundException);
+		void setComments(const std::string& name, const Comments& comments);
 		const Comments& getGeneralComments() const
     {
       return comments_;
@@ -155,22 +155,22 @@ class AbstractSequenceContainer:
 		 *
 		 * @{
 		 */
-		virtual const std::string& getName(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+		virtual const std::string& getName(size_t sequenceIndex) const
     {
 	    return getSequence(sequenceIndex).getName();
     }
     
-    virtual std::string toString(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+    virtual std::string toString(size_t sequenceIndex) const
     {
       return getSequence(sequenceIndex).toString();
     }
 
-		virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+		virtual const Comments& getComments(size_t sequenceIndex) const
     {
       return getSequence(sequenceIndex).getComments();
     }
 
-		virtual void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException) = 0;
+		virtual void setComments(size_t sequenceIndex, const Comments& comments) = 0;
 		/** @} */
 
 };

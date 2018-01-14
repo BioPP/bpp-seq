@@ -88,14 +88,14 @@ namespace bpp {
     bool isCharInAlphabet(const std::string& state) const {
       return isCharInAlphabet(state[0]);
     }
-    int charToInt(const std::string &state) const throw (BadCharException) {
+    int charToInt(const std::string &state) const {
       if (!isCharInAlphabet(state))
         throw BadCharException(state, "LetterAlphabet::charToInt: Unknown state", this);
       return letters_[static_cast<unsigned int>(state[0])];
     }
 
   protected:
-    void registerState(AlphabetState* st) throw (Exception) {
+    void registerState(AlphabetState* st) {
       AbstractAlphabet::registerState(st);
       if (caseSensitive_) {
         letters_[static_cast<unsigned int>(st->getLetter()[0])] = st->getNum();
@@ -105,7 +105,7 @@ namespace bpp {
       }
     }
 
-    void setState(size_t pos, AlphabetState* st) throw (Exception, IndexOutOfBoundsException) {
+    void setState(size_t pos, AlphabetState* st) {
       AbstractAlphabet::setState(pos, st);
       if (caseSensitive_) {
         letters_[static_cast<unsigned int>(st->getLetter()[0])] = st->getNum();

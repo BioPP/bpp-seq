@@ -60,7 +60,7 @@ const string IoSequenceFactory::PAML_FORMAT_SEQUENTIAL    = "PAML S";
 const string IoSequenceFactory::GENBANK_FORMAT            = "GenBank";  
 const string IoSequenceFactory::NEXUS_FORMAT              = "Nexus";  
 
-ISequence* IoSequenceFactory::createReader(const string& format) throw (Exception)
+ISequence* IoSequenceFactory::createReader(const string& format)
 {
        if(format == FASTA_FORMAT) return new Fasta();
   else if(format == MASE_FORMAT) return new Mase();
@@ -75,7 +75,7 @@ ISequence* IoSequenceFactory::createReader(const string& format) throw (Exceptio
   else throw Exception("Format " + format + " is not supported for sequences input.");
 }
   
-IAlignment* IoSequenceFactory::createAlignmentReader(const string& format) throw (Exception)
+IAlignment* IoSequenceFactory::createAlignmentReader(const string& format)
 {
        if(format == FASTA_FORMAT) return new Fasta();
   else if(format == MASE_FORMAT) return new Mase();
@@ -89,14 +89,14 @@ IAlignment* IoSequenceFactory::createAlignmentReader(const string& format) throw
   else throw Exception("Format " + format + " is not supported for alignment input.");
 }
   
-OSequence* IoSequenceFactory::createWriter(const string& format) throw (Exception)
+OSequence* IoSequenceFactory::createWriter(const string& format)
 {
        if(format == FASTA_FORMAT) return new Fasta();
   else if(format == MASE_FORMAT) return new Mase();
   else throw Exception("Format " + format + " is not supported for output.");
 }
 
-OAlignment* IoSequenceFactory::createAlignmentWriter(const string& format) throw (Exception)
+OAlignment* IoSequenceFactory::createAlignmentWriter(const string& format)
 {
        if (format == FASTA_FORMAT) return new Fasta();
   else if (format == MASE_FORMAT) return new Mase();

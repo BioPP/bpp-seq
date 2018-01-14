@@ -86,7 +86,7 @@ public:
    * @param checkPositions Check for the redundancy of site position tag. This may turn to be very time consuming!
    * @throw Exception If sites differ in size or in alphabet.
    */
-  VectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
+  VectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha, bool checkPositions = true);
   /**
    * @brief Build a new empty container with specified size.
    *
@@ -135,15 +135,15 @@ public:
    *
    * @{
    */
-  const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException);
-  void        setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
-  Site*    removeSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-  void     deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-  void    deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException);
-  void        addSite(const Site& site,                                 bool checkPosition = true) throw (Exception);
-  void        addSite(const Site& site,                   int position, bool checkPosition = true) throw (Exception);
-  void        addSite(const Site& site, size_t siteIndex,               bool checkPosition = true) throw (Exception);
-  void        addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true) throw (Exception);
+  const Site& getSite(size_t siteIndex) const;
+  void        setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
+  Site*    removeSite(size_t siteIndex);
+  void     deleteSite(size_t siteIndex);
+  void    deleteSites(size_t siteIndex, size_t length);
+  void        addSite(const Site& site,                                 bool checkPosition = true);
+  void        addSite(const Site& site,                   int position, bool checkPosition = true);
+  void        addSite(const Site& site, size_t siteIndex,               bool checkPosition = true);
+  void        addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true);
   size_t getNumberOfSites() const;
   void reindexSites();
   Vint getSitePositions() const;
@@ -157,39 +157,39 @@ public:
    *
    * @{
    */
-  void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
+  void setComments(size_t sequenceIndex, const Comments& comments);
 
   // Method to get a sequence object from sequence container
-  const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException);
-  const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
+  const Sequence& getSequence(size_t sequenceIndex) const;
+  const Sequence& getSequence(const std::string& name) const;
   bool hasSequence(const std::string& name) const;
 
   // Methods to get position of a sequence in sequence container from his name
   // This method is used by delete and remove methods
-  size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
+  size_t getSequencePosition(const std::string& name) const;
 
-  Sequence* removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
-  Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException);
+  Sequence* removeSequence(size_t sequenceIndex);
+  Sequence* removeSequence(const std::string& name);
 
-  void deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
-  void deleteSequence(const std::string& name) throw (SequenceNotFoundException);
+  void deleteSequence(size_t sequenceIndex);
+  void deleteSequence(const std::string& name);
 
   size_t getNumberOfSequences() const { return names_.size(); }
 
   std::vector<std::string> getSequencesNames() const;
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception);
+  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true);
 
   void clear();
 
   VectorSiteContainer* createEmptyContainer() const;
 
-  int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+  int& valueAt(const std::string& sequenceName, size_t elementIndex)
   {
     if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*sites_[elementIndex])[getSequencePosition(sequenceName)];
   }
-  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
   {
     if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*sites_[elementIndex])[getSequencePosition(sequenceName)];
@@ -203,13 +203,13 @@ public:
     return (*sites_[elementIndex])[getSequencePosition(sequenceName)];
   }
 
-  int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException)
+  int& valueAt(size_t sequenceIndex, size_t elementIndex)
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*sites_[elementIndex])[sequenceIndex];
   }
-  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException)
+  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
@@ -225,11 +225,11 @@ public:
   }
   /** @} */
 
-  void addSequence(const Sequence& sequence,                             bool checkName = true) throw (Exception);
-  void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true) throw (Exception);
+  void addSequence(const Sequence& sequence,                             bool checkName = true);
+  void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
 
-  void setSequence(const std::string& name,    const Sequence& sequence, bool checkName) throw (Exception);
-  void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception);
+  void setSequence(const std::string& name,    const Sequence& sequence, bool checkName);
+  void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName);
 
 protected:
   // Create n void sites:

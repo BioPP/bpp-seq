@@ -55,13 +55,13 @@ Site::Site(const Alphabet* alpha) : AbstractCoreSite(), BasicSymbolList(alpha) {
 
 Site::Site(const Alphabet* alpha, int position) : AbstractCoreSite(position), BasicSymbolList(alpha) {}
 
-Site::Site(const vector<string>& site, const Alphabet* alpha) throw (BadCharException) : AbstractCoreSite(), BasicSymbolList(site, alpha) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha) : AbstractCoreSite(), BasicSymbolList(site, alpha) {}
 
-Site::Site(const vector<string>& site, const Alphabet* alpha, int position) throw (BadCharException) : AbstractCoreSite(position), BasicSymbolList(site, alpha) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha, int position) : AbstractCoreSite(position), BasicSymbolList(site, alpha) {}
 
-Site::Site(const vector<int>& site, const Alphabet* alpha) throw (BadIntException) : AbstractCoreSite(), BasicSymbolList(site, alpha) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha) : AbstractCoreSite(), BasicSymbolList(site, alpha) {}
 
-Site::Site(const vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException) : AbstractCoreSite(position), BasicSymbolList(site, alpha) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha, int position) : AbstractCoreSite(position), BasicSymbolList(site, alpha) {}
 
 /****************************************************************************************/
 

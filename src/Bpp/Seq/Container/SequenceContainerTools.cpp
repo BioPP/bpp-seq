@@ -68,7 +68,6 @@ SequenceContainer* SequenceContainerTools::createContainerOfSpecifiedSize(const 
 SequenceContainer* SequenceContainerTools::createContainerWithSequenceNames(
   const Alphabet* alphabet,
   const vector<string>& seqNames)
-throw (Exception)
 {
   SequenceContainer* sc = createContainerOfSpecifiedSize(alphabet, seqNames.size());
   sc->setSequencesNames(seqNames, true);
@@ -80,7 +79,7 @@ throw (Exception)
 void SequenceContainerTools::getSelectedSequences(
   const OrderedSequenceContainer& sequences,
   const SequenceSelection& selection,
-  SequenceContainer& outputCont) throw (Exception)
+  SequenceContainer& outputCont)
 {
   bool checkNames = outputCont.getNumberOfSequences() > 0;
   for (size_t i = 0; i < selection.size(); i++)
@@ -94,7 +93,7 @@ void SequenceContainerTools::getSelectedSequences(
 void SequenceContainerTools::getSelectedSequences(
   const SequenceContainer& sequences,
   const std::vector<std::string>& selection,
-  SequenceContainer& outputCont, bool strict) throw (Exception)
+  SequenceContainer& outputCont, bool strict)
 {
   bool checkNames = outputCont.getNumberOfSequences() > 0;
   for (size_t i = 0; i < selection.size(); i++)
@@ -201,7 +200,7 @@ void SequenceContainerTools::getCounts(const SequenceContainer& sequences, std::
 
 /******************************************************************************/
 
-SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContainer& sequences, size_t pos) throw (AlphabetException)
+SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContainer& sequences, size_t pos)
 {
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(sequences.getAlphabet());
   if (!calpha)

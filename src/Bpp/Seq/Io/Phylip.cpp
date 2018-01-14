@@ -52,7 +52,7 @@ using namespace std;
 
 /******************************************************************************/
 
-const std::vector<std::string> Phylip::splitNameAndSequence(const std::string& s) const throw (Exception)
+const std::vector<std::string> Phylip::splitNameAndSequence(const std::string& s) const
 {
   vector<string> v(2);
   if (extended_)
@@ -72,7 +72,7 @@ const std::vector<std::string> Phylip::splitNameAndSequence(const std::string& s
 
 /******************************************************************************/
 
-void Phylip::readSequential(std::istream& in, SiteContainer& asc) const throw (Exception)
+void Phylip::readSequential(std::istream& in, SiteContainer& asc) const
 {
   string temp;
   
@@ -129,7 +129,7 @@ void Phylip::readSequential(std::istream& in, SiteContainer& asc) const throw (E
 
 /******************************************************************************/
 
-void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const throw (Exception)
+void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const
 {
   string temp;
   
@@ -171,7 +171,7 @@ void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const throw (
   
 /******************************************************************************/
 
-void Phylip::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) const throw (Exception)
+void Phylip::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) const
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("Phylip::read: fail to open file"); }
@@ -182,7 +182,7 @@ void Phylip::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) 
 
 /******************************************************************************/
 
-unsigned int Phylip::getNumberOfSequences(const std::string& path) const throw (IOException)
+unsigned int Phylip::getNumberOfSequences(const std::string& path) const
 {
   // Checking the existence of specified file
   ifstream file (path.c_str(), ios::in);
@@ -276,7 +276,7 @@ void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc) co
 
 /******************************************************************************/
 
-void Phylip::writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception)
+void Phylip::writeAlignment(std::ostream& output, const SiteContainer& sc) const
 {
   //First must check if all sequences are aligned:
   if (sc.getNumberOfSequences() == 0)

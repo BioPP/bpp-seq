@@ -51,7 +51,7 @@ NucleicAcidsReplication SequenceWithQualityTools::transc_(& DNA_, & RNA_);
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::concatenate(const SequenceWithQuality& seqwq1, const SequenceWithQuality& seqwq2) throw (AlphabetMismatchException, Exception)
+SequenceWithQuality* SequenceWithQualityTools::concatenate(const SequenceWithQuality& seqwq1, const SequenceWithQuality& seqwq2)
 {
 	// Sequence's alphabets matching verification
 	if ((seqwq1.getAlphabet()->getAlphabetType()) != (seqwq2.getAlphabet()->getAlphabetType()))
@@ -74,7 +74,7 @@ SequenceWithQuality* SequenceWithQualityTools::concatenate(const SequenceWithQua
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::complement(const SequenceWithQuality& sequence) throw (AlphabetException)
+SequenceWithQuality* SequenceWithQualityTools::complement(const SequenceWithQuality& sequence)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
@@ -98,7 +98,7 @@ SequenceWithQuality* SequenceWithQualityTools::complement(const SequenceWithQual
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::transcript(const SequenceWithQuality& sequence) throw (AlphabetException)
+SequenceWithQuality* SequenceWithQualityTools::transcript(const SequenceWithQuality& sequence)
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "DNA alphabet")
@@ -113,7 +113,7 @@ SequenceWithQuality* SequenceWithQualityTools::transcript(const SequenceWithQual
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::reverseTranscript(const SequenceWithQuality& sequence) throw (AlphabetException)
+SequenceWithQuality* SequenceWithQualityTools::reverseTranscript(const SequenceWithQuality& sequence)
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "RNA alphabet")

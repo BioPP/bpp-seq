@@ -89,9 +89,9 @@ class Sequence:
      * @param sequence The new content of the sequence.
      * @see The Sequence constructor for information about the way sequences are internaly stored.
      */
-    virtual void setContent(const std::string& sequence) throw (BadCharException) = 0;
-    virtual void setContent(const std::vector<int>& list) throw (BadIntException) = 0;
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException) = 0;
+    virtual void setContent(const std::string& sequence) = 0;
+    virtual void setContent(const std::vector<int>& list) = 0;
+    virtual void setContent(const std::vector<std::string>& list) = 0;
 
     /**
      * @brief Set up the size of a sequence from the right side.
@@ -119,7 +119,7 @@ class Sequence:
      * @param seq The sequence to append.
      * @throw AlphabetMismatchException If the alphabet of the specified sequence does not match the current alphabet.
      */
-    virtual void append(const Sequence& seq) throw (AlphabetMismatchException) = 0;
+    virtual void append(const Sequence& seq) = 0;
 
     /**
      * @brief Append the specified content to the sequence.
@@ -127,7 +127,7 @@ class Sequence:
      * @param content The content to append to the sequence.
      * @throw BadIntException If the content does not match the current alphabet.
      */
-    virtual void append(const std::vector<int>& content) throw (BadIntException) = 0;
+    virtual void append(const std::vector<int>& content) = 0;
 
     /**
      * @brief Append the specified content to the sequence.
@@ -135,7 +135,7 @@ class Sequence:
      * @param content The content to append to the sequence.
      * @throw BadCharException If the content does not match the current alphabet.
      */
-    virtual void append(const std::vector<std::string>& content) throw (BadCharException) = 0;
+    virtual void append(const std::vector<std::string>& content) = 0;
 
     /**
      * @brief Append the specified content to the sequence.
@@ -143,7 +143,7 @@ class Sequence:
      * @param content The content to append to the sequence.
      * @throw BadCharException If the content does not match the current alphabet.
      */
-    virtual void append(const std::string& content) throw (BadCharException) = 0;
+    virtual void append(const std::string& content) = 0;
 
     /** @} */
 
@@ -193,7 +193,7 @@ class BasicSequence :
      * @param sequence The whole sequence to be parsed as a std::string.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException);
+    BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha);
   
     /**
      * @brief Direct constructor: build a Sequence object from a std::string.
@@ -209,7 +209,7 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -221,7 +221,7 @@ class BasicSequence :
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha) throw (BadCharException);
+    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -234,7 +234,7 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -243,7 +243,7 @@ class BasicSequence :
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) throw (BadIntException);
+    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -253,7 +253,7 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadIntException);
+    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha);
 
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
@@ -297,14 +297,14 @@ class BasicSequence :
      * @{
      */
      
-    void setContent(const std::string& sequence) throw (BadCharException);
+    void setContent(const std::string& sequence);
     
-    void setContent(const std::vector<int>& list) throw (BadIntException)
+    void setContent(const std::vector<int>& list)
     {
       BasicSymbolList::setContent(list);
     }
     
-    void setContent(const std::vector<std::string>& list) throw (BadCharException)
+    void setContent(const std::vector<std::string>& list)
     {
       BasicSymbolList::setContent(list);
     }
@@ -313,13 +313,13 @@ class BasicSequence :
     
     void setToSizeL(size_t newSize);
 
-    void append(const Sequence& seq) throw (AlphabetMismatchException);
+    void append(const Sequence& seq);
     
-    void append(const std::vector<int>& content) throw (BadIntException);
+    void append(const std::vector<int>& content);
 
-    void append(const std::vector<std::string>& content) throw (BadCharException);
+    void append(const std::vector<std::string>& content);
 
-    void append(const std::string& content) throw (BadCharException);
+    void append(const std::string& content);
 
     /** @} */
 

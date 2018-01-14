@@ -78,8 +78,8 @@ class SequenceWalker
     virtual ~SequenceWalker() {}
 
   public:
-    size_t getAlignmentPosition(size_t seqPos) throw (Exception);
-    size_t getSequencePosition(size_t alnPos) throw (Exception);
+    size_t getAlignmentPosition(size_t seqPos);
+    size_t getSequencePosition(size_t alnPos);
 };
 
 } //end of namespace bpp.

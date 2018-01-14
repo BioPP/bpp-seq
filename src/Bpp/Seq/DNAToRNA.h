@@ -79,15 +79,15 @@ class DNAToRNA:
 	public:
 		virtual const Alphabet* getSourceAlphabet() const { return dna_; }
 		virtual const Alphabet* getTargetAlphabet() const { return rna_; }
-		int translate(int state) const throw (BadIntException);		
-    std::string translate(const std::string& state) const throw (BadCharException);		
-		Sequence* translate(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+		int translate(int state) const;		
+    std::string translate(const std::string& state) const;		
+		Sequence* translate(const Sequence& sequence) const
     {
       return AbstractReverseTransliterator::translate(sequence);
     }
-		int reverse(int state) const throw (BadIntException);
-    std::string reverse(const std::string& state) const throw (BadCharException);
-		Sequence* reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+		int reverse(int state) const;
+    std::string reverse(const std::string& state) const;
+		Sequence* reverse(const Sequence& sequence) const
     {
       return AbstractReverseTransliterator::reverse(sequence);
     }

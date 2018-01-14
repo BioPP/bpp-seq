@@ -72,7 +72,7 @@ class GenBank :
      *
      * @{
      */
-    void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
+    void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const;
     /** @} */
   
     /**

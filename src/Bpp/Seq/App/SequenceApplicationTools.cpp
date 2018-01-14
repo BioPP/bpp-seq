@@ -77,7 +77,7 @@ Alphabet* SequenceApplicationTools::getAlphabet(
   bool suffixIsOptional,
   bool verbose,
   bool allowGeneric,
-  int warn) throw (Exception)
+  int warn)
 {
   Alphabet* chars = 0;
   
@@ -206,7 +206,7 @@ Alphabet* SequenceApplicationTools::getAlphabet(
 
 GeneticCode* SequenceApplicationTools::getGeneticCode(
   const NucleicAlphabet* alphabet,
-  const string& description) throw (Exception)
+  const string& description)
 {
   GeneticCode* geneCode;
   if (description.find("EchinodermMitochondrial") != string::npos || description.find("9") != string::npos)
@@ -231,14 +231,12 @@ GeneticCode* SequenceApplicationTools::getGeneticCode(
 /******************************************************************************/
 
 AlphabetIndex1* SequenceApplicationTools::getAlphabetIndex1(const Alphabet* alphabet, const string& description, const string& message, bool verbose)
-throw (Exception)
 {
   BppOAlphabetIndex1Format reader(alphabet, message, verbose);
   return reader.read(description);
 }
 
 AlphabetIndex2* SequenceApplicationTools::getAlphabetIndex2(const Alphabet* alphabet, const string& description, const string& message, bool verbose)
-throw (Exception)
 {
   BppOAlphabetIndex2Format reader(alphabet, message, verbose);
   return reader.read(description);

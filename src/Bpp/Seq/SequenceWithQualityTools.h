@@ -74,7 +74,7 @@ public:
    * @param end      The last position of the subsequence (included).
    * @param output   A sequence object to be appended with the given subsequence.
    */
-  static void subseq(const SequenceWithQuality& sequence, size_t begin, size_t end, SequenceWithQuality& output) throw (Exception) {
+  static void subseq(const SequenceWithQuality& sequence, size_t begin, size_t end, SequenceWithQuality& output) {
     if (end < begin || end >= sequence.size())
       throw Exception("SequenceWithQualityTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
     std::vector<int> content(end - begin + 1);
@@ -94,7 +94,7 @@ public:
    * @param end   The last position of the subsequence.
    * @return A new sequence object with the given subsequence.
    */
-  static SequenceWithQuality* subseq(const SequenceWithQuality& sequence, size_t begin, size_t end) throw (IndexOutOfBoundsException, Exception) {
+  static SequenceWithQuality* subseq(const SequenceWithQuality& sequence, size_t begin, size_t end) {
     SequenceWithQuality* seq = new SequenceWithQuality(sequence.getAlphabet());
     seq->setName(sequence.getName());
     seq->setComments(sequence.getComments());
@@ -119,7 +119,7 @@ public:
       static SequenceWithQuality* concatenate(
           const SequenceWithQuality& seqwq1,
           const SequenceWithQuality& seqwq2
-          ) throw (AlphabetMismatchException, Exception) ;
+          ) ;
 
       /**
        * @brief Get the complementary sequence of a nucleotide sequence.
@@ -132,7 +132,7 @@ public:
        */
       static SequenceWithQuality* complement(
           const SequenceWithQuality& sequence
-          ) throw (AlphabetException);
+          );
 
       /**
        * @brief Get the transcription sequence of a DNA sequence.
@@ -145,7 +145,7 @@ public:
        */
       static SequenceWithQuality* transcript(
           const SequenceWithQuality& sequence
-          ) throw (AlphabetException);
+          );
 
       /**
        * @brief Get the reverse-transcription sequence of a RNA sequence.
@@ -159,7 +159,7 @@ public:
 
       static SequenceWithQuality* reverseTranscript(
           const SequenceWithQuality& sequence
-          ) throw (AlphabetException);
+          );
       /**
        * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
        *

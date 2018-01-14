@@ -77,7 +77,7 @@ public:
    * @return A site objet corresponding to site i in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException) = 0;
+  virtual const Site& getSite(size_t siteIndex) const = 0;
 
   /**
    * @brief Set a site in the container.
@@ -87,7 +87,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void setSite(size_t siteIndex, const Site& site, bool checkPosition) throw (Exception) = 0;
+  virtual void setSite(size_t siteIndex, const Site& site, bool checkPosition) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -96,7 +96,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const Site& site, bool checkPosition) throw (Exception) = 0;
+  virtual void addSite(const Site& site, bool checkPosition) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -106,7 +106,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const Site& site, int position, bool checkPosition) throw (Exception) = 0;
+  virtual void addSite(const Site& site, int position, bool checkPosition) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -116,7 +116,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const Site& site, size_t siteIndex, bool checkPosition) throw (Exception) = 0;
+  virtual void addSite(const Site& site, size_t siteIndex, bool checkPosition) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -127,7 +127,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition) throw (Exception) = 0;
+  virtual void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition) = 0;
 
   /**
    * @brief Remove a site from the container.
@@ -138,7 +138,7 @@ public:
    * @return A pointer toward site i in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual Site* removeSite(size_t siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
+  virtual Site* removeSite(size_t siteIndex) = 0;
 
   /**
    * @brief Delete a site in the container.
@@ -146,7 +146,7 @@ public:
    * @param siteIndex The position of the site in the container.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual void deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
+  virtual void deleteSite(size_t siteIndex) = 0;
 
   /**
    * @brief Delete a continuous range of sites in the container.
@@ -155,7 +155,7 @@ public:
    * @param length The length of the region to delete, starting at pposition siteIndex.
    * @throw IndexOutOfBoundsException If the specified range is not valid.
    */
-  virtual void deleteSites(size_t siteIndex, size_t length) throw (IndexOutOfBoundsException, Exception) = 0;
+  virtual void deleteSites(size_t siteIndex, size_t length) = 0;
 
 
   /**

@@ -62,7 +62,7 @@ namespace bpp
     StopCodonException(const std::string& text, const std::string& codon);
 	
     // Class destructor
-    virtual ~StopCodonException() throw () {}
+    virtual ~StopCodonException() {}
 		
   public:
     virtual const std::string& getCodon() const { return codon_; }

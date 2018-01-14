@@ -78,7 +78,7 @@ NumericAlphabet& NumericAlphabet::operator=(const NumericAlphabet& na)
 
 /****************************************************************************************/
 
-void NumericAlphabet::setState(size_t stateIndex, AlphabetState* st) throw (Exception)
+void NumericAlphabet::setState(size_t stateIndex, AlphabetState* st)
 {
   try {
     AbstractAlphabet::setState(stateIndex, st);
@@ -90,7 +90,7 @@ void NumericAlphabet::setState(size_t stateIndex, AlphabetState* st) throw (Exce
   }
 }
 
-void NumericAlphabet::registerState(AlphabetState* st) throw (Exception)
+void NumericAlphabet::registerState(AlphabetState* st)
 {
   try {
     AbstractAlphabet::registerState(st);
@@ -103,14 +103,14 @@ void NumericAlphabet::registerState(AlphabetState* st) throw (Exception)
 }
 
 
-vector<int> NumericAlphabet::getAlias(int state) const throw (BadIntException)
+vector<int> NumericAlphabet::getAlias(int state) const
 {
   vector<int> v;
   v.push_back(state);
   return v;
 }
 
-vector<string> NumericAlphabet::getAlias(const string& state) const throw (BadCharException)
+vector<string> NumericAlphabet::getAlias(const string& state) const
 {
   vector<string> v;
   v.push_back(state);
@@ -124,7 +124,7 @@ bool NumericAlphabet::isGap(int state) const
   return false;
 }
 
-bool NumericAlphabet::containsGap(const string& state) const throw (BadCharException)
+bool NumericAlphabet::containsGap(const string& state) const
 {
   return false;
 }
@@ -167,7 +167,7 @@ double NumericAlphabet::getDelta() const
   return (pdd_->getUpperBound() - pdd_->getLowerBound()) / static_cast<double>(pdd_->getNumberOfCategories());
 }
 
-double NumericAlphabet::intToValue(int state) const throw (BadIntException)
+double NumericAlphabet::intToValue(int state) const
 {
   return static_cast<const AlphabetNumericState& >(getState(state)).getValue();
 }
@@ -178,12 +178,12 @@ size_t NumericAlphabet::getValueIndex(double value) const
   return it->second;
 }
 
-AlphabetNumericState& NumericAlphabet::getStateAt(size_t stateIndex) throw (IndexOutOfBoundsException)
+AlphabetNumericState& NumericAlphabet::getStateAt(size_t stateIndex)
 {
   return static_cast<AlphabetNumericState&>(AbstractAlphabet::getStateAt(stateIndex));
 }
 
-const AlphabetNumericState& NumericAlphabet::getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException)
+const AlphabetNumericState& NumericAlphabet::getStateAt(size_t stateIndex) const
 {
   return static_cast<const AlphabetNumericState&>(AbstractAlphabet::getStateAt(stateIndex));
 }

@@ -71,7 +71,7 @@ namespace bpp
      * @param setName        The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SiteSelection getSiteSet(const Comments& maseFileHeader, const std::string& setName) throw (IOException);
+    static SiteSelection getSiteSet(const Comments& maseFileHeader, const std::string& setName);
 
     /**
      * @brief Get a sequence selection from a Mase+ header file.
@@ -80,7 +80,7 @@ namespace bpp
      * @param setName        The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SequenceSelection getSequenceSet(const Comments& maseFileHeader, const std::string& setName) throw (IOException);
+    static SequenceSelection getSequenceSet(const Comments& maseFileHeader, const std::string& setName);
 
     /**
      * @brief Create a new container corresponding to a site set given in the mase+ format.
@@ -94,7 +94,7 @@ namespace bpp
      * @param setName   The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SiteContainer* getSelectedSites(const SiteContainer& sequences, const std::string& setName) throw (IOException);
+    static SiteContainer* getSelectedSites(const SiteContainer& sequences, const std::string& setName);
 
     /**
      * @brief Create a new container corresponding to a site set given in the mase+ format.
@@ -108,7 +108,7 @@ namespace bpp
      * @param setName   The name of the set to retrieve.
      * @throw IOException If the specified set is not found.
      */
-    static SequenceContainer* getSelectedSequences(const OrderedSequenceContainer& sequences, const std::string & setName) throw (IOException);
+    static SequenceContainer* getSelectedSequences(const OrderedSequenceContainer& sequences, const std::string & setName);
 
     /**
      * @brief Get a list of all available site selections.
@@ -136,7 +136,7 @@ namespace bpp
      * @return 1,2 or 3.
      * @throw Exception If no corresponding tag found in file.
      */
-    static size_t getPhase(const Comments & maseFileHeader, const std::string &setName) throw (Exception);
+    static size_t getPhase(const Comments & maseFileHeader, const std::string &setName);
 
   };
 

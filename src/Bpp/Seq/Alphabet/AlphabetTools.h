@@ -101,7 +101,7 @@ public:
    * @param alphabet The alphabet to check.
    * @return True if all text description have the same length (e.g. 3 for codon alphabet).
    */
-  static bool checkAlphabetCodingSize(const Alphabet& alphabet) throw (AlphabetException);
+  static bool checkAlphabetCodingSize(const Alphabet& alphabet);
 
   /**
    * @brief This checks that all characters in the alphabet are coded by a string of same length.
@@ -112,7 +112,7 @@ public:
    * @param alphabet a pointer toward the alphabet to check.
    * @return True if all text description have the same length (e.g. 3 for codon alphabet).
    */
-  static bool checkAlphabetCodingSize(const Alphabet* alphabet) throw (AlphabetException);
+  static bool checkAlphabetCodingSize(const Alphabet* alphabet);
 
   /**
    * @brief In case that all states in the given alphabet have a string description of same length,
@@ -121,7 +121,7 @@ public:
    * @param alphabet The alphabet to analyse.
    * @return The common size of all text descriptionif there is one. Else throws an AlphabetException.
    */
-  static unsigned int getAlphabetCodingSize(const Alphabet& alphabet) throw (AlphabetException);
+  static unsigned int getAlphabetCodingSize(const Alphabet& alphabet);
 
   /**
    * @brief In case that all states in the given alphabet have a string description of same length,
@@ -133,7 +133,7 @@ public:
    * @param alphabet a pointer toward the alphabet to analyse.
    * @return The common size of all text descriptionif there is one. Else throws an AlphabetException.
    */
-  static unsigned int getAlphabetCodingSize(const Alphabet* alphabet) throw (AlphabetException);
+  static unsigned int getAlphabetCodingSize(const Alphabet* alphabet);
 
   /**
    * @return True if the alphabet is an instanciation of the NucleicAlphabet class.

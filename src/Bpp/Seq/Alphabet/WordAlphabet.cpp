@@ -192,7 +192,7 @@ bool WordAlphabet::containsGap(const std::string& state) const
 
 /******************************************************************************/
 
-std::string WordAlphabet::getName(const std::string& state) const throw (BadCharException)
+std::string WordAlphabet::getName(const std::string& state) const
 {
   if (state.size() != vAbsAlph_.size())
     throw BadCharException(state, "WordAlphabet::getName", this);
@@ -206,7 +206,7 @@ std::string WordAlphabet::getName(const std::string& state) const throw (BadChar
 
 /******************************************************************************/
 
-std::vector<int> WordAlphabet::getAlias(int state) const throw (BadIntException)
+std::vector<int> WordAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
@@ -230,7 +230,7 @@ std::vector<int> WordAlphabet::getAlias(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const throw (BadCharException)
+std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
@@ -262,14 +262,14 @@ std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const 
 
 /******************************************************************************/
 
-int WordAlphabet::getGeneric(const std::vector<int>& states) const throw (BadIntException)
+int WordAlphabet::getGeneric(const std::vector<int>& states) const
 {
   return states[0];
 }
 
 /******************************************************************************/
 
-std::string WordAlphabet::getGeneric(const std::vector<std::string>& states) const throw (BadCharException)
+std::string WordAlphabet::getGeneric(const std::vector<std::string>& states) const
 {
   return states[0];
 }

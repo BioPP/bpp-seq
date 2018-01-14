@@ -46,13 +46,13 @@ using namespace std;
 
 /****************************************************************************************/
 
-BasicSymbolList::BasicSymbolList(const std::vector<string>& list, const Alphabet* alpha) throw (BadCharException) :
+BasicSymbolList::BasicSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
 	alphabet_(alpha), content_()
 {
 	setContent(list);
 }
 
-BasicSymbolList::BasicSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException) :
+BasicSymbolList::BasicSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
 	alphabet_(alpha), content_()
 {
 	setContent(list);
@@ -88,7 +88,7 @@ BasicSymbolList& BasicSymbolList::operator=(const BasicSymbolList& list)
 
 /****************************************************************************************/
 
-void BasicSymbolList::setContent(const vector<string>& list) throw (BadCharException)
+void BasicSymbolList::setContent(const vector<string>& list)
 {
 	// Check list for incorrect characters
 	vector<int> coded(list.size());
@@ -104,7 +104,7 @@ void BasicSymbolList::setContent(const vector<string>& list) throw (BadCharExcep
 
 /****************************************************************************************/
 
-void BasicSymbolList::setContent(const vector<int>& list) throw (BadIntException)
+void BasicSymbolList::setContent(const vector<int>& list)
 {
 	// Check list for incorrect characters
 	for (size_t i = 0; i < list.size(); i++)
@@ -124,14 +124,14 @@ string BasicSymbolList::toString() const
 
 /****************************************************************************************/
 
-void BasicSymbolList::addElement(const string& c) throw (BadCharException)
+void BasicSymbolList::addElement(const string& c)
 {
 	content_.push_back(alphabet_->charToInt(c));
 }
 
 /****************************************************************************************/
 
-void BasicSymbolList::addElement(size_t pos, const string& c) throw (BadCharException, IndexOutOfBoundsException)
+void BasicSymbolList::addElement(size_t pos, const string& c)
 {
   if(pos >= content_.size()) throw IndexOutOfBoundsException("BasicSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
 	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), alphabet_->charToInt(c));
@@ -139,7 +139,7 @@ void BasicSymbolList::addElement(size_t pos, const string& c) throw (BadCharExce
 
 /****************************************************************************************/
 
-void BasicSymbolList::setElement(size_t pos, const string& c) throw (BadCharException, IndexOutOfBoundsException)
+void BasicSymbolList::setElement(size_t pos, const string& c)
 {
 	if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
@@ -148,7 +148,7 @@ void BasicSymbolList::setElement(size_t pos, const string& c) throw (BadCharExce
 
 /****************************************************************************************/
 
-string BasicSymbolList::getChar(size_t pos) const throw (IndexOutOfBoundsException)
+string BasicSymbolList::getChar(size_t pos) const
 {
 	if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
@@ -166,7 +166,7 @@ string BasicSymbolList::getChar(size_t pos) const throw (IndexOutOfBoundsExcepti
 
 /****************************************************************************************/
 
-void BasicSymbolList::deleteElement(size_t pos) throw (IndexOutOfBoundsException)
+void BasicSymbolList::deleteElement(size_t pos)
 {
 	if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
@@ -175,7 +175,7 @@ void BasicSymbolList::deleteElement(size_t pos) throw (IndexOutOfBoundsException
 
 /****************************************************************************************/
 
-void BasicSymbolList::deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException)
+void BasicSymbolList::deleteElements(size_t pos, size_t len)
 {
 	if (pos + len > content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
@@ -184,7 +184,7 @@ void BasicSymbolList::deleteElements(size_t pos, size_t len) throw (IndexOutOfBo
 
 /****************************************************************************************/
 
-void BasicSymbolList::addElement(int v) throw (BadIntException)
+void BasicSymbolList::addElement(int v)
 {
 	//test:
 	alphabet_->intToChar(v);
@@ -193,7 +193,7 @@ void BasicSymbolList::addElement(int v) throw (BadIntException)
 
 /****************************************************************************************/
 
-void BasicSymbolList::addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException)
+void BasicSymbolList::addElement(size_t pos, int v)
 {
 	//test:
 	if(pos >= content_.size())
@@ -204,7 +204,7 @@ void BasicSymbolList::addElement(size_t pos, int v) throw (BadIntException, Inde
 
 /****************************************************************************************/
 
-void BasicSymbolList::setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException)
+void BasicSymbolList::setElement(size_t pos, int v)
 {
 	//test:
   if(pos >= content_.size())
@@ -215,7 +215,7 @@ void BasicSymbolList::setElement(size_t pos, int v) throw (BadIntException, Inde
 
 /****************************************************************************************/
 
-int BasicSymbolList::getValue(size_t pos) const throw (IndexOutOfBoundsException)
+int BasicSymbolList::getValue(size_t pos) const
 {
   if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::getValue. Invalid position.", pos, 0, size() - 1);
@@ -227,13 +227,13 @@ int BasicSymbolList::getValue(size_t pos) const throw (IndexOutOfBoundsException
 
 /****************************************************************************************/
 
-EdSymbolList::EdSymbolList(const std::vector<string>& list, const Alphabet* alpha) throw (BadCharException) :
+EdSymbolList::EdSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
 	alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
 {
 	setContent(list);
 }
 
-EdSymbolList::EdSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException) :
+EdSymbolList::EdSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
 	alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
 {
 	setContent(list);
@@ -288,7 +288,7 @@ EdSymbolList& EdSymbolList::operator=(const EdSymbolList& list)
 
 /****************************************************************************************/
 
-void EdSymbolList::setContent(const vector<string>& list) throw (BadCharException)
+void EdSymbolList::setContent(const vector<string>& list)
 {
   SymbolListEditionEvent event(this);
   fireBeforeSequenceChanged(event);
@@ -308,7 +308,7 @@ void EdSymbolList::setContent(const vector<string>& list) throw (BadCharExceptio
 
 /****************************************************************************************/
 
-void EdSymbolList::setContent(const vector<int>& list) throw (BadIntException)
+void EdSymbolList::setContent(const vector<int>& list)
 {
   SymbolListEditionEvent event(this);
   fireBeforeSequenceChanged(event);
@@ -332,7 +332,7 @@ string EdSymbolList::toString() const
 
 /****************************************************************************************/
 
-void EdSymbolList::addElement(const string& c) throw (BadCharException)
+void EdSymbolList::addElement(const string& c)
 {
   SymbolListInsertionEvent event(this, size(), 1);
   fireBeforeSequenceInserted(event);
@@ -342,7 +342,7 @@ void EdSymbolList::addElement(const string& c) throw (BadCharException)
 
 /****************************************************************************************/
 
-void EdSymbolList::addElement(size_t pos, const string& c) throw (BadCharException, IndexOutOfBoundsException)
+void EdSymbolList::addElement(size_t pos, const string& c)
 {
   if (pos >= content_.size()) throw IndexOutOfBoundsException("EdSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
   SymbolListInsertionEvent event(this, pos, 1);
@@ -353,7 +353,7 @@ void EdSymbolList::addElement(size_t pos, const string& c) throw (BadCharExcepti
 
 /****************************************************************************************/
 
-void EdSymbolList::setElement(size_t pos, const string& c) throw (BadCharException, IndexOutOfBoundsException)
+void EdSymbolList::setElement(size_t pos, const string& c)
 {
 	if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
@@ -365,7 +365,7 @@ void EdSymbolList::setElement(size_t pos, const string& c) throw (BadCharExcepti
 
 /****************************************************************************************/
 
-string EdSymbolList::getChar(size_t pos) const throw (IndexOutOfBoundsException)
+string EdSymbolList::getChar(size_t pos) const
 {
 	if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
@@ -380,7 +380,7 @@ string EdSymbolList::getChar(size_t pos) const throw (IndexOutOfBoundsException)
 
 /****************************************************************************************/
 
-void EdSymbolList::deleteElement(size_t pos) throw (IndexOutOfBoundsException)
+void EdSymbolList::deleteElement(size_t pos)
 {
 	if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
@@ -392,7 +392,7 @@ void EdSymbolList::deleteElement(size_t pos) throw (IndexOutOfBoundsException)
 
 /****************************************************************************************/
 
-void EdSymbolList::deleteElements(size_t pos, size_t len) throw (IndexOutOfBoundsException)
+void EdSymbolList::deleteElements(size_t pos, size_t len)
 {
 	if(pos + len > content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
@@ -405,7 +405,7 @@ void EdSymbolList::deleteElements(size_t pos, size_t len) throw (IndexOutOfBound
 
 /****************************************************************************************/
 
-void EdSymbolList::addElement(int v) throw (BadIntException)
+void EdSymbolList::addElement(int v)
 {
   SymbolListInsertionEvent event(this, size(), 1);
   fireBeforeSequenceInserted(event);
@@ -417,7 +417,7 @@ void EdSymbolList::addElement(int v) throw (BadIntException)
 
 /****************************************************************************************/
 
-void EdSymbolList::addElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException)
+void EdSymbolList::addElement(size_t pos, int v)
 {
 	//test:
 	if (pos >= content_.size())
@@ -431,7 +431,7 @@ void EdSymbolList::addElement(size_t pos, int v) throw (BadIntException, IndexOu
 
 /****************************************************************************************/
 
-void EdSymbolList::setElement(size_t pos, int v) throw (BadIntException, IndexOutOfBoundsException)
+void EdSymbolList::setElement(size_t pos, int v)
 {
 	//test:
   if (pos >= content_.size())
@@ -445,7 +445,7 @@ void EdSymbolList::setElement(size_t pos, int v) throw (BadIntException, IndexOu
 
 /****************************************************************************************/
 
-int EdSymbolList::getValue(size_t pos) const throw (IndexOutOfBoundsException)
+int EdSymbolList::getValue(size_t pos) const
 {
   if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::getValue. Invalid position.", pos, 0, size() - 1);

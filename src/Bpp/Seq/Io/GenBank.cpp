@@ -47,7 +47,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-void GenBank::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc) const throw (Exception)
+void GenBank::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc) const
 {
   if (!input) { throw IOException ("GenBank::read: fail to open file"); }
 
