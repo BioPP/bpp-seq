@@ -91,7 +91,7 @@ MapSequenceContainer::~MapSequenceContainer()
 
 /******************************************************************************/
 
-const Sequence& MapSequenceContainer::getSequence(size_t i) const throw (IndexOutOfBoundsException)
+const Sequence& MapSequenceContainer::getSequence(size_t i) const
 {
   // Specified sequence existence verification
   if (i < sequences_.size())
@@ -105,7 +105,7 @@ const Sequence& MapSequenceContainer::getSequence(size_t i) const throw (IndexOu
 
 /******************************************************************************/
 
-const Sequence& MapSequenceContainer::getSequence(const string& name) const throw (SequenceNotFoundException)
+const Sequence& MapSequenceContainer::getSequence(const string& name) const
 {
   // Specified sequence name research into all sequences
   for (map<string, Sequence*>::const_iterator it = sequences_.begin(); it != sequences_.end(); it++)
@@ -127,7 +127,7 @@ bool MapSequenceContainer::hasSequence(const string& name) const
 
 /******************************************************************************/
 
-Sequence& MapSequenceContainer::getSequence_(size_t i) throw (IndexOutOfBoundsException)
+Sequence& MapSequenceContainer::getSequence_(size_t i)
 {
   if (i >= sequences_.size())
     throw IndexOutOfBoundsException("MapSequenceContainer::getSequence", i, 0, sequences_.size() - 1);
@@ -138,7 +138,7 @@ Sequence& MapSequenceContainer::getSequence_(size_t i) throw (IndexOutOfBoundsEx
 
 /******************************************************************************/
 
-Sequence& MapSequenceContainer::getSequence_(const string& name) throw (SequenceNotFoundException)
+Sequence& MapSequenceContainer::getSequence_(const string& name)
 {
   // Specified sequence name research into all sequences
   for (map<string, Sequence*>::iterator it = sequences_.begin(); it != sequences_.end(); it++)
@@ -150,7 +150,6 @@ Sequence& MapSequenceContainer::getSequence_(const string& name) throw (Sequence
 /******************************************************************************/
 
 const Sequence& MapSequenceContainer::getSequenceByKey(const string& key) const
-  throw (SequenceNotFoundException)
 {
   map<string, Sequence*>::const_iterator it = sequences_.find(key);
   if (it == sequences_.end())
@@ -161,7 +160,7 @@ const Sequence& MapSequenceContainer::getSequenceByKey(const string& key) const
 /******************************************************************************/
 
 size_t MapSequenceContainer::getSequencePosition(const string& name)
-  const throw (SequenceNotFoundException)
+  const
 {
   // Specified sequence name research into all sequences
   size_t pos = 0;
@@ -177,7 +176,6 @@ size_t MapSequenceContainer::getSequencePosition(const string& name)
 /******************************************************************************/
 
 void MapSequenceContainer::setSequence(size_t i, const Sequence& sequence, bool checkNames)
-    throw (IndexOutOfBoundsException)
 {
   // Sequence's name existence checking
   if (checkNames)
@@ -206,7 +204,7 @@ void MapSequenceContainer::setSequence(size_t i, const Sequence& sequence, bool 
 
 /******************************************************************************/
 
-void MapSequenceContainer::setSequence(const string& name, const Sequence& sequence, bool checkNames) throw (SequenceNotFoundException)
+void MapSequenceContainer::setSequence(const string& name, const Sequence& sequence, bool checkNames)
 {
   // Sequence's name existence checking
   if (checkNames)
@@ -234,7 +232,7 @@ void MapSequenceContainer::setSequence(const string& name, const Sequence& seque
 
 /******************************************************************************/
 
-void MapSequenceContainer::setSequenceByKey(const string& key, const Sequence& sequence, bool checkNames) throw (SequenceNotFoundException)
+void MapSequenceContainer::setSequenceByKey(const string& key, const Sequence& sequence, bool checkNames)
 {
   // Sequence's name existence checking
   if (checkNames)
@@ -262,7 +260,7 @@ void MapSequenceContainer::setSequenceByKey(const string& key, const Sequence& s
 
 /******************************************************************************/
 
-Sequence* MapSequenceContainer::removeSequence(size_t i) throw (IndexOutOfBoundsException)
+Sequence* MapSequenceContainer::removeSequence(size_t i)
 {
   if (i >= sequences_.size())
     throw IndexOutOfBoundsException("MapSequenceContainer::removeSequence", i, 0, sequences_.size() - 1);
@@ -275,7 +273,7 @@ Sequence* MapSequenceContainer::removeSequence(size_t i) throw (IndexOutOfBounds
 
 /******************************************************************************/
 
-Sequence* MapSequenceContainer::removeSequence(const string& name) throw (SequenceNotFoundException)
+Sequence* MapSequenceContainer::removeSequence(const string& name)
 {
   for (map<string, Sequence*>::iterator it = sequences_.begin(); it != sequences_.end(); it++) {
     if (it->second->getName() == name)
@@ -290,7 +288,7 @@ Sequence* MapSequenceContainer::removeSequence(const string& name) throw (Sequen
 
 /******************************************************************************/
 
-Sequence* MapSequenceContainer::removeSequenceByKey(const string& key)throw (SequenceNotFoundException)
+Sequence* MapSequenceContainer::removeSequenceByKey(const string& key)
 {
   map<string, Sequence*>::iterator it = sequences_.find(key);
   if (it == sequences_.end())
@@ -303,7 +301,7 @@ Sequence* MapSequenceContainer::removeSequenceByKey(const string& key)throw (Seq
 
 /******************************************************************************/
 
-void MapSequenceContainer::deleteSequence(size_t i) throw (IndexOutOfBoundsException)
+void MapSequenceContainer::deleteSequence(size_t i)
 {
   if (i >= sequences_.size())
     throw IndexOutOfBoundsException("MapSequenceContainer::deleteSequence", i, 0, sequences_.size() - 1);
@@ -315,7 +313,7 @@ void MapSequenceContainer::deleteSequence(size_t i) throw (IndexOutOfBoundsExcep
 
 /******************************************************************************/
 
-void MapSequenceContainer::deleteSequence(const string& name) throw (SequenceNotFoundException)
+void MapSequenceContainer::deleteSequence(const string& name)
 {
   for (map<string, Sequence*>::iterator it = sequences_.begin(); it != sequences_.end(); it++) {
     if (it->second->getName() == name)
@@ -330,7 +328,7 @@ void MapSequenceContainer::deleteSequence(const string& name) throw (SequenceNot
 
 /******************************************************************************/
 
-void MapSequenceContainer::deleteSequenceByKey(const string& key) throw (SequenceNotFoundException)
+void MapSequenceContainer::deleteSequenceByKey(const string& key)
 {
   map<string, Sequence*>::iterator it = sequences_.find(key);
   if (it == sequences_.end())
@@ -341,7 +339,7 @@ void MapSequenceContainer::deleteSequenceByKey(const string& key) throw (Sequenc
 
 /******************************************************************************/
 
-void MapSequenceContainer::addSequence(const string& key, const Sequence& sequence, bool checkNames) throw (Exception)
+void MapSequenceContainer::addSequence(const string& key, const Sequence& sequence, bool checkNames)
 {
   // Sequence's name existence checking
   if (checkNames)
@@ -377,7 +375,7 @@ vector<string> MapSequenceContainer::getKeys() const
 
 /******************************************************************************/
 
-string MapSequenceContainer::getKey(size_t pos) const throw (IndexOutOfBoundsException)
+string MapSequenceContainer::getKey(size_t pos) const
 {
   if (pos >= getNumberOfSequences())
     throw IndexOutOfBoundsException("MapSequenceContainer::getKey", pos, 0, sequences_.size() - 1);
@@ -388,7 +386,7 @@ string MapSequenceContainer::getKey(size_t pos) const throw (IndexOutOfBoundsExc
 
 /******************************************************************************/
 
-string MapSequenceContainer::getKey(const string& name) const throw (SequenceNotFoundException)
+string MapSequenceContainer::getKey(const string& name) const
 {
   try
   {
@@ -402,7 +400,7 @@ string MapSequenceContainer::getKey(const string& name) const throw (SequenceNot
   
 /******************************************************************************/
 
-void MapSequenceContainer::setComments(size_t pos, const Comments& comments) throw (IndexOutOfBoundsException)
+void MapSequenceContainer::setComments(size_t pos, const Comments& comments)
 {
   if (pos >= getNumberOfSequences())
     throw IndexOutOfBoundsException("MapSequenceContainer::setComments", pos, 0, sequences_.size() - 1);
@@ -423,7 +421,7 @@ vector<string> MapSequenceContainer::getSequencesNames() const
 
 /******************************************************************************/
 
-void MapSequenceContainer::setSequencesNames(const vector<string>& names, bool checkNames) throw (Exception)
+void MapSequenceContainer::setSequencesNames(const vector<string>& names, bool checkNames)
 {
   if (names.size() != getNumberOfSequences())
     throw IndexOutOfBoundsException("MapSequenceContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences(), getNumberOfSequences());

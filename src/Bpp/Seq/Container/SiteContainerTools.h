@@ -155,7 +155,7 @@ namespace bpp
      * @param gCode the genetic code to use to determine stop codons.
      * @return A pointer toward a new SiteContainer.
      */
-    static SiteContainer* removeStopCodonSites(const SiteContainer& sites, const GeneticCode& gCode) throw (AlphabetException);
+    static SiteContainer* removeStopCodonSites(const SiteContainer& sites, const GeneticCode& gCode);
 
     /**
      * @brief Remove sites with stop codons, if the alphabet is a CodonAlphabet, otherwise throws an Exception.
@@ -163,7 +163,7 @@ namespace bpp
      * @param sites The container to analyse.
      * @param gCode the genetic code to use to determine stop codons.
      */
-    static void removeStopCodonSites(SiteContainer& sites, const GeneticCode& gCode) throw (AlphabetException);
+    static void removeStopCodonSites(SiteContainer& sites, const GeneticCode& gCode);
 
     /**
      * @brief Create a new container with a specified set of sites.
@@ -262,7 +262,7 @@ namespace bpp
      * @throw AlphabetException If the alphabet of the input alignment is not of class DefaultAlphabet, or if one character does not match with the output alphabet.
      * @throw Exception If no reference sequence was found, or if the input alignment contains no sequence.
      */
-    static SiteContainer* resolveDottedAlignment(const SiteContainer& dottedAln, const Alphabet* resolvedAlphabet) throw (AlphabetException, Exception);
+    static SiteContainer* resolveDottedAlignment(const SiteContainer& dottedAln, const Alphabet* resolvedAlphabet);
 
     /**
      * @name Sequences coordinates.
@@ -318,7 +318,7 @@ namespace bpp
      * @throw AlphabetMismatchException If the sequences do not share the same alphabet.
      * @throw Exception If the sequence do not match.
      */
-    static std::map<size_t, size_t> translateAlignment(const Sequence& seq1, const Sequence& seq2) throw (AlphabetMismatchException, Exception);
+    static std::map<size_t, size_t> translateAlignment(const Sequence& seq1, const Sequence& seq2);
 
     /**
      * @brief Translate sequence positions from a sequence to another in the same alignment.
@@ -347,7 +347,7 @@ namespace bpp
      * @return A new SiteContainer instance.
      * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
      */
-    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2& s, double gap) throw (AlphabetMismatchException);
+    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2& s, double gap);
 
     /**
      * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -364,7 +364,7 @@ namespace bpp
      * @return A new SiteContainer instance.
      * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
      */
-    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2& s, double opening, double extending) throw (AlphabetMismatchException);
+    static AlignedSequenceContainer* alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2& s, double opening, double extending);
 
     /**
      * @brief Sample sites in an alignment.
@@ -415,7 +415,7 @@ namespace bpp
      * @throw AlphabetMismatchException If the two sequences do not share the same alphabet type.
      * @throw Exception If an invalid gapOption is passed.
      */
-    static double computeSimilarity(const Sequence& seq1, const Sequence& seq2, bool dist = false, const std::string& gapOption = SIMILARITY_NODOUBLEGAP, bool unresolvedAsGap = true) throw (SequenceNotAlignedException, AlphabetMismatchException, Exception);
+    static double computeSimilarity(const Sequence& seq1, const Sequence& seq2, bool dist = false, const std::string& gapOption = SIMILARITY_NODOUBLEGAP, bool unresolvedAsGap = true);
 
     /**
      * @brief Compute the similarity matrix of an alignment.
@@ -466,7 +466,7 @@ namespace bpp
      * @throw AlphabetMismatchException If the alphabet in the 2 containers do not match.
      * @throw Exception If sequence names do not match.
      */
-    static void merge(SiteContainer& seqCont1, const SiteContainer& seqCont2, bool leavePositionAsIs = false) throw (AlphabetMismatchException, Exception);
+    static void merge(SiteContainer& seqCont1, const SiteContainer& seqCont2, bool leavePositionAsIs = false);
 
     /**
      * @brief Compare an alignment to a reference alignment, and compute the column scores.

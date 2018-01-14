@@ -81,7 +81,7 @@ class SequenceException :
       return *this;
     }
 	
-		virtual ~SequenceException() throw() {}
+		virtual ~SequenceException() {}
 	
 	public:
     
@@ -110,7 +110,7 @@ class EmptySequenceException :
 		 */
 		EmptySequenceException(const std::string& text, const Sequence* seq = 0);
 	
-		virtual ~EmptySequenceException() throw() {}
+		virtual ~EmptySequenceException() {}
 };
 
 /**
@@ -130,7 +130,7 @@ class SequenceWithGapException :
 		 */
 		SequenceWithGapException(const std::string& text, const Sequence* seq = 0);
 	
-		virtual ~SequenceWithGapException() throw() {}
+		virtual ~SequenceWithGapException() {}
 };
 
 /**
@@ -152,7 +152,7 @@ class SequenceNotAlignedException :
      */
     SequenceNotAlignedException(const std::string& text, const Sequence* seq);
 	
-		virtual ~SequenceNotAlignedException() throw() {}
+		virtual ~SequenceNotAlignedException() {}
 };
 
 } //end of namespace bpp.

@@ -83,8 +83,7 @@ class VectorSequenceContainer:
      * @throw AlphabetMismatchException if one sequence does not match the specified alphabet.
      */
     VectorSequenceContainer(
-      const std::vector<const Sequence*>& vs, const Alphabet* alpha)
-      throw (AlphabetMismatchException);
+      const std::vector<const Sequence*>& vs, const Alphabet* alpha);
   
     /**
      * @brief Build an empty container that will contain sequences of a particular alphabet.
@@ -165,19 +164,19 @@ class VectorSequenceContainer:
      */
     bool hasSequence(const std::string& name) const;
   
-    const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
+    const Sequence& getSequence(const std::string& name) const;
 
-    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception)
+    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true)
     {
       setSequence(getSequencePosition(name), sequence, checkName);
     }
 
-    Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException)
+    Sequence* removeSequence(const std::string& name)
     {
       return removeSequence(getSequencePosition(name));
     }
 
-    void deleteSequence(const std::string& name) throw (SequenceNotFoundException)
+    void deleteSequence(const std::string& name)
     {
       deleteSequence(getSequencePosition(name));
     }
@@ -185,16 +184,16 @@ class VectorSequenceContainer:
     size_t getNumberOfSequences() const { return sequences_.size(); }
     
     std::vector<std::string> getSequencesNames() const;
-    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception);
+    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true);
     void clear();
     VectorSequenceContainer * createEmptyContainer() const;
     
-    int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    int& valueAt(const std::string& sequenceName, size_t elementIndex)
     {
       return getSequence_(sequenceName)[elementIndex];
     }
 
-    const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
     {
       return getSequence(sequenceName)[elementIndex]; 
     }
@@ -209,12 +208,12 @@ class VectorSequenceContainer:
       return getSequence(sequenceName)[elementIndex]; 
     }
     
-    int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException)
+    int& valueAt(size_t sequenceIndex, size_t elementIndex)
     {
       return getSequence_(sequenceIndex)[elementIndex];
     }
 
-    const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException)
+    const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
     {
       return getSequence(sequenceIndex)[elementIndex];
     }
@@ -235,17 +234,17 @@ class VectorSequenceContainer:
      *
      * @{
      */
-    void setComments(const std::string & name, const Comments& comments) throw (SequenceNotFoundException)
+    void setComments(const std::string & name, const Comments& comments)
     {
       AbstractSequenceContainer::setComments(name, comments);
     }
 
-    void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
-    size_t getSequencePosition(const std::string& name) const throw (SequenceNotFoundException);
-    const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException);
-    void  setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (Exception);
-    Sequence* removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
-    void deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
+    void setComments(size_t sequenceIndex, const Comments& comments);
+    size_t getSequencePosition(const std::string& name) const;
+    const Sequence& getSequence(size_t sequenceIndex) const;
+    void  setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true);
+    Sequence* removeSequence(size_t sequenceIndex);
+    void deleteSequence(size_t sequenceIndex);
     /** @} */
     
     /**
@@ -268,7 +267,7 @@ class VectorSequenceContainer:
      * before adding it.
      * @throw Exception If the sequence couldn't be added to the container.
      */
-    virtual void addSequence(const Sequence& sequence, bool checkName = true) throw (Exception);
+    virtual void addSequence(const Sequence& sequence, bool checkName = true);
 
     /**
      * @brief Add a sequence to the container at a particular position.
@@ -286,7 +285,7 @@ class VectorSequenceContainer:
      * before adding it.
      * @throw Exception If the sequence couldn't be added to the container.
      */
-    virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true) throw (Exception);
+    virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
 
   protected:
 
@@ -295,8 +294,8 @@ class VectorSequenceContainer:
      *
      * @{
      */
-    Sequence& getSequence_(size_t i) throw (IndexOutOfBoundsException);
-    Sequence& getSequence_(const std::string& name) throw (SequenceNotFoundException);
+    Sequence& getSequence_(size_t i);
+    Sequence& getSequence_(const std::string& name);
     /** @} */
 };
 

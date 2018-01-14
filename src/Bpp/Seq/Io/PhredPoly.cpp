@@ -51,7 +51,7 @@ PhredPoly::PhredPoly(double ratio) : ratio_(ratio) {}
 
 /******************************************************************************/
 
-bool PhredPoly::nextSequence(istream& input, Sequence& seq) const throw (Exception) {
+bool PhredPoly::nextSequence(istream& input, Sequence& seq) const {
   if (!input) { throw IOException ("PhredPoly::read: fail to open stream"); }
 
   string temp, name, sequence = "";  // Initialization

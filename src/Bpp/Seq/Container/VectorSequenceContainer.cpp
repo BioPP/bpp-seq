@@ -48,8 +48,7 @@ using namespace std;
 
 VectorSequenceContainer::VectorSequenceContainer(
   const std::vector<const Sequence*>& vs,
-  const Alphabet* alpha)
-throw (AlphabetMismatchException) :
+  const Alphabet* alpha) :
   AbstractSequenceContainer(alpha),
   sequences_()
 {
@@ -155,7 +154,7 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
 
 /******************************************************************************/
 
-const Sequence& VectorSequenceContainer::getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+const Sequence& VectorSequenceContainer::getSequence(size_t sequenceIndex) const
 {
   // Specified sequence existence verification
   if (sequenceIndex < sequences_.size())
@@ -178,7 +177,7 @@ bool VectorSequenceContainer::hasSequence(const string& name) const
 
 /******************************************************************************/
 
-const Sequence& VectorSequenceContainer::getSequence(const string& name) const throw (SequenceNotFoundException)
+const Sequence& VectorSequenceContainer::getSequence(const string& name) const
 {
   // Specified sequence name research into all sequences
   for (size_t i = 0; i < sequences_.size(); i++)
@@ -191,7 +190,7 @@ const Sequence& VectorSequenceContainer::getSequence(const string& name) const t
 
 /******************************************************************************/
 
-Sequence& VectorSequenceContainer::getSequence_(size_t sequenceIndex) throw (IndexOutOfBoundsException)
+Sequence& VectorSequenceContainer::getSequence_(size_t sequenceIndex)
 {
   // Specified sequence existence verification
   if (sequenceIndex < sequences_.size())
@@ -201,7 +200,7 @@ Sequence& VectorSequenceContainer::getSequence_(size_t sequenceIndex) throw (Ind
 
 /******************************************************************************/
 
-Sequence& VectorSequenceContainer::getSequence_(const string& name) throw (SequenceNotFoundException)
+Sequence& VectorSequenceContainer::getSequence_(const string& name)
 {
   // Specified sequence name research into all sequences
   for (size_t i = 0; i < sequences_.size(); i++)
@@ -214,7 +213,7 @@ Sequence& VectorSequenceContainer::getSequence_(const string& name) throw (Seque
 
 /******************************************************************************/
 
-size_t VectorSequenceContainer::getSequencePosition(const string& name) const throw (SequenceNotFoundException)
+size_t VectorSequenceContainer::getSequencePosition(const string& name) const
 {
   // Specified sequence name research into all sequences
   for (size_t i = 0; i < sequences_.size(); i++)
@@ -227,7 +226,7 @@ size_t VectorSequenceContainer::getSequencePosition(const string& name) const th
 
 /******************************************************************************/
 
-void VectorSequenceContainer::setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception)
+void VectorSequenceContainer::setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName)
 {
   // Sequence's name existence checking
   if (checkName)
@@ -255,7 +254,7 @@ void VectorSequenceContainer::setSequence(size_t sequenceIndex, const Sequence& 
 
 /******************************************************************************/
 
-Sequence* VectorSequenceContainer::removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException)
+Sequence* VectorSequenceContainer::removeSequence(size_t sequenceIndex)
 {
   // Copy sequence:
   if (sequenceIndex >= sequences_.size())
@@ -269,7 +268,7 @@ Sequence* VectorSequenceContainer::removeSequence(size_t sequenceIndex) throw (I
 
 /******************************************************************************/
 
-void VectorSequenceContainer::deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException)
+void VectorSequenceContainer::deleteSequence(size_t sequenceIndex)
 {
   // Delete sequence
   if (sequenceIndex >= sequences_.size())
@@ -281,7 +280,7 @@ void VectorSequenceContainer::deleteSequence(size_t sequenceIndex) throw (IndexO
 
 /******************************************************************************/
 
-void VectorSequenceContainer::addSequence(const Sequence& sequence, bool checkName) throw (Exception)
+void VectorSequenceContainer::addSequence(const Sequence& sequence, bool checkName)
 {
   // Sequence's name existence checking
   if (checkName)
@@ -304,7 +303,7 @@ void VectorSequenceContainer::addSequence(const Sequence& sequence, bool checkNa
     throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
 }
 
-void VectorSequenceContainer::addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName) throw (Exception)
+void VectorSequenceContainer::addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName)
 {
   // Sequence's name existence checking
   if (checkName)
@@ -344,7 +343,6 @@ std::vector<std::string> VectorSequenceContainer::getSequencesNames() const
 void VectorSequenceContainer::setSequencesNames(
   const std::vector<std::string>& names,
   bool checkNames)
-throw (Exception)
 {
   if (names.size() != getNumberOfSequences())
     throw IndexOutOfBoundsException("VectorSequenceContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences(), getNumberOfSequences());
@@ -381,7 +379,7 @@ void VectorSequenceContainer::clear()
 
 /******************************************************************************/
 
-void VectorSequenceContainer::setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException)
+void VectorSequenceContainer::setComments(size_t sequenceIndex, const Comments& comments)
 {
   sequences_[sequenceIndex]->setComments(comments);
 }

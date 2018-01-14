@@ -54,7 +54,7 @@ SiteNotFoundException::SiteNotFoundException(const string & text, const string &
 	Exception("SequenceNotFoundException: " + text + "(" + sId + ")"),
 	id(sId) {};
 
-SiteNotFoundException::~SiteNotFoundException() throw() {};
+SiteNotFoundException::~SiteNotFoundException() {};
 
 const string SiteNotFoundException::getSiteId() const { return id; }
 

@@ -72,7 +72,7 @@ public:
    * @param nbExtraSpacesBeforeSeq Specify the number of extra space characters separating the sequence name form content. The default is 5 (hence 6 spaces in total) for backward compatibility, using 0 will not allow for any space in the sequence names.
    * @param charsByLine Number of character per line when writing file.
    */
-  Clustal(bool checkSequenceNames = true, unsigned int nbExtraSpacesBeforeSeq = 5, unsigned int charsByLine = 100) throw (Exception) :
+  Clustal(bool checkSequenceNames = true, unsigned int nbExtraSpacesBeforeSeq = 5, unsigned int charsByLine = 100) :
     checkNames_(checkSequenceNames),
     nbSpacesBeforeSeq_(nbExtraSpacesBeforeSeq + 1),
     charsByLine_(charsByLine)
@@ -86,7 +86,7 @@ public:
    *
    * @{
    */
-  void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception);
+  void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const;
   /** @} */
 
   /**
@@ -97,10 +97,10 @@ public:
    *
    * @{
    */
-  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const throw (Exception) {
+  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const {
     return readAlignment(input, alpha);
   }
-  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const throw (Exception) {
+  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const {
     return readAlignment(path, alpha);
   }
   /** @} */
@@ -110,8 +110,8 @@ public:
    *
    * @{
    */
-  void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception);
-  void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const throw (Exception)
+  void writeAlignment(std::ostream& output, const SiteContainer& sc) const;
+  void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const
   {
     AbstractOAlignment::writeAlignment(path, sc, overwrite);
   }

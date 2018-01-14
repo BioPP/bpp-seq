@@ -84,7 +84,7 @@ class SequenceNotFoundException :
 	    id(seqId) {};
 	
 		// Class destructor
-		virtual ~SequenceNotFoundException() throw() {}
+		virtual ~SequenceNotFoundException() {}
 	
 	public:
 
@@ -133,7 +133,7 @@ class EmptyContainerException :
     }
 	
 		// Class destructor
-		virtual ~EmptyContainerException() throw() {}
+		virtual ~EmptyContainerException() {}
 	
 	public:
 

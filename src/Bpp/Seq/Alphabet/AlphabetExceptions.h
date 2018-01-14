@@ -78,7 +78,7 @@ class AlphabetException:
       return *this;
     }
 	
-		virtual ~AlphabetException() throw () {}
+		virtual ~AlphabetException() {}
         
 	public:
 		/**
@@ -108,7 +108,7 @@ class BadCharException:
 		 */
 		BadCharException(const std::string & badChar, const std::string & text = "", const Alphabet * alpha = 0);
 	
-		virtual ~BadCharException() throw() {};
+		virtual ~BadCharException() {};
 	
 	public:
 		/**
@@ -137,7 +137,7 @@ class BadIntException:
 		 */
 		BadIntException(int badInt, const std::string& text = "", const Alphabet* alpha = 0);
 	
-		virtual ~BadIntException() throw() {}
+		virtual ~BadIntException() {}
 
 	public:
 		/**
@@ -179,7 +179,7 @@ class AlphabetMismatchException : public Exception
       return *this;
     }
 
-		virtual ~AlphabetMismatchException() throw() {}
+		virtual ~AlphabetMismatchException() {}
 
 	public:
 		/**
@@ -204,7 +204,7 @@ class CharStateNotSupportedException : public AlphabetException
      */
     CharStateNotSupportedException(const std::string & text = "", const Alphabet * alpha = 0);
 
-    virtual ~CharStateNotSupportedException() throw() {};
+    virtual ~CharStateNotSupportedException() {};
 };
 
 } //end of namespace bpp.

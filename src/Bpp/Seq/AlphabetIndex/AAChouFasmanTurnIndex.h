@@ -89,13 +89,13 @@ public:
   AAChouFasmanTurnIndex* clone() const { return new AAChouFasmanTurnIndex(); }
 
 public:
-  double getIndex(int state) const throw (BadIntException)
+  double getIndex(int state) const
   {
     if (state < 0 || state > 19) throw BadIntException(state, "AAChouFasmanTurnIndex::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
     return turn_[static_cast<size_t>(state)];
   }
 
-  double getIndex(const std::string& state) const throw (BadCharException)
+  double getIndex(const std::string& state) const
   {
     return turn_[static_cast<size_t>(AlphabetTools::PROTEIN_ALPHABET.charToInt(state))];
   }

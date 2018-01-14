@@ -62,7 +62,7 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::string& sequence,
   const Alphabet* alpha
-) throw (BadCharException) :
+) :
   AbstractCoreSequence(name),
   BasicSymbolList(alpha)
 {
@@ -75,7 +75,7 @@ BasicSequence::BasicSequence(
   const std::string& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) throw (BadCharException) :
+) :
   AbstractCoreSequence(name, comments),
   BasicSymbolList(alpha)
 {
@@ -87,7 +87,7 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::vector<std::string>& sequence,
   const Alphabet* alpha
-) throw (BadCharException) :
+) :
   AbstractCoreSequence(name),
   BasicSymbolList(sequence, alpha)
 {}
@@ -97,7 +97,7 @@ BasicSequence::BasicSequence(
   const std::vector<std::string>& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) throw (BadCharException) :
+) :
   AbstractCoreSequence(name, comments),
   BasicSymbolList(sequence, alpha)
 {}
@@ -106,7 +106,7 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::vector<int>& sequence,
   const Alphabet* alpha
-) throw (BadIntException) :
+) :
   AbstractCoreSequence(name),
   BasicSymbolList(sequence, alpha)
 {}
@@ -116,7 +116,7 @@ BasicSequence::BasicSequence(
   const std::vector<int>& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) throw (BadIntException) :
+) :
   AbstractCoreSequence(name, comments),
   BasicSymbolList(sequence, alpha)
 {}
@@ -153,7 +153,7 @@ BasicSequence& BasicSequence::operator=(const BasicSequence& s)
 
 /******************************************************************************/
 
-void BasicSequence::setContent(const std::string& sequence) throw (BadCharException)
+void BasicSequence::setContent(const std::string& sequence)
 {
   // Remove blanks in sequence
   content_ = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet());
@@ -202,7 +202,7 @@ void BasicSequence::setToSizeL(size_t newSize)
 
 /******************************************************************************/
 
-void BasicSequence::append(const Sequence& seq) throw (AlphabetMismatchException)
+void BasicSequence::append(const Sequence& seq)
 {
   if (seq.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("BasicSequence::append");
@@ -211,7 +211,7 @@ void BasicSequence::append(const Sequence& seq) throw (AlphabetMismatchException
     content_.push_back(seq[i]);
 }
 
-void BasicSequence::append(const std::vector<int>& content) throw (BadIntException)
+void BasicSequence::append(const std::vector<int>& content)
 {
   // Check list for incorrect characters
   for (size_t i = 0; i < content.size(); i++)
@@ -222,7 +222,7 @@ void BasicSequence::append(const std::vector<int>& content) throw (BadIntExcepti
     content_.push_back(content[i]);
 }
 
-void BasicSequence::append(const std::vector<std::string>& content) throw (BadCharException)
+void BasicSequence::append(const std::vector<std::string>& content)
 {
   // Check list for incorrect characters
   for (size_t i = 0; i < content.size(); i++)
@@ -234,7 +234,7 @@ void BasicSequence::append(const std::vector<std::string>& content) throw (BadCh
     content_.push_back(getAlphabet()->charToInt(content[i]));
 }
 
-void BasicSequence::append(const std::string& content) throw (BadCharException)
+void BasicSequence::append(const std::string& content)
 {
   append(StringSequenceTools::codeSequence(content, getAlphabet()));
 }

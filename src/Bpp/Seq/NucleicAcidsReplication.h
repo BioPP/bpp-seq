@@ -90,12 +90,12 @@ class NucleicAcidsReplication :
     const Alphabet* getSourceAlphabet() const { return nuc1_; }
     const Alphabet* getTargetAlphabet() const { return nuc2_; }
 
-    int translate(int state) const throw (BadIntException);
-    std::string translate(const std::string& state) const throw (BadCharException);    
-      Sequence* translate(const Sequence& sequence) const throw (AlphabetMismatchException);
-            int reverse(int state) const throw (BadIntException);    
-    std::string reverse(const std::string& state) const throw (BadCharException);      
-      Sequence* reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception);
+    int translate(int state) const;
+    std::string translate(const std::string& state) const;    
+      Sequence* translate(const Sequence& sequence) const;
+            int reverse(int state) const;    
+    std::string reverse(const std::string& state) const;      
+      Sequence* reverse(const Sequence& sequence) const;
 
 };
 

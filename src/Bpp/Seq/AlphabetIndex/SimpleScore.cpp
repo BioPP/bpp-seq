@@ -62,7 +62,6 @@ SimpleScore::SimpleScore(const Alphabet* alphabet, double match, double mismatch
 }
 
 double SimpleScore::getIndex(int state1, int state2) const
-throw (BadIntException)
 {
   size_t stateIndex1 = alphabet_->getStateIndex(state1);
   size_t stateIndex2 = alphabet_->getStateIndex(state2);
@@ -70,7 +69,6 @@ throw (BadIntException)
 }
 
 double SimpleScore::getIndex(const std::string& state1, const std::string& state2) const
-throw (BadCharException)
 {
   size_t stateIndex1 = alphabet_->getStateIndex(state1);
   size_t stateIndex2 = alphabet_->getStateIndex(state2);

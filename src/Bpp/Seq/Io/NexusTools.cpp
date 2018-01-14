@@ -70,7 +70,6 @@ std::string NexusTools::getNextNonCommentLine(std::istream& input)
 
 
 bool NexusTools::getNextCommand(std::istream& input, std::string& name, std::string& arguments, bool lineBrk)
-  throw (IOException)
 {
 	// Checking if the stream is readable
 	if (! input) { throw IOException ("NexusTools::getNextCommand(). Failed to read from stream"); }

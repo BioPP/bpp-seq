@@ -65,7 +65,6 @@ namespace bpp
      */
   public:
     const ProteicAlphabetState& getState(const std::string& letter) const
-      throw (BadCharException)
     {
       return dynamic_cast<const ProteicAlphabetState&>(
         AbstractAlphabet::getState(letter)
@@ -73,7 +72,6 @@ namespace bpp
     }
     
     const ProteicAlphabetState& getState(int num) const
-      throw (BadIntException)
     {
       return dynamic_cast<const ProteicAlphabetState&>(
         AbstractAlphabet::getState(num)
@@ -83,7 +81,6 @@ namespace bpp
   protected:
     
     const ProteicAlphabetState& getStateAt(size_t pos) const
-      throw (IndexOutOfBoundsException)
     {
       return dynamic_cast<const ProteicAlphabetState&>(
         AbstractAlphabet::getStateAt(pos)
@@ -91,7 +88,6 @@ namespace bpp
     }
     
     ProteicAlphabetState& getStateAt(size_t pos)
-      throw (IndexOutOfBoundsException)
     {
       return dynamic_cast<ProteicAlphabetState&>(
         AbstractAlphabet::getStateAt(pos)
@@ -123,10 +119,10 @@ namespace bpp
     unsigned int getSize() const { return 20; }
     unsigned int getNumberOfTypes() const { return 23; }
     int getUnknownCharacterCode() const { return 22; }
-    std::vector<int> getAlias(int state) const throw (BadIntException);
-    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
-    int getGeneric(const std::vector<int>& states) const throw (BadIntException);
-    std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
+    std::vector<int> getAlias(int state) const;
+    std::vector<std::string> getAlias(const std::string& state) const;
+    int getGeneric(const std::vector<int>& states) const;
+    std::string getGeneric(const std::vector<std::string>& states) const;
     bool isUnresolved(int state) const { return state > 19; }
     bool isUnresolved(const std::string& state) const { return charToInt(state) > 19; }
     std::string getAlphabetType() const { return "Proteic"; }
@@ -144,14 +140,14 @@ namespace bpp
      *
      * @param aa Char description of the amino-acid to analyse.
      */
-    std::string getAbbr(const std::string & aa) const throw (AlphabetException);
+    std::string getAbbr(const std::string & aa) const;
 	
     /**
      * @brief Get the abbreviation (3 letter code) for a state coded as int.
      *
      * @param aa Int description of the amino-acid to analyse.
      */
-    std::string getAbbr(int aa) const throw (AlphabetException);
+    std::string getAbbr(int aa) const;
     /** @} */
 		
   };

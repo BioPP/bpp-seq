@@ -102,7 +102,7 @@ namespace bpp
       bool suffixIsOptional = true,
       bool verbose = true,
       bool allowGeneric = false,
-      int warn = 1) throw (Exception);
+      int warn = 1);
 
     /**
      * @brief Build a GeneticCode object according to options.
@@ -117,7 +117,7 @@ namespace bpp
      * @return A new GeneticCode object
      * @throw Exception in case of bad description.
      */
-    static GeneticCode* getGeneticCode(const NucleicAlphabet* alphabet, const std::string& description) throw (Exception);
+    static GeneticCode* getGeneticCode(const NucleicAlphabet* alphabet, const std::string& description);
 
     /**
      * @brief Build a AlphabetIndex1 object for a given alphabet.
@@ -133,7 +133,7 @@ namespace bpp
         const Alphabet* alphabet,
         const std::string& description,
         const std::string& message = "Alphabet distance:",
-        bool verbose = true) throw (Exception);
+        bool verbose = true);
 
 
     /**
@@ -150,7 +150,7 @@ namespace bpp
         const Alphabet* alphabet,
         const std::string& description,
         const std::string& message = "Alphabet distance:",
-        bool verbose = true) throw (Exception);
+        bool verbose = true);
 
 
     /**

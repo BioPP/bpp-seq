@@ -87,17 +87,17 @@ public:
   ~RNY() {}
 
 public:
-  int charToInt(const std::string& state) const throw (BadCharException);
-  std::string intToChar(int state) const throw (BadIntException);
+  int charToInt(const std::string& state) const;
+  std::string intToChar(int state) const;
 
-  bool containsGap(const std::string& state) const throw (BadCharException);
+  bool containsGap(const std::string& state) const;
 
   unsigned int getSize() const { return 36; }
   unsigned int getNumberOfTypes() const { return 80; }
   int getUnknownCharacterCode() const { return 350; }
   bool isGap(int state) const;
-  std::vector<int   > getAlias(      int state) const throw (BadIntException);
-  std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+  std::vector<int   > getAlias(      int state) const;
+  std::vector<std::string> getAlias(const std::string& state) const;
   bool isUnresolved(int state) const;
   bool isUnresolved(const std::string& state) const;
 
@@ -116,9 +116,9 @@ public:
    * @param pos3 Char description for position 3.
    * @return The Char code of the triplet.
    */
-  std::string getRNY(const std::string&, const std::string&, const std::string&) const throw (BadCharException);
+  std::string getRNY(const std::string&, const std::string&, const std::string&) const;
 
-  int getRNY(int, int, int, const Alphabet&) const throw (BadCharException);
+  int getRNY(int, int, int, const Alphabet&) const;
 };
 }
 

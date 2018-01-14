@@ -89,7 +89,7 @@ class Site:
      * @param alpha    The alphabet to use.
      * @throw BadCharException If the content does not match the specified alphabet.
      */
-    Site(const std::vector<std::string>& site, const Alphabet* alpha) throw (BadCharException);
+    Site(const std::vector<std::string>& site, const Alphabet* alpha);
 
     /**
      * @brief Build a new Site object with the specified alphabet and position.
@@ -100,7 +100,7 @@ class Site:
      * @param position The position attribute for this site.
      * @throw BadCharException If the content does not match the specified alphabet.
      */
-    Site(const std::vector<std::string>& site, const Alphabet* alpha, int position) throw (BadCharException);
+    Site(const std::vector<std::string>& site, const Alphabet* alpha, int position);
 
     /**
      * @brief Build a new Site object with the specified alphabet.
@@ -110,7 +110,7 @@ class Site:
      * @param alpha    The alphabet to use.
      * @throw BadIntException If the content does not match the specified alphabet.
      */
-    Site(const std::vector<int>& site, const Alphabet* alpha) throw (BadIntException);
+    Site(const std::vector<int>& site, const Alphabet* alpha);
 
     /**
      * @brief Build a new Site object with the specified alphabet and position.
@@ -121,7 +121,7 @@ class Site:
      * @param position The position attribute for this site.
      * @throw BadIntException If the content does not match the specified alphabet.
      */
-    Site(const std::vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException);
+    Site(const std::vector<int>& site, const Alphabet* alpha, int position);
 
     /**
      * @brief The copy constructor.

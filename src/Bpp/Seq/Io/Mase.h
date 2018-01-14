@@ -78,21 +78,21 @@ class MaseHeader
     std::vector<std::string> getSiteSelectionNames() const { return MapTools::getKeys(siteSelections_); }
     std::vector<std::string> getSequenceSelectionNames() const { return MapTools::getKeys(sequenceSelections_); }
 
-    const std::string& getTree(const std::string& name) const throw (Exception) {
+    const std::string& getTree(const std::string& name) const {
       if (trees_.find(name) != trees_.end()) {
         return trees_[name];
       } else {
         throw Exception("MaseHeader::getTree. No tree with name " + name);
       }
     }
-    const MultiRange<size_t>& getSiteSelection(const std::string& name) const throw (Exception) {
+    const MultiRange<size_t>& getSiteSelection(const std::string& name) const {
       if (siteSelections_.find(name) != siteSelections_.end()) {
         return siteSelections_[name];
       } else {
         throw Exception("MaseHeader::getSiteSelection. No site selection with name " + name);
       }
     }
-    const std::vector<size_t>& getSequenceSelection(const std::string& name) const throw (Exception) {
+    const std::vector<size_t>& getSequenceSelection(const std::string& name) const {
       if (sequenceSelections_.find(name) != sequenceSelections_.end()) {
         return sequenceSelections_[name];
       } else {
@@ -155,12 +155,12 @@ class Mase:
      *
      * @{
      */
-    VectorSequenceContainer* readMeta(std::istream& input, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
+    VectorSequenceContainer* readMeta(std::istream& input, const Alphabet* alpha, MaseHeader& header) const
     {
       readHeader_(input, header);
       return AbstractISequence::readSequences(input, alpha);
     }
-    VectorSequenceContainer* readMeta(std::string& path, const Alphabet* alpha, MaseHeader& header) const throw (Exception)
+    VectorSequenceContainer* readMeta(std::string& path, const Alphabet* alpha, MaseHeader& header) const
     {
       std::ifstream input(path.c_str(), std::ios::in);
       VectorSequenceContainer* sc = readMeta(input, alpha, header);
@@ -174,7 +174,7 @@ class Mase:
      *
      * @{
      */
-    void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
+    void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const;
     /** @} */
 
     /**
@@ -182,7 +182,7 @@ class Mase:
      *
      * @{
      */
-    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception) {
+    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const {
       appendSequencesFromStream(input, sc); //This might cast an exception if sequences are not aligned! 
     }
     /** @} */
@@ -193,8 +193,8 @@ class Mase:
      *
      * @{
      */
-    void writeSequences(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
-    void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const throw (Exception)
+    void writeSequences(std::ostream& output, const SequenceContainer& sc) const;
+    void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const
     {
       AbstractOSequence::writeSequences(path, sc, overwrite);
     }
@@ -205,12 +205,12 @@ class Mase:
      *
      * @{
      */
-    void writeMeta(std::ostream& output, const SequenceContainer& sc, const MaseHeader& header) const throw (Exception)
+    void writeMeta(std::ostream& output, const SequenceContainer& sc, const MaseHeader& header) const
     {
       writeHeader_(output, header);
       writeSequences(output, sc);
     }
-    void writeMeta(const std::string& path, const SequenceContainer& sc, const MaseHeader& header, bool overwrite = true) const throw (Exception)
+    void writeMeta(const std::string& path, const SequenceContainer& sc, const MaseHeader& header, bool overwrite = true) const
     {
 			// Open file in specified mode
       std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
@@ -246,7 +246,7 @@ class Mase:
     void checkNames(bool yn) { checkNames_ = yn; }
 
   private:
-    void readHeader_(std::istream& input, MaseHeader& header) const throw (Exception);
+    void readHeader_(std::istream& input, MaseHeader& header) const;
     void writeHeader_(std::ostream& output, const MaseHeader& header) const;
 };
 

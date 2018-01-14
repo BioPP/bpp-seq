@@ -125,7 +125,7 @@ public:
    * @param end      The last position of the subsequence (included).
    * @param output   A sequence object to be appended with the given subsequence.
    */
-  static void subseq(const Sequence& sequence, size_t begin, size_t end, Sequence& output) throw (Exception) {
+  static void subseq(const Sequence& sequence, size_t begin, size_t end, Sequence& output) {
     if (end < begin || end >= sequence.size())
       throw Exception("SequenceTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
     std::vector<int> content(end - begin + 1);
@@ -143,7 +143,7 @@ public:
    * @param end   The last position of the subsequence.
    * @return A new sequence object with the given subsequence.
    */
-  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end) throw (IndexOutOfBoundsException, Exception) {
+  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end) {
     Sequence* seq = new BasicSequence(sequence.getAlphabet());
     seq->setName(sequence.getName());
     seq->setComments(sequence.getComments());
@@ -165,8 +165,7 @@ public:
    * @throw AlphabetMismatchException If the two alphabets do not match.
    * @throw Exception If the sequence names do not match.
    */
-  static Sequence* concatenate(const Sequence& seq1, const Sequence& seq2)
-  throw (AlphabetMismatchException, Exception);
+  static Sequence* concatenate(const Sequence& seq1, const Sequence& seq2);
 
   /**
    * @brief Complement the nucleotide sequence itself
@@ -176,7 +175,7 @@ public:
    * @throw AlphabetException if the sequence is not a nucleotide sequence.
    * @author Sylvain Gaillard
    */
-  static Sequence& complement(Sequence& seq) throw (AlphabetException);
+  static Sequence& complement(Sequence& seq);
 
   /**
    * @brief Get the complementary sequence of a nucleotide sequence.
@@ -186,7 +185,7 @@ public:
    * @param sequence The sequence to complement.
    * @throw AlphabetException If the sequence is not a nucleotide sequence.
    */
-  static Sequence* getComplement(const Sequence& sequence) throw (AlphabetException);
+  static Sequence* getComplement(const Sequence& sequence);
 
   /**
    * @brief Get the transcription sequence of a DNA sequence.
@@ -198,7 +197,7 @@ public:
    * @param sequence The sequence to transcript.
    * @throw AlphabetException If the sequence is not a DNA sequence.
    */
-  static Sequence* transcript(const Sequence& sequence) throw (AlphabetException);
+  static Sequence* transcript(const Sequence& sequence);
 
   /**
    * @brief Get the reverse-transcription sequence of a RNA sequence.
@@ -210,7 +209,7 @@ public:
    * @param sequence The sequence to reverse-transcript.
    * @throw AlphabetException If the sequence is not a RNA sequence.
    */
-  static Sequence* reverseTranscript(const Sequence& sequence) throw (AlphabetException);
+  static Sequence* reverseTranscript(const Sequence& sequence);
 
   /**
    * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
@@ -257,7 +256,7 @@ public:
    * @throw AlphabetMismatchException If the two sequences do not have the same alphabet.
    * @throw SequenceNotAlignedException If the two sequences do not have the same length.
    */
-  static double getPercentIdentity(const Sequence& seq1, const Sequence& seq2, bool ignoreGaps = false) throw (AlphabetMismatchException, SequenceNotAlignedException);
+  static double getPercentIdentity(const Sequence& seq1, const Sequence& seq2, bool ignoreGaps = false);
 
   /**
    * @return The number of sites in the sequences, <i>i.e.</i> all positions without gaps.
@@ -320,7 +319,7 @@ public:
    * @param gCode The genetic code according to which stop codons are specified.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static void removeStops(Sequence& seq, const GeneticCode& gCode) throw (Exception);
+  static void removeStops(Sequence& seq, const GeneticCode& gCode);
 
   /**
    * @brief Get a copy of the codon sequence without stops.
@@ -333,7 +332,7 @@ public:
    * @return A new sequence object without stops.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static Sequence* getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode) throw (Exception);
+  static Sequence* getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode);
 
   /**
    * @brief Replace stop codons by gaps.
@@ -343,7 +342,7 @@ public:
    * @param gCode The genetic code according to which stop codons are specified.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static void replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode) throw (Exception);
+  static void replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode);
 
   /**
    * @brief Bowker's test for homogeneity.
@@ -360,7 +359,7 @@ public:
    * @return A BowkerTest object with the computed statistic and p-value (computed from a chi square distribution).
    * @throw SequenceNotAlignedException If the two sequences do not have the same length.
    */
-  static BowkerTest* bowkerTest(const Sequence& seq1, const Sequence& seq2) throw (SequenceNotAlignedException);
+  static BowkerTest* bowkerTest(const Sequence& seq1, const Sequence& seq2);
 
   /**
    * @brief Get all putatives haplotypes from an heterozygous sequence.
@@ -382,7 +381,7 @@ public:
    * @author Sylvain Gaillard
    */
 
-  static Sequence* combineSequences(const Sequence& s1, const Sequence& s2) throw (AlphabetMismatchException);
+  static Sequence* combineSequences(const Sequence& s1, const Sequence& s2);
 
   /**
    * @brief Subtract haplotype from an heterozygous sequence.
@@ -409,7 +408,7 @@ public:
    *
    * @author Sylvain Gaillard
    */
-  static Sequence* subtractHaplotype(const Sequence& s, const Sequence& h, std::string name = "", unsigned int level = 1) throw (SequenceNotAlignedException);
+  static Sequence* subtractHaplotype(const Sequence& s, const Sequence& h, std::string name = "", unsigned int level = 1);
 
   /**
    * @brief Get the RNY decomposition of a DNA sequence; with a given
@@ -425,8 +424,8 @@ public:
    *
    * @author Laurent Guéguen
    */
-  static Sequence* RNYslice(const Sequence& sequence, int ph) throw (AlphabetException);
-  static Sequence* RNYslice(const Sequence& sequence) throw (AlphabetException);
+  static Sequence* RNYslice(const Sequence& sequence, int ph);
+  static Sequence* RNYslice(const Sequence& sequence);
 
   /**
    * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.

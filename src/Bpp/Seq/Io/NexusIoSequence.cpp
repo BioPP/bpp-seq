@@ -54,7 +54,7 @@ using namespace std;
 
 /******************************************************************************/
 
-const std::vector<std::string> NexusIOSequence::splitNameAndSequence_(const std::string& s) const throw (Exception)
+const std::vector<std::string> NexusIOSequence::splitNameAndSequence_(const std::string& s) const
 {
   vector<string> v(2);
   string::size_type index = s.find(" ");
@@ -67,7 +67,7 @@ const std::vector<std::string> NexusIOSequence::splitNameAndSequence_(const std:
   
 /******************************************************************************/
 
-void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) const throw (Exception)
+void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) const
 {
   // Checking the existence of specified file
   if (!input) { throw IOException ("NexusIOSequence::read(). Fail to open file"); }

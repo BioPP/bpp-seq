@@ -79,7 +79,7 @@ class AbstractISequence:
      * @param sc     The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-   virtual void readSequences(std::istream& input, SequenceContainer& sc) const throw (Exception)
+   virtual void readSequences(std::istream& input, SequenceContainer& sc) const
     {
       appendSequencesFromStream(input, sc);
     }
@@ -91,19 +91,19 @@ class AbstractISequence:
      * @param sc    The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual void readSequences(const std::string& path, SequenceContainer& sc) const throw (Exception)
+    virtual void readSequences(const std::string& path, SequenceContainer& sc) const
     {
       appendSequencesFromFile(path, sc);
     }
  
     virtual
-    VectorSequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    VectorSequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const
     {
       return readSequencesFromStream(input, alpha);
     }
 
     virtual
-    VectorSequenceContainer* readSequences(const std::string& path , const Alphabet* alpha) const throw (Exception)
+    VectorSequenceContainer* readSequences(const std::string& path , const Alphabet* alpha) const
     {
       return readSequencesFromFile(path, alpha);
     }
@@ -120,7 +120,7 @@ class AbstractISequence:
      * @param sc     The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception) = 0;
+    virtual void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const = 0;
   
     /**
      * @brief Append sequences to a container from a file.
@@ -129,7 +129,7 @@ class AbstractISequence:
      * @param sc    The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual void appendSequencesFromFile(const std::string& path, SequenceContainer& sc) const throw (Exception)
+    virtual void appendSequencesFromFile(const std::string& path, SequenceContainer& sc) const
     {
       std::ifstream input(path.c_str(), std::ios::in);
       appendSequencesFromStream(input, sc);
@@ -144,7 +144,7 @@ class AbstractISequence:
      * @return A sequence container.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual VectorSequenceContainer* readSequencesFromStream(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    virtual VectorSequenceContainer* readSequencesFromStream(std::istream& input, const Alphabet* alpha) const
     {
       VectorSequenceContainer* vsc = new VectorSequenceContainer(alpha);
       appendSequencesFromStream(input, *vsc);
@@ -158,7 +158,7 @@ class AbstractISequence:
      * @param alpha The alphabet to use.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual VectorSequenceContainer* readSequencesFromFile(const std::string& path , const Alphabet* alpha) const throw (Exception)
+    virtual VectorSequenceContainer* readSequencesFromFile(const std::string& path , const Alphabet* alpha) const
     {
       VectorSequenceContainer* vsc = new VectorSequenceContainer(alpha);
       appendSequencesFromFile(path, *vsc);

@@ -69,7 +69,7 @@ public:
    * If the input matrix is square, it will be considered non-symetric.
    * @throw IOException if the stream content does not follow the AAIndex2 database entry format.
    */
-  AAIndex2Entry(std::istream& input, bool sym = true) throw (IOException);
+  AAIndex2Entry(std::istream& input, bool sym = true);
 
   AAIndex2Entry(const AAIndex2Entry& index) :
     property_(index.property_),
@@ -92,14 +92,14 @@ public:
 
   AAIndex2Entry* clone() const { return new AAIndex2Entry(*this); }
 
-  double getIndex(int state1, int state2) const throw (BadIntException)
+  double getIndex(int state1, int state2) const
   {
     size_t stateIndex1 = alpha_->getStateIndex(state1);
     size_t stateIndex2 = alpha_->getStateIndex(state2);
     return property_(stateIndex1, stateIndex2);
   }
 
-  double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException)
+  double getIndex(const std::string& state1, const std::string& state2) const
   {
     size_t stateIndex1 = alpha_->getStateIndex(state1);
     size_t stateIndex2 = alpha_->getStateIndex(state2);
