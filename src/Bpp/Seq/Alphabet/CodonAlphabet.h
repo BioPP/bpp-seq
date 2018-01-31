@@ -73,6 +73,8 @@ namespace bpp
      * @brief Builds a new codon alphabet from a nucleic alphabet.
      * 
      * @param alpha The nucleic alphabet to be used.
+     *
+     * Takes ownership of the NucleicAlphabet object (dynamically allocated).
      */
     CodonAlphabet(const NucleicAlphabet* alpha) :
       AbstractAlphabet(),

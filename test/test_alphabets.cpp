@@ -54,7 +54,7 @@ int main() {
   NucleicAlphabet* rna = new RNA();
   Alphabet* pro = new ProteicAlphabet;
   Alphabet* def = new DefaultAlphabet;
-  Alphabet* cdn = new CodonAlphabet(rna);
+  Alphabet* cdn = new CodonAlphabet(rna); // Takes ownership of rna
 
   //Testing functions:
   if (!AlphabetTools::isDNAAlphabet(dna)) return 1;
@@ -64,11 +64,10 @@ int main() {
   if (!AlphabetTools::isProteicAlphabet(pro)) return 1;
   if (!AlphabetTools::isCodonAlphabet(cdn)) return 1;
 
-  delete dna;
-  delete rna;
-  delete pro;
-  delete def;
   delete cdn;
+  delete def;
+  delete pro;
+  delete dna;
 
   return (0);
 }
