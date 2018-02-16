@@ -102,7 +102,8 @@ namespace bpp
 
     virtual ~CodonAlphabet()
     {
-      delete nAlph_;
+      if (nAlph_)
+        delete nAlph_;
     }
   
     std::string getAlphabetType() const

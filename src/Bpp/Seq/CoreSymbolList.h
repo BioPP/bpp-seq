@@ -421,12 +421,12 @@ namespace bpp
      *
      */
     
-    double getStateValueAt(size_t siteIndex, int state) const
+    virtual double getStateValueAt(size_t siteIndex, int state) const
     {
       return CoreSymbolList<T>::getStateValueAt(siteIndex, state);
     }
     
-    double operator()(size_t siteIndex, int state) const 
+    virtual double operator()(size_t siteIndex, int state) const 
     {
       return CoreSymbolList<T>::operator()(siteIndex, state);
     }

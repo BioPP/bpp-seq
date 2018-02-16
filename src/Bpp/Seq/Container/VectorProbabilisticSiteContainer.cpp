@@ -123,8 +123,10 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
 
   // Now add each site:
   for (size_t i = 0; i < avc.getNumberOfSites(); i++)
-    appendSite(shared_ptr<ProbabilisticSite>(new ProbabilisticSite(avc.getSymbolListSite(i))));
-  
+  {
+    shared_ptr<ProbabilisticSite> ps(new ProbabilisticSite(avc.getSymbolListSite(i)));
+    appendSite(ps);
+  }
 }
 
 

@@ -54,7 +54,7 @@ int main() {
   NucleicAlphabet* rna = new RNA();
   Alphabet* pro = new ProteicAlphabet;
   Alphabet* def = new DefaultAlphabet;
-  Alphabet* cdn = new CodonAlphabet(rna);
+  Alphabet* cdn = new CodonAlphabet(rna->clone());
 
   //Testing functions:
   if (!AlphabetTools::isDNAAlphabet(dna)) return 1;

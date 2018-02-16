@@ -213,7 +213,7 @@ namespace bpp
 
     virtual std::string getChar(size_t pos) const;
 
-    double getStateValueAt(size_t siteIndex, int state) const
+    virtual double getStateValueAt(size_t siteIndex, int state) const
     {
       if (siteIndex >= content_.size())
         throw IndexOutOfBoundsException("IntSymbolList::getStateValueAt.", siteIndex, 0, content_.size() - 1);
@@ -221,7 +221,7 @@ namespace bpp
       return getAlphabet()->isResolvedIn(content_[siteIndex],state)?1.:0.;
     }
     
-    double operator()(size_t siteIndex, int state) const 
+    virtual double operator()(size_t siteIndex, int state) const 
     {
       return getAlphabet()->isResolvedIn(content_[siteIndex],state)?1.:0.;
     }

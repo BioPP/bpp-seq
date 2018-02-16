@@ -210,8 +210,12 @@ VectorSiteContainer::VectorSiteContainer(const AlignedValuesContainer& avc) :
   // Seq names and comments:
   
   for (size_t i = 0; i < nbSeq; i++)
-    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence(avc.getName(i), "", alpha)), avc.getName(i));
-
+  {
+    std::shared_ptr<Sequence> ps(new BasicSequence(avc.getName(i), "", alpha));
+    
+    VectorMappedContainer<Sequence>::appendObject(ps, avc.getName(i));
+  }
+  
   // Now try to add each site:
   for (size_t i = 0; i < avc.getNumberOfSites(); i++)
   {

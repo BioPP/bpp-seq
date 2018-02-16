@@ -236,9 +236,7 @@ public :
   {
     if (siteIndex >= content_.getNumberOfColumns())
       throw IndexOutOfBoundsException("ProbabilisticSymbolList::getStateValueAt.", siteIndex, 0, content_.getNumberOfColumns() - 1);
-      
     return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state)-1];
-    
   }
     
   double operator()(size_t siteIndex, int state) const 

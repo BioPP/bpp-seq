@@ -148,9 +148,9 @@ namespace bpp
     void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = false)
     {
       if (checkName && hasObject(name))
-        throw Exception("MappedNamedContainer::setObject : Object's name already exists in container : " + name);
-
-      mObjects_[name] = object;
+        throw Exception("MappedNamedContainer::addObject : Object's name already exists in container : " + name);
+      std::string nn=name;
+      mObjects_[nn] = object;
     }
 
     /**
@@ -221,7 +221,8 @@ namespace bpp
       if (checkName && hasObject(name))
         throw Exception("MappedNamedContainer::setObject : Object's name already exists in container : " + name);
 
-      const_cast<std::map<std::string, std::shared_ptr<T> >& >(mObjects_)[name] = object;
+      std::string nn=name;
+      const_cast<std::map<std::string, std::shared_ptr<T> >& >(mObjects_)[nn] = object;
     }
 
 
