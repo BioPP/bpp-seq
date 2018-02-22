@@ -114,12 +114,11 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   size_t nRow=alpha->getSize();
   if (avc.getNumberOfSites() == 0) throw Exception("VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(AlignedValuesContainer). Empty site set.");
 
-  size_t nbSeq=avc.getSymbolListSite(0).size();
-  
   // Seq names and comments:
-  
-  for (size_t i = 0; i < nbSeq; i++)
-    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence("Seq_" + TextTools::toString(i), Table<double>(nRow,0), alpha)), "Seq_" + TextTools::toString(i));
+
+  vector<string> vn=avc.getSequencesNames();
+  for (auto& n : vn)
+    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(n, Table<double>(nRow,0), alpha)), n);
 
   // Now add each site:
   for (size_t i = 0; i < avc.getNumberOfSites(); i++)
@@ -202,7 +201,7 @@ void VectorProbabilisticSiteContainer::appendSite(std::shared_ptr<ProbabilisticS
         throw Exception("VectorProbabilisticSiteContainer::appendSite. Site position: " + TextTools::toString(position) + ", already used in container.");
     }
   }
-  
+
   VectorPositionedContainer<ProbabilisticSite>::appendObject(site);
 }
 

@@ -51,8 +51,8 @@ using namespace std;
 
 /********************************************************************************/
 
-bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasLabels, vector<int> & permutationMap) const {
-
+bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasLabels, vector<int> & permutationMap) const
+{
   if(!input)
     throw IOException("Pasta::nextSequence : can't read from istream input");
 
@@ -124,7 +124,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
   }
 
   seq.setName(seqname);
-
+  
   /* finally, deal with the content */
 
   // there is a header that specifies to which character each
@@ -273,9 +273,9 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
 
       input.putback(c);
       c = last_c;
-      BasicProbabilisticSequence tmpseq(container.getAlphabet()); // add probabilistic sequences instead
-      hasSeq = nextSequence(input, tmpseq, hasLabels, permutationMap);
-      container.addSequence(std::make_shared<BasicProbabilisticSequence>(tmpseq), checkNames_);
+      shared_ptr<BasicProbabilisticSequence> tmpseq(new BasicProbabilisticSequence(container.getAlphabet())); // add probabilistic sequences instead
+      hasSeq = nextSequence(input, *tmpseq, hasLabels, permutationMap);
+      container.addSequence(tmpseq, checkNames_);
     }
   }
   if(extended_ && cmts.size()) {
