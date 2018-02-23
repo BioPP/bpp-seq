@@ -1,5 +1,5 @@
 %define _basename bpp-seq
-%define _version 2.3.1
+%define _version 2.4.0
 %define _release 1
 %define _prefix /usr
 
@@ -27,11 +27,11 @@ AutoProv: yes
 This library contains utilitary and classes for bio-sequence analysis.
 It is part of the Bio++ project.
 
-%package -n libbpp-seq11
+%package -n libbpp-seq12
 Summary: Bio++ Sequence library
 Group: Development/Libraries/C and C++
 
-%description -n libbpp-seq11
+%description -n libbpp-seq12
 This library contains utilitary and classes for bio-sequence analysis.
 It is part of the Bio++ project.
 
