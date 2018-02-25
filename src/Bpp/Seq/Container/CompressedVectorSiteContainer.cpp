@@ -50,8 +50,7 @@ using namespace bpp;
 
 CompressedVectorSiteContainer::CompressedVectorSiteContainer(
   const std::vector<const Site*>& vs,
-  const Alphabet* alpha)
-throw (Exception) :
+  const Alphabet* alpha) :
   VectorPositionedContainer<Site>(),
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(alpha),
@@ -182,7 +181,7 @@ CompressedVectorSiteContainer& CompressedVectorSiteContainer::operator=(const Si
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositions) throw (Exception)
+void CompressedVectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositions)
 {
   if (pos >= getNumberOfSites())
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::setSite.", pos, 0, getNumberOfSites() - 1);
@@ -259,7 +258,7 @@ void CompressedVectorSiteContainer::setSite(size_t pos, const Site& site, bool c
 
 /******************************************************************************/
 
-std::shared_ptr<Site> CompressedVectorSiteContainer::deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException)
+std::shared_ptr<Site> CompressedVectorSiteContainer::deleteSite(size_t siteIndex)
 {
   if (siteIndex >= getNumberOfSites())
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::deleteSite.", siteIndex, 0, getNumberOfSites() - 1);
@@ -305,7 +304,7 @@ void CompressedVectorSiteContainer::deleteSites(size_t siteIndex, size_t length)
 
 /***************************************************************************/
 
-void CompressedVectorSiteContainer::addSite(const Site& site, bool checkPositions) throw (Exception)
+void CompressedVectorSiteContainer::addSite(const Site& site, bool checkPositions)
 {
   // Check size:
   if (getNumberOfSequences()!=0 && site.size() != getNumberOfSequences())
@@ -334,7 +333,7 @@ void CompressedVectorSiteContainer::addSite(const Site& site, bool checkPosition
 
 /******************************************************************************/
 
-void CompressedVectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions) throw (Exception)
+void CompressedVectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions)
 {
   if (siteIndex >= getNumberOfSites())
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
@@ -427,7 +426,6 @@ void CompressedVectorSiteContainer::clear()
   VectorMappedContainer<Sequence>::clear();
   index_.clear();
 }
-
 
 /******************************************************************************/
 

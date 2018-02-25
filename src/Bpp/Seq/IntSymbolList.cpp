@@ -46,13 +46,13 @@ using namespace std;
 
 /****************************************************************************************/
 
-BasicIntSymbolList::BasicIntSymbolList(const std::vector<string>& list, const Alphabet* alpha) throw (BadCharException) :
+BasicIntSymbolList::BasicIntSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
   SymbolList<int>(alpha)
 {
   setContent(list);
 }
 
-BasicIntSymbolList::BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException) :
+BasicIntSymbolList::BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
   SymbolList<int>(alpha)
 {
   setContent(list);
@@ -87,7 +87,7 @@ BasicIntSymbolList& BasicIntSymbolList::operator=(const BasicIntSymbolList& list
 
 /****************************************************************************************/
 
-void BasicIntSymbolList::setContent(const vector<string>& list) throw (BadCharException)
+void BasicIntSymbolList::setContent(const vector<string>& list)
 {
   // Check list for incorrect characters
   vector<int> coded(list.size());
@@ -165,13 +165,13 @@ string BasicIntSymbolList::getChar(size_t pos) const
 
 /****************************************************************************************/
 
-EdIntSymbolList::EdIntSymbolList(const std::vector<string>& list, const Alphabet* alpha) throw (BadCharException) :
+EdIntSymbolList::EdIntSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
   EdSymbolList<int>(alpha)
 {
   setContent(list);
 }
 
-EdIntSymbolList::EdIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException) :
+EdIntSymbolList::EdIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
   EdSymbolList<int>(list, alpha)
 {
 }
@@ -191,7 +191,7 @@ EdIntSymbolList& EdIntSymbolList::operator=(const EdIntSymbolList& list)
 
 /****************************************************************************************/
 
-void EdIntSymbolList::setContent(const vector<string>& list) throw (BadCharException)
+void EdIntSymbolList::setContent(const vector<string>& list)
 {
   // Check list for incorrect characters
   vector<int> coded(list.size());

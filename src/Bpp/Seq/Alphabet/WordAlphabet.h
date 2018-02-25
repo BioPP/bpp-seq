@@ -83,7 +83,6 @@ namespace bpp
      * @return The int code of the word.
      * @throw IndexOutOfBoundsException In case of wrong position.
      */
-    
     virtual int getWord(const std::vector<int>& vint, size_t pos = 0) const = 0;
 
     /**
@@ -96,7 +95,6 @@ namespace bpp
      * @return The string of the word.
      * @throw IndexOutOfBoundsException In case of wrong position.
      */
-    
     virtual std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const = 0;
 
     /**
@@ -106,7 +104,6 @@ namespace bpp
      * @param n The position in the word (starting at 0).
      * @return The int description of the n-position of the word.
      */
-    
     virtual int getNPosition(int word, size_t n) const = 0;
     
     /**
@@ -115,7 +112,6 @@ namespace bpp
      * @param word The int description of the word.
      * @return The int description of the positions of the codon.
      */
-
     virtual std::vector<int> getPositions(int word) const = 0;
 
     /**
@@ -125,7 +121,6 @@ namespace bpp
      * @param n The position in the word (starting at 0).
      * @return The char description of the n-position of the word.
      */
-
     virtual std::string getNPosition(const std::string& word, size_t n) const = 0;
 
     /**
@@ -134,7 +129,6 @@ namespace bpp
      * @param word The char description of the word.
      * @return The char description of the three positions of the word.
      */
-
     virtual std::vector<std::string> getPositions(const std::string& word) const = 0;
 
     /**
@@ -146,7 +140,6 @@ namespace bpp
      * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
      * @throw Exception                 Other kind of error, depending on the implementation.
      */
-
     virtual Sequence* translate(const Sequence &sequence, size_t pos = 0) const = 0;
 
     /**
@@ -157,7 +150,6 @@ namespace bpp
      * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
      * @throw Exception                 Other kind of error, depending on the implementation.
      */
-    
     virtual Sequence* reverse(const Sequence& sequence) const = 0;
 
   private:
@@ -190,12 +182,10 @@ namespace bpp
  * of the Alphabets. They are made from the resolved letters of the
  * Alphabets.
  */
-
-    
-  class WordAlphabet :
-    public virtual CoreWordAlphabet,
-    public AbstractAlphabet
-  {
+class WordAlphabet :
+  public virtual CoreWordAlphabet,
+  public AbstractAlphabet
+{
   protected:
     std::vector<const Alphabet* > vAbsAlph_;
 
@@ -252,9 +242,9 @@ namespace bpp
      * @return The name of the state.
      * @throw BadCharException When state is not a valid char description.
      */
-    std::string getName(const std::string& state) const throw (BadCharException);
+    std::string getName(const std::string& state) const;
 
-    int charToInt(const std::string& state) const throw (BadCharException)
+    int charToInt(const std::string& state) const
     {
       if (state.size() != vAbsAlph_.size())
         throw BadCharException(state, "WordAlphabet::charToInt", this);
@@ -273,7 +263,7 @@ namespace bpp
     /** @} */
 
 
-    bool isResolvedIn(int state1, int state2) const throw (BadIntException);
+    bool isResolvedIn(int state1, int state2) const;
 
     /**
      * @brief Returns True if the Alphabet of the letters in the word
@@ -311,13 +301,13 @@ namespace bpp
     bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
     bool isUnresolved(const std::string& state) const { return charToInt(state) == getUnknownCharacterCode(); }
 
-    std::vector<int> getAlias(int state) const throw (BadIntException);
+    std::vector<int> getAlias(int state) const;
 
-    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+    std::vector<std::string> getAlias(const std::string& state) const;
     
-    int getGeneric(const std::vector<int>& states) const throw (BadIntException);
+    int getGeneric(const std::vector<int>& states) const;
 
-    std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
+    std::string getGeneric(const std::vector<std::string>& states) const;
 
   private:
     /**

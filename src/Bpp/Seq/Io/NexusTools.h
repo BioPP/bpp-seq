@@ -74,7 +74,7 @@ class NexusTools
      * @return Whether a command was found in the current block.
      * @throw IOException In case of bad format.
      */
-    static bool getNextCommand(std::istream& input, std::string& name, std::string& arguments, bool lineBrk = true) throw (IOException);
+    static bool getNextCommand(std::istream& input, std::string& name, std::string& arguments, bool lineBrk = true);
 
 };
 

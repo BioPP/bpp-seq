@@ -70,7 +70,6 @@ namespace bpp
      *
      * @param sequenceIndex The position of the sequence.
      * @return A reference toward the Sequence object with corresponding name.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
      */
     virtual const Sequence& getSequence(size_t sequenceIndex) const = 0;
 
@@ -81,18 +80,14 @@ namespace bpp
      * @param sequence      The sequence to add.
      * @param checkName     Tell if the container must check if the name of the sequence
      * is already used in the container before adding it.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
-     * @throw Exception Any other kind of exception.
      */
 
-    virtual void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception) = 0;
+    virtual void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) = 0;
 
     /**
      * @brief Extract (and remove) a sequence from the container.
      *
      * @param sequenceIndex The position of the sequence.
-     * @throw IndexOutOfBoundsException If the name does not match any sequence in
-     * the container.
      */
 
     virtual Sequence* removeSequence(size_t sequenceIndex) = 0;
@@ -107,9 +102,9 @@ namespace bpp
      * @{
      */
 
-    virtual int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+    virtual int& valueAt(const std::string& sequenceName, size_t elementIndex) = 0;
 
-    virtual const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+    virtual const int& valueAt(const std::string& sequenceName, size_t elementIndex) const = 0;
 
     /**
      * @brief Element access operator.
@@ -118,9 +113,8 @@ namespace bpp
      * 
      * @param sequenceIndex The sequence position.
      * @param elementIndex The element position within the sequence.
-     * @throw IndexOutOfBoundsException If a position is not valid.
      */
-    virtual int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException) = 0;
+    virtual int& valueAt(size_t sequenceIndex, size_t elementIndex) = 0;
     
     /**
      * @brief Element access operator.
@@ -129,10 +123,8 @@ namespace bpp
      * 
      * @param sequenceIndex The sequence position.
      * @param elementIndex The element position within the sequence.
-     * @throw IndexOutOfBoundsException If a position is not valid.
      */
-
-    virtual const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const int& valueAt(size_t sequenceIndex, size_t elementIndex) const = 0;
 
     /**
      * @brief Element access operator.
@@ -168,20 +160,20 @@ namespace bpp
      *
      * @{
      */
-    virtual std::string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
+    virtual std::string toString(const std::string& name) const = 0;  
     virtual const Sequence& getSequence(const std::string& name) const = 0;
-    virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;
+    virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) = 0;
     virtual Sequence* removeSequence(const std::string& name) = 0;
     virtual size_t getNumberOfSequences() const = 0;
     virtual std::vector<std::string> getSequencesNames() const = 0;
-    virtual void setSequencesNames(const std::vector<std::string> & names, bool checkNames) throw (Exception) = 0;
+    virtual void setSequencesNames(const std::vector<std::string> & names, bool checkNames) = 0;
     
     /*
      * @brief For backward compatibility
      *
      */
     
-    virtual const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException) = 0;
+    virtual const Comments& getComments(const std::string& name) const = 0;
     virtual void setComments(const std::string& name, const Comments& comments) = 0;
     /** @} */
 

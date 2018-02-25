@@ -93,7 +93,7 @@ namespace bpp
      * @param alpha The common alphabet for all sites.
      * @throw Exception If sites differ in size or in alphabet.
      */
-    CompressedVectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha) throw (Exception);
+    CompressedVectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha);
     /**
      * @brief Build a new empty container with specified size.
      *
@@ -138,28 +138,28 @@ namespace bpp
      *
      * @{
      */
-    const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException)
+    const Site& getSite(size_t siteIndex) const
     {
       return *VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
     }
     
-    Site& getSite(size_t siteIndex) throw (IndexOutOfBoundsException)
+    Site& getSite(size_t siteIndex)
     {
       return *VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
     }
     
-    void setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
+    void setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
       
-    std::shared_ptr<Site> deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
+    std::shared_ptr<Site> deleteSite(size_t siteIndex);
 
     
-    void addSite(const Site& site, bool checkPosition = false) throw (Exception);
-    void addSite(const Site& site, int position, bool checkPosition = false) throw (Exception)
+    void addSite(const Site& site, bool checkPosition = false);
+    void addSite(const Site& site, int position, bool checkPosition = false)
     {
       addSite(site, checkPosition);
     }
-    void addSite(const Site& site, size_t siteIndex, bool checkPosition = false) throw (Exception);
-    void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = false) throw (Exception)
+    void addSite(const Site& site, size_t siteIndex, bool checkPosition = false);
+    void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = false)
     {
       addSite(site, siteIndex, checkPosition);
     }
@@ -247,7 +247,7 @@ namespace bpp
       return VectorMappedContainer<Sequence>::getObjectsNames();
     }
   
-    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception)
+    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
     {
       VectorMappedContainer<Sequence>::setObjectsNames(names);
     }
@@ -256,13 +256,13 @@ namespace bpp
 
     CompressedVectorSiteContainer* createEmptyContainer() const;
 
-    int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    int& valueAt(const std::string& sequenceName, size_t elementIndex)
     {
       if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
       return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[getSequencePosition(sequenceName)];
     }
 
-    const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
     {
       if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
       return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[getSequencePosition(sequenceName)];
@@ -278,14 +278,14 @@ namespace bpp
       return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[getSequencePosition(sequenceName)];
     }
 
-    int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException)
+    int& valueAt(size_t sequenceIndex, size_t elementIndex)
     {
       if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
       if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
       return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[sequenceIndex];
     }
 
-    const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException)
+    const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
     {
       if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
       if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
@@ -316,13 +316,13 @@ namespace bpp
       throw NotImplementedException("CompressedVectorSiteContainer::addSequence.");
     }
 
-    void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception, NotImplementedException)
+    void setSequence(const std::string& name, const Sequence& sequence, bool checkName)
     {
       //Implementing this function would involve (partially) decompressing the data...
       throw NotImplementedException("CompressedVectorSiteContainer::setSequence.");
     }
 
-    void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception, NotImplementedException)
+    void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName)
     {
       //Implementing this function would involve (partially) decompressing the data...
       throw NotImplementedException("CompressedVectorSiteContainer::setSequence.");

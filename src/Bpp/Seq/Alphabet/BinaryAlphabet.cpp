@@ -59,7 +59,7 @@ BinaryAlphabet::BinaryAlphabet()
 
 
 /******************************************************************************/
-bool BinaryAlphabet::isResolvedIn(int state1, int state2) const throw (BadIntException) 
+bool BinaryAlphabet::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
     throw BadIntException(state1, "BinaryAlphabet::isResolvedIn(int, int): Specified base unknown.");
@@ -75,7 +75,7 @@ bool BinaryAlphabet::isResolvedIn(int state1, int state2) const throw (BadIntExc
 
 /******************************************************************************/
 
-std::vector<int> BinaryAlphabet::getAlias(int state) const throw (BadIntException) 
+std::vector<int> BinaryAlphabet::getAlias(int state) const 
 {
   if (!isIntInAlphabet(state)) throw BadIntException(state, "BinaryAlphabet::getAlias(int): Specified base unknown.");
   std::vector<int> v;
@@ -101,7 +101,7 @@ std::vector<int> BinaryAlphabet::getAlias(int state) const throw (BadIntExceptio
 
 /******************************************************************************/
 
-std::vector<std::string> BinaryAlphabet::getAlias(const std::string& state) const throw (BadCharException) 
+std::vector<std::string> BinaryAlphabet::getAlias(const std::string& state) const 
 {
   if (!isCharInAlphabet(state)) throw BadCharException(state, "BinaryAlphabet::getAlias(char): Specified base unknown.");
   

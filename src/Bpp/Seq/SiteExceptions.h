@@ -82,7 +82,7 @@ namespace bpp
     }
 
     // Class destructor
-    virtual ~SiteException() throw() {}
+    virtual ~SiteException() {}
 
   public:
 
@@ -103,19 +103,20 @@ namespace bpp
   public:
     EmptySiteException(const std::string& text, const CoreSite* s = 0): SiteException(text, s) {}
 
-    virtual ~EmptySiteException() throw() {}
+    virtual ~EmptySiteException() {}
   };
 
 /**
  * @brief Exception sent when a site containing gap is found.
  */
+
   class SiteWithGapException:
     public SiteException
   {
   public:
     SiteWithGapException(const std::string& text, const CoreSite* s = 0): SiteException(text, s) {}
 
-    virtual ~SiteWithGapException() throw() {}
+    virtual ~SiteWithGapException() {}
   };
 
 } //end of namespace bpp.

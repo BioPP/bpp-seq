@@ -66,7 +66,6 @@ namespace bpp
     
     // Class destructor
     virtual ~CruxSymbolListSite() {}
-
   };
 
 } //end of namespace bpp.

@@ -89,7 +89,7 @@ namespace bpp
      * @name Overloaded methods from AbstractAlphabet
      * @{
      */
-    void registerState(AlphabetState* st) throw (Exception) {
+    void registerState(AlphabetState* st) {
       NucleicAlphabetState* nst = dynamic_cast<NucleicAlphabetState*>(st);
       if (!nst)
         throw Exception("NucleicAlphabet::registerState. Incorrect alphabet type.");
@@ -97,7 +97,7 @@ namespace bpp
       updateBinMaps_(getNumberOfChars(), *nst);
     }
 
-    void setState(size_t pos, AlphabetState* st) throw (Exception, IndexOutOfBoundsException) {
+    void setState(size_t pos, AlphabetState* st) {
       NucleicAlphabetState* nst = dynamic_cast<NucleicAlphabetState*>(st);
       if (!nst)
         throw Exception("NucleicAlphabet::setState. Incorrect alphabet type.");
@@ -112,26 +112,22 @@ namespace bpp
      * @name Overloaded methods from AbstractAlphabet
      * @{
      */
-    const NucleicAlphabetState& getStateAt(size_t stateIndex) const
-      throw (IndexOutOfBoundsException) {
+    const NucleicAlphabetState& getStateAt(size_t stateIndex) const {
       return dynamic_cast<const NucleicAlphabetState&>(
         AbstractAlphabet::getStateAt(stateIndex)
         );
     }
-    NucleicAlphabetState& getStateAt(size_t stateIndex)
-      throw (IndexOutOfBoundsException) {
+    NucleicAlphabetState& getStateAt(size_t stateIndex) {
       return dynamic_cast<NucleicAlphabetState&>(
         AbstractAlphabet::getStateAt(stateIndex)
         );
     }
-    const NucleicAlphabetState& getState(const std::string& letter) const
-      throw (BadCharException) {
+    const NucleicAlphabetState& getState(const std::string& letter) const {
       return dynamic_cast<const NucleicAlphabetState&>(
         AbstractAlphabet::getState(letter)
         );
     }
-    const NucleicAlphabetState& getState(int num) const
-      throw (BadIntException) {
+    const NucleicAlphabetState& getState(int num) const {
       return dynamic_cast<const NucleicAlphabetState&>(
         AbstractAlphabet::getState(num)
         );
@@ -151,8 +147,7 @@ namespace bpp
      * @throw BadIntException If the code is not a valide state.
      * @author Sylvain Gaillard
      */
-    const NucleicAlphabetState& getStateByBinCode(int code) const
-      throw (BadIntException) {
+    const NucleicAlphabetState& getStateByBinCode(int code) const {
       std::map<int, size_t>::const_iterator it = binCodes_.find(code);
       if (it == binCodes_.end())
         throw BadIntException(code, "NucleicAlphabet::getState(unsigned char): Binary code not in alphabet", this);
@@ -180,7 +175,7 @@ namespace bpp
      * @return The remaining state as an int
      * @author Sylvain Gaillard
      */
-    int subtract(int s1, int s2) const throw (BadIntException) {
+    int subtract(int s1, int s2) const {
       return getStateByBinCode(getState(s1).getBinaryCode() & ~ getState(s2).getBinaryCode()).getNum();
     }
 
@@ -204,7 +199,7 @@ namespace bpp
      * @return The remaining state as a string
      * @author Sylvain Gaillard
      */
-    std::string subtract(const std::string& s1, const std::string& s2) const throw (BadCharException) {
+    std::string subtract(const std::string& s1, const std::string& s2) const {
       return intToChar(subtract(charToInt(s1), charToInt(s2)));
     }
 
@@ -229,7 +224,7 @@ namespace bpp
      * @return The overlapping state
      * @author Sylvain Gaillard
      */
-    int getOverlap(int s1, int s2) const throw (BadIntException) {
+    int getOverlap(int s1, int s2) const {
       return getStateByBinCode(getState(s1).getBinaryCode() & getState(s2).getBinaryCode()).getNum();
     }
 
@@ -253,7 +248,7 @@ namespace bpp
      * @return The overlapping state
      * @author Sylvain Gaillard
      */
-    std::string getOverlap(const std::string& s1, const std::string& s2) const throw (BadCharException) {
+    std::string getOverlap(const std::string& s1, const std::string& s2) const {
       return intToChar(getOverlap(charToInt(s1), charToInt(s2)));
     }
 

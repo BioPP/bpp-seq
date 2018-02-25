@@ -49,7 +49,7 @@
 using namespace std;
 using namespace bpp;
 
-SiteSelection MaseTools::getSiteSet(const Comments& maseFileHeader, const string& setName) throw (IOException)
+SiteSelection MaseTools::getSiteSet(const Comments& maseFileHeader, const string& setName)
 {
   SiteSelection selection;
   for (size_t i = 0; i < maseFileHeader.size(); i++)
@@ -101,7 +101,7 @@ SiteSelection MaseTools::getSiteSet(const Comments& maseFileHeader, const string
 
 /******************************************************************************/
 
-SequenceSelection MaseTools::getSequenceSet(const Comments& maseFileHeader, const string& setName) throw (IOException)
+SequenceSelection MaseTools::getSequenceSet(const Comments& maseFileHeader, const string& setName)
 {
   SequenceSelection selection;
   for (size_t i = 0; i < maseFileHeader.size(); i++)
@@ -150,7 +150,7 @@ SequenceSelection MaseTools::getSequenceSet(const Comments& maseFileHeader, cons
 
 SiteContainer* MaseTools::getSelectedSites(
   const SiteContainer& sequences,
-  const string& setName) throw (IOException)
+  const string& setName)
 {
   SiteSelection ss = getSiteSet(sequences.getGeneralComments(), setName);
   return dynamic_cast<SiteContainer*>(SiteContainerTools::getSelectedPositions(sequences, ss));
@@ -160,7 +160,7 @@ SiteContainer* MaseTools::getSelectedSites(
 
 SequenceContainer* MaseTools::getSelectedSequences(
   const OrderedSequenceContainer& sequences,
-  const std::string& setName) throw (IOException)
+  const std::string& setName)
 {
   SequenceSelection ss = getSequenceSet(sequences.getGeneralComments(), setName);
   VectorSequenceContainer* cont = new VectorSequenceContainer(sequences.getAlphabet());
@@ -243,7 +243,7 @@ map<string, size_t> MaseTools::getAvailableSequenceSelections(const Comments& ma
 
 /******************************************************************************/
 
-size_t MaseTools::getPhase(const Comments& maseFileHeader, const string& setName) throw (Exception)
+size_t MaseTools::getPhase(const Comments& maseFileHeader, const string& setName)
 {
   size_t phase = 0;
   string::size_type index = 0;

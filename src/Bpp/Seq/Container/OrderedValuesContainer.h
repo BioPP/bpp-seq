@@ -75,7 +75,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
      */
 
-    virtual std::string toString(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual std::string toString(size_t sequenceIndex) const = 0;
 
     /**
      * @brief Get the name of a particular row of the alignement (aka sequence).
@@ -86,7 +86,7 @@ namespace bpp
      * the container.
      */
     
-    virtual const std::string& getName(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const std::string& getName(size_t sequenceIndex) const = 0;
 
     /**
      * @brief Get the position of a sequence in sequence container from its name.
@@ -118,7 +118,7 @@ namespace bpp
      * the container.
      */
 
-    virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const Comments& getComments(size_t sequenceIndex) const = 0;
 
     /**
      * @brief Set the comments of a particular sequence

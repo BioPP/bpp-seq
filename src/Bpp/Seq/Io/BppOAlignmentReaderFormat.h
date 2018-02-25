@@ -79,7 +79,7 @@ namespace bpp
      * @return A new IAlignment object according to options specified.
      * @throw Exception if an error occured.
      */
-    IAlignment* read(const std::string& description) throw (Exception);
+    IAlignment* read(const std::string& description);
 
     IProbabilisticAlignment* readProbabilistic(const std::string& description) throw (Exception);
 

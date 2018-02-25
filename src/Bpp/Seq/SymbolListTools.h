@@ -237,9 +237,8 @@ namespace bpp
      * @param list2 The second list.
      * @param counts The output map to store the counts (existing counts will be incremented).
      */
-
     
-    static void getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2, std::map<int, std::map<int, size_t> >& counts) throw (DimensionException)
+    static void getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2, std::map<int, std::map<int, size_t> >& counts)
     {
       if(list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
       for(size_t i = 0; i < list1.size(); i++)
@@ -260,7 +259,7 @@ namespace bpp
      * @param counts The output map to store the counts (existing counts will be summed).
      */
     
-    static void getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2, std::map<int, std::map<int, double> >& counts) throw (DimensionException)
+    static void getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2, std::map<int, std::map<int, double> >& counts)
     {
       if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
       for (size_t i = 0; i < list1.size(); i++)
@@ -285,7 +284,7 @@ namespace bpp
      * @return A map with all states and corresponding counts.
      */
 
-    static void getCounts(const CruxSymbolList& list, std::map<int, double>& counts, bool resolveUnknowns = false) throw (DimensionException)
+    static void getCounts(const CruxSymbolList& list, std::map<int, double>& counts, bool resolveUnknowns = false)
     {
       if (dynamic_cast<const ProbabilisticSymbolList*>(&list))
         getCounts(dynamic_cast<const ProbabilisticSymbolList&>(list), counts, resolveUnknowns);
@@ -331,8 +330,7 @@ namespace bpp
      * @return A map with all states and corresponding counts.
      */
 
-
-    static void getCounts(const CruxSymbolList& list1, const CruxSymbolList& list2, std::map<int, std::map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException)
+    static void getCounts(const CruxSymbolList& list1, const CruxSymbolList& list2, std::map<int, std::map<int, double> >& counts, bool resolveUnknowns)
     {
       if (dynamic_cast<const ProbabilisticSymbolList*>(&list1) && dynamic_cast<const ProbabilisticSymbolList*>(&list2))
         getCounts(dynamic_cast<const ProbabilisticSymbolList&>(list1), dynamic_cast<const ProbabilisticSymbolList&>(list2), counts, resolveUnknowns);
@@ -342,7 +340,7 @@ namespace bpp
         throw Exception("SymbolListTools::getCounts : this should not happen.");
     }
     
-    static void getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException);
+    static void getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns);
 
     /**
      * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
@@ -361,7 +359,7 @@ namespace bpp
      * @return A map with all states and corresponding counts.
      */
 
-    static void getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException);
+    static void getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns);
 
     /**
      * @brief Get all states frequencies in the list.
@@ -388,7 +386,7 @@ namespace bpp
      * @param frequencies The output map with all state pairs and corresponding frequencies. Existing frequencies will be erased if any.
      */
 
-    static void getFrequencies(const CruxSymbolList& list1, const CruxSymbolList& list2, std::map<int, std::map<int, double> >& frequencies, bool resolveUnknowns = false) throw (DimensionException);
+    static void getFrequencies(const CruxSymbolList& list1, const CruxSymbolList& list2, std::map<int, std::map<int, double> >& frequencies, bool resolveUnknowns = false);
 
     /**
      * @brief Get the GC content of a symbol list.
@@ -403,9 +401,9 @@ namespace bpp
      * @throw AlphabetException If the list is not made of nucleotide states.
      */
 
-    static double getGCContent(const IntCoreSymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true) throw (AlphabetException);
+    static double getGCContent(const IntCoreSymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true);
 
-    static double getGCContent(const ProbabilisticSymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true) throw (AlphabetException);
+    static double getGCContent(const ProbabilisticSymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true);
 
     /**
      * @brief Get the number of distinct positions.
@@ -418,11 +416,11 @@ namespace bpp
      * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
      */
 
-    static size_t getNumberOfDistinctPositions(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2) throw (AlphabetMismatchException);
+    static size_t getNumberOfDistinctPositions(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2);
 
-    static size_t getNumberOfDistinctPositions(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2) throw (AlphabetMismatchException);
+    static size_t getNumberOfDistinctPositions(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2);
 
-    static size_t getNumberOfDistinctPositions(const CruxSymbolList& l1, const CruxSymbolList& l2) throw (AlphabetMismatchException)
+    static size_t getNumberOfDistinctPositions(const CruxSymbolList& l1, const CruxSymbolList& l2)
     {
       if (dynamic_cast<const ProbabilisticSymbolList*>(&l1) && dynamic_cast<const ProbabilisticSymbolList*>(&l2))
         return getNumberOfDistinctPositions(dynamic_cast<const ProbabilisticSymbolList&>(l1), dynamic_cast<const ProbabilisticSymbolList&>(l2));
@@ -444,11 +442,11 @@ namespace bpp
      * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
      */
 
-    static size_t getNumberOfPositionsWithoutGap(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2) throw (AlphabetMismatchException);
+    static size_t getNumberOfPositionsWithoutGap(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2);
 
-    static size_t getNumberOfPositionsWithoutGap(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2) throw (AlphabetMismatchException);
+    static size_t getNumberOfPositionsWithoutGap(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2);
 
-    static size_t getNumberOfPositionsWithoutGap(const CruxSymbolList& l1, const CruxSymbolList& l2) throw (AlphabetMismatchException)
+    static size_t getNumberOfPositionsWithoutGap(const CruxSymbolList& l1, const CruxSymbolList& l2)
     {
       if (dynamic_cast<const ProbabilisticSymbolList*>(&l1) && dynamic_cast<const ProbabilisticSymbolList*>(&l2))
         return getNumberOfPositionsWithoutGap(dynamic_cast<const ProbabilisticSymbolList&>(l1), dynamic_cast<const ProbabilisticSymbolList&>(l2));
@@ -457,8 +455,7 @@ namespace bpp
       else
         throw Exception("SymbolListTools::getNumberOfPositionsWithoutGap : this should not happen.");
     }
-
-
+    
     /**
      * @brief Change all gap elements to unknown characters (or
      * columns of 1).

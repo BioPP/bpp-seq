@@ -387,8 +387,7 @@ void SymbolListTools::getCounts(const IntCoreSymbolList& list, map<int, double>&
   }
 }
 
-
-void SymbolListTools::getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns)
 {
   if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
   if (!resolveUnknowns)
@@ -424,7 +423,7 @@ void SymbolListTools::getFrequencies(const CruxSymbolList& list, map<int, double
   }
 }
 
-void SymbolListTools::getFrequencies(const CruxSymbolList& list1, const CruxSymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getFrequencies(const CruxSymbolList& list1, const CruxSymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns)
 {
   double n2 = (double)list1.size() * (double)list1.size();
   map<int, map<int, double> > counts;
@@ -437,7 +436,7 @@ void SymbolListTools::getFrequencies(const CruxSymbolList& list1, const CruxSymb
     }
 }
 
-double SymbolListTools::getGCContent(const IntCoreSymbolList& list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
+double SymbolListTools::getGCContent(const IntCoreSymbolList& list, bool ignoreUnresolved, bool ignoreGap)
 {
   const Alphabet * alphabet = list.getAlphabet();
   if (!AlphabetTools::isNucleicAlphabet(alphabet))
@@ -476,7 +475,7 @@ double SymbolListTools::getGCContent(const IntCoreSymbolList& list, bool ignoreU
   return total != 0 ? gc/total : 0;
 }
 
-size_t SymbolListTools::getNumberOfDistinctPositions(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfDistinctPositions(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2)
 {
   if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
   size_t n = min(l1.size(), l2.size());
@@ -487,7 +486,7 @@ size_t SymbolListTools::getNumberOfDistinctPositions(const IntCoreSymbolList& l1
   return count;
 }
 
-size_t SymbolListTools::getNumberOfPositionsWithoutGap(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfPositionsWithoutGap(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2)
 {
   if (l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
   size_t n = min(l1.size(), l2.size());
@@ -543,7 +542,7 @@ void SymbolListTools::getCounts(const ProbabilisticSymbolList& list, map<int, do
 }
 
 
-void SymbolListTools::getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns) throw (DimensionException)
+void SymbolListTools::getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns)
 {
   if (!resolveUnknowns)
   {
@@ -564,7 +563,7 @@ void SymbolListTools::getCounts(const ProbabilisticSymbolList& list1, const Prob
   }
 }
 
-double SymbolListTools::getGCContent(const ProbabilisticSymbolList& list, bool ignoreUnresolved, bool ignoreGap) throw (AlphabetException)
+double SymbolListTools::getGCContent(const ProbabilisticSymbolList& list, bool ignoreUnresolved, bool ignoreGap)
 {
   const Alphabet * alphabet = list.getAlphabet();
   if (!AlphabetTools::isNucleicAlphabet(alphabet))
@@ -593,7 +592,7 @@ double SymbolListTools::getGCContent(const ProbabilisticSymbolList& list, bool i
   return total != 0 ? gc/total : 0;
 }
 
-size_t SymbolListTools::getNumberOfDistinctPositions(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfDistinctPositions(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2)
 {
   if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
   
@@ -606,7 +605,7 @@ size_t SymbolListTools::getNumberOfDistinctPositions(const ProbabilisticSymbolLi
   return count;
 }
 
-size_t SymbolListTools::getNumberOfPositionsWithoutGap(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2) throw (AlphabetMismatchException)
+size_t SymbolListTools::getNumberOfPositionsWithoutGap(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2)
 {
   if (l1.getAlphabet() -> getAlphabetType() != l2.getAlphabet() -> getAlphabetType()) throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
   size_t n = min(l1.size(), l2.size());

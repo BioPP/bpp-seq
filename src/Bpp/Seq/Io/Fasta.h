@@ -99,7 +99,7 @@ class Fasta:
      *
      * @{
      */
-    void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const throw (Exception);
+    void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const;
     /** @} */
 
     /**
@@ -107,7 +107,7 @@ class Fasta:
      *
      * @{
      */
-    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception) {
+    void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const {
       appendSequencesFromStream(input, sc); //This may raise an exception if sequences are not aligned!
     }
     /** @} */
@@ -117,9 +117,9 @@ class Fasta:
      *
      * @{
      */
-    void writeSequences(std::ostream& output, const SequenceContainer& sc) const throw (Exception);
+    void writeSequences(std::ostream& output, const SequenceContainer& sc) const;
     
-    void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite=true) const throw (Exception)
+    void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite=true) const
     {
       AbstractOSequence::writeSequences(path, sc, overwrite);
     }
@@ -142,7 +142,7 @@ class Fasta:
      *
      * @{
      */
-    bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception);
+    bool nextSequence(std::istream& input, Sequence& seq) const;
     /** @} */
 
     /**
@@ -150,7 +150,7 @@ class Fasta:
      *
      * @{
      */
-    void writeSequence(std::ostream& output, const Sequence& seq) const throw (Exception);
+    void writeSequence(std::ostream& output, const Sequence& seq) const;
     /** @} */
 
     /**
@@ -185,7 +185,7 @@ class Fasta:
       public:
         FileIndex(): index_(), fileSize_(0) {}
         ~FileIndex() {}
-        void build(const std::string& path) throw (Exception) {
+        void build(const std::string& path) {
           build(path, false);
         }
         /**
@@ -194,19 +194,19 @@ class Fasta:
          * @param path The path to the file.
          * @param strictSequenceNames Tells if the sequence names should be restricted to the characters between '>' and the first blank one.
          */
-        void build(const std::string& path, const bool strictSequenceNames) throw (Exception);
-        std::streampos getSequencePosition(const std::string& id) const throw (Exception);
-        size_t getNumberOfSequences() const throw (Exception) {
+        void build(const std::string& path, const bool strictSequenceNames);
+        std::streampos getSequencePosition(const std::string& id) const;
+        size_t getNumberOfSequences() const {
           return index_.size();
         }
         /**
          * @brief Read the index from a file
          */
-        void read(const std::string& path) throw (Exception);
+        void read(const std::string& path);
         /**
          * @brief Write the index to a file
          */
-        void write(const std::string& path) throw (Exception);
+        void write(const std::string& path);
         /**
          * @brief Get a sequence given its ID
          */

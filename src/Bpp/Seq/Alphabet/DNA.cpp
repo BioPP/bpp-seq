@@ -86,7 +86,7 @@ DNA::DNA(bool exclamationMarkCountsAsGap)
 
 /******************************************************************************/
 
-bool DNA::isResolvedIn(int state1, int state2) const throw (BadIntException) 
+bool DNA::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
     throw BadIntException(state1, "DNA::isResolvedIn(int, int): Specified base unknown.");
@@ -118,7 +118,7 @@ bool DNA::isResolvedIn(int state1, int state2) const throw (BadIntException)
 
 /******************************************************************************/
 
-std::vector<int> DNA::getAlias(int state) const throw (BadIntException) 
+std::vector<int> DNA::getAlias(int state) const 
 {
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "DNA::getAlias(int): Specified base unknown.");
@@ -140,7 +140,7 @@ std::vector<int> DNA::getAlias(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-std::vector<std::string> DNA::getAlias(const std::string& state) const throw (BadCharException) 
+std::vector<std::string> DNA::getAlias(const std::string& state) const 
 {
   string locstate = TextTools::toUpper(state);
 	if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "DNA::getAlias(int): Specified base unknown.");
@@ -153,7 +153,7 @@ std::vector<std::string> DNA::getAlias(const std::string& state) const throw (Ba
 
 /******************************************************************************/
 
-int DNA::getGeneric(const std::vector<int>& states) const throw (BadIntException)
+int DNA::getGeneric(const std::vector<int>& states) const
 {
   int v = 0;
   for (size_t i = 0 ; i < states.size() ; ++i) {
@@ -165,7 +165,7 @@ int DNA::getGeneric(const std::vector<int>& states) const throw (BadIntException
 
 /******************************************************************************/
 
-std::string DNA::getGeneric(const std::vector<std::string>& states) const throw (BadCharException)
+std::string DNA::getGeneric(const std::vector<std::string>& states) const
 {
   vector<int> vi;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {

@@ -86,13 +86,13 @@ public:
   virtual ~SimpleIndexDistance() {}
 
 public:
-  double getIndex(int state1, int state2) const throw (BadIntException)
+  double getIndex(int state1, int state2) const
   {
     double d = index_->getIndex(state2) - index_->getIndex(state1);
     return sym_ ? NumTools::abs<double>(d) : d;
   }
 
-  double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException)
+  double getIndex(const std::string& state1, const std::string& state2) const
   {
     double d = index_->getIndex(state2) - index_->getIndex(state1);
     return sym_ ? NumTools::abs<double>(d) : d;

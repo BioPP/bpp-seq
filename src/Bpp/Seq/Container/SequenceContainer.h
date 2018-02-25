@@ -92,7 +92,6 @@ namespace bpp
      *
      * @param name The name of the sequence.
      * @return A reference toward the Sequence with corresponding name.
-     * @throw SequenceNotFoundException If the name does not match any sequence in the container.
      */
     virtual const Sequence& getSequence(const std::string& name) const = 0;
  
@@ -103,19 +102,13 @@ namespace bpp
      * @param sequence  The sequence to add.
      * @param checkName Tell if the container must check if the name of the sequence
      * is already used in the container before adding it.
-     * @throw SequenceNotFoundException If the name does not match any sequence in
-     * the container.
-     * @throw Exception Any other kind of exception, if the name of the sequence is
-     * already used, are whatever else depending on the implementation.
      */
-    virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) throw (Exception) = 0;
+    virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) = 0;
 
     /**
      * @brief Extract (and remove) a sequence from the container.
      *
      * @param name The name of the sequence.
-     * @throw SequenceNotFoundException If the name does not match any sequence in
-     * the container.
      */
     virtual Sequence* removeSequence(const std::string& name) = 0;
 		
@@ -136,10 +129,8 @@ namespace bpp
      * 
      * @param sequenceName The sequence name.
      * @param elementIndex The element position within the sequence.
-     * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
-     * @throw IndexOutOfBoundsException If the element position is not valid.
      */
-    virtual int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+    virtual int& valueAt(const std::string& sequenceName, size_t elementIndex) = 0;
 
     /**
      * @brief Element access function.
@@ -148,10 +139,8 @@ namespace bpp
      * 
      * @param sequenceName The sequence name.
      * @param elementIndex The element position within the sequence.
-     * @throw SequenceNotFoundException If no corresponding sequence is found in the container.
-     * @throw IndexOutOfBoundsException If the element position is not valid.
      */
-    virtual const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException) = 0;
+    virtual const int& valueAt(const std::string& sequenceName, size_t elementIndex) const = 0;
 
     /**
      * @brief Element access operator.

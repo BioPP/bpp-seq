@@ -83,12 +83,12 @@ namespace bpp
     virtual ~DNA() {}
 	
   public:
-    bool isResolvedIn(int state1, int state2) const throw (BadIntException);
+    bool isResolvedIn(int state1, int state2) const;
     
-    std::vector<int> getAlias(int state) const throw (BadIntException);
-    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
-    int getGeneric(const std::vector<int>& states) const throw (BadIntException);
-    std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException);
+    std::vector<int> getAlias(int state) const;
+    std::vector<std::string> getAlias(const std::string& state) const;
+    int getGeneric(const std::vector<int>& states) const;
+    std::string getGeneric(const std::vector<std::string>& states) const;
     std::string getAlphabetType() const { return "DNA"; }
   };
 

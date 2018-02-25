@@ -97,8 +97,8 @@ namespace bpp
      * @param pos Starting point of the region.
      * @param len The length of the region, in number of positions.
      */
-    virtual SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const throw (Exception) = 0;
-  };
+    virtual SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const = 0;
+};
 
 /**
  * @brief An implementation of the Sequence interface that supports annotation. 
@@ -146,7 +146,7 @@ namespace bpp
      * @param sequence The whole sequence to be parsed as a std::string.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha);
   
     /**
      * @brief Direct constructor: build a Sequence object from a std::string.
@@ -162,7 +162,7 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -174,7 +174,7 @@ namespace bpp
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -187,7 +187,7 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -196,7 +196,7 @@ namespace bpp
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) throw (BadIntException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -206,7 +206,7 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadIntException);
+    SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha);
 
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
@@ -258,9 +258,9 @@ namespace bpp
      * @param sequence The new content of the sequence.
      * @see The Sequence constructor for information about the way sequences are internaly stored.
      */
-    virtual void setContent(const std::string& sequence) throw (BadCharException);
+    virtual void setContent(const std::string& sequence);
 
-    void setContent(const std::vector<std::string>& list) throw (BadCharException)
+    void setContent(const std::vector<std::string>& list)
     {
       EdIntSymbolList::setContent(list);
     }
@@ -304,8 +304,7 @@ namespace bpp
      * @throw Exception If the annotation is not valid for this sequence.
      * @see SequenceWithAnnotation::isValidWith
      */
-  
-    virtual void addAnnotation(SequenceAnnotation* anno) throw (Exception)
+    virtual void addAnnotation(SequenceAnnotation* anno)
     {
       anno->isValidWith(*this);
       addIntSymbolListListener(anno);
@@ -359,8 +358,7 @@ namespace bpp
      * @throw AlphabetMismatchException If the two alphabets do not match.
      * @throw Exception If the sequence names do not match.
      */
-    virtual void merge(const SequenceWithAnnotation& swa)
-      throw (AlphabetMismatchException, Exception);
+    virtual void merge(const SequenceWithAnnotation& swa);
 
     const Comments& getComments() const { return Commentable::getComments(); }
 

@@ -85,7 +85,7 @@ namespace bpp
      * @see The list constructor for information about the way lists are internaly stored.
      */
 
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException) = 0;
+    virtual void setContent(const std::vector<std::string>& list) = 0;
 
     /**
      * @name Edition methods.
@@ -157,9 +157,8 @@ namespace bpp
      *
      * @param list     The content of the site.
      * @param alpha    The alphabet to use.
-     * @throw BadCharException If the content does not match the specified alphabet.
      */
-    BasicIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha) throw (BadCharException);
+    BasicIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
 
     /**
      * @brief Build a new BasicIntSymbolList object with the specified alphabet.
@@ -167,9 +166,8 @@ namespace bpp
      *
      * @param list     The content of the site.
      * @param alpha    The alphabet to use.
-     * @throw BadIntException If the content does not match the specified alphabet.
      */
-    BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException);
+    BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha);
 
     /**
      * @brief The copy constructor.
@@ -201,7 +199,7 @@ namespace bpp
 
     void setContent(const std::vector<int>& list);
     
-    void setContent(const std::vector<std::string>& list) throw (BadCharException);
+    void setContent(const std::vector<std::string>& list);
 
     std::string toString() const;
 
@@ -271,9 +269,8 @@ namespace bpp
      *
      * @param list     The content of the site.
      * @param alpha    The alphabet to use.
-     * @throw BadCharException If the content does not match the specified alphabet.
      */
-    EdIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha) throw (BadCharException);
+    EdIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
 
     /**
      * @brief Build a new BasicIntSymbolList object with the specified alphabet.
@@ -281,9 +278,8 @@ namespace bpp
      *
      * @param list     The content of the site.
      * @param alpha    The alphabet to use.
-     * @throw BadIntException If the content does not match the specified alphabet.
      */
-    EdIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) throw (BadIntException);
+    EdIntSymbolList(const std::vector<int>& list, const Alphabet* alpha);
 
     /**
      * @brief The generic copy constructor.
@@ -319,7 +315,7 @@ namespace bpp
     
   public:
 
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException);
+    virtual void setContent(const std::vector<std::string>& list);
 
     void setContent(const std::vector<int>& list);
 

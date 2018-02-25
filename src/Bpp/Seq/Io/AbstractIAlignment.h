@@ -81,8 +81,7 @@ namespace bpp
      * @param sc     The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-  
-    virtual void readAlignment(std::istream& input, SiteContainer& sc) const throw (Exception)
+    virtual void readAlignment(std::istream& input, SiteContainer& sc) const
     {
       appendAlignmentFromStream(input, sc);
     }
@@ -94,17 +93,17 @@ namespace bpp
      * @param sc    The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual void readAlignment(const std::string& path, SiteContainer& sc) const throw (Exception)
+    virtual void readAlignment(const std::string& path, SiteContainer& sc) const
     {
       appendAlignmentFromFile(path, sc);
     }
-
-    virtual AlignedSequenceContainer* readAlignment(const std::string& path , const Alphabet* alpha) const throw (Exception)
+    
+    virtual AlignedSequenceContainer* readAlignment(const std::string& path , const Alphabet* alpha) const
     {
       return readAlignmentFromFile(path, alpha);
     }
 
-    virtual AlignedSequenceContainer* readAlignment(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    virtual AlignedSequenceContainer* readAlignment(std::istream& input, const Alphabet* alpha) const
     {
       return readAlignmentFromStream(input, alpha);
     }
@@ -121,8 +120,7 @@ namespace bpp
      * @param sc     The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-
-    virtual void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const throw (Exception) = 0;
+    virtual void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const = 0;
 
     /**
      * @brief Append sequences to a container from a file.
@@ -131,8 +129,7 @@ namespace bpp
      * @param sc    The sequence container to update.
      * @throw Exception If the file is not in the specified format.
      */
-
-    virtual void appendAlignmentFromFile(const std::string& path, SiteContainer& sc) const throw (Exception)
+    virtual void appendAlignmentFromFile(const std::string& path, SiteContainer& sc) const
     {
       std::ifstream input(path.c_str(), std::ios::in);
       appendAlignmentFromStream(input, sc);
@@ -147,8 +144,7 @@ namespace bpp
      * @return A sequence container.
      * @throw Exception If the file is not in the specified format.
      */
-
-    virtual AlignedSequenceContainer* readAlignmentFromStream(std::istream& input, const Alphabet* alpha) const throw (Exception)
+    virtual AlignedSequenceContainer* readAlignmentFromStream(std::istream& input, const Alphabet* alpha) const
     {
       AlignedSequenceContainer* asc = new AlignedSequenceContainer(alpha);
       appendAlignmentFromStream(input, *asc);
@@ -163,8 +159,7 @@ namespace bpp
      * @return A sequence container.
      * @throw Exception If the file is not in the specified format.
      */
-
-    virtual AlignedSequenceContainer* readAlignmentFromFile(const std::string& path, const Alphabet* alpha) const throw (Exception)
+    virtual AlignedSequenceContainer* readAlignmentFromFile(const std::string& path, const Alphabet* alpha) const
     {
       AlignedSequenceContainer* asc = new AlignedSequenceContainer(alpha);
       appendAlignmentFromFile(path, *asc);

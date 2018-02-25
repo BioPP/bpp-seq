@@ -156,7 +156,7 @@ Sequence* CodonAlphabet::reverse(const Sequence& sequence) const
 
 /****************************************************************************************/
 
-std::vector<int> CodonAlphabet::getAlias(int state) const throw (BadIntException)
+std::vector<int> CodonAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
@@ -179,7 +179,7 @@ std::vector<int> CodonAlphabet::getAlias(int state) const throw (BadIntException
 
 /******************************************************************************/
 
-std::vector<std::string> CodonAlphabet::getAlias(const std::string& state) const throw (BadCharException)
+std::vector<std::string> CodonAlphabet::getAlias(const std::string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
@@ -202,7 +202,7 @@ std::vector<std::string> CodonAlphabet::getAlias(const std::string& state) const
 }
 
 
-bool CodonAlphabet::isResolvedIn(int state1, int state2) const throw (BadIntException)
+bool CodonAlphabet::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
     throw BadIntException(state1, "CodonAlphabet::isResolvedIn(int, int): Specified base unknown.");

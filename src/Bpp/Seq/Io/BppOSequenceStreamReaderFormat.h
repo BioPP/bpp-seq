@@ -78,7 +78,7 @@ namespace bpp
      * @return A new ISequenceStream object according to options specified.
      * @throw Exception if an error occured.
      */
-    ISequenceStream* read(const std::string& description) throw (Exception);
+    ISequenceStream* read(const std::string& description);
 
     /**
      * @return The arguments and their unparsed values from the last call of the read function, if there are any.

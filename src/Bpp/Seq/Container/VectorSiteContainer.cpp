@@ -52,8 +52,7 @@ using namespace bpp;
 VectorSiteContainer::VectorSiteContainer(
   const std::vector<const CruxSymbolListSite*>& vs,
   const Alphabet* alpha,
-  bool checkPositions)
-  throw (Exception) :
+  bool checkPositions) :
   VectorPositionedContainer<Site>(),
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(alpha)
@@ -80,8 +79,7 @@ VectorSiteContainer::VectorSiteContainer(
 VectorSiteContainer::VectorSiteContainer(
   const std::vector<const Site*>& vs,
   const Alphabet* alpha,
-  bool checkPositions)
-  throw (Exception) :
+  bool checkPositions) :
   VectorPositionedContainer<Site>(),
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(alpha)
@@ -291,10 +289,9 @@ VectorSiteContainer& VectorSiteContainer::operator=(const SequenceContainer& sc)
   return *this;
 }
 
-
 /******************************************************************************/
 
-void VectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositions) throw (Exception)
+void VectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositions)
 {
   if (pos >= getNumberOfSites())
     throw IndexOutOfBoundsException("VectorSiteContainer::setSite.", pos, 0, getNumberOfSites() - 1);
@@ -323,7 +320,7 @@ void VectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositi
 
 /******************************************************************************/
 
-void VectorSiteContainer::addSite(const Site& site, bool checkPositions) throw (Exception)
+void VectorSiteContainer::addSite(const Site& site, bool checkPositions)
 {
   // Check size:
   if (getNumberOfSequences()!=0 && (site.size() != getNumberOfSequences()))
@@ -354,7 +351,7 @@ void VectorSiteContainer::addSite(const Site& site, bool checkPositions) throw (
 
 /******************************************************************************/
 
-void VectorSiteContainer::addSite(const Site& site, int position, bool checkPositions) throw (Exception)
+void VectorSiteContainer::addSite(const Site& site, int position, bool checkPositions)
 {
   // Check size:
   if (getNumberOfSequences()!=0 && (site.size() != getNumberOfSequences()))
@@ -386,7 +383,7 @@ void VectorSiteContainer::addSite(const Site& site, int position, bool checkPosi
 
 /******************************************************************************/
 
-void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions) throw (Exception)
+void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions)
 {
   if (siteIndex >= getNumberOfSites())
     throw IndexOutOfBoundsException("VectorSiteContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
@@ -418,7 +415,7 @@ void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool check
 
 /******************************************************************************/
 
-void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, int position, bool checkPositions) throw (Exception)
+void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, int position, bool checkPositions)
 {
   if (siteIndex >= getNumberOfSites())
     throw IndexOutOfBoundsException("VectorSiteContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
@@ -512,7 +509,7 @@ const Sequence& VectorSiteContainer::getSequence(const string& name) const
 
 /******************************************************************************/
 
-void VectorSiteContainer::setSequence(const string& name, const Sequence& sequence, bool checkNames) throw (Exception)
+void VectorSiteContainer::setSequence(const string& name, const Sequence& sequence, bool checkNames)
 {
   // Look for sequence name:
   size_t pos = getSequencePosition(name);
@@ -522,7 +519,6 @@ void VectorSiteContainer::setSequence(const string& name, const Sequence& sequen
 /******************************************************************************/
 
 void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool checkNames)
-  throw (Exception)
 {
   if (pos >= getNumberOfSequences())
     throw IndexOutOfBoundsException("VectorSiteContainer::setSequence", pos, 0, getNumberOfSequences() - 1);
@@ -555,7 +551,6 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
     VectorMappedContainer<Sequence>::setObjectName(pos, sname);
     VectorMappedContainer<Sequence>::getObject(pos)->setName(sname);
   }
-
   
   // Update elements at each site:
   for (size_t i = 0; i < getNumberOfSites(); i++)
@@ -614,7 +609,7 @@ void VectorSiteContainer::addSequence(const Sequence& sequence, bool checkNames)
 }
     
 /******************************************************************************/
-    
+
 void VectorSiteContainer::addSequence(const Sequence& sequence, size_t pos, bool checkNames)
 {
   if (pos >= getNumberOfSequences())

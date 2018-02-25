@@ -82,9 +82,8 @@ namespace bpp
      *
      * @param key The key of the sequence to retrieve.
      * @return The sequence associated to the given key.
-     * @throw SequenceNotFoundException If no sequence is associated to the given key.
      */
-    const Sequence& getSequenceByKey(const std::string& key)  const throw (SequenceNotFoundException);
+    const Sequence& getSequenceByKey(const std::string& key)  const;
 
     /**
      * @brief Set a sequence.
@@ -92,26 +91,23 @@ namespace bpp
      * @param key The key of the sequence.
      * @param sequence The new sequence that will be associated to the key.
      * @param checkNames Tell is the sequence name must be checked.
-     * @throw SequenceNotFoundException If no sequence is associated to the given key.
      */
-    void setSequenceByKey(const std::string& key , const Sequence& sequence, bool checkNames = true) throw (SequenceNotFoundException);
+    void setSequenceByKey(const std::string& key , const Sequence& sequence, bool checkNames = true);
 
     /**
      * @brief Remove a sequence.
      * 
      * @param key The key of the sequence.
      * @return The sequence previously associated to the given key.
-     * @throw SequenceNotFoundException If no sequence is associated to the given key.
      */
-    Sequence* removeSequenceByKey(const std::string& key) throw (SequenceNotFoundException);
+    Sequence* removeSequenceByKey(const std::string& key);
 
     /**
      * @brief Delete a sequence.
      * 
      * @param key The key of the sequence.
-     * @throw SequenceNotFoundException If no sequence is associated to the given key.
      */
-    void deleteSequenceByKey(const std::string& key) throw (SequenceNotFoundException);
+    void deleteSequenceByKey(const std::string& key);
 
     /**
      * @brief Add a sequence and key.
@@ -120,7 +116,7 @@ namespace bpp
      * @param sequence The new sequence that will be associated to the key.
      * @param checkNames Tell is the sequence name must be checked.
      */
-    void addSequence(const std::string& key, const Sequence& sequence, bool checkNames = true) throw (Exception);
+    void addSequence(const std::string& key, const Sequence& sequence, bool checkNames = true);
 
     /**
      * @return All sequences keys.
@@ -130,16 +126,14 @@ namespace bpp
     /**
      * @return The key of a given sequence specified by its position in the container.
      * @param pos The index of the sequence.
-     * @throw IndexOutOfBoundsException If pos is not a valid index.
      */
-    std::string getKey(size_t pos) const throw (IndexOutOfBoundsException);
+    std::string getKey(size_t pos) const;
 
     /**
      * @return The key of a given sequence specified by its name.
      * @param name The name of the sequence.
-     * @throw SequenceNotFoundException If no sequence was found with the given name.
      */
-    std::string getKey(const std::string& name) const throw (SequenceNotFoundException);
+    std::string getKey(const std::string& name) const;
 
     /**
      * @name The clonable interface
@@ -156,29 +150,29 @@ namespace bpp
      *
      * @{
      */
-    const Sequence& getSequence(const std::string& name) const throw (SequenceNotFoundException);
+    const Sequence& getSequence(const std::string& name) const;
 
     bool hasSequence(const std::string& name) const;
     
     /**
      * @brief The SequenceContainer method. Calls the addSeqeucne(key, Sequence) method while using the resut of sequence.getName() as a key.
      */
-    void addSequence(const Sequence& sequence, bool checkNames = true) throw (Exception)
+    void addSequence(const Sequence& sequence, bool checkNames = true)
     {
       addSequence(sequence.getName(), sequence, checkNames);
     }
-    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (SequenceNotFoundException);
-    Sequence* removeSequence(const std::string& name) throw (SequenceNotFoundException);
-    void deleteSequence(const std::string& name) throw (SequenceNotFoundException);
+    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true);
+    Sequence* removeSequence(const std::string& name);
+    void deleteSequence(const std::string& name);
     size_t getNumberOfSequences() const { return sequences_.size(); }
     void clear();
     MapSequenceContainer* createEmptyContainer() const;
 
-    int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    int& valueAt(const std::string& sequenceName, size_t elementIndex)
     {
       return getSequence_(sequenceName)[elementIndex];
     }
-    const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
     {
       return getSequence(sequenceName)[elementIndex];
     }
@@ -191,11 +185,11 @@ namespace bpp
       return getSequence(sequenceName)[elementIndex];
     }
 
-    int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException)
+    int& valueAt(size_t sequenceIndex, size_t elementIndex)
     {
       return getSequence_(sequenceIndex)[elementIndex];
     }
-    const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException)
+    const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
     {
       return getSequence(sequenceIndex)[elementIndex];
     }    
@@ -214,14 +208,14 @@ namespace bpp
      *
      * @{
      */
-    const Sequence& getSequence(size_t sequenceIndex) const throw (IndexOutOfBoundsException);
+    const Sequence& getSequence(size_t sequenceIndex) const;
     size_t getSequencePosition(const std::string& name) const;
-    void            setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (IndexOutOfBoundsException);
-    Sequence*    removeSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
-    void         deleteSequence(size_t sequenceIndex) throw (IndexOutOfBoundsException);
-    void setComments(size_t sequenceIndex, const Comments& comments) throw (IndexOutOfBoundsException);
+    void            setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true);
+    Sequence*    removeSequence(size_t sequenceIndex);
+    void         deleteSequence(size_t sequenceIndex);
+    void setComments(size_t sequenceIndex, const Comments& comments);
     std::vector<std::string> getSequencesNames() const;
-    void setSequencesNames(const std::vector<std::string>& names, bool checkNames) throw (Exception);
+    void setSequencesNames(const std::vector<std::string>& names, bool checkNames);
     /** @} */
 
     /**
@@ -229,8 +223,8 @@ namespace bpp
      *
      * @{
      */
-    Sequence& getSequence_(size_t i) throw (IndexOutOfBoundsException);
-    Sequence& getSequence_(const std::string& name) throw (SequenceNotFoundException);
+    Sequence& getSequence_(size_t i);
+    Sequence& getSequence_(const std::string& name);
     /** @} */
 
     /**

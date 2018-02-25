@@ -55,13 +55,13 @@ Site::Site(const Alphabet* alpha) : SymbolList<int>(alpha), AbstractCoreSite(), 
 
 Site::Site(const Alphabet* alpha, int position) : SymbolList<int>(alpha), AbstractCoreSite(position), BasicIntSymbolList(alpha) {}
 
-Site::Site(const vector<string>& site, const Alphabet* alpha) throw (BadCharException) : SymbolList<int>(alpha), AbstractCoreSite(), BasicIntSymbolList(site, alpha) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha) : SymbolList<int>(alpha), AbstractCoreSite(), BasicIntSymbolList(site, alpha) {}
 
-Site::Site(const vector<string>& site, const Alphabet* alpha, int position) throw (BadCharException) : SymbolList<int>(alpha), AbstractCoreSite(position), BasicIntSymbolList(site, alpha) {}
+Site::Site(const vector<string>& site, const Alphabet* alpha, int position) : SymbolList<int>(alpha), AbstractCoreSite(position), BasicIntSymbolList(site, alpha) {}
 
-Site::Site(const vector<int>& site, const Alphabet* alpha) throw (BadIntException) : SymbolList<int>(site, alpha), AbstractCoreSite(), BasicIntSymbolList(site, alpha) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha) : SymbolList<int>(site, alpha), AbstractCoreSite(), BasicIntSymbolList(site, alpha) {}
 
-Site::Site(const vector<int>& site, const Alphabet* alpha, int position) throw (BadIntException) : SymbolList<int>(alpha), AbstractCoreSite(position), BasicIntSymbolList(site, alpha) {}
+Site::Site(const vector<int>& site, const Alphabet* alpha, int position) : SymbolList<int>(alpha), AbstractCoreSite(position), BasicIntSymbolList(site, alpha) {}
 
 /****************************************************************************************/
 

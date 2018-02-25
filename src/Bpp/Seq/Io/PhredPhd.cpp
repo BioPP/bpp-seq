@@ -49,14 +49,14 @@ using namespace bpp;
 
 /******************************************************************************/
 
-bool PhredPhd::nextSequence(std::istream& input, Sequence& seq) const throw (Exception) {
+bool PhredPhd::nextSequence(std::istream& input, Sequence& seq) const {
   std::vector<int> pos;
   return nextSequence(input, seq, pos);
 }
 
 /******************************************************************************/
 
-bool PhredPhd::nextSequence(std::istream& input, Sequence& seq, std::vector<int>& pos) const throw (Exception) {
+bool PhredPhd::nextSequence(std::istream& input, Sequence& seq, std::vector<int>& pos) const {
   if (!input) {
     throw IOException ("PhredPhd::read: fail to open stream");
   }

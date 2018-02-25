@@ -67,19 +67,19 @@ NucleicAcidsReplication::NucleicAcidsReplication(const NucleicAlphabet* nuc1, co
   trans_[14] = 14;
 }
 
-int NucleicAcidsReplication::translate(int state) const throw (BadIntException)
+int NucleicAcidsReplication::translate(int state) const
 {
   nuc1_->intToChar(state);
   return trans_[state];
 }
 
-std::string NucleicAcidsReplication::translate(const std::string& state) const throw (BadCharException)
+std::string NucleicAcidsReplication::translate(const std::string& state) const
 {
   int i = nuc1_->charToInt(state);
   return nuc2_->intToChar(trans_[i]);
 }
 
-Sequence* NucleicAcidsReplication::translate(const Sequence& sequence) const throw (AlphabetMismatchException)
+Sequence* NucleicAcidsReplication::translate(const Sequence& sequence) const
 {
   if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("NucleicAcidsReplication::translate", getSourceAlphabet(), getTargetAlphabet());
@@ -93,19 +93,19 @@ Sequence* NucleicAcidsReplication::translate(const Sequence& sequence) const thr
 }
 
 
-int NucleicAcidsReplication::reverse(int state) const throw (BadIntException) 
+int NucleicAcidsReplication::reverse(int state) const 
 {
   nuc2_->intToChar(state);
   return trans_[state];
 }
 
-std::string NucleicAcidsReplication::reverse(const std::string& state) const throw (BadCharException)
+std::string NucleicAcidsReplication::reverse(const std::string& state) const
 {
   int i = nuc2_->charToInt(state);
   return nuc1_->intToChar(trans_[i]);
 }
 
-Sequence* NucleicAcidsReplication::reverse(const Sequence& sequence) const throw (AlphabetMismatchException, Exception)
+Sequence* NucleicAcidsReplication::reverse(const Sequence& sequence) const
 {
   if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("NucleicAcidsReplication::reverse", getSourceAlphabet(), getTargetAlphabet());

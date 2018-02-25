@@ -94,7 +94,7 @@ namespace bpp {
       bool nextSequence(
           std::istream& input,
           Sequence& seq
-          ) const throw (Exception);
+          ) const;
       /** @} */
 
       /**
@@ -113,7 +113,7 @@ namespace bpp {
           std::istream& input,
           Sequence& seq,
           std::vector<int>& pos
-          ) const throw (Exception);
+          ) const;
 
       /**
        * @name The IOFormat interface.

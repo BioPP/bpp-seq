@@ -48,8 +48,7 @@ using namespace std;
 
 VectorSequenceContainer::VectorSequenceContainer(
   const std::vector<const Sequence*>& vs,
-  const Alphabet* alpha)
-throw (AlphabetMismatchException) :
+  const Alphabet* alpha) :
   AbstractSequenceContainer(alpha),
   VectorMappedContainer<Sequence>()
 {
@@ -150,7 +149,6 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
 void VectorSequenceContainer::setSequencesNames(
   const std::vector<std::string>& names,
   bool checkNames)
-throw (Exception)
 {
   if (names.size() != getNumberOfSequences())
     throw IndexOutOfBoundsException("VectorSequenceContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences(), getNumberOfSequences());
@@ -172,7 +170,6 @@ throw (Exception)
     getSequence_(i).setName(names[i]);
   }
 }
-
 
 /******************************************************************************/
 

@@ -155,23 +155,23 @@ namespace bpp
       return isUnresolved(charToInt(state));
     }
 
-    bool isResolvedIn(int state1, int state2) const throw (BadIntException);
+    bool isResolvedIn(int state1, int state2) const;
 
-    std::vector<int> getAlias(int state) const throw (BadIntException);
+    std::vector<int> getAlias(int state) const;
 
-    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
+    std::vector<std::string> getAlias(const std::string& state) const;
     
-    int getGeneric(const std::vector<int>& states) const throw (BadIntException)
+    int getGeneric(const std::vector<int>& states) const
     {
       return states[0];
     }
 
-    std::string getGeneric(const std::vector<std::string>& states) const throw (BadCharException)
+    std::string getGeneric(const std::vector<std::string>& states) const
     {
       return states[0];
     }
     
-    int charToInt(const std::string& state) const throw (BadCharException)
+    int charToInt(const std::string& state) const
     {
       if (state.size() != 3)
         throw BadCharException(state, "CodonAlphabet::charToInt", this);
@@ -197,7 +197,6 @@ namespace bpp
      * @param pos3 Int description for position 3.
      * @return The int code of the codon.
      */
-
     int getCodon(int pos1, int pos2, int pos3) const
     {
       return (nAlph_->isUnresolved(pos1)
@@ -341,7 +340,6 @@ namespace bpp
      * @return The string of the word.
      * @throw IndexOutOfBoundsException In case of wrong position.
      */
-    
     std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const
     {    
       if (vpos.size() < pos + 3)
@@ -407,7 +405,6 @@ namespace bpp
      * @param word The char description of the word.
      * @return The char description of the three positions of the word.
      */
-
     std::vector<std::string> getPositions(const std::string& word) const
     {
       return std::vector<std::string>{word.substr(0,1), word.substr(1,1), word.substr(2,1)};
@@ -422,7 +419,6 @@ namespace bpp
      * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
      * @throw Exception                 Other kind of error, depending on the implementation.
      */
-
     Sequence* translate(const Sequence &sequence, size_t = 0) const;
 
     /**
@@ -433,7 +429,6 @@ namespace bpp
      * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
      * @throw Exception                 Other kind of error, depending on the implementation.
      */
-    
     Sequence* reverse(const Sequence& sequence) const;
 
     /*
@@ -447,13 +442,11 @@ namespace bpp
      *
      * @return The number of G+C in codon
      */
-  
     int getGCinCodon(int codon) const;
 
     /**
      * @return The nucleic alphabet associated to this codon alphabet.
      */
-
     const NucleicAlphabet* const getNucleicAlphabet() const
     {
       return nAlph_;
@@ -463,7 +456,6 @@ namespace bpp
      * @name Overloaded AbstractAlphabet methods.
      * @{
      */
-
     unsigned int getStateCodingSize() const { return 3; }
     /** @} */
   };

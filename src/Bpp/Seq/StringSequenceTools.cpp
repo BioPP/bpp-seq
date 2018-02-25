@@ -58,7 +58,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-string StringSequenceTools::subseq(const string& sequence, size_t begin, size_t end) throw (Exception)
+string StringSequenceTools::subseq(const string& sequence, size_t begin, size_t end)
 {
   // Checking interval
   if (end < begin)
@@ -191,7 +191,7 @@ string* StringSequenceTools::complement(const string& sequence)
 
 /****************************************************************************************/
 
-double StringSequenceTools::getGCcontent(const string& sequence, size_t pos, size_t window) throw (BadIntegerException, Exception)
+double StringSequenceTools::getGCcontent(const string& sequence, size_t pos, size_t window)
 {
   // Frequency counts for nucleotids A, C, G, T
   map<char, double> counts;
@@ -270,7 +270,6 @@ double StringSequenceTools::getGCcontent(const string& sequence, size_t pos, siz
 /****************************************************************************************/
 
 vector<int> StringSequenceTools::codeSequence(const string& sequence, const Alphabet* alphabet)
-throw (BadCharException)
 {
   unsigned int size = AlphabetTools::getAlphabetCodingSize(alphabet); // Warning,
                                                                       // an
@@ -293,7 +292,7 @@ throw (BadCharException)
 
 /****************************************************************************************/
 
-string StringSequenceTools::decodeSequence(const vector<int>& sequence, const Alphabet* alphabet) throw (BadIntException)
+string StringSequenceTools::decodeSequence(const vector<int>& sequence, const Alphabet* alphabet)
 {
   string result = "";
   for (unsigned int i = 0; i < sequence.size(); i++)
@@ -306,7 +305,6 @@ string StringSequenceTools::decodeSequence(const vector<int>& sequence, const Al
 /****************************************************************************************/
 
 Alphabet* StringSequenceTools::getAlphabetFromSequence(const std::string& sequence)
-throw (EmptySequenceException, SequenceException, AlphabetException)
 {
   // empty sequence test
   if (sequence.size() == 0)

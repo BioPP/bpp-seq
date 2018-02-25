@@ -80,7 +80,7 @@ namespace bpp
      * @return A string with the subsequence.
      * @throw Exception If position does not not match the interval [0, length].
      */
-    static std::string subseq(const std::string& sequence, size_t begin, size_t end) throw (Exception);
+    static std::string subseq(const std::string& sequence, size_t begin, size_t end);
 
     /**
      * @brief Set up the size of a sequence from the right side.
@@ -157,7 +157,8 @@ namespace bpp
      * @throw BadIntException If the sequence is not of type DNA or RNA.
      * @throw Exception       Error in calculus (if the sequence contain gaps for instance).
      */
-    static double getGCcontent(const std::string& sequence, size_t pos, size_t window) throw (BadIntegerException, Exception);
+
+    static double getGCcontent(const std::string& sequence, size_t pos, size_t window);
 
     /**
      * @brief Convert a string sequence to a vector of int.
@@ -173,7 +174,7 @@ namespace bpp
      * @return A vector of int codes.
      * @throw BarCharException If some character does not match the specified alphabet.
      */
-    static std::vector<int> codeSequence(const std::string& sequence, const Alphabet* alphabet) throw (BadCharException);
+    static std::vector<int> codeSequence(const std::string& sequence, const Alphabet* alphabet);
 
     /**
      * @brief Convert a sequence to its string representation.
@@ -183,7 +184,7 @@ namespace bpp
      * @return A string representation of the sequence.
      * @throw BarIntException If some value does not match the specified alphabet.
      */
-    static std::string decodeSequence(const std::vector<int>& sequence, const Alphabet* alphabet) throw (BadIntException);
+    static std::string decodeSequence(const std::vector<int>& sequence, const Alphabet* alphabet);
 
     /**
      * @brief Parse a sequence and try to guess the correct alphabet to use.
@@ -194,7 +195,7 @@ namespace bpp
      * @throw SequenceException if their is an ambiguity between several alphabet.
      * @throw AlphabetException if the sequence does not match any alphabet.
      */
-    static Alphabet* getAlphabetFromSequence(const std::string& sequence) throw (EmptySequenceException, SequenceException, AlphabetException);
+    static Alphabet* getAlphabetFromSequence(const std::string& sequence);
 
   };
 

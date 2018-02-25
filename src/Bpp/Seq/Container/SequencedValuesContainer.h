@@ -84,7 +84,7 @@ namespace bpp
      * @return A string describing the content of the sequence.
      * @throw SequenceNotFoundException If the name does not match any sequence in the container.
      */
-    virtual std::string toString(const std::string& name) const throw (SequenceNotFoundException) = 0;  
+    virtual std::string toString(const std::string& name) const = 0;  
 
     /**
      * @brief Check if a sequence with a given name is present in the container.
@@ -118,7 +118,7 @@ namespace bpp
      * is already used in the container before adding it.
      * @throw Exception If there are redundant names in the input vector.
      */
-    virtual void setSequencesNames(const std::vector<std::string>& names, bool checkNames) throw (Exception) = 0;
+    virtual void setSequencesNames(const std::vector<std::string>& names, bool checkNames) = 0;
 
     /*
      * @brief get value of a state in a position
@@ -139,7 +139,7 @@ namespace bpp
      * @throw SequenceNotFoundException If the name does not match any sequence in
      * the container.
      */
-    virtual const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException) = 0;
+    virtual const Comments& getComments(const std::string& name) const = 0;
 		
     /**
      * @brief Set the comments of a particular sequence.

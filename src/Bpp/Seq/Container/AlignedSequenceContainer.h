@@ -129,11 +129,11 @@ namespace bpp
      * @param osc The ordered container to coerce.
      * @throw SequenceNotAlignedException If sequences in osc do not have the same length.
      */
-    AlignedSequenceContainer(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException);
+    AlignedSequenceContainer(const OrderedSequenceContainer& osc);
 
     AlignedSequenceContainer& operator=(const AlignedSequenceContainer& asc);
     AlignedSequenceContainer& operator=(const            SiteContainer&  sc);
-    AlignedSequenceContainer& operator=(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException);
+    AlignedSequenceContainer& operator=(const OrderedSequenceContainer& osc);
 
     virtual ~AlignedSequenceContainer() {};
     
@@ -153,14 +153,14 @@ namespace bpp
      *
      * @{
      */
-    const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException);
-    Site& getSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-    void  setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
-    std::shared_ptr<Site> deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException);
-    void addSite(const Site& site, bool checkPosition = true) throw (Exception);
-    void addSite(const Site& site, int position, bool checkPosition = true) throw (Exception);
-    void addSite(const Site& site, size_t siteIndex, bool checkPosition = true) throw (Exception);
-    void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true) throw (Exception);
+    const Site& getSite(size_t siteIndex) const;
+    Site& getSite(size_t siteIndex);
+    void  setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
+    std::shared_ptr<Site> deleteSite(size_t siteIndex);
+    void addSite(const Site& site, bool checkPosition = true);
+    void addSite(const Site& site, int position, bool checkPosition = true);
+    void addSite(const Site& site, size_t siteIndex, bool checkPosition = true);
+    void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true);
  
     void clear();
 
@@ -189,8 +189,8 @@ namespace bpp
      *
      * @{
      */
-    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception);
-    void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (Exception);
+    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true);
+    void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true);
 
     void addSequence(const Sequence& sequence, bool checkName = true);
     void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);

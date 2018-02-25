@@ -95,8 +95,8 @@ public:
    * and divides it by the number of different states.
    * @author Sylvain Gaillard
    */
-  double getIndex(int state1, int state2) const throw (BadIntException);
-  double getIndex(const std::string& state1, const std::string& state2) const throw (BadCharException);
+  double getIndex(int state1, int state2) const;
+  double getIndex(const std::string& state1, const std::string& state2) const;
   const Alphabet* getAlphabet() const { return alpha_; }
   DefaultNucleotideScore* clone() const { return new DefaultNucleotideScore(*this); }
   LinearMatrix<double>* getIndexMatrix() const;

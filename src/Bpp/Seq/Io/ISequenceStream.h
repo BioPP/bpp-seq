@@ -72,9 +72,7 @@ namespace bpp
      * @return true if a sequence was read or false if not.
      * @throw Exception IOExecption and Sequence related Exceptions.
      */
-    
-    virtual bool nextSequence(std::istream& input, Sequence& seq) const throw (Exception) = 0;
-
+    virtual bool nextSequence(std::istream& input, Sequence& seq) const = 0;
   };
 
 } //end of namespace bpp.

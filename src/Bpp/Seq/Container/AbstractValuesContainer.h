@@ -134,7 +134,7 @@ namespace bpp
      * @{
      */
 
-    virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException) = 0;
+    virtual const Comments& getComments(size_t sequenceIndex) const = 0;
 
     virtual void setComments(size_t sequenceIndex, const Comments& comments) = 0;
     /** @} */

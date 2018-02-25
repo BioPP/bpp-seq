@@ -104,7 +104,7 @@ namespace bpp
      * @return A new AlphabetIndex2 object according to options specified.
      * @throw Exception if an error occured.
      */
-    AlphabetIndex2* read(const std::string& description) throw (Exception);
+    AlphabetIndex2* read(const std::string& description);
 
   };
 

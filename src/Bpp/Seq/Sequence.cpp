@@ -63,7 +63,7 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::string& sequence,
   const Alphabet* alpha
-) throw (BadCharException) :
+) :
   AbstractCoreSequence(name),
   SymbolList<int>(alpha),
   BasicIntSymbolList(alpha)
@@ -77,7 +77,7 @@ BasicSequence::BasicSequence(
   const std::string& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) throw (BadCharException) :
+) :
   AbstractCoreSequence(name, comments),
   SymbolList<int>(alpha),
   BasicIntSymbolList(alpha)
@@ -90,7 +90,7 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::vector<std::string>& sequence,
   const Alphabet* alpha
-) throw (BadCharException) :
+) :
   AbstractCoreSequence(name),
   SymbolList<int>(alpha),
   BasicIntSymbolList(sequence, alpha)
@@ -101,7 +101,7 @@ BasicSequence::BasicSequence(
   const std::vector<std::string>& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) throw (BadCharException) :
+) :
   AbstractCoreSequence(name, comments),
   SymbolList<int>(alpha),
   BasicIntSymbolList(sequence, alpha)
@@ -111,7 +111,7 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::vector<int>& sequence,
   const Alphabet* alpha
-) throw (BadIntException) :
+) :
   AbstractCoreSequence(name),
   SymbolList<int>(sequence, alpha),
   BasicIntSymbolList(sequence, alpha)
@@ -122,7 +122,7 @@ BasicSequence::BasicSequence(
   const std::vector<int>& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) throw (BadIntException) :
+) :
   AbstractCoreSequence(name, comments),
   SymbolList<int>(sequence, alpha),
   BasicIntSymbolList(sequence, alpha)
@@ -162,7 +162,7 @@ BasicSequence& BasicSequence::operator=(const BasicSequence& s)
 
 /******************************************************************************/
 
-void BasicSequence::setContent(const std::string& sequence) throw (BadCharException)
+void BasicSequence::setContent(const std::string& sequence)
 {
   // Remove blanks in sequence
   content_ = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet());

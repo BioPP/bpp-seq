@@ -42,7 +42,7 @@ using namespace std;
 
 using namespace bpp;
 
-size_t DistanceMatrix::getNameIndex(const std::string& name) const throw (Exception)
+size_t DistanceMatrix::getNameIndex(const std::string& name) const
 {
   for (size_t i = 0; i < names_.size(); ++i)
   {

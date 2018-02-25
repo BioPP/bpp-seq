@@ -89,9 +89,9 @@ namespace bpp
      * @param sequence The new content of the sequence.
      * @see The Sequence constructor for information about the way sequences are internaly stored.
      */
-    virtual void setContent(const std::string& sequence) throw (BadCharException) = 0;
+    virtual void setContent(const std::string& sequence) = 0;
  
-    virtual void setContent(const std::vector<std::string>& list) throw (BadCharException) = 0;
+    virtual void setContent(const std::vector<std::string>& list) = 0;
 
     virtual void setContent(const std::vector<int>& list) = 0;
 
@@ -148,7 +148,6 @@ namespace bpp
      * @throw BadCharException If the content does not match the current alphabet.
      */
     virtual void append(const std::string& content) = 0;
-
     
     /** @} */
 
@@ -239,7 +238,7 @@ namespace bpp
      * @param sequence The whole sequence to be parsed as a std::string.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha) throw (BadCharException);
+    BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha);
   
     /**
      * @brief Direct constructor: build a Sequence object from a std::string.
@@ -255,7 +254,7 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -267,7 +266,7 @@ namespace bpp
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha) throw (BadCharException);
+    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -280,7 +279,7 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadCharException);
+    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha);
   
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -289,7 +288,7 @@ namespace bpp
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) throw (BadIntException);
+    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha);
     
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -299,7 +298,7 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha) throw (BadIntException);
+    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha);
 
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
@@ -343,7 +342,7 @@ namespace bpp
      * @{
      */
      
-    void setContent(const std::string& sequence) throw (BadCharException);
+    void setContent(const std::string& sequence);
     
     void addElement(int elem)
     {
@@ -355,12 +354,12 @@ namespace bpp
       SymbolList<int>::setElement(pos, elem);
     }
 
-    void setContent(const std::vector<std::string>& list) throw (BadCharException)
+    void setContent(const std::vector<std::string>& list)
     {
       BasicIntSymbolList::setContent(list);
     }
 
-    void setContent(const std::vector<int>& list) throw (BadCharException)
+    void setContent(const std::vector<int>& list)
     {
       BasicIntSymbolList::setContent(list);
     }

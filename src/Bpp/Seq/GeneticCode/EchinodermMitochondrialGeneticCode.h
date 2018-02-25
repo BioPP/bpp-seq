@@ -80,24 +80,24 @@ class EchinodermMitochondrialGeneticCode:
       return v;
     }
     
-    bool isStop(int state) const throw (BadIntException) {
+    bool isStop(int state) const {
       //Test:
       codonAlphabet_.intToChar(state); //throw exception if invalid state!
       return (state == 48 || state == 50);
     }
     
-    bool isStop(const std::string& state) const throw (BadCharException) {
+    bool isStop(const std::string& state) const {
       int i = codonAlphabet_.charToInt(state);
       return (i == 48 || i == 50);
     }
  
-    bool isAltStart(int state) const throw (BadIntException) {
+    bool isAltStart(int state) const {
       //Test:
       codonAlphabet_.intToChar(state); //throw exception if invalid state!
       return (state == 46);
     }
     
-    bool isAltStart(const std::string& state) const throw (BadCharException) {
+    bool isAltStart(const std::string& state) const {
       int i = codonAlphabet_.charToInt(state);
       return (i == 46);
     }

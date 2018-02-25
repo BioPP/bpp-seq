@@ -107,12 +107,12 @@ namespace bpp
 		
   public:
 	
-    std::string toString(const std::string& name) const throw (SequenceNotFoundException)
+    std::string toString(const std::string& name) const
     {
       return getSequence(name).toString();
     }
 
-    const Comments& getComments(const std::string& name) const throw (SequenceNotFoundException)
+    const Comments& getComments(const std::string& name) const
     {
       return getSequence(name).getComments();
     }
@@ -130,17 +130,17 @@ namespace bpp
      *
      * @{
      */
-    virtual const std::string& getName(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+    virtual const std::string& getName(size_t sequenceIndex) const
     {
       return getSequence(sequenceIndex).getName();
     }
     
-    virtual std::string toString(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+    virtual std::string toString(size_t sequenceIndex) const
     {
       return getSequence(sequenceIndex).toString();
     }
 
-    virtual const Comments& getComments(size_t sequenceIndex) const throw (IndexOutOfBoundsException)
+    virtual const Comments& getComments(size_t sequenceIndex) const
     {
       return getSequence(sequenceIndex).getComments();
     }

@@ -281,7 +281,6 @@ namespace bpp
       SymbolList<T>(list,alpha), propagateEvents_(true), listeners_()
     {}
     
-
     /**
      * @brief The generic copy constructor.
      */
@@ -406,7 +405,6 @@ namespace bpp
       SymbolList<T>::addElement(pos,v);
       fireAfterSequenceInserted(event);
     }
-
 
     virtual void setElement(size_t pos, const T& v)
     {

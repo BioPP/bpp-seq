@@ -82,7 +82,7 @@ namespace bpp
     SiteNotFoundException(const std::string & text, const std::string & sId = "");
 
     // Class destructor
-    ~SiteNotFoundException() throw();
+    ~SiteNotFoundException();
 
   public:
 

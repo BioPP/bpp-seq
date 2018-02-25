@@ -76,8 +76,8 @@ namespace bpp
      * @throw IndexOutOfBoundsException If the specified site does not exists.
      */
   
-    virtual const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException) = 0;
-    virtual Site& getSite(size_t siteIndex) throw (IndexOutOfBoundsException) = 0;
+    virtual const Site& getSite(size_t siteIndex) const = 0;
+    virtual Site& getSite(size_t siteIndex) = 0;
 
     const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const
     {
@@ -97,7 +97,7 @@ namespace bpp
      * @param checkPosition Look if the position of the new site match a position attribute in the container.
      * @throw Exception If the specified site does not exists or is not correct.
      */
-    virtual void setSite(size_t siteIndex, const Site& site, bool checkPosition) throw (Exception) = 0;
+    virtual void setSite(size_t siteIndex, const Site& site, bool checkPosition) = 0;
 
     /**
      * @brief Add a site in the container.
@@ -106,7 +106,7 @@ namespace bpp
      * @param checkPosition Look if the position of the new site match a position attribute in the container.
      * @throw Exception If the specified site does not exists or is not correct.
      */
-    virtual void addSite(const Site& site, bool checkPosition) throw (Exception) = 0;
+    virtual void addSite(const Site& site, bool checkPosition) = 0;
 
     /**
      * @brief Add a site in the container.
@@ -116,7 +116,7 @@ namespace bpp
      * @param checkPosition Look if the position of the new site match a position attribute in the container.
      * @throw Exception If the specified site does not exists or is not correct.
      */
-    virtual void addSite(const Site& site, int position, bool checkPosition) throw (Exception) = 0;
+    virtual void addSite(const Site& site, int position, bool checkPosition) = 0;
 
     /**
      * @brief Add a site in the container.
@@ -126,7 +126,7 @@ namespace bpp
      * @param checkPosition Look if the position of the new site match a position attribute in the container.
      * @throw Exception If the specified site does not exists or is not correct.
      */
-    virtual void addSite(const Site& site, size_t siteIndex, bool checkPosition) throw (Exception) = 0;
+    virtual void addSite(const Site& site, size_t siteIndex, bool checkPosition) = 0;
 
     /**
      * @brief Add a site in the container.
@@ -137,7 +137,7 @@ namespace bpp
      * @param checkPosition Look if the position of the new site match a position attribute in the container.
      * @throw Exception If the specified site does not exists or is not correct.
      */
-    virtual void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition) throw (Exception) = 0;
+    virtual void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition) = 0;
 
     /**
      * @brief Remove a site from the container.
@@ -150,7 +150,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If the specified site does not exists.
      */
   
-    virtual std::shared_ptr<Site> deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException, Exception) = 0;
+    virtual std::shared_ptr<Site> deleteSite(size_t siteIndex) = 0;
 
   };
 } // end of namespace bpp.

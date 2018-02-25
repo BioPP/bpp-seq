@@ -87,13 +87,13 @@ public:
   AASEASup30Index* clone() const { return new AASEASup30Index(); }
 
 public:
-  double getIndex(int state) const throw (BadIntException)
+  double getIndex(int state) const
   {
     if (state < 0 || state > 19) throw BadIntException(state, "AASEASup30Index::getIndex(). Invalid state.", &AlphabetTools::PROTEIN_ALPHABET);
     return seaSup30_[static_cast<size_t>(state)];
   }
 
-  double getIndex(const std::string& state) const throw (BadCharException)
+  double getIndex(const std::string& state) const
   {
     return seaSup30_[static_cast<size_t>(AlphabetTools::PROTEIN_ALPHABET.charToInt(state))];
   }

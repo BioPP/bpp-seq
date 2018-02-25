@@ -84,7 +84,7 @@ RNA::RNA(bool exclamationMarkCountsAsGap)
 
 /******************************************************************************/
 
-bool RNA::isResolvedIn(int state1, int state2) const throw (BadIntException) 
+bool RNA::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
     throw BadIntException(state1, "RNA::isResolvedIn(int, int): Specified base unknown.");
@@ -116,7 +116,7 @@ bool RNA::isResolvedIn(int state1, int state2) const throw (BadIntException)
 
 /******************************************************************************/
 
-std::vector<int> RNA::getAlias(int state) const throw (BadIntException) 
+std::vector<int> RNA::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
     throw BadIntException(state, "RNA::getAlias(int): Specified base unknown.");
@@ -138,7 +138,7 @@ std::vector<int> RNA::getAlias(int state) const throw (BadIntException)
 
 /******************************************************************************/
 
-std::vector<std::string> RNA::getAlias(const std::string & state) const throw (BadCharException) 
+std::vector<std::string> RNA::getAlias(const std::string & state) const 
 {
   string locstate = TextTools::toUpper(state);
   if(!isCharInAlphabet(locstate)) throw BadCharException(locstate, "RNA::getAlias(int): Specified base unknown.");
@@ -151,7 +151,7 @@ std::vector<std::string> RNA::getAlias(const std::string & state) const throw (B
 
 /******************************************************************************/
 
-int RNA::getGeneric(const std::vector<int> & states) const throw (BadIntException)
+int RNA::getGeneric(const std::vector<int> & states) const
 {
   int v = 0;
   for (size_t i = 0 ; i < states.size() ; ++i) {
@@ -163,7 +163,7 @@ int RNA::getGeneric(const std::vector<int> & states) const throw (BadIntExceptio
 
 /******************************************************************************/
 
-std::string RNA::getGeneric(const std::vector<std::string> & states) const throw (BadCharException)
+std::string RNA::getGeneric(const std::vector<std::string> & states) const
 {
   vector<int> vi;
   for (unsigned int i = 0 ; i < states.size() ; ++i) {

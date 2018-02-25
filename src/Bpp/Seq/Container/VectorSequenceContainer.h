@@ -69,8 +69,7 @@ namespace bpp
   public:
     
     VectorSequenceContainer(
-      const std::vector<const Sequence*>& vs, const Alphabet* alpha)
-      throw (AlphabetMismatchException);
+      const std::vector<const Sequence*>& vs, const Alphabet* alpha);
   
     /**
      * @brief Build an empty container that will contain sequences of a particular alphabet.
@@ -166,7 +165,7 @@ namespace bpp
       return *getObject(name);
     }
 
-    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true) throw (Exception)
+    void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true)
     {
       setSequence(getSequencePosition(name), sequence, checkName);
     }
@@ -183,16 +182,16 @@ namespace bpp
       return getObjectsNames();
     }
 
-    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception);
+    void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true);
 
     VectorSequenceContainer * createEmptyContainer() const;
     
-    int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    int& valueAt(const std::string& sequenceName, size_t elementIndex)
     {
       return getSequence_(sequenceName)[elementIndex];
     }
 
-    const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+    const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
     {
       return getSequence(sequenceName)[elementIndex]; 
     }
@@ -207,12 +206,12 @@ namespace bpp
       return getSequence(sequenceName)[elementIndex]; 
     }
     
-    int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException)
+    int& valueAt(size_t sequenceIndex, size_t elementIndex)
     {
       return getSequence_(sequenceIndex)[elementIndex];
     }
 
-    const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException)
+    const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
     {
       return getSequence(sequenceIndex)[elementIndex];
     }
@@ -244,7 +243,7 @@ namespace bpp
       return *getObject(sequenceIndex);
     }
     
-    void  setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true) throw (Exception)
+    void  setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true)
     {
       if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
         throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
@@ -292,7 +291,6 @@ namespace bpp
       appendObject(std::shared_ptr<Sequence>(sequence.clone()), sequence.getName(), checkName);
     }
     
-
     /**
      * @brief Add a sequence to the container at a particular position.
      *
@@ -314,7 +312,6 @@ namespace bpp
     addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
   }
     
-
   protected:
 
     /**
@@ -333,7 +330,6 @@ namespace bpp
       return *getObject(name);
     }
 
-    
     /** @} */
 
         /**

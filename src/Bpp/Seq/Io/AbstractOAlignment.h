@@ -69,8 +69,8 @@ namespace bpp
      *
      * @{
      */ 
-    void writeAlignment(std::ostream& output, const SiteContainer& sc) const throw (Exception) = 0;
-    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const throw (Exception)
+    void writeAlignment(std::ostream& output, const SiteContainer& sc) const = 0;
+    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const
     {
       // Open file in specified mode
       std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));

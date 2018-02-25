@@ -105,7 +105,7 @@ namespace bpp
      * @param state The input state.
      * @throw BadIntException if the input state is not supported, or if there is no quivallent masked state.
      */
-    int getMaskedEquivalentState(int state) const throw (BadIntException);
+    int getMaskedEquivalentState(int state) const;
     /**
      * @brief Get the masked state equivalent to the input one.
      *
@@ -114,7 +114,7 @@ namespace bpp
      * @throw BadCharException if the input state is not supported.
      * @throw BadIntException if there is no equivalent masked state.
      */
-    const std::string getMaskedEquivalentState(const std::string& state) const throw (BadCharException, BadIntException);
+    const std::string getMaskedEquivalentState(const std::string& state) const;
 
   };
 

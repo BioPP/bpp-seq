@@ -51,7 +51,7 @@ using namespace std;
 
 /***************************************************************************/
 
-AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException) :
+AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer& osc) :
   AbstractSequenceContainer(osc.getAlphabet()),
   VectorSequenceContainer(osc.getAlphabet()),
   VectorPositionedContainer<Site>(),
@@ -105,7 +105,7 @@ AlignedSequenceContainer& AlignedSequenceContainer::operator=(const SiteContaine
 
 /***************************************************************************/
 
-AlignedSequenceContainer& AlignedSequenceContainer::operator=(const OrderedSequenceContainer& osc) throw (SequenceNotAlignedException)
+AlignedSequenceContainer& AlignedSequenceContainer::operator=(const OrderedSequenceContainer& osc)
 {
   VectorSequenceContainer::operator=(osc);
 
@@ -119,7 +119,7 @@ AlignedSequenceContainer& AlignedSequenceContainer::operator=(const OrderedSeque
 
 /***************************************************************************/
 
-const Site& AlignedSequenceContainer::getSite(size_t i) const throw (IndexOutOfBoundsException)
+const Site& AlignedSequenceContainer::getSite(size_t i) const
 {
   if (i >= length_)
     throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites() - 1);
@@ -136,7 +136,7 @@ const Site& AlignedSequenceContainer::getSite(size_t i) const throw (IndexOutOfB
   return *VectorPositionedContainer<Site>::getObject(i);
 }
 
-Site& AlignedSequenceContainer::getSite(size_t i) throw (IndexOutOfBoundsException)
+Site& AlignedSequenceContainer::getSite(size_t i)
 {
   if (i >= length_)
     throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites() - 1);
@@ -155,7 +155,7 @@ Site& AlignedSequenceContainer::getSite(size_t i) throw (IndexOutOfBoundsExcepti
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkPositions) throw (Exception)
+void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkPositions)
 {
   // New site's alphabet and site container's alphabet matching verification
   if (pos >= getNumberOfSites())
@@ -185,7 +185,7 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
 
 /******************************************************************************/
 
-std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos) throw (IndexOutOfBoundsException)
+std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos)
 {
   if (pos >= getNumberOfSites())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites() - 1);
@@ -206,7 +206,6 @@ std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos) throw (In
   // Actualizes the 'sites' vector:
   return VectorPositionedContainer<Site>::deleteObject(pos);
 }
-
 
 /******************************************************************************/
 
@@ -232,7 +231,7 @@ void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length)
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions) throw (Exception)
+void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions)
 {
   // New site's alphabet and site container's alphabet matching verification
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
@@ -269,7 +268,7 @@ void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions) th
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::addSite(const Site& site, int position, bool checkPositions) throw (Exception)
+void AlignedSequenceContainer::addSite(const Site& site, int position, bool checkPositions)
 {
   // New site's alphabet and site container's alphabet matching verification
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
@@ -305,7 +304,7 @@ void AlignedSequenceContainer::addSite(const Site& site, int position, bool chec
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions) throw (Exception)
+void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions)
 {
   if (siteIndex >= getNumberOfSites())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
@@ -345,7 +344,7 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool 
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, int position, bool checkPositions) throw (Exception)
+void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, int position, bool checkPositions)
 {
   if (siteIndex >= getNumberOfSites())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
@@ -405,7 +404,7 @@ void AlignedSequenceContainer::setSitePositions(Vint vPositions)
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::setSequence(size_t i, const Sequence& sequence, bool checkName) throw (Exception)
+void AlignedSequenceContainer::setSequence(size_t i, const Sequence& sequence, bool checkName)
 {
   if (i >= getNumberOfSequences())
     throw IndexOutOfBoundsException("AlignedSequenceContainer::setSequence", i, 0, getNumberOfSequences() - 1);
@@ -420,7 +419,7 @@ void AlignedSequenceContainer::setSequence(size_t i, const Sequence& sequence, b
 
 /******************************************************************************/
 
-void AlignedSequenceContainer::setSequence(const string& name, const Sequence& sequence, bool checkName) throw (Exception)
+void AlignedSequenceContainer::setSequence(const string& name, const Sequence& sequence, bool checkName)
 {
   // if container has only one sequence
   if (getNumberOfSequences() == 1)

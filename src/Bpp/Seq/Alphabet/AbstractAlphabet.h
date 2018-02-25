@@ -142,17 +142,17 @@ namespace bpp
      */
     size_t getNumberOfStates() const { return alphabet_.size(); }
     unsigned int getNumberOfChars() const { return static_cast<unsigned int>(alphabet_.size()); }
-    std::string getName(const std::string& state) const throw (BadCharException);
-    std::string getName(int state) const throw (BadIntException);
-    int charToInt(const std::string& state) const throw (BadCharException);
-    std::string intToChar(int state) const throw (BadIntException);
+    std::string getName(const std::string& state) const;
+    std::string getName(int state) const;
+    int charToInt(const std::string& state) const;
+    std::string intToChar(int state) const;
     bool isIntInAlphabet(int state) const;
     bool isCharInAlphabet(const std::string& state) const;
-    bool isResolvedIn(int state1, int state2) const throw (BadIntException);
-    std::vector<int> getAlias(int state) const throw (BadIntException);
-    std::vector<std::string> getAlias(const std::string& state) const throw (BadCharException);
-    int getGeneric(const std::vector<int>& states) const throw (BadIntException);
-    std::string getGeneric(const std::vector<std::string>& states) const throw (AlphabetException);
+    bool isResolvedIn(int state1, int state2) const;
+    std::vector<int> getAlias(int state) const;
+    std::vector<std::string> getAlias(const std::string& state) const;
+    int getGeneric(const std::vector<int>& states) const;
+    std::string getGeneric(const std::vector<std::string>& states) const;
     const std::vector<int>& getSupportedInts() const;
     const std::vector<std::string>& getSupportedChars() const;
     const std::vector<std::string> & getResolvedChars() const;
@@ -174,7 +174,7 @@ namespace bpp
      * @param stateIndex The index of the state in the alphabet_ vector.
      * @throw IndexOutOfBoundsException If the index is invalid.
      */
-    virtual AlphabetState& getStateAt(size_t stateIndex) throw (IndexOutOfBoundsException);
+    virtual AlphabetState& getStateAt(size_t stateIndex);
     
     /**
      * @brief Get a state at a position in the alphabet_ vector.
@@ -185,7 +185,7 @@ namespace bpp
      * @param stateIndex The index of the state in the alphabet_ vector.
      * @throw IndexOutOfBoundsException If the index is invalid.
      */
-    virtual const AlphabetState& getStateAt(size_t stateIndex) const throw (IndexOutOfBoundsException);
+    virtual const AlphabetState& getStateAt(size_t stateIndex) const;
 
     /**
      * @brief Get a state by its letter.
@@ -196,9 +196,9 @@ namespace bpp
      * @param letter The letter of the state to find.
      * @throw BadCharException If the letter is not in the Alphabet.
      */
-    const AlphabetState& getState(const std::string& letter) const throw (BadCharException);
+    const AlphabetState& getState(const std::string& letter) const;
 
-    AlphabetState& getState(const std::string& letter) throw (BadCharException);
+    AlphabetState& getState(const std::string& letter);
     
     /**
      * @brief Get a state by its num.
@@ -209,21 +209,21 @@ namespace bpp
      * @param num The num of the state to find.
      * @throw BadIntException If the num is not in the Alphabet.
      */
-    const AlphabetState& getState(int num) const throw (BadIntException);
+    const AlphabetState& getState(int num) const;
 
-    AlphabetState& getState(int num) throw (BadIntException);
+    AlphabetState& getState(int num);
 
-    int getIntCodeAt(size_t stateIndex) const throw (IndexOutOfBoundsException) {
+    int getIntCodeAt(size_t stateIndex) const {
       return getStateAt(stateIndex).getNum();
     }
 
-    const std::string& getCharCodeAt(size_t stateIndex) const throw (IndexOutOfBoundsException) {
+    const std::string& getCharCodeAt(size_t stateIndex) const {
       return getStateAt(stateIndex).getLetter();
     }
 
-    size_t getStateIndex(int state) const throw (BadIntException);
+    size_t getStateIndex(int state) const;
     
-    size_t getStateIndex(const std::string& state) const throw (BadCharException);
+    size_t getStateIndex(const std::string& state) const;
     /** @} */
 
   protected:
@@ -233,7 +233,7 @@ namespace bpp
      * @param st The state to add.
      * @throw Exception If a wrong alphabet state is provided.
      */
-    virtual void registerState(AlphabetState* st) throw (Exception);
+    virtual void registerState(AlphabetState* st);
     
     /**
      * @brief Set a state in the Alphabet.
@@ -243,7 +243,7 @@ namespace bpp
      * @throw Exception If a wrong alphabet state is provided.
      * @throw IndexOutOfBoundsException If an incorrect index is provided.
      */
-    virtual void setState(size_t pos, AlphabetState* st) throw (Exception, IndexOutOfBoundsException);
+    virtual void setState(size_t pos, AlphabetState* st);
     
     /**
      * @brief Resize the private alphabet_ vector.

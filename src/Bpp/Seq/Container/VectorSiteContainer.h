@@ -83,9 +83,8 @@ public:
    * @throw Exception If sites differ in size or in alphabet.
    */
 
-  VectorSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
-  VectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
-
+  VectorSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha, bool checkPositions = true);
+  VectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha, bool checkPositions = true);
   /**
    * @brief Build a new empty container with specified size.
    *
@@ -137,27 +136,28 @@ public:
    *
    * @{
    */
-  const Site& getSite(size_t siteIndex) const throw (IndexOutOfBoundsException)
+
+  const Site& getSite(size_t siteIndex) const
   {
     return *VectorPositionedContainer<Site>::getObject(siteIndex);
   }
 
-  Site& getSite(size_t siteIndex) throw (IndexOutOfBoundsException)
+  Site& getSite(size_t siteIndex)
   {
     return *VectorPositionedContainer<Site>::getObject(siteIndex);
   }
 
-  void setSite(size_t siteIndex, const Site& site, bool checkPosition = true) throw (Exception);
+  void setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
 
-  std::shared_ptr<Site> deleteSite(size_t siteIndex) throw (IndexOutOfBoundsException)
+  std::shared_ptr<Site> deleteSite(size_t siteIndex)
   {
     return VectorPositionedContainer<Site>::deleteObject(siteIndex);
   }
 
-  void        addSite(const Site& site,                                 bool checkPosition = true) throw (Exception);
-  void        addSite(const Site& site,                   int position, bool checkPosition = true) throw (Exception);
-  void        addSite(const Site& site, size_t siteIndex,               bool checkPosition = true) throw (Exception);
-  void        addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true) throw (Exception);
+  void        addSite(const Site& site,                                 bool checkPosition = true);
+  void        addSite(const Site& site,                   int position, bool checkPosition = true);
+  void        addSite(const Site& site, size_t siteIndex,               bool checkPosition = true);
+  void        addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true);
 
   /** @} */
 
@@ -218,14 +218,17 @@ public:
   Sequence* removeSequence(size_t sequenceIndex);
   Sequence* removeSequence(const std::string& name);
 
-  size_t getNumberOfSequences() const { return VectorMappedContainer<Sequence>::getNumberOfObjects(); }
+  size_t getNumberOfSequences() const
+  {
+    return VectorMappedContainer<Sequence>::getNumberOfObjects();
+  }
 
   std::vector<std::string> getSequencesNames() const
   {
     return VectorMappedContainer<Sequence>::getObjectsNames();
   }
   
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception)
+  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
   {
     VectorMappedContainer<Sequence>::setObjectsNames(names);
   }
@@ -234,13 +237,13 @@ public:
 
   VectorSiteContainer* createEmptyContainer() const;
 
-  int& valueAt(const std::string& sequenceName, size_t elementIndex) throw (SequenceNotFoundException, IndexOutOfBoundsException)
+  int& valueAt(const std::string& sequenceName, size_t elementIndex)
   {
     if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
   }
   
-  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const throw (SequenceNotFoundException, IndexOutOfBoundsException)
+  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
   {
     if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
@@ -256,14 +259,14 @@ public:
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
   }
 
-  int& valueAt(size_t sequenceIndex, size_t elementIndex) throw (IndexOutOfBoundsException)
+  int& valueAt(size_t sequenceIndex, size_t elementIndex)
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[sequenceIndex];
   }
-  
-  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const throw (IndexOutOfBoundsException)
+
+  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
@@ -336,10 +339,11 @@ public:
   /** @} */
 
   void addSequence(const Sequence& sequence, bool checkName = true);
+
   void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
 
-  void setSequence(const std::string& name,    const Sequence& sequence, bool checkName) throw (Exception);
-  void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName) throw (Exception);
+  void setSequence(const std::string& name,    const Sequence& sequence, bool checkName);
+  void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName);
 
 protected:
   // Create n void sites:

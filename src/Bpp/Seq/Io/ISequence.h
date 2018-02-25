@@ -80,7 +80,7 @@ class ISequence :
      * @return A new SequenceContainer object.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
+    virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const = 0;
     /**
      * @brief Create a new container from a file.
      *
@@ -89,7 +89,7 @@ class ISequence :
      * @return A new SequenceContainer object.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
+    virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const = 0;
 
 };
   
@@ -115,8 +115,7 @@ class ISequence :
      * @return A new SiteContainer object.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual SiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const throw (Exception) = 0;
-
+    virtual SiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const = 0;
     /**
      * @brief Create a new container from a file.
      *
@@ -125,7 +124,7 @@ class ISequence :
      * @return A new SiteContainer object.
      * @throw Exception If the file is not in the specified format.
      */
-    virtual SiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const throw (Exception) = 0;
+    virtual SiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const = 0;
 
   };
 
