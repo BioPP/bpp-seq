@@ -367,7 +367,7 @@ namespace bpp
     std::string toString() const
     {
       return BasicIntSymbolList::toString();
-    };
+    }
 
     std::string getChar(size_t pos) const
     {

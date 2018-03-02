@@ -164,11 +164,8 @@ void VectorSequenceContainer::setSequencesNames(
       }
     }
   }
-  for (size_t i = 0; i < names.size(); i++)
-  {
-    changeName(getSequence(i).getName(),names[i]);
-    getSequence_(i).setName(names[i]);
-  }
+  
+  setObjectsNames(names);
 }
 
 /******************************************************************************/
