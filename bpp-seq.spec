@@ -1,25 +1,22 @@
-%define _basename bpp-seq
-%define _version 2.4.0
-%define _release 1
 %define _prefix /usr
 
-URL: http://biopp.univ-montp2.fr/
+URL: https://github.com/BioPP/bpp-seq
 
-Name: %{_basename}
-Version: %{_version}
-Release: %{_release}
+Name: bpp-seq
+Version: 2.4.0
+Release: 1%{?dist}
 License: CECILL-2.0
 Vendor: The Bio++ Project
-Source: http://biopp.univ-montp2.fr/repos/sources/%{_basename}-%{_version}.tar.gz
+Source: %{name}-%{version}.tar.gz
 Summary: Bio++ Sequence library
 Group: Development/Libraries/C and C++
-Requires: bpp-core = %{_version}
+Requires: bpp-core = %{version}
 
-BuildRoot: %{_builddir}/%{_basename}-root
+BuildRoot: %{_builddir}/%{name}-root
 BuildRequires: cmake >= 2.8.11
 BuildRequires: gcc-c++ >= 4.7.0
-BuildRequires: libbpp-core4 = %{_version}
-BuildRequires: libbpp-core-devel = %{_version}
+BuildRequires: libbpp-core4 = %{version}
+BuildRequires: libbpp-core-devel = %{version}
 AutoReq: yes
 AutoProv: yes
 
@@ -36,15 +33,15 @@ This library contains utilitary and classes for bio-sequence analysis.
 It is part of the Bio++ project.
 
 %package -n libbpp-seq-devel
-Summary: Libraries, includes to develop applications with %{_basename}
+Summary: Libraries, includes to develop applications with %{name}
 Group: Development/Libraries/C and C++
-Requires: libbpp-seq12 = %{_version}
-Requires: libbpp-core4 = %{_version}
-Requires: libbpp-core-devel = %{_version}
+Requires: libbpp-seq12 = %{version}
+Requires: libbpp-core4 = %{version}
+Requires: libbpp-core-devel = %{version}
 
 %description -n libbpp-seq-devel
 The libbpp-seq-devel package contains the header files and static libraries for
-building applications which use %{_basename}.
+building applications which use %{name}.
 
 %prep
 %setup -q
@@ -81,8 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
-* Tue Feb 20 2018 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.4.0-1
+* Fri Mar 03 2018 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.4.0-1
 - Increased interface number
+- Removed dynamic exceptions declarations.
 * Tue Jun 06 2017 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.3.1-1
 - Increased interface number
 * Wed May 10 2017 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.3.0-1
