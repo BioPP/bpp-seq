@@ -41,7 +41,6 @@
 #define _AAINDEX2ENTRY_H_
 
 #include "AlphabetIndex2.h"
-#include "../Alphabet/ProteicAlphabet.h"
 #include <Bpp/Numeric/Matrix/Matrix.h>
 
 namespace bpp
@@ -50,11 +49,10 @@ namespace bpp
  * @brief Create a AlphabetIndex2 object from an AAIndex2 entry.
  */
 class AAIndex2Entry :
-  public virtual AlphabetIndex2
+  public virtual ProteicAlphabetIndex2
 {
 private:
   LinearMatrix<double> property_;
-  const ProteicAlphabet* alpha_;
   bool sym_;
 
 public:
@@ -72,15 +70,16 @@ public:
   AAIndex2Entry(std::istream& input, bool sym = true);
 
   AAIndex2Entry(const AAIndex2Entry& index) :
+    ProteicAlphabetIndex2(*this),
     property_(index.property_),
-    alpha_(index.alpha_),
     sym_(index.sym_)
   {}
 
   AAIndex2Entry& operator=(const AAIndex2Entry& index)
   {
+    ProteicAlphabetIndex2::operator=(*this);
+    
     property_ = index.property_;
-    alpha_ = index.alpha_;
     sym_ = index.sym_;
     return *this;
   }
@@ -88,23 +87,21 @@ public:
   virtual ~AAIndex2Entry() {}
 
 public:
-  const Alphabet* getAlphabet() const { return alpha_; }
-
   AAIndex2Entry* clone() const { return new AAIndex2Entry(*this); }
 
   double getIndex(int state1, int state2) const
   {
     if (state1 < 0 || state1 > 19)
-      throw BadIntException(state1, "AAIndex2Entry::getIndex(). Invalid state1.", alpha_);
+      throw BadIntException(state1, "AAIndex2Entry::getIndex(). Invalid state1.", getAlphabet());
     if (state2 < 0 || state2 > 19)
-      throw BadIntException(state2, "AAIndex2Entry::getIndex(). Invalid state2.", alpha_);
+      throw BadIntException(state2, "AAIndex2Entry::getIndex(). Invalid state2.", getAlphabet());
     double d = property_(static_cast<size_t>(state1), static_cast<size_t>(state2));
     return d;
   }
 
   double getIndex(const std::string& state1, const std::string& state2) const
   {
-    return getIndex(alpha_->charToInt(state1), alpha_->charToInt(state2));
+    return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
   }
 
   LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(property_); }

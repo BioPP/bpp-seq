@@ -42,6 +42,7 @@
 
 #include <Bpp/Io/IoFormat.h>
 #include "../AlphabetIndex/AlphabetIndex2.h"
+#include "../GeneticCode/GeneticCode.h"
 
 // From the STL:
 #include <string>
@@ -62,6 +63,8 @@ namespace bpp
   {
   private:
     const Alphabet* alphabet_;
+    const GeneticCode* gencode_;
+    
     std::string message_;
     bool verbose_;
 
@@ -73,16 +76,21 @@ namespace bpp
       * @param verbose Tell if some messages should be printed while parsing.
       */
     BppOAlphabetIndex2Format(const Alphabet* alphabet, const std::string& message, bool verbose = true):
-      alphabet_(alphabet), message_(message), verbose_(verbose) {}
+      alphabet_(alphabet), gencode_(0), message_(message), verbose_(verbose) {}
+
+    BppOAlphabetIndex2Format(const CodonAlphabet* alphabet, const GeneticCode* gencode, const std::string& message, bool verbose = true):
+      alphabet_(alphabet), gencode_(gencode), message_(message), verbose_(verbose) {}
 
     BppOAlphabetIndex2Format(const BppOAlphabetIndex2Format& format):
       alphabet_(format.alphabet_),
+      gencode_(format.gencode_),
       message_(format.message_),
       verbose_(format.verbose_) {}
 
     BppOAlphabetIndex2Format& operator=(const BppOAlphabetIndex2Format& format)
     {
       alphabet_ = format.alphabet_;
+      gencode_ = format.gencode_;
       message_  = format.message_;
       verbose_  = format.verbose_;
       return *this;
@@ -95,10 +103,10 @@ namespace bpp
 
     const std::string getFormatDescription() const { return "Bpp Options format."; }
 
-		const std::string getDataType() const { return "AlphabetIndex2"; }
+    const std::string getDataType() const { return "AlphabetIndex2"; }
 
     /**
-     * @brief Read a AlphabetIndex1 object from a string.
+     * @brief Read a AlphabetIndex2 object from a string.
      *
      * @param description A string describing the index in the keyval syntax.
      * @return A new AlphabetIndex2 object according to options specified.

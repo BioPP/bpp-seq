@@ -48,8 +48,8 @@ using namespace std;
 #include <Bpp/Text/StringTokenizer.h>
 
 AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) :
+  ProteicAlphabetIndex2(),
   property_(20, 20),
-  alpha_(&AlphabetTools::PROTEIN_ALPHABET),
   sym_(sym)
 {
   // Parse entry:

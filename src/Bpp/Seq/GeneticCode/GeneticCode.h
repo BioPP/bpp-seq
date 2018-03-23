@@ -71,11 +71,13 @@ namespace bpp
   /**
    * @brief Partial implementation of the Transliterator interface for genetic code object.
    *
-   * A genetic code object if a translator from a codon alphabet to a proteic alphabet.
-   * Depending on the codon alphabet used, several genetic code can be implemented.
+   * A genetic code object if a translator from a codon alphabet to a
+   * proteic alphabet. Depending on the codon alphabet used, several
+   * genetic code can be implemented.
    *
    * @see CodonAlphabet, ProteicAlphabet
    */
+  
   class GeneticCode:
     public AbstractTransliterator,
     public virtual Clonable
@@ -86,6 +88,11 @@ namespace bpp
     std::map<int, int> tlnTable_;
 	
   public:
+    /*
+     * @brief the CodonAlphabet of the Genetic Code will own the
+     * NucleicAlphabet.
+     *
+     */
     GeneticCode(const NucleicAlphabet* alphabet):
       AbstractTransliterator(),
       codonAlphabet_(alphabet),

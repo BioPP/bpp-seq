@@ -243,6 +243,18 @@ AlphabetIndex2* SequenceApplicationTools::getAlphabetIndex2(const Alphabet* alph
   return reader.read(description);
 }
 
+AlphabetIndex1* SequenceApplicationTools::getAlphabetIndex1(const CodonAlphabet* alphabet, const GeneticCode* gencode, const string& description, const string& message, bool verbose)
+{
+  BppOAlphabetIndex1Format reader(alphabet, gencode, message, verbose);
+  return reader.read(description);
+}
+
+AlphabetIndex2* SequenceApplicationTools::getAlphabetIndex2(const CodonAlphabet* alphabet, const GeneticCode* gencode, const string& description, const string& message, bool verbose)
+{
+  BppOAlphabetIndex2Format reader(alphabet, gencode, message, verbose);
+  return reader.read(description);
+}
+
 /******************************************************************************/
 SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   const Alphabet* alpha,

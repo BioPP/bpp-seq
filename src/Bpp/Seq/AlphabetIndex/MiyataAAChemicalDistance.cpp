@@ -49,8 +49,8 @@ using namespace std;
 using namespace bpp;
 
 MiyataAAChemicalDistance::MiyataAAChemicalDistance() :
+  ProteicAlphabetIndex2(),
   distanceMatrix_(20, 20),
-  alpha_(&AlphabetTools::PROTEIN_ALPHABET),
   sym_(true)
 {
   #include "__MiyataMatrixCode"
@@ -59,16 +59,16 @@ MiyataAAChemicalDistance::MiyataAAChemicalDistance() :
 double MiyataAAChemicalDistance::getIndex(int state1, int state2) const
 {
   if (state1 < 0 || state1 > 19)
-    throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", alpha_);
+    throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", getAlphabet());
   if (state2 < 0 || state2 > 19)
-    throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", alpha_);
+    throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", getAlphabet());
   double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   return sym_ ? NumTools::abs<double>(d) : d;
 }
 
 double MiyataAAChemicalDistance::getIndex(const string& state1, const string& state2) const
 {
-  return getIndex(alpha_->charToInt(state1), alpha_->charToInt(state2));
+  return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
 }
 
 Matrix<double>* MiyataAAChemicalDistance::getIndexMatrix() const

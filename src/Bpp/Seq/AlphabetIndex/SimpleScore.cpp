@@ -65,14 +65,14 @@ double SimpleScore::getIndex(int state1, int state2) const
 {
   size_t stateIndex1 = alphabet_->getStateIndex(state1);
   size_t stateIndex2 = alphabet_->getStateIndex(state2);
-  return distanceMatrix_(stateIndex1, stateIndex2);
+  return distanceMatrix_(stateIndex1-1, stateIndex2-1);
 }
 
 double SimpleScore::getIndex(const std::string& state1, const std::string& state2) const
 {
   size_t stateIndex1 = alphabet_->getStateIndex(state1);
   size_t stateIndex2 = alphabet_->getStateIndex(state2);
-  return distanceMatrix_(stateIndex1, stateIndex2);
+  return distanceMatrix_(stateIndex1-1, stateIndex2-1);
 }
 
 LinearMatrix<double>* SimpleScore::getIndexMatrix() const

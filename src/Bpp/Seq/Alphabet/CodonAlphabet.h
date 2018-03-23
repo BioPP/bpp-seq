@@ -65,7 +65,7 @@ namespace bpp
     public AbstractAlphabet
   {
   protected:
-    const NucleicAlphabet* nAlph_;
+    std::shared_ptr<const NucleicAlphabet> nAlph_;
   
   public: // Constructor and destructor.
 		
@@ -83,14 +83,14 @@ namespace bpp
 
     CodonAlphabet(const CodonAlphabet& bia) :
       AbstractAlphabet(bia),
-      nAlph_(bia.nAlph_->clone())
+      nAlph_(bia.nAlph_)
     {
     }
 
     CodonAlphabet& operator=(const CodonAlphabet& bia)
     {
       AbstractAlphabet::operator=(bia);
-      nAlph_ = bia.nAlph_->clone();
+      nAlph_ = bia.nAlph_;
     
       return *this;
     }
@@ -102,8 +102,6 @@ namespace bpp
 
     virtual ~CodonAlphabet()
     {
-      if (nAlph_)
-        delete nAlph_;
     }
   
     std::string getAlphabetType() const
@@ -320,7 +318,7 @@ namespace bpp
 
     const Alphabet* getNAlphabet(size_t n) const 
     {
-      return nAlph_;
+      return nAlph_.get();
     }
 
     int getWord(const Sequence& seq, size_t pos = 0) const
@@ -447,9 +445,10 @@ namespace bpp
     /**
      * @return The nucleic alphabet associated to this codon alphabet.
      */
+    
     const NucleicAlphabet* const getNucleicAlphabet() const
     {
-      return nAlph_;
+      return nAlph_.get();
     }
 
     /**

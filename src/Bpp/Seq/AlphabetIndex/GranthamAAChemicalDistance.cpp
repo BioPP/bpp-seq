@@ -45,28 +45,30 @@
 #include <Bpp/Numeric/NumTools.h>
 
 using namespace bpp;
+using namespace std;
 
 short int GranthamAAChemicalDistance::SIGN_NONE = 0;
 short int GranthamAAChemicalDistance::SIGN_ARBITRARY = 1;
 short int GranthamAAChemicalDistance::SIGN_PC1 = 2;
 
 GranthamAAChemicalDistance::GranthamAAChemicalDistance() :
+  ProteicAlphabetIndex2(),
   distanceMatrix_(20, 20),
   signMatrix_(20, 20),
-  alpha_(&AlphabetTools::PROTEIN_ALPHABET),
   sign_(0)
 {
   // Load the matrix:
   #include "__GranthamMatrixCode"
 }
+
 GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
 
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
 {
   if (state1 < 0 || state1 > 19)
-    throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", alpha_);
+    throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", getAlphabet());
   if (state2 < 0 || state2 > 19)
-    throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", alpha_);
+    throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", getAlphabet());
   double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   if (sign_ == SIGN_NONE)
     return NumTools::abs<double>(d);
@@ -77,7 +79,7 @@ double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
 
 double GranthamAAChemicalDistance::getIndex(const std::string& state1, const std::string& state2) const
 {
-  return getIndex(alpha_->charToInt(state1), alpha_->charToInt(state2));
+  return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
 }
 
 Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const

@@ -54,6 +54,7 @@
 #include "../AlphabetIndex/AASEA1030Index.h"
 #include "../AlphabetIndex/AASEASup30Index.h"
 #include "../AlphabetIndex/AAIndex1Entry.h"
+#include "../AlphabetIndex/CodonFromProteicAlphabetIndex1.h"
 
 #include <Bpp/Text/KeyvalTools.h>
 #include <Bpp/App/ApplicationTools.h>
@@ -73,6 +74,20 @@ AlphabetIndex1* BppOAlphabetIndex1Format::read(const std::string& description)
     KeyvalTools::parseProcedure(description, name, args);
     if (verbose_)
       ApplicationTools::displayResult(message_, description);
+
+    if (AlphabetTools::isCodonAlphabet(alphabet_))
+    {
+      if (!gencode_)
+          throw Exception("BppOAlphabetIndex2Format::read. Missing genetic code for codon alphabet.");
+
+      BppOAlphabetIndex1Format reader1(gencode_->getTargetAlphabet(), message_, false);
+
+      shared_ptr<ProteicAlphabetIndex1> pai(dynamic_cast<ProteicAlphabetIndex1*>(reader1.read(description)));
+      if (!pai)
+        throw Exception("BppOAlphabetIndex1Format::read. Bad ProteicAlphabetIndex2 for CodonAlphabetIndex2.");
+
+      return new CodonFromProteicAlphabetIndex1(gencode_, pai.get());
+    }
 
     //Currently, only protein indices are supported:
     if (!AlphabetTools::isProteicAlphabet(alphabet_))

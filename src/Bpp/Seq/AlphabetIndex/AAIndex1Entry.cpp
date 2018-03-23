@@ -38,7 +38,6 @@
  */
 
 #include "AAIndex1Entry.h"
-#include "../Alphabet/AlphabetTools.h"
 #include <Bpp/Io/FileTools.h>
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Text/StringTokenizer.h>
@@ -47,8 +46,8 @@ using namespace bpp;
 using namespace std;
 
 AAIndex1Entry::AAIndex1Entry(std::istream& input) :
-  property_(20),
-  alpha_(&AlphabetTools::PROTEIN_ALPHABET)
+  ProteicAlphabetIndex1(),
+  property_(20)
 {
   // Parse entry:
   string line;

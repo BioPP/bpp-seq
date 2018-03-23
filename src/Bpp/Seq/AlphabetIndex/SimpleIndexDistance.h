@@ -45,7 +45,6 @@
 
 #include "AlphabetIndex1.h"
 #include "AlphabetIndex2.h"
-#include "../Alphabet/ProteicAlphabet.h"
 #include "../Alphabet/AlphabetExceptions.h"
 #include <Bpp/Exceptions.h>
 #include <Bpp/Numeric/Matrix/Matrix.h>

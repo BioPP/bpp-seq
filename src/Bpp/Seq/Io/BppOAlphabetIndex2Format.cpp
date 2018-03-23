@@ -46,6 +46,7 @@
 #include "../AlphabetIndex/SimpleIndexDistance.h"
 #include "../AlphabetIndex/AAIndex2Entry.h"
 #include "../AlphabetIndex/AlphabetIndex1.h"
+#include "../AlphabetIndex/CodonFromProteicAlphabetIndex2.h"
 
 #include <Bpp/Text/KeyvalTools.h>
 #include <Bpp/App/ApplicationTools.h>
@@ -66,9 +67,24 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
     if (verbose_)
       ApplicationTools::displayResult(message_, description);
 
+    if (AlphabetTools::isCodonAlphabet(alphabet_))
+    {
+      if (!gencode_)
+          throw Exception("BppOAlphabetIndex2Format::read. Missing genetic code for codon alphabet.");
+
+      BppOAlphabetIndex2Format reader2(gencode_->getTargetAlphabet(), message_, false);
+
+      shared_ptr<ProteicAlphabetIndex2> pai(dynamic_cast<ProteicAlphabetIndex2*>(reader2.read(description)));
+      if (!pai)
+        throw Exception("BppOAlphabetIndex2Format::read. Bad ProteicAlphabetIndex2 for CodonAlphabetIndex2.");
+
+      return new CodonFromProteicAlphabetIndex2(gencode_, pai.get());
+    }
+    
     //Currently, only protein indices are supported:
     if (!AlphabetTools::isProteicAlphabet(alphabet_))
         throw Exception("BppOAlphabetIndex2Format::read. This index is only supported with a protein alphabet.");
+    
     if (name == "Blosum50")
     {
       return new BLOSUM50();

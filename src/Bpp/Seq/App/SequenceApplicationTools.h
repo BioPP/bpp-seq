@@ -133,8 +133,15 @@ namespace bpp
     static AlphabetIndex1* getAlphabetIndex1(
         const Alphabet* alphabet,
         const std::string& description,
-        const std::string& message = "Alphabet distance:",
+        const std::string& message = "Alphabet measure:",
         bool verbose = true);
+
+    static AlphabetIndex1* getAlphabetIndex1(
+      const CodonAlphabet* alphabet,
+      const GeneticCode* gencode,
+      const std::string& description,
+      const std::string& message = "Alphabet measure:",
+      bool verbose = true);
 
 
     /**
@@ -147,12 +154,19 @@ namespace bpp
      * @param verbose Tell if some info should be displayed while parsing.
      * @throw Exception in case of bad description.
      */
+
     static AlphabetIndex2* getAlphabetIndex2(
         const Alphabet* alphabet,
         const std::string& description,
         const std::string& message = "Alphabet distance:",
         bool verbose = true);
 
+    static AlphabetIndex2* getAlphabetIndex2(
+      const CodonAlphabet* alphabet,
+      const GeneticCode* gencode,
+      const std::string& description,
+      const std::string& message = "Alphabet distance:",
+      bool verbose = true);
 
     /**
      * @brief Build a SequenceContainer object according to options.

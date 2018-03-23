@@ -1,7 +1,7 @@
 //
-// File: AAIndex1Entry.h
-// Created by: Julien Dutheil
-// Created on: Fri Jan 19 17:07 2007
+// File: CodonFromProteicAlphabetIndex1.h
+// Created by: Laurent Guéguen
+// Created on: jeudi 22 mars 2018, à 09h 04
 //
 
 /*
@@ -37,62 +37,88 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _AAINDEX1ENTRY_H_
-#define _AAINDEX1ENTRY_H_
+#ifndef _CODON_FROM_PROTEIC_ALPHABET_INDEX1_H_
+#define _CODON_FROM_PROTEIC_ALPHABET_INDEX1_H_
 
 #include "AlphabetIndex1.h"
+#include "../Alphabet/CodonAlphabet.h"
+#include "../GeneticCode/GeneticCode.h"
 
 namespace bpp
 {
-/**
- * @brief Create a AlphabetIndex1 object from an AAIndex2 entry.
- */
-  class AAIndex1Entry :
-    public ProteicAlphabetIndex1
+  /*
+   * @brief AlphabetIndex1 for codon based on ProteicAlphabetIndex1.
+   *
+   */
+  
+  class CodonFromProteicAlphabetIndex1 :
+    public AlphabetIndex1
   {
   private:
-    std::vector<double> property_;
+    const CodonAlphabet* alpha_;
+    const GeneticCode* gencode_;
 
+    std::vector<double> vIndex_;
+    
   public:
-    /**
-     * @brief Create a new AAIndex1Entry from an input stream.
-     *
-     * @param input The input stream to use.
-     * @throw IOException if the stream content does not follow the AAIndex1 database entry format.
-     */
-    AAIndex1Entry(std::istream& input);
-
-    AAIndex1Entry(const AAIndex1Entry& index) :
-      ProteicAlphabetIndex1(index),
-      property_(index.property_)
-    {}
-
-    AAIndex1Entry& operator=(const AAIndex1Entry& index)
+    CodonFromProteicAlphabetIndex1(const GeneticCode* gencode, const ProteicAlphabetIndex1* protalphindex) :
+      AlphabetIndex1(),
+      alpha_(&AlphabetTools::CODON_ALPHABET),
+      gencode_(gencode),
+      vIndex_(64)
     {
-      ProteicAlphabetIndex1::operator=(*this);
-      property_ = index.property_;
+      fillIndex_(protalphindex);
+    }
+
+    CodonFromProteicAlphabetIndex1(const CodonFromProteicAlphabetIndex1& cfp) :
+      alpha_(cfp.alpha_),
+      gencode_(cfp.gencode_),
+      vIndex_(cfp.vIndex_)
+    {
+    }
+
+    CodonFromProteicAlphabetIndex1& operator=(const CodonFromProteicAlphabetIndex1& cfp)
+    {
+      alpha_ = cfp.alpha_;
+      gencode_ = cfp.gencode_;
+      vIndex_ = cfp.vIndex_;
+
       return *this;
     }
 
-    virtual ~AAIndex1Entry() {}
+    virtual ~CodonFromProteicAlphabetIndex1() {}
 
-    AAIndex1Entry* clone() const { return new AAIndex1Entry(*this); }
+    CodonFromProteicAlphabetIndex1* clone() const { return new CodonFromProteicAlphabetIndex1(*this); }
 
   public:
     double getIndex(int state) const
     {
-      return property_[getAlphabet()->getStateIndex(state)-1];
+      return vIndex_[getAlphabet()->getStateIndex(state)-1];
     }
 
     double getIndex(const std::string& state) const
     {
-      return property_[getAlphabet()->getStateIndex(state)-1];
+      return vIndex_[getAlphabet()->getStateIndex(state)-1];
     }
 
-    std::vector<double>* getIndexVector() const { return new std::vector<double>(property_); }
+    const Alphabet* getAlphabet() const
+    {
+      return alpha_;
+    }
+    
+    std::vector<double>* getIndexVector() const {
+      return new std::vector<double>(vIndex_);
+    }
 
+  private:
+    void fillIndex_(const ProteicAlphabetIndex1* protAlphIndex_)
+    {
+      for (int i=0; i<64; i++)
+        vIndex_[i]=gencode_->isStop(i)?0:protAlphIndex_->getIndex(gencode_->translate(i));
+    }
+    
   };
 } // end of namespace bpp.
 
-#endif // _AAINDEX1ENTRY_H_
+#endif // _CODON_FROM_PROTEIC_ALPHABET_INDEX1_H_
 
