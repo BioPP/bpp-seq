@@ -155,7 +155,7 @@ Sequence* SequenceTools::getComplement(const Sequence& sequence)
 Sequence* SequenceTools::transcript(const Sequence& sequence)
 {
   // Alphabet type checking
-  if (AlphabetTools::isDNAAlphabet(sequence.getAlphabet()))
+  if (!AlphabetTools::isDNAAlphabet(sequence.getAlphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
   }
@@ -168,7 +168,7 @@ Sequence* SequenceTools::transcript(const Sequence& sequence)
 Sequence* SequenceTools::reverseTranscript(const Sequence& sequence)
 {
   // Alphabet type checking
-  if (AlphabetTools::isRNAAlphabet(sequence.getAlphabet()))
+  if (!AlphabetTools::isRNAAlphabet(sequence.getAlphabet()))
   {
     throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
   }

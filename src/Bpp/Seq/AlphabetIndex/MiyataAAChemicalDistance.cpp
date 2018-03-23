@@ -58,18 +58,17 @@ MiyataAAChemicalDistance::MiyataAAChemicalDistance() :
 
 double MiyataAAChemicalDistance::getIndex(int state1, int state2) const
 {
-  size_t stateIndex1 = alpha_->getStateIndex(state1);
-  size_t stateIndex2 = alpha_->getStateIndex(state2);
-  double d = distanceMatrix_(stateIndex1, stateIndex2);
+  if (state1 < 0 || state1 > 19)
+    throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", alpha_);
+  if (state2 < 0 || state2 > 19)
+    throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", alpha_);
+  double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   return sym_ ? NumTools::abs<double>(d) : d;
 }
 
 double MiyataAAChemicalDistance::getIndex(const string& state1, const string& state2) const
 {
-  double d = distanceMatrix_(
-      static_cast<size_t>(alpha_->charToInt(state1)),
-      static_cast<size_t>(alpha_->charToInt(state2)));
-  return sym_ ? NumTools::abs(d) : d;
+  return getIndex(alpha_->charToInt(state1), alpha_->charToInt(state2));
 }
 
 Matrix<double>* MiyataAAChemicalDistance::getIndexMatrix() const
