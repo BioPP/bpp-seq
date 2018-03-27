@@ -64,13 +64,15 @@ namespace bpp
     bool isSymmetric_;
     
   public:
-    CodonFromProteicAlphabetIndex2(const GeneticCode* gencode, const ProteicAlphabetIndex2* protalphindex) :
+    CodonFromProteicAlphabetIndex2(const GeneticCode* gencode, const AlphabetIndex2* protalphindex) :
       AlphabetIndex2(),
       alpha_(&AlphabetTools::CODON_ALPHABET),
       gencode_(gencode),
       vIndex_(64,64),
       isSymmetric_(protalphindex->isSymmetric())
     {
+      if (!AlphabetTools::isProteicAlphabet(protalphindex->getAlphabet()))
+        throw Exception("CodonFromProteicAlphabetIndex2: Not a Proteic Alphabet for CodonAlphabetIndex2.");
       fillIndex_(protalphindex);
     }
 
@@ -122,7 +124,7 @@ namespace bpp
     }
     
   private:
-    void fillIndex_(const ProteicAlphabetIndex2* protAlphIndex_)
+    void fillIndex_(const AlphabetIndex2* protAlphIndex_)
     {
       for (int i=0; i<64; i++)
         for (int j=0; j<64; j++)

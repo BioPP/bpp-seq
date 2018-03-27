@@ -82,11 +82,11 @@ AlphabetIndex1* BppOAlphabetIndex1Format::read(const std::string& description)
 
       BppOAlphabetIndex1Format reader1(gencode_->getTargetAlphabet(), message_, false);
 
-      shared_ptr<ProteicAlphabetIndex1> pai(dynamic_cast<ProteicAlphabetIndex1*>(reader1.read(description)));
-      if (!pai)
-        throw Exception("BppOAlphabetIndex1Format::read. Bad ProteicAlphabetIndex2 for CodonAlphabetIndex2.");
+      shared_ptr<AlphabetIndex1> ai2(reader1.read(description));
+      if (!AlphabetTools::isProteicAlphabet(ai2->getAlphabet()))
+        throw Exception("BppOAlphabetIndex2Format::read. Not a Proteic Alphabet for CodonAlphabetIndex1.");
 
-      return new CodonFromProteicAlphabetIndex1(gencode_, pai.get());
+      return new CodonFromProteicAlphabetIndex1(gencode_, ai2.get());
     }
 
     //Currently, only protein indices are supported:

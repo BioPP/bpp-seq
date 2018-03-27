@@ -61,12 +61,14 @@ namespace bpp
     std::vector<double> vIndex_;
     
   public:
-    CodonFromProteicAlphabetIndex1(const GeneticCode* gencode, const ProteicAlphabetIndex1* protalphindex) :
+    CodonFromProteicAlphabetIndex1(const GeneticCode* gencode, const AlphabetIndex1* protalphindex) :
       AlphabetIndex1(),
       alpha_(&AlphabetTools::CODON_ALPHABET),
       gencode_(gencode),
       vIndex_(64)
     {
+      if (!AlphabetTools::isProteicAlphabet(protalphindex->getAlphabet()))
+        throw Exception("CodonFromProteicAlphabetIndex1: Not a Proteic Alphabet for CodonAlphabetIndex1.");
       fillIndex_(protalphindex);
     }
 
@@ -111,7 +113,7 @@ namespace bpp
     }
 
   private:
-    void fillIndex_(const ProteicAlphabetIndex1* protAlphIndex_)
+    void fillIndex_(const AlphabetIndex1* protAlphIndex_)
     {
       for (int i=0; i<64; i++)
         vIndex_[i]=gencode_->isStop(i)?0:protAlphIndex_->getIndex(gencode_->translate(i));
