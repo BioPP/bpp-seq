@@ -1,6 +1,7 @@
 //
 // File: AAVolumeIndex.h
 // Created by: Bastien Boussau
+// Modified by: Laurent Guéguen
 // Created on: Fri Jan 14 10:31 2011
 //
 
@@ -46,7 +47,7 @@ namespace bpp
 {
 /**
  * @brief Volume (Angström^3) of each amino acid, according to
- * http://www.imb-jena.de/IMAGE_AA.html
+ * Zamyatnin, A.A., Protein volume in solution, Prog. Biophys. Mol. Biol., 24, 107-123 (1972)
  *
  *
  */
@@ -62,26 +63,26 @@ namespace bpp
       volume_()
     {
       volume_.resize(20);
-      volume_[ 0] =  115; // A
-      volume_[ 1] =  225; // R
-      volume_[ 2] =  160; // N
-      volume_[ 3] =  150; // D
-      volume_[ 4] =  135; // C
-      volume_[ 5] =  180; // Q
-      volume_[ 6] =  190; // E
-      volume_[ 7] =  75; // G
-      volume_[ 8] =  195; // H
-      volume_[ 9] =  175; // I
-      volume_[10] =  170; // L
-      volume_[11] =  200; // K
-      volume_[12] =  185; // M
-      volume_[13] =  210; // F
-      volume_[14] =  145; // P
-      volume_[15] =  115; // S
-      volume_[16] =  140; // T
-      volume_[17] =  255; // W
-      volume_[18] =  230; // Y
-      volume_[19] =  155; // V
+      volume_[ 0] =  88.6; // A
+      volume_[ 1] =  173.4; // R
+      volume_[ 2] =  114.1; // N
+      volume_[ 3] =  111.1; // D
+      volume_[ 4] =  108.5; // C
+      volume_[ 5] =  143.8; // Q
+      volume_[ 6] =  138.4; // E
+      volume_[ 7] =  60.1; // G
+      volume_[ 8] =  153.2; // H
+      volume_[ 9] =  166.7; // I
+      volume_[10] =  166.7; // L
+      volume_[11] =  168.6; // K
+      volume_[12] =  162.9; // M
+      volume_[13] =  189.9; // F
+      volume_[14] =  112.7; // P
+      volume_[15] =  89; // S
+      volume_[16] =  116.1; // T
+      volume_[17] =  227.8; // W
+      volume_[18] =  193.6; // Y
+      volume_[19] =  140; // V
     }
 
     virtual ~AAVolumeIndex() {}

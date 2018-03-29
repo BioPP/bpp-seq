@@ -41,6 +41,7 @@
 #include "../Alphabet/AlphabetTools.h"
 #include "../AlphabetIndex/GranthamAAPolarityIndex.h"
 #include "../AlphabetIndex/GranthamAAVolumeIndex.h"
+#include "../AlphabetIndex/KD_AAHydropathyIndex.h"
 #include "../AlphabetIndex/KleinAANetChargeIndex.h"
 #include "../AlphabetIndex/AAChouFasmanAHelixIndex.h"
 #include "../AlphabetIndex/AAChouFasmanBSheetIndex.h"
@@ -103,6 +104,10 @@ AlphabetIndex1* BppOAlphabetIndex1Format::read(const std::string& description)
     else if (name == "KleinCharge")
     {
       return new KleinAANetChargeIndex();
+    }
+    else if (name == "KDHydropathy")
+    {
+      return new KD_AAHydropathyIndex();
     }
     else if (name == "ChouFasmanAHelix")
     {
