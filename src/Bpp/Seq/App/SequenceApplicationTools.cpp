@@ -535,6 +535,9 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
     VectorSiteContainer* selectedSites = 0;
     if (siteSet != "none")
     {
+      if(siteSet[0]=='(')
+        siteSet=siteSet.substr(1,siteSet.size()-2);
+
       vector<size_t> vSite;
       try
       {
@@ -707,10 +710,14 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   AlignedValuesContainer* selectedSites = 0;
   if (siteSet != "none")
   {
+    if(siteSet[0]=='(')
+      siteSet=siteSet.substr(1,siteSet.size()-2);
+    
     vector<size_t> vSite;
     try
     {
       vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet,",",":");
+      
       for (auto ps : vSite1)
       {
         int x = (ps >= 0 ? ps : static_cast<int>(nbSites) + ps + 1);
