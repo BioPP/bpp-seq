@@ -57,11 +57,11 @@ namespace bpp
  */
 class ISequenceStream: public virtual IOSequenceStream
 {
-	public:
-		ISequenceStream() {}
-		virtual ~ISequenceStream() {}
+  public:
+    ISequenceStream() {}
+    virtual ~ISequenceStream() {}
 
-	public:
+  public:
     /**
      * @brief Read sequence from stream.
      *
@@ -78,5 +78,5 @@ class ISequenceStream: public virtual IOSequenceStream
 
 } //end of namespace bpp.
 
-#endif	// _ISEQUENCESTREAM_H_
+#endif  // _ISEQUENCESTREAM_H_
 

@@ -47,15 +47,15 @@ using namespace std;
 /****************************************************************************************/
 
 BasicSymbolList::BasicSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
-	alphabet_(alpha), content_()
+  alphabet_(alpha), content_()
 {
-	setContent(list);
+  setContent(list);
 }
 
 BasicSymbolList::BasicSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
-	alphabet_(alpha), content_()
+  alphabet_(alpha), content_()
 {
-	setContent(list);
+  setContent(list);
 }
 
 /****************************************************************************************/
@@ -72,61 +72,61 @@ BasicSymbolList::BasicSymbolList(const BasicSymbolList& list):
 
 BasicSymbolList& BasicSymbolList::operator=(const SymbolList& list)
 {
-	content_.resize(list.size());
+  content_.resize(list.size());
   for (size_t i = 0; i < list.size(); ++i)
     content_[i] = list[i];
-	alphabet_ = list.getAlphabet();
-	return *this;
+  alphabet_ = list.getAlphabet();
+  return *this;
 }
 
 BasicSymbolList& BasicSymbolList::operator=(const BasicSymbolList& list)
 {
-	content_  = list.content_;
-	alphabet_ = list.alphabet_;
-	return *this;
+  content_  = list.content_;
+  alphabet_ = list.alphabet_;
+  return *this;
 }
 
 /****************************************************************************************/
 
 void BasicSymbolList::setContent(const vector<string>& list)
 {
-	// Check list for incorrect characters
-	vector<int> coded(list.size());
-	for (size_t i = 0; i < list.size(); i++)
-		if(!alphabet_->isCharInAlphabet(list[i])) throw BadCharException(list[i], "BasicSymbolList::setContent", alphabet_);
+  // Check list for incorrect characters
+  vector<int> coded(list.size());
+  for (size_t i = 0; i < list.size(); i++)
+    if(!alphabet_->isCharInAlphabet(list[i])) throw BadCharException(list[i], "BasicSymbolList::setContent", alphabet_);
 
   for (size_t i = 0; i < list.size(); i++) 
-		coded[i] = alphabet_->charToInt(list[i]);
-	
+    coded[i] = alphabet_->charToInt(list[i]);
+  
   //BasicSymbolList is valid:
-	content_ = coded;
+  content_ = coded;
 };
 
 /****************************************************************************************/
 
 void BasicSymbolList::setContent(const vector<int>& list)
 {
-	// Check list for incorrect characters
-	for (size_t i = 0; i < list.size(); i++)
-		if(!alphabet_->isIntInAlphabet(list[i]))
+  // Check list for incorrect characters
+  for (size_t i = 0; i < list.size(); i++)
+    if(!alphabet_->isIntInAlphabet(list[i]))
       throw BadIntException(list[i], "BasicSymbolList::setContent", alphabet_);
-	
+  
   //Sequence is valid:
-	content_ = list;
+  content_ = list;
 };
 
 /****************************************************************************************/
 
 string BasicSymbolList::toString() const
 {
-	return StringSequenceTools::decodeSequence(content_, alphabet_);
+  return StringSequenceTools::decodeSequence(content_, alphabet_);
 };
 
 /****************************************************************************************/
 
 void BasicSymbolList::addElement(const string& c)
 {
-	content_.push_back(alphabet_->charToInt(c));
+  content_.push_back(alphabet_->charToInt(c));
 }
 
 /****************************************************************************************/
@@ -134,83 +134,83 @@ void BasicSymbolList::addElement(const string& c)
 void BasicSymbolList::addElement(size_t pos, const string& c)
 {
   if(pos >= content_.size()) throw IndexOutOfBoundsException("BasicSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), alphabet_->charToInt(c));
+  content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), alphabet_->charToInt(c));
 }
 
 /****************************************************************************************/
 
 void BasicSymbolList::setElement(size_t pos, const string& c)
 {
-	if(pos >= content_.size())
+  if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-	content_[pos] = alphabet_->charToInt(c);
+  content_[pos] = alphabet_->charToInt(c);
 }
 
 /****************************************************************************************/
 
 string BasicSymbolList::getChar(size_t pos) const
 {
-	if(pos >= content_.size())
+  if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
-	string c = "";
-	try
+  string c = "";
+  try
   {
-		c = alphabet_->intToChar(content_[pos]);
-	}
-  catch(BadIntException bie)
+    c = alphabet_->intToChar(content_[pos]);
+  }
+  catch(BadIntException& bie)
   {
-		//This should never happen!
-	}
-	return c;
+    //This should never happen!
+  }
+  return c;
 }
 
 /****************************************************************************************/
 
 void BasicSymbolList::deleteElement(size_t pos)
 {
-	if(pos >= content_.size())
+  if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
-	content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos));
+  content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos));
 }
 
 /****************************************************************************************/
 
 void BasicSymbolList::deleteElements(size_t pos, size_t len)
 {
-	if (pos + len > content_.size())
+  if (pos + len > content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
-	 content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos), content_.begin() + static_cast<ptrdiff_t>(pos + len));
+   content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos), content_.begin() + static_cast<ptrdiff_t>(pos + len));
 }
 
 /****************************************************************************************/
 
 void BasicSymbolList::addElement(int v)
 {
-	//test:
-	alphabet_->intToChar(v);
-	content_.push_back(v);
+  //test:
+  alphabet_->intToChar(v);
+  content_.push_back(v);
 }
 
 /****************************************************************************************/
 
 void BasicSymbolList::addElement(size_t pos, int v)
 {
-	//test:
-	if(pos >= content_.size())
+  //test:
+  if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-	alphabet_->intToChar(v);
-	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), v);
+  alphabet_->intToChar(v);
+  content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), v);
 }
 
 /****************************************************************************************/
 
 void BasicSymbolList::setElement(size_t pos, int v)
 {
-	//test:
+  //test:
   if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-	alphabet_->intToChar(v);
-	content_[pos] = v;
+  alphabet_->intToChar(v);
+  content_[pos] = v;
 }
 
 /****************************************************************************************/
@@ -219,7 +219,7 @@ int BasicSymbolList::getValue(size_t pos) const
 {
   if(pos >= content_.size())
     throw IndexOutOfBoundsException("BasicSymbolList::getValue. Invalid position.", pos, 0, size() - 1);
-	return content_[pos];
+  return content_[pos];
 }
 
 /****************************************************************************************/
@@ -228,15 +228,15 @@ int BasicSymbolList::getValue(size_t pos) const
 /****************************************************************************************/
 
 EdSymbolList::EdSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
-	alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
+  alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
 {
-	setContent(list);
+  setContent(list);
 }
 
 EdSymbolList::EdSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
-	alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
+  alphabet_(alpha), propagateEvents_(true), content_(), listeners_()
 {
-	setContent(list);
+  setContent(list);
 }
 
 /****************************************************************************************/
@@ -259,23 +259,23 @@ EdSymbolList::EdSymbolList(const EdSymbolList& list):
 
 EdSymbolList& EdSymbolList::operator=(const SymbolList& list)
 {
-	content_.resize(list.size());
+  content_.resize(list.size());
   for (size_t i = 0; i < list.size(); ++i) {
     content_[i] = list[i];
   }
-	alphabet_        = list.getAlphabet();
+  alphabet_        = list.getAlphabet();
   propagateEvents_ = true;
   for (size_t i = 0; i < listeners_.size(); ++i)
     if (!listeners_[i]->isShared())
      delete listeners_[i];
   listeners_.clear();
-	return *this;
+  return *this;
 }
 
 EdSymbolList& EdSymbolList::operator=(const EdSymbolList& list)
 {
-	content_         = list.getContent();
-	alphabet_        = list.getAlphabet();
+  content_         = list.getContent();
+  alphabet_        = list.getAlphabet();
   propagateEvents_ = list.propagateEvents_;
   for (size_t i = 0; i < listeners_.size(); ++i)
     delete listeners_[i];
@@ -283,7 +283,7 @@ EdSymbolList& EdSymbolList::operator=(const EdSymbolList& list)
   for (size_t i = 0; i < listeners_.size(); ++i)
     if (!list.listeners_[i]->isShared())
       listeners_[i] = dynamic_cast<SymbolListListener*>(list.listeners_[i]->clone());
-	return *this;
+  return *this;
 }
 
 /****************************************************************************************/
@@ -294,15 +294,15 @@ void EdSymbolList::setContent(const vector<string>& list)
   fireBeforeSequenceChanged(event);
 
   // Check list for incorrect characters
-	vector<int> coded(list.size());
-	for (size_t i = 0; i < list.size(); i++)
-		if (!alphabet_->isCharInAlphabet(list[i])) throw BadCharException(list[i], "EdSymbolList::setContent", alphabet_);
-	
+  vector<int> coded(list.size());
+  for (size_t i = 0; i < list.size(); i++)
+    if (!alphabet_->isCharInAlphabet(list[i])) throw BadCharException(list[i], "EdSymbolList::setContent", alphabet_);
+  
   for (size_t i = 0; i < list.size(); i++) 
-		coded[i] = alphabet_->charToInt(list[i]);
-	
+    coded[i] = alphabet_->charToInt(list[i]);
+  
   //SymbolList is valid:
-	content_ = coded;
+  content_ = coded;
   fireAfterSequenceChanged(event);
 };
 
@@ -313,13 +313,13 @@ void EdSymbolList::setContent(const vector<int>& list)
   SymbolListEditionEvent event(this);
   fireBeforeSequenceChanged(event);
 
-	// Check list for incorrect characters
-	for (size_t i = 0; i < list.size(); i++)
-		if(!alphabet_->isIntInAlphabet(list[i]))
+  // Check list for incorrect characters
+  for (size_t i = 0; i < list.size(); i++)
+    if(!alphabet_->isIntInAlphabet(list[i]))
       throw BadIntException(list[i], "EdSymbolList::setContent", alphabet_);
-	
+  
   //Sequence is valid:
-	content_ = list;
+  content_ = list;
   fireAfterSequenceChanged(event);
 };
 
@@ -327,7 +327,7 @@ void EdSymbolList::setContent(const vector<int>& list)
 
 string EdSymbolList::toString() const
 {
-	return StringSequenceTools::decodeSequence(content_, alphabet_);
+  return StringSequenceTools::decodeSequence(content_, alphabet_);
 };
 
 /****************************************************************************************/
@@ -336,7 +336,7 @@ void EdSymbolList::addElement(const string& c)
 {
   SymbolListInsertionEvent event(this, size(), 1);
   fireBeforeSequenceInserted(event);
-	content_.push_back(alphabet_->charToInt(c));
+  content_.push_back(alphabet_->charToInt(c));
   fireAfterSequenceInserted(event);
 }
 
@@ -347,7 +347,7 @@ void EdSymbolList::addElement(size_t pos, const string& c)
   if (pos >= content_.size()) throw IndexOutOfBoundsException("EdSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
   SymbolListInsertionEvent event(this, pos, 1);
   fireBeforeSequenceInserted(event);
-	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), alphabet_->charToInt(c));
+  content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), alphabet_->charToInt(c));
   fireAfterSequenceInserted(event);
 }
 
@@ -355,11 +355,11 @@ void EdSymbolList::addElement(size_t pos, const string& c)
 
 void EdSymbolList::setElement(size_t pos, const string& c)
 {
-	if (pos >= content_.size())
+  if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
   SymbolListSubstitutionEvent event(this, pos, pos);
   fireBeforeSequenceSubstituted(event);
-	content_[pos] = alphabet_->charToInt(c);
+  content_[pos] = alphabet_->charToInt(c);
   fireAfterSequenceSubstituted(event);
 }
 
@@ -367,26 +367,26 @@ void EdSymbolList::setElement(size_t pos, const string& c)
 
 string EdSymbolList::getChar(size_t pos) const
 {
-	if (pos >= content_.size())
+  if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
-	string c = "";
-	try {
-		c = alphabet_->intToChar(content_[pos]);
-	} catch(BadIntException bie) {
-		//This should never happen!
-	}
-	return c;
+  string c = "";
+  try {
+    c = alphabet_->intToChar(content_[pos]);
+  } catch(BadIntException& bie) {
+    //This should never happen!
+  }
+  return c;
 }
 
 /****************************************************************************************/
 
 void EdSymbolList::deleteElement(size_t pos)
 {
-	if (pos >= content_.size())
+  if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
   SymbolListDeletionEvent event(this, pos, 1);
   fireBeforeSequenceDeleted(event);
-	content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos));
+  content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos));
   fireAfterSequenceDeleted(event);
 }
 
@@ -394,11 +394,11 @@ void EdSymbolList::deleteElement(size_t pos)
 
 void EdSymbolList::deleteElements(size_t pos, size_t len)
 {
-	if(pos + len > content_.size())
+  if(pos + len > content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
   SymbolListDeletionEvent event(this, pos, len);
   fireBeforeSequenceDeleted(event);
-	content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos), content_.begin() + static_cast<ptrdiff_t>(pos + len));
+  content_.erase(content_.begin() + static_cast<ptrdiff_t>(pos), content_.begin() + static_cast<ptrdiff_t>(pos + len));
   fireAfterSequenceDeleted(event);
 }
 
@@ -409,9 +409,9 @@ void EdSymbolList::addElement(int v)
 {
   SymbolListInsertionEvent event(this, size(), 1);
   fireBeforeSequenceInserted(event);
-	//test:
-	alphabet_->intToChar(v);
-	content_.push_back(v);
+  //test:
+  alphabet_->intToChar(v);
+  content_.push_back(v);
   fireAfterSequenceInserted(event);
 }
 
@@ -419,13 +419,13 @@ void EdSymbolList::addElement(int v)
 
 void EdSymbolList::addElement(size_t pos, int v)
 {
-	//test:
-	if (pos >= content_.size())
+  //test:
+  if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
   SymbolListInsertionEvent event(this, pos, 1);
   fireBeforeSequenceInserted(event);
-	alphabet_->intToChar(v);
-	content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), v);
+  alphabet_->intToChar(v);
+  content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), v);
   fireAfterSequenceInserted(event);
 }
 
@@ -433,13 +433,13 @@ void EdSymbolList::addElement(size_t pos, int v)
 
 void EdSymbolList::setElement(size_t pos, int v)
 {
-	//test:
+  //test:
   if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
   SymbolListSubstitutionEvent event(this, pos, pos);
   fireBeforeSequenceSubstituted(event);
-	alphabet_->intToChar(v);
-	content_[pos] = v;
+  alphabet_->intToChar(v);
+  content_[pos] = v;
   fireAfterSequenceSubstituted(event);
 }
 
@@ -449,7 +449,7 @@ int EdSymbolList::getValue(size_t pos) const
 {
   if (pos >= content_.size())
     throw IndexOutOfBoundsException("EdSymbolList::getValue. Invalid position.", pos, 0, size() - 1);
-	return content_[pos];
+  return content_[pos];
 }
 
 /****************************************************************************************/

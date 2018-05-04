@@ -87,7 +87,7 @@ vector<int> GeneticCode::getSynonymous(int aminoacid) const
       if (translate(i) == aminoacid)
         synonymes.push_back(i);
     }
-    catch (StopCodonException)
+    catch (StopCodonException&)
     { }
   }
   return synonymes;
@@ -108,7 +108,7 @@ std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid
       if (translate(i) == aa)
         synonymes.push_back(codonAlphabet_.intToChar(i));
     }
-    catch (StopCodonException)
+    catch (StopCodonException&)
     { }
   }
   return synonymes;
