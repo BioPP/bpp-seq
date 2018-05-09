@@ -70,8 +70,8 @@ namespace bpp {
     LetterAlphabet& operator=(const LetterAlphabet& bia)
     {
       AbstractAlphabet::operator=(bia);
-      letters_=bia.letters_;
-      caseSensitive_=bia.caseSensitive_;
+      letters_ = bia.letters_;
+      caseSensitive_ = bia.caseSensitive_;
 
       return *this;
       
@@ -83,7 +83,7 @@ namespace bpp {
 
   public:
     bool isCharInAlphabet(char state) const {
-      return letters_[static_cast<unsigned int>(state)] != LETTER_UNDEF_VALUE;
+      return letters_[static_cast<size_t>(state)] != LETTER_UNDEF_VALUE;
     }
     bool isCharInAlphabet(const std::string& state) const {
       return isCharInAlphabet(state[0]);
@@ -98,20 +98,20 @@ namespace bpp {
     void registerState(AlphabetState* st) {
       AbstractAlphabet::registerState(st);
       if (caseSensitive_) {
-        letters_[static_cast<unsigned int>(st->getLetter()[0])] = st->getNum();
+        letters_[static_cast<size_t>(st->getLetter()[0])] = st->getNum();
       } else {
-        letters_[static_cast<unsigned int>(tolower(st->getLetter()[0]))] = st->getNum();
-        letters_[static_cast<unsigned int>(toupper(st->getLetter()[0]))] = st->getNum();
+        letters_[static_cast<size_t>(tolower(st->getLetter()[0]))] = st->getNum();
+        letters_[static_cast<size_t>(toupper(st->getLetter()[0]))] = st->getNum();
       }
     }
 
     void setState(size_t pos, AlphabetState* st) {
       AbstractAlphabet::setState(pos, st);
       if (caseSensitive_) {
-        letters_[static_cast<unsigned int>(st->getLetter()[0])] = st->getNum();
+        letters_[static_cast<size_t>(st->getLetter()[0])] = st->getNum();
       } else {
-        letters_[static_cast<unsigned int>(tolower(st->getLetter()[0]))] = st->getNum();
-        letters_[static_cast<unsigned int>(toupper(st->getLetter()[0]))] = st->getNum();
+        letters_[static_cast<size_t>(tolower(st->getLetter()[0]))] = st->getNum();
+        letters_[static_cast<size_t>(toupper(st->getLetter()[0]))] = st->getNum();
       }
     }
 
