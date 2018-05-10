@@ -906,6 +906,9 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
   else
     sitesToAnalyse2 = sitesToAnalyse;
 
+  if (verbose)
+    ApplicationTools::displayResult("Number of sites", sitesToAnalyse2->getNumberOfSites());
+
   return sitesToAnalyse2;
 }
 
