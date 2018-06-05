@@ -77,5 +77,5 @@ namespace bpp
 
 } //end of namespace bpp.
 
-#endif	// _ISEQUENCESTREAM_H_
+#endif  // _ISEQUENCESTREAM_H_
 
