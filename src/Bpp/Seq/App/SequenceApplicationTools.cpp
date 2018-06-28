@@ -828,7 +828,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
         if (verbose)
           ApplicationTools::displayGauge(nbSites - i, nbSites - 1, '=');
 
-        if (SymbolListTools::numberOfGaps(sitesToAnalyse->getSymbolListSite(i - 1)) > gapCount)
+        if ((double)SymbolListTools::numberOfGaps(sitesToAnalyse->getSymbolListSite(i - 1)) > gapCount)
           sitesToAnalyse->deleteSites(i - 1, 1);
       }
       if (verbose)
@@ -857,7 +857,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
         if (verbose)
           ApplicationTools::displayGauge(nbSites - i, nbSites - 1, '=');
 
-        if (SymbolListTools::numberOfUnresolved(sitesToAnalyse->getSymbolListSite(i - 1)) > unresCount)
+        if ((double)SymbolListTools::numberOfUnresolved(sitesToAnalyse->getSymbolListSite(i - 1)) > unresCount)
           sitesToAnalyse->deleteSites(i - 1, 1);
       }
       if (verbose)
