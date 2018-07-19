@@ -47,7 +47,7 @@
 namespace bpp
 {
 /**
- * @brief Volume (Angström^3) of each amino acid, according to http://www.imb-jena.de/IMAGE_AA.html
+ * @brief Volume (Angström^3) of each amino acid, according to http://www.imb-jena.de/IMAGE_AA.html (Note: original webpage is not available anymore)
  *
  *
  */
