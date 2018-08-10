@@ -3,7 +3,7 @@
 URL: https://github.com/BioPP/bpp-seq
 
 Name: bpp-seq
-Version: 2.4.0
+Version: 2.4.1
 Release: 1%{?dist}
 License: CECILL-2.0
 Vendor: The Bio++ Project
@@ -78,6 +78,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Fri Aug 10 2018 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.4.1-1
+- Compatibility update gcc8
 * Fri Mar 03 2018 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.4.0-1
 - Increased interface number
 - Removed dynamic exceptions declarations.
