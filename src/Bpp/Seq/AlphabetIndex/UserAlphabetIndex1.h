@@ -65,13 +65,13 @@ public:
   {}
 
   UserAlphabetIndex1(const UserAlphabetIndex1& uAlph) :
-    alph_(uAlph.alph_),//->clone()),
+    alph_(uAlph.alph_),
     index_(uAlph.index_)
   {}
 
   UserAlphabetIndex1& operator=(const UserAlphabetIndex1& uAlph)
   {
-    alph_  = uAlph.alph_;//->clone();
+    alph_  = uAlph.alph_;
     index_ = uAlph.index_;
     return *this;
   }    
@@ -83,22 +83,22 @@ public:
 public:
   double getIndex(int state) const
   {
-    return index_[alph_->getStateIndex(state)];
+    return index_[alph_->getStateIndex(state)-1];
   }
 
   void setIndex(int state, double val) 
   {
-    index_[alph_->getStateIndex(state)] = val;
+    index_[alph_->getStateIndex(state)-1] = val;
   }
 
   double getIndex(const std::string& state) const
   {
-    return index_[alph_->getStateIndex(state)];
+    return index_[alph_->getStateIndex(state)-1];
   }
 
   void setIndex(const std::string& state, double val) 
   {
-    index_[alph_->getStateIndex(state)] = val;
+    index_[alph_->getStateIndex(state)-1] = val;
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(index_); }

@@ -63,15 +63,15 @@ SimpleScore::SimpleScore(const Alphabet* alphabet, double match, double mismatch
 
 double SimpleScore::getIndex(int state1, int state2) const
 {
-  size_t stateIndex1 = alphabet_->getStateIndex(state1);
-  size_t stateIndex2 = alphabet_->getStateIndex(state2);
+  size_t stateIndex1 = alphabet_->getStateIndex(state1)-1;
+  size_t stateIndex2 = alphabet_->getStateIndex(state2)-1;
   return distanceMatrix_(stateIndex1, stateIndex2);
 }
 
 double SimpleScore::getIndex(const std::string& state1, const std::string& state2) const
 {
-  size_t stateIndex1 = alphabet_->getStateIndex(state1);
-  size_t stateIndex2 = alphabet_->getStateIndex(state2);
+  size_t stateIndex1 = alphabet_->getStateIndex(state1)-1;
+  size_t stateIndex2 = alphabet_->getStateIndex(state2)-1;
   return distanceMatrix_(stateIndex1, stateIndex2);
 }
 
