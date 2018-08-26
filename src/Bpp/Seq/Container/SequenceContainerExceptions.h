@@ -84,7 +84,7 @@ namespace bpp
       id(seqId) {};
 	
     // Class destructor
-    virtual ~SequenceNotFoundException() throw() {}
+    virtual ~SequenceNotFoundException() {}
 	
   public:
 
@@ -133,7 +133,7 @@ namespace bpp
     }
 	
     // Class destructor
-    virtual ~EmptyContainerException() throw() {}
+    virtual ~EmptyContainerException() {}
 	
   public:
 

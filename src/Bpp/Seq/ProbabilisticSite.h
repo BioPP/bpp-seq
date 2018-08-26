@@ -94,7 +94,7 @@ namespace bpp
      * @param alpha    The alphabet to use.
      * @throw Exception If the content does not match the specified alphabet or is internally inconsistent.
      */
-    ProbabilisticSite(const Table<double> & site, const Alphabet* alpha) throw (Exception);
+    ProbabilisticSite(const Table<double> & site, const Alphabet* alpha);
 
     /**
      * @brief Build a new ProbabilisticSite object with the specified alphabet and position.
@@ -105,7 +105,7 @@ namespace bpp
      * @param position The position attribute for this site.
      * @throw Exception If the content does not match the specified alphabet or is internally insconsistent.
      */
-    ProbabilisticSite(const Table<double> & site, const Alphabet* alpha, int position) throw (Exception);
+    ProbabilisticSite(const Table<double> & site, const Alphabet* alpha, int position);
 
     /**
      * @brief The copy constructor.

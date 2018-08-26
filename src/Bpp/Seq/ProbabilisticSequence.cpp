@@ -46,13 +46,13 @@ using namespace bpp;
 BasicProbabilisticSequence::BasicProbabilisticSequence(const Alphabet * alpha) :
   AbstractCoreSequence(), BasicProbabilisticSymbolList(alpha) {}
 
-BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Alphabet * alpha) throw (Exception) :
+BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Alphabet * alpha) :
   AbstractCoreSequence(name), BasicProbabilisticSymbolList(alpha)
 {
   setContent(sequence);
 }
 
-BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Comments & comments, const Alphabet * alpha) throw (Exception) :
+BasicProbabilisticSequence::BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Comments & comments, const Alphabet * alpha) :
   AbstractCoreSequence(name, comments), BasicProbabilisticSymbolList(sequence, alpha) {}
 
 /****************************************************************************************/

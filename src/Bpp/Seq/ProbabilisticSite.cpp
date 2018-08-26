@@ -49,10 +49,10 @@ ProbabilisticSite::ProbabilisticSite(const Alphabet* alpha) :
 ProbabilisticSite::ProbabilisticSite(const Alphabet* alpha, int position) :
   AbstractCoreSite(position), BasicProbabilisticSymbolList(alpha) {}
 
-ProbabilisticSite::ProbabilisticSite(const Table<double> & site, const Alphabet* alpha) throw (Exception) :
+ProbabilisticSite::ProbabilisticSite(const Table<double> & site, const Alphabet* alpha) :
   AbstractCoreSite(), BasicProbabilisticSymbolList(site, alpha) {}
 
-ProbabilisticSite::ProbabilisticSite(const Table<double> & site, const Alphabet* alpha, int position) throw (Exception) :
+ProbabilisticSite::ProbabilisticSite(const Table<double> & site, const Alphabet* alpha, int position) :
   AbstractCoreSite(position), BasicProbabilisticSymbolList(site, alpha){}
 
 /****************************************************************************************/

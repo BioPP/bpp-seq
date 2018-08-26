@@ -107,7 +107,7 @@ namespace bpp
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
     
-    BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Alphabet * alpha) throw (Exception);
+    BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Alphabet * alpha);
 
     /**
      * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
@@ -120,7 +120,7 @@ namespace bpp
      * @param alpha A pointer to the alphabet associated with this sequence.
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
-    BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Comments & comments, const Alphabet * alpha) throw (Exception);
+    BasicProbabilisticSequence(const std::string & name, const Table<double> & sequence, const Comments & comments, const Alphabet * alpha);
 
     /**
      * @brief The copy constructor.  This does not perform a hard copy of the alphabet object.
@@ -150,7 +150,7 @@ namespace bpp
 
   public :
 
-    void setContent(const Table<double> & content) throw (Exception) { BasicProbabilisticSymbolList::setContent(content); }
+    void setContent(const Table<double> & content) { BasicProbabilisticSymbolList::setContent(content); }
 
     const std::vector<std::vector<double> >& getContent() const
     {

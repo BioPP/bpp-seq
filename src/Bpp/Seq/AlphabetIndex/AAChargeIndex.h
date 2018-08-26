@@ -79,7 +79,7 @@ namespace bpp
  * C RICJ880106    0.849
  * I    A/L     R/K     N/M     D/F     C/P     Q/S     E/T     G/W     H/Y     I/V
  *       0.      0.      0.      1.      0.      0.      1.      0.      0.      0.
- *       0.      0.      0.      0.      0.      0.      0.      0.      0.      0. * Soit:
+ *       0.      0.      0.      0.      0.      0.      0.      0.      0.      0.
  * //
  * @endcode
  *

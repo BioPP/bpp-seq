@@ -93,7 +93,7 @@ public :
    * @throw Exception If sites differ in size or in alphabet.
    */
 
-  VectorProbabilisticSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha, bool checkPositions = true) throw (Exception);
+  VectorProbabilisticSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha, bool checkPositions = true);
 
   /**
    * @brief Build a new container from an AlignedValuesContainer.
@@ -187,7 +187,7 @@ public :
     return VectorMappedContainer<BasicProbabilisticSequence>::getObjectsNames();
   }
   
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true) throw (Exception)
+  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
   {
     VectorMappedContainer<BasicProbabilisticSequence>::setObjectsNames(names);
   }

@@ -46,8 +46,7 @@
 namespace bpp
 {
 /**
- * @brief Volume (Angström^3) of each amino acid, according to
- * Zamyatnin, A.A., Protein volume in solution, Prog. Biophys. Mol. Biol., 24, 107-123 (1972)
+ * @brief Volume (Angström^3) of each amino acid, according to http://www.imb-jena.de/IMAGE_AA.html (Note: original webpage is not available anymore)
  *
  *
  */

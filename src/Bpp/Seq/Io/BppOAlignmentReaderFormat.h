@@ -81,7 +81,7 @@ namespace bpp
      */
     IAlignment* read(const std::string& description);
 
-    IProbabilisticAlignment* readProbabilistic(const std::string& description) throw (Exception);
+    IProbabilisticAlignment* readProbabilistic(const std::string& description);
 
     /**
      * @return The arguments and their unparsed values from the last call of the read function, if there are any.

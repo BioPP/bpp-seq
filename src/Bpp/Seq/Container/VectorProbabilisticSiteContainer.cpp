@@ -58,8 +58,7 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const Alphabe
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   const std::vector<const CruxSymbolListSite*>& vs,
   const Alphabet* alpha,
-  bool checkPositions)
-  throw (Exception) :
+  bool checkPositions) :
   VectorPositionedContainer<ProbabilisticSite>(),
   VectorMappedContainer<BasicProbabilisticSequence>(),
   AbstractValuesContainer(alpha),

@@ -123,7 +123,7 @@ IAlignment* BppOAlignmentReaderFormat::read(const std::string& description)
 }
 
 
-IProbabilisticAlignment* BppOAlignmentReaderFormat::readProbabilistic(const std::string& description) throw (Exception)
+IProbabilisticAlignment* BppOAlignmentReaderFormat::readProbabilistic(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";
