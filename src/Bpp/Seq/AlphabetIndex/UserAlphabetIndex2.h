@@ -41,6 +41,7 @@
 #define _USER_ALPHABET_INDEX2_H_
 
 #include "AlphabetIndex2.h"
+#include <Bpp/Numeric/Matrix/MatrixTools.h>
 
 // From the STL:
 #include <vector>
