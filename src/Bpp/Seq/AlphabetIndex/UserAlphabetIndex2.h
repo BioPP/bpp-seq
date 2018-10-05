@@ -100,6 +100,12 @@ public:
     return index_(alph_->getStateIndex(state1)-1,alph_->getStateIndex(state2)-1);
   }
 
+  void setIndexMatrix(const Matrix<double>& mat)
+  {
+    index_=mat;
+    sym_=MatrixTools::isSymmetric(index_);
+  }
+  
   LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(index_); }
 
   const Alphabet* getAlphabet() const { return alph_; }
