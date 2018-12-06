@@ -49,6 +49,7 @@ SET(CPP_FILES
   Bpp/Seq/DNAToRNA.cpp
   Bpp/Seq/DistanceMatrix.cpp
   Bpp/Seq/GeneticCode/AscidianMitochondrialGeneticCode.cpp
+  Bpp/Seq/GeneticCode/CiliateNuclearGeneticCode.cpp
   Bpp/Seq/GeneticCode/EchinodermMitochondrialGeneticCode.cpp
   Bpp/Seq/GeneticCode/GeneticCode.cpp
   Bpp/Seq/GeneticCode/InvertebrateMitochondrialGeneticCode.cpp
