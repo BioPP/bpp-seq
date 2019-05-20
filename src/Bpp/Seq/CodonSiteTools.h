@@ -139,7 +139,7 @@ class CodonSiteTools:
      *
      * The following formula is used:
      * @f[
-     * pi = frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}
+     * pi = \frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}
      * @f]
      * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occuring at the site
      * \f$P_{i,j}\f$ the number of synonymous difference between these codons.
@@ -159,7 +159,7 @@ class CodonSiteTools:
      *
      * The following formula is used:
      * @f[
-     * pi = frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}
+     * pi = \frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}
      * @f]
      * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occuring at the site
      * \f$P_{i,j}\f$ the number of nonsynonymous difference between these codons.
