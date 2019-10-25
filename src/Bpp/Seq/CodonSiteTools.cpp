@@ -583,8 +583,8 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
   for (auto it = freqs.begin(); it != freqs.end(); ++it)
   {
     int state = it->first;
-    if (alphabet->isUnresolved(state) ||
-        alphabet->isGap(state)) {
+    if (!alphabet->isUnresolved(state) &&
+        !alphabet->isGap(state)) {
       double freq = it->second;
       total += freq;
       nbSyn += freq * numberOfSynonymousPositions(state, gCode, ratio);
