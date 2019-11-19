@@ -137,19 +137,22 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode
     throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic: Incorrect specified site", &site);
 
   // Global polymorphism checking
-  if (SiteTools::isConstant(site))
-    return false;
+  if (SiteTools::isConstant(site, true)) //Unknown sites are ignored, so that AAAAN is not considered as polymorphic.
+    return false; //The site is not polymorphic
 
   // Synonymous polymorphism checking
-  vector<int> prot;
-  int first_aa = gCode.translate(site[0]);
-  for (size_t i = 1; i < site.size(); i++)
-  {
-    int aa = gCode.translate(site[i]);
-    if (aa != first_aa)
-      return false;
+  map<int, size_t> counts;
+  SiteTools::getCounts(site, counts);
+  map<int, size_t> aas;
+  size_t cdat = 0;
+  for (auto it = counts.begin(); it != counts.end(); ++it) {
+    if (!site.getAlphabet()->isUnresolved(it->first)) {
+      cdat += it->second;
+      aas[gCode.translate(it->first)]++;
+      if (aas.size() > 1) return false;
+    }
   }
-  return true;
+  return (cdat > 1); //If only one sequence is non-missing, then the site is not considered to be polymorphic.
 }
 
 /******************************************************************************/
@@ -479,8 +482,8 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
       pi += (it1->second) * (it2->second) * (numberOfSynonymousDifferences(it1->first, it2->first, gCode, minchange));
     }
   }
-  size_t n = site.size();
-  return pi * static_cast<double>(n / (n - 1));
+  double n = static_cast<double>(site.size());
+  return pi * n / (n - 1);
 }
 
 /******************************************************************************/
@@ -516,8 +519,8 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
     }
   }
   
-  size_t n = site.size();
-  return pi * static_cast<double>(n / (n - 1));
+  double n = static_cast<double>(site.size());
+  return pi * n / (n - 1);
 }
 
 /******************************************************************************/
