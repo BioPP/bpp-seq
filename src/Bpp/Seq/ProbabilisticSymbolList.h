@@ -87,7 +87,7 @@ namespace bpp
  * @brief A basic ProbabilisticSymbolList object.
  *
  * This is a general purpose container, containing an ordered list of
- * elements.  The states represented by the elements is defined by an
+ * elements.  The states represented by the elements are defined by an
  * alphabet object, which is passed to the list constructor by a
  * pointer.
  *

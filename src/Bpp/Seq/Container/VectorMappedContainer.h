@@ -213,7 +213,7 @@ namespace bpp
         MappedNamedContainer<T>::changeName(vNames_[i], names[i]);
         mNames_[names[i]]=i;
       }
-      
+
       vNames_=names;
     }
 

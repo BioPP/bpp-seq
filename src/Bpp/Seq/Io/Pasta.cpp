@@ -180,8 +180,8 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
 
 /********************************************************************************/
 
-void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteContainer & container) const {
-
+void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteContainer & container) const
+{
   if(!input)
     throw IOException("Pasta::appendFromStream: can't read from istream input");
 

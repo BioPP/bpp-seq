@@ -565,8 +565,9 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCo
 double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const GeneticCode& gCode, double ratio)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
-    throw AlphabetException("CodonSiteTools::meanNumberOfSynonymousPositions: alphabet is not CodonAlphabet", site.getAlphabet());
+  const Alphabet* alphabet = site.getAlphabet();
+  if (!AlphabetTools::isCodonAlphabet(alphabet))
+    throw AlphabetException("CodonSiteTools::meanNumberOfSynonymousPositions: alphabet is not CodonAlphabet", alphabet);
   if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::meanNumberOfSynonymousPositions: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
   // Empty site checking
@@ -574,14 +575,22 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
     throw EmptySiteException("CodonSiteTools::meanNumberOfSynonymousPositions: Incorrect specified site", &site);
 
   // Computation
-  double NbSyn = 0;
-  map<int, double> freq;
-  SymbolListTools::getFrequencies(site, freq);
-  for (map<int, double>::iterator it = freq.begin(); it != freq.end(); it++)
+
+  double nbSyn = 0;
+  map<int, double> freqs;
+  SymbolListTools::getFrequencies(site, freqs);
+  double total = 0;
+  for (const auto& it : freqs)
   {
-    NbSyn += (it->second) * numberOfSynonymousPositions(it->first, gCode, ratio);
+    int state = it.first;
+    if (alphabet->isUnresolved(state) ||
+        alphabet->isGap(state)) {
+      double freq = it.second;
+      total += freq;
+      nbSyn += freq * numberOfSynonymousPositions(state, gCode, ratio);
+    }
   }
-  return NbSyn;
+  return nbSyn / total;
 }
 
 /******************************************************************************/

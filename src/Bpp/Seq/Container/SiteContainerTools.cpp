@@ -150,7 +150,7 @@ AlignedValuesContainer* SiteContainerTools::getSelectedSites(
     const VectorProbabilisticSiteContainer* psc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sequences);
     if (psc)
     {
-      VectorProbabilisticSiteContainer* nsc=new VectorProbabilisticSiteContainer(sequences.getAlphabet());
+      VectorProbabilisticSiteContainer* nsc=new VectorProbabilisticSiteContainer(seqNames, sequences.getAlphabet());
   
       for (size_t i = 0; i < selection.size(); i++)
       {
@@ -158,7 +158,6 @@ AlignedValuesContainer* SiteContainerTools::getSelectedSites(
         // We do not check positions, we suppose that the container passed as an argument is correct.
         // WARNING: what if selection contains many times the same indice? ...
       }
-      nsc->setSequencesNames(seqNames, false);
       nsc->AbstractValuesContainer::setGeneralComments(psc->getGeneralComments());
       return nsc;
     }

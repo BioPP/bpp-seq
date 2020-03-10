@@ -62,15 +62,18 @@ BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const DataTable & lis
 /****************************************************************************************/
 
 BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const ProbabilisticSymbolList & list) :
-  alphabet_(list.getAlphabet()), content_(list.getContent()) {}
+  alphabet_(list.getAlphabet()), content_(list.getContent())
+{}
 
 BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const BasicProbabilisticSymbolList & list) :
-  alphabet_(list.alphabet_), content_(list.content_) {}
+  alphabet_(list.alphabet_), content_(list.content_)
+{}
 
 BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const CruxSymbolList & list) :
   alphabet_(list.getAlphabet()), content_(list.getAlphabet()->getResolvedChars().size(),list.size())
 {
   int nbc=(int)getAlphabet()->getResolvedChars().size();
+  content_.setRowNames(alphabet_->getResolvedChars());
 
   for (size_t i=0; i<size(); i++)
     for (int s=0; s<nbc; s++)
@@ -119,7 +122,7 @@ void BasicProbabilisticSymbolList::setContent(const DataTable & list)
 }
 
 
-std::string BasicProbabilisticSymbolList::toString() const
+string BasicProbabilisticSymbolList::toString() const
 {
   stringstream ss;
   ss.precision(10);

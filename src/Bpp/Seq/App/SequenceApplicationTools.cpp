@@ -46,6 +46,7 @@
 #include "../Alphabet/AlphabetTools.h"
 #include "../GeneticCode/EchinodermMitochondrialGeneticCode.h"
 #include "../GeneticCode/InvertebrateMitochondrialGeneticCode.h"
+#include "../GeneticCode/CiliateNuclearGeneticCode.h"
 #include "../GeneticCode/StandardGeneticCode.h"
 #include "../GeneticCode/VertebrateMitochondrialGeneticCode.h"
 #include "../GeneticCode/YeastMitochondrialGeneticCode.h"
@@ -210,20 +211,22 @@ GeneticCode* SequenceApplicationTools::getGeneticCode(
   const string& description)
 {
   GeneticCode* geneCode;
-  if (description.find("EchinodermMitochondrial") != string::npos || description.find("9") != string::npos)
-    geneCode = new EchinodermMitochondrialGeneticCode(alphabet);
-  else if (description.find("InvertebrateMitochondrial") != string::npos || description.find("5") != string::npos)
-    geneCode = new InvertebrateMitochondrialGeneticCode(alphabet);
-  else if (description.find("Standard") != string::npos || description.find("1") != string::npos)
+  if (description.find("Standard") != string::npos || description.find("1") != string::npos)
     geneCode = new StandardGeneticCode(alphabet);
   else if (description.find("VertebrateMitochondrial") != string::npos || description.find("2") != string::npos)
     geneCode = new VertebrateMitochondrialGeneticCode(alphabet);
   else if (description.find("YeastMitochondrial") != string::npos || description.find("3") != string::npos)
     geneCode = new YeastMitochondrialGeneticCode(alphabet);
-  else if (description.find("AscidianMitochondrial") != string::npos || description.find("13") != string::npos)
-    geneCode = new AscidianMitochondrialGeneticCode(alphabet);
   else if (description.find("MoldMitochondrial") != string::npos || description.find("4") != string::npos)
     geneCode = new MoldMitochondrialGeneticCode(alphabet);
+  else if (description.find("InvertebrateMitochondrial") != string::npos || description.find("5") != string::npos)
+    geneCode = new InvertebrateMitochondrialGeneticCode(alphabet);
+  else if (description.find("CiliateNuclear") != string::npos || description.find("6") != string::npos)
+    geneCode = new CiliateNuclearGeneticCode(alphabet);
+  else if (description.find("EchinodermMitochondrial") != string::npos || description.find("9") != string::npos)
+    geneCode = new EchinodermMitochondrialGeneticCode(alphabet);
+  else if (description.find("AscidianMitochondrial") != string::npos || description.find("13") != string::npos)
+    geneCode = new AscidianMitochondrialGeneticCode(alphabet);
   else
     throw Exception("Unknown GeneticCode: " + description);
   return geneCode;
@@ -797,10 +800,11 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
     throw Exception("SequenceApplicationTools::getSitesToAnalyse: unknown data container.");
   
   size_t numSeq=allSites.getNumberOfSequences();
-                                              
+
   string option = ApplicationTools::getStringParameter("input.sequence.sites_to_use", params, "complete", suffix, suffixIsOptional, warn);
   if (verbose)
     ApplicationTools::displayResult("Sites to use", option);
+  
   if (option == "all")
   {
     sitesToAnalyse = vsc?dynamic_cast<AlignedValuesContainer*>(new VectorSiteContainer(*vsc)):dynamic_cast<AlignedValuesContainer*>(new VectorProbabilisticSiteContainer(*vpsc));
