@@ -92,7 +92,7 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
       while(st.hasMoreToken()) {
         double t;
         stringstream ss(st.nextToken());
-        ss >> t;        
+        ss >> t;
 	tokens.push_back(t);
       }
     }
@@ -157,12 +157,12 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
 
     // fill in pairs of probabilities that (binary) character is 0,
     // resp. 1
-    for(vector<double>::const_iterator i = tokens.begin(); i != tokens.end(); ++i) {
+    for(const auto& i : tokens) {
 
       // the following will throw an exception if v[i] is not a properly
       // formatted double : a check that we want to have
       
-      vector<double> pair_v{1.-*i,*i};
+      vector<double> pair_v{1.-i,i};
       content.addColumn(pair_v);
     }
 
@@ -245,8 +245,8 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
       /* check labels against alphabet of the container */
       vector<string> resolved_chars = container.getAlphabet()->getResolvedChars();
       string states = "<";
-      for(vector<string>::const_iterator i = resolved_chars.begin(); i != resolved_chars.end(); ++i)
-	states += " " + *i;
+      for(const auto&  i :  resolved_chars)
+	states += " " + i;
       states += " >";
 
       // check if size is the same
@@ -254,17 +254,17 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
 	throw DimensionException("Pasta::appendSequencesFromStream. ", labels.size(), resolved_chars.size());
 
       // build permutation map on the content, error should one exist
-      for(vector<string>::const_iterator i = labels.begin(); i != labels.end(); ++i) {
+      for(const auto&  i : labels) {
 	bool found = false;
 
 	for(int j = 0; j < int(resolved_chars.size()); ++j)
-	  if(*i == resolved_chars[j]) {
+	  if(i == resolved_chars[j]) {
 	      permutationMap.push_back(j);
 	      found = true;
 	  }
 	
 	if(!found)
-	  throw Exception("Pasta::appendSequencesFromStream. Label " + TextTools::toString(*i) + " is not found in alphabet " + TextTools::toString(states) + ".");
+	  throw Exception("Pasta::appendSequencesFromStream. Label " + i + " is not found in alphabet " + states + ".");
       }		
     }
 

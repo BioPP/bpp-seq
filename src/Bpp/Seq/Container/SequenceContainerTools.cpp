@@ -168,12 +168,14 @@ void SequenceContainerTools::getFrequencies(const SequencedValuesContainer& sequ
       SymbolListTools::getCounts(seq, f, true);
       n += (double)seq.size();
     }
-    else
+    else if (psc)
     {
       const ProbabilisticSequence& seq=*psc->getSequence(names[j]);
       SymbolListTools::getCounts(seq, f, true);
       n += (double)seq.size();
     }
+    else
+      throw Exception("SequenceContainerTools::getFrequencies : unknown SequenceContainer type.");
   }
   
   if (pseudoCount != 0)

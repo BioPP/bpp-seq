@@ -264,12 +264,12 @@ void SiteContainerTools::changeGapsToUnknownCharacters(AlignedValuesContainer& s
       }
       else
       {
-        shared_ptr<ProbabilisticSite> psite=vpsc->getSite(i);
+        auto psite=vpsc->getSite(i);
         for (unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
         {
           vector<double>& element = (*psite)[j];
           if (VectorTools::sum(element) <= NumConstants::TINY())
-            VectorTools::fill(element, 1.);
+            VectorTools::fill(element, 0.);
         }
       }
     }
