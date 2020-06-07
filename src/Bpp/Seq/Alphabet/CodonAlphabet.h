@@ -65,7 +65,7 @@ namespace bpp
     public AbstractAlphabet
   {
   protected:
-    std::shared_ptr<const NucleicAlphabet> nAlph_;
+    std::shared_ptr<NucleicAlphabet> nAlph_;
   
   public: // Constructor and destructor.
 		
@@ -456,6 +456,11 @@ namespace bpp
     const NucleicAlphabet* const getNucleicAlphabet() const
     {
       return nAlph_.get();
+    }
+
+    std::shared_ptr<NucleicAlphabet> const shareNucleicAlphabet() const
+    {
+      return nAlph_;
     }
 
     /**
