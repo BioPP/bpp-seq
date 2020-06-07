@@ -54,8 +54,18 @@ namespace bpp
     public virtual GeneticCode
   {
   public:
-    StandardGeneticCode(const NucleicAlphabet* alphabet);
-		
+    StandardGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+      GeneticCode(alphabet) 
+    {
+      init_();
+    }
+
+    StandardGeneticCode(const NucleicAlphabet& alphabet) :
+      GeneticCode(alphabet) 
+    {
+      init_();
+    }
+
     virtual ~StandardGeneticCode() {}
 	
     virtual StandardGeneticCode* clone() const {
@@ -103,6 +113,8 @@ namespace bpp
       return (i == 62 || i == 30);
     }
 
+  private:
+    void init_();
   };
 
 } //end of namespace bpp.

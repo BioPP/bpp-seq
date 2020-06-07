@@ -180,16 +180,16 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     map<string, string> alphnArgs;
     KeyvalTools::parseProcedure(alphnDesc, alphn, alphnArgs);
 
-    NucleicAlphabet* pnalph;
+    shared_ptr<NucleicAlphabet> pnalph;
     if (alphn == "RNA")
     {
       bool mark = ApplicationTools::getBooleanParameter("bangAsGap", alphnArgs, false, "", true, warn + 1);
-      pnalph = new RNA(mark);
+      pnalph = make_shared<RNA>(mark);
     }
     else if (alphn == "DNA")
     {
       bool mark = ApplicationTools::getBooleanParameter("bangAsGap", alphnArgs, false, "", true, warn + 1);
-      pnalph = new DNA(mark);
+      pnalph = make_shared<DNA>(mark);
     }
     else
       throw Exception("Alphabet not known in Codon : " + alphn);
@@ -207,7 +207,7 @@ Alphabet* SequenceApplicationTools::getAlphabet(
 /******************************************************************************/
 
 GeneticCode* SequenceApplicationTools::getGeneticCode(
-  const NucleicAlphabet* alphabet,
+  std::shared_ptr<NucleicAlphabet> alphabet,
   const string& description)
 {
   GeneticCode* geneCode;
@@ -899,7 +899,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
     if (option == "yes")
     {
       string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, warn);
-      unique_ptr<GeneticCode> gCode(getGeneticCode(ca->getNucleicAlphabet()->clone(), codeDesc));
+      unique_ptr<GeneticCode> gCode(getGeneticCode(std::shared_ptr<NucleicAlphabet>(ca->getNucleicAlphabet()->clone()), codeDesc));
 
       sitesToAnalyse2 = SiteContainerTools::removeStopCodonSites(*vsc, *gCode);
       delete sitesToAnalyse;

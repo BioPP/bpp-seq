@@ -88,12 +88,14 @@ namespace bpp
     std::map<int, int> tlnTable_;
 	
   public:
-    /*
-     * @brief the CodonAlphabet of the Genetic Code will own the
-     * NucleicAlphabet.
-     *
-     */
-    GeneticCode(const NucleicAlphabet* alphabet):
+    GeneticCode(std::shared_ptr<NucleicAlphabet> alphabet):
+      AbstractTransliterator(),
+      codonAlphabet_(alphabet),
+      proteicAlphabet_(),
+      tlnTable_()
+    {}
+
+    GeneticCode(const NucleicAlphabet& alphabet):
       AbstractTransliterator(),
       codonAlphabet_(alphabet),
       proteicAlphabet_(),

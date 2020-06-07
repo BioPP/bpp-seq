@@ -45,8 +45,7 @@ using namespace bpp;
 
 using namespace std;
 
-YeastMitochondrialGeneticCode::YeastMitochondrialGeneticCode(const NucleicAlphabet* alphabet) :
-  GeneticCode(alphabet) 
+void YeastMitochondrialGeneticCode::init_() 
 {
   tlnTable_[0] = 11; //AAA -> K
   tlnTable_[1] = 2; //AAC -> N

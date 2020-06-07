@@ -44,8 +44,7 @@ using namespace bpp;
 
 using namespace std;
 
-EchinodermMitochondrialGeneticCode::EchinodermMitochondrialGeneticCode(const NucleicAlphabet* alphabet) :
-  GeneticCode(alphabet) 
+void EchinodermMitochondrialGeneticCode::init_()  
 {
   tlnTable_[0] = 2; //AAA -> N
   tlnTable_[1] = 2; //AAC -> N

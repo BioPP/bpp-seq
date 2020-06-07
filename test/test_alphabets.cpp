@@ -50,25 +50,19 @@ using namespace std;
 
 int main() {
   //This is a very simple test that instanciate all alpahabet classes.
-  NucleicAlphabet* dna = new DNA();
-  NucleicAlphabet* rna = new RNA();
-  Alphabet* pro = new ProteicAlphabet;
-  Alphabet* def = new DefaultAlphabet;
-  Alphabet* cdn = new CodonAlphabet(rna->clone());
+  auto dna = std::make_shared<DNA>();
+  auto rna = std::make_shared<RNA>();
+  auto pro = std::make_shared<ProteicAlphabet>();
+  auto def = std::make_shared<DefaultAlphabet>();
+  auto cdn = std::make_shared<CodonAlphabet>(rna);
 
   //Testing functions:
-  if (!AlphabetTools::isDNAAlphabet(dna)) return 1;
-  if (!AlphabetTools::isRNAAlphabet(rna)) return 1;
-  if (!AlphabetTools::isNucleicAlphabet(dna)) return 1;
-  if (!AlphabetTools::isNucleicAlphabet(rna)) return 1;
-  if (!AlphabetTools::isProteicAlphabet(pro)) return 1;
-  if (!AlphabetTools::isCodonAlphabet(cdn)) return 1;
-
-  delete dna;
-  delete rna;
-  delete pro;
-  delete def;
-  delete cdn;
+  if (!AlphabetTools::isDNAAlphabet(dna.get())) return 1;
+  if (!AlphabetTools::isRNAAlphabet(rna.get())) return 1;
+  if (!AlphabetTools::isNucleicAlphabet(dna.get())) return 1;
+  if (!AlphabetTools::isNucleicAlphabet(rna.get())) return 1;
+  if (!AlphabetTools::isProteicAlphabet(pro.get())) return 1;
+  if (!AlphabetTools::isCodonAlphabet(cdn.get())) return 1;
 
   return (0);
 }

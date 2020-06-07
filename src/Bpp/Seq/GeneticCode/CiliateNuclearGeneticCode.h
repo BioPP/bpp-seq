@@ -56,7 +56,17 @@ namespace bpp
     public virtual GeneticCode
   {
   public:
-    CiliateNuclearGeneticCode(const NucleicAlphabet* alphabet);
+    CiliateNuclearGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+      GeneticCode(alphabet) 
+    {
+      init_();
+    }
+
+    CiliateNuclearGeneticCode(const NucleicAlphabet& alphabet) :
+      GeneticCode(alphabet) 
+    {
+      init_();
+    }
 
     virtual ~CiliateNuclearGeneticCode() {}
 	
@@ -96,6 +106,9 @@ namespace bpp
       return (i == 62 || i == 30);
     }
 
+  private:
+
+    void init_();
   };
 
 } //end of namespace bpp.

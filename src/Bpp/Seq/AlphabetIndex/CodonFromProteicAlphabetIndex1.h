@@ -63,7 +63,7 @@ namespace bpp
   public:
     CodonFromProteicAlphabetIndex1(const GeneticCode* gencode, const AlphabetIndex1* protalphindex) :
       AlphabetIndex1(),
-      alpha_(&AlphabetTools::CODON_ALPHABET),
+      alpha_(&AlphabetTools::DNA_CODON_ALPHABET),
       gencode_(gencode),
       vIndex_(64)
     {

@@ -74,7 +74,14 @@ namespace bpp
      * 
      * @param alpha The nucleic alphabet to be used.
      */
-    CodonAlphabet(const NucleicAlphabet* alpha) :
+    CodonAlphabet(const NucleicAlphabet& alpha) :
+      AbstractAlphabet(),
+      nAlph_(alpha.clone())
+    {
+      build_();  
+    }
+
+    CodonAlphabet(std::shared_ptr<NucleicAlphabet> alpha) :
       AbstractAlphabet(),
       nAlph_(alpha)
     {

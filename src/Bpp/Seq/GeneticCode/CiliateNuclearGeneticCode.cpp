@@ -45,8 +45,7 @@ using namespace bpp;
 
 using namespace std;
 
-CiliateNuclearGeneticCode::CiliateNuclearGeneticCode(const NucleicAlphabet* alphabet) :
-  GeneticCode(alphabet) 
+void CiliateNuclearGeneticCode::init_()
 {
   tlnTable_[0] = 11; //AAA -> K
   tlnTable_[1] = 2; //AAC -> N

@@ -118,7 +118,7 @@ namespace bpp
      * @return A new GeneticCode object
      * @throw Exception in case of bad description.
      */
-    static GeneticCode* getGeneticCode(const NucleicAlphabet* alphabet, const std::string& description);
+    static GeneticCode* getGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet, const std::string& description);
 
     /**
      * @brief Build a AlphabetIndex1 object for a given alphabet.
