@@ -76,7 +76,7 @@ namespace bpp
     unsigned int getSize() const { return 2; }
     unsigned int getNumberOfTypes() const { return 2; }
     std::string getAlphabetType() const { return "Binary"; }
-    int getUnknownCharacterCode() const { return 3; }
+    int getUnknownCharacterCode() const { return 2; }
     bool isUnresolved(int state) const { return state > 1; }
     bool isUnresolved(const std::string& state) const { return charToInt(state) > 1; }
 
