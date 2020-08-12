@@ -218,6 +218,8 @@ void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainer& sites)
 
 SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites)
 {
+  if (sites.getNumberOfSequences() == 0)
+    throw Exception("SiteContainerTools::removeGapOnlySites. Container is empty.");
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
@@ -234,6 +236,9 @@ SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites
 
 void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
 {
+  if (sites.getNumberOfSequences() == 0)
+    throw Exception("SiteContainerTools::removeGapOnlySites. Container is empty.");
+
   size_t n = sites.getNumberOfSites();
   size_t i = n;
   while (i > 1)
@@ -265,6 +270,9 @@ void SiteContainerTools::removeGapOnlySites(SiteContainer& sites)
 
 SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteContainer& sites)
 {
+  if (sites.getNumberOfSequences() == 0)
+    throw Exception("SiteContainerTools::removeGapOrUnresolvedOnlySites. Container is empty.");
+
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
@@ -281,6 +289,9 @@ SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCont
 
 void SiteContainerTools::removeGapOrUnresolvedOnlySites(SiteContainer& sites)
 {
+  if (sites.getNumberOfSequences() == 0)
+    throw Exception("SiteContainerTools::removeGapOrUnresolvedOnlySites. Container is empty.");
+
   size_t n = sites.getNumberOfSites();
   size_t i = n;
   while (i > 1)
@@ -312,6 +323,9 @@ void SiteContainerTools::removeGapOrUnresolvedOnlySites(SiteContainer& sites)
 
 SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, double maxFreqGaps)
 {
+  if (sites.getNumberOfSequences() == 0)
+    throw Exception("SiteContainerTools::removeGapSites. Container is empty.");
+
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
@@ -328,6 +342,9 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
 
 void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps)
 {
+  if (sites.getNumberOfSequences() == 0)
+    throw Exception("SiteContainerTools::removeGapSites. Container is empty.");
+
   for (size_t i = sites.getNumberOfSites(); i > 0; --i) {
     map<int, double> freq;
     SiteTools::getFrequencies(sites.getSite(i - 1), freq);
@@ -343,7 +360,10 @@ SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sit
   const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
   if (!pca)
     throw AlphabetException("Not a Codon Alphabet", sites.getAlphabet());
-  vector<string> seqNames = sites.getSequencesNames();
+  if (sites.getNumberOfSequences() == 0)
+    throw Exception("SiteContainerTools::removeStopCodonSites. Container is empty.");
+
+   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noStopCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noStopCont->setSequencesNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i)
@@ -362,6 +382,9 @@ void SiteContainerTools::removeStopCodonSites(SiteContainer& sites, const Geneti
   const CodonAlphabet* pca = dynamic_cast<const CodonAlphabet*>(sites.getAlphabet());
   if (!pca)
     throw AlphabetException("Not a Codon Alphabet", sites.getAlphabet());
+  if (sites.getNumberOfSequences() == 0)
+    throw Exception("SiteContainerTools::removeStopCodonSites. Container is empty.");
+
   for (size_t i = sites.getNumberOfSites(); i > 0; --i)
   {
     const Site& site = sites.getSite(i - 1);
