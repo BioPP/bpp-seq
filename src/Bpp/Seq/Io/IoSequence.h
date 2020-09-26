@@ -56,17 +56,17 @@ namespace bpp
  */
 class IOSequence: public virtual IOFormat
 {
-	public:
-		IOSequence() {}
-		virtual ~IOSequence() {}
+  public:
+    IOSequence() {}
+    virtual ~IOSequence() {}
 
-	public:
+  public:
 
-		const std::string getDataType() const { return "Sequence container"; }
+    const std::string getDataType() const { return "Sequence container"; }
 
 };
 
 } //end of namespace bpp.
 
-#endif	// _IOSEQUENCE_H_
+#endif  // _IOSEQUENCE_H_
 
