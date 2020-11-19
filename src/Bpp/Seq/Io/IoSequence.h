@@ -80,10 +80,9 @@ namespace bpp
   public:
 
     const std::string getDataType() const { return "Probabilistic sequence container"; }
-
   };
 
 } //end of namespace bpp.
 
-#endif	// _IOSEQUENCE_H_
+#endif  // _IOSEQUENCE_H_
 
