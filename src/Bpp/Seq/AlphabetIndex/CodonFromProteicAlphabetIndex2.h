@@ -126,11 +126,11 @@ namespace bpp
   private:
     void fillIndex_(const AlphabetIndex2* protAlphIndex_)
     {
-      for (int i=0; i<64; i++)
-        for (int j=0; j<64; j++)
-          vIndex_(i,j)=gencode_->isStop(i)?0:
-            gencode_->isStop(j)?0:
-            protAlphIndex_->getIndex(gencode_->translate(i),gencode_->translate(j));
+      for (size_t i=0; i<64; i++)
+        for (size_t j=0; j<64; j++)
+          vIndex_(i,j)=gencode_->isStop((int)i)?0:
+            gencode_->isStop((int)j)?0:
+            protAlphIndex_->getIndex(gencode_->translate((int)i),gencode_->translate((int)j));
     } 
   };
   

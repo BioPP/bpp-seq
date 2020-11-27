@@ -51,7 +51,7 @@ using namespace std;
 
 /********************************************************************************/
 
-bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasLabels, vector<int> & permutationMap) const
+bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasLabels, const vector<size_t> & permutationMap) const
 {
   if(!input)
     throw IOException("Pasta::nextSequence : can't read from istream input");
@@ -137,10 +137,10 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
       // junk up the tokens into groups of alphabetsize, and permute
       // according to how the header is permuted
       vector<double> row(permutationMap.size());
-      for(vector<int>::const_iterator j = permutationMap.begin(); j != permutationMap.end(); ++j) {
-	if(i == tokens.end())
+      for(const auto j:permutationMap) {
+	if (i == tokens.end())
 	  throw Exception("Pasta::nextSequence : input is incomplete");
-	row[*j] = *i;
+	row[(size_t)j] = *i;
       	++i;
       }
 
@@ -195,7 +195,7 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
   // labels for the states
   bool hasLabels = false;
   vector<string> labels;
-  vector<int> permutationMap;
+  vector<size_t> permutationMap;
 
   while(!input.eof() && hasSeq) {
 
@@ -257,10 +257,10 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
       for(const auto&  i : labels) {
 	bool found = false;
 
-	for(int j = 0; j < int(resolved_chars.size()); ++j)
+	for(size_t j = 0; j < resolved_chars.size(); ++j)
 	  if(i == resolved_chars[j]) {
-	      permutationMap.push_back(j);
-	      found = true;
+            permutationMap.push_back(j);
+            found = true;
 	  }
 	
 	if(!found)

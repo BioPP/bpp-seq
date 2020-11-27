@@ -112,7 +112,7 @@ namespace bpp {
       bool nextSequence(
           std::istream& input,
           Sequence& seq,
-          std::vector<int>& pos
+          std::vector<size_t>& pos
           ) const;
 
       /**
@@ -137,7 +137,7 @@ namespace bpp {
        * @param qual The vector to store qualities
        * @param pos The vector to store positions
        */
-      bool parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const;
+      bool parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<size_t>& pos) const;
 
       /**
        * @brief Parse the DNA part of the file
@@ -149,7 +149,7 @@ namespace bpp {
        * @param qual The vector to store qualities
        * @param pos The vector to store positions
        */
-      bool parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const;
+      bool parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<size_t>& pos) const;
   };
 } //end of namespace bpp
 

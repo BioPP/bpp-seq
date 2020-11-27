@@ -75,6 +75,8 @@ namespace bpp
      * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
      */
 
+    using SequencedValuesContainer::toString;
+    
     virtual std::string toString(size_t sequenceIndex) const = 0;
 
     /**
@@ -104,7 +106,9 @@ namespace bpp
      * @param sequenceIndex index of the sequence in the container
      * @param state  state in the alphabet
      */
-  
+
+    using SequencedValuesContainer::getStateValueAt;
+    
     virtual double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const  = 0;
   
     virtual double operator()(size_t siteIndex, size_t sequenceIndex, int state) const = 0;
@@ -118,6 +122,8 @@ namespace bpp
      * the container.
      */
 
+    using SequencedValuesContainer::getComments;
+    
     virtual const Comments& getComments(size_t sequenceIndex) const = 0;
 
     /**
@@ -129,6 +135,8 @@ namespace bpp
      * the container.
      */
 
+    using SequencedValuesContainer::setComments;
+    
     virtual void setComments(size_t sequenceIndex, const Comments & comments) = 0;
 
   };

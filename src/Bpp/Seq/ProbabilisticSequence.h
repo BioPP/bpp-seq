@@ -150,6 +150,7 @@ namespace bpp
 
   public :
 
+    using ProbabilisticSequence::setContent;
     void setContent(const Table<double> & content) { BasicProbabilisticSymbolList::setContent(content); }
 
     const std::vector<std::vector<double> >& getContent() const

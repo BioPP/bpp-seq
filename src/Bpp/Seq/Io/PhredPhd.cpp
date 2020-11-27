@@ -50,20 +50,21 @@ using namespace bpp;
 /******************************************************************************/
 
 bool PhredPhd::nextSequence(std::istream& input, Sequence& seq) const {
-  std::vector<int> pos;
+  std::vector<size_t> pos;
   return nextSequence(input, seq, pos);
 }
 
 /******************************************************************************/
 
-bool PhredPhd::nextSequence(std::istream& input, Sequence& seq, std::vector<int>& pos) const {
+bool PhredPhd::nextSequence(std::istream& input, Sequence& seq, std::vector<size_t>& pos) const {
   if (!input) {
     throw IOException ("PhredPhd::read: fail to open stream");
   }
 
   bool flag = false;
   std::string name, sequence = "";  // Initialization
-  std::vector<int> q, p;
+  std::vector<int> q;
+  std::vector<size_t> p;
 
   flag = parseFile_(input, name, sequence, q, p);
   // Sequence creation
@@ -81,7 +82,7 @@ bool PhredPhd::nextSequence(std::istream& input, Sequence& seq, std::vector<int>
 
 /******************************************************************************/
 
-bool PhredPhd::parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const {
+bool PhredPhd::parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<size_t>& pos) const {
   bool readSeqFlag = false;
   std::string temp;
   // Read sequence info
@@ -112,7 +113,7 @@ bool PhredPhd::parseFile_(std::istream& input, std::string& name, std::string& s
 
 /******************************************************************************/
 
-bool PhredPhd::parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<int>& pos) const {
+bool PhredPhd::parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<size_t>& pos) const {
   bool readSeqFlag = false;
   std::string line_buffer;
   std::string flag;
@@ -127,7 +128,7 @@ bool PhredPhd::parseDNA_(std::istream& input, std::string& sequence, std::vector
       if (st.numberOfRemainingTokens() == 3) {
         sequence += flag;
         qual.push_back(TextTools::toInt(st.getToken(1)));
-        pos.push_back(TextTools::toInt(st.getToken(2)));
+        pos.push_back(TextTools::to<size_t>(st.getToken(2)));
         readSeqFlag = true;
       }
     }

@@ -224,6 +224,8 @@ namespace bpp
       vNames_[pos]=name;
      }
 
+    using VectorPositionedContainer<T>::addObject;
+    using MappedNamedContainer<T>::addObject;
     void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false)
     {
       VectorPositionedContainer<T>::addObject(object, objectIndex, check);
@@ -232,6 +234,7 @@ namespace bpp
       mNames_[name]=objectIndex;
     }
 
+    using VectorPositionedContainer<T>::insertObject;
     void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name)
     {
       MappedNamedContainer<T>::addObject(object, name, true);
@@ -244,6 +247,7 @@ namespace bpp
       mNames_[name]=objectIndex;      
     }
 
+    using VectorPositionedContainer<T>::appendObject;
     void appendObject(std::shared_ptr<T> object, const std::string& name, bool check = true)
     {
       MappedNamedContainer<T>::addObject(object,name, check);
@@ -262,6 +266,7 @@ namespace bpp
       return obj;
     }
 
+    using PositionedContainer<T>::deleteObject;
     std::shared_ptr<T> deleteObject(size_t objectIndex)
     {
       std::shared_ptr<T> obj= VectorPositionedContainer<T>::deleteObject(objectIndex);

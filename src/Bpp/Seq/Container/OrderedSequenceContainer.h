@@ -160,6 +160,7 @@ namespace bpp
      *
      * @{
      */
+    using OrderedValuesContainer::toString;
     virtual std::string toString(const std::string& name) const = 0;  
     virtual const Sequence& getSequence(const std::string& name) const = 0;
     virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) = 0;
@@ -173,7 +174,9 @@ namespace bpp
      *
      */
     
+    using OrderedValuesContainer::getComments;
     virtual const Comments& getComments(const std::string& name) const = 0;
+    using OrderedValuesContainer::setComments;
     virtual void setComments(const std::string& name, const Comments& comments) = 0;
     /** @} */
 

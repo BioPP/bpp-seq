@@ -85,6 +85,8 @@ namespace bpp
      * @see The list constructor for information about the way lists are internaly stored.
      */
 
+    using SymbolList<int>::setContent;
+    
     virtual void setContent(const std::vector<std::string>& list) = 0;
 
     /**
@@ -99,6 +101,8 @@ namespace bpp
      * @param c The character to add, given as a string.
      */
 
+    using SymbolList<int>::addElement;
+    
     virtual void addElement(const std::string& c) = 0;
 
     /**
@@ -115,6 +119,9 @@ namespace bpp
      * @param pos The position of the character to set.
      * @param c   The value of the element, given as a string.
      */
+
+    using SymbolList<int>::setElement;
+    
     virtual void setElement(size_t pos, const std::string& c) = 0;
     
     /**
@@ -321,9 +328,13 @@ namespace bpp
 
     virtual std::string toString() const;
 
+    using EdSymbolList<int>::addElement;
+    
     virtual void addElement(const std::string& c);
 
     virtual void addElement(size_t pos, const std::string& c);
+
+    using EdSymbolList<int>::setElement;
 
     virtual void setElement(size_t pos, const std::string& c);
 

@@ -77,8 +77,11 @@ namespace bpp
     }
 
   public:
+    using PositionedContainer<T>::addObject;
+    using NamedContainer<T>::addObject;
     virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) = 0;
 
+    using PositionedContainer<T>::insertObject;
     virtual void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name) = 0;
 
     virtual size_t getObjectPosition(const std::string& name) const = 0;

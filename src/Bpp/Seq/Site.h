@@ -153,25 +153,24 @@ namespace bpp
      * @{
      */
 
-    void setElement(size_t pos, int v)
-    {
-      SymbolList<int>::setElement(pos,v);
-    }
+    using SymbolList<int>::setElement;
 
-    void addElement(const std::string& s)
-    {
-      this->addElement(s);
-    }
+    using BasicIntSymbolList::addElement;
+    // void addElement(const std::string& s)
+    // {
+    //   BasicIntSymbolList::addElement(s);
+    // }
 
-    void addElement(int v)
-    {
-      SymbolList<int>::addElement(v);
-    }
+    using SymbolList<int>::addElement;
+    // void addElement(int v)
+    // {
+    //   SymbolList<int>::addElement(v);
+    // }
 
-    void addElement(size_t pos, int v)
-    {
-      SymbolList<int>::addElement(pos, v);
-    }
+    // void addElement(size_t pos, int v)
+    // {
+    //   SymbolList<int>::addElement(pos, v);
+    // }
 
     /**
      * @brief Get the position of this site.

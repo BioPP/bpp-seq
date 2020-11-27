@@ -190,7 +190,8 @@ namespace bpp
 
       return ret;
     }
-    
+
+    using PositionedContainer<T>::deleteObject;
     std::shared_ptr<T> deleteObject(size_t objectIndex)
     {
       if (objectIndex >= getSize())
@@ -241,7 +242,7 @@ namespace bpp
     void addObject_(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false) const
     {
       if (objectIndex >= VectorPositionedContainer<T>::getSize())
-        throw IndexOutOfBoundsException("VectorPositionedContainer::addObject.", objectIndex, 0, (int)VectorPositionedContainer<T>::getSize() - 1);
+        throw IndexOutOfBoundsException("VectorPositionedContainer::addObject.", objectIndex, 0, VectorPositionedContainer<T>::getSize() - 1);
 
       if (checkPosition && positions_[objectIndex]!=nullptr)
         throw BadIntegerException("VectorPositionedContainer::setObject: object position already occupied in container ", (int)objectIndex);

@@ -193,6 +193,8 @@ public:
    *
    * @{
    */
+  
+  using OrderedSequenceContainer::setComments;
   void setComments(size_t sequenceIndex, const Comments& comments);
 
   // Method to get a sequence object from sequence container

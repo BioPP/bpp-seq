@@ -112,7 +112,7 @@ class Pasta
    *
    * @{
    */
-  bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, std::vector<int> & permutationMap) const;
+  bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, const std::vector<size_t> & permutationMap) const;
 
   /**
    * @}

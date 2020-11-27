@@ -343,16 +343,8 @@ namespace bpp
      */
      
     void setContent(const std::string& sequence);
-    
-    void addElement(int elem)
-    {
-      SymbolList<int>::addElement(elem);
-    }
 
-    void setElement(size_t pos, int elem)
-    {
-      SymbolList<int>::setElement(pos, elem);
-    }
+    using SymbolList<int>::addElement;
 
     void setContent(const std::vector<std::string>& list)
     {

@@ -76,7 +76,7 @@ BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const CruxSymbolList 
   content_.setRowNames(alphabet_->getResolvedChars());
 
   for (size_t i=0; i<size(); i++)
-    for (int s=0; s<nbc; s++)
+    for (size_t s=0; s<nbc; s++)
       content_(s,i)=list.getStateValueAt(i,s);
 }
 
