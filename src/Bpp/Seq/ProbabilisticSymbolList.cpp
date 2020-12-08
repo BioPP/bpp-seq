@@ -72,12 +72,12 @@ BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const BasicProbabilis
 BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const CruxSymbolList & list) :
   alphabet_(list.getAlphabet()), content_(list.getAlphabet()->getResolvedChars().size(),list.size())
 {
-  int nbc=(int)getAlphabet()->getResolvedChars().size();
+  size_t nbc=getAlphabet()->getResolvedChars().size();
   content_.setRowNames(alphabet_->getResolvedChars());
 
   for (size_t i=0; i<size(); i++)
     for (size_t s=0; s<nbc; s++)
-      content_(s,i)=list.getStateValueAt(i,s);
+      content_(s,i)=list.getStateValueAt(i,(int)s);
 }
 
 BasicProbabilisticSymbolList & BasicProbabilisticSymbolList::operator=(const ProbabilisticSymbolList & list)

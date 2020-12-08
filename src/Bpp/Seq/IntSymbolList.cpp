@@ -156,7 +156,7 @@ string BasicIntSymbolList::getChar(size_t pos) const
   {
     c = getAlphabet()->intToChar(content_[pos]);
   }
-  catch(BadIntException bie)
+  catch(BadIntException& bie)
   {
     //This should never happen!
   }
@@ -253,7 +253,7 @@ string EdIntSymbolList::getChar(size_t pos) const
   string c = "";
   try {
     c = getAlphabet()->intToChar(content_[pos]);
-  } catch(BadIntException bie) {
+  } catch(BadIntException& bie) {
     //This should never happen!
   }
   return c;
