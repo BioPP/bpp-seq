@@ -11,6 +11,7 @@ SET(CPP_FILES
   Bpp/Seq/Alphabet/AlphabetExceptions.cpp
   Bpp/Seq/Alphabet/AlphabetTools.cpp
   Bpp/Seq/Alphabet/BinaryAlphabet.cpp
+  Bpp/Seq/Alphabet/ChromosomeAlphabet.cpp
   Bpp/Seq/Alphabet/CaseMaskedAlphabet.cpp
   Bpp/Seq/Alphabet/CodonAlphabet.cpp
   Bpp/Seq/Alphabet/DNA.cpp
@@ -65,6 +66,7 @@ SET(CPP_FILES
   Bpp/Seq/Io/BppOSequenceStreamReaderFormat.cpp
   Bpp/Seq/Io/BppOSequenceWriterFormat.cpp
   Bpp/Seq/Io/Clustal.cpp
+  Bpp/Seq/Io/chrFasta.cpp
   Bpp/Seq/Io/Dcse.cpp
   Bpp/Seq/Io/Fasta.cpp
   Bpp/Seq/Io/GenBank.cpp

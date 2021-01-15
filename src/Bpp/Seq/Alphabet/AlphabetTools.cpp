@@ -112,6 +112,13 @@ bool AlphabetTools::checkAlphabetCodingSize(const Alphabet* alphabet)
 
 unsigned int AlphabetTools::getAlphabetCodingSize(const Alphabet& alphabet)
 {
+  //Anat's addition to the code
+  if (alphabet.getAlphabetType() == "Chromosome"){
+    //int number_of_types = alphabet.getNumberOfTypes();
+    //string str_state_of_max = std :: to_string(number_of_types-1);
+    return static_cast<unsigned int> (1);
+    /////////////////////////////////////////////////////////////////
+  }
   if (!checkAlphabetCodingSize(alphabet))
     throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().");
   return static_cast<unsigned int>(alphabet.intToChar(0).size());

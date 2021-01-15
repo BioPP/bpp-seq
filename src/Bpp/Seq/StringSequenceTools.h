@@ -42,6 +42,7 @@
 
 #include "Alphabet/Alphabet.h"
 #include "Alphabet/AlphabetExceptions.h"
+#include "Alphabet/ChromosomeAlphabet.h"
 #include "SequenceExceptions.h"
 #include <Bpp/Exceptions.h>
 
