@@ -67,6 +67,8 @@
 #include <Bpp/App/NumCalcApplicationTools.h>
 #include <Bpp/Numeric/Random/RandomTools.h>
 
+#include <algorithm>
+
 using namespace bpp;
 using namespace std;
 
@@ -265,6 +267,9 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   }
   SequenceContainer* sequences = iSeq->readSequences(sequenceFilePath, alpha);
 
+  //Apply sequence selection:
+  restrictSelectedSequencesByName(*sequences, params, suffix, suffixIsOptional, verbose, warn);
+  
   return sequences;
 }
 
@@ -497,7 +502,50 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
       sites = selectedSites;
     }
   }
+  //Apply sequence selection:
+  restrictSelectedSequencesByName(*sites, params, suffix, suffixIsOptional, verbose, warn);
+
   return sites;
+}
+
+/******************************************************************************/
+
+void SequenceApplicationTools::restrictSelectedSequencesByName(
+  SequenceContainer& allSequences,
+  map<std::string, std::string>& params,
+  string suffix,
+  bool suffixIsOptional,
+  bool verbose,
+  int warn)
+{
+  string optionKeep = ApplicationTools::getStringParameter("input.sequence.keep_names", params, "all", suffix, suffixIsOptional, warn);
+  if (optionKeep != "all") {
+    vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.keep_names", params, ',', optionKeep, suffix, suffixIsOptional, warn);
+    vector<string> seqNames = allSequences.getSequencesNames();
+    for (auto name: seqNames) {
+      if (! binary_search(selection.begin(), selection.end(), name)) {
+        allSequences.deleteSequence(name);
+	if (verbose) {
+          ApplicationTools::displayResult("Discard sequence", name);
+	}
+      }
+    }
+  }
+  string optionRemove = ApplicationTools::getStringParameter("input.sequence.remove_names", params, "none", suffix, suffixIsOptional, warn);
+  if (optionKeep != "none") {
+    vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.remove_names", params, ',', optionKeep, suffix, suffixIsOptional, warn);
+    vector<string> seqNames = allSequences.getSequencesNames();
+    for (auto name: selection) {
+      if (binary_search(seqNames.begin(), seqNames.end(), name)) {
+        allSequences.deleteSequence(name);
+	if (verbose) {
+          ApplicationTools::displayResult("Discard sequence", name);
+	}
+      } else {
+        throw SequenceNotFoundException("No sequence with the specified name was found.", name);
+      }
+    }
+  }
 }
 
 /******************************************************************************/
