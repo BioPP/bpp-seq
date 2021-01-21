@@ -521,6 +521,7 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
   string optionKeep = ApplicationTools::getStringParameter("input.sequence.keep_names", params, "all", suffix, suffixIsOptional, warn);
   if (optionKeep != "all") {
     vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.keep_names", params, ',', optionKeep, suffix, suffixIsOptional, warn);
+    sort(selection.begin(), selection.end());
     vector<string> seqNames = allSequences.getSequencesNames();
     for (auto name: seqNames) {
       if (! binary_search(selection.begin(), selection.end(), name)) {
@@ -532,9 +533,10 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
     }
   }
   string optionRemove = ApplicationTools::getStringParameter("input.sequence.remove_names", params, "none", suffix, suffixIsOptional, warn);
-  if (optionKeep != "none") {
-    vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.remove_names", params, ',', optionKeep, suffix, suffixIsOptional, warn);
+  if (optionRemove != "none") {
+    vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.remove_names", params, ',', optionRemove, suffix, suffixIsOptional, warn);
     vector<string> seqNames = allSequences.getSequencesNames();
+    sort(seqNames.begin(), seqNames.end());
     for (auto name: selection) {
       if (binary_search(seqNames.begin(), seqNames.end(), name)) {
         allSequences.deleteSequence(name);
