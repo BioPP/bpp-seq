@@ -246,3 +246,39 @@ const std::vector <int> ChromosomeAlphabet::getSetOfStatesForAComposite(int stat
   }
   return setOfStates;
 }
+/*******************************************************************************/
+
+double ChromosomeAlphabet::getProbabilityOfChar(int state1, int state2) const
+{
+  if (state1 < 0 || !isIntInAlphabet(state1))
+    throw BadIntException(state1, "ChromosomeAlphabet::getProbabilityOfChar(int, int): Specified base unknown.");
+
+  if (state2 < 0 || !isIntInAlphabet(state2))
+    throw BadIntException(state2, "ChromosomeAlphabet::getProbabilityOfChar: Specified base unknown.");
+
+  if (isUnresolved(state2))
+    throw BadIntException(state2, "ChromosomeAlphabet::getProbabilityOfChar: Unresolved base."); 
+
+  if (state2 >= (int)getNumberOfTypes())
+    throw IndexOutOfBoundsException("ChromosomeSubstitutionModel::getProbabilityOfChar", state2, 0, getNumberOfTypes() - 1);
+  vector<int> states = getAlias(state1);
+  for (size_t j = 0; j < states.size(); j++)
+  {
+     if (state2 == states[j]){
+         // it is a composite state
+        if (state1 > getMax() + 1){
+          return getProbabilityForState(state2, states[j]);
+
+        }else{
+          return 1.;
+        }
+
+     }
+  }
+  return 0;
+}
+/***************************************************************************************/
+bool ChromosomeAlphabet::isResolvedIn(int state1, int state2) const
+{
+  return (getProbabilityOfChar(state1, state2) > 0);
+}

@@ -46,6 +46,7 @@
 #include "AlignedSequenceContainer.h"
 #include "OrderedSequenceContainer.h"
 #include <Bpp/Numeric/VectorTools.h>
+#include "../Alphabet/ChromosomeAlphabet.h"
 
 // From the STL library:
 #include <string>
@@ -330,6 +331,10 @@ public:
   
   double operator()(size_t siteIndex, size_t sequenceIndex, int state) const 
   {
+    if (dynamic_cast<const ChromosomeAlphabet*>(getAlphabet())){
+      const ChromosomeAlphabet* alphabet = dynamic_cast<const ChromosomeAlphabet*>(getAlphabet());
+      return alphabet->getProbabilityOfChar(valueAt(sequenceIndex, siteIndex),state);
+    }
     return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
   }
 

@@ -118,6 +118,8 @@ public:
   const AlphabetState& getState(int num) const;
 
   std::vector<int> getAlias(int state) const;
+  double getProbabilityOfChar(int state1, int state2) const;
+  bool isResolvedIn(int state1, int state2) const;
 
   std::vector<std::string> getAlias(const std::string& state) const;
   bool isComposite(const std::string& state) const;
