@@ -49,12 +49,13 @@
 namespace bpp
 {
 
-/**
- * @brief This alphabet is used to deal with proteins.
- *
- * It supports all 20 amino-acids with their standard denomination.
- * Gaps are coded by '-', unresolved characters are coded by 'X'.
- */
+  /**
+   * @brief This alphabet is used to deal with proteins.
+   *
+   * It supports all 20 amino-acids with their standard denomination.
+   * Gaps are coded by '-', unresolved characters are coded by 'X'.
+   * Generic characters: B={N,D}, Z={Q,E}, J={I,L}.
+   */
 
   class ProteicAlphabet:
     public LetterAlphabet
@@ -117,8 +118,8 @@ namespace bpp
     
   public:
     unsigned int getSize() const { return 20; }
-    unsigned int getNumberOfTypes() const { return 23; }
-    int getUnknownCharacterCode() const { return 22; }
+    unsigned int getNumberOfTypes() const { return 24; }
+    int getUnknownCharacterCode() const { return 23; }
     std::vector<int> getAlias(int state) const;
     std::vector<std::string> getAlias(const std::string& state) const;
     int getGeneric(const std::vector<int>& states) const;
@@ -140,7 +141,7 @@ namespace bpp
      *
      * @param aa Char description of the amino-acid to analyse.
      */
-    std::string getAbbr(const std::string & aa) const;
+    std::string getAbbr(const std::string& aa) const;
 	
     /**
      * @brief Get the abbreviation (3 letter code) for a state coded as int.
