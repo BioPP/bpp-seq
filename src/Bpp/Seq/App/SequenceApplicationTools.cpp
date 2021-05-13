@@ -851,6 +851,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
     else
       unresCount = TextTools::to<double>(maxUnresolvedOption)-NumConstants::TINY();
 
+    nbSites=sitesToAnalyse->getNumberOfSites();
     
     if (unresCount < (double)numSeq - NumConstants::TINY())
     {

@@ -129,14 +129,15 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
 
   // there is a header that specifies to which character each
   // probability is associated
+  auto size = seq.getAlphabet()->getSize();
   if(hasLabels) {
-    DataTable content(permutationMap.size(),0);
+    DataTable content(size,0);
     vector<double>::const_iterator i = tokens.begin();
-    while(i != tokens.end()) {
+    while (i != tokens.end()) {
 
       // junk up the tokens into groups of alphabetsize, and permute
       // according to how the header is permuted
-      vector<double> row(permutationMap.size());
+      vector<double> row(size,0.);
       for(const auto j:permutationMap) {
 	if (i == tokens.end())
 	  throw Exception("Pasta::nextSequence : input is incomplete");
@@ -146,7 +147,6 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
 
       content.addColumn(row);
     }
-
     // finally set the content
     seq.setContent(content.getData());
   }
@@ -244,27 +244,29 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
 
       /* check labels against alphabet of the container */
       vector<string> resolved_chars = container.getAlphabet()->getResolvedChars();
-      string states = "<";
-      for(const auto&  i :  resolved_chars)
-	states += " " + i;
-      states += " >";
-
-      // check if size is the same
-      if(labels.size() != resolved_chars.size())
-	throw DimensionException("Pasta::appendSequencesFromStream. ", labels.size(), resolved_chars.size());
 
       // build permutation map on the content, error should one exist
       for(const auto&  i : labels) {
 	bool found = false;
 
-	for(size_t j = 0; j < resolved_chars.size(); ++j)
+	for(size_t j = 0; j < resolved_chars.size(); ++j)            
 	  if(i == resolved_chars[j]) {
+            if (found)
+              throw Exception("Pasta::appendSequencesFromStream. Label " + i + " found twice.");
+
             permutationMap.push_back(j);
             found = true;
 	  }
 	
 	if(!found)
+        {
+          string states = "<";
+          for(const auto&  i2 :  resolved_chars)
+            states += " " + i2;
+          states += " >";
+
 	  throw Exception("Pasta::appendSequencesFromStream. Label " + i + " is not found in alphabet " + states + ".");
+        }
       }		
     }
 

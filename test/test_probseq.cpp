@@ -371,6 +371,13 @@ int main() {
   dna_pasta->appendSequencesFromStream(dna_pasta_iss2, dna_p_container);
   cerr << "OK." << endl;
 
+  string dna_pasta_in3 = "T A G\n>a 3rd dna prob. sequence\n0.2023275 0.570924031 0.03822292\n0.2366416 0.004093129 0.64697079";
+  istringstream dna_pasta_iss3(dna_pasta_in3);
+  cerr << "read the following (permuted) sequence into dna prob. container" << endl;
+  cerr << endl << dna_pasta_in3 << endl;
+  dna_pasta->appendSequencesFromStream(dna_pasta_iss3, dna_p_container);
+  cerr << "OK." << endl;
+
   cerr << "dna prob. container contains : " << endl << endl;
   for(size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i) {
     DataTable::write(dna_p_container.getSequence(i)->getTable(), cerr, false);
