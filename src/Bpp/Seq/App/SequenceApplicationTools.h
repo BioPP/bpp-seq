@@ -78,15 +78,17 @@ namespace bpp
      * @brief Build an Alphabet object according to options.
      *
      * Options used are:
-     * - alphabet = [DNA|RNA|Protein], the alphabet type to use.
-     *            = [DNA|RNA|Protein](length=n) a word-alphabet of
-     *                 words with length n
-     *            = [EchinodermMitochondrialCodonAlphabet
-     *                   | InvertebrateMitochondrialCodonAlphabet
-     *                   | InvertebrateMitochondrialCodonAlphabet
-     *                   | StandardCodonAlphabet
-     *                   | VertebrateMitochondrialCodonAlphabet]([alphn=NA|RNA])
-     *                  a codon-alphabet
+     * @verbatim
+      - alphabet = [DNA|RNA|Protein], the alphabet type to use.
+                 = [DNA|RNA|Protein](length=n) a word-alphabet of
+                      words with length n
+                 = [EchinodermMitochondrialCodonAlphabet
+                        | InvertebrateMitochondrialCodonAlphabet
+                        | InvertebrateMitochondrialCodonAlphabet
+                        | StandardCodonAlphabet
+                        | VertebrateMitochondrialCodonAlphabet]([alphn=NA|RNA])
+                       a codon-alphabet
+     @endverbatim
      *
      * @param params  The attribute map where options may be found.
      * @param suffix  A suffix to be applied to each attribute name.
