@@ -34,6 +34,7 @@ SET(CPP_FILES
   Bpp/Seq/AlphabetIndex/__GranthamMatrixCode
   Bpp/Seq/AlphabetIndex/__MiyataMatrixCode
   Bpp/Seq/App/SequenceApplicationTools.cpp
+  Bpp/Seq/App/BppSequenceApplication.cpp
   Bpp/Seq/CodonSiteTools.cpp
   Bpp/Seq/Container/AlignedSequenceContainer.cpp
   Bpp/Seq/Container/CompressedVectorSiteContainer.cpp
