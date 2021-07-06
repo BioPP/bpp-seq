@@ -87,6 +87,8 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const
       content += TextTools::toUpper(TextTools::removeWhiteSpaces(linebuffer));
     }
   }
+    
+  seqname=TextTools::removeWhiteSpaces(seqname);
 
   bool res = (!input.eof());
   // Sequence name and comments isolation
