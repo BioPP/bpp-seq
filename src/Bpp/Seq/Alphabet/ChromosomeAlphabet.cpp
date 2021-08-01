@@ -259,7 +259,7 @@ double ChromosomeAlphabet::getProbabilityOfChar(int state1, int state2) const
   if (isUnresolved(state2))
     throw BadIntException(state2, "ChromosomeAlphabet::getProbabilityOfChar: Unresolved base."); 
 
-  if (state2 >= (int)getNumberOfTypes())
+  if (state2 > getMax())
     throw IndexOutOfBoundsException("ChromosomeSubstitutionModel::getProbabilityOfChar", state2, 0, getNumberOfTypes() - 1);
   vector<int> states = getAlias(state1);
   for (size_t j = 0; j < states.size(); j++)
