@@ -170,6 +170,8 @@ class AbstractCoreSite :
 
   /**
    * @name The Clonable interface
+   *
+   * @{
    */
   
   AbstractCoreSite * clone() const { return new AbstractCoreSite(*this);}

@@ -168,7 +168,7 @@ namespace bpp
 
     /** @} */
 
-    /*
+    /**
      * @name From AlignedValuesContainer interface
      *
      * @{

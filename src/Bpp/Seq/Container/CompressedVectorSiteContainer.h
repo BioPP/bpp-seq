@@ -194,9 +194,7 @@ namespace bpp
     }
     
 
-    /** @} */
-
-    // Theses methods are implemented for this class:
+    // These methods are implemented for this class:
 
     /**
      * @name The SequenceContainer interface.
@@ -215,8 +213,14 @@ namespace bpp
       return VectorMappedContainer<Sequence>::hasObject(name);
     }
 
-    // Methods to get position of a sequence in sequence container from his name
-    // This method is used by delete and remove methods
+    /**
+     *
+     * @brief Method to get position of a sequence in sequence
+     * container from his name. This method is used by delete and
+     * remove methods
+     * 
+     */
+    
     size_t getSequencePosition(const std::string& name) const
     {
       try {

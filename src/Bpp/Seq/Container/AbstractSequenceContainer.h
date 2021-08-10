@@ -123,8 +123,6 @@ namespace bpp
       setComments(pos, comments);
     }
 
-    /** @} */
-
     /**
      * @name From the OrderedSequenceContainer interface
      *

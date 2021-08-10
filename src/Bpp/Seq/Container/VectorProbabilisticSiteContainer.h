@@ -166,7 +166,19 @@ public :
     return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
   }
 
+  /**
+   * @brief Get Sequence from a position in the container.
+   * @param i  index of the sequence
+   *
+   */
+
   const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const;
+
+  /**
+   * @brief Get Sequence from its name in the container.
+   * @param name Name of the sequence
+   *
+   */
 
   const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const;
 

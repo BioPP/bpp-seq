@@ -75,7 +75,6 @@ namespace bpp
 
     Sequence* clone() const = 0;
 
-    /** @} */
     
     /**
      * @name Adjusting the content and size of the sequence.

@@ -161,7 +161,7 @@ public:
 
   /** @} */
 
-  /*
+  /**
    * @name From AlignedValuesContainer interface
    *
    * @{
