@@ -70,9 +70,10 @@ class Pasta
  protected :
 
   /**
-   * @breif The maximum number of chars to be written on a line.
+   * @brief The maximum number of chars to be written on a line.
    */
   unsigned int charsByLine_; // Number of chars by line (output only)
+  
   bool checkNames_;          // If names must be checked
   bool extended_;            // If using HUPO-PSI extensions
   bool strictNames_;         // If name is between '>' and first space

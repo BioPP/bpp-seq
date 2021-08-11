@@ -118,7 +118,7 @@ public :
    */
 
   /**
-   * @bried Copy contructors
+   * @brief Copy contructors
    *
    * Sites are cloned.
    *

@@ -333,7 +333,7 @@ VectorProbabilisticSiteContainer* VectorProbabilisticSiteContainer::createEmptyC
 
 /******************************************************************************/
 
-const std::shared_ptr<BasicProbabilisticSequence> VectorProbabilisticSiteContainer::getSequence(size_t i) const
+const std::shared_ptr<BasicProbabilisticSequence> VectorProbabilisticSiteContainer::getSequence(std::size_t i) const
 {
   if (i >= getNumberOfSequences())
     throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getSequence.", i, 0, getNumberOfSequences() - 1);

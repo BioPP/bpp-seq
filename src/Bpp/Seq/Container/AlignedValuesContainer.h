@@ -113,7 +113,7 @@ namespace bpp
     /**
      * @brief Set all position attributes of sites.
      *
-     * @param A vector with all site positions.
+     * @param vPositions A vector with all site positions.
      */
     
     virtual void setSitePositions(Vint vPositions) = 0;

@@ -222,14 +222,14 @@ public :
     return getElement(pos);
   }
 
-  const std::vector<double>& operator[](size_t i) const
+  const std::vector<double>& operator[](size_t pos) const
   {
-    return content_.getColumn(i);
+    return content_.getColumn(pos);
   }
 
-  std::vector<double>& operator[](size_t i)
+  std::vector<double>& operator[](size_t pos)
   {
-    return content_.getColumn(i);
+    return content_.getColumn(pos);
   }
 
   double getStateValueAt(size_t siteIndex, int state) const

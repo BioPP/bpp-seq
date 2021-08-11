@@ -256,8 +256,8 @@ namespace bpp
     /**
      * @brief checked access to a character in list.
      *
-     * @param i The position to retrieve.
-     * @return The T value of character at position i.
+     * @param pos The position to retrieve.
+     * @return The T value of character at position pos.
      */
     
     virtual const T& getValue(size_t pos) const = 0;
@@ -265,18 +265,18 @@ namespace bpp
     /**
      * @brief Operator [] overloaded for quick access to a character in list.
      *
-     * @param i The position to retrieve.
-     * @return The T value of character at position i.
+     * @param pos The position to retrieve.
+     * @return The T value of character at position pos.
      */
 
-    virtual const T& operator[](size_t i) const = 0;
+    virtual const T& operator[](size_t pos) const = 0;
     /**
      * @brief Operator [] overloaded for quick access to a character in list.
      *
-     * @param i The position to retrieve.
-     * @return The T value of character at position i.
+     * @param pos The position to retrieve.
+     * @return The T value of character at position pos.
      */
-    virtual T& operator[](size_t i) = 0;
+    virtual T& operator[](size_t pos) = 0;
 
     /** @} */
   };

@@ -91,8 +91,8 @@ namespace bpp
     /**
      * @brief Add  an object in the container.
      *
-     * @param object          The object to add.
-     * @param position The new position of the object
+     * @param object  The object to add.
+     * @param objectIndex The new position of the object
      * @param checkPosition Look if the position is empty.
      */
 
@@ -102,7 +102,7 @@ namespace bpp
      * @brief Insert an object in the container.
      *
      * @param object          The object to add.
-     * @param position The new position of the object
+     * @param objectIndex The new position of the object
      */
 
     virtual void insertObject(std::shared_ptr<T> object, size_t objectIndex) {};

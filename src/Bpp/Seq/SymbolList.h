@@ -230,9 +230,9 @@ namespace bpp
       return content_[pos];
     }
 
-    virtual const T& operator[](size_t i) const { return content_[i]; }
+    virtual const T& operator[](size_t pos) const { return content_[pos]; }
 		
-    virtual T& operator[](size_t i) { return content_[i]; }
+    virtual T& operator[](size_t pos) { return content_[pos]; }
 
     virtual void shuffle()
     {

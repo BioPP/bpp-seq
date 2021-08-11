@@ -113,6 +113,7 @@ namespace bpp
      *
      * @param sc The container to copy.
      */
+
     AlignedSequenceContainer(const SiteContainer& sc):
       AbstractSequenceContainer(sc),
       VectorSequenceContainer(sc),

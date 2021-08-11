@@ -86,7 +86,6 @@ namespace bpp
      * @brief Build a new empty container with specified size.
      *
      * @param size Number of sequences in the container.
-     * @param alpha The alphabet for this container.
      */
     
     VectorPositionedContainer(size_t size = 0) :
@@ -149,9 +148,12 @@ namespace bpp
       return positions_[objectIndex];
     }
     
-    /*
-     * @brief Fill container
+    /**
+     * @brief Add an object
      *
+     * @param object  The object to add.
+     * @param objectIndex The new position of the object
+     * @param checkPosition Look if the position is empty.
      */
     
     void addObject(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false)
@@ -165,6 +167,13 @@ namespace bpp
       positions_[objectIndex] = object;
     }
 
+    /**
+     * @brief Insert an object
+     *
+     * @param object          The object to add.
+     * @param objectIndex The new position of the object
+     */
+    
     void insertObject(std::shared_ptr<T> object, size_t objectIndex)
     {
       if (objectIndex > getSize())
