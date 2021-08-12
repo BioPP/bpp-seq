@@ -105,6 +105,19 @@ bool SiteTools::hasUnknown(const Site& site)
 
 /******************************************************************************/
 
+bool SiteTools::hasUnresolved(const Site& site)
+{
+  // Main loop : for all characters in site
+  for (size_t i = 0; i < site.size(); i++)
+  {
+    if (site.getAlphabet()->isUnresolved(site[i]))
+      return true;
+  }
+  return false;
+}
+
+/******************************************************************************/
+
 bool SiteTools::isComplete(const Site& site)
 {
   // Main loop : for all characters in site

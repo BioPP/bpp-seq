@@ -82,7 +82,13 @@ public:
 
   /**
    * @param site A site.
-   * @return True if the site contains one or several unknwn characters.
+   * @return True if the site contains one or several unresolved characters.
+   */
+  static bool hasUnresolved(const Site& site);
+
+  /**
+   * @param site A site.
+   * @return True if the site contains one or several unknown characters (e.g. N).
    */
   static bool hasUnknown(const Site& site);
 
