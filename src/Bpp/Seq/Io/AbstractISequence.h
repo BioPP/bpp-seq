@@ -132,6 +132,8 @@ class AbstractISequence:
     virtual void appendSequencesFromFile(const std::string& path, SequenceContainer& sc) const
     {
       std::ifstream input(path.c_str(), std::ios::in);
+      if (!input)
+        throw IOException("AbstractIAlignment::appendSequencesFromFile: can't read file " + path);
       appendSequencesFromStream(input, sc);
       input.close();
     }

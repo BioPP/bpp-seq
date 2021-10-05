@@ -916,7 +916,6 @@ AlignedValuesContainer* SiteContainerTools::sampleSites(const AlignedValuesConta
   VectorSiteContainer* nvsc=vsc?new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet()):0;
   VectorProbabilisticSiteContainer* nvpsc=vpsc?new VectorProbabilisticSiteContainer(sites.getSequencesNames(), sites.getAlphabet()):0;
   
-    
   for (size_t i = 0; i < nbSites; i++)
   {
     size_t pos = static_cast<size_t>(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(static_cast<int>(sites.getNumberOfSites())));
