@@ -120,7 +120,7 @@ namespace bpp
      */
     virtual void setSequencesNames(const std::vector<std::string>& names, bool checkNames) = 0;
 
-    /*
+    /**
      * @brief get value of a state in a position
      * @param siteIndex  index of the site
      * @param sequenceName name of the sequence in the container

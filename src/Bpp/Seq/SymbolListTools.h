@@ -77,6 +77,13 @@ namespace bpp
       else
         throw Exception("SymbolListTools::hasGap : this should not happen.");
     }
+
+    /**
+     * @param site A site.
+     * @return True if the site contains one or several unresolved state.
+     */
+    static bool hasUnresolved(const IntCoreSymbolList& site);
+
     /**
      * @param site A site.
      * @return True if the site contains only gaps.

@@ -132,6 +132,8 @@ namespace bpp
     virtual void appendAlignmentFromFile(const std::string& path, SiteContainer& sc) const
     {
       std::ifstream input(path.c_str(), std::ios::in);
+      if (!input)
+        throw IOException("AbstractIAlignment::appendAlignmentFromFile: can't read file " + path);
       appendAlignmentFromStream(input, sc);
       input.close();
     }
@@ -243,6 +245,8 @@ namespace bpp
     virtual void appendAlignmentFromFile(const std::string& path, ProbabilisticSiteContainer& sc) const
     {
       std::ifstream input(path.c_str(), std::ios::in);
+      if (!input)
+        throw IOException("AbstractIProbabilisticAlignment::appendAlignmentFromFile: can't read file " + path);
       appendAlignmentFromStream(input, sc);
       input.close();
     }

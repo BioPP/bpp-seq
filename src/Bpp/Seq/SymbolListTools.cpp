@@ -77,6 +77,19 @@ bool SymbolListTools::hasGap(const ProbabilisticSymbolList& site)
 
 /******************************************************************************/
 
+bool SymbolListTools::hasUnresolved(const IntCoreSymbolList& site)
+{
+  // Main loop : for all characters in site
+  for (size_t i = 0; i < site.size(); i++)
+  {
+    if (site.getAlphabet()->isUnresolved(site[i]))
+      return true;
+  }
+  return false;
+}
+
+/******************************************************************************/
+
 bool SymbolListTools::isGapOnly(const IntCoreSymbolList& site)
 {
   // Main loop : for all characters in site
@@ -87,6 +100,7 @@ bool SymbolListTools::isGapOnly(const IntCoreSymbolList& site)
   }
   return true;
 }
+
 
 bool SymbolListTools::isGapOnly(const ProbabilisticSymbolList& site)
 {
