@@ -280,4 +280,3 @@ size_t MaseTools::getPhase(const Comments& maseFileHeader, const string& setName
 }
 
 /******************************************************************************/
-

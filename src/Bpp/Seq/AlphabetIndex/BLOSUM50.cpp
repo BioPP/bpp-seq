@@ -74,4 +74,3 @@ LinearMatrix<double>* BLOSUM50::getIndexMatrix() const
 {
   return new LinearMatrix<double>(distanceMatrix_);
 }
-

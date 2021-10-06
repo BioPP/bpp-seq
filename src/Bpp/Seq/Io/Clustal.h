@@ -97,10 +97,12 @@ public:
    *
    * @{
    */
-  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const {
+  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const
+  {
     return readAlignment(input, alpha);
   }
-  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const {
+  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const
+  {
     return readAlignment(path, alpha);
   }
   /** @} */
@@ -142,5 +144,4 @@ public:
 };
 } // end of namespace bpp.
 
-#endif // _CLUSTAL_H_
-
+#endif// _CLUSTAL_H_

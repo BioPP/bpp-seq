@@ -114,14 +114,14 @@ bool ProteicAlphabet::isResolvedIn(int state1, int state2) const
   if (isUnresolved(state2))
     throw BadIntException(state2, "DNA::isResolvedIn(int, int): Unresolved base.");
 
-  if (state1==20)
-    return (state2==2 || state2==3);
+  if (state1 == 20)
+    return state2 == 2 || state2 == 3;
   else if (state1 == 21)
-    return (state2==5 || state2==6);
-  else if (state1==22)
-    return state2>0;
+    return state2 == 5 || state2 == 6;
+  else if (state1 == 22)
+    return state2 > 0;
   else
-    return state1==state2;
+    return state1 == state2;
 }
 
 /******************************************************************************/
@@ -284,4 +284,3 @@ string ProteicAlphabet::getGeneric(const vector<string>& states) const
 }
 
 /******************************************************************************/
-

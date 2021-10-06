@@ -64,16 +64,16 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
   if (AlphabetTools::isDNAAlphabet(&na))
     s1 = "RCT-";
-  else 
+  else
     s1 = "RCU-";
-  
+
   string s2;
- 
+
   if (AlphabetTools::isDNAAlphabet(&na))
     s2 = "AGCT-";
   else
     s2 = "AGCU-";
-  
+
   string s3 = "AGY-";
   string s = "   ";
 
@@ -189,7 +189,9 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
   // Register all states:
   for (size_t i = 0; i < states.size(); ++i)
+  {
     registerState(states[i]);
+  }
 }
 
 /****************************************************************************************/
@@ -297,21 +299,21 @@ bool RNY::isResolvedIn(int state1, int state2) const
   switch (qs)
   {
   case 0: // NNN
-    return state2==rs;
+    return state2 == rs;
   case 1: // NN-
-    return ((state2 < rs + 3) && (state2 >= rs));
+    return (state2 < rs + 3) && (state2 >= rs);
   case 2: // N-N
-    return ((state2 - rs)%3 == 0 && (state2 >= rs) && (state2 <  rs + 12));
+    return (state2 - rs) % 3 == 0 && (state2 >= rs) && (state2 <  rs + 12);
   case 3: // N--
-    return ((state2 >= rs) && (state2 < rs + 12));
+    return (state2 >= rs) && (state2 < rs + 12);
   case 4: // -NN
-    return ((state2 - rs)%12 == 0 && (state2 >= rs) &&  (state2 < rs + 36));
+    return (state2 - rs) % 12 == 0 && (state2 >= rs) &&  (state2 < rs + 36);
   case 5: // -N-
-    return ((state2 - rs)%12 < 3 && (state2 >= rs) &&  (state2 < rs + 27));
+    return (state2 - rs) % 12 < 3 && (state2 >= rs) &&  (state2 < rs + 27);
   case 6: // --N
-    return ((state2 - rs)%3 == 0 && (state2 >= rs) &&  (state2 < rs + 36));
+    return (state2 - rs) % 3 == 0 && (state2 >= rs) &&  (state2 < rs + 36);
   case 7: // ---
-    return (state2>=0);
+    return state2 >= 0;
   default:
     throw BadIntException(state1, "RNY:isResolvedIn : this sould not happen.");
   }
@@ -367,7 +369,7 @@ string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) c
 /**************************************************************************************/
 int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
 {
-  if (! AlphabetTools::isNucleicAlphabet(&alph))
+  if (!AlphabetTools::isNucleicAlphabet(&alph))
   {
     throw AlphabetException ("RNY::getRNY : Sequence must be Nucleic",
                              &alph);

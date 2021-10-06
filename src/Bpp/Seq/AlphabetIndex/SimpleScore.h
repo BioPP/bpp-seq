@@ -102,5 +102,4 @@ public:
 };
 } // end of namespace bpp.
 
-#endif // _SIMPLESCORE_H_
-
+#endif// _SIMPLESCORE_H_

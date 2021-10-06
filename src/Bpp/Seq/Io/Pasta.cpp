@@ -5,37 +5,37 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include "Pasta.h"
 
@@ -51,9 +51,9 @@ using namespace std;
 
 /********************************************************************************/
 
-bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasLabels, const vector<size_t> & permutationMap) const
+bool Pasta::nextSequence(istream& input, ProbabilisticSequence& seq, bool hasLabels, const vector<size_t>& permutationMap) const
 {
-  if(!input)
+  if (!input)
     throw IOException("Pasta::nextSequence : can't read from istream input");
 
   string seqname = "";
@@ -63,37 +63,38 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
   string linebuffer = "";
   char c;
 
-  while(!input.eof()) {
-
+  while (!input.eof())
+  {
     c = static_cast<char>(input.peek());
-    if(input.eof())
+    if (input.eof())
       c = '\n';
 
     // detect the beginning of a sequence
-    if(c == '>') {
-
+    if (c == '>')
+    {
       // stop if we find a new sequence
-      if(seqcpt++)
-	break;
+      if (seqcpt++)
+        break;
     }
 
     getline(input, linebuffer);
 
-    if(c == '>') {
-
+    if (c == '>')
+    {
       // get the sequence name line
       seqname = string(linebuffer.begin() + 1, linebuffer.end());
     }
 
-    if(c != '>' && !TextTools::isWhiteSpaceCharacter(c)) {
-
+    if (c != '>' && !TextTools::isWhiteSpaceCharacter(c))
+    {
       // sequence content : probabilities for each site are space-separated
       StringTokenizer st(linebuffer, " \t\n", false, false);
-      while(st.hasMoreToken()) {
+      while (st.hasMoreToken())
+      {
         double t;
         stringstream ss(st.nextToken());
         ss >> t;
-	tokens.push_back(t);
+        tokens.push_back(t);
       }
     }
   }
@@ -101,48 +102,54 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
   bool res = (!input.eof());
 
   // Sequence name and comments isolation (identical to that of Fasta)
-  if(strictNames_ || extended_) {
-
+  if (strictNames_ || extended_)
+  {
     size_t pos = seqname.find_first_of(" \t\n");
     string seqcmt;
 
-    if(pos != string::npos) {
+    if (pos != string::npos)
+    {
       seqcmt = seqname.substr(pos + 1);
       seqname = seqname.substr(0, pos);
     }
 
-    if(extended_) {
+    if (extended_)
+    {
       StringTokenizer st(seqcmt, " \\", true, false);
-      while(st.hasMoreToken()) {
-	seqcmts.push_back(st.nextToken());
+      while (st.hasMoreToken())
+      {
+        seqcmts.push_back(st.nextToken());
       }
     }
-    else {
+    else
+    {
       seqcmts.push_back(seqcmt);
     }
     seq.setComments(seqcmts);
   }
 
   seq.setName(seqname);
-  
+
   /* finally, deal with the content */
 
   // there is a header that specifies to which character each
   // probability is associated
   auto size = seq.getAlphabet()->getSize();
-  if(hasLabels) {
-    DataTable content(size,0);
+  if (hasLabels)
+  {
+    DataTable content(size, 0);
     vector<double>::const_iterator i = tokens.begin();
-    while (i != tokens.end()) {
-
+    while (i != tokens.end())
+    {
       // junk up the tokens into groups of alphabetsize, and permute
       // according to how the header is permuted
-      vector<double> row(size,0.);
-      for(const auto j:permutationMap) {
-	if (i == tokens.end())
-	  throw Exception("Pasta::nextSequence : input is incomplete");
-	row[(size_t)j] = *i;
-      	++i;
+      vector<double> row(size, 0.);
+      for (const auto j:permutationMap)
+      {
+        if (i == tokens.end())
+          throw Exception("Pasta::nextSequence : input is incomplete");
+        row[(size_t)j] = *i;
+        ++i;
       }
 
       content.addColumn(row);
@@ -152,17 +159,18 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
   }
   // o.w., we assume that each probability is that a (binary)
   // character is 1
-  else {
-    DataTable content(2,0);
+  else
+  {
+    DataTable content(2, 0);
 
     // fill in pairs of probabilities that (binary) character is 0,
     // resp. 1
-    for(const auto& i : tokens) {
-
+    for (const auto& i : tokens)
+    {
       // the following will throw an exception if v[i] is not a properly
       // formatted double : a check that we want to have
-      
-      vector<double> pair_v{1.-i,i};
+
+      vector<double> pair_v{1. - i, i};
       content.addColumn(pair_v);
     }
 
@@ -180,9 +188,9 @@ bool Pasta::nextSequence(istream & input, ProbabilisticSequence & seq, bool hasL
 
 /********************************************************************************/
 
-void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteContainer & container) const
+void Pasta::appendSequencesFromStream(istream& input, VectorProbabilisticSiteContainer& container) const
 {
-  if(!input)
+  if (!input)
     throw IOException("Pasta::appendFromStream: can't read from istream input");
 
   char c = '\n';
@@ -197,39 +205,43 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
   vector<string> labels;
   vector<size_t> permutationMap;
 
-  while(!input.eof() && hasSeq) {
-
+  while (!input.eof() && hasSeq)
+  {
     last_c = c;
     input.get(c);
 
     // detect the header
-    if(extended_ && c == '#') {
+    if (extended_ && c == '#')
+    {
       header = true;
       continue;
     }
 
     // detect the end of the header
-    if(c == '\n') {
-      if(extended_ && header) {
-	if(line[0] == '\\') {
-
-	  line.erase(line.begin());
-	  cmts.push_back(line);
-	}
-	line = "";
-	header = false;
+    if (c == '\n')
+    {
+      if (extended_ && header)
+      {
+        if (line[0] == '\\')
+        {
+          line.erase(line.begin());
+          cmts.push_back(line);
+        }
+        line = "";
+        header = false;
       }
       continue;
     }
 
     // capture the header
-    if(header) {
-      line.append(1,c);
+    if (header)
+    {
+      line.append(1, c);
     }
 
     // detect/get labels for the states
-    if(!header && c != '>') {
-
+    if (!header && c != '>')
+    {
       hasLabels = true;
       input.putback(c);
       c = last_c;
@@ -237,42 +249,49 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
       getline(input, line);
       StringTokenizer st(line, " \t\n", false, false);
 
-      while(st.hasMoreToken()) {
-	string s = st.nextToken();
-	labels.push_back(s);
+      while (st.hasMoreToken())
+      {
+        string s = st.nextToken();
+        labels.push_back(s);
       }
 
       /* check labels against alphabet of the container */
       vector<string> resolved_chars = container.getAlphabet()->getResolvedChars();
 
       // build permutation map on the content, error should one exist
-      for(const auto&  i : labels) {
-	bool found = false;
+      for (const auto&  i : labels)
+      {
+        bool found = false;
 
-	for(size_t j = 0; j < resolved_chars.size(); ++j)            
-	  if(i == resolved_chars[j]) {
+        for (size_t j = 0; j < resolved_chars.size(); ++j)
+        {
+          if (i == resolved_chars[j])
+          {
             if (found)
               throw Exception("Pasta::appendSequencesFromStream. Label " + i + " found twice.");
 
             permutationMap.push_back(j);
             found = true;
-	  }
-	
-	if(!found)
+          }
+        }
+
+        if (!found)
         {
           string states = "<";
-          for(const auto&  i2 :  resolved_chars)
+          for (const auto&  i2 :  resolved_chars)
+          {
             states += " " + i2;
+          }
           states += " >";
 
-	  throw Exception("Pasta::appendSequencesFromStream. Label " + i + " is not found in alphabet " + states + ".");
+          throw Exception("Pasta::appendSequencesFromStream. Label " + i + " is not found in alphabet " + states + ".");
         }
-      }		
+      }
     }
 
     // detect the sequence
-    if(c == '>' && last_c == '\n') {
-
+    if (c == '>' && last_c == '\n')
+    {
       input.putback(c);
       c = last_c;
       shared_ptr<BasicProbabilisticSequence> tmpseq(new BasicProbabilisticSequence(container.getAlphabet())); // add probabilistic sequences instead
@@ -280,7 +299,8 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
       container.addSequence(tmpseq, checkNames_);
     }
   }
-  if(extended_ && cmts.size()) {
+  if (extended_ && cmts.size())
+  {
     container.setGeneralComments(cmts);
   }
 }
@@ -288,17 +308,19 @@ void Pasta::appendSequencesFromStream(istream & input, VectorProbabilisticSiteCo
 
 /********************************************************************************/
 
-void Pasta::writeSequence(ostream & output, const ProbabilisticSequence & seq) const
+void Pasta::writeSequence(ostream& output, const ProbabilisticSequence& seq) const
 {
-  if(!output)
+  if (!output)
     throw IOException("Pasta::writeSequence : can't write to ostream output");
 
   // sequence name
   output << ">" << seq.getName();
 
   // sequence comments
-  if(extended_) {
-    for(unsigned int i = 0; i < seq.getComments().size(); ++i) {
+  if (extended_)
+  {
+    for (unsigned int i = 0; i < seq.getComments().size(); ++i)
+    {
       output << " \\" << seq.getComments()[i];
     }
   }
@@ -308,26 +330,28 @@ void Pasta::writeSequence(ostream & output, const ProbabilisticSequence & seq) c
 
   // sequence content
   const vector<vector<double> >& data = seq.getContent();
-  
+
   for (auto i : data)
   {
-    VectorTools::print(i,outs,"\t");
+    VectorTools::print(i, outs, "\t");
   }
 }
 
 /********************************************************************************/
 
-void Pasta::writeSequence(ostream & output, const Sequence & seq) const
+void Pasta::writeSequence(ostream& output, const Sequence& seq) const
 {
-  if(!output)
+  if (!output)
     throw IOException("Pasta::writeSequence : can't write to ostream output");
 
   // sequence name
   output << ">" << seq.getName();
 
   // sequence comments
-  if(extended_) {
-    for(unsigned int i = 0; i < seq.getComments().size(); ++i) {
+  if (extended_)
+  {
+    for (unsigned int i = 0; i < seq.getComments().size(); ++i)
+    {
       output << " \\" << seq.getComments()[i];
     }
   }
@@ -335,13 +359,13 @@ void Pasta::writeSequence(ostream & output, const Sequence & seq) const
 
   // sequence content
 
-  int nbc=(int)seq.getAlphabet()->getResolvedChars().size();
-  
-  for (size_t i=0; i<seq.size(); i++)
+  int nbc = (int)seq.getAlphabet()->getResolvedChars().size();
+
+  for (size_t i = 0; i < seq.size(); i++)
   {
-    for (int s=0; s<nbc; s++)
+    for (int s = 0; s < nbc; s++)
     {
-      output << seq.getStateValueAt(i,(int)s);
+      output << seq.getStateValueAt(i, (int)s);
       output << "\t";
     }
     output << endl;
@@ -362,10 +386,10 @@ void Pasta::writeAlignedValues(ostream& output, const AlignedValuesContainer& av
   }
   output << endl;
 
-  
+
   // Main loop : for all sequences in vector container
 
-  const AbstractProbabilisticSequenceContainer* vpsc=dynamic_cast<const AbstractProbabilisticSequenceContainer*>(&avc);
+  const AbstractProbabilisticSequenceContainer* vpsc = dynamic_cast<const AbstractProbabilisticSequenceContainer*>(&avc);
 
   if (vpsc)
     for (auto name : vpsc->getSequencesNames())
@@ -374,7 +398,7 @@ void Pasta::writeAlignedValues(ostream& output, const AlignedValuesContainer& av
     }
   else
   {
-    const SequenceContainer* sc=dynamic_cast<const SiteContainer*>(&avc);
+    const SequenceContainer* sc = dynamic_cast<const SiteContainer*>(&avc);
 
     if (sc)
       for (auto name : sc->getSequencesNames())

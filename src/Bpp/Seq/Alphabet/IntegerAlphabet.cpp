@@ -59,4 +59,3 @@ IntegerAlphabet::IntegerAlphabet(unsigned int max) : MAX_(max)
     registerState(new AlphabetState(i, TextTools::toString(i), ""));
   }
 }
-

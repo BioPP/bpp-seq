@@ -64,8 +64,8 @@ public:
   IntegerAlphabet& operator=(const IntegerAlphabet& bia)
   {
     AbstractAlphabet::operator=(bia);
-    MAX_=bia.MAX_;
-    
+    MAX_ = bia.MAX_;
+
     return *this;
   }
 
@@ -80,15 +80,15 @@ public:
   unsigned int getSize() const { return MAX_ + 1; }
 
   unsigned int getNumberOfTypes() const { return MAX_ + 1; }
-  
+
   std::string getAlphabetType() const { return "Integer"; }
-  
+
   int getUnknownCharacterCode() const { return static_cast<int>(MAX_); }
-  
+
   bool isUnresolved(int state) const { return state == static_cast<int>(MAX_); }
-  
+
   bool isUnresolved(const std::string& state) const { return false; }
 };
 } // end of namespace bpp.
 
-#endif // _INTEGERALPHABET_H_
+#endif// _INTEGERALPHABET_H_

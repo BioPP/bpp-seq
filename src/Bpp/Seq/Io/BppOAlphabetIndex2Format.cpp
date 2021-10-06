@@ -5,37 +5,37 @@
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
-  This software is a computer program whose purpose is to provide classes
-  for phylogenetic data analysis.
+   This software is a computer program whose purpose is to provide classes
+   for phylogenetic data analysis.
 
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-  As a counterpart to the access to the source code and  rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-  In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include "BppOAlphabetIndex2Format.h"
 #include "BppOAlphabetIndex1Format.h"
@@ -70,7 +70,7 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
     if (AlphabetTools::isCodonAlphabet(alphabet_))
     {
       if (!gencode_)
-          throw Exception("BppOAlphabetIndex2Format::read. Missing genetic code for codon alphabet.");
+        throw Exception("BppOAlphabetIndex2Format::read. Missing genetic code for codon alphabet.");
 
       BppOAlphabetIndex2Format reader2(gencode_->getTargetAlphabet(), message_, false);
 
@@ -80,11 +80,11 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
 
       return new CodonFromProteicAlphabetIndex2(gencode_, ai2.get());
     }
-    
-    //Currently, only protein indices are supported:
+
+    // Currently, only protein indices are supported:
     if (!AlphabetTools::isProteicAlphabet(alphabet_))
-        throw Exception("BppOAlphabetIndex2Format::read. This index is only supported with a protein alphabet.");
-    
+      throw Exception("BppOAlphabetIndex2Format::read. This index is only supported with a protein alphabet.");
+
     if (name == "Blosum50")
     {
       return new BLOSUM50();
@@ -94,7 +94,8 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
       bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true, 1);
       GranthamAAChemicalDistance* M = new GranthamAAChemicalDistance();
       M->setSymmetric(sym);
-      if (!sym) M->setPC1Sign(true);
+      if (!sym)
+        M->setPC1Sign(true);
       return M;
     }
     else if (name == "Miyata")
@@ -108,13 +109,16 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
     {
       string index1Desc = ApplicationTools::getStringParameter("index1", args, "None", "", true, 1);
       bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true);
-      BppOAlphabetIndex1Format index1Reader(alphabet_, "" , false);
+      BppOAlphabetIndex1Format index1Reader(alphabet_, "", false);
       AlphabetIndex1* index1 = index1Reader.read(index1Desc);
-      if (index1) {
+      if (index1)
+      {
         SimpleIndexDistance* M = new SimpleIndexDistance(index1);
         M->setSymmetric(sym);
         return M;
-      } else {
+      }
+      else
+      {
         throw Exception("BppOAlphabetIndex2Format::read. Diff: index1 should be provided.");
       }
     }
@@ -137,4 +141,3 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
     return 0;
   }
 }
-

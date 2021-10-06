@@ -101,4 +101,3 @@ AAIndex2Entry::AAIndex2Entry(std::istream& input, bool sym) :
   if (!diag)
     sym_ = false;
 }
-

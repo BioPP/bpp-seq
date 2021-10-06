@@ -62,22 +62,22 @@ using namespace std;
 
 AlignedValuesContainer* SiteContainerTools::getSitesWithoutGaps(const AlignedValuesContainer& sites)
 {
-  const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&sites);
-  const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
+  const VectorSiteContainer* vsc = dynamic_cast<const VectorSiteContainer*>(&sites);
+  const VectorProbabilisticSiteContainer* vpsc = dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
 
   vector<string> seqNames = sites.getSequencesNames();
 
-  VectorSiteContainer* ngc=vsc?new VectorSiteContainer(seqNames, sites.getAlphabet()):0;
-  
-  VectorProbabilisticSiteContainer* ngcp=vpsc?new VectorProbabilisticSiteContainer(seqNames, sites.getAlphabet()):0;
+  VectorSiteContainer* ngc = vsc ? new VectorSiteContainer(seqNames, sites.getAlphabet()) : 0;
+
+  VectorProbabilisticSiteContainer* ngcp = vpsc ? new VectorProbabilisticSiteContainer(seqNames, sites.getAlphabet()) : 0;
 
 
-  AlignedValuesContainer* noGapCont=vsc?
-    dynamic_cast<AlignedValuesContainer*>(ngc):
-    dynamic_cast<AlignedValuesContainer*>(ngcp);
-  
+  AlignedValuesContainer* noGapCont = vsc ?
+                                      dynamic_cast<AlignedValuesContainer*>(ngc) :
+                                      dynamic_cast<AlignedValuesContainer*>(ngcp);
+
   noGapCont->setSequencesNames(seqNames, false);
-  for (size_t i=0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     if (!SymbolListTools::hasGap(sites.getSymbolListSite(i)))
     {
@@ -94,21 +94,21 @@ AlignedValuesContainer* SiteContainerTools::getSitesWithoutGaps(const AlignedVal
 
 AlignedValuesContainer* SiteContainerTools::getCompleteSites(const AlignedValuesContainer& sites)
 {
-  const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&sites);
-  const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
+  const VectorSiteContainer* vsc = dynamic_cast<const VectorSiteContainer*>(&sites);
+  const VectorProbabilisticSiteContainer* vpsc = dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
 
   vector<string> seqNames = sites.getSequencesNames();
 
-  VectorSiteContainer* ngc=vsc?new VectorSiteContainer(seqNames, sites.getAlphabet()):0;
-  
-  VectorProbabilisticSiteContainer* ngcp=vpsc?new VectorProbabilisticSiteContainer(seqNames, sites.getAlphabet()):0;
-  
-  AlignedValuesContainer* noGapCont=vsc?
-    dynamic_cast<AlignedValuesContainer*>(ngc):
-    dynamic_cast<AlignedValuesContainer*>(ngcp);
-  
+  VectorSiteContainer* ngc = vsc ? new VectorSiteContainer(seqNames, sites.getAlphabet()) : 0;
+
+  VectorProbabilisticSiteContainer* ngcp = vpsc ? new VectorProbabilisticSiteContainer(seqNames, sites.getAlphabet()) : 0;
+
+  AlignedValuesContainer* noGapCont = vsc ?
+                                      dynamic_cast<AlignedValuesContainer*>(ngc) :
+                                      dynamic_cast<AlignedValuesContainer*>(ngcp);
+
   noGapCont->setSequencesNames(seqNames, false);
-  for (size_t i=0; i < sites.getNumberOfSites(); i++)
+  for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     if (SymbolListTools::isComplete(sites.getSymbolListSite(i)))
     {
@@ -118,7 +118,7 @@ AlignedValuesContainer* SiteContainerTools::getCompleteSites(const AlignedValues
         ngcp->appendSite(vpsc->getSite(i));
     }
   }
-  
+
   return noGapCont;
 }
 
@@ -130,12 +130,12 @@ AlignedValuesContainer* SiteContainerTools::getSelectedSites(
 {
   vector<string> seqNames = sequences.getSequencesNames();
 
-  const SiteContainer* sc=dynamic_cast<const SiteContainer*>(&sequences);
+  const SiteContainer* sc = dynamic_cast<const SiteContainer*>(&sequences);
   if (sc)
   {
-    VectorSiteContainer* nsc=new VectorSiteContainer(seqNames.size(), sequences.getAlphabet());
+    VectorSiteContainer* nsc = new VectorSiteContainer(seqNames.size(), sequences.getAlphabet());
     nsc->setSequencesNames(seqNames, false);
-  
+
     for (size_t i = 0; i < selection.size(); i++)
     {
       nsc->addSite(sc->getSite(selection[i]), false);
@@ -143,15 +143,15 @@ AlignedValuesContainer* SiteContainerTools::getSelectedSites(
       // WARNING: what if selection contains many times the same indice? ...
     }
     nsc->setGeneralComments(sc->getGeneralComments());
-    return nsc;    
+    return nsc;
   }
-  else 
+  else
   {
-    const VectorProbabilisticSiteContainer* psc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sequences);
+    const VectorProbabilisticSiteContainer* psc = dynamic_cast<const VectorProbabilisticSiteContainer*>(&sequences);
     if (psc)
     {
-      VectorProbabilisticSiteContainer* nsc=new VectorProbabilisticSiteContainer(seqNames, sequences.getAlphabet());
-  
+      VectorProbabilisticSiteContainer* nsc = new VectorProbabilisticSiteContainer(seqNames, sequences.getAlphabet());
+
       for (size_t i = 0; i < selection.size(); i++)
       {
         nsc->appendSite(psc->getSite(selection[i]), false);
@@ -164,7 +164,6 @@ AlignedValuesContainer* SiteContainerTools::getSelectedSites(
     else
       throw Exception("SiteContainerTools::getSelectedSites : this should not happen");
   }
-  
 }
 
 /******************************************************************************/
@@ -244,17 +243,18 @@ Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::s
 
 void SiteContainerTools::changeGapsToUnknownCharacters(AlignedValuesContainer& sites)
 {
-  VectorSiteContainer* vsc=dynamic_cast<VectorSiteContainer*>(&sites);
-  VectorProbabilisticSiteContainer* vpsc=dynamic_cast<VectorProbabilisticSiteContainer*>(&sites);
+  VectorSiteContainer* vsc = dynamic_cast<VectorSiteContainer*>(&sites);
+  VectorProbabilisticSiteContainer* vpsc = dynamic_cast<VectorProbabilisticSiteContainer*>(&sites);
 
   // NB: use iterators for a better algorithm?
   int unknownCode = sites.getAlphabet()->getUnknownCharacterCode();
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
-    if (SymbolListTools::hasGap(sites.getSymbolListSite(i))){
+    if (SymbolListTools::hasGap(sites.getSymbolListSite(i)))
+    {
       if (vsc)
       {
-        Site& site=vsc->getSite(i);
+        Site& site = vsc->getSite(i);
         for (unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
         {
           int& element = site[j];
@@ -264,7 +264,7 @@ void SiteContainerTools::changeGapsToUnknownCharacters(AlignedValuesContainer& s
       }
       else
       {
-        auto psite=vpsc->getSite(i);
+        auto psite = vpsc->getSite(i);
         for (unsigned int j = 0; j < sites.getNumberOfSequences(); j++)
         {
           vector<double>& element = (*psite)[j];
@@ -273,7 +273,7 @@ void SiteContainerTools::changeGapsToUnknownCharacters(AlignedValuesContainer& s
         }
       }
     }
-   }
+  }
 }
 
 /******************************************************************************/
@@ -408,7 +408,8 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
   vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noGapCont->setSequencesNames(seqNames, false);
-  for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
+  for (size_t i = 0; i < sites.getNumberOfSites(); ++i)
+  {
     map<int, double> freq;
     SymbolListTools::getFrequencies(sites.getSite(i), freq);
     if (freq[-1] <= maxFreqGaps)
@@ -424,7 +425,8 @@ void SiteContainerTools::removeGapSites(SiteContainer& sites, double maxFreqGaps
   if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeGapSites. Container is empty.");
 
-  for (size_t i = sites.getNumberOfSites(); i > 0; --i) {
+  for (size_t i = sites.getNumberOfSites(); i > 0; --i)
+  {
     map<int, double> freq;
     SymbolListTools::getFrequencies(sites.getSite(i - 1), freq);
     if (freq[-1] > maxFreqGaps)
@@ -442,7 +444,7 @@ SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sit
   if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeStopCodonSites. Container is empty.");
 
-   vector<string> seqNames = sites.getSequencesNames();
+  vector<string> seqNames = sites.getSequencesNames();
   VectorSiteContainer* noStopCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
   noStopCont->setSequencesNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i)
@@ -910,12 +912,12 @@ AlignedSequenceContainer* SiteContainerTools::alignNW(
 
 AlignedValuesContainer* SiteContainerTools::sampleSites(const AlignedValuesContainer& sites, size_t nbSites, vector<size_t>* index)
 {
-  const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&sites);
-  const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
+  const VectorSiteContainer* vsc = dynamic_cast<const VectorSiteContainer*>(&sites);
+  const VectorProbabilisticSiteContainer* vpsc = dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
 
-  VectorSiteContainer* nvsc=vsc?new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet()):0;
-  VectorProbabilisticSiteContainer* nvpsc=vpsc?new VectorProbabilisticSiteContainer(sites.getSequencesNames(), sites.getAlphabet()):0;
-  
+  VectorSiteContainer* nvsc = vsc ? new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet()) : 0;
+  VectorProbabilisticSiteContainer* nvpsc = vpsc ? new VectorProbabilisticSiteContainer(sites.getSequencesNames(), sites.getAlphabet()) : 0;
+
   for (size_t i = 0; i < nbSites; i++)
   {
     size_t pos = static_cast<size_t>(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(static_cast<int>(sites.getNumberOfSites())));
@@ -923,11 +925,11 @@ AlignedValuesContainer* SiteContainerTools::sampleSites(const AlignedValuesConta
       nvsc->addSite(vsc->getSite(pos), false);
     else
       nvpsc->appendSite(vpsc->getSite(pos), false);
-    
+
     if (index)
       index->push_back(pos);
   }
-  
+
   if (vsc)
     return nvsc;
   else
@@ -1097,14 +1099,19 @@ void SiteContainerTools::getSequencePositions(const SiteContainer& sites, Matrix
 {
   positions.resize(sites.getNumberOfSequences(), sites.getNumberOfSites());
   int gap = sites.getAlphabet()->getGapCharacterCode();
-  for (size_t i = 0; i < sites.getNumberOfSequences(); ++i) {
+  for (size_t i = 0; i < sites.getNumberOfSequences(); ++i)
+  {
     const Sequence& seq = sites.getSequence(i);
     unsigned int pos = 0;
-    for (size_t j = 0; j < sites.getNumberOfSites(); ++j) {
-      if (seq[j] != gap) {
+    for (size_t j = 0; j < sites.getNumberOfSites(); ++j)
+    {
+      if (seq[j] != gap)
+      {
         ++pos;
         positions(i, j) = pos;
-      } else {
+      }
+      else
+      {
         positions(i, j) = 0;
       }
     }
@@ -1118,37 +1125,45 @@ vector<int> SiteContainerTools::getColumnScores(const Matrix<size_t>& positions1
   if (positions1.getNumberOfRows() != positions2.getNumberOfRows())
     throw Exception("SiteContainerTools::getColumnScores. The two input alignments must have the same number of sequences!");
   vector<int> scores(positions1.getNumberOfColumns());
-  for (size_t i = 0; i < positions1.getNumberOfColumns(); ++i) {
-    //Find an anchor point:
+  for (size_t i = 0; i < positions1.getNumberOfColumns(); ++i)
+  {
+    // Find an anchor point:
     size_t whichSeq = 0;
     size_t whichPos = 0;
-    for (size_t j = 0; j < positions1.getNumberOfRows(); ++j) {
-      if (positions1(j, i) > 0) {
+    for (size_t j = 0; j < positions1.getNumberOfRows(); ++j)
+    {
+      if (positions1(j, i) > 0)
+      {
         whichSeq = j;
         whichPos = positions1(j, i);
         break;
       }
     }
-    if (whichPos == 0) {
-      //No anchor found, this alignment column is only made of gaps. We assign a score of 'na' and move to the next column.
+    if (whichPos == 0)
+    {
+      // No anchor found, this alignment column is only made of gaps. We assign a score of 'na' and move to the next column.
       scores[i] = na;
       continue;
     }
-    //We look for the anchor in the reference alignment:
+    // We look for the anchor in the reference alignment:
     size_t i2 = 0;
     bool found = false;
-    for (size_t j = 0; !found && j < positions2.getNumberOfColumns(); ++j) {
-      if (positions2(whichSeq, j) == whichPos) {
+    for (size_t j = 0; !found && j < positions2.getNumberOfColumns(); ++j)
+    {
+      if (positions2(whichSeq, j) == whichPos)
+      {
         i2 = j;
         found = true;
       }
     }
-    if (!found) {
+    if (!found)
+    {
       throw Exception("SiteContainerTools::getColumnScores(). Position " + TextTools::toString(whichPos) + " of sequence " + TextTools::toString(whichSeq) + " not found in reference alignment. Please make sure the two indexes are built from the same data!");
     }
-    //Now we compare all pairs of sequences between the two positions:
+    // Now we compare all pairs of sequences between the two positions:
     bool test = true;
-    for (size_t j = 0; test && j < positions1.getNumberOfRows(); ++j) {
+    for (size_t j = 0; test && j < positions1.getNumberOfRows(); ++j)
+    {
       test = (positions1(j, i) == positions2(j, i2));
     }
     scores[i] = test ? 1 : 0;
@@ -1163,39 +1178,47 @@ vector<double> SiteContainerTools::getSumOfPairsScores(const Matrix<size_t>& pos
   if (positions1.getNumberOfRows() != positions2.getNumberOfRows())
     throw Exception("SiteContainerTools::getColumnScores. The two input alignments must have the same number of sequences!");
   vector<double> scores(positions1.getNumberOfColumns());
-  for (size_t i = 0; i < positions1.getNumberOfColumns(); ++i) {
-    //For all positions in alignment 1...
+  for (size_t i = 0; i < positions1.getNumberOfColumns(); ++i)
+  {
+    // For all positions in alignment 1...
     size_t countAlignable = 0;
     size_t countAligned   = 0;
-    for (size_t j = 0; j < positions1.getNumberOfRows(); ++j) {
-      //Get the corresponding column in alignment 2:
+    for (size_t j = 0; j < positions1.getNumberOfRows(); ++j)
+    {
+      // Get the corresponding column in alignment 2:
       size_t whichPos = positions1(j, i);
-      if (whichPos == 0) {
-        //No position for this sequence here.
+      if (whichPos == 0)
+      {
+        // No position for this sequence here.
         continue;
       }
-      //We look for the position in the second alignment:
+      // We look for the position in the second alignment:
       size_t i2 = 0;
       bool found = false;
-      for (size_t k = 0; !found && k < positions2.getNumberOfColumns(); ++k) {
-        if (positions2(j, k) == whichPos) {
+      for (size_t k = 0; !found && k < positions2.getNumberOfColumns(); ++k)
+      {
+        if (positions2(j, k) == whichPos)
+        {
           i2 = k;
           found = true;
         }
       }
-      if (!found) {
+      if (!found)
+      {
         throw Exception("SiteContainerTools::getColumnScores(). Position " + TextTools::toString(whichPos) + " of sequence " + TextTools::toString(j) + " not found in reference alignment. Please make sure the two indexes are built from the same data!");
       }
 
-      //Now we check all other positions and see if they are aligned with this one:
-      for (size_t k = j + 1; k < positions1.getNumberOfRows(); ++k) {
+      // Now we check all other positions and see if they are aligned with this one:
+      for (size_t k = j + 1; k < positions1.getNumberOfRows(); ++k)
+      {
         size_t whichPos2 = positions1(k, i);
-        if (whichPos2 == 0) {
-          //Empty position
+        if (whichPos2 == 0)
+        {
+          // Empty position
           continue;
         }
         countAlignable++;
-        //check position in alignment 2:
+        // check position in alignment 2:
         if (positions2(k, i2) == whichPos2)
           countAligned++;
       }
@@ -1206,4 +1229,3 @@ vector<double> SiteContainerTools::getSumOfPairsScores(const Matrix<size_t>& pos
 }
 
 /******************************************************************************/
-
