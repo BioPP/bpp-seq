@@ -81,3 +81,4 @@ AAIndex1Entry::AAIndex1Entry(std::istream& input) :
   if (!ok)
     throw IOException("AAIndex1Entry: invalid AAIndex1 entry.");
 }
+

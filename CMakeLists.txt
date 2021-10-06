@@ -6,7 +6,7 @@
 # Created: 20/08/2009
 
 cmake_minimum_required (VERSION 2.8.12)
-project (bpp-seq3 CXX)
+project (bpp-seq CXX)
 
 # Compile options
 set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
@@ -35,7 +35,7 @@ ELSE(NO_DEP_CHECK)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(${PROJECT_NAME}_VERSION_CURRENT "1")
+SET(${PROJECT_NAME}_VERSION_CURRENT "13")
 SET(${PROJECT_NAME}_VERSION_REVISION "0")
 SET(${PROJECT_NAME}_VERSION_AGE "0")
 
@@ -63,7 +63,7 @@ if (CMAKE_INSTALL_PREFIX)
 endif (CMAKE_INSTALL_PREFIX)
 
 include (GNUInstallDirs)
-find_package (bpp-core3 1.0.0 REQUIRED)
+find_package (bpp-core 5.0.0 REQUIRED)
 
 # CMake package
 set (cmake-package-location ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
@@ -103,7 +103,7 @@ ENDIF (DOXYGEN_FOUND)
 ENDIF(NO_DEP_CHECK)
 
 # Packager
-SET(CPACK_PACKAGE_NAME "libbpp-seq3")
+SET(CPACK_PACKAGE_NAME "libbpp-seq")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
 SET(CPACK_PACKAGE_VERSION "3.0.0")
 SET(CPACK_PACKAGE_VERSION_MAJOR "3")

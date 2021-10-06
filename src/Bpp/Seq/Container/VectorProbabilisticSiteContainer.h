@@ -35,7 +35,7 @@
 
    The fact that you are presently reading this means that you have had
    knowledge of the CeCILL license and that you accept its terms.
- */
+*/
 
 #ifndef _VECTORPROBABILISTICSITECONTAINER_H_
 #define _VECTORPROBABILISTICSITECONTAINER_H_
@@ -54,6 +54,7 @@
 
 namespace bpp
 {
+
 /**
  * @brief The VectorProbabilisticSiteContainer class.
  *
@@ -67,20 +68,21 @@ namespace bpp
  *
  * @see ProbabilisticSequence, ProbabilisticSite, VectorSiteContainer
  */
-
+  
 class VectorProbabilisticSiteContainer :
-  virtual public VectorPositionedContainer<ProbabilisticSite>,
-  virtual public VectorMappedContainer<BasicProbabilisticSequence>,
-  virtual public AbstractProbabilisticSequenceContainer,
-  virtual public ProbabilisticSiteContainer
+    virtual public VectorPositionedContainer<ProbabilisticSite>,
+    virtual public VectorMappedContainer<BasicProbabilisticSequence>,
+    virtual public AbstractProbabilisticSequenceContainer,
+    virtual public ProbabilisticSiteContainer
 {
-public:
+public :
+
   /**
    * @brief Build a new emtpy container.
    *
    */
-
-  VectorProbabilisticSiteContainer(const Alphabet* alpha);
+  
+  VectorProbabilisticSiteContainer(const Alphabet * alpha);
 
   /**
    * @brief Build a new container from a set of sites.
@@ -121,14 +123,14 @@ public:
    * Sites are cloned.
    *
    */
-
+  
   VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc);
 
   VectorProbabilisticSiteContainer(const OrderedSequenceContainer& osc);
 
 
   VectorProbabilisticSiteContainer& operator=(const VectorProbabilisticSiteContainer& vpsc);
-
+  
   VectorProbabilisticSiteContainer* clone() const { return new VectorProbabilisticSiteContainer(*this); }
 
   /**
@@ -137,8 +139,9 @@ public:
 
   // class destructor
   virtual ~VectorProbabilisticSiteContainer() {}
+  
+ public :
 
-public:
   size_t getNumberOfSequences() const { return VectorMappedContainer<BasicProbabilisticSequence>::getSize(); }
 
   /*
@@ -146,9 +149,10 @@ public:
    *
    * @{
    */
+  
   const std::shared_ptr<ProbabilisticSite> getSite(size_t i) const
   {
-    if (i >= getNumberOfSites())
+    if(i >= getNumberOfSites())
       throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getProbabilisticSite.", i, 0, getNumberOfSites() - 1);
 
     return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
@@ -156,7 +160,7 @@ public:
 
   std::shared_ptr<ProbabilisticSite> getSite(size_t i)
   {
-    if (i >= getNumberOfSites())
+    if(i >= getNumberOfSites())
       throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getProbabilisticSite.", i, 0, getNumberOfSites() - 1);
 
     return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
@@ -194,12 +198,12 @@ public:
   {
     return VectorMappedContainer<BasicProbabilisticSequence>::getObjectsNames();
   }
-
+  
   void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
   {
     VectorMappedContainer<BasicProbabilisticSequence>::setObjectsNames(names);
   }
-
+  
 
   void setComments(size_t sequenceIndex, const Comments& comments)
   {
@@ -212,7 +216,7 @@ public:
    *
    */
 
-
+  
   /**
    * @name SequencedValuesContainer methods.
    *
@@ -225,13 +229,14 @@ public:
    * @param sequenceIndex index of the looked value in the site
    * @param state  state alphabet
    */
-  double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
+  
+  double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const 
   {
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
     return (*getSite(siteIndex))[getSequencePosition(sequenceName)][(size_t)state];
   }
-
-  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const
+  
+  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const 
   {
     return (*getSite(siteIndex))[getSequencePosition(sequenceName)][(size_t)state];
   }
@@ -253,14 +258,15 @@ public:
    * @param sequenceIndex index of the looked value in the site
    * @param state  state alphabet
    */
-  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
+  
+  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const 
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
     return (*getSite(siteIndex))[sequenceIndex][(size_t)state];
   }
-
-  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const
+  
+  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const 
   {
     return (*getSite(siteIndex))[sequenceIndex][(size_t)state];
   }
@@ -300,6 +306,7 @@ public:
    *
    * @{
    */
+
   void deleteSites(size_t siteIndex, size_t length)
   {
     VectorPositionedContainer<ProbabilisticSite>::deleteObjects(siteIndex, length);
@@ -309,16 +316,18 @@ public:
   {
     return VectorPositionedContainer<ProbabilisticSite>::getSize();
   }
-
+  
   void reindexSites();
 
   Vint getSitePositions() const;
 
   void setSitePositions(Vint vPositions);
 
-
+  
   /** @} */
+
 };
+
 } // end of namespace bpp
 
-#endif// _VECTORPROBABILISTICSITECONTAINER_H_
+#endif  // _VECTORPROBABILISTICSITECONTAINER_H_

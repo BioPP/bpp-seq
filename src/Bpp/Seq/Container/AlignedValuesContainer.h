@@ -58,65 +58,68 @@ namespace bpp
  * with <em>aligned</em> data.
  */
 
-class AlignedValuesContainer :
-  virtual public OrderedValuesContainer
-{
-public:
-  AlignedValuesContainer() {}
-  virtual ~AlignedValuesContainer() {}
+  class AlignedValuesContainer :
+    virtual public OrderedValuesContainer
+  {
 
-  AlignedValuesContainer* clone() const = 0;
+  public:
+    AlignedValuesContainer() {}
+    virtual ~AlignedValuesContainer() {}
 
+    AlignedValuesContainer* clone() const = 0;
 
-  /**
-   * @brief Get a CruxSymbolListSite from a given position.
-   *
-   * @param siteIndex The position
-   */
+    
+    /**
+     * @brief Get a CruxSymbolListSite from a given position.
+     *
+     * @param siteIndex The position 
+     */
+    
+    virtual const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const = 0;
 
-  virtual const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const = 0;
+    virtual CruxSymbolListSite& getSymbolListSite(size_t siteIndex) = 0;
 
-  virtual CruxSymbolListSite& getSymbolListSite(size_t siteIndex) = 0;
+    /**
+     * @brief Remove a continuous range of sites in the container.
+     *
+     * @param siteIndex The position of the first site in the container.
+     * @param length The length of the region to delete, starting at pposition siteIndex.
+     * @throw IndexOutOfBoundsException If the specified range is not valid.
+     */
+    virtual void deleteSites(size_t siteIndex, size_t length) = 0;
 
-  /**
-   * @brief Remove a continuous range of sites in the container.
-   *
-   * @param siteIndex The position of the first site in the container.
-   * @param length The length of the region to delete, starting at pposition siteIndex.
-   * @throw IndexOutOfBoundsException If the specified range is not valid.
-   */
-  virtual void deleteSites(size_t siteIndex, size_t length) = 0;
+    /**
+     * @brief Get the number of aligned positions in the container.
+     *
+     * @return The number of sites in the container.
+     */
+    
+    virtual size_t getNumberOfSites() const = 0;
 
-  /**
-   * @brief Get the number of aligned positions in the container.
-   *
-   * @return The number of sites in the container.
-   */
+    /**
+     * @brief Set all positions attributes.
+     */
+    
+    virtual void reindexSites() = 0;
 
-  virtual size_t getNumberOfSites() const = 0;
+    /**
+     * @brief Get all position attributes of sites.
+     *
+     * @return A vector with all site positions.
+     */
 
-  /**
-   * @brief Set all positions attributes.
-   */
+    virtual Vint getSitePositions() const = 0;
 
-  virtual void reindexSites() = 0;
+    /**
+     * @brief Set all position attributes of sites.
+     *
+     * @param vPositions A vector with all site positions.
+     */
+    
+    virtual void setSitePositions(Vint vPositions) = 0;
 
-  /**
-   * @brief Get all position attributes of sites.
-   *
-   * @return A vector with all site positions.
-   */
-
-  virtual Vint getSitePositions() const = 0;
-
-  /**
-   * @brief Set all position attributes of sites.
-   *
-   * @param vPositions A vector with all site positions.
-   */
-
-  virtual void setSitePositions(Vint vPositions) = 0;
-};
+  };
 } // end of namespace bpp.
 
-#endif// _ALIGNED_VALUES_CONTAINER_H_
+#endif  // _ALIGNED_VALUES_CONTAINER_H_
+

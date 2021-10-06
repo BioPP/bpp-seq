@@ -51,7 +51,7 @@
  * combinations with "-".
  *
  * More explicitly, a quotiented triplet RNY is defined on the alphabet
- *
+ * 
  * \f[\{C,T,R\} x \{A,C,G,T\} x \{ A,G,Y\}\f].
  *
  * Triplet "---" is the only triplet defined as gap. Other triplets
@@ -122,4 +122,5 @@ public:
 };
 }
 
-#endif// _RNY_H_
+#endif // _RNY_H_
+

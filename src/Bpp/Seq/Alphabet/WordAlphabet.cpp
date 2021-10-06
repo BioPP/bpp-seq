@@ -122,9 +122,8 @@ void WordAlphabet::build_()
 
   states[size + 1] = new AlphabetState(static_cast<int>(size), s, "Unresolved");
 
-  // Now register all states once for all:
-  for (size_t i = 0; i < states.size(); ++i)
-  {
+  //Now register all states once for all:
+  for (size_t i = 0; i < states.size(); ++i) {
     registerState(states[i]);
   }
 }
@@ -136,14 +135,14 @@ std::string WordAlphabet::getAlphabetType() const
   string s = "Word(";
   for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
   {
-    if (i != 0)
+    if (i!=0)
       s += ",";
 
-    s += "alphabet" + TextTools::toString(i + 1) + "=" + vAbsAlph_[i]->getAlphabetType();
+    s += "alphabet"+TextTools::toString(i+1)+"="+vAbsAlph_[i]->getAlphabetType();
   }
 
   s += ")";
-
+  
   return s;
 }
 
@@ -218,7 +217,7 @@ bool WordAlphabet::isResolvedIn(int state1, int state2) const
   if (isUnresolved(state2))
     throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Unresolved base.");
 
-  return (state1 == (int)getSize()) ? (state2 >= 0) : (state1 == state2);
+  return (state1 == (int)getSize())?(state2 >= 0):(state1==state2);
 }
 
 /******************************************************************************/
@@ -384,3 +383,4 @@ Sequence* WordAlphabet::reverse(const Sequence& sequence) const
 }
 
 /****************************************************************************************/
+

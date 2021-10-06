@@ -68,21 +68,21 @@ int AlphabetTools::getType(char state)
   bool p = PROTEIN_ALPHABET.isCharInAlphabet(TextTools::toString(state));
 
   if (!d && !r && !p)
-    return 0;                 // Unknown character
+    return 0;  // Unknown character
   else if (d && !r && !p)
-    return 1;                 // DNA specific
+    return 1;  // DNA specific
   else if (!d && r && !p)
-    return 2;                 // RNA specific
+    return 2;  // RNA specific
   else if (!d && !r && p)
-    return 3;                 // Protein specific
+    return 3;  // Protein specific
   else if (d && r && !p)
-    return 4;                 // Nucleotide specific
+    return 4;  // Nucleotide specific
   else if (d && !r && p)
-    return 5;                 // DNA or Protein specific
+    return 5;  // DNA or Protein specific
   else if (!d && r && p)
-    return 6;                 // RNA or Protein specific
+    return 6;  // RNA or Protein specific
   else
-    return 7;                 // Non-specific character
+    return 7;  // Non-specific character
 }
 
 /**********************************************************************************************/
@@ -90,7 +90,7 @@ int AlphabetTools::getType(char state)
 bool AlphabetTools::checkAlphabetCodingSize(const Alphabet& alphabet)
 {
   if (alphabet.getNumberOfChars() == 0)
-    return true;                    // Will this really happen?
+    return true;  // Will this really happen?
   size_t size = alphabet.intToChar(0).size();
 
   for (int i = 1; i < static_cast<int>(alphabet.getNumberOfTypes()); ++i)

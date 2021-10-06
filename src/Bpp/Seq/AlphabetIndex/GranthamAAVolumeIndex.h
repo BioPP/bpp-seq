@@ -5,37 +5,37 @@
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
 
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability.
 
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and,  more generally, to use and operate it in the
+  same conditions as regards security.
 
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
 #ifndef _GRANTHAMAAVOLUMEINDEX_H_
 #define _GRANTHAMAAVOLUMEINDEX_H_
@@ -66,58 +66,60 @@ namespace bpp
  * //
  * @endcode
  */
-class GranthamAAVolumeIndex :
-  public virtual ProteicAlphabetIndex1
-{
-private:
-  std::vector<double> volume_;
-
-public:
-  GranthamAAVolumeIndex() :
-    ProteicAlphabetIndex1(),
-    volume_()
+  class GranthamAAVolumeIndex :
+    public virtual ProteicAlphabetIndex1
   {
-    volume_.resize(20);
-    volume_[ 0] =  31.; // A
-    volume_[ 1] = 124.; // R
-    volume_[ 2] =  56.; // N
-    volume_[ 3] =  54.; // D
-    volume_[ 4] =  55.; // C
-    volume_[ 5] =  85.; // Q
-    volume_[ 6] =  83.; // E
-    volume_[ 7] =   3.; // G
-    volume_[ 8] =  96.; // H
-    volume_[ 9] = 111.; // I
-    volume_[10] = 111.; // L
-    volume_[11] = 119.; // K
-    volume_[12] = 105.; // M
-    volume_[13] = 132.; // F
-    volume_[14] =  32.5; // P
-    volume_[15] =  32.; // S
-    volume_[16] =  61.; // T
-    volume_[17] = 170.; // W
-    volume_[18] = 136.; // Y
-    volume_[19] =  84.; // V
-  }
+  private:
+    std::vector<double> volume_;
 
-  virtual ~GranthamAAVolumeIndex() {}
+  public:
+    GranthamAAVolumeIndex() :
+      ProteicAlphabetIndex1(),
+      volume_()
+    {
+      volume_.resize(20);
+      volume_[ 0] =  31.; // A
+      volume_[ 1] = 124.; // R
+      volume_[ 2] =  56.; // N
+      volume_[ 3] =  54.; // D
+      volume_[ 4] =  55.; // C
+      volume_[ 5] =  85.; // Q
+      volume_[ 6] =  83.; // E
+      volume_[ 7] =   3.; // G
+      volume_[ 8] =  96.; // H
+      volume_[ 9] = 111.; // I
+      volume_[10] = 111.; // L
+      volume_[11] = 119.; // K
+      volume_[12] = 105.; // M
+      volume_[13] = 132.; // F
+      volume_[14] =  32.5; // P
+      volume_[15] =  32.; // S
+      volume_[16] =  61.; // T
+      volume_[17] = 170.; // W
+      volume_[18] = 136.; // Y
+      volume_[19] =  84.; // V
+    }
 
-  GranthamAAVolumeIndex* clone() const { return new GranthamAAVolumeIndex(); }
+    virtual ~GranthamAAVolumeIndex() {}
 
-public:
-  double getIndex(int state) const
-  {
-    if (state < 0 || state > 19) throw BadIntException(state, "GranthamAAVolumeIndex::getIndex(). Invalid state.", getAlphabet());
-    return volume_[static_cast<size_t>(state)];
-  }
+    GranthamAAVolumeIndex* clone() const { return new GranthamAAVolumeIndex(); }
 
-  double getIndex(const std::string& state) const
-  {
-    return volume_[static_cast<size_t>(getAlphabet()->charToInt(state))];
-  }
+  public:
+    double getIndex(int state) const
+    {
+      if (state < 0 || state > 19) throw BadIntException(state, "GranthamAAVolumeIndex::getIndex(). Invalid state.", getAlphabet());
+      return volume_[static_cast<size_t>(state)];
+    }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(volume_); }
-};
+    double getIndex(const std::string& state) const
+    {
+      return volume_[static_cast<size_t>(getAlphabet()->charToInt(state))];
+    }
+
+    std::vector<double>* getIndexVector() const { return new std::vector<double>(volume_); }
+
+  };
 } // end of namespace bpp.
 
-#endif// _GRANTHAMAAVOLUMEINDEX_H_
+#endif // _GRANTHAMAAVOLUMEINDEX_H_
+

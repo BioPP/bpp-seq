@@ -55,14 +55,14 @@ StopCodonException::StopCodonException(const std::string& text, const std::strin
 int GeneticCode::translate(int state) const
 {
   if (isStop(state))
-    throw StopCodonException("GeneticCode::translate().", codonAlphabet_.intToChar(state));
-
+    throw StopCodonException("GeneticCode::translate().", codonAlphabet_.intToChar(state)); 
+    
   map<int, int>::const_iterator it = tlnTable_.find(state);
   if (it == tlnTable_.end())
     throw BadIntException(state, "GeneticCode::translate().");
-
+  
   return it->second;
-}
+}		
 
 /**********************************************************************************************/
 
@@ -210,3 +210,4 @@ Sequence* GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForI
 }
 
 /**********************************************************************************************/
+

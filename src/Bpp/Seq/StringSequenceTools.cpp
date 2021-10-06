@@ -345,3 +345,4 @@ Alphabet* StringSequenceTools::getAlphabetFromSequence(const std::string& sequen
 }
 
 /****************************************************************************************/
+

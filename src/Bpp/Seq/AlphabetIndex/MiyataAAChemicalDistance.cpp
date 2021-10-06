@@ -86,3 +86,4 @@ Matrix<double>* MiyataAAChemicalDistance::getIndexMatrix() const
   }
   return m;
 }
+

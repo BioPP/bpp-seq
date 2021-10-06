@@ -7,37 +7,37 @@
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
 
 #ifndef _PROTEICALPHABET_H_
@@ -48,108 +48,113 @@
 
 namespace bpp
 {
-/**
- * @brief This alphabet is used to deal with proteins.
- *
- * It supports all 20 amino-acids with their standard denomination.
- * Gaps are coded by '-', unresolved characters are coded by 'X'.
- * Generic characters: B={N,D}, Z={Q,E}, J={I,L}.
- */
 
-class ProteicAlphabet :
-  public LetterAlphabet
-{
   /**
-   * @name Overloaded methods from AbstractAlphabet
-   * @{
-   */
-
-public:
-  const ProteicAlphabetState& getState(const std::string& letter) const
-  {
-    return dynamic_cast<const ProteicAlphabetState&>(
-      AbstractAlphabet::getState(letter)
-      );
-  }
-
-  const ProteicAlphabetState& getState(int num) const
-  {
-    return dynamic_cast<const ProteicAlphabetState&>(
-      AbstractAlphabet::getState(num)
-      );
-  }
-
-protected:
-  const ProteicAlphabetState& getStateAt(size_t pos) const
-  {
-    return dynamic_cast<const ProteicAlphabetState&>(
-      AbstractAlphabet::getStateAt(pos)
-      );
-  }
-
-  ProteicAlphabetState& getStateAt(size_t pos)
-  {
-    return dynamic_cast<ProteicAlphabetState&>(
-      AbstractAlphabet::getStateAt(pos)
-      );
-  }
-
-  /** @} */
-
-public:
-  ProteicAlphabet();
-
-  ProteicAlphabet(const ProteicAlphabet& bia) : LetterAlphabet(bia) {}
-
-  ProteicAlphabet& operator=(const ProteicAlphabet& bia)
-  {
-    LetterAlphabet::operator=(bia);
-    return *this;
-  }
-
-  ProteicAlphabet* clone() const
-  {
-    return new ProteicAlphabet(*this);
-  }
-
-
-  virtual ~ProteicAlphabet() {}
-
-public:
-  unsigned int getSize() const { return 20; }
-  unsigned int getNumberOfTypes() const { return 23; }
-  int getUnknownCharacterCode() const { return 22; }
-  bool isResolvedIn(int state1, int state2) const;
-  std::vector<int> getAlias(int state) const;
-  std::vector<std::string> getAlias(const std::string& state) const;
-  int getGeneric(const std::vector<int>& states) const;
-  std::string getGeneric(const std::vector<std::string>& states) const;
-  bool isUnresolved(int state) const { return state > 19; }
-  bool isUnresolved(const std::string& state) const { return charToInt(state) > 19; }
-  std::string getAlphabetType() const { return "Proteic"; }
-
-public:
-  /**
-   * @name Specific methods
+   * @brief This alphabet is used to deal with proteins.
    *
-   * @{
+   * It supports all 20 amino-acids with their standard denomination.
+   * Gaps are coded by '-', unresolved characters are coded by 'X'.
+   * Generic characters: B={N,D}, Z={Q,E}, J={I,L}.
    */
 
-  /**
-   * @brief Get the abbreviation (3 letter code) for a state coded as char.
-   *
-   * @param aa Char description of the amino-acid to analyse.
-   */
-  std::string getAbbr(const std::string& aa) const;
+  class ProteicAlphabet:
+    public LetterAlphabet
+  {
+    /**
+     * @name Overloaded methods from AbstractAlphabet
+     * @{
+     */
+  public:
+    const ProteicAlphabetState& getState(const std::string& letter) const
+    {
+      return dynamic_cast<const ProteicAlphabetState&>(
+        AbstractAlphabet::getState(letter)
+        );
+    }
+    
+    const ProteicAlphabetState& getState(int num) const
+    {
+      return dynamic_cast<const ProteicAlphabetState&>(
+        AbstractAlphabet::getState(num)
+        );
+    }
 
-  /**
-   * @brief Get the abbreviation (3 letter code) for a state coded as int.
-   *
-   * @param aa Int description of the amino-acid to analyse.
-   */
-  std::string getAbbr(int aa) const;
-  /** @} */
-};
-} // end of namespace bpp.
+  protected:
+    
+    const ProteicAlphabetState& getStateAt(size_t pos) const
+    {
+      return dynamic_cast<const ProteicAlphabetState&>(
+        AbstractAlphabet::getStateAt(pos)
+        );
+    }
+    
+    ProteicAlphabetState& getStateAt(size_t pos)
+    {
+      return dynamic_cast<ProteicAlphabetState&>(
+        AbstractAlphabet::getStateAt(pos)
+        );
+    }
+    
+    /** @} */
+  public:
+    ProteicAlphabet();
 
-#endif// _PROTEICALPHABET_H_
+    ProteicAlphabet(const ProteicAlphabet& bia) : LetterAlphabet(bia) {}
+
+    ProteicAlphabet& operator=(const ProteicAlphabet& bia)
+    {
+      LetterAlphabet::operator=(bia);
+      return *this;
+    }
+
+    ProteicAlphabet* clone() const
+    {
+      return new ProteicAlphabet(*this);
+    }
+
+
+    virtual ~ProteicAlphabet() {}
+
+    
+  public:
+    unsigned int getSize() const { return 20; }
+    unsigned int getNumberOfTypes() const { return 23; }
+    int getUnknownCharacterCode() const { return 22; }
+    bool isResolvedIn(int state1, int state2) const;
+    std::vector<int> getAlias(int state) const;
+    std::vector<std::string> getAlias(const std::string& state) const;
+    int getGeneric(const std::vector<int>& states) const;
+    std::string getGeneric(const std::vector<std::string>& states) const;
+    bool isUnresolved(int state) const { return state > 19; }
+    bool isUnresolved(const std::string& state) const { return charToInt(state) > 19; }
+    std::string getAlphabetType() const { return "Proteic"; }
+	
+  public:
+
+    /**
+     * @name Specific methods
+     *
+     * @{
+     */
+    
+    /**
+     * @brief Get the abbreviation (3 letter code) for a state coded as char.
+     *
+     * @param aa Char description of the amino-acid to analyse.
+     */
+    std::string getAbbr(const std::string& aa) const;
+	
+    /**
+     * @brief Get the abbreviation (3 letter code) for a state coded as int.
+     *
+     * @param aa Int description of the amino-acid to analyse.
+     */
+    std::string getAbbr(int aa) const;
+    /** @} */
+		
+  };
+
+} //end of namespace bpp.
+
+#endif // _PROTEICALPHABET_H_
+

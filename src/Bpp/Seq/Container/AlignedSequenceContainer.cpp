@@ -66,7 +66,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
   }
 
   if (osc.getNumberOfSequences() > 0)
-    length_ = getSequence(0).size();                                        // the overloaded
+    length_ = getSequence(0).size();  // the overloaded
   else
     length_ = 0;
 
@@ -155,7 +155,7 @@ Site& AlignedSequenceContainer::getSite(size_t i)
     site->addElement(getSequence(j)[i]);
   }
 
-  VectorPositionedContainer<Site>::addObject(site, i);
+  VectorPositionedContainer<Site>::addObject(site,i);
   return *VectorPositionedContainer<Site>::getObject(i);
 }
 
@@ -180,7 +180,7 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
     if (poss == position)
       throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
   }
-
+   
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
   {
@@ -228,7 +228,7 @@ void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length)
 
   // Delete site's siteIndexition
   positions_.erase(positions_.begin() + static_cast<ptrdiff_t>(siteIndex),
-                   positions_.begin() + static_cast<ptrdiff_t>(siteIndex + length));
+      positions_.begin() + static_cast<ptrdiff_t>(siteIndex + length));
   length_ -= length;
 
   // Actualizes the 'sites' vector:
@@ -402,11 +402,9 @@ void AlignedSequenceContainer::setSitePositions(Vint vPositions)
 {
   if (vPositions.size() != getNumberOfSites())
     throw BadSizeException("AlignedSequenceContainer::setSitePositions bad size of positions vector", vPositions.size(), getNumberOfSites());
-
+  
   for (size_t i = 0; i < vPositions.size(); i++)
-  {
-    positions_[i] = vPositions[i];
-  }
+    positions_[i] = vPositions[i]; 
 }
 
 
@@ -466,7 +464,7 @@ void AlignedSequenceContainer::addSequence(const Sequence& sequence, size_t i, b
   {
     length_ = sequence.size();
     VectorPositionedContainer<Site>::setSize(length_);
-  }
+  }  
   if (checkSize_(sequence))
     VectorSequenceContainer::addSequence(sequence, i, checkName);
   else
@@ -491,3 +489,5 @@ AlignedSequenceContainer* AlignedSequenceContainer::createEmptyContainer() const
 }
 
 /******************************************************************************/
+
+

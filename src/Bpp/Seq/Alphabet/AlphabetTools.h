@@ -231,6 +231,7 @@ private:
     }
   }
 };
+
 } // end of namespace bpp.
 
-#endif// _ALPHABETTOOLS_H_
+#endif  // _ALPHABETTOOLS_H_

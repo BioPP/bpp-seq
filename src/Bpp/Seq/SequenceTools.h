@@ -125,18 +125,16 @@ public:
    * @param end      The last position of the subsequence (included).
    * @param output   A sequence object to be appended with the given subsequence.
    */
-  static void subseq(const Sequence& sequence, size_t begin, size_t end, Sequence& output)
-  {
+  static void subseq(const Sequence& sequence, size_t begin, size_t end, Sequence& output) {
     if (end < begin || end >= sequence.size())
       throw Exception("SequenceTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
     std::vector<int> content(end - begin + 1);
-    for (size_t i = 0; i <= end - begin; ++i)
-    {
+    for (size_t i = 0; i <= end - begin; ++i) {
       content[i] = sequence[begin + i];
     }
     output.append(content);
   }
-
+ 
   /**
    * @brief Get a sub-sequence.
    *
@@ -145,8 +143,7 @@ public:
    * @param end   The last position of the subsequence.
    * @return A new sequence object with the given subsequence.
    */
-  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end)
-  {
+  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end) {
     Sequence* seq = new BasicSequence(sequence.getAlphabet());
     seq->setName(sequence.getName());
     seq->setComments(sequence.getComments());
@@ -281,7 +278,7 @@ public:
    * The deleteElement method of the Sequence object will be used where appropriate.
    * @param seq The sequence to analyse.
    */
-
+  
   static Sequence* getSequenceWithCompleteSites(const Sequence& seq);
 
   /**
@@ -291,7 +288,7 @@ public:
    *
    * @author Sylvain Gaillard
    */
-
+  
   static size_t getNumberOfUnresolvedSites(const Sequence& seq);
 
 
@@ -465,4 +462,5 @@ public:
 };
 } // end of namespace bpp.
 
-#endif// _SEQUENCETOOLS_H_
+#endif // _SEQUENCETOOLS_H_
+

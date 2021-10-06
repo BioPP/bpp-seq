@@ -99,9 +99,7 @@ Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2)
   Sequence* concat = seq1.clone();
   concat->setToSizeR(seq1.size() + seq2.size());
   for (size_t i = 0; i < seq2.size(); ++i)
-  {
     (*concat)[seq1.size() + i] = seq2[i];
-  }
   return concat;
 }
 
@@ -492,7 +490,7 @@ void SequenceTools::getPutativeHaplotypes(const Sequence& seq, std::vector<Seque
     {
       for (size_t j = 0; j < states[i].size(); j++)
       {
-        // Sequence* tmp_seq = new BasicSequence(seq.getName() + "_hap", (**it).getContent(), alpha);
+        //Sequence* tmp_seq = new BasicSequence(seq.getName() + "_hap", (**it).getContent(), alpha);
         Sequence* tmp_seq = (**it).clone();
         tmp_seq->setName(seq.getName() + "_hap");
         if (j < states[i].size() - 1)
@@ -715,16 +713,16 @@ size_t SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif, bo
 }
 
 /******************************************************************************/
-
+  
 Sequence* SequenceTools::getRandomSequence(const Alphabet* alphabet, size_t length)
 {
   int s = static_cast<int>(alphabet->getSize());
   vector<int> content(length);
-  for (size_t i = 0; i < length; ++i)
-  {
+  for (size_t i = 0; i < length; ++i) {
     content[i] = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(s);
   }
   return new BasicSequence("random", content, alphabet);
 }
 
 /******************************************************************************/
+

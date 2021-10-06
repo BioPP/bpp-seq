@@ -68,19 +68,18 @@ bool BinaryAlphabet::isResolvedIn(int state1, int state2) const
     throw BadIntException(state2, "BinaryAlphabet::isResolvedIn(int, int): Specified base unknown.");
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "BinaryAlphabet::isResolvedIn(int, int): Unresolved base.");
+    throw BadIntException(state2, "BinaryAlphabet::isResolvedIn(int, int): Unresolved base.");  
 
-  return (state1 == 2 && state2 > 0) || (state1 == state2);
+  return ((state1==2 && state2>0) || (state1==state2));
 }
 
 /******************************************************************************/
 
-std::vector<int> BinaryAlphabet::getAlias(int state) const
+std::vector<int> BinaryAlphabet::getAlias(int state) const 
 {
-  if (!isIntInAlphabet(state))
-    throw BadIntException(state, "BinaryAlphabet::getAlias(int): Specified base unknown.");
+  if (!isIntInAlphabet(state)) throw BadIntException(state, "BinaryAlphabet::getAlias(int): Specified base unknown.");
   std::vector<int> v;
-  switch (state)
+  switch(state)
   {
   case -1:
     v.push_back(-1);
@@ -96,25 +95,25 @@ std::vector<int> BinaryAlphabet::getAlias(int state) const
     v.push_back(1);
     break;
   }
-
+  
   return v;
 }
 
 /******************************************************************************/
 
-std::vector<std::string> BinaryAlphabet::getAlias(const std::string& state) const
+std::vector<std::string> BinaryAlphabet::getAlias(const std::string& state) const 
 {
-  if (!isCharInAlphabet(state))
-    throw BadCharException(state, "BinaryAlphabet::getAlias(char): Specified base unknown.");
-
+  if (!isCharInAlphabet(state)) throw BadCharException(state, "BinaryAlphabet::getAlias(char): Specified base unknown.");
+  
   std::vector<std::string> v(1);
-  if (state == "?")
+  if (state=="?")
   {
     v.push_back("0");
     v.push_back("1");
   }
   else
     v.push_back(state);
-
+  
   return v;
 }
+

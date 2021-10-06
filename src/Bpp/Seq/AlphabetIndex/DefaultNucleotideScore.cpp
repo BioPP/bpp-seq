@@ -79,8 +79,8 @@ double DefaultNucleotideScore::getIndex(int state1, int state2) const
     throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state1.", alpha_);
   if (!alpha_->isUnresolved(state1) && !alpha_->isUnresolved(state2))
     return distanceMatrix_(
-      static_cast<size_t>(state1),
-      static_cast<size_t>(state2));
+        static_cast<size_t>(state1),
+        static_cast<size_t>(state2));
   vector<int> states1 = alpha_->getAlias(state1);
   vector<int> states2 = alpha_->getAlias(state2);
   double score = -5;
@@ -100,11 +100,12 @@ double DefaultNucleotideScore::getIndex(int state1, int state2) const
 double DefaultNucleotideScore::getIndex(const std::string& state1, const std::string& state2) const
 {
   return distanceMatrix_(
-    static_cast<size_t>(alpha_->charToInt(state1)),
-    static_cast<size_t>(alpha_->charToInt(state2)));
+      static_cast<size_t>(alpha_->charToInt(state1)),
+      static_cast<size_t>(alpha_->charToInt(state2)));
 }
 
 LinearMatrix<double>* DefaultNucleotideScore::getIndexMatrix() const
 {
   return new LinearMatrix<double>(distanceMatrix_);
 }
+

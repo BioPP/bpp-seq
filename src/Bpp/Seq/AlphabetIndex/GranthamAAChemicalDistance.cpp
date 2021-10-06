@@ -107,3 +107,4 @@ Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const
   }
   return m;
 }
+
