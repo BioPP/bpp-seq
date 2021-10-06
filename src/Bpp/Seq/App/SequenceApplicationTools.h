@@ -265,7 +265,7 @@ public:
    */
   static void restrictSelectedSequencesByName(
     SequenceContainer& allSequences,
-    std::map<std::string, std::string>& params,
+    const std::map<std::string, std::string>& params,
     std::string suffix = "",
     bool suffixIsOptional = true,
     bool verbose = true,
