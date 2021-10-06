@@ -69,6 +69,8 @@
 #include <Bpp/App/NumCalcApplicationTools.h>
 #include <Bpp/Numeric/Random/RandomTools.h>
 
+#include <algorithm>
+
 using namespace bpp;
 using namespace std;
 
@@ -278,6 +280,9 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   }
   SequenceContainer* sequences = iSeq->readSequences(sequenceFilePath, alpha);
 
+  //Apply sequence selection:
+  restrictSelectedSequencesByName(*sequences, params, suffix, suffixIsOptional, verbose, warn);
+  
   return sequences;
 }
 
@@ -599,6 +604,9 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
       sites = selectedSites;
     }
   }
+  //Apply sequence selection:
+  restrictSelectedSequencesByName(*sites, params, suffix, suffixIsOptional, verbose, warn);
+
   return sites;
 }
 

@@ -78,10 +78,11 @@ ProteicAlphabet::ProteicAlphabet()
   registerState(new ProteicAlphabetState(19, "V", "VAL", "Valine"));
   registerState(new ProteicAlphabetState(20, "B", "B", "N or D"));
   registerState(new ProteicAlphabetState(21, "Z", "Z", "Q or E"));
-  registerState(new ProteicAlphabetState(22, "X", "X", "Unresolved amino acid"));
-  registerState(new ProteicAlphabetState(22, "O", "O", "Unresolved amino acid"));
-  registerState(new ProteicAlphabetState(22, "0", "0", "Unresolved amino acid"));
-  registerState(new ProteicAlphabetState(22, "?", "?", "Unresolved amino acid"));
+  registerState(new ProteicAlphabetState(22, "J", "J", "I or L"));
+  registerState(new ProteicAlphabetState(23, "X", "X", "Unresolved amino acid"));
+  registerState(new ProteicAlphabetState(23, "O", "O", "Unresolved amino acid"));
+  registerState(new ProteicAlphabetState(23, "0", "0", "Unresolved amino acid"));
+  registerState(new ProteicAlphabetState(23, "?", "?", "Unresolved amino acid"));
   registerState(new ProteicAlphabetState(-2, "*", "STOP", "Stop"));
 }
 
@@ -139,7 +140,11 @@ vector<int> ProteicAlphabet::getAlias(int state) const
   {
     v.resize(2); v[0] = 5; v[1] = 6;
   }
-  else if (state == 22)  // all!
+  else if (state == 22)  // I or L
+  {
+    v.resize(2); v[0] = 9; v[1] = 10;
+  }
+  else if (state == 23)  // all!
   {
     v.resize(20);
     for (size_t i = 0; i < 20; i++)
@@ -170,6 +175,10 @@ vector<string> ProteicAlphabet::getAlias(const string& state) const
   {
     v.resize(2); v[0] = "Q"; v[1] = "E";
   }
+  else if (locstate == "J")  // I or L
+  {
+    v.resize(2); v[0] = "I"; v[1] = "L";
+  }
   else if (locstate == "X"
            || locstate == "O"
            || locstate == "0"
@@ -193,10 +202,10 @@ vector<string> ProteicAlphabet::getAlias(const string& state) const
 int ProteicAlphabet::getGeneric(const vector<int>& states) const
 {
   map<int, int> m;
-  for (unsigned int i = 0; i < states.size(); ++i)
+  for (size_t i = 0; i < states.size(); ++i)
   {
     vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
-    for (unsigned int j = 0; j < tmp_s.size(); ++j)
+    for (size_t j = 0; j < tmp_s.size(); ++j)
     {
       m[tmp_s[j]]++; // add each state to the list
     }
@@ -204,7 +213,7 @@ int ProteicAlphabet::getGeneric(const vector<int>& states) const
   vector<int> ve = MapTools::getKeys(m);
 
   string key;
-  for (unsigned int i = 0; i < ve.size(); ++i)
+  for (size_t i = 0; i < ve.size(); ++i)
   {
     if (!isIntInAlphabet(ve[i]))
       throw BadIntException(ve[i], "ProteicAlphabet::getGeneric(const vector<int>): Specified base unknown.");
@@ -213,6 +222,7 @@ int ProteicAlphabet::getGeneric(const vector<int>& states) const
   map<string, int> g;
   g["_2_3"] = 20;
   g["_5_6"] = 21;
+  g["_9_10"] = 22;
   int v;
   map<string, int>::iterator it = g.find(key);
   if (ve.size() == 1)
@@ -225,7 +235,7 @@ int ProteicAlphabet::getGeneric(const vector<int>& states) const
   }
   else
   {
-    v = 22;
+    v = 23;
   }
   return v;
 }
@@ -235,10 +245,10 @@ int ProteicAlphabet::getGeneric(const vector<int>& states) const
 string ProteicAlphabet::getGeneric(const vector<string>& states) const
 {
   map<string, int> m;
-  for (unsigned int i = 0; i < states.size(); ++i)
+  for (size_t i = 0; i < states.size(); ++i)
   {
     vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
-    for (unsigned int j = 0; j < tmp_s.size(); ++j)
+    for (size_t j = 0; j < tmp_s.size(); ++j)
     {
       m[tmp_s[j]]++; // add each state to the list
     }
@@ -246,7 +256,7 @@ string ProteicAlphabet::getGeneric(const vector<string>& states) const
   vector<string> ve = MapTools::getKeys(m);
 
   string key;
-  for (unsigned int i = 0; i < ve.size(); ++i)
+  for (size_t i = 0; i < ve.size(); ++i)
   {
     if (!isCharInAlphabet(ve[i]))
       throw BadCharException(ve[i], "ProteicAlphabet::getAlias(const vector<string>): Specified base unknown.");
@@ -255,6 +265,7 @@ string ProteicAlphabet::getGeneric(const vector<string>& states) const
   map<string, string> g;
   g["DN"] = "B";
   g["EQ"] = "Z";
+  g["IL"] = "J";
   string v;
   map<string, string>::iterator it = g.find(key);
   if (ve.size() == 1)
@@ -273,3 +284,4 @@ string ProteicAlphabet::getGeneric(const vector<string>& states) const
 }
 
 /******************************************************************************/
+

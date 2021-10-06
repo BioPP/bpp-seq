@@ -52,8 +52,9 @@ namespace bpp
 {
 /**
  * @brief Utilitary methods dealing with sites.
+ *
+ * This class is an alias for SymbolListTools.
  */
-
   class SiteTools :
     public SymbolListTools
   {
@@ -62,7 +63,3 @@ namespace bpp
     virtual ~SiteTools() {}
     
   };
-} // end of namespace bpp.
-
-#endif //_SITETOOLS_H_
-

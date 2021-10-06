@@ -78,15 +78,17 @@ namespace bpp
      * @brief Build an Alphabet object according to options.
      *
      * Options used are:
-     * - alphabet = [DNA|RNA|Protein], the alphabet type to use.
-     *            = [DNA|RNA|Protein](length=n) a word-alphabet of
-     *                 words with length n
-     *            = [EchinodermMitochondrialCodonAlphabet
-     *                   | InvertebrateMitochondrialCodonAlphabet
-     *                   | InvertebrateMitochondrialCodonAlphabet
-     *                   | StandardCodonAlphabet
-     *                   | VertebrateMitochondrialCodonAlphabet]([alphn=NA|RNA])
-     *                  a codon-alphabet
+     * @verbatim
+      - alphabet = [DNA|RNA|Protein], the alphabet type to use.
+                 = [DNA|RNA|Protein](length=n) a word-alphabet of
+                      words with length n
+                 = [EchinodermMitochondrialCodonAlphabet
+                        | InvertebrateMitochondrialCodonAlphabet
+                        | InvertebrateMitochondrialCodonAlphabet
+                        | StandardCodonAlphabet
+                        | VertebrateMitochondrialCodonAlphabet]([alphn=NA|RNA])
+                       a codon-alphabet
+     @endverbatim
      *
      * @param params  The attribute map where options may be found.
      * @param suffix  A suffix to be applied to each attribute name.
@@ -244,6 +246,31 @@ namespace bpp
       bool suffixIsOptional = true,
       bool verbose = true,
       int warn = 1);
+
+    /**
+     * @brief Retrieves selected sequences (by name).
+     *
+     * This method works on the input container and discard sequences not present in the selection.
+     *
+     * Recognized options are:
+     * - sequence.keep_names = [ all | name1,...,nameN ].
+     * - sequence.remove_names = [ none | name1,...,nameN ].
+     *
+     * @param allSequences The sequence container from which sequences should be filtered.
+     * @param params   The attribute map where options may be found.
+     * @param suffix   A suffix to be applied to each attribute name.
+     * @param suffixIsOptional Tell if the suffix is absolutely required.
+     * @param verbose Print some info to the 'message' output stream.
+     * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
+     */
+    static void restrictSelectedSequencesByName(
+      SequenceContainer& allSequences,
+      std::map<std::string, std::string>& params,
+      std::string suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
+
 
     /**
      * @brief Retrieves sites suitable for the analysis.
