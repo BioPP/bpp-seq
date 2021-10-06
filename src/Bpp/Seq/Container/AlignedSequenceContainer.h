@@ -195,7 +195,8 @@ namespace bpp
 
     void addSequence(const Sequence& sequence, bool checkName = true);
     void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
-    /** @} */
+
+/** @} */
     
   
   protected:
