@@ -5,37 +5,37 @@
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-  This software is a computer program whose purpose is to provide classes
-  for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-  As a counterpart to the access to the source code and  rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability.
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-  In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and,  more generally, to use and operate it in the
-  same conditions as regards security.
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include "VectorSiteContainer.h"
 
@@ -57,21 +57,24 @@ VectorSiteContainer::VectorSiteContainer(
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(alpha)
 {
-  if (vs.size() == 0) throw Exception("VectorSiteContainer::VectorSiteContainer. Empty site set.");
+  if (vs.size() == 0)
+    throw Exception("VectorSiteContainer::VectorSiteContainer. Empty site set.");
 
-  size_t nbSeq=vs[0]->size();
-  
+  size_t nbSeq = vs[0]->size();
+
   // Seq names and comments:
-  
+
   for (size_t i = 0; i < nbSeq; i++)
+  {
     VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", alpha)), "Seq_" + TextTools::toString(i));
+  }
 
   // Now try to add each site:
   for (size_t i = 0; i < vs.size(); i++)
   {
     if (!dynamic_cast<const Site*>(vs[i]))
       throw Exception("VectorSiteContainer::VectorSiteContainer : Not a Site in position " + TextTools::toString(i));
-    
+
     addSite(dynamic_cast<const Site&>(*vs[i]), checkPositions); // This may throw an exception if position argument already exists or its size is not valid.
   }
 }
@@ -84,14 +87,17 @@ VectorSiteContainer::VectorSiteContainer(
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(alpha)
 {
-  if (vs.size() == 0) throw Exception("VectorSiteContainer::VectorSiteContainer. Empty site set.");
+  if (vs.size() == 0)
+    throw Exception("VectorSiteContainer::VectorSiteContainer. Empty site set.");
 
-  size_t nbSeq=vs[0]->size();
-  
+  size_t nbSeq = vs[0]->size();
+
   // Seq names and comments:
-  
+
   for (size_t i = 0; i < nbSeq; i++)
+  {
     VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", alpha)), "Seq_" + TextTools::toString(i));
+  }
 
   // Now try to add each site:
   for (size_t i = 0; i < vs.size(); i++)
@@ -109,7 +115,9 @@ VectorSiteContainer::VectorSiteContainer(size_t size, const Alphabet* alpha) :
 {
   // Seq names and comments:
   for (size_t i = 0; i < size; i++)
+  {
     VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", alpha)), "Seq_" + TextTools::toString(i));
+  }
 }
 
 /******************************************************************************/
@@ -121,7 +129,9 @@ VectorSiteContainer::VectorSiteContainer(const std::vector<std::string>& names, 
 {
   // Seq names and comments:
   for (auto i : names)
+  {
     VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence(i, "", alpha)), i);
+  }
 }
 
 /******************************************************************************/
@@ -165,7 +175,7 @@ VectorSiteContainer::VectorSiteContainer(const SiteContainer& sc) :
 /******************************************************************************/
 
 VectorSiteContainer::VectorSiteContainer(const OrderedSequenceContainer& osc) :
-  VectorPositionedContainer<Site>(), 
+  VectorPositionedContainer<Site>(),
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(osc)
 {
@@ -194,33 +204,33 @@ VectorSiteContainer::VectorSiteContainer(const SequenceContainer& sc) :
 /******************************************************************************/
 
 VectorSiteContainer::VectorSiteContainer(const AlignedValuesContainer& avc) :
-  VectorPositionedContainer<Site>(), 
+  VectorPositionedContainer<Site>(),
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(avc.getAlphabet())
 {
-  const Alphabet* alpha=avc.getAlphabet();
+  const Alphabet* alpha = avc.getAlphabet();
 
   if (avc.getNumberOfSites() == 0)
     throw Exception("VectorSiteContainer::VectorSiteContainer(AlignedValuesContainer): Empty site set.");
 
-  size_t nbSeq=avc.getNumberOfSequences();
-  
+  size_t nbSeq = avc.getNumberOfSequences();
+
   // Seq names and comments:
-  
+
   for (size_t i = 0; i < nbSeq; i++)
   {
     std::shared_ptr<Sequence> ps(new BasicSequence(avc.getName(i), "", alpha));
-    
+
     VectorMappedContainer<Sequence>::appendObject(ps, avc.getName(i));
   }
-  
+
   // Now try to add each site:
   for (size_t i = 0; i < avc.getNumberOfSites(); i++)
   {
     if (!dynamic_cast<const Site*>(&avc.getSymbolListSite(i)))
       throw Exception("VectorSiteContainer::VectorSiteContainer(AlignedValuesContainer) : Not a Site in position " + TextTools::toString(i));
-    
-    addSite(dynamic_cast<const Site&>(avc.getSymbolListSite(i))); 
+
+    addSite(dynamic_cast<const Site&>(avc.getSymbolListSite(i)));
   }
 }
 
@@ -323,7 +333,7 @@ void VectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositi
 void VectorSiteContainer::addSite(const Site& site, bool checkPositions)
 {
   // Check size:
-  if (getNumberOfSequences()!=0 && (site.size() != getNumberOfSequences()))
+  if (getNumberOfSequences() != 0 && (site.size() != getNumberOfSequences()))
     throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
 
   // New site's alphabet and site container's alphabet matching verification
@@ -341,12 +351,14 @@ void VectorSiteContainer::addSite(const Site& site, bool checkPositions)
         throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
     }
   }
-  
+
   VectorPositionedContainer<Site>::appendObject(shared_ptr<Site>(site.clone()));
-  
-  if (getNumberOfSequences()==0)
+
+  if (getNumberOfSequences() == 0)
     for (size_t i = 0; i < site.size(); i++)
+    {
       VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", getAlphabet())), "Seq_" + TextTools::toString(i));
+    }
 }
 
 /******************************************************************************/
@@ -354,7 +366,7 @@ void VectorSiteContainer::addSite(const Site& site, bool checkPositions)
 void VectorSiteContainer::addSite(const Site& site, int position, bool checkPositions)
 {
   // Check size:
-  if (getNumberOfSequences()!=0 && (site.size() != getNumberOfSequences()))
+  if (getNumberOfSequences() != 0 && (site.size() != getNumberOfSequences()))
     throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", &site);
 
   // New site's alphabet and site container's alphabet matching verification
@@ -371,14 +383,16 @@ void VectorSiteContainer::addSite(const Site& site, int position, bool checkPosi
         throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
     }
   }
-  
+
   shared_ptr<Site> nsite(shared_ptr<Site>(site.clone()));
   nsite->setPosition(position);
   VectorPositionedContainer<Site>::appendObject(nsite);
-  
-  if (getNumberOfSequences()==0)
+
+  if (getNumberOfSequences() == 0)
     for (size_t i = 0; i < site.size(); i++)
+    {
       VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", getAlphabet())), "Seq_" + TextTools::toString(i));
+    }
 }
 
 /******************************************************************************/
@@ -409,7 +423,7 @@ void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool check
         throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
     }
   }
-  
+
   VectorPositionedContainer<Site>::insertObject(shared_ptr<Site>(site.clone()), siteIndex);
 }
 
@@ -451,8 +465,10 @@ void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, int positi
 
 void VectorSiteContainer::reindexSites()
 {
-  for (size_t i=0; i<getNumberOfSites(); i++)
-    getSite(i).setPosition((int)i+1);
+  for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
+    getSite(i).setPosition((int)i + 1);
+  }
 }
 
 /******************************************************************************/
@@ -461,7 +477,9 @@ Vint VectorSiteContainer::getSitePositions() const
 {
   Vint positions(getNumberOfSites());
   for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
     positions[i] = getSite(i).getPosition();
+  }
 
   return positions;
 }
@@ -471,9 +489,11 @@ void VectorSiteContainer::setSitePositions(Vint vPositions)
 {
   if (vPositions.size() != getNumberOfSites())
     throw BadSizeException("VectorSiteContainer::setSitePositions bad size of positions vector", vPositions.size(), getNumberOfSites());
-  
+
   for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
     getSite(i).setPosition(vPositions[i]);
+  }
 }
 
 /******************************************************************************/
@@ -493,7 +513,7 @@ const Sequence& VectorSiteContainer::getSequence(size_t i) const
 
   shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(VectorMappedContainer<Sequence>::getObjectName(i), sequence, VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet())));
 
-  VectorMappedContainer<Sequence>::addObject_(ns,i,ns->getName(), false);
+  VectorMappedContainer<Sequence>::addObject_(ns, i, ns->getName(), false);
 
   return *ns;
 }
@@ -527,7 +547,7 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
   if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("VectorSiteContainer::setSequence", getAlphabet(), sequence.getAlphabet());
 
-  const string& sname=sequence.getName();
+  const string& sname = sequence.getName();
 
   // If the container has only one sequence, we set the size to the size of this sequence:
   if (getNumberOfSequences() == 1)
@@ -539,19 +559,19 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
   {
     if (sequence.size() != getNumberOfSites())
       throw SequenceException("VectorSiteContainer::setSequence. Sequence has not the appropriate length.", &sequence);
-  
+
     if (checkNames)
     {
-      if (VectorMappedContainer<Sequence>::hasObject(sname) && VectorMappedContainer<Sequence>::getObjectPosition(sname)!=pos)
+      if (VectorMappedContainer<Sequence>::hasObject(sname) && VectorMappedContainer<Sequence>::getObjectPosition(sname) != pos)
         throw SequenceException("VectorSiteContainer::setSequence. Name already exists in another sequence in container.", &sequence);
     }
-  
+
     // Update name:
-    
+
     VectorMappedContainer<Sequence>::setObjectName(pos, sname);
     VectorMappedContainer<Sequence>::getObject(pos)->setName(sname);
   }
-  
+
   // Update elements at each site:
   for (size_t i = 0; i < getNumberOfSites(); i++)
   {
@@ -567,7 +587,7 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
 Sequence* VectorSiteContainer::removeSequence(size_t i)
 {
   getSequence(i);
-  
+
   return VectorMappedContainer<Sequence>::getObject(i).get();
 }
 
@@ -595,8 +615,8 @@ void VectorSiteContainer::addSequence(const Sequence& sequence, bool checkNames)
   if (sequence.size() != getNumberOfSites())
     throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length: " + TextTools::toString(sequence.size()) + ", should be " + TextTools::toString(getNumberOfSites()) + ".", &sequence);
 
-  const string& sname=sequence.getName();
-  
+  const string& sname = sequence.getName();
+
   if (checkNames && VectorMappedContainer<Sequence>::hasObject(sname))
     throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
 
@@ -604,17 +624,18 @@ void VectorSiteContainer::addSequence(const Sequence& sequence, bool checkNames)
 
   // Update elements at each site:
   for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
     getSite(i).addElement(sequence.getValue(i));
-
+  }
 }
-    
+
 /******************************************************************************/
 
 void VectorSiteContainer::addSequence(const Sequence& sequence, size_t pos, bool checkNames)
 {
   if (pos >= getNumberOfSequences())
     throw IndexOutOfBoundsException("VectorSiteContainer::addSequence.", pos, 0, getNumberOfSequences() - 1);
-  
+
   if (sequence.size() != getNumberOfSites())
     throw SequenceNotAlignedException("VectorSiteContainer::addSequence", &sequence);
 
@@ -622,16 +643,18 @@ void VectorSiteContainer::addSequence(const Sequence& sequence, size_t pos, bool
   if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("VectorSiteContainer::addSequence", getAlphabet(), sequence.getAlphabet());
 
-  const string& sname=sequence.getName();
-  
+  const string& sname = sequence.getName();
+
   if (checkNames && VectorMappedContainer<Sequence>::hasObject(sname))
     throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
 
   VectorMappedContainer<Sequence>::insertObject(std::shared_ptr<Sequence>(new BasicSequence(sname, "", sequence.getComments(), getAlphabet())), pos, sname);
-  
+
   // Update elements at each site:
   for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
     getSite(i).addElement(pos, sequence.getValue(i));
+  }
 }
 
 /******************************************************************************/
@@ -648,10 +671,12 @@ void VectorSiteContainer::realloc(size_t n)
 {
   clear();
   Site s(getAlphabet());
-    
-  for (size_t i=0;i<n;i++)
-    addSite(s,false);
-    
+
+  for (size_t i = 0; i < n; i++)
+  {
+    addSite(s, false);
+  }
+
   reindexSites();
 }
 
@@ -672,4 +697,3 @@ VectorSiteContainer* VectorSiteContainer::createEmptyContainer() const
 }
 
 /******************************************************************************/
-

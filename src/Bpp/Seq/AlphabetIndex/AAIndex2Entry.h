@@ -78,7 +78,7 @@ public:
   AAIndex2Entry& operator=(const AAIndex2Entry& index)
   {
     ProteicAlphabetIndex2::operator=(*this);
-    
+
     property_ = index.property_;
     sym_ = index.sym_;
     return *this;
@@ -107,9 +107,7 @@ public:
   LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(property_); }
 
   bool isSymmetric() const { return sym_; }
-
 };
 } // end of namespace bpp.
 
-#endif // _AAINDEX2ENTRY_H_
-
+#endif// _AAINDEX2ENTRY_H_

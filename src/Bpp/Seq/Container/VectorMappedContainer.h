@@ -62,251 +62,245 @@ namespace bpp
  *
  */
 
-  template<class T>
-  class VectorMappedContainer :
-    virtual public PositionedNamedContainer<T>,
-    virtual public MappedNamedContainer<T>,
-    virtual public VectorPositionedContainer<T>
+template<class T>
+class VectorMappedContainer :
+  virtual public PositionedNamedContainer<T>,
+  virtual public MappedNamedContainer<T>,
+  virtual public VectorPositionedContainer<T>
+{
+private:
+  /*
+   * @brief vector of the names, in same order as objects
+   *
+   */
+
+  std::vector<std::string> vNames_;
+
+  /*
+   * @brief map <string, size_t> for the positions of the names
+   *
+   */
+
+  std::map<std::string, size_t> mNames_;
+
+public:
+  VectorMappedContainer() :
+    MappedNamedContainer<T>(),
+    VectorPositionedContainer<T>(),
+    vNames_(),
+    mNames_()
+  {}
+
+
+  VectorMappedContainer(const VectorMappedContainer& vsc) :
+    MappedNamedContainer<T>(vsc),
+    VectorPositionedContainer<T>(vsc),
+    vNames_(vsc.vNames_),
+    mNames_(vsc.mNames_)
+  {}
+
+
+  VectorMappedContainer<T>& operator=(const VectorMappedContainer& vsc)
   {
-  private:
-    /*
-     * @brief vector of the names, in same order as objects
-     *
-     */
-    
-    std::vector<std::string> vNames_;
+    MappedNamedContainer<T>::operator=(vsc);
+    VectorPositionedContainer<T>::operator=(vsc);
+    vNames_ = vsc.vNames_;
+    mNames_ = vsc.mNames_;
 
-    /*
-     * @brief map <string, size_t> for the positions of the names
-     *
-     */
-    
-    std::map<std::string, size_t> mNames_;
+    return *this;
+  }
 
-  public:
-    VectorMappedContainer() :
-      MappedNamedContainer<T>(),
-      VectorPositionedContainer<T>(),
-      vNames_(),
-      mNames_()
+public:
+  /**
+   * @name The Clonable interface.
+   *
+   * @{
+   */
+  VectorMappedContainer<T>* clone() const
+  {
+    return new VectorMappedContainer(*this);
+  }
+
+  /** @} */
+
+  /*
+   * @brief size of the position vector
+   * !! may be different than the actual number of objects
+   *
+   */
+  size_t getSize() const
+  {
+    return VectorPositionedContainer<T>::getSize();
+  }
+
+  /*
+   * @brief real number of objects
+   *
+   */
+  size_t getNumberOfObjects() const
+  {
+    return MappedNamedContainer<T>::getSize();
+  }
+
+  size_t getObjectPosition(const std::string& name) const
+  {
+    auto it = mNames_.find(name);
+    if (it == mNames_.end())
+      throw Exception("VectorMappedContainer::getObjectPosition : Not found object with name " + name);
+
+    return it->second;
+  }
+
+  std::string getObjectName(size_t objectIndex) const
+  {
+    if (objectIndex >= getSize())
+      throw IndexOutOfBoundsException("VectorMappedContainer::getObjectName.", objectIndex, 0, getSize() - 1);
+
+    return vNames_[objectIndex];
+  }
+
+  const std::shared_ptr<T> getObject(size_t objectIndex) const
+  {
+    return VectorPositionedContainer<T>::getObject(objectIndex);
+  }
+
+  std::shared_ptr<T> getObject(size_t objectIndex)
+  {
+    return VectorPositionedContainer<T>::getObject(objectIndex);
+  }
+
+  /**
+   * @brief Get a object.
+   *
+   * @param name The key of the object to retrieve.
+   * @return The object associated to the given key.
+   */
+  const std::shared_ptr<T> getObject(const std::string& name) const
+  {
+    return MappedNamedContainer<T>::getObject(name);
+  }
+
+  std::shared_ptr<T> getObject(const std::string& name)
+  {
+    return MappedNamedContainer<T>::getObject(name);
+  }
+
+  bool hasObject(const std::string& name) const
+  {
+    return MappedNamedContainer<T>::hasObject(name);
+  }
+
+  std::vector<std::string> getObjectsNames() const
+  {
+    return vNames_;
+  }
+
+  void setObjectsNames(const std::vector<std::string>& names)
+  {
+    if (names.size() != vNames_.size())
+      throw BadSizeException("VectorMappedContainer::setObjectsNames: bad number of new names", vNames_.size(), names.size());
+
+    mNames_.clear();
+
+    for (size_t i = 0; i < names.size(); i++)
     {
+      MappedNamedContainer<T>::changeName(vNames_[i], names[i]);
+      mNames_[names[i]] = i;
     }
 
+    vNames_ = names;
+  }
 
-    VectorMappedContainer(const VectorMappedContainer& vsc) :
-      MappedNamedContainer<T>(vsc),
-      VectorPositionedContainer<T>(vsc),
-      vNames_(vsc.vNames_),
-      mNames_(vsc.mNames_)      
-    {
-    }
-    
+  void setObjectName(size_t pos, const std::string& name)
+  {
+    MappedNamedContainer<T>::changeName(vNames_[pos], name);
+    mNames_[name] = pos;
+    vNames_[pos] = name;
+  }
 
-    VectorMappedContainer<T>& operator=(const VectorMappedContainer& vsc)
-    {
-      MappedNamedContainer<T>::operator=(vsc);
-      VectorPositionedContainer<T>::operator=(vsc);
-      vNames_=vsc.vNames_;
-      mNames_=vsc.mNames_;
-      
-      return *this;
-    }
+  using VectorPositionedContainer<T>::addObject;
+  using MappedNamedContainer<T>::addObject;
+  void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false)
+  {
+    VectorPositionedContainer<T>::addObject(object, objectIndex, check);
+    MappedNamedContainer<T>::addObject(object, name, check);
+    vNames_[objectIndex] = name;
+    mNames_[name] = objectIndex;
+  }
 
-  public:
-    /**
-     * @name The Clonable interface.
-     *
-     * @{
-     */
-    
-    VectorMappedContainer<T>* clone() const
+  using VectorPositionedContainer<T>::insertObject;
+  void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name)
+  {
+    MappedNamedContainer<T>::addObject(object, name, true);
+    VectorPositionedContainer<T>::insertObject(object, objectIndex);
+    vNames_.insert(vNames_.begin() + static_cast<std::ptrdiff_t>(objectIndex), name);
+    for (auto it : mNames_)
     {
-      return new VectorMappedContainer(*this);
-    }
-    
-    /** @} */
-
-    /*
-     * @brief size of the position vector
-     * !! may be different than the actual number of objects
-     *
-     */
-    
-    size_t getSize() const
-    {
-      return VectorPositionedContainer<T>::getSize();
+      if (it.second >= objectIndex)
+        it.second++;
     }
 
-    /*
-     * @brief real number of objects
-     *
-     */
+    mNames_[name] = objectIndex;
+  }
 
-    size_t getNumberOfObjects() const
+  using VectorPositionedContainer<T>::appendObject;
+  void appendObject(std::shared_ptr<T> object, const std::string& name, bool check = true)
+  {
+    MappedNamedContainer<T>::addObject(object, name, check);
+    VectorPositionedContainer<T>::appendObject(object);
+
+    vNames_.push_back(name);
+    mNames_[name] = vNames_.size() - 1;
+  }
+
+  std::shared_ptr<T> removeObject(size_t objectIndex)
+  {
+    std::shared_ptr<T> obj = VectorPositionedContainer<T>::removeObject(objectIndex);
+    MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
+    mNames_.erase(vNames_[objectIndex]);
+    vNames_[objectIndex] = "";
+    return obj;
+  }
+
+  using PositionedContainer<T>::deleteObject;
+  std::shared_ptr<T> deleteObject(size_t objectIndex)
+  {
+    std::shared_ptr<T> obj = VectorPositionedContainer<T>::deleteObject(objectIndex);
+    MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
+
+    mNames_.erase(vNames_[objectIndex]);
+    for (auto it : mNames_)
     {
-      return MappedNamedContainer<T>::getSize();
+      if (it.second > objectIndex)
+        it.second--;
     }
-
-    size_t getObjectPosition(const std::string& name) const
-    {
-      auto it = mNames_.find(name);
-      if (it == mNames_.end())
-        throw Exception("VectorMappedContainer::getObjectPosition : Not found object with name " + name);
-      
-      return it->second;
-    }
-
-    std::string getObjectName(size_t objectIndex) const
-    {
-      if (objectIndex >= getSize())
-        throw IndexOutOfBoundsException("VectorMappedContainer::getObjectName.", objectIndex, 0, getSize() - 1);
-
-      return vNames_[objectIndex];
-    }
-
-    const std::shared_ptr<T> getObject(size_t objectIndex) const
-    {
-      return VectorPositionedContainer<T>::getObject(objectIndex);
-    }
-
-    std::shared_ptr<T> getObject(size_t objectIndex)
-    {
-      return VectorPositionedContainer<T>::getObject(objectIndex);
-    }
-    
-    /**
-     * @brief Get a object.
-     *
-     * @param name The key of the object to retrieve.
-     * @return The object associated to the given key.
-     */
-
-    const std::shared_ptr<T> getObject(const std::string& name) const
-    {
-      return MappedNamedContainer<T>::getObject(name);
-    }
-
-    std::shared_ptr<T> getObject(const std::string& name) 
-    {
-       return MappedNamedContainer<T>::getObject(name);
-    }
-    
-    bool hasObject(const std::string& name) const
-    {
-      return MappedNamedContainer<T>::hasObject(name);
-    }
-
-    std::vector<std::string> getObjectsNames() const
-    {
-      return vNames_;
-    }
-
-    void setObjectsNames(const std::vector<std::string>& names)
-    {
-      if (names.size()!=vNames_.size())
-        throw BadSizeException("VectorMappedContainer::setObjectsNames: bad number of new names", vNames_.size(), names.size());
-
-      mNames_.clear();
-      
-      for (size_t i=0;i<names.size();i++)
-      {
-        MappedNamedContainer<T>::changeName(vNames_[i], names[i]);
-        mNames_[names[i]]=i;
-      }
-
-      vNames_=names;
-    }
-
-    void setObjectName(size_t pos, const std::string& name)
-    {
-      MappedNamedContainer<T>::changeName(vNames_[pos], name);
-      mNames_[name]=pos;
-      vNames_[pos]=name;
-     }
-
-    using VectorPositionedContainer<T>::addObject;
-    using MappedNamedContainer<T>::addObject;
-    void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false)
-    {
-      VectorPositionedContainer<T>::addObject(object, objectIndex, check);
-      MappedNamedContainer<T>::addObject(object, name, check);
-      vNames_[objectIndex]=name;
-      mNames_[name]=objectIndex;
-    }
-
-    using VectorPositionedContainer<T>::insertObject;
-    void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name)
-    {
-      MappedNamedContainer<T>::addObject(object, name, true);
-      VectorPositionedContainer<T>::insertObject(object, objectIndex);
-      vNames_.insert(vNames_.begin()+ static_cast<std::ptrdiff_t>(objectIndex), name);
-      for (auto it : mNames_)
-        if (it.second>=objectIndex)
-          it.second++;
-      
-      mNames_[name]=objectIndex;      
-    }
-
-    using VectorPositionedContainer<T>::appendObject;
-    void appendObject(std::shared_ptr<T> object, const std::string& name, bool check = true)
-    {
-      MappedNamedContainer<T>::addObject(object,name, check);
-      VectorPositionedContainer<T>::appendObject(object);
-      
-      vNames_.push_back(name);
-      mNames_[name]=vNames_.size()-1;
-    }
-
-    std::shared_ptr<T> removeObject(size_t objectIndex)
-    {
-      std::shared_ptr<T> obj= VectorPositionedContainer<T>::removeObject(objectIndex);
-      MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
-      mNames_.erase(vNames_[objectIndex]);
-      vNames_[objectIndex]="";
-      return obj;
-    }
-
-    using PositionedContainer<T>::deleteObject;
-    std::shared_ptr<T> deleteObject(size_t objectIndex)
-    {
-      std::shared_ptr<T> obj= VectorPositionedContainer<T>::deleteObject(objectIndex);
-      MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
-      
-      mNames_.erase(vNames_[objectIndex]);
-      for (auto it : mNames_)
-        if (it.second>objectIndex)
-          it.second--;
-      vNames_.erase(vNames_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
-      return obj;
-    }
+    vNames_.erase(vNames_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
+    return obj;
+  }
 
 
-    std::shared_ptr<T> removeObject(const std::string& name)
-    {
-      return removeObject(mNames_[name]);
-    }
+  std::shared_ptr<T> removeObject(const std::string& name)
+  {
+    return removeObject(mNames_[name]);
+  }
 
-    void clear()
-    {
-      MappedNamedContainer<T>::clear();
-      VectorPositionedContainer<T>::clear();
-      vNames_.clear();
-      mNames_.clear();
-    }
+  void clear()
+  {
+    MappedNamedContainer<T>::clear();
+    VectorPositionedContainer<T>::clear();
+    vNames_.clear();
+    mNames_.clear();
+  }
 
-  protected:
-
-    void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
-    {
-      VectorPositionedContainer<T>::addObject_(object, objectIndex, check);
-      MappedNamedContainer<T>::addObject_(object, name, check);
-      const_cast<std::vector<std::string>& >(vNames_)[objectIndex]=name;
-      const_cast<std::map<std::string, size_t>&>(mNames_)[name]=objectIndex;
-    }
-
-
-  };
+protected:
+  void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
+  {
+    VectorPositionedContainer<T>::addObject_(object, objectIndex, check);
+    MappedNamedContainer<T>::addObject_(object, name, check);
+    const_cast<std::vector<std::string>& >(vNames_)[objectIndex] = name;
+    const_cast<std::map<std::string, size_t>&>(mNames_)[name] = objectIndex;
+  }
+};
 } // end of namespace bpp.
 
-#endif  // VECTOR_MAPPED_CONTAINER_H_
-
+#endif// VECTOR_MAPPED_CONTAINER_H_

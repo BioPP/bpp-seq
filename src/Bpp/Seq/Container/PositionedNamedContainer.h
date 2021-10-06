@@ -56,40 +56,37 @@ namespace bpp
  *
  */
 
-  template<class T>
-  class PositionedNamedContainer :
-    private PositionedContainer<T>,
-    private NamedContainer<T>
-  {
-  public:
-    /**
-     * @name The Clonable interface.
-     *
-     * @{
-     */
-    
-    virtual PositionedNamedContainer<T>* clone() const = 0;
-    
-    /** @} */
+template<class T>
+class PositionedNamedContainer :
+  private PositionedContainer<T>,
+  private NamedContainer<T>
+{
+public:
+  /**
+   * @name The Clonable interface.
+   *
+   * @{
+   */
 
-    virtual ~PositionedNamedContainer() 
-    {
-    }
+  virtual PositionedNamedContainer<T>* clone() const = 0;
 
-  public:
-    using PositionedContainer<T>::addObject;
-    using NamedContainer<T>::addObject;
-    virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) = 0;
+  /** @} */
 
-    using PositionedContainer<T>::insertObject;
-    virtual void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name) = 0;
+  virtual ~PositionedNamedContainer()
+  {}
 
-    virtual size_t getObjectPosition(const std::string& name) const = 0;
+public:
+  using PositionedContainer<T>::addObject;
+  using NamedContainer<T>::addObject;
+  virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) = 0;
 
-    virtual std::string getObjectName(size_t objectIndex) const = 0;
-    
-  };
+  using PositionedContainer<T>::insertObject;
+  virtual void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name) = 0;
+
+  virtual size_t getObjectPosition(const std::string& name) const = 0;
+
+  virtual std::string getObjectName(size_t objectIndex) const = 0;
+};
 } // end of namespace bpp.
 
-#endif  // POSITIONED_NAMED_CONTAINER_H_
-
+#endif// POSITIONED_NAMED_CONTAINER_H_

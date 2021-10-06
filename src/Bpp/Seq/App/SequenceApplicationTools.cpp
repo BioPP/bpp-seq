@@ -85,7 +85,7 @@ Alphabet* SequenceApplicationTools::getAlphabet(
   int warn)
 {
   Alphabet* chars = 0;
-  
+
   string alphtt = ApplicationTools::getStringParameter("alphabet", params, "DNA", suffix, suffixIsOptional, warn);
 
   map<string, string> args;
@@ -97,10 +97,10 @@ Alphabet* SequenceApplicationTools::getAlphabet(
   {
     if (args.find("letter") != args.end())
     {
-      args["alphabet"]=args["letter"];
-      
-      Alphabet* inAlphabet = SequenceApplicationTools::getAlphabet(args, suffix, suffixIsOptional, false, allowGeneric, warn+1);
-      
+      args["alphabet"] = args["letter"];
+
+      Alphabet* inAlphabet = SequenceApplicationTools::getAlphabet(args, suffix, suffixIsOptional, false, allowGeneric, warn + 1);
+
       if (args.find("length") == args.end())
         throw Exception("Missing length parameter for Word alphabet");
 
@@ -115,8 +115,8 @@ Alphabet* SequenceApplicationTools::getAlphabet(
 
       while (args.find("alphabet" + TextTools::toString(indAlph)) != args.end())
       {
-        map<string,string> args2;
-        args2["alphabet"]=args["alphabet" + TextTools::toString(indAlph)];
+        map<string, string> args2;
+        args2["alphabet"] = args["alphabet" + TextTools::toString(indAlph)];
 
         vAlph.push_back(SequenceApplicationTools::getAlphabet(args2, suffix, suffixIsOptional, verbose, allowGeneric, warn));
         indAlph++;
@@ -133,8 +133,8 @@ Alphabet* SequenceApplicationTools::getAlphabet(
     if (args.find("letter") == args.end())
       throw Exception("Missing letter alphabet for RNY alphabet");
 
-    args["alphabet"]=args["letter"];
-      
+    args["alphabet"] = args["letter"];
+
     Alphabet* inAlphabet = SequenceApplicationTools::getAlphabet(args, suffix, suffixIsOptional, verbose, allowGeneric, warn);
 
     if (AlphabetTools::isNucleicAlphabet(inAlphabet))
@@ -151,9 +151,9 @@ Alphabet* SequenceApplicationTools::getAlphabet(
   {
     vector<string> vWord = ApplicationTools::getVectorParameter<string>("words", args, ',', "()");
 
-    if (vWord.size()==0)
+    if (vWord.size() == 0)
       throw Exception("SequenceApplicationTools::getAlphabet. 'words' list is missing or empty for Lexicon alphabet");
-    
+
     chars = new LexicalAlphabet(vWord);
   }
   else if (alphabet == "DNA")
@@ -280,9 +280,9 @@ SequenceContainer* SequenceApplicationTools::getSequenceContainer(
   }
   SequenceContainer* sequences = iSeq->readSequences(sequenceFilePath, alpha);
 
-  //Apply sequence selection:
+  // Apply sequence selection:
   restrictSelectedSequencesByName(*sequences, params, suffix, suffixIsOptional, verbose, warn);
-  
+
   return sequences;
 }
 
@@ -352,7 +352,7 @@ map<size_t, SiteContainer*> SequenceApplicationTools::getSiteContainers(
       if (args.find("remove_stop_codons") != args.end())
         args2["input.sequence.remove_stop_codons"] = args["remove_stop_codons"];
 
-      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (dynamic_cast<const CodonAlphabet*>(alpha)?0:1));
+      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (dynamic_cast<const CodonAlphabet*>(alpha) ? 0 : 1));
 
       ApplicationTools::displayMessage("");
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
@@ -438,7 +438,7 @@ map<size_t, AlignedValuesContainer*> SequenceApplicationTools::getAlignedContain
       if (args.find("remove_stop_codons") != args.end())
         args2["input.sequence.remove_stop_codons"] = args["remove_stop_codons"];
 
-      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (dynamic_cast<const CodonAlphabet*>(alpha)?0:1));
+      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (dynamic_cast<const CodonAlphabet*>(alpha) ? 0 : 1));
 
       ApplicationTools::displayMessage("");
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
@@ -454,8 +454,7 @@ map<size_t, AlignedValuesContainer*> SequenceApplicationTools::getAlignedContain
         delete mCont[num];
       }
       mCont[num] = vsC2;
-   }
-    
+    }
   }
   return mCont;
 }
@@ -488,11 +487,11 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   const SiteContainer* seqCont = iAln->readAlignment(sequenceFilePath, alpha2);
 
   VectorSiteContainer* sites2 = new VectorSiteContainer(*seqCont);
-  
+
   delete seqCont;
-  
+
   VectorSiteContainer* sites;
-  
+
   if (AlphabetTools::isRNYAlphabet(alpha))
   {
     const SequenceTools ST;
@@ -500,13 +499,13 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
     for (unsigned int i = 0; i < sites2->getNumberOfSequences(); i++)
     {
       sites->addSequence(*(ST.RNYslice(sites2->getSequence(i))));
-     }
+    }
     delete sites2;
   }
   else
     sites = sites2;
-  
-  
+
+
   // Look for site selection:
   if (iAln->getFormatName() == "MASE file")
   {
@@ -543,17 +542,17 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
     VectorSiteContainer* selectedSites = 0;
     if (siteSet != "none")
     {
-      if(siteSet[0]=='(')
-        siteSet=siteSet.substr(1,siteSet.size()-2);
+      if (siteSet[0] == '(')
+        siteSet = siteSet.substr(1, siteSet.size() - 2);
 
       vector<size_t> vSite;
       try
       {
-        vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet,",",":");
+        vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet, ",", ":");
         for (size_t i = 0; i < vSite1.size(); ++i)
         {
-          int x = (vSite1[i] >= 0 ? vSite1[i] : static_cast<int>(nbSites) + vSite1[i]+ 1);
-          if (x<=(int)nbSites)
+          int x = (vSite1[i] >= 0 ? vSite1[i] : static_cast<int>(nbSites) + vSite1[i] + 1);
+          if (x <= (int)nbSites)
           {
             if (x > 0)
               vSite.push_back(static_cast<size_t>(x - 1));
@@ -604,7 +603,7 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
       sites = selectedSites;
     }
   }
-  //Apply sequence selection:
+  // Apply sequence selection:
   restrictSelectedSequencesByName(*sites, params, suffix, suffixIsOptional, verbose, warn);
 
   return sites;
@@ -625,19 +624,20 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   unique_ptr<IAlignment> iAln;
   unique_ptr<IProbabilisticAlignment> iProbAln;
 
-  try{
+  try
+  {
     iAln.reset(bppoReader.read(sequenceFormat));
   }
   catch (Exception& e)
   {
     iProbAln.reset(bppoReader.readProbabilistic(sequenceFormat));
   }
-  
+
   map<string, string> args(bppoReader.getUnparsedArguments());
   if (verbose)
   {
     ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
-    ApplicationTools::displayResult("Sequence format " + suffix, iAln?iAln->getFormatName():iProbAln->getFormatName());
+    ApplicationTools::displayResult("Sequence format " + suffix, iAln ? iAln->getFormatName() : iProbAln->getFormatName());
   }
 
   const Alphabet* alpha2;
@@ -646,29 +646,29 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   else
     alpha2 = alpha;
 
-  AlignedValuesContainer* avc2 = iAln?dynamic_cast<AlignedValuesContainer*>(iAln->readAlignment(sequenceFilePath, alpha2)):dynamic_cast<AlignedValuesContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2));
+  AlignedValuesContainer* avc2 = iAln ? dynamic_cast<AlignedValuesContainer*>(iAln->readAlignment(sequenceFilePath, alpha2)) : dynamic_cast<AlignedValuesContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2));
 
   VectorSiteContainer* sites2;
   AlignedValuesContainer* avc;
 
   try
   {
-    sites2=new VectorSiteContainer(*avc2);
+    sites2 = new VectorSiteContainer(*avc2);
   }
   catch (Exception& e)
   {
-    sites2=0;
+    sites2 = 0;
   }
 
   if (sites2)
   {
     VectorSiteContainer* sites;
-    
+
     /// Look for RNY translation
     if (AlphabetTools::isRNYAlphabet(alpha))
     {
       sites = new VectorSiteContainer(alpha);
-      
+
       const SequenceTools ST;
       for (auto name : sites2->getSequencesNames())
       {
@@ -706,33 +706,33 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
         sites = selectedSites;
       }
     }
-    avc=sites;
+    avc = sites;
   }
   else
-    avc = new VectorProbabilisticSiteContainer(*avc2); 
+    avc = new VectorProbabilisticSiteContainer(*avc2);
 
   delete avc2;
-  
+
   // getting site set:
   size_t nbSites = avc->getNumberOfSites();
-  
+
   string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
 
   AlignedValuesContainer* selectedSites = 0;
   if (siteSet != "none")
   {
-    if(siteSet[0]=='(')
-      siteSet=siteSet.substr(1,siteSet.size()-2);
-    
+    if (siteSet[0] == '(')
+      siteSet = siteSet.substr(1, siteSet.size() - 2);
+
     vector<size_t> vSite;
     try
     {
-      vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet,",",":");
-      
+      vector<int> vSite1 = NumCalcApplicationTools::seqFromString(siteSet, ",", ":");
+
       for (auto ps : vSite1)
       {
         int x = (ps >= 0 ? ps : static_cast<int>(nbSites) + ps + 1);
-        if (x<=(int)nbSites)
+        if (x <= (int)nbSites)
         {
           if (x > 0)
             vSite.push_back(static_cast<size_t>(x - 1));
@@ -754,27 +754,27 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
       {
         size_t n = ApplicationTools::getParameter<size_t>("n", selArgs, nbSites, "", true, warn + 1);
         bool replace = ApplicationTools::getBooleanParameter("replace", selArgs, false, "", true, warn + 1);
-        
+
         vSite.resize(n);
         vector<size_t> vPos;
         for (size_t p = 0; p < nbSites; ++p)
         {
           vPos.push_back(p);
         }
-        
+
         RandomTools::getSample(vPos, vSite, replace);
-        
+
         selectedSites = SiteContainerTools::getSelectedSites(*avc, vSite);
         if (replace)
           selectedSites->reindexSites();
       }
-        else
-          throw Exception("Unknown site selection description: " + siteSet);
+      else
+        throw Exception("Unknown site selection description: " + siteSet);
     }
-    
+
     if (verbose)
       ApplicationTools::displayResult("Selected sites", TextTools::toString(siteSet));
-    
+
     if (selectedSites && (selectedSites->getNumberOfSites() == 0))
     {
       throw Exception("Site set '" + siteSet + "' is empty.");
@@ -784,6 +784,49 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   }
 
   return avc;
+}
+
+/******************************************************************************/
+
+void SequenceApplicationTools::restrictSelectedSequencesByName(
+  SequenceContainer& allSequences,
+  const map<std::string, std::string>& params,
+  string suffix,
+  bool suffixIsOptional,
+  bool verbose,
+  int warn)
+{
+  string optionKeep = ApplicationTools::getStringParameter("input.sequence.keep_names", params, "all", suffix, suffixIsOptional, warn);
+  if (optionKeep != "all") {
+    vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.keep_names", params, ',', optionKeep, suffix, suffixIsOptional, warn);
+    sort(selection.begin(), selection.end());
+    vector<string> seqNames = allSequences.getSequencesNames();
+    for (auto name: seqNames) {
+      if (! binary_search(selection.begin(), selection.end(), name)) {
+        delete allSequences.removeSequence(name);
+        if (verbose) {
+          ApplicationTools::displayResult("Discard sequence", name);
+        }
+      }
+    }
+  }
+  string optionRemove = ApplicationTools::getStringParameter("input.sequence.remove_names", params, "none", suffix, suffixIsOptional, warn);
+  if (optionRemove != "none") {
+    vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.remove_names", params, ',', optionRemove, suffix, suffixIsOptional, warn);
+    vector<string> seqNames = allSequences.getSequencesNames();
+    sort(seqNames.begin(), seqNames.end());
+    for (auto name: selection) {
+      if (binary_search(seqNames.begin(), seqNames.end(), name)) {
+        delete allSequences.removeSequence(name);
+        if (verbose) {
+          ApplicationTools::displayResult("Discard sequence", name);
+        }
+      } 
+      else {
+        throw SequenceNotFoundException("No sequence with the specified name was found.", name);
+      }
+    }
+  }
 }
 
 /******************************************************************************/
@@ -801,36 +844,36 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
   AlignedValuesContainer* sitesToAnalyse;
   AlignedValuesContainer* sitesToAnalyse2;
 
-  const VectorSiteContainer* vsc=dynamic_cast<const VectorSiteContainer*>(&allSites);
-  const VectorProbabilisticSiteContainer* vpsc=dynamic_cast<const VectorProbabilisticSiteContainer*>(&allSites);
+  const VectorSiteContainer* vsc = dynamic_cast<const VectorSiteContainer*>(&allSites);
+  const VectorProbabilisticSiteContainer* vpsc = dynamic_cast<const VectorProbabilisticSiteContainer*>(&allSites);
 
   if (!vsc && !vpsc)
     throw Exception("SequenceApplicationTools::getSitesToAnalyse: unknown data container.");
-  
-  size_t numSeq=allSites.getNumberOfSequences();
+
+  size_t numSeq = allSites.getNumberOfSequences();
 
   string option = ApplicationTools::getStringParameter("input.sequence.sites_to_use", params, "complete", suffix, suffixIsOptional, warn);
   if (verbose)
     ApplicationTools::displayResult("Sites to use", option);
-  
+
   if (option == "all")
   {
-    sitesToAnalyse = vsc?dynamic_cast<AlignedValuesContainer*>(new VectorSiteContainer(*vsc)):dynamic_cast<AlignedValuesContainer*>(new VectorProbabilisticSiteContainer(*vpsc));
+    sitesToAnalyse = vsc ? dynamic_cast<AlignedValuesContainer*>(new VectorSiteContainer(*vsc)) : dynamic_cast<AlignedValuesContainer*>(new VectorProbabilisticSiteContainer(*vpsc));
 
-    size_t nbSites=sitesToAnalyse->getNumberOfSites();
+    size_t nbSites = sitesToAnalyse->getNumberOfSites();
 
     string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional, warn);
 
-    double gapCount=0;
-    
+    double gapCount = 0;
+
     if (maxGapOption[maxGapOption.size() - 1] == '%')
     {
-      double gapFreq = TextTools::toDouble(maxGapOption.substr(0, maxGapOption.size() - 1))/100;
-      gapCount = gapFreq*(int)numSeq;
+      double gapFreq = TextTools::toDouble(maxGapOption.substr(0, maxGapOption.size() - 1)) / 100;
+      gapCount = gapFreq * (int)numSeq;
     }
     else
-      gapCount = TextTools::to<int>(maxGapOption)-NumConstants::TINY();
-      
+      gapCount = TextTools::to<int>(maxGapOption) - NumConstants::TINY();
+
     if (gapCount < (double)numSeq  - NumConstants::TINY())
     {
       if (verbose)
@@ -849,18 +892,18 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
 
     string maxUnresolvedOption = ApplicationTools::getStringParameter("input.sequence.max_unresolved_allowed", params, "100%", suffix, suffixIsOptional, warn);
 
-    double unresCount=0;
+    double unresCount = 0;
 
     if (maxUnresolvedOption[maxUnresolvedOption.size() - 1] == '%')
     {
-      double unresFreq = TextTools::toDouble(maxUnresolvedOption.substr(0, maxUnresolvedOption.size() - 1))/100;
-      unresCount = unresFreq*(int)numSeq;
+      double unresFreq = TextTools::toDouble(maxUnresolvedOption.substr(0, maxUnresolvedOption.size() - 1)) / 100;
+      unresCount = unresFreq * (int)numSeq;
     }
     else
-      unresCount = TextTools::to<double>(maxUnresolvedOption)-NumConstants::TINY();
+      unresCount = TextTools::to<double>(maxUnresolvedOption) - NumConstants::TINY();
 
-    nbSites=sitesToAnalyse->getNumberOfSites();
-    
+    nbSites = sitesToAnalyse->getNumberOfSites();
+
     if (unresCount < (double)numSeq - NumConstants::TINY())
     {
       if (verbose)
@@ -896,7 +939,7 @@ AlignedValuesContainer* SequenceApplicationTools::getSitesToAnalyse(
     throw Exception("Option '" + option + "' unknown in parameter 'sequence.sites_to_use'.");
   }
 
-  vsc=dynamic_cast<const VectorSiteContainer*>(sitesToAnalyse);
+  vsc = dynamic_cast<const VectorSiteContainer*>(sitesToAnalyse);
 
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(sitesToAnalyse->getAlphabet());
   if (vsc && ca)

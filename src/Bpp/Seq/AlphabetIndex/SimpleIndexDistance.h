@@ -103,7 +103,7 @@ public:
 
   Matrix<double>* getIndexMatrix() const
   {
-    size_t n = index_->getAlphabet()->getSize(); //We should change to "supported ints" there...
+    size_t n = index_->getAlphabet()->getSize(); // We should change to "supported ints" there...
     RowMatrix<double>* m = new RowMatrix<double>(n, n);
     for (size_t i = 0; i < n; ++i)
     {
@@ -129,5 +129,4 @@ public:
 };
 } // end of namespace bpp.
 
-#endif // _SIMPLEINDEXDISTANCE_H_
-
+#endif// _SIMPLEINDEXDISTANCE_H_

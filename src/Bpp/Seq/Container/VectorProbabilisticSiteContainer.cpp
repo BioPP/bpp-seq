@@ -35,7 +35,7 @@
 
    The fact that you are presently reading this means that you have had
    knowledge of the CeCILL license and that you accept its terms.
-*/
+ */
 
 #include "VectorProbabilisticSiteContainer.h"
 
@@ -46,13 +46,12 @@ using namespace std;
 
 /********************************************************************************/
 
-VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const Alphabet * alpha) :
+VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const Alphabet* alpha) :
   VectorPositionedContainer<ProbabilisticSite>(),
   VectorMappedContainer<BasicProbabilisticSequence>(),
   AbstractValuesContainer(alpha),
   AbstractProbabilisticSequenceContainer(alpha)
-{
-}
+{}
 
 /** Class constructors: *******************************************************/
 
@@ -65,22 +64,24 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   AbstractValuesContainer(alpha),
   AbstractProbabilisticSequenceContainer(alpha)
 {
-  size_t nRow=alpha->getSize();
+  size_t nRow = alpha->getSize();
   if (vs.size() == 0)
     throw Exception("VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(vector). Empty site set.");
-  
-  size_t nbSeq=vs[0]->size();
+
+  size_t nbSeq = vs[0]->size();
   // Seq names and comments:
-  
+
   for (size_t i = 0; i < nbSeq; i++)
-    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence("Seq_" + TextTools::toString(i), Table<double>(nRow,0), alpha)), "Seq_" + TextTools::toString(i));
+  {
+    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence("Seq_" + TextTools::toString(i), Table<double>(nRow, 0), alpha)), "Seq_" + TextTools::toString(i));
+  }
 
   // Now try to add each site:
   for (size_t i = 0; i < vs.size(); i++)
   {
     if (!dynamic_cast<const ProbabilisticSite*>(vs[i]))
       throw Exception("VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer : Not a ProbabilisticSite in position " + TextTools::toString(i));
-    
+
     appendSite(shared_ptr<ProbabilisticSite>(dynamic_cast<ProbabilisticSite*>(vs[i]->clone())), checkPositions); // This may throw an exception if position argument already exists or is size is not valid.
   }
 }
@@ -93,10 +94,12 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   AbstractValuesContainer(alpha),
   AbstractProbabilisticSequenceContainer(alpha)
 {
-  size_t nRow=alpha->getSize();
-  
+  size_t nRow = alpha->getSize();
+
   for (auto i : names)
-    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(i, Table<double>(nRow,0), alpha)), i);
+  {
+    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(i, Table<double>(nRow, 0), alpha)), i);
+  }
 }
 
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
@@ -106,16 +109,19 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   AbstractValuesContainer(avc.getAlphabet()),
   AbstractProbabilisticSequenceContainer(avc.getAlphabet())
 {
-  const Alphabet* alpha=avc.getAlphabet();
-  
-  size_t nRow=alpha->getSize();
-  if (avc.getNumberOfSites() == 0) throw Exception("VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(AlignedValuesContainer). Empty site set.");
+  const Alphabet* alpha = avc.getAlphabet();
+
+  size_t nRow = alpha->getSize();
+  if (avc.getNumberOfSites() == 0)
+    throw Exception("VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(AlignedValuesContainer). Empty site set.");
 
   // Seq names and comments:
 
-  vector<string> vn=avc.getSequencesNames();
+  vector<string> vn = avc.getSequencesNames();
   for (auto& n : vn)
-    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(n, Table<double>(nRow,0), alpha)), n);
+  {
+    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(n, Table<double>(nRow, 0), alpha)), n);
+  }
 
   // Now add each site:
   for (size_t i = 0; i < avc.getNumberOfSites(); i++)
@@ -135,8 +141,7 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const VectorP
   VectorMappedContainer<BasicProbabilisticSequence>(vpsc),
   AbstractValuesContainer(vpsc),
   AbstractProbabilisticSequenceContainer(vpsc)
-{
-}
+{}
 
 /******************************************************************************/
 
@@ -160,7 +165,7 @@ VectorProbabilisticSiteContainer& VectorProbabilisticSiteContainer::operator=(co
 {
   clear();
   AbstractProbabilisticSequenceContainer::operator=(vpsc);
-  
+
   // Now try to add each site:
   for (size_t i = 0; i < vpsc.getNumberOfSites(); i++)
   {
@@ -172,14 +177,14 @@ VectorProbabilisticSiteContainer& VectorProbabilisticSiteContainer::operator=(co
 
 /********************************************************************************/
 
-void VectorProbabilisticSiteContainer::appendSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition) 
+void VectorProbabilisticSiteContainer::appendSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition)
 {
   // check size :
   if (site->size() != getNumberOfSequences())
     throw Exception("VectorProbabilisticSiteContainer::appendSite. Site does not have the appropriate length: " + TextTools::toString(site->size()) + ", should be " + TextTools::toString(getNumberOfSequences()) + ".");
 
   // new site's alphabet and site container's alphabet must match :
-  if(site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+  if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("VectorProbabilisticSiteContainer::appendSite.", getAlphabet(), site->getAlphabet());
 
   int position = site->getPosition();
@@ -190,7 +195,7 @@ void VectorProbabilisticSiteContainer::appendSite(std::shared_ptr<ProbabilisticS
     // For all positions in vector : throw exception if position already exists
     for (size_t i = 0; i < getNumberOfSites(); i++)
     {
-      if (getSite(i)!=nullptr && getSite(i)->getPosition() == position)
+      if (getSite(i) != nullptr && getSite(i)->getPosition() == position)
         throw Exception("VectorProbabilisticSiteContainer::appendSite. Site position: " + TextTools::toString(position) + ", already used in container.");
     }
   }
@@ -202,8 +207,8 @@ void VectorProbabilisticSiteContainer::appendSite(std::shared_ptr<ProbabilisticS
 void VectorProbabilisticSiteContainer::addSequence(const std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName)
 {
   // new sequence's alphabet and site container's alphabet must match :
-  
-  if(sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+
+  if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("VectorProbabilisticSiteContainer::addSequence->", getAlphabet(), sequence->getAlphabet());
 
   // check name :
@@ -216,24 +221,25 @@ void VectorProbabilisticSiteContainer::addSequence(const std::shared_ptr<BasicPr
   if (getNumberOfSequences() == 0)
   {
     VectorPositionedContainer<ProbabilisticSite>::setSize(0);
-    for (size_t i=0;i<(size_t)sequence->size();i++)
-      appendSite(shared_ptr<ProbabilisticSite>(new ProbabilisticSite(getAlphabet(),(int)(i)+1)));
+    for (size_t i = 0; i < (size_t)sequence->size(); i++)
+    {
+      appendSite(shared_ptr<ProbabilisticSite>(new ProbabilisticSite(getAlphabet(), (int)(i) + 1)));
+    }
   }
-  else 
-    if(sequence->size() != getNumberOfSites())
-      throw Exception("VectorProbabilisticSiteContainer::addSequence. Sequence does not have the appropriate length: " + TextTools::toString(sequence->size()) + ", should be " + TextTools::toString(getNumberOfSites()) + ".");
+  else if (sequence->size() != getNumberOfSites())
+    throw Exception("VectorProbabilisticSiteContainer::addSequence. Sequence does not have the appropriate length: " + TextTools::toString(sequence->size()) + ", should be " + TextTools::toString(getNumberOfSites()) + ".");
 
   // append empty sequence
 
-  VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(sequence->getName(), Table<double>(getAlphabet()->getSize(),0), getAlphabet())), sequence->getName());
+  VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(sequence->getName(), Table<double>(getAlphabet()->getSize(), 0), getAlphabet())), sequence->getName());
 
   // append elements at each site :
-  
-  for(size_t i = 0; i < getNumberOfSites(); ++i)
+
+  for (size_t i = 0; i < getNumberOfSites(); ++i)
   {
     getSite(i)->addElement(sequence->getContent()[i]);
   }
-  
+
   // // append comments :
   setGeneralComments(sequence->Commentable::getComments());
 }
@@ -241,25 +247,27 @@ void VectorProbabilisticSiteContainer::addSequence(const std::shared_ptr<BasicPr
 /********************************************************************************/
 
 void VectorProbabilisticSiteContainer::addSequence(const Sequence& sequence, bool checkName)
- {
+{
   // new sequence's alphabet and site container's alphabet must match :
-  if(sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+  if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("VectorProbabilisticSiteContainer::addSequence", getAlphabet(), sequence.getAlphabet());
 
   // check name :
   if (checkName)
     if (hasObject(sequence.getName()))
       throw Exception("VectorProbabilisticSiteContainer::addSequence. Name: " + sequence.getName() + ", already exists in the container.");
-  
+
   // if the container has no sequence, we set the size to the size of this sequence :
   if (getNumberOfSequences() == 0)
   {
     VectorPositionedContainer<ProbabilisticSite>::setSize(0);
-    
-    for (size_t i=0;i<(size_t)sequence.size();i++)
-      appendSite(shared_ptr<ProbabilisticSite>(new ProbabilisticSite(getAlphabet(),(int)(i)+1)));
+
+    for (size_t i = 0; i < (size_t)sequence.size(); i++)
+    {
+      appendSite(shared_ptr<ProbabilisticSite>(new ProbabilisticSite(getAlphabet(), (int)(i) + 1)));
+    }
   }
-  else if(sequence.size() != getNumberOfSites())
+  else if (sequence.size() != getNumberOfSites())
     throw Exception("VectorProbabilisticSiteContainer::addSequence. Sequence does not have the appropriate length: " + TextTools::toString(sequence.size()) + ", should be " + TextTools::toString(getNumberOfSites()) + ".");
 
   // append the empty sequence
@@ -268,17 +276,19 @@ void VectorProbabilisticSiteContainer::addSequence(const Sequence& sequence, boo
 
   // conversion
 
-  size_t size=getAlphabet()->getSize();
-  
-  vector<double> vd(size,0.);
-  
-  for (size_t i=0; i<sequence.size(); i++)
+  size_t size = getAlphabet()->getSize();
+
+  vector<double> vd(size, 0.);
+
+  for (size_t i = 0; i < sequence.size(); i++)
   {
-    for (size_t s=0; s<size; s++)
-      vd[s]=sequence.getStateValueAt(i,(int)s);
+    for (size_t s = 0; s < size; s++)
+    {
+      vd[s] = sequence.getStateValueAt(i, (int)s);
+    }
     getSite(i)->addElement(vd);
   }
-      
+
   // // append comments :
   setGeneralComments(sequence.getComments());
 }
@@ -288,16 +298,18 @@ void VectorProbabilisticSiteContainer::addSequence(const Sequence& sequence, boo
 
 void VectorProbabilisticSiteContainer::clear()
 {
-  VectorPositionedContainer<ProbabilisticSite>::clear(); 
+  VectorPositionedContainer<ProbabilisticSite>::clear();
   VectorMappedContainer<BasicProbabilisticSequence>::clear();
-}  
+}
 
 /********************************************************************************/
 
 void VectorProbabilisticSiteContainer::reindexSites()
 {
-  for(size_t i=0; i<getNumberOfSites(); i++)
-    getSite(i)->setPosition((int)i+1);
+  for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
+    getSite(i)->setPosition((int)i + 1);
+  }
 }
 
 /******************************************************************************/
@@ -306,7 +318,9 @@ Vint VectorProbabilisticSiteContainer::getSitePositions() const
 {
   Vint positions(getNumberOfSites());
   for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
     positions[i] = getSite(i)->getPosition();
+  }
 
   return positions;
 }
@@ -317,9 +331,11 @@ void VectorProbabilisticSiteContainer::setSitePositions(Vint vPositions)
 {
   if (vPositions.size() != getNumberOfSites())
     throw BadSizeException("VectorSiteContainer::setSitePositions bad size of positions vector", vPositions.size(), getNumberOfSites());
-  
+
   for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
     getSite(i)->setPosition(vPositions[i]);
+  }
 }
 
 /******************************************************************************/
@@ -340,7 +356,7 @@ const std::shared_ptr<BasicProbabilisticSequence> VectorProbabilisticSiteContain
 
   // Main loop : for all sites
   size_t n = getNumberOfSites();
-  Table<double> sequence(getAlphabet()->getSize(),0);
+  Table<double> sequence(getAlphabet()->getSize(), 0);
   for (size_t j = 0; j < n; j++)
   {
     sequence.addColumn((*getSite(j))[i]);
@@ -348,7 +364,7 @@ const std::shared_ptr<BasicProbabilisticSequence> VectorProbabilisticSiteContain
 
   shared_ptr<BasicProbabilisticSequence> ns(shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(VectorMappedContainer<BasicProbabilisticSequence>::getObjectName(i), sequence, VectorMappedContainer<BasicProbabilisticSequence>::getObject(i)->getComments(), getAlphabet())));
 
-  VectorMappedContainer<BasicProbabilisticSequence>::addObject_(ns,i,ns->getName(), false);
+  VectorMappedContainer<BasicProbabilisticSequence>::addObject_(ns, i, ns->getName(), false);
 
   return ns;
 }
@@ -361,5 +377,3 @@ const std::shared_ptr<BasicProbabilisticSequence> VectorProbabilisticSiteContain
   size_t pos = getSequencePosition(name);
   return getSequence(pos);
 }
-
-

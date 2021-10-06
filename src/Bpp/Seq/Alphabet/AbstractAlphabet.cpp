@@ -7,37 +7,37 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include "AbstractAlphabet.h"
 #include <Bpp/Text/TextTools.h>
@@ -54,7 +54,8 @@ using namespace std;
 
 /******************************************************************************/
 
-void AbstractAlphabet::updateMaps_(size_t pos, const AlphabetState& st) {
+void AbstractAlphabet::updateMaps_(size_t pos, const AlphabetState& st)
+{
   if (letters_.find(st.getLetter()) == letters_.end())
     letters_[st.getLetter()] = pos;
   else
@@ -67,7 +68,8 @@ void AbstractAlphabet::updateMaps_(size_t pos, const AlphabetState& st) {
 
 /******************************************************************************/
 
-void AbstractAlphabet::registerState(AlphabetState* st) {
+void AbstractAlphabet::registerState(AlphabetState* st)
+{
   // Add the state to the vector
   alphabet_.push_back(st);
   // Update the maps
@@ -76,30 +78,33 @@ void AbstractAlphabet::registerState(AlphabetState* st) {
 
 /******************************************************************************/
 
-void AbstractAlphabet::setState(size_t pos, AlphabetState* st) {
-    if (pos > alphabet_.size())
-      throw IndexOutOfBoundsException("AbstractAlphabet::setState: incorrect position", pos, 0, alphabet_.size());
-    // Delete the state if not empty
-    if (alphabet_[pos] != 0)
-      delete alphabet_[pos];
-    // Put the state in the vector
-    alphabet_[pos] = st;
-    // Update the maps
-    updateMaps_(pos, *st);
-  }
-
-/******************************************************************************/
-
-const AlphabetState& AbstractAlphabet::getState(const std::string& letter) const {
-  map<string, size_t>::const_iterator it = letters_.find(letter);
-  if (it == letters_.end())
-    throw BadCharException(letter, "AbstractAlphabet::getState(string): Specified base unknown", this);
-  return * (alphabet_[it->second]);
+void AbstractAlphabet::setState(size_t pos, AlphabetState* st)
+{
+  if (pos > alphabet_.size())
+    throw IndexOutOfBoundsException("AbstractAlphabet::setState: incorrect position", pos, 0, alphabet_.size());
+  // Delete the state if not empty
+  if (alphabet_[pos] != 0)
+    delete alphabet_[pos];
+  // Put the state in the vector
+  alphabet_[pos] = st;
+  // Update the maps
+  updateMaps_(pos, *st);
 }
 
 /******************************************************************************/
 
-size_t AbstractAlphabet::getStateIndex(const std::string& letter) const {
+const AlphabetState& AbstractAlphabet::getState(const std::string& letter) const
+{
+  map<string, size_t>::const_iterator it = letters_.find(letter);
+  if (it == letters_.end())
+    throw BadCharException(letter, "AbstractAlphabet::getState(string): Specified base unknown", this);
+  return *(alphabet_[it->second]);
+}
+
+/******************************************************************************/
+
+size_t AbstractAlphabet::getStateIndex(const std::string& letter) const
+{
   map<string, size_t>::const_iterator it = letters_.find(letter);
   if (it == letters_.end())
     throw BadCharException(letter, "AbstractAlphabet::getStateIndex(string): Specified base unknown", this);
@@ -108,7 +113,8 @@ size_t AbstractAlphabet::getStateIndex(const std::string& letter) const {
 
 /******************************************************************************/
 
-const AlphabetState& AbstractAlphabet::getState(int num) const {
+const AlphabetState& AbstractAlphabet::getState(int num) const
+{
   map<int, size_t>::const_iterator it = nums_.find(num);
   if (it == nums_.end())
     throw BadIntException(num, "AbstractAlphabet::getState(int): Specified base unknown", this);
@@ -117,7 +123,8 @@ const AlphabetState& AbstractAlphabet::getState(int num) const {
 
 /******************************************************************************/
 
-size_t AbstractAlphabet::getStateIndex(int num) const {
+size_t AbstractAlphabet::getStateIndex(int num) const
+{
   map<int, size_t>::const_iterator it = nums_.find(num);
   if (it == nums_.end())
     throw BadIntException(num, "AbstractAlphabet::getStateIndex(int): Specified base unknown", this);
@@ -126,36 +133,40 @@ size_t AbstractAlphabet::getStateIndex(int num) const {
 
 /******************************************************************************/
 
-AlphabetState& AbstractAlphabet::getState(const std::string& letter) {
+AlphabetState& AbstractAlphabet::getState(const std::string& letter)
+{
   map<string, size_t>::iterator it = letters_.find(letter);
   if (it == letters_.end())
     throw BadCharException(letter, "AbstractAlphabet::getState(string): Specified base unknown", this);
-  return * (alphabet_[it->second]);
+  return *(alphabet_[it->second]);
 }
 
 /******************************************************************************/
 
-AlphabetState& AbstractAlphabet::getState(int num) {
+AlphabetState& AbstractAlphabet::getState(int num)
+{
   map<int, size_t>::iterator it = nums_.find(num);
   if (it == nums_.end())
     throw BadIntException(num, "AbstractAlphabet::getState(int): Specified base unknown", this);
-  return * (alphabet_[it->second]);
+  return *(alphabet_[it->second]);
 }
 
 /******************************************************************************/
 
-AlphabetState& AbstractAlphabet::getStateAt(size_t pos) {
+AlphabetState& AbstractAlphabet::getStateAt(size_t pos)
+{
   if (pos > alphabet_.size())
     throw IndexOutOfBoundsException("AbstractAlphabet::getStateAt: incorrect position", pos, 0, alphabet_.size());
-  return * (alphabet_[pos]);
+  return *(alphabet_[pos]);
 }
 
 /******************************************************************************/
 
-const AlphabetState& AbstractAlphabet::getStateAt(size_t pos) const {
+const AlphabetState& AbstractAlphabet::getStateAt(size_t pos) const
+{
   if (pos > alphabet_.size())
     throw IndexOutOfBoundsException("AbstractAlphabet::getStateAt: incorrect position", pos, 0, alphabet_.size());
-  return * (alphabet_[pos]);
+  return *(alphabet_[pos]);
 }
 
 /******************************************************************************/
@@ -204,7 +215,7 @@ bool AbstractAlphabet::isCharInAlphabet(const std::string& state) const
   if (it != letters_.end())
     return true;
   return false;
-}	
+}
 
 /******************************************************************************/
 
@@ -218,15 +229,16 @@ bool AbstractAlphabet::isResolvedIn(int state1, int state2) const
 
   if (isUnresolved(state2))
     throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Unresolved base.");
-  
-  return state1==state2;
+
+  return state1 == state2;
 }
 
 /******************************************************************************/
 
-std::vector<int> AbstractAlphabet::getAlias(int state) const 
+std::vector<int> AbstractAlphabet::getAlias(int state) const
 {
-  if (!isIntInAlphabet(state)) throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");
+  if (!isIntInAlphabet(state))
+    throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");
   vector<int> v(1);
   v[0] = state;
   return v;
@@ -234,9 +246,10 @@ std::vector<int> AbstractAlphabet::getAlias(int state) const
 
 /******************************************************************************/
 
-std::vector<std::string> AbstractAlphabet::getAlias(const std::string& state) const 
+std::vector<std::string> AbstractAlphabet::getAlias(const std::string& state) const
 {
-  if (!isCharInAlphabet(state)) throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.");
+  if (!isCharInAlphabet(state))
+    throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.");
   vector<string> v(1);
   v[0] = state;
   return v;
@@ -244,25 +257,33 @@ std::vector<std::string> AbstractAlphabet::getAlias(const std::string& state) co
 
 /******************************************************************************/
 
-int AbstractAlphabet::getGeneric(const std::vector<int>& states) const {
+int AbstractAlphabet::getGeneric(const std::vector<int>& states) const
+{
   map<int, int> m;
-  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+  for (unsigned int i = 0; i < states.size(); ++i)
+  {
     vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
-    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
-      m[tmp_s[j]] ++; // add each state to the list
+    for (unsigned int j = 0; j < tmp_s.size(); ++j)
+    {
+      m[tmp_s[j]]++;// add each state to the list
     }
   }
   vector<int> ve = MapTools::getKeys(m);
 
   string key;
-  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
-    if (!isIntInAlphabet(ve[i])) throw BadIntException(ve[i], "AbstractAlphabet::getGeneric(const vector<int>): Specified base unknown.");
+  for (unsigned int i = 0; i < ve.size(); ++i)
+  {
+    if (!isIntInAlphabet(ve[i]))
+      throw BadIntException(ve[i], "AbstractAlphabet::getGeneric(const vector<int>): Specified base unknown.");
     key += "_" + TextTools::toString(ve[i]);
   }
   int v;
-  if (ve.size() == 1) {
+  if (ve.size() == 1)
+  {
     v = ve[0];
-  } else {
+  }
+  else
+  {
     v = this->getUnknownCharacterCode();
   }
   return v;
@@ -270,25 +291,33 @@ int AbstractAlphabet::getGeneric(const std::vector<int>& states) const {
 
 /******************************************************************************/
 
-std::string AbstractAlphabet::getGeneric(const std::vector<std::string>& states) const {
-  map <string, int> m;
-  for (unsigned int i = 0 ; i < states.size() ; ++i) {
+std::string AbstractAlphabet::getGeneric(const std::vector<std::string>& states) const
+{
+  map<string, int> m;
+  for (unsigned int i = 0; i < states.size(); ++i)
+  {
     vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
-    for (unsigned int j = 0 ; j < tmp_s.size() ; ++j) {
-      m[tmp_s[j]] ++; // add each state to the list
+    for (unsigned int j = 0; j < tmp_s.size(); ++j)
+    {
+      m[tmp_s[j]]++;// add each state to the list
     }
   }
   vector<string> ve = MapTools::getKeys(m);
 
   string key;
-  for (unsigned int i = 0 ; i < ve.size() ; ++i) {
-    if (!isCharInAlphabet(ve[i])) throw BadCharException(ve[i], "AbstractAlphabet::getAlias(const vector<string>): Specified base unknown.");
+  for (unsigned int i = 0; i < ve.size(); ++i)
+  {
+    if (!isCharInAlphabet(ve[i]))
+      throw BadCharException(ve[i], "AbstractAlphabet::getAlias(const vector<string>): Specified base unknown.");
     key += TextTools::toString(ve[i]);
   }
   string v;
-  if (ve.size() == 1) {
+  if (ve.size() == 1)
+  {
     v = ve[0];
-  } else {
+  }
+  else
+  {
     throw CharStateNotSupportedException("AbstractAlphabet::getAlias(const vector<string>): No generic char state.");
   }
   return v;
@@ -298,7 +327,7 @@ std::string AbstractAlphabet::getGeneric(const std::vector<std::string>& states)
 
 const std::vector<int>& AbstractAlphabet::getSupportedInts() const
 {
-  if(intList_.size() != alphabet_.size())
+  if (intList_.size() != alphabet_.size())
   {
     intList_.resize(alphabet_.size());
     charList_.resize(alphabet_.size());
@@ -315,7 +344,7 @@ const std::vector<int>& AbstractAlphabet::getSupportedInts() const
 
 const std::vector<std::string>& AbstractAlphabet::getSupportedChars() const
 {
-  if(charList_.size() != alphabet_.size())
+  if (charList_.size() != alphabet_.size())
   {
     intList_.resize(alphabet_.size());
     charList_.resize(alphabet_.size());
@@ -330,13 +359,15 @@ const std::vector<std::string>& AbstractAlphabet::getSupportedChars() const
 
 /******************************************************************************/
 
-const std::vector<std::string> & AbstractAlphabet::getResolvedChars() const
+const std::vector<std::string>& AbstractAlphabet::getResolvedChars() const
 {
   charList_.clear();
-  for(size_t i = 0; i < alphabet_.size(); ++i)
+  for (size_t i = 0; i < alphabet_.size(); ++i)
+  {
     // well, non-gap chars also
-    if(!isGap(alphabet_[i]->getLetter()) and !isUnresolved(alphabet_[i]->getLetter()))
+    if (!isGap(alphabet_[i]->getLetter()) and !isUnresolved(alphabet_[i]->getLetter()))
       charList_.push_back(alphabet_[i]->getLetter());
+  }
 
   return charList_;
 }

@@ -5,37 +5,37 @@
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-  This software is a computer program whose purpose is to provide classes
-  for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-  As a counterpart to the access to the source code and  rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-  In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #ifndef _ABSTRACTOSEQUENCE_H_
 #define _ABSTRACTOSEQUENCE_H_
@@ -51,137 +51,125 @@
 
 namespace bpp
 {
-
 /**
  * @brief Partial implementation of the OSequence and OAlignment interfaces.
  */
-  class AbstractOSequence:
-    public virtual OSequence,
-    public virtual OAlignment
+class AbstractOSequence :
+  public virtual OSequence,
+  public virtual OAlignment
+{
+public:
+  AbstractOSequence() {}
+  virtual ~AbstractOSequence() {}
+
+public:
+  /**
+   * @name OSequence methods:
+   *
+   * @{
+   */
+  void writeSequences(std::ostream& output, const SequenceContainer& sc) const = 0;
+  void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const
   {
-
-  public: 
-    AbstractOSequence() {}
-    virtual ~AbstractOSequence() {}
-
-  public:
-
-    /**
-     * @name OSequence methods:
-     *
-     * @{
-     */ 
-    void writeSequences(std::ostream& output, const SequenceContainer& sc) const = 0;
-    void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite=true) const
-    {
-      // Open file in specified mode
-      std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
-      writeSequences(output, sc);
-      output.close();
-    }
-    /** @} */
-    
-    /**
-     * @name OAlignment methods:
-     *
-     * As a SiteContainer is a specialization of SequenceContainer, it is assumed that a OSequence
-     * object can write aligned sequence just like a OAlignment object.
-     * Therefore it implements the OAlignment interface by down-casting the SiteContainer
-     * to a SequenceContainer. 
-     * @{
-     */ 
-    void writeAlignment(std::ostream& output, const SiteContainer& sc) const
-    {
-      writeSequences(output, dynamic_cast<const SequenceContainer&>(sc));
-    }
-    void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite=true) const
-    {
-      writeSequences(path, dynamic_cast<const SequenceContainer&>(sc), overwrite);
-    }
-    /** @} */
-
-  };
+    // Open file in specified mode
+    std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
+    writeSequences(output, sc);
+    output.close();
+  }
+  /** @} */
 
   /**
-   * @brief Partial implementation of the OProbabilisticAlignment interfaces.
+   * @name OAlignment methods:
+   *
+   * As a SiteContainer is a specialization of SequenceContainer, it is assumed that a OSequence
+   * object can write aligned sequence just like a OAlignment object.
+   * Therefore it implements the OAlignment interface by down-casting the SiteContainer
+   * to a SequenceContainer.
+   * @{
    */
-  
-  class AbstractOProbabilisticAlignment:
-    public virtual OProbabilisticAlignment
+  void writeAlignment(std::ostream& output, const SiteContainer& sc) const
   {
+    writeSequences(output, dynamic_cast<const SequenceContainer&>(sc));
+  }
+  void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const
+  {
+    writeSequences(path, dynamic_cast<const SequenceContainer&>(sc), overwrite);
+  }
+  /** @} */
+};
 
-  public: 
-    AbstractOProbabilisticAlignment() {}
-    virtual ~AbstractOProbabilisticAlignment() {}
+/**
+ * @brief Partial implementation of the OProbabilisticAlignment interfaces.
+ */
 
-  public:
+class AbstractOProbabilisticAlignment :
+  public virtual OProbabilisticAlignment
+{
+public:
+  AbstractOProbabilisticAlignment() {}
+  virtual ~AbstractOProbabilisticAlignment() {}
 
-    /**
-     * @name OSequence methods:
-     *
-     * @{
-     */
-    
-    virtual void writeSequence(std::ostream& output, const ProbabilisticSequence& ps) const = 0;
+public:
+  /**
+   * @name OSequence methods:
+   *
+   * @{
+   */
 
-    void writeSequence(const std::string& path, const ProbabilisticSequence& ps, bool overwrite=true) const
-    {
-      // Open file in specified mode
-      std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
-      writeSequence(output, ps);
-      output.close();
-    }
-    
-    /** @} */
-    
-    /**
-     * @name OProbabilisticSequences methods:
-     *
-     * @{
-     */ 
+  virtual void writeSequence(std::ostream& output, const ProbabilisticSequence& ps) const = 0;
 
-    virtual void writeSequences(std::ostream& output, const ProbabilisticSequenceContainer& psc) const = 0;
+  void writeSequence(const std::string& path, const ProbabilisticSequence& ps, bool overwrite = true) const
+  {
+    // Open file in specified mode
+    std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
+    writeSequence(output, ps);
+    output.close();
+  }
 
-    void writeSequences(const std::string& path, const ProbabilisticSequenceContainer& psc, bool overwrite=true) const
-    {
-      // Open file in specified mode
-      std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
-      writeSequences(output, psc);
-      output.close();
-    }
-    
-    /** @} */
-    /**
+  /** @} */
 
-     * @name OProbabilisticAlignment methods:
-     *
-     * As a ProbabilisticSiteContainer is a specialization of
-     * ProbabilisticSequenceContainer, it is assumed that a OProbabilisticSequence
-     * object can write aligned sequence just like a OProbabilisticAlignment
-     * object. Therefore it implements the OProbabilisticAlignment interface by
-     * down-casting the ProbabilisticSiteContainer to a
-     * ProbabilisticSequenceContainer.
-     *
-     * @{
-     */
-    
-    void writeAlignment(std::ostream& output, const ProbabilisticSiteContainer& sc)
-    {
-      writeSequences(output, dynamic_cast<const ProbabilisticSequenceContainer&>(sc));
-    }
+  /**
+   * @name OProbabilisticSequences methods:
+   *
+   * @{
+   */
 
-    void writeAlignment(const std::string& path, const ProbabilisticSiteContainer& sc, bool overwrite=true)
-    {
-      writeSequences(path, dynamic_cast<const ProbabilisticSequenceContainer&>(sc), overwrite);
-    }
-    
-    /** @} */
+  virtual void writeSequences(std::ostream& output, const ProbabilisticSequenceContainer& psc) const = 0;
 
+  void writeSequences(const std::string& path, const ProbabilisticSequenceContainer& psc, bool overwrite = true) const
+  {
+    // Open file in specified mode
+    std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
+    writeSequences(output, psc);
+    output.close();
+  }
 
-  };
+  /** @} */
+  /**
 
+   * @name OProbabilisticAlignment methods:
+   *
+   * As a ProbabilisticSiteContainer is a specialization of
+   * ProbabilisticSequenceContainer, it is assumed that a OProbabilisticSequence
+   * object can write aligned sequence just like a OProbabilisticAlignment
+   * object. Therefore it implements the OProbabilisticAlignment interface by
+   * down-casting the ProbabilisticSiteContainer to a
+   * ProbabilisticSequenceContainer.
+   *
+   * @{
+   */
+  void writeAlignment(std::ostream& output, const ProbabilisticSiteContainer& sc)
+  {
+    writeSequences(output, dynamic_cast<const ProbabilisticSequenceContainer&>(sc));
+  }
 
-} //end of namespace bpp.
+  void writeAlignment(const std::string& path, const ProbabilisticSiteContainer& sc, bool overwrite = true)
+  {
+    writeSequences(path, dynamic_cast<const ProbabilisticSequenceContainer&>(sc), overwrite);
+  }
 
-#endif //_ABSTRACTOSEQUENCE_H_
+  /** @} */
+};
+} // end of namespace bpp.
 
+#endif//_ABSTRACTOSEQUENCE_H_

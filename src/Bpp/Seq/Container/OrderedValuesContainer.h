@@ -57,90 +57,87 @@ namespace bpp
  * data.
  */
 
-  class OrderedValuesContainer :
-    virtual public SequencedValuesContainer
-  {
-    
-  public:
-    OrderedValuesContainer() {}
-    virtual ~OrderedValuesContainer() {}
+class OrderedValuesContainer :
+  virtual public SequencedValuesContainer
+{
+public:
+  OrderedValuesContainer() {}
+  virtual ~OrderedValuesContainer() {}
 
-    OrderedValuesContainer* clone() const = 0;
+  OrderedValuesContainer* clone() const = 0;
 
-    /**
-     * @brief Convert a particular sequence to a string.
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @return A string describing the content of the sequence.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
-     */
+  /**
+   * @brief Convert a particular sequence to a string.
+   *
+   * @param sequenceIndex The position of the sequence.
+   * @return A string describing the content of the sequence.
+   * @throw IndexOutOfBoundsException If the position does not match any sequence in the container.
+   */
 
-    using SequencedValuesContainer::toString;
-    
-    virtual std::string toString(size_t sequenceIndex) const = 0;
+  using SequencedValuesContainer::toString;
 
-    /**
-     * @brief Get the name of a particular row of the alignement (aka sequence).
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @return The name of the sequence at position 'sequenceIndex'.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in
-     * the container.
-     */
-    
-    virtual const std::string& getName(size_t sequenceIndex) const = 0;
+  virtual std::string toString(size_t sequenceIndex) const = 0;
 
-    /**
-     * @brief Get the position of a sequence in sequence container from its name.
-     *
-     * @param name The name of the sequence.
-     * @return The position of the sequence with name 'name', if it exists.
-     * @throw SequenceNotFoundException If no sequence with name 'name' could be found.
-     */
+  /**
+   * @brief Get the name of a particular row of the alignement (aka sequence).
+   *
+   * @param sequenceIndex The position of the sequence.
+   * @return The name of the sequence at position 'sequenceIndex'.
+   * @throw IndexOutOfBoundsException If the position does not match any sequence in
+   * the container.
+   */
 
-    virtual size_t getSequencePosition(const std::string & name) const = 0;
+  virtual const std::string& getName(size_t sequenceIndex) const = 0;
 
-    /*
-     * @brief get value of a state in a position
-     * @param siteIndex  index of the site 
-     * @param sequenceIndex index of the sequence in the container
-     * @param state  state in the alphabet
-     */
+  /**
+   * @brief Get the position of a sequence in sequence container from its name.
+   *
+   * @param name The name of the sequence.
+   * @return The position of the sequence with name 'name', if it exists.
+   * @throw SequenceNotFoundException If no sequence with name 'name' could be found.
+   */
 
-    using SequencedValuesContainer::getStateValueAt;
-    
-    virtual double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const  = 0;
-  
-    virtual double operator()(size_t siteIndex, size_t sequenceIndex, int state) const = 0;
+  virtual size_t getSequencePosition(const std::string& name) const = 0;
 
-    /**
-     * @brief Get comments of a particular sequence.
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @return The comments associated to sequence at position 'sequenceIndex'.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in
-     * the container.
-     */
+  /*
+   * @brief get value of a state in a position
+   * @param siteIndex  index of the site
+   * @param sequenceIndex index of the sequence in the container
+   * @param state  state in the alphabet
+   */
 
-    using SequencedValuesContainer::getComments;
-    
-    virtual const Comments& getComments(size_t sequenceIndex) const = 0;
+  using SequencedValuesContainer::getStateValueAt;
 
-    /**
-     * @brief Set the comments of a particular sequence
-     *
-     * @param sequenceIndex The position of the sequence.
-     * @param comments      The comments to set to sequence with position 'i'.
-     * @throw IndexOutOfBoundsException If the position does not match any sequence in
-     * the container.
-     */
+  virtual double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const = 0;
 
-    using SequencedValuesContainer::setComments;
-    
-    virtual void setComments(size_t sequenceIndex, const Comments & comments) = 0;
+  virtual double operator()(size_t siteIndex, size_t sequenceIndex, int state) const = 0;
 
-  };
+  /**
+   * @brief Get comments of a particular sequence.
+   *
+   * @param sequenceIndex The position of the sequence.
+   * @return The comments associated to sequence at position 'sequenceIndex'.
+   * @throw IndexOutOfBoundsException If the position does not match any sequence in
+   * the container.
+   */
+
+  using SequencedValuesContainer::getComments;
+
+  virtual const Comments& getComments(size_t sequenceIndex) const = 0;
+
+  /**
+   * @brief Set the comments of a particular sequence
+   *
+   * @param sequenceIndex The position of the sequence.
+   * @param comments      The comments to set to sequence with position 'i'.
+   * @throw IndexOutOfBoundsException If the position does not match any sequence in
+   * the container.
+   */
+
+  using SequencedValuesContainer::setComments;
+
+  virtual void setComments(size_t sequenceIndex, const Comments& comments) = 0;
+};
 } // end of namespace bpp.
 
-#endif  // _ORDERED_VALUES_CONTAINER_H_
-
+#endif// _ORDERED_VALUES_CONTAINER_H_

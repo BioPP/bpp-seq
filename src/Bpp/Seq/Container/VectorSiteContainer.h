@@ -67,11 +67,12 @@ namespace bpp
  */
 class VectorSiteContainer :
   public AbstractSequenceContainer,
-  // This container implements the SequenceContainer interface
-  // and use the AbstractSequenceContainer adapter.
-  public virtual SiteContainer,        // This container is a SiteContainer.
-  public virtual VectorPositionedContainer<Site>,
-  public virtual VectorMappedContainer<Sequence> 
+// This container implements the SequenceContainer interface
+// and use the AbstractSequenceContainer adapter.
+public virtual SiteContainer,
+// This container is a SiteContainer.
+public virtual VectorPositionedContainer<Site>,
+public virtual VectorMappedContainer<Sequence>
 {
 public:
   /**
@@ -112,7 +113,7 @@ public:
   VectorSiteContainer(const SiteContainer&  sc);
   VectorSiteContainer(const OrderedSequenceContainer& osc);
   VectorSiteContainer(const SequenceContainer&  sc);
-  
+
   VectorSiteContainer(const AlignedValuesContainer& avc);
 
   VectorSiteContainer& operator=(const VectorSiteContainer& vsc);
@@ -136,7 +137,6 @@ public:
    *
    * @{
    */
-
   const Site& getSite(size_t siteIndex) const
   {
     return *VectorPositionedContainer<Site>::getObject(siteIndex);
@@ -166,7 +166,6 @@ public:
    *
    * @{
    */
-
   void deleteSites(size_t siteIndex, size_t length)
   {
     VectorPositionedContainer<Site>::deleteObjects(siteIndex, length);
@@ -176,14 +175,14 @@ public:
   {
     return VectorPositionedContainer<Site>::getSize();
   }
-  
+
   void reindexSites();
 
   Vint getSitePositions() const;
 
   void setSitePositions(Vint vPositions);
 
-  
+
   /** @} */
 
   // These methods are implemented for this class:
@@ -193,14 +192,14 @@ public:
    *
    * @{
    */
-  
+
   using OrderedSequenceContainer::setComments;
   void setComments(size_t sequenceIndex, const Comments& comments);
 
   // Method to get a sequence object from sequence container
   const Sequence& getSequence(size_t sequenceIndex) const;
   const Sequence& getSequence(const std::string& name) const;
-  
+
   bool hasSequence(const std::string& name) const
   {
     // Look for sequence name:
@@ -229,12 +228,12 @@ public:
   {
     return VectorMappedContainer<Sequence>::getObjectsNames();
   }
-  
+
   void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
   {
     VectorMappedContainer<Sequence>::setObjectsNames(names);
   }
-  
+
   void clear();
 
   VectorSiteContainer* createEmptyContainer() const;
@@ -244,13 +243,13 @@ public:
     if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
   }
-  
+
   const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
   {
     if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
   }
-  
+
   int& operator()(const std::string& sequenceName, size_t elementIndex)
   {
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
@@ -274,7 +273,7 @@ public:
     if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[sequenceIndex];
   }
-  
+
   int& operator()(size_t sequenceIndex, size_t elementIndex)
   {
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[sequenceIndex];
@@ -289,16 +288,16 @@ public:
    *
    * @{
    */
-  
   double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
   {
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
-    
-    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex),state)?1.:0.;
+
+    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex), state) ? 1. : 0.;
   }
-  
-  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const{
-    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex),state)?1.:0.;
+
+  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const
+  {
+    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex), state) ? 1. : 0.;
   }
 
   /*
@@ -306,7 +305,7 @@ public:
    * @}
    *
    */
-  
+
   /**
    * @name OrderedValuesContainer methods.
    *
@@ -319,18 +318,17 @@ public:
    * @param sequenceIndex index of the looked value in the site
    * @param state  state in the alphabet
    */
-  
-  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const 
+  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
 
-    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
+    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex), state) ? 1. : 0.;
   }
-  
-  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const 
+
+  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const
   {
-    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
+    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex), state) ? 1. : 0.;
   }
 
   /*
@@ -353,5 +351,4 @@ protected:
 };
 } // end of namespace bpp.
 
-#endif  // _VECTORSITECONTAINER_H_
-
+#endif// _VECTORSITECONTAINER_H_

@@ -157,27 +157,27 @@ void SequenceContainerTools::getFrequencies(const SequencedValuesContainer& sequ
   double n = 0;
   vector<string> names = sequences.getSequencesNames();
 
-  const SequenceContainer* sc=dynamic_cast<const SequenceContainer*>(&sequences);
-  const ProbabilisticSequenceContainer* psc=dynamic_cast<const ProbabilisticSequenceContainer*>(&sequences);
+  const SequenceContainer* sc = dynamic_cast<const SequenceContainer*>(&sequences);
+  const ProbabilisticSequenceContainer* psc = dynamic_cast<const ProbabilisticSequenceContainer*>(&sequences);
 
   for (size_t j = 0; j < names.size(); j++)
   {
     if (sc)
     {
-      const Sequence& seq=sc->getSequence(names[j]);
+      const Sequence& seq = sc->getSequence(names[j]);
       SymbolListTools::getCounts(seq, f, true);
       n += (double)seq.size();
     }
     else if (psc)
     {
-      const ProbabilisticSequence& seq=*psc->getSequence(names[j]);
+      const ProbabilisticSequence& seq = *psc->getSequence(names[j]);
       SymbolListTools::getCounts(seq, f, true);
       n += (double)seq.size();
     }
     else
       throw Exception("SequenceContainerTools::getFrequencies : unknown SequenceContainer type.");
   }
-  
+
   if (pseudoCount != 0)
   {
     const Alphabet* pA = sequences.getAlphabet();
@@ -190,8 +190,9 @@ void SequenceContainerTools::getFrequencies(const SequencedValuesContainer& sequ
   }
 
   for (auto& i : f)
+  {
     i.second = i.second / n;
-
+  }
 }
 
 /******************************************************************************/
@@ -235,4 +236,3 @@ SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContai
 }
 
 /******************************************************************************/
-

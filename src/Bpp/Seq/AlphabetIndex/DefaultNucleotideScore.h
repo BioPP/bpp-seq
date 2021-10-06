@@ -105,5 +105,4 @@ public:
 };
 } // end of namespace bpp.
 
-#endif // _DEFAULTNUCLEOTIDESCORE_H_
-
+#endif// _DEFAULTNUCLEOTIDESCORE_H_

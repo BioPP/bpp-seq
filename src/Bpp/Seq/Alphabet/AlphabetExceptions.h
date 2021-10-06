@@ -5,37 +5,37 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. CNRS, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #ifndef _ALPHABETEXCEPTIONS_H_
 #define _ALPHABETEXCEPTIONS_H_
@@ -47,105 +47,104 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp
 {
-
 class Alphabet;
 
 /**
  * @brief The alphabet exception base class.
- * 
+ *
  * @see Alphabet, Exception
  */
-class AlphabetException:
+class AlphabetException :
   public Exception
 {
-	private:
-		const Alphabet* alphabet_;
-			
-	public:
-		/**
-		 * @brief Build a new AlphabetException object.
-		 * 
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param alpha A const pointer toward the alphabet that threw the exception.
-		 */
-		AlphabetException(const std::string& text, const Alphabet* alpha = 0);
-		
-    AlphabetException(const AlphabetException& ae): Exception(ae), alphabet_(ae.alphabet_) {}
-    AlphabetException& operator=(const AlphabetException& ae)
-    {
-      Exception::operator=(ae);
-      alphabet_ = ae.alphabet_;
-      return *this;
-    }
-	
-		virtual ~AlphabetException() {}
-        
-	public:
-		/**
-		 * @brief Get the alphabet that threw the exception.
-		 * 
-		 * @return a const pointer toward the alphabet.
-		 */
-		virtual const Alphabet* getAlphabet() const { return alphabet_; }
+private:
+  const Alphabet* alphabet_;
+
+public:
+  /**
+   * @brief Build a new AlphabetException object.
+   *
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha A const pointer toward the alphabet that threw the exception.
+   */
+  AlphabetException(const std::string& text, const Alphabet* alpha = 0);
+
+  AlphabetException(const AlphabetException& ae) : Exception(ae), alphabet_(ae.alphabet_) {}
+  AlphabetException& operator=(const AlphabetException& ae)
+  {
+    Exception::operator=(ae);
+    alphabet_ = ae.alphabet_;
+    return *this;
+  }
+
+  virtual ~AlphabetException() {}
+
+public:
+  /**
+   * @brief Get the alphabet that threw the exception.
+   *
+   * @return a const pointer toward the alphabet.
+   */
+  virtual const Alphabet* getAlphabet() const { return alphabet_; }
 };
 
 /**
  * @brief An alphabet exception thrown when trying to specify a bad char to the alphabet.
  */
-class BadCharException:
+class BadCharException :
   public AlphabetException
 {
-	protected:
-    std::string c_;
-	
-	public:
-		/**
-		 * @brief Build a new BadCharException.
-		 * 
-		 * @param badChar The faulty character.
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param alpha A const pointer toward the alphabet that threw the exception.
-		 */
-		BadCharException(const std::string & badChar, const std::string & text = "", const Alphabet * alpha = 0);
-	
-		virtual ~BadCharException() {};
-	
-	public:
-		/**
-		 * @brief Get the character that threw the exception.
-		 * 
-		 * @return the faulty character.
-		 */
-		virtual std::string getBadChar() const;
+protected:
+  std::string c_;
+
+public:
+  /**
+   * @brief Build a new BadCharException.
+   *
+   * @param badChar The faulty character.
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha A const pointer toward the alphabet that threw the exception.
+   */
+  BadCharException(const std::string& badChar, const std::string& text = "", const Alphabet* alpha = 0);
+
+  virtual ~BadCharException() {}
+
+public:
+  /**
+   * @brief Get the character that threw the exception.
+   *
+   * @return the faulty character.
+   */
+  virtual std::string getBadChar() const;
 };
 
 /**
  * @brief An alphabet exception thrown when trying to specify a bad int to the alphabet.
  */
-class BadIntException:
+class BadIntException :
   public AlphabetException
 {
-	protected:
-		int i_;
-	
-	public:
-		/**
-		 * @brief Build a new BadIntException.
-		 * @param badInt The faulty integer.
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param alpha A const pointer toward the alphabet that threw the exception.
-		 */
-		BadIntException(int badInt, const std::string& text = "", const Alphabet* alpha = 0);
-	
-		virtual ~BadIntException() {}
+protected:
+  int i_;
 
-	public:
-		/**
-		 * @brief Get the integer that threw the exception.
-		 * 
-		 * @return the faulty integer.
-		 */
-		virtual int getBadInt() const;
+public:
+  /**
+   * @brief Build a new BadIntException.
+   * @param badInt The faulty integer.
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha A const pointer toward the alphabet that threw the exception.
+   */
+  BadIntException(int badInt, const std::string& text = "", const Alphabet* alpha = 0);
+
+  virtual ~BadIntException() {}
+
+public:
+  /**
+   * @brief Get the integer that threw the exception.
+   *
+   * @return the faulty integer.
+   */
+  virtual int getBadInt() const;
 };
 
 /**
@@ -156,38 +155,37 @@ class BadIntException:
  */
 class AlphabetMismatchException : public Exception
 {
-	private:
-		const Alphabet* alphabet1_, * alphabet2_;
-	
-	public:
-           
-		/**
-		 * @brief Build a new AlphabetMismatchException object.
-     *
-		 * @param text A message to be passed to the exception hierarchy.
-		 * @param alpha1 A const pointer toward the first alphabet.
-		 * @param alpha2 A const pointer toward the second alphabet, i.e. the one which does not match with the first.
-		 */
-		AlphabetMismatchException(const std::string& text = "", const Alphabet* alpha1 = 0, const Alphabet* alpha2 = 0);
-	
-    AlphabetMismatchException(const AlphabetMismatchException& ame): Exception(ame), alphabet1_(ame.alphabet1_), alphabet2_(ame.alphabet2_) {}
-    AlphabetMismatchException& operator=(const AlphabetMismatchException& ame)
-    {
-      Exception::operator=(ame);
-      alphabet1_ = ame.alphabet1_;
-      alphabet2_ = ame.alphabet2_;
-      return *this;
-    }
+private:
+  const Alphabet* alphabet1_, * alphabet2_;
 
-		virtual ~AlphabetMismatchException() {}
+public:
+  /**
+   * @brief Build a new AlphabetMismatchException object.
+   *
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha1 A const pointer toward the first alphabet.
+   * @param alpha2 A const pointer toward the second alphabet, i.e. the one which does not match with the first.
+   */
+  AlphabetMismatchException(const std::string& text = "", const Alphabet* alpha1 = 0, const Alphabet* alpha2 = 0);
 
-	public:
-		/**
-		 * @brief Get the alphabets that do not match.
-     *
-		 * @return a vector of pointers toward the alphabets.
-		 */
-    std::vector<const Alphabet *> getAlphabets() const;
+  AlphabetMismatchException(const AlphabetMismatchException& ame) : Exception(ame), alphabet1_(ame.alphabet1_), alphabet2_(ame.alphabet2_) {}
+  AlphabetMismatchException& operator=(const AlphabetMismatchException& ame)
+  {
+    Exception::operator=(ame);
+    alphabet1_ = ame.alphabet1_;
+    alphabet2_ = ame.alphabet2_;
+    return *this;
+  }
+
+  virtual ~AlphabetMismatchException() {}
+
+public:
+  /**
+   * @brief Get the alphabets that do not match.
+   *
+   * @return a vector of pointers toward the alphabets.
+   */
+  std::vector<const Alphabet*> getAlphabets() const;
 };
 
 /**
@@ -195,19 +193,17 @@ class AlphabetMismatchException : public Exception
  */
 class CharStateNotSupportedException : public AlphabetException
 {
-  public:
-    /**
-     * @brief Build a new CharStateNotSupportedException.
-     *
-     * @param text A message to be passed to the exception hierarchy.
-     * @param alpha A const pointer toward the alphabet that threw the exception.
-     */
-    CharStateNotSupportedException(const std::string & text = "", const Alphabet * alpha = 0);
+public:
+  /**
+   * @brief Build a new CharStateNotSupportedException.
+   *
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha A const pointer toward the alphabet that threw the exception.
+   */
+  CharStateNotSupportedException(const std::string& text = "", const Alphabet* alpha = 0);
 
-    virtual ~CharStateNotSupportedException() {};
+  virtual ~CharStateNotSupportedException() {}
 };
+} // end of namespace bpp.
 
-} //end of namespace bpp.
-
-#endif	//_ALPHABETEXCEPTIONS_H_
-
+#endif//_ALPHABETEXCEPTIONS_H_

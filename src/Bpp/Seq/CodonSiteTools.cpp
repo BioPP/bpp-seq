@@ -145,14 +145,17 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode
   SymbolListTools::getCounts(site, counts);
   map<int, size_t> aas;
   size_t cdat = 0;
-  for (auto it = counts.begin(); it != counts.end(); ++it) {
-    if (!site.getAlphabet()->isUnresolved(it->first)) {
+  for (auto it = counts.begin(); it != counts.end(); ++it)
+  {
+    if (!site.getAlphabet()->isUnresolved(it->first))
+    {
       cdat += it->second;
       aas[gCode.translate(it->first)]++;
-      if (aas.size() > 1) return false;
+      if (aas.size() > 1)
+        return false;
     }
   }
-  return (cdat > 1); //If only one sequence is non-missing, then the site is not considered to be polymorphic.
+  return cdat > 1; // If only one sequence is non-missing, then the site is not considered to be polymorphic.
 }
 
 /******************************************************************************/
@@ -235,7 +238,7 @@ size_t CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet& ca
 double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const GeneticCode& gCode, bool minchange)
 {
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gCode.getSourceAlphabet());
-  
+
   vector<int> ci = ca->getPositions(i);
   vector<int> cj = ca->getPositions(j);
 
@@ -259,7 +262,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
     {
       int trans1 = ca->getCodon(ci[0], cj[1], ci[2]); // transitory codon between NcNiNi et NcNjNj: NcNjNi, Nc = identical site
       int trans2 = ca->getCodon(ci[0], ci[1], cj[2]); // transitory codon between NcNiNi et NcNjNj: NcNiNj, Nc = identical site
-      
+
       if (!gCode.isStop(trans1))
       {
         if (gCode.areSynonymous(i, trans1))
@@ -468,7 +471,7 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
   // General polymorphism checking
   if (SymbolListTools::isConstant(site))
     return 0;
-  
+
   // Computation
   map<int, double> freq;
   SymbolListTools::getFrequencies(site, freq);
@@ -477,7 +480,6 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
   {
     for (map<int, double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++)
     {
-      
       pi += (it1->second) * (it2->second) * (numberOfSynonymousDifferences(it1->first, it2->first, gCode, minchange));
     }
   }
@@ -517,7 +519,7 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
       pi += (it1->second) * (it2->second) * (nbtot - nbsyn);
     }
   }
-  
+
   double n = static_cast<double>(site.size());
   return pi * n / (n - 1);
 }
@@ -587,7 +589,8 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
   {
     int state = it.first;
     if (alphabet->isUnresolved(state) ||
-        alphabet->isGap(state)) {
+        alphabet->isGap(state))
+    {
       double freq = it.second;
       total += freq;
       nbSyn += freq * numberOfSynonymousPositions(state, gCode, ratio);
@@ -796,10 +799,13 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
     {
       if (test1)
       {
-        if (ca->getSecondPosition(i) == ca->getSecondPosition(j)) {
-          if (Na > 0) //jdutheil on 19/12/16: added these checks to avoid negative Na/Ns
+        if (ca->getSecondPosition(i) == ca->getSecondPosition(j))
+        {
+          if (Na > 0) // jdutheil on 19/12/16: added these checks to avoid negative Na/Ns
             Na--;
-        } else {
+        }
+        else
+        {
           if (Ns > 0)
             Ns--;
         }
@@ -810,7 +816,7 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
         Ns--;
     }
   }
-  //cout << Na << " " << Ns << endl;
+  // cout << Na << " " << Ns << endl;
   v[0] = Ns;
   v[1] = Na;
   return v;
@@ -848,4 +854,3 @@ bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& 
 }
 
 /******************************************************************************/
-

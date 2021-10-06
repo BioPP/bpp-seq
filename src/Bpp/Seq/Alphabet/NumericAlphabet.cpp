@@ -52,13 +52,13 @@ using namespace bpp;
 NumericAlphabet::NumericAlphabet(const UniformDiscreteDistribution& pd) :
   AbstractAlphabet(), pdd_(pd.clone()), values_()
 {
-  
   // Alphabet size definition
   size_t size = pdd_->getNumberOfCategories();
 
   Vdouble vd = pdd_->getCategories();
-  
-  for (size_t i = 0; i < size; ++i){
+
+  for (size_t i = 0; i < size; ++i)
+  {
     registerState(new AlphabetNumericState(static_cast<int>(i), vd[i], TextTools::toString(vd[i]), TextTools::toString(vd[i])));
   }
 }
@@ -69,7 +69,7 @@ NumericAlphabet::NumericAlphabet(const NumericAlphabet& na) :
   values_(na.values_)
 {}
 
-NumericAlphabet& NumericAlphabet::operator=(const NumericAlphabet& na) 
+NumericAlphabet& NumericAlphabet::operator=(const NumericAlphabet& na)
 {
   AbstractAlphabet::operator=(na);
   pdd_ = na.pdd_->clone();
@@ -80,24 +80,30 @@ NumericAlphabet& NumericAlphabet::operator=(const NumericAlphabet& na)
 
 void NumericAlphabet::setState(size_t stateIndex, AlphabetState* st)
 {
-  try {
+  try
+  {
     AbstractAlphabet::setState(stateIndex, st);
     double x = dynamic_cast<AlphabetNumericState*>(st)->getValue();
     if (values_.find(x) == values_.end())
-    values_[x] = stateIndex;  
-  } catch(std::bad_cast&) {
+      values_[x] = stateIndex;
+  }
+  catch (std::bad_cast&)
+  {
     throw Exception("NumericAlphabet::setState. Incorrect alphabet type.");
   }
 }
 
 void NumericAlphabet::registerState(AlphabetState* st)
 {
-  try {
+  try
+  {
     AbstractAlphabet::registerState(st);
     double x = dynamic_cast<AlphabetNumericState*>(st)->getValue();
     if (values_.find(x) == values_.end())
       values_[x] = getSize();
-  } catch(std::bad_cast&) {
+  }
+  catch (std::bad_cast&)
+  {
     throw Exception("NumericAlphabet::registerState. Incorrect alphabet type.");
   }
 }
@@ -146,13 +152,14 @@ unsigned int NumericAlphabet::getSize() const
 unsigned int NumericAlphabet::getNumberOfTypes() const
 {
   return static_cast<unsigned int>(values_.size());
-}  
+}
 
 void NumericAlphabet::remap()
 {
   AbstractAlphabet::remap();
   values_.clear();
-  for (size_t pos = 0 ; pos < getSize() ; pos++) {
+  for (size_t pos = 0; pos < getSize(); pos++)
+  {
     double x = getStateAt(pos).getValue();
     if (values_.find(x) == values_.end())
       values_[x] = pos;

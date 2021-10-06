@@ -53,7 +53,9 @@ VectorSequenceContainer::VectorSequenceContainer(
   VectorMappedContainer<Sequence>()
 {
   for (auto i = vs.begin(); i < vs.end(); i++)
+  {
     addSequence(**i);
+  }
 }
 
 /** Copy constructors: ********************************************************/
@@ -165,7 +167,9 @@ void VectorSequenceContainer::setSequencesNames(
     }
   }
   for (size_t i = 0; i < names.size(); i++)
+  {
     getSequence_(i).setName(names[i]);
+  }
 
   setObjectsNames(names);
 }
@@ -180,4 +184,3 @@ VectorSequenceContainer* VectorSequenceContainer::createEmptyContainer() const
 }
 
 /******************************************************************************/
-

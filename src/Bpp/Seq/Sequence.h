@@ -6,37 +6,37 @@
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-  This software is a computer program whose purpose is to provide classes
-  for sequences analysis.
+   This software is a computer program whose purpose is to provide classes
+   for sequences analysis.
 
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-  As a counterpart to the access to the source code and  rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-  In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #ifndef _SEQUENCE_H_
 #define _SEQUENCE_H_
@@ -51,9 +51,8 @@
 
 namespace bpp
 {
-
 /**
- * @brief The sequence interface. 
+ * @brief The sequence interface.
  *
  * This is a general purpose container, containing an ordered list of states.
  * The states that allowed to be present in the sequence are defined
@@ -65,136 +64,134 @@ namespace bpp
  * @see Alphabet
  */
 
-  class Sequence:
-    public virtual IntCoreSequenceSymbolList
-  {
-  public:
-    virtual ~Sequence() {}
+class Sequence :
+  public virtual IntCoreSequenceSymbolList
+{
+public:
+  virtual ~Sequence() {}
 
-  public:
+public:
+  Sequence* clone() const = 0;
 
-    Sequence* clone() const = 0;
 
-    
-    /**
-     * @name Adjusting the content and size of the sequence.
-     *
-     * @{
-     */
-     
-    /**
-     * @brief Set the whole content of the sequence.
-     *
-     * @param sequence The new content of the sequence.
-     * @see The Sequence constructor for information about the way sequences are internaly stored.
-     */
-    virtual void setContent(const std::string& sequence) = 0;
- 
-    virtual void setContent(const std::vector<std::string>& list) = 0;
+  /**
+   * @name Adjusting the content and size of the sequence.
+   *
+   * @{
+   */
 
-    virtual void setContent(const std::vector<int>& list) = 0;
+  /**
+   * @brief Set the whole content of the sequence.
+   *
+   * @param sequence The new content of the sequence.
+   * @see The Sequence constructor for information about the way sequences are internaly stored.
+   */
+  virtual void setContent(const std::string& sequence) = 0;
 
-    virtual  std::string getChar(size_t pos) const = 0;
+  virtual void setContent(const std::vector<std::string>& list) = 0;
 
-    /**
-     * @brief Set up the size of a sequence from the right side.
-     *
-     * All new characters are filled with gaps.
-     * If the specified size is < to the sequence size, the sequence will be truncated.
-     *
-     * @param newSize The new size of the sequence.
-     */
-    virtual void setToSizeR(size_t newSize) = 0;
-    
-    /**
-     * @brief Set up the size of a sequence from the left side.
-     *
-     * All new characters are filled with gaps.
-     * If the specified size is < to the sequence size, the sequence will be truncated.
-     *
-     * @param newSize The new size of the sequence.
-     */
-    virtual void setToSizeL(size_t newSize) = 0;
+  virtual void setContent(const std::vector<int>& list) = 0;
 
-    /**
-     * @brief Append the content of the sequence.
-     *
-     * @param seq The sequence to append.
-     * @throw AlphabetMismatchException If the alphabet of the specified sequence does not match the current alphabet.
-     */
-    virtual void append(const Sequence& seq) = 0;
+  virtual std::string getChar(size_t pos) const = 0;
 
-    /**
-     * @brief Append the specified content to the sequence.
-     *
-     * @param content The content to append to the sequence.
-     * @throw BadIntException If the content does not match the current alphabet.
-     */
-    virtual void append(const std::vector<int>& content) = 0;
+  /**
+   * @brief Set up the size of a sequence from the right side.
+   *
+   * All new characters are filled with gaps.
+   * If the specified size is < to the sequence size, the sequence will be truncated.
+   *
+   * @param newSize The new size of the sequence.
+   */
+  virtual void setToSizeR(size_t newSize) = 0;
 
-    /**
-     * @brief Append the specified content to the sequence.
-     *
-     * @param content The content to append to the sequence.
-     * @throw BadCharException If the content does not match the current alphabet.
-     */
-    virtual void append(const std::vector<std::string>& content) = 0;
+  /**
+   * @brief Set up the size of a sequence from the left side.
+   *
+   * All new characters are filled with gaps.
+   * If the specified size is < to the sequence size, the sequence will be truncated.
+   *
+   * @param newSize The new size of the sequence.
+   */
+  virtual void setToSizeL(size_t newSize) = 0;
 
-    /**
-     * @brief Append the specified content to the sequence.
-     *
-     * @param content The content to append to the sequence.
-     * @throw BadCharException If the content does not match the current alphabet.
-     */
-    virtual void append(const std::string& content) = 0;
-    
-    /** @} */
+  /**
+   * @brief Append the content of the sequence.
+   *
+   * @param seq The sequence to append.
+   * @throw AlphabetMismatchException If the alphabet of the specified sequence does not match the current alphabet.
+   */
+  virtual void append(const Sequence& seq) = 0;
 
-    /**
-     * @name Setting/getting the name of the sequence.
-     *
-     * @{
-     */
-     
-    /**
-     * @brief Get the name of this sequence.
-     *
-     * @return This sequence name.
-     */
-    virtual const std::string& getName() const = 0;
-    
-    /**
-     * @brief Set the name of this sequence.
-     *
-     * @param name The new name of the sequence.
-     */
-    virtual void setName(const std::string& name) = 0;    
-    /** @} */
-    
+  /**
+   * @brief Append the specified content to the sequence.
+   *
+   * @param content The content to append to the sequence.
+   * @throw BadIntException If the content does not match the current alphabet.
+   */
+  virtual void append(const std::vector<int>& content) = 0;
 
-    /** 
-     * Comments @{
-     */
-    
-    virtual const Comments& getComments() const =0;
+  /**
+   * @brief Append the specified content to the sequence.
+   *
+   * @param content The content to append to the sequence.
+   * @throw BadCharException If the content does not match the current alphabet.
+   */
+  virtual void append(const std::vector<std::string>& content) = 0;
 
-    /**
-     * @brief Set the comments.
-     *
-     * @param comments The new comments.
-     */
+  /**
+   * @brief Append the specified content to the sequence.
+   *
+   * @param content The content to append to the sequence.
+   * @throw BadCharException If the content does not match the current alphabet.
+   */
+  virtual void append(const std::string& content) = 0;
 
-    virtual void setComments(const Comments& comments) = 0;
+  /** @} */
 
-    virtual void clearComments() = 0;
+  /**
+   * @name Setting/getting the name of the sequence.
+   *
+   * @{
+   */
 
-    /** @} */
+  /**
+   * @brief Get the name of this sequence.
+   *
+   * @return This sequence name.
+   */
+  virtual const std::string& getName() const = 0;
 
-  };
+  /**
+   * @brief Set the name of this sequence.
+   *
+   * @param name The new name of the sequence.
+   */
+  virtual void setName(const std::string& name) = 0;
+  /** @} */
+
+
+  /**
+   * Comments @{
+   */
+
+  virtual const Comments& getComments() const = 0;
+
+  /**
+   * @brief Set the comments.
+   *
+   * @param comments The new comments.
+   */
+
+  virtual void setComments(const Comments& comments) = 0;
+
+  virtual void clearComments() = 0;
+
+  /** @} */
+};
 
 
 /**
- * @brief A basic implementation of the Sequence interface. 
+ * @brief A basic implementation of the Sequence interface.
  *
  * This is a general purpose container, containing an ordered list of states.
  * The states that allowed to be present in the sequence are defined
@@ -208,190 +205,185 @@ namespace bpp
  * @see Alphabet
  */
 
-  class BasicSequence :
-    public virtual Sequence,
-    public virtual AbstractCoreSequence,
-    public virtual BasicIntSymbolList
+class BasicSequence :
+  public virtual Sequence,
+  public virtual AbstractCoreSequence,
+  public virtual BasicIntSymbolList
+{
+public:
+  /**
+   * @brief Empty constructor: build a void Sequence with just an Alphabet
+   *
+   * You can use it safely for all type of Alphabet in order to build an
+   * empty Sequence i.e. without name nor sequence data.
+   *
+   * @param alpha    A pointer toward the Alphabet to be used with this Sequence.
+   */
+  BasicSequence(const Alphabet* alpha);
+
+  /**
+   * @brief Direct constructor: build a Sequence object from a std::string
+   * You can use it safely for RNA, DNA and protein sequences.
+   *
+   * It can be used with codon sequences too, the std::string will be cut into
+   * parts of size 3. But for more complicated alphabets, you should use one
+   * complete constructors.
+   *
+   * @param name     The sequence name.
+   * @param sequence The whole sequence to be parsed as a std::string.
+   * @param alpha    A pointer toward the alphabet to be used with this sequence.
+   */
+  BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha);
+
+  /**
+   * @brief Direct constructor: build a Sequence object from a std::string.
+   *
+   * You can use it safely for RNA, DNA and protein sequences.
+   *
+   * It can be used with codon sequences too, the std::string will be cut into
+   * tokens of size 3. But for more complicated alphabets, you should use one
+   * complete constructors.
+   *
+   * @param name     The sequence name.
+   * @param sequence The whole sequence to be parsed as a std::string.
+   * @param comments Comments to add to the sequence.
+   * @param alpha    A pointer toward the alphabet to be used with this sequence.
+   */
+  BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha);
+
+  /**
+   * @brief General purpose constructor, can be used with any alphabet.
+   *
+   * You should note that the sequence is stored as a std::vector of int.
+   * Hence each std::string in the std::vector will be translated using the alphabet object.
+   *
+   * @param name     The sequence name.
+   * @param sequence The sequence content.
+   * @param alpha    A pointer toward the alphabet to be used with this sequence.
+   */
+  BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha);
+
+  /**
+   * @brief General purpose constructor, can be used with any alphabet.
+   *
+   * You should note that the sequence is stored as a std::vector of int.
+   * Hence each std::string in the std::vector will be translated using the alphabet object.
+   *
+   * @param name     The sequence name.
+   * @param sequence The sequence content.
+   * @param comments Comments to add to the sequence.
+   * @param alpha    A pointer toward the alphabet to be used with this sequence.
+   */
+  BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha);
+
+  /**
+   * @brief General purpose constructor, can be used with any alphabet.
+   *
+   * @param name     The sequence name.
+   * @param sequence The sequence content.
+   * @param alpha    A pointer toward the alphabet to be used with this sequence.
+   */
+  BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha);
+
+  /**
+   * @brief General purpose constructor, can be used with any alphabet.
+   *
+   * @param name     The sequence name.
+   * @param sequence The sequence content.
+   * @param comments Comments to add to the sequence.
+   * @param alpha    A pointer toward the alphabet to be used with this sequence.
+   */
+  BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha);
+
+  /**
+   * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
+   */
+  BasicSequence(const Sequence& s);
+
+  /**
+   * @brief The Sequence copy constructor. This does not perform a hard copy of the alphabet object.
+   */
+  BasicSequence(const BasicSequence& s);
+
+  /**
+   * @brief The Sequence generic assignment operator. This does not perform a hard copy of the alphabet object.
+   *
+   * @return A ref toward the assigned Sequence.
+   */
+  BasicSequence& operator=(const Sequence& s);
+
+  /**
+   * @brief The Sequence assignment operator. This does not perform a hard copy of the alphabet object.
+   *
+   * @return A ref toward the assigned Sequence.
+   */
+  BasicSequence& operator=(const BasicSequence& s);
+
+  virtual ~BasicSequence() {}
+
+public:
+  /**
+   * @name The Clonable interface
+   *
+   * @{
+   */
+  BasicSequence* clone() const { return new BasicSequence(*this); }
+  /** @} */
+
+  /**
+   * @name Adjusting the size of the sequence.
+   *
+   * @{
+   */
+
+  void setContent(const std::string& sequence);
+
+  using SymbolList<int>::addElement;
+
+  void setContent(const std::vector<std::string>& list)
   {
-  public:
+    BasicIntSymbolList::setContent(list);
+  }
 
-    /**
-     * @brief Empty constructor: build a void Sequence with just an Alphabet
-     *
-     * You can use it safely for all type of Alphabet in order to build an
-     * empty Sequence i.e. without name nor sequence data.
-     *
-     * @param alpha    A pointer toward the Alphabet to be used with this Sequence.
-     */
-    BasicSequence(const Alphabet* alpha);
+  void setContent(const std::vector<int>& list)
+  {
+    BasicIntSymbolList::setContent(list);
+  }
 
-    /**
-     * @brief Direct constructor: build a Sequence object from a std::string
-     * You can use it safely for RNA, DNA and protein sequences.
-     *
-     * It can be used with codon sequences too, the std::string will be cut into
-     * parts of size 3. But for more complicated alphabets, you should use one
-     * complete constructors.
-     *
-     * @param name     The sequence name.
-     * @param sequence The whole sequence to be parsed as a std::string.
-     * @param alpha    A pointer toward the alphabet to be used with this sequence.
-     */
-    BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha);
-  
-    /**
-     * @brief Direct constructor: build a Sequence object from a std::string.
-     * 
-     * You can use it safely for RNA, DNA and protein sequences.
-     *
-     * It can be used with codon sequences too, the std::string will be cut into
-     * tokens of size 3. But for more complicated alphabets, you should use one
-     * complete constructors.
-     *
-     * @param name     The sequence name.
-     * @param sequence The whole sequence to be parsed as a std::string.
-     * @param comments Comments to add to the sequence.
-     * @param alpha    A pointer toward the alphabet to be used with this sequence.
-     */
-    BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha);
-  
-    /**
-     * @brief General purpose constructor, can be used with any alphabet.
-     *
-     * You should note that the sequence is stored as a std::vector of int.
-     * Hence each std::string in the std::vector will be translated using the alphabet object.
-     *
-     * @param name     The sequence name.
-     * @param sequence The sequence content.
-     * @param alpha    A pointer toward the alphabet to be used with this sequence.
-     */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha);
-    
-    /**
-     * @brief General purpose constructor, can be used with any alphabet.
-     *
-     * You should note that the sequence is stored as a std::vector of int.
-     * Hence each std::string in the std::vector will be translated using the alphabet object.
-     *
-     * @param name     The sequence name.
-     * @param sequence The sequence content.
-     * @param comments Comments to add to the sequence.
-     * @param alpha    A pointer toward the alphabet to be used with this sequence.
-     */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha);
-  
-    /**
-     * @brief General purpose constructor, can be used with any alphabet.
-     *
-     * @param name     The sequence name.
-     * @param sequence The sequence content.
-     * @param alpha    A pointer toward the alphabet to be used with this sequence.
-     */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha);
-    
-    /**
-     * @brief General purpose constructor, can be used with any alphabet.
-     *
-     * @param name     The sequence name.
-     * @param sequence The sequence content.
-     * @param comments Comments to add to the sequence.
-     * @param alpha    A pointer toward the alphabet to be used with this sequence.
-     */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha);
+  std::string toString() const
+  {
+    return BasicIntSymbolList::toString();
+  }
 
-    /**
-     * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
-     */
-    BasicSequence(const Sequence& s);
-   
-    /**
-     * @brief The Sequence copy constructor. This does not perform a hard copy of the alphabet object.
-     */
-    BasicSequence(const BasicSequence& s);
- 
-    /**
-     * @brief The Sequence generic assignment operator. This does not perform a hard copy of the alphabet object.
-     *
-     * @return A ref toward the assigned Sequence.
-     */
-    BasicSequence& operator=(const Sequence& s);
-   
-    /**
-     * @brief The Sequence assignment operator. This does not perform a hard copy of the alphabet object.
-     *
-     * @return A ref toward the assigned Sequence.
-     */
-    BasicSequence& operator=(const BasicSequence& s);
+  std::string getChar(size_t pos) const
+  {
+    return BasicIntSymbolList::getChar(pos);
+  }
 
-    virtual ~BasicSequence() {}
+  void setToSizeR(size_t newSize);
 
-  public:
-  
-    /**
-     * @name The Clonable interface
-     *
-     * @{
-     */
-    BasicSequence* clone() const { return new BasicSequence(*this); }
-    /** @} */
-    
-    /**
-     * @name Adjusting the size of the sequence.
-     *
-     * @{
-     */
-     
-    void setContent(const std::string& sequence);
+  void setToSizeL(size_t newSize);
 
-    using SymbolList<int>::addElement;
+  void append(const Sequence& seq);
 
-    void setContent(const std::vector<std::string>& list)
-    {
-      BasicIntSymbolList::setContent(list);
-    }
+  void append(const std::vector<int>& content);
 
-    void setContent(const std::vector<int>& list)
-    {
-      BasicIntSymbolList::setContent(list);
-    }
+  void append(const std::vector<std::string>& content);
 
-    std::string toString() const
-    {
-      return BasicIntSymbolList::toString();
-    }
+  void append(const std::string& content);
 
-    std::string getChar(size_t pos) const
-    {
-       return BasicIntSymbolList::getChar(pos);
-    }
+  const Comments& getComments() const { return Commentable::getComments(); }
 
-    void setToSizeR(size_t newSize);
-    
-    void setToSizeL(size_t newSize);
+  void setComments(const Comments& comments) { Commentable::setComments(comments); }
 
-    void append(const Sequence& seq);
-    
-    void append(const std::vector<int>& content);
+  void clearComments() { Commentable::clearComments(); }
 
-    void append(const std::vector<std::string>& content);
+  const std::string& getName() const { return AbstractCoreSequence::getName(); }
 
-    void append(const std::string& content);
+  void setName(const std::string& name) { AbstractCoreSequence::setName(name); }
 
-    const Comments& getComments() const { return Commentable::getComments(); }
+  /** @} */
+};
+} // end of namespace bpp.
 
-    void setComments(const Comments& comments) { Commentable::setComments(comments); }    
-
-    void clearComments() { Commentable::clearComments(); }    
-
-    const std::string& getName() const { return AbstractCoreSequence::getName(); }
-    
-    void setName(const std::string& name) { AbstractCoreSequence::setName(name); }
-
-    /** @} */
-
-  };
-
-} //end of namespace bpp.
-
-#endif // _SEQUENCE_H_
-
+#endif// _SEQUENCE_H_
