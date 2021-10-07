@@ -1,14 +1,17 @@
 //
 // File: SiteContainerTools.h
-// Created by: Julien Dutheil
-// Created on: Fri Dec 12 18:55:06 2003
+// Authors:
+//   Julien Dutheil
+// Created: 2003-12-12 18:55:06
 //
 
-#ifndef _SITECONTAINERTOOLS_H_
-#define _SITECONTAINERTOOLS_H_
+#ifndef BPP_SEQ_CONTAINER_SITECONTAINERTOOLS_H
+#define BPP_SEQ_CONTAINER_SITECONTAINERTOOLS_H
+
+
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for sequences analysis.
@@ -483,7 +486,7 @@ public:
   /**
    * @brief Compare an alignment to a reference alignment, and compute the column scores.
    *
-   * Calculations are made according to formula for the "CS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682–2690.
+   * Calculations are made according to formula for the "CS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682â2690.
    *
    * @param positions1 Alignment index for the test alignment.
    * @param positions2 Alignment index for the reference alignment.
@@ -498,7 +501,7 @@ public:
   /**
    * @brief Compare an alignment to a reference alignment, and compute the sum-of-pairs scores.
    *
-   * Calculations are made according to formula for the "SPS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682–2690.
+   * Calculations are made according to formula for the "SPS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682â2690.
    *
    * @param positions1 Alignment index for the test alignment.
    * @param positions2 Alignment index for the reference alignment.
@@ -511,5 +514,4 @@ public:
   static std::vector<double> getSumOfPairsScores(const Matrix<size_t>& positions1, const Matrix<size_t>& positions2, double na = 0);
 };
 } // end of namespace bpp.
-
-#endif//_SITECONTAINERTOOLS_H_
+#endif // BPP_SEQ_CONTAINER_SITECONTAINERTOOLS_H
