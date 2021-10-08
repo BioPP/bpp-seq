@@ -63,11 +63,13 @@
  * The bpp::SequenceTools static class provides simple analysis tools, like base frequencies measures,
  * concatenation, etc.
  *
- * @par
- * SeqLib also provides tools to perform <i>in silico</i> molecular biology, like complementation,
- * transcription, translation, etc. All these methods are particular cases of alphabet translation, and are implemented
- * via the interface bpp::Translator. Of particular interest are the classes bpp::NucleicAcidsReplication,
- * bpp::DNAToRNA and bpp::GeneticCode + derivatives.
+ * @par SeqLib also provides tools to perform <i>in silico</i>
+ * molecular biology, like complementation, transcription,
+ * translation, etc. All these methods are particular cases of
+ * alphabet translation, and are implemented via the interface
+ * bpp::Translator. Of particular interest are the classes
+ * bpp::NucleicAcidsReplication, bpp::DNAToRNA and bpp::GeneticCode +
+ * derivatives.
  *
  * @par
  * Sequence collections are stored as <em>containers</em>. The simplest container implements the
