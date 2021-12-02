@@ -121,6 +121,8 @@ bool ProteicAlphabet::isResolvedIn(int state1, int state2) const
   else if (state1 == 21)
     return state2 == 5 || state2 == 6;
   else if (state1 == 22)
+    return state2 == 9 || state2 == 10;
+  else if (state1 == 23)
     return state2 > 0;
   else
     return state1 == state2;
