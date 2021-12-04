@@ -245,8 +245,8 @@ Sequence* SiteContainerTools::getConsensus(const SiteContainer& sc, const std::s
 
 void SiteContainerTools::changeGapsToUnknownCharacters(AlignedValuesContainer& sites)
 {
-  VectorSiteContainer* vsc = dynamic_cast<VectorSiteContainer*>(&sites);
-  VectorProbabilisticSiteContainer* vpsc = dynamic_cast<VectorProbabilisticSiteContainer*>(&sites);
+  SiteContainer* vsc = dynamic_cast<SiteContainer*>(&sites);
+  ProbabilisticSiteContainer* vpsc = dynamic_cast<ProbabilisticSiteContainer*>(&sites);
 
   // NB: use iterators for a better algorithm?
   int unknownCode = sites.getAlphabet()->getUnknownCharacterCode();
