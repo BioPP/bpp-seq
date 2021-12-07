@@ -211,14 +211,14 @@ std::vector<std::string> CodonAlphabet::getAlias(const std::string& state) const
 
 bool CodonAlphabet::isResolvedIn(int state1, int state2) const
 {
-  if (!isIntInAlphabet(state1))
-    throw BadIntException(state1, "CodonAlphabet::isResolvedIn(int, int): Specified base unknown.");
+  if (state1 < 0 || !isIntInAlphabet(state1))
+    throw BadIntException(state1, "CodonAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.");
 
-  if (!isIntInAlphabet(state2))
-    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Specified base unknown.");
+  if (state2 < 0 || !isIntInAlphabet(state2))
+    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.");
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Unresolved base.");
+    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2));
 
   return (state1 == 64) ? (state2 >= 0) : (state1 == state2);
 }
