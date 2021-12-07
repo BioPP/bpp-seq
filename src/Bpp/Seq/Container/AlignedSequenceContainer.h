@@ -153,9 +153,19 @@ public:
    *
    * @{
    */
-  const Site& getSite(size_t siteIndex) const;
-  Site& getSite(size_t siteIndex);
-  void  setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
+
+  /*
+   * @brief If needed, those methods will create Sites from the
+   * Sequences, BUT are not included in the Sequences. Which means
+   * that if those are modified, the sequences are not, and
+   * information is not consistent any more.
+   *
+   */
+  
+  virtual const Site& getSite(size_t siteIndex) const;
+  virtual Site& getSite(size_t siteIndex);
+  
+  virtual void  setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
   std::shared_ptr<Site> deleteSite(size_t siteIndex);
   void addSite(const Site& site, bool checkPosition = true);
   void addSite(const Site& site, int position, bool checkPosition = true);

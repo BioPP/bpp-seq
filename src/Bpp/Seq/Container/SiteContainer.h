@@ -99,7 +99,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void setSite(size_t siteIndex, const Site& site, bool checkPosition) = 0;
+  virtual void setSite(size_t siteIndex, const Site& site, bool checkPosition = true) = 0;
 
   /**
    * @brief Add a site in the container.

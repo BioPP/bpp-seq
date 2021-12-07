@@ -198,7 +198,17 @@ public:
   using OrderedSequenceContainer::setComments;
   void setComments(size_t sequenceIndex, const Comments& comments);
 
-  // Method to get a sequence object from sequence container
+
+  /*
+   * brief  Method to get a sequence object from sequence container.
+   *
+   * If needed, those methods will create Sequences from the
+   * Sites Container, BUT those Sequences are independent from the set
+   * of Sites. Which means that if those are modified, the sites
+   * are not, and information is not consistent any more.
+   *
+   */
+  
   const Sequence& getSequence(size_t sequenceIndex) const;
   const Sequence& getSequence(const std::string& name) const;
 

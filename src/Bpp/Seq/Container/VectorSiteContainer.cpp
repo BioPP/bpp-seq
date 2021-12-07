@@ -349,7 +349,7 @@ void VectorSiteContainer::addSite(const Site& site, bool checkPositions)
     for (size_t i = 0; i < getNumberOfSites(); i++)
     {
       if (getSite(i).getPosition() == position)
-        throw SiteException("VectorSiteContainer::addSite. Site position already exists in container", &site);
+        throw SiteException("VectorSiteContainer::addSite(site, bool): Site position already exists in container", &site);
     }
   }
 
@@ -508,9 +508,7 @@ const Sequence& VectorSiteContainer::getSequence(size_t i) const
   size_t n = getNumberOfSites();
   vector<int> sequence(n);
   for (size_t j = 0; j < n; j++)
-  {
     sequence[j] = getSite(j)[i];
-  }
 
   shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(VectorMappedContainer<Sequence>::getObjectName(i), sequence, VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet())));
 
@@ -674,9 +672,7 @@ void VectorSiteContainer::realloc(size_t n)
   Site s(getAlphabet());
 
   for (size_t i = 0; i < n; i++)
-  {
     addSite(s, false);
-  }
 
   reindexSites();
 }

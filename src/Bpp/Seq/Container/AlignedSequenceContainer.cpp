@@ -130,11 +130,9 @@ const Site& AlignedSequenceContainer::getSite(size_t i) const
 
   // Main loop : for all sequences
   size_t n = getNumberOfSequences();
-  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)i));
+  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)(i+1)));
   for (size_t j = 0; j < n; j++)
-  {
     site->addElement(getSequence(j)[i]);
-  }
 
   VectorPositionedContainer<Site>::addObject_(site, i, true);
   return *VectorPositionedContainer<Site>::getObject(i);
@@ -150,7 +148,7 @@ Site& AlignedSequenceContainer::getSite(size_t i)
 
   // Main loop : for all sequences
   size_t n = getNumberOfSequences();
-  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)i));
+  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)(i+1)));
   for (size_t j = 0; j < n; j++)
   {
     site->addElement(getSequence(j)[i]);
@@ -175,18 +173,20 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
     throw SiteException("AlignedSequenceContainer::setSite, site does not have the appropriate length", &site);
 
   // Check position:
-  int position = site.getPosition();
-  for (auto poss : positions_)
+  if (checkPositions)
   {
-    if (poss == position)
-      throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
+    int position = site.getPosition();
+    for (auto poss : positions_)
+    {
+      if (poss == position)
+        throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
+    }
   }
-
+  
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
     getSequence_(j).setElement(pos, site[j]);
-  }
+
   positions_[pos] = site.getPosition();
 }
 
@@ -262,9 +262,7 @@ void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions)
 
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
     getSequence_(j).addElement(site[j]);
-  }
 
   length_++;
   positions_.push_back(position);
@@ -338,9 +336,7 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool 
 
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
     getSequence_(j).addElement(siteIndex, site[j]);
-  }
 
   length_++;
   positions_.insert(positions_.begin() + static_cast<ptrdiff_t>(siteIndex), position);
@@ -377,9 +373,7 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, int p
 
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
     getSequence_(j).addElement(siteIndex, site[j]);
-  }
 
   length_++;
   positions_.insert(positions_.begin() + static_cast<ptrdiff_t>(siteIndex), position);

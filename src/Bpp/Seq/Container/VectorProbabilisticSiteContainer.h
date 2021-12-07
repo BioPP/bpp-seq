@@ -167,6 +167,11 @@ public:
    * @brief Get Sequence from a position in the container.
    * @param i  index of the sequence
    *
+   * @brief If needed, those methods will create Sequences from the
+   * Sites Container, BUT those Sequences are independent from the set
+   * of Sites. Which means that if those are modified, the sites
+   * are not, and information is not consistent any more.
+   *
    */
 
   const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const;
