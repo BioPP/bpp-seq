@@ -118,8 +118,8 @@ public:
 
 public:
   unsigned int getSize() const { return 20; }
-  unsigned int getNumberOfTypes() const { return 23; }
-  int getUnknownCharacterCode() const { return 22; }
+  unsigned int getNumberOfTypes() const { return 24; }
+  int getUnknownCharacterCode() const { return 23; }
   bool isResolvedIn(int state1, int state2) const;
   std::vector<int> getAlias(int state) const;
   std::vector<std::string> getAlias(const std::string& state) const;
