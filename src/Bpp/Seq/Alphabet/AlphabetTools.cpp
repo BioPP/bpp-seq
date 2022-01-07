@@ -95,9 +95,9 @@ bool AlphabetTools::checkAlphabetCodingSize(const Alphabet& alphabet)
     return true;                    // Will this really happen?
   size_t size = alphabet.intToChar(0).size();
 
-  for (int i = 1; i < static_cast<int>(alphabet.getNumberOfTypes()); ++i)
+  for (size_t i = 1; i < alphabet.getNumberOfTypes(); ++i)
   {
-    if (alphabet.intToChar(i).size() != size)
+    if (alphabet.intToChar(alphabet.getStateAt(i).getNum()).size() != size)
       return false;
   }
   return true;
