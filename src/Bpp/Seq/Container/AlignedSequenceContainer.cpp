@@ -52,6 +52,25 @@ using namespace std;
 
 /***************************************************************************/
 
+AlignedSequenceContainer::AlignedSequenceContainer(std::vector<std::shared_ptr<Sequence>> vseq, const Alphabet* alpha):
+  AbstractSequenceContainer(alpha),
+  VectorSequenceContainer(vseq, alpha),
+  VectorPositionedContainer<Site>(),
+  positions_(),
+  length_(0)
+{
+  if (vseq.size()==0)
+    return;
+  
+  length_ = vseq[0]->size();
+  for (size_t ns=1; ns < vseq.size(); ns++)
+    if (!checkSize_(*vseq[ns]))
+      throw BadSizeException("Sequences of different sizes in aligned construction",length_,vseq[ns]->size());
+
+  VectorPositionedContainer<Site>::setSize(length_);
+  reindexSites();
+}
+
 AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer& osc) :
   AbstractSequenceContainer(osc.getAlphabet()),
   VectorSequenceContainer(osc.getAlphabet()),

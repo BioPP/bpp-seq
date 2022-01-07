@@ -82,6 +82,13 @@ private:
 
 public:
   /**
+   * @brief Build a container with the specified alphabet, with shared Sequences.
+   *
+   * @param alpha The alphabet to use.
+   */
+  AlignedSequenceContainer(std::vector<std::shared_ptr<Sequence>> vseq, const Alphabet* alpha);
+  
+  /**
    * @brief Build a new empty container with the specified alphabet.
    *
    * @param alpha The alphabet to use.

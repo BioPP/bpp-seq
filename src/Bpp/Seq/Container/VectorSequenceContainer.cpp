@@ -49,14 +49,14 @@ using namespace std;
 /** Class constructors: *******************************************************/
 
 VectorSequenceContainer::VectorSequenceContainer(
-  const std::vector<const Sequence*>& vs,
+  const std::vector<std::shared_ptr<Sequence>>& vs,
   const Alphabet* alpha) :
   AbstractSequenceContainer(alpha),
   VectorMappedContainer<Sequence>()
 {
   for (auto i = vs.begin(); i < vs.end(); i++)
   {
-    addSequence(**i);
+    addSequence(*i);
   }
 }
 

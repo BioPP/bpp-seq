@@ -68,8 +68,14 @@ class VectorSequenceContainer :
   virtual public VectorMappedContainer<Sequence>
 {
 public:
+
+  /**
+   * @brief Build a container with shared Sequences.
+   *
+   */
+  
   VectorSequenceContainer(
-    const std::vector<const Sequence*>& vs, const Alphabet* alpha);
+    const std::vector<std::shared_ptr<Sequence>>& vs, const Alphabet* alpha);
 
   /**
    * @brief Build an empty container that will contain sequences of a particular alphabet.
@@ -278,14 +284,37 @@ public:
    * @param sequence The sequence to add.
    * @param checkName Tell if the method must check the name of the sequence
    * before adding it.
-   * @throw Exception If the sequence couldn't be added to the container.
    */
+
   virtual void addSequence(const Sequence& sequence, bool checkName = true)
   {
     if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
       throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
 
     appendObject(std::shared_ptr<Sequence>(sequence.clone()), sequence.getName(), checkName);
+  }
+
+  /**
+  * @brief Add a sequence at the end of the container.
+  *
+  * The sequence is shared with the container.
+  * If checkNames is set to true, the method check if the name of the
+  * sequence is already used in the container, and sends an exception if it
+  * is the case. Otherwise, do not check the name: the method is hence faster,
+  * but use it at your own risks!
+  *
+  * @param sequence The sequence to add.
+  * @param checkName Tell if the method must check the name of the sequence
+  * before adding it.
+  * @throw Exception If the sequence couldn't be added to the container.
+  */
+
+  virtual void addSequence(const std::shared_ptr<Sequence> sequence, bool checkName = true)
+  {
+    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
+
+    appendObject(sequence, sequence->getName(), checkName);
   }
 
   /**
