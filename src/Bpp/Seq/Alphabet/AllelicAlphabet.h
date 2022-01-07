@@ -47,7 +47,7 @@
 #include <string>
 #include <vector>
 
-#include "../Sequence.h"
+#include "../Transliterator.h"
 
 namespace bpp
 {
@@ -87,7 +87,7 @@ namespace bpp
     public AbstractAlphabet
   {
   protected:
-    std::shared_ptr<const Alphabet> pAlph_;
+    const Alphabet& alph_;
     
     /*
      * @brief the number of alleles.
@@ -109,20 +109,20 @@ namespace bpp
      * @brief Builds a new word alphabet from an  Alphabet
      *
      */
-    AllelicAlphabet(std::shared_ptr<const Alphabet> pAlph, uint nbAlleles);
+    AllelicAlphabet(const Alphabet& alph, uint nbAlleles);
 
-    AllelicAlphabet(const AllelicAlphabet& bia) : AbstractAlphabet(bia), pAlph_(bia.pAlph_), nbAlleles_(bia.nbAlleles_), nbUnknown_(bia.nbUnknown_)
+    AllelicAlphabet(const AllelicAlphabet& bia) : AbstractAlphabet(bia), alph_(bia.alph_), nbAlleles_(bia.nbAlleles_), nbUnknown_(bia.nbUnknown_)
     {}
 
-     AllelicAlphabet& operator=(const AllelicAlphabet& bia)
-     {
-       AbstractAlphabet::operator=(bia);
-       pAlph_ = bia.pAlph_;
-       nbAlleles_ = bia.nbAlleles_;
-       nbUnknown_ = bia.nbUnknown_;
+     // AllelicAlphabet& operator=(const AllelicAlphabet& bia)
+     // {
+     //   AbstractAlphabet::operator=(bia);
+     //   alph_ = bia.pAlph_;
+     //   nbAlleles_ = bia.nbAlleles_;
+     //   nbUnknown_ = bia.nbUnknown_;
   
-       return *this;
-     }
+     //   return *this;
+     // }
 
      AllelicAlphabet* clone() const
      {
@@ -139,23 +139,19 @@ namespace bpp
       */
 
     int charToInt(const std::string& state) const
-     {
+    {
        if (state.size() != getStateCodingSize())
          throw BadCharException(state, "AllelicAlphabet::charToInt", this);
-       if (isUnresolved(state))
-         return nbUnknown_;
-       if (isGap(state))
-         return -1;
-       else return AbstractAlphabet::charToInt(state);
-     }
+       else
+         return  AbstractAlphabet::charToInt(state);
+    }
 
-     unsigned int getSize() const
-     {
-       return getNumberOfChars() - 2;
-     }
-
-
-     unsigned int getNumberOfTypes() const
+    unsigned int getSize() const
+    {
+      return getNumberOfChars() - 2;
+    }
+    
+    unsigned int getNumberOfTypes() const
      {
        return getNumberOfChars() - 1;
      }
@@ -173,6 +169,15 @@ namespace bpp
      {
        return nbAlleles_;
      }
+
+    /**
+     * @brief Returns Base Alphabet
+     *
+     */
+    const Alphabet& getStateAlphabet() const
+    {
+      return alph_;
+    }
 
      std::string getAlphabetType() const;
 
@@ -199,6 +204,42 @@ namespace bpp
        return states[0];
      }
 
+    class AllelicTransliterator : public AbstractTransliterator
+    {
+    private:
+
+      const AllelicAlphabet& alph_;
+
+    public:
+      AllelicTransliterator(const AllelicAlphabet& alph) : AbstractTransliterator(), alph_(alph) {}
+
+      const Alphabet* getSourceAlphabet() const { return &alph_.getStateAlphabet(); }
+      const Alphabet* getTargetAlphabet() const { return &alph_; }
+
+      std::string translate(const std::string& state) const
+      {
+        return getTargetAlphabet()->intToChar(getSourceAlphabet()->charToInt(state));
+      }
+
+      /*
+       * @brief States of the original alphabet are the first ones of
+       * the allelic alphabet.
+       *
+       */
+      
+      int translate(int state) const
+      {
+        return state;
+      }
+      
+      Sequence* translate(const Sequence& sequence) const
+      {
+        return AbstractTransliterator::translate(sequence);
+      }
+    };
+
+    Sequence* convertFromStateAlphabet(const Sequence& sequence) const;
+
    private:
      /**
       * @name Inner utilitary functions
@@ -215,8 +256,9 @@ namespace bpp
       * @{
       */
      unsigned int getStateCodingSize() const
-     {
-       return 2*((uint)pAlph_->getStateCodingSize()+(uint)std::to_string(nbAlleles_).size());
+    {
+      auto x = 2*((uint)alph_.getStateCodingSize()+(uint)std::to_string(nbAlleles_).size());
+      return x;
      }
     
     /** @} */

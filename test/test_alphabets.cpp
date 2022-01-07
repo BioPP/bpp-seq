@@ -56,7 +56,7 @@ int main() {
   auto pro = std::make_shared<ProteicAlphabet>();
   auto def = std::make_shared<DefaultAlphabet>();
   auto cdn = std::make_shared<CodonAlphabet>(rna);
-  auto allelic = std::make_shared<AllelicAlphabet>(dna,4);
+  auto allelic = std::make_shared<AllelicAlphabet>(*dna,4);
 
   //Testing functions:
   if (!AlphabetTools::isDNAAlphabet(dna.get())) return 1;

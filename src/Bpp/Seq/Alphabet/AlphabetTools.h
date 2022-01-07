@@ -51,6 +51,7 @@
 #include "ProteicAlphabet.h"
 #include "RNA.h"
 #include "RNY.h"
+#include "AllelicAlphabet.h"
 #include "WordAlphabet.h"
 
 // From the STL :
@@ -191,6 +192,12 @@ public:
    */
   static bool isDefaultAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
 
+  /**
+   * @return True if the alphabet is an instanciation of the Allelic class.
+   * @param alphabet The alphabet to check.
+   */
+  static bool isAllelicAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<AllelicAlphabet>(alphabet); }
+  
   /**
    * @brief Tell if two characters match according to a given alphabet.
    *

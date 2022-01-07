@@ -49,21 +49,21 @@ using namespace bpp;
 
 using namespace std;
 
-AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> pAlph, uint nbAlleles) :
-  pAlph_(pAlph),
+AllelicAlphabet::AllelicAlphabet(const Alphabet& alph, uint nbAlleles) :
+  alph_(alph),
   nbAlleles_(nbAlleles)
 {
   if (nbAlleles_<=1)
     throw BadIntException((int)nbAlleles_, "AllelicAlphabet::AllelicAlphabet : wrong number of alleles", this);
   
-  uint size = pAlph->getSize();
+  uint size = alph_.getSize();
 
-  auto sword=pAlph->getStateCodingSize();
+  auto sword=alph_.getStateCodingSize();
   auto snb=std::to_string(nbAlleles_).size();
 
   // Gap is such as "-6-0"
   
-  string gapchar = pAlph->getState(pAlph->getGapCharacterCode()).getLetter();
+  string gapchar = alph_.getState(alph_.getGapCharacterCode()).getLetter();
 
   auto gapword =  gapchar + std::string("0",snb);
 
@@ -75,7 +75,7 @@ AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> pAlph, uint nbA
   
   for (int i = 0; i < size; ++i)
   {
-    auto desc= pAlph->intToChar(i)+std::to_string(nbAlleles_)+ gapword;
+    auto desc= alph_.intToChar(i)+std::to_string(nbAlleles_)+ gapword;
     registerState(new AlphabetState(i, desc, desc));
   }
 
@@ -87,9 +87,9 @@ AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> pAlph, uint nbA
       auto nbl = (i * (int)size + j) * (int)(nbAlleles_-1) + (int)size;
       for (int nba=1 ; nba<nbAlleles_; nba++)
       {
-        auto sni=std::string("0",snb-std::to_string(nba).size()) + std::to_string(nba);
-        auto snj=std::string("0",snb-std::to_string((int)nbAlleles_-nba).size()) + std::to_string((int)nbAlleles_-nba);
-        auto desc= pAlph_->intToChar(i)+ sni + pAlph_->intToChar(j)+snj;
+        auto sni=std::string("0",snb-std::to_string((int)nbAlleles_-nba).size()) + std::to_string((int)nbAlleles_-nba);
+        auto snj=std::string("0",snb-std::to_string(nba).size()) + std::to_string(nba);
+        auto desc= alph_.intToChar(i)+ sni + alph_.intToChar(j)+snj;
         registerState(new AlphabetState((int)(nbl + nba -1), desc, desc));
       }
     }
@@ -106,7 +106,7 @@ AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> pAlph, uint nbA
 
 std::string AllelicAlphabet::getAlphabetType() const
 {
-  return "Allelic(alphabet="+pAlph_->getAlphabetType()+",nbAlleles_="+std::to_string(nbAlleles_);
+  return "Allelic(alphabet="+alph_.getAlphabetType()+",nbAlleles_="+std::to_string(nbAlleles_);
 }
 
 
@@ -123,7 +123,7 @@ std::string AllelicAlphabet::getAlphabetType() const
    if (isUnresolved(state2))
      throw BadIntException(state2, "AllelicAlphabet::isResolvedIn(int, int): Unresolved base.");
 
-   auto size=pAlph_->getSize();
+   auto size=alph_.getSize();
    return (state1 == size*size*(nbAlleles_-1)) ? (state2 >= 0) : (state1 == state2);
  }
 
@@ -155,3 +155,10 @@ std::vector<std::string> AllelicAlphabet::getAlias(const std::string& state) con
     return vector<string>(1, state);
 }
 
+/******************************************************************************/
+
+Sequence*  AllelicAlphabet::convertFromStateAlphabet(const Sequence& sequence) const
+{
+  AllelicAlphabet::AllelicTransliterator t(*this);
+  return t.translate(sequence);
+}
