@@ -120,8 +120,8 @@ public:
  */
 class SequenceWithAnnotation :
   public virtual Sequence,
-  public virtual AbstractCoreSequence,
-  public virtual EdIntSymbolList
+  public AbstractCoreSequence,
+  public EdIntSymbolList
 {
 public:
   /**
