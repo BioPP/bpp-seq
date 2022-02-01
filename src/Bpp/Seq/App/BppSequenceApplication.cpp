@@ -107,3 +107,20 @@ map<size_t, AlignedValuesContainer*> BppSequenceApplication::getAlignmentsMap(
 
   return mSites;
 }
+
+map<size_t, const AlignedValuesContainer*> BppSequenceApplication::getConstAlignmentsMap(
+  const Alphabet* alphabet,
+  bool changeGapsToUnknownCharacters,
+  bool optionalData,
+  const std::string& prefix,
+  const std::string& suffix,
+  bool suffixIsOptional) const
+{
+  auto mSites = getAlignmentsMap(alphabet, changeGapsToUnknownCharacters, optionalData, prefix, suffix, suffixIsOptional);
+
+  map<size_t, const AlignedValuesContainer*> mSitesconst;
+  for (auto it:mSites)
+    mSitesconst[it.first]=it.second;
+
+  return mSitesconst;
+}
