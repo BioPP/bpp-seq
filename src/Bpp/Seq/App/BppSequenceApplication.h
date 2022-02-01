@@ -102,6 +102,20 @@ public:
     const std::string& prefix = "input.",
     const std::string& suffix = "",
     bool suffixIsOptional = true) const;
+
+
+  /*
+   * @brief Get the std::map of const alignments
+   */
+  
+  virtual std::map<size_t, const AlignedValuesContainer*> getConstAlignmentsMap(
+    const Alphabet* alphabet,
+    bool changeGapsToUnknownCharacters = true,
+    bool optionalData = false,
+    const std::string& prefix = "input.",
+    const std::string& suffix = "",
+    bool suffixIsOptional = true) const;
 };
+  
 } // end of namespace bpp;
 #endif // BPP_SEQ_APP_BPPSEQUENCEAPPLICATION_H
