@@ -248,11 +248,6 @@ class EdSymbolList :
   public virtual EdCoreSymbolList<T>
 {
 private:
-  /**
-   * @brief The Alphabet attribute must be initialized in constructor and then can never be changed.
-   *
-   * To apply another alphabet to a list you'll have to create a new list.
-   */
   bool propagateEvents_;
 
 protected:
