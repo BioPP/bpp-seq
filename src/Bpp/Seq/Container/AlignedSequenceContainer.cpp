@@ -493,6 +493,7 @@ void AlignedSequenceContainer::clear()
 {
   length_ = 0;
   VectorSequenceContainer::clear();
+  VectorPositionedContainer<Site>::clear();
 }
 
 /******************************************************************************/
