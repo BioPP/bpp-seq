@@ -224,7 +224,7 @@ public:
   void setSize(size_t size)
   {
     if (positions_.size() > size)
-      throw Exception("VectorPositionedContainer::setSize : not possible to shroten the vector.");
+      throw Exception("VectorPositionedContainer::setSize : not possible to shorten the vector.");
 
     positions_.resize(size);
   }

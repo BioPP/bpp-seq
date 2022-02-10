@@ -239,7 +239,6 @@ public:
     const Alphabet* alpha
     ) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(alpha),
     qualScores_(new SequenceQuality(0, false))
   {
@@ -263,7 +262,6 @@ public:
     const std::string& sequence,
     const Alphabet* alpha) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
   {
@@ -291,7 +289,6 @@ public:
     const Comments& comments,
     const Alphabet* alpha) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
   {
@@ -319,7 +316,6 @@ public:
     const std::vector<int>& quality,
     const Alphabet* alpha) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(quality, false))
   {
@@ -351,7 +347,6 @@ public:
     const Comments& comments,
     const Alphabet* alpha) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(quality, false))
   {
@@ -375,7 +370,6 @@ public:
     const std::vector<int>& sequence,
     const Alphabet* alpha) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
   {
@@ -403,7 +397,6 @@ public:
     const Comments& comments,
     const Alphabet* alpha) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
   {
@@ -431,7 +424,6 @@ public:
     const std::vector<int>& quality,
     const Alphabet* alpha) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(quality, false))
   {
@@ -463,7 +455,6 @@ public:
     const Comments& comments,
     const Alphabet* alpha) :
     EdSymbolList<int>(alpha),
-    EdIntSymbolList(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(quality, false))
   {
@@ -480,7 +471,6 @@ public:
    */
   SequenceWithQuality(const Sequence& s) :
     EdSymbolList<int>(s.getAlphabet()),
-    EdIntSymbolList(s.getAlphabet()),
     SequenceWithAnnotation(s), qualScores_(new SequenceQuality(s.size(), false))
   {
     addAnnotation(qualScores_);
@@ -502,7 +492,6 @@ public:
     const Sequence& s,
     const std::vector<int>& sc) :
     EdSymbolList<int>(sc, s.getAlphabet()),
-    EdIntSymbolList(sc, s.getAlphabet()),
     SequenceWithAnnotation(s),
     qualScores_(new SequenceQuality(sc, false))
   {
@@ -520,7 +509,6 @@ public:
 
   SequenceWithQuality(const SequenceWithQuality& sequence) :
     EdSymbolList<int>(sequence.getAlphabet()),
-    EdIntSymbolList(sequence.getAlphabet()),
     SequenceWithAnnotation(sequence), qualScores_(0)
   {
     qualScores_ = dynamic_cast<SequenceQuality*>(&getAnnotation(SequenceQuality::QUALITY_SCORE));

@@ -256,16 +256,15 @@ class EdIntSymbolList :
 {
 public:
   /**
-   * @brief Build a new void BasicIntSymbolList object with the specified alphabet.
+   * @brief Build a new void EdIntSymbolList object with the specified alphabet.
    *
    * @param alpha The alphabet to use.
    */
-  EdIntSymbolList(const Alphabet* alpha) : EdSymbolList<int>(alpha)
-  {}
+  EdIntSymbolList(const Alphabet* alpha) : EdSymbolList<int>(alpha) {}
 
 
   /**
-   * @brief Build a new BasicIntSymbolList object with the specified alphabet.
+   * @brief Build a new EdIntSymbolList object with the specified alphabet.
    * The content of the site is initialized from a vector of characters.
    *
    * @param list     The content of the site.
@@ -274,7 +273,7 @@ public:
   EdIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
 
   /**
-   * @brief Build a new BasicIntSymbolList object with the specified alphabet.
+   * @brief Build a new EdIntSymbolList object with the specified alphabet.
    * The content of the site is initialized from a vector of integers.
    *
    * @param list     The content of the site.
@@ -310,8 +309,7 @@ public:
   EdIntSymbolList* clone() const { return new EdIntSymbolList(*this); }
   /** @} */
 
-  ~EdIntSymbolList()
-  {}
+  ~EdIntSymbolList() {}
 
 public:
   virtual void setContent(const std::vector<std::string>& list);

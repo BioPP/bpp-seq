@@ -54,14 +54,14 @@ using namespace std;
 /* Constructors: **************************************************************/
 
 SequenceWithAnnotation::SequenceWithAnnotation(const Alphabet* alpha) :
-  AbstractCoreSequence(""),
   EdSymbolList<int>(alpha),
+  AbstractCoreSequence(""),
   EdIntSymbolList(alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha) :
-  AbstractCoreSequence(name),
   EdSymbolList<int>(alpha),
+  AbstractCoreSequence(name),
   EdIntSymbolList(alpha)
 {
   if (sequence != "")
@@ -69,8 +69,8 @@ SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const st
 }
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha) :
-  AbstractCoreSequence(name, comments),
   EdSymbolList<int>(alpha),
+  AbstractCoreSequence(name, comments),
   EdIntSymbolList(alpha)
 {
   if (sequence != "")
@@ -78,40 +78,40 @@ SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const st
 }
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha) :
-  AbstractCoreSequence(name),
   EdSymbolList<int>(alpha),
+  AbstractCoreSequence(name),
   EdIntSymbolList(sequence, alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha) :
-  AbstractCoreSequence(name, comments),
   EdSymbolList<int>(alpha),
+  AbstractCoreSequence(name, comments),
   EdIntSymbolList(sequence, alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) :
-  AbstractCoreSequence(name),
   EdSymbolList<int>(sequence, alpha),
+  AbstractCoreSequence(name),
   EdIntSymbolList(sequence, alpha)
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha) :
-  AbstractCoreSequence(name, comments),
   EdSymbolList<int>(sequence, alpha),
+  AbstractCoreSequence(name, comments),
   EdIntSymbolList(sequence, alpha)
 {}
 
 /* Copy constructors: *********************************************************/
 
 SequenceWithAnnotation::SequenceWithAnnotation(const Sequence& s) :
-  AbstractCoreSequence(s.getName(), s.getComments()),
   EdSymbolList<int>(s.getContent(), s.getAlphabet()),
+  AbstractCoreSequence(s.getName(), s.getComments()),
   EdIntSymbolList(s.getContent(), s.getAlphabet())
 {}
 
 SequenceWithAnnotation::SequenceWithAnnotation(const SequenceWithAnnotation& s) :
-  AbstractCoreSequence(s.getName(), s.getComments()),
   EdSymbolList<int>(s.getContent(), s.getAlphabet()),
+  AbstractCoreSequence(s.getName(), s.getComments()),
   EdIntSymbolList(s.getContent(), s.getAlphabet())
 {}
 

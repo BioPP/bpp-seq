@@ -70,9 +70,9 @@ namespace bpp
  * @see VectorSequenceContainer, Sequence, Site, VectorSiteContainer
  */
 class AlignedSequenceContainer :
-  public virtual VectorSequenceContainer,
+  public VectorSequenceContainer,
   public virtual SiteContainer,
-  public virtual VectorPositionedContainer<Site>
+  public VectorPositionedContainer<Site>
 {
 private:
   // // Integer std::vector that contains sites's positions

@@ -248,11 +248,6 @@ class EdSymbolList :
   public virtual EdCoreSymbolList<T>
 {
 private:
-  /**
-   * @brief The Alphabet attribute must be initialized in constructor and then can never be changed.
-   *
-   * To apply another alphabet to a list you'll have to create a new list.
-   */
   bool propagateEvents_;
 
 protected:
@@ -298,10 +293,11 @@ protected:
   {
     for (size_t i = 0; i < listeners_.size(); ++i)
     {
-      if (!list.listeners_[i]->isShared())
-        throw Exception("EdSymbolList(EdSymbolList) :  mgmt of non shared listeners to be implemented");
-
-      listeners_[i] = (dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone()));
+      if (list.listeners_[i]->isShared()) {
+        listeners_[i] = list.listeners_[i];
+      } else {
+        listeners_[i] = (dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone()));
+      }
     }
   }
 
@@ -337,10 +333,11 @@ protected:
 
     for (size_t i = 0; i < listeners_.size(); ++i)
     {
-      if (!list.listeners_[i]->isShared())
-        throw Exception("EdSymbolList::operator= :  mgmt of non shared listeners to be implemented");
-
-      listeners_[i] = dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone());
+      if (list.listeners_[i]->isShared()) {
+        listeners_[i] = list.listeners_[i];
+      } else {
+        listeners_[i] = dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone());
+      }
     }
 
     return *this;
