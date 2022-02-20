@@ -355,6 +355,7 @@ public:
   void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
 
   void setSequence(const std::string& name,    const Sequence& sequence, bool checkName);
+
   void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName);
 
 protected:

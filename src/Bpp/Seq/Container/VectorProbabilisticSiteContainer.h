@@ -70,10 +70,13 @@ namespace bpp
  */
 
 class VectorProbabilisticSiteContainer :
-  virtual public VectorPositionedContainer<ProbabilisticSite>,
-  virtual public VectorMappedContainer<BasicProbabilisticSequence>,
-  virtual public AbstractProbabilisticSequenceContainer,
-  virtual public ProbabilisticSiteContainer
+    public AbstractProbabilisticSequenceContainer,
+// This container implements the SequenceContainer interface
+// and use the AbstractSequenceContainer adapter.
+    public virtual ProbabilisticSiteContainer,
+// This container is a SiteContainer.
+    virtual public VectorPositionedContainer<ProbabilisticSite>,
+    virtual public VectorMappedContainer<ProbabilisticSequence>
 {
 public:
   /**
@@ -93,6 +96,15 @@ public:
    */
 
   VectorProbabilisticSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha, bool checkPositions = true);
+
+  /**
+   * @brief Build a new container from a set of aligned probabilistic sequences.
+   *
+   * @param vseq A std::vector of sequences. Those sequences are cloned in the container.
+   * @param alpha The common alphabet for all sequences.
+   */
+
+  VectorProbabilisticSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha);
 
   /**
    * @brief Build a new container from an AlignedValuesContainer.
@@ -140,7 +152,7 @@ public:
   virtual ~VectorProbabilisticSiteContainer() {}
 
 public:
-  size_t getNumberOfSequences() const { return VectorMappedContainer<BasicProbabilisticSequence>::getSize(); }
+  size_t getNumberOfSequences() const { return VectorMappedContainer<ProbabilisticSequence>::getSize(); }
 
   /*
    * @brief get Objects
@@ -174,7 +186,7 @@ public:
    *
    */
 
-  const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const;
+  const ProbabilisticSequence& getSequence(std::size_t i) const;
 
   /**
    * @brief Get Sequence from its name in the container.
@@ -182,34 +194,35 @@ public:
    *
    */
 
-  const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const;
+  const ProbabilisticSequence& getSequence(const std::string& name) const;
 
+  
   bool hasSequence(const std::string& name) const
   {
     // Look for sequence name:
-    return VectorMappedContainer<BasicProbabilisticSequence>::hasObject(name);
+    return VectorMappedContainer<ProbabilisticSequence>::hasObject(name);
   }
 
   size_t getSequencePosition(const std::string& name) const
   {
     // Look for sequence name:
-    return VectorMappedContainer<BasicProbabilisticSequence>::getObjectPosition(name);
+    return VectorMappedContainer<ProbabilisticSequence>::getObjectPosition(name);
   }
 
   std::vector<std::string> getSequencesNames() const
   {
-    return VectorMappedContainer<BasicProbabilisticSequence>::getObjectsNames();
+    return VectorMappedContainer<ProbabilisticSequence>::getObjectsNames();
   }
 
   void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
   {
-    VectorMappedContainer<BasicProbabilisticSequence>::setObjectsNames(names);
+    VectorMappedContainer<ProbabilisticSequence>::setObjectsNames(names);
   }
 
 
   void setComments(size_t sequenceIndex, const Comments& comments)
   {
-    VectorMappedContainer<BasicProbabilisticSequence>::getObject(sequenceIndex)->setComments(comments);
+    VectorMappedContainer<ProbabilisticSequence>::getObject(sequenceIndex)->setComments(comments);
   }
 
 
@@ -293,9 +306,13 @@ public:
    *
    */
 
-  void addSequence(std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true);
+  void addSequence(std::shared_ptr<ProbabilisticSequence> sequence, bool checkName = true);
 
   void addSequence(const Sequence& sequence, bool checkName = true);
+
+  void setSequence(const std::string& name, const ProbabilisticSequence& sequence, bool checkName);
+
+  void setSequence(size_t sequenceIndex, const ProbabilisticSequence& sequence, bool checkName);
 
   void clear();
 
@@ -322,6 +339,9 @@ public:
 
   void setSitePositions(Vint vPositions);
 
+protected:
+  // Create n void sites:
+  void realloc(size_t n);
 
   /** @} */
 };

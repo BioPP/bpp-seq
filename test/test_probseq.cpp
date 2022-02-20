@@ -282,7 +282,7 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "binary probabilistic container's first element is : " << endl;
-  DataTable::write(p_container.getSequence(0)->getTable(), cerr, false);
+  DataTable::write(p_container.getSequence(0).getTable(), cerr, false);
 
   /*
    * *** Fasta (and Pasta) files ***
@@ -328,7 +328,7 @@ int main() {
 
   cerr << "binary probabilistic container contains : " << endl << endl;
   for(size_t i = 0; i < p_container.getNumberOfSequences(); ++i) {
-    DataTable::write(p_container.getSequence(i)->getContent(), cerr, false);
+    DataTable::write(p_container.getSequence(i).getContent(), cerr, false);
     cerr << endl;
   }
 
@@ -380,7 +380,7 @@ int main() {
 
   cerr << "dna prob. container contains : " << endl << endl;
   for(size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i) {
-    DataTable::write(dna_p_container.getSequence(i)->getTable(), cerr, false);
+    DataTable::write(dna_p_container.getSequence(i).getTable(), cerr, false);
     cerr << endl;
   }
 

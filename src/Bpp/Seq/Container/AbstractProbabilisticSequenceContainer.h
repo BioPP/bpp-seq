@@ -80,9 +80,9 @@ public:
   virtual ~AbstractProbabilisticSequenceContainer() {}
 
 public:
-  virtual const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const = 0;
+  virtual const ProbabilisticSequence& getSequence(std::size_t i) const = 0;
 
-  virtual const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const = 0;
+  virtual const ProbabilisticSequence& getSequence(const std::string& name) const = 0;
 
   /**
    * @brief Add a probabilistic sequence to the container.
@@ -94,7 +94,7 @@ public:
    * already used, are whatever else depending on the implementation.
    */
 
-  virtual void addSequence(const std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true) = 0;
+  virtual void addSequence(const std::shared_ptr<ProbabilisticSequence> sequence, bool checkName = true) = 0;
 
   /**
    * @brief Add a basic sequence to the container, through
@@ -115,12 +115,12 @@ public:
    **/
   std::string toString(const std::string& name) const
   {
-    return getSequence(name)->toString();
+    return getSequence(name).toString();
   }
 
   const Comments& getComments(const std::string& name) const
   {
-    return getSequence(name)->getComments();
+    return getSequence(name).getComments();
   }
 
   void setComments(const std::string& name, const Comments& comments)
@@ -136,12 +136,12 @@ public:
    */
   virtual const std::string& getName(size_t sequenceIndex) const
   {
-    return getSequence(sequenceIndex)->getName();
+    return getSequence(sequenceIndex).getName();
   }
 
   virtual std::string toString(size_t sequenceIndex) const
   {
-    return getSequence(sequenceIndex)->toString();
+    return getSequence(sequenceIndex).toString();
   }
 
   const Comments& getGeneralComments() const
@@ -161,7 +161,7 @@ public:
 
   virtual const Comments& getComments(size_t sequenceIndex) const
   {
-    return getSequence(sequenceIndex)->getComments();
+    return getSequence(sequenceIndex).getComments();
   }
 
   virtual void setComments(size_t sequenceIndex, const Comments& comments) = 0;

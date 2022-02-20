@@ -172,7 +172,7 @@ void SequenceContainerTools::getFrequencies(const SequencedValuesContainer& sequ
     }
     else if (psc)
     {
-      const ProbabilisticSequence& seq = *psc->getSequence(names[j]);
+      const ProbabilisticSequence& seq = psc->getSequence(names[j]);
       SymbolListTools::getCounts(seq, f, true);
       n += (double)seq.size();
     }

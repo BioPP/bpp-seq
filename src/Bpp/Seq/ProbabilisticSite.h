@@ -133,9 +133,7 @@ public:
   virtual ~ProbabilisticSite() {}
 
 public:
-  int getPosition() const { return AbstractCoreSite::getPosition(); }
-
-  void setPosition(int position) { AbstractCoreSite::setPosition(position); }
+//  void setPosition(int position) { AbstractCoreSite::setPosition(position); }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_PROBABILISTICSITE_H
