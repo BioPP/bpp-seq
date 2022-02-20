@@ -306,7 +306,7 @@ public:
    *
    */
 
-  void addSequence(std::shared_ptr<ProbabilisticSequence> sequence, bool checkName = true);
+  void addSequence(const ProbabilisticSequence& sequence, bool checkName = true);
 
   void addSequence(const Sequence& sequence, bool checkName = true);
 
