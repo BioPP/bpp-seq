@@ -98,15 +98,6 @@ public:
   VectorProbabilisticSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha, bool checkPositions = true);
 
   /**
-   * @brief Build a new container from a set of aligned probabilistic sequences.
-   *
-   * @param vseq A std::vector of sequences. Those sequences are cloned in the container.
-   * @param alpha The common alphabet for all sequences.
-   */
-
-  VectorProbabilisticSiteContainer(const std::vector<const CruxSymbolListSite*>& vs, const Alphabet* alpha);
-
-  /**
    * @brief Build a new container from an AlignedValuesContainer.
    *
    */
@@ -306,7 +297,7 @@ public:
    *
    */
 
-  void addSequence(std::shared_ptr<ProbabilisticSequence> sequence, bool checkName = true);
+  void addSequence(const ProbabilisticSequence& sequence, bool checkName = true);
 
   void addSequence(const Sequence& sequence, bool checkName = true);
 

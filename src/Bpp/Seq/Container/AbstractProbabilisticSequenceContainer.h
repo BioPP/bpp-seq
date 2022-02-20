@@ -94,7 +94,7 @@ public:
    * already used, are whatever else depending on the implementation.
    */
 
-  virtual void addSequence(const std::shared_ptr<ProbabilisticSequence> sequence, bool checkName = true) = 0;
+  virtual void addSequence(const ProbabilisticSequence& sequence, bool checkName = true) = 0;
 
   /**
    * @brief Add a basic sequence to the container, through

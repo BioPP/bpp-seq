@@ -205,44 +205,44 @@ void VectorProbabilisticSiteContainer::appendSite(std::shared_ptr<ProbabilisticS
 
 /********************************************************************************/
 
-void VectorProbabilisticSiteContainer::addSequence(const std::shared_ptr<ProbabilisticSequence> sequence, bool checkName)
+void VectorProbabilisticSiteContainer::addSequence(const ProbabilisticSequence& sequence, bool checkName)
 {
   // new sequence's alphabet and site container's alphabet must match :
 
-  if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-    throw AlphabetMismatchException("VectorProbabilisticSiteContainer::addSequence->", getAlphabet(), sequence->getAlphabet());
+  if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("VectorProbabilisticSiteContainer::addSequence->", getAlphabet(), sequence.getAlphabet());
 
   // check name :
   if (checkName)
-    if (hasObject(sequence->getName()))
-      throw Exception("VectorProbabilisticSiteContainer::addSequence. Name: " + sequence->getName() + ", already exists in the container.");
+    if (hasObject(sequence.getName()))
+      throw Exception("VectorProbabilisticSiteContainer::addSequence. Name: " + sequence.getName() + ", already exists in the container.");
 
   // if the container has no sequence, we set the size to the size of
   // this sequence :
   if (getNumberOfSequences() == 0)
   {
     VectorPositionedContainer<ProbabilisticSite>::setSize(0);
-    for (size_t i = 0; i < (size_t)sequence->size(); i++)
+    for (size_t i = 0; i < (size_t)sequence.size(); i++)
     {
       appendSite(shared_ptr<ProbabilisticSite>(new ProbabilisticSite(getAlphabet(), (int)(i) + 1)));
     }
   }
-  else if (sequence->size() != getNumberOfSites())
-    throw Exception("VectorProbabilisticSiteContainer::addSequence. Sequence does not have the appropriate length: " + TextTools::toString(sequence->size()) + ", should be " + TextTools::toString(getNumberOfSites()) + ".");
+  else if (sequence.size() != getNumberOfSites())
+    throw Exception("VectorProbabilisticSiteContainer::addSequence. Sequence does not have the appropriate length: " + TextTools::toString(sequence.size()) + ", should be " + TextTools::toString(getNumberOfSites()) + ".");
 
   // append empty sequence
 
-  VectorMappedContainer<ProbabilisticSequence>::appendObject(std::shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(sequence->getName(), Table<double>(getAlphabet()->getSize(), 0), getAlphabet())), sequence->getName());
+  VectorMappedContainer<ProbabilisticSequence>::appendObject(std::shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(sequence.getName(), Table<double>(getAlphabet()->getSize(), 0), getAlphabet())), sequence.getName());
 
   // append elements at each site :
 
   for (size_t i = 0; i < getNumberOfSites(); ++i)
   {
-    getSite(i)->addElement(sequence->getContent()[i]);
+    getSite(i)->addElement(sequence.getContent()[i]);
   }
 
   // // append comments :
-  setGeneralComments(sequence->getComments());
+  setGeneralComments(sequence.getComments());
 }
 
 /********************************************************************************/

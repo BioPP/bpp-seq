@@ -278,7 +278,7 @@ int main() {
 
   cerr << endl << "add binary probabilistic sequence to binary probabilistic container...";
 
-  p_container.addSequence(std::make_shared<BasicProbabilisticSequence>(p_seq));
+  p_container.addSequence(p_seq);
   cerr << "OK." << endl;
 
   cerr << "binary probabilistic container's first element is : " << endl;
