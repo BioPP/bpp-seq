@@ -112,11 +112,19 @@ public:
   virtual void setComments(const Comments& comments) = 0;
 
   /**
+   * @brief Clear the comments.
+   *
+   */
+
+  virtual void clearComments() = 0;
+
+  /**
    * @name Adjusting the size of the sequence.
    *
    * @{
    */
 
+  
   /**
    * @brief Set up the size of a sequence from the right side.
    *

@@ -54,8 +54,19 @@
 
 namespace bpp
 {
+  /**
+   * @brief The probabilisticSympbolList interface.
+   *
+   * This container aims at containing an ordered list of
+   * probabilistic sites.
+   * It does not inherit from * SympbolList<std::vector<double>>
+   * because it does not contain a * vector of sites but a Table of
+   * doubles.
+   *
+   **/
+  
 class ProbabilisticSymbolList :
-  virtual public CoreSymbolList<std::vector<double> >
+    virtual public CoreSymbolList<std::vector<double> >  
 {
 public:
   ProbabilisticSymbolList()

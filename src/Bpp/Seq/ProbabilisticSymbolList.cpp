@@ -186,7 +186,13 @@ void BasicProbabilisticSymbolList::addElement(const std::vector<double>& element
   }
   else
   {
-    content_.addColumn(element);
+    if (element.size() > content_.getNumberOfRows())
+     {
+      throw BadSizeException("BasicProbabilisticSymbolList::addElement: too long element: ", element.size(),
+                             content_.getNumberOfRows());
+     }
+    else
+      content_.addColumn(element);
   }
 }
 

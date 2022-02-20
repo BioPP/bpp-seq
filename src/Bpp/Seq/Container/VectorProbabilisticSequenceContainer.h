@@ -1,8 +1,7 @@
 //
-// File: VectorSequenceContainer.h
+// File: VectorProbabilisticSequenceContainer.h
 // Authors:
-//   Guillaume Deuchst
-//   Julien Dutheil
+//   Laurent Guéguen
 //
 
 /*
@@ -44,8 +43,8 @@
 #include <Bpp/Exceptions.h>
 
 #include "../Alphabet/Alphabet.h"
-#include "../Sequence.h"
-#include "AbstractSequenceContainer.h"
+#include "../ProbabilisticSequence.h"
+#include "AbstractValuesContainer.h"
 #include "VectorMappedContainer.h"
 
 // From the STL:
@@ -55,15 +54,15 @@
 namespace bpp
 {
 /**
- * @brief The VectorSequenceContainer class.
+ * @brief The VectorProbabilisticSequenceContainer class.
  *
- * This is the simplest implementation of the OrderedSequenceContainer interface.
- * Sequences are stored in a std::vector of shared pointers.
+ * This is the simplest implementation of the OrderedValuesContainer interface for ProbabilisticSequences
+ * ProbabilisticSequences are stored in a std::vector of shared pointers.
  */
 
-class VectorSequenceContainer :
-  virtual public AbstractSequenceContainer,
-  virtual public VectorMappedContainer<Sequence>
+class VectorProbabilisticSequenceContainer :
+    public AbstractValuesContainer,
+    virtual public VectorMappedContainer<ProbabilisticSequence>
 {
 public:
 
@@ -72,15 +71,15 @@ public:
    *
    */
   
-  VectorSequenceContainer(
-    const std::vector<std::shared_ptr<Sequence>>& vs, const Alphabet* alpha);
+  VectorProbabilisticSequenceContainer(
+    const std::vector<std::shared_ptr<ProbabilisticSequence>>& vs, const Alphabet* alpha);
 
   /**
    * @brief Build an empty container that will contain sequences of a particular alphabet.
    *
    * @param alpha The alphabet of the container.
    */
-  VectorSequenceContainer(const Alphabet* alpha) : AbstractSequenceContainer(alpha), VectorMappedContainer<Sequence>() {}
+  VectorProbabilisticSequenceContainer(const Alphabet* alpha) : VectorMappedContainer<ProbabilisticSequence>(), AbstractValuesContainer(alpha) {}
 
   /**
    * @name Copy contructors:
@@ -89,67 +88,71 @@ public:
    */
 
   /**
-   * @brief Copy from a VectorSequenceContainer.
+   * @brief Copy from a VectorProbabilisticSequenceContainer.
    *
-   * @param vsc The VectorSequenceContainer to copy into this container.
+   * @param vsc The VectorProbabilisticSequenceContainer to copy into this container.
    */
-  VectorSequenceContainer(const VectorSequenceContainer& vsc);
-
-  /**
-   * @brief Copy from an OrderedSequenceContainer.
-   *
-   * @param osc The OrderedSequenceContainer to copy into this container.
-   */
-  VectorSequenceContainer(const OrderedSequenceContainer& osc);
-
-  /**
-   * @brief Copy from a SequenceContainer.
-   *
-   * @param osc The SequenceContainer to copy into this container.
-   */
-  VectorSequenceContainer(const SequenceContainer& osc);
+  VectorProbabilisticSequenceContainer(const VectorProbabilisticSequenceContainer& vsc);
 
   /** @} */
 
   /**
-   * @brief Assign from a VectorSequenceContainer.
+   * @brief Assign from a VectorProbabilisticSequenceContainer.
    *
-   * @param vsc The VectorSequenceContainer to copy into this container.
+   * @param vsc The VectorProbabilisticSequenceContainer to copy into this container.
    */
-  VectorSequenceContainer& operator=(const VectorSequenceContainer& vsc);
+  VectorProbabilisticSequenceContainer& operator=(const VectorProbabilisticSequenceContainer& vsc);
 
-  /**
-   * @brief Copy from an OrderedSequenceContainer.
-   *
-   * @param osc The OrderedSequenceContainer to copy into this container.
-   */
-  VectorSequenceContainer& operator=(const OrderedSequenceContainer& osc);
-
-  /**
-   * @brief Copy from a SequenceContainer.
-   *
-   * @param osc The SequenceContainer to copy into this container.
-   */
-  VectorSequenceContainer& operator=(const SequenceContainer& osc);
-
-  /**
-   * @brief Container destructor: delete all sequences in the container.
-   */
-  virtual ~VectorSequenceContainer()
-  {}
 
   void clear()
   {
-    VectorMappedContainer<Sequence>::clear();
+    VectorMappedContainer<ProbabilisticSequence>::clear();
   }
 
 public:
+
+  std::string toString(const std::string& name) const
+  {
+    return getSequence(name).toString();
+  }
+
+  std::string toString(size_t sequenceIndex) const
+  {
+    return getSequence(sequenceIndex).toString();
+  }
+
+  const Comments& getComments(const std::string& name) const
+  {
+    return getSequence(name).getComments();
+  }
+
+  virtual const Comments& getComments(size_t sequenceIndex) const
+  {
+    return getSequence(sequenceIndex).getComments();
+  }
+
+  void setComments(const std::string& name, const Comments& comments)
+  {
+    size_t pos = getSequencePosition(name);
+    setComments(pos, comments);
+  }
+
+  const std::string& getName(size_t sequenceIndex) const
+  {
+    return getSequence(sequenceIndex).getName();
+  }
+
+  size_t getSequencePosition(const std::string& name) const
+  {
+    return getObjectPosition(name);
+  }
+
   /**
    * @name The Clonable interface.
    *
    * @{
    */
-  VectorSequenceContainer* clone() const { return new VectorSequenceContainer(*this); }
+  VectorProbabilisticSequenceContainer* clone() const { return new VectorProbabilisticSequenceContainer(*this); }
   /** @} */
 
   /**
@@ -162,17 +165,17 @@ public:
     return hasObject(name);
   }
 
-  const Sequence& getSequence(const std::string& name) const
+  const ProbabilisticSequence& getSequence(const std::string& name) const
   {
     return *getObject(name);
   }
 
-  void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true)
+  void setSequence(const std::string& name, const ProbabilisticSequence& sequence, bool checkName = true)
   {
     setSequence(getSequencePosition(name), sequence, checkName);
   }
 
-  Sequence* removeSequence(const std::string& name)
+  ProbabilisticSequence* removeSequence(const std::string& name)
   {
     return removeSequence(getSequencePosition(name));
   }
@@ -186,73 +189,25 @@ public:
 
   void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true);
 
-  VectorSequenceContainer* createEmptyContainer() const;
+  VectorProbabilisticSequenceContainer* createEmptyContainer() const;
 
-  int& valueAt(const std::string& sequenceName, size_t elementIndex)
-  {
-    return getSequence_(sequenceName)[elementIndex];
-  }
-
-  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
-  {
-    return getSequence(sequenceName)[elementIndex];
-  }
-
-  int& operator()(const std::string& sequenceName, size_t elementIndex)
-  {
-    return getSequence_(sequenceName)[elementIndex];
-  }
-
-  const int& operator()(const std::string& sequenceName, size_t elementIndex) const
-  {
-    return getSequence(sequenceName)[elementIndex];
-  }
-
-  int& valueAt(size_t sequenceIndex, size_t elementIndex)
-  {
-    return getSequence_(sequenceIndex)[elementIndex];
-  }
-
-  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
-  {
-    return getSequence(sequenceIndex)[elementIndex];
-  }
-
-  int& operator()(size_t sequenceIndex, size_t elementIndex)
-  {
-    return getSequence_(sequenceIndex)[elementIndex];
-  }
-  const int& operator()(size_t sequenceIndex, size_t elementIndex) const
-  {
-    return getSequence(sequenceIndex)[elementIndex];
-  }
   /** @} */
 
 
-  /**
-   * @name The OrderedSequenceContainer interface.
-   *
-   * @{
-   */
-  size_t getSequencePosition(const std::string& name) const
-  {
-    return getObjectPosition(name);
-  }
-
-  const Sequence& getSequence(size_t sequenceIndex) const
+  const ProbabilisticSequence& getSequence(size_t sequenceIndex) const
   {
     return *getObject(sequenceIndex);
   }
 
-  void  setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true)
+  void  setSequence(size_t sequenceIndex, const ProbabilisticSequence& sequence, bool checkName = true)
   {
     if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
+      throw AlphabetMismatchException("VectorProbabilisticSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
 
-    addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
+    addObject(std::shared_ptr<ProbabilisticSequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
   }
 
-  Sequence* removeSequence(size_t sequenceIndex)
+  ProbabilisticSequence* removeSequence(size_t sequenceIndex)
   {
     return removeObject(sequenceIndex).get();
   }
@@ -284,12 +239,12 @@ public:
    * before adding it.
    */
 
-  virtual void addSequence(const Sequence& sequence, bool checkName = true)
+  virtual void addSequence(const ProbabilisticSequence& sequence, bool checkName = true)
   {
     if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
+      throw AlphabetMismatchException("VectorProbabilisticSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
 
-    appendObject(std::shared_ptr<Sequence>(sequence.clone()), sequence.getName(), checkName);
+    appendObject(std::shared_ptr<ProbabilisticSequence>(sequence.clone()), sequence.getName(), checkName);
   }
 
   /**
@@ -307,10 +262,10 @@ public:
   * @throw Exception If the sequence couldn't be added to the container.
   */
 
-  virtual void addSequence(const std::shared_ptr<Sequence> sequence, bool checkName = true)
+  virtual void addSequence(const std::shared_ptr<ProbabilisticSequence> sequence, bool checkName = true)
   {
     if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
+      throw AlphabetMismatchException("VectorProbabilisticSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
 
     appendObject(sequence, sequence->getName(), checkName);
   }
@@ -331,9 +286,9 @@ public:
    * before adding it.
    * @throw Exception If the sequence couldn't be added to the container.
    */
-  virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true)
+  virtual void addSequence(const ProbabilisticSequence& sequence, size_t sequenceIndex, bool checkName = true)
   {
-    addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
+    addObject(std::shared_ptr<ProbabilisticSequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
   }
 
 protected:
@@ -342,24 +297,17 @@ protected:
    *
    * @{
    */
-  Sequence& getSequence_(size_t i)
+  ProbabilisticSequence& getSequence_(size_t i)
   {
     return *getObject(i);
   }
 
 
-  Sequence& getSequence_(const std::string& name)
+  ProbabilisticSequence& getSequence_(const std::string& name)
   {
     return *getObject(name);
   }
 
-  /** @} */
-
-  /**
-   * @name SequencedValuesContainer methods.
-   *
-   * @{
-   */
   double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
   {
     return getSequence(sequenceName).getStateValueAt(siteIndex, state);
@@ -370,38 +318,22 @@ protected:
     return getSequence(sequenceName)(siteIndex, state);
   }
 
-  /*
-   *
-   * @}
-   *
-   */
-
-  /**
-   * @name OrderedValuesContainer methods.
-   *
-   * @{
-   */
   double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
   {
-    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSequenceContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
-    const Sequence& seq = getSequence(sequenceIndex);
+    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorProbabilisticSequenceContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
+    const ProbabilisticSequence& seq = getSequence(sequenceIndex);
 
     if (siteIndex >= seq.size())
-      throw IndexOutOfBoundsException("VectorSequenceContainer::getStateValueAt.", siteIndex, 0, seq.size() - 1);
+      throw IndexOutOfBoundsException("VectorProbabilisticSequenceContainer::getStateValueAt.", siteIndex, 0, seq.size() - 1);
 
-    return getAlphabet()->isResolvedIn(seq[siteIndex], state) ? 1. : 0.;
+    return (getSequence(sequenceIndex))[siteIndex][(size_t)state];
   }
 
   double operator()(size_t siteIndex, size_t sequenceIndex, int state) const
   {
-    return getAlphabet()->isResolvedIn(getSequence(sequenceIndex)[siteIndex], state) ? 1. : 0.;
+    return (getSequence(sequenceIndex))[siteIndex][(size_t)state];
   }
 
-  /*
-   *
-   * @}
-   *
-   */
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORSEQUENCECONTAINER_H

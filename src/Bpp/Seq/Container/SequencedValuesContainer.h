@@ -189,17 +189,6 @@ public:
 
   virtual SequencedValuesContainer* createEmptyContainer() const = 0;
 
-
-  /**
-   * @brief Add a sequence to the container.
-   *
-   * @param sequence  The sequence to add.
-   * @param checkName Tell if the container must check if the name of the sequence
-   * is already used in the container before adding it.
-   * @throw Exception Any other kind of exception, if the name of the sequence is
-   * already used, are whatever else depending on the implementation.
-   */
-  virtual void addSequence(const Sequence& sequence, bool checkName) = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCEDVALUESCONTAINER_H

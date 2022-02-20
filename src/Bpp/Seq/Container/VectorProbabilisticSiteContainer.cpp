@@ -48,9 +48,9 @@ using namespace std;
 /********************************************************************************/
 
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const Alphabet* alpha) :
-  VectorPositionedContainer<ProbabilisticSite>(),
-  VectorMappedContainer<BasicProbabilisticSequence>(),
   AbstractValuesContainer(alpha),
+  VectorPositionedContainer<ProbabilisticSite>(),
+  VectorMappedContainer<ProbabilisticSequence>(),
   AbstractProbabilisticSequenceContainer(alpha)
 {}
 
@@ -60,9 +60,9 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   const std::vector<const CruxSymbolListSite*>& vs,
   const Alphabet* alpha,
   bool checkPositions) :
-  VectorPositionedContainer<ProbabilisticSite>(),
-  VectorMappedContainer<BasicProbabilisticSequence>(),
   AbstractValuesContainer(alpha),
+  VectorPositionedContainer<ProbabilisticSite>(),
+  VectorMappedContainer<ProbabilisticSequence>(),
   AbstractProbabilisticSequenceContainer(alpha)
 {
   size_t nRow = alpha->getSize();
@@ -74,7 +74,7 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
 
   for (size_t i = 0; i < nbSeq; i++)
   {
-    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence("Seq_" + TextTools::toString(i), Table<double>(nRow, 0), alpha)), "Seq_" + TextTools::toString(i));
+    VectorMappedContainer<ProbabilisticSequence>::appendObject(std::shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence("Seq_" + TextTools::toString(i), Table<double>(nRow, 0), alpha)), "Seq_" + TextTools::toString(i));
   }
 
   // Now try to add each site:
@@ -90,24 +90,24 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
 
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   const std::vector<std::string>& names, const Alphabet* alpha) :
-  VectorPositionedContainer<ProbabilisticSite>(),
-  VectorMappedContainer<BasicProbabilisticSequence>(),
   AbstractValuesContainer(alpha),
+  VectorPositionedContainer<ProbabilisticSite>(),
+  VectorMappedContainer<ProbabilisticSequence>(),
   AbstractProbabilisticSequenceContainer(alpha)
 {
   size_t nRow = alpha->getSize();
 
   for (auto i : names)
   {
-    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(i, Table<double>(nRow, 0), alpha)), i);
+    VectorMappedContainer<ProbabilisticSequence>::appendObject(std::shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(i, Table<double>(nRow, 0), alpha)), i);
   }
 }
 
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   const AlignedValuesContainer& avc) :
-  VectorPositionedContainer<ProbabilisticSite>(),
-  VectorMappedContainer<BasicProbabilisticSequence>(),
   AbstractValuesContainer(avc.getAlphabet()),
+  VectorPositionedContainer<ProbabilisticSite>(),
+  VectorMappedContainer<ProbabilisticSequence>(),
   AbstractProbabilisticSequenceContainer(avc.getAlphabet())
 {
   const Alphabet* alpha = avc.getAlphabet();
@@ -121,7 +121,7 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
   vector<string> vn = avc.getSequencesNames();
   for (auto& n : vn)
   {
-    VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(n, Table<double>(nRow, 0), alpha)), n);
+    VectorMappedContainer<ProbabilisticSequence>::appendObject(std::shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(n, Table<double>(nRow, 0), alpha)), n);
   }
 
   // Now add each site:
@@ -136,20 +136,20 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
 /******************************************************************************/
 
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc) :
-  VectorPositionedContainer<ProbabilisticSite>(vpsc),
-  MappedNamedContainer<BasicProbabilisticSequence>(vpsc),
-  VectorPositionedContainer<BasicProbabilisticSequence>(vpsc),
-  VectorMappedContainer<BasicProbabilisticSequence>(vpsc),
   AbstractValuesContainer(vpsc),
+  VectorPositionedContainer<ProbabilisticSite>(vpsc),
+  MappedNamedContainer<ProbabilisticSequence>(vpsc),
+  VectorPositionedContainer<ProbabilisticSequence>(vpsc),
+  VectorMappedContainer<ProbabilisticSequence>(vpsc),
   AbstractProbabilisticSequenceContainer(vpsc)
 {}
 
 /******************************************************************************/
 
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const OrderedSequenceContainer& osc) :
-  VectorPositionedContainer<ProbabilisticSite>(),
-  VectorMappedContainer<BasicProbabilisticSequence>(),
   AbstractValuesContainer(osc.getGeneralComments(), osc.getAlphabet()),
+  VectorPositionedContainer<ProbabilisticSite>(),
+  VectorMappedContainer<ProbabilisticSequence>(),
   AbstractProbabilisticSequenceContainer(osc.getAlphabet())
 {
   // Now try to add each site:
@@ -205,7 +205,7 @@ void VectorProbabilisticSiteContainer::appendSite(std::shared_ptr<ProbabilisticS
 
 /********************************************************************************/
 
-void VectorProbabilisticSiteContainer::addSequence(const std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName)
+void VectorProbabilisticSiteContainer::addSequence(const std::shared_ptr<ProbabilisticSequence> sequence, bool checkName)
 {
   // new sequence's alphabet and site container's alphabet must match :
 
@@ -232,7 +232,7 @@ void VectorProbabilisticSiteContainer::addSequence(const std::shared_ptr<BasicPr
 
   // append empty sequence
 
-  VectorMappedContainer<BasicProbabilisticSequence>::appendObject(std::shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(sequence->getName(), Table<double>(getAlphabet()->getSize(), 0), getAlphabet())), sequence->getName());
+  VectorMappedContainer<ProbabilisticSequence>::appendObject(std::shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(sequence->getName(), Table<double>(getAlphabet()->getSize(), 0), getAlphabet())), sequence->getName());
 
   // append elements at each site :
 
@@ -242,7 +242,7 @@ void VectorProbabilisticSiteContainer::addSequence(const std::shared_ptr<BasicPr
   }
 
   // // append comments :
-  setGeneralComments(sequence->Commentable::getComments());
+  setGeneralComments(sequence->getComments());
 }
 
 /********************************************************************************/
@@ -273,7 +273,7 @@ void VectorProbabilisticSiteContainer::addSequence(const Sequence& sequence, boo
 
   // append the empty sequence
 
-  VectorMappedContainer<BasicProbabilisticSequence>::appendObject(shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(sequence.getName(), Table<double>(getAlphabet()->getSize(), 0),  getAlphabet())), sequence.getName());
+  VectorMappedContainer<ProbabilisticSequence>::appendObject(shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(sequence.getName(), Table<double>(getAlphabet()->getSize(), 0),  getAlphabet())), sequence.getName());
 
   // conversion
 
@@ -300,7 +300,18 @@ void VectorProbabilisticSiteContainer::addSequence(const Sequence& sequence, boo
 void VectorProbabilisticSiteContainer::clear()
 {
   VectorPositionedContainer<ProbabilisticSite>::clear();
-  VectorMappedContainer<BasicProbabilisticSequence>::clear();
+  VectorMappedContainer<ProbabilisticSequence>::clear();
+}
+
+void VectorProbabilisticSiteContainer::realloc(size_t n)
+{
+  clear();
+  auto s = std::make_shared<ProbabilisticSite>(getAlphabet());
+
+  for (size_t i = 0; i < n; i++)
+    appendSite(s, false);
+
+  reindexSites();
 }
 
 /********************************************************************************/
@@ -350,7 +361,7 @@ VectorProbabilisticSiteContainer* VectorProbabilisticSiteContainer::createEmptyC
 
 /******************************************************************************/
 
-const std::shared_ptr<BasicProbabilisticSequence> VectorProbabilisticSiteContainer::getSequence(std::size_t i) const
+const ProbabilisticSequence& VectorProbabilisticSiteContainer::getSequence(std::size_t i) const
 {
   if (i >= getNumberOfSequences())
     throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getSequence.", i, 0, getNumberOfSequences() - 1);
@@ -363,18 +374,75 @@ const std::shared_ptr<BasicProbabilisticSequence> VectorProbabilisticSiteContain
     sequence.addColumn((*getSite(j))[i]);
   }
 
-  shared_ptr<BasicProbabilisticSequence> ns(shared_ptr<BasicProbabilisticSequence>(new BasicProbabilisticSequence(VectorMappedContainer<BasicProbabilisticSequence>::getObjectName(i), sequence, VectorMappedContainer<BasicProbabilisticSequence>::getObject(i)->getComments(), getAlphabet())));
+  shared_ptr<ProbabilisticSequence> ns(shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(VectorMappedContainer<ProbabilisticSequence>::getObjectName(i), sequence, VectorMappedContainer<ProbabilisticSequence>::getObject(i)->getComments(), getAlphabet())));
 
-  VectorMappedContainer<BasicProbabilisticSequence>::addObject_(ns, i, ns->getName(), false);
+  VectorMappedContainer<ProbabilisticSequence>::addObject_(ns, i, ns->getName(), false);
 
-  return ns;
+  return *ns;
 }
 
 /******************************************************************************/
 
-const std::shared_ptr<BasicProbabilisticSequence> VectorProbabilisticSiteContainer::getSequence(const string& name) const
+const ProbabilisticSequence& VectorProbabilisticSiteContainer::getSequence(const string& name) const
 {
   // Look for sequence name:
   size_t pos = getSequencePosition(name);
   return getSequence(pos);
+}
+
+
+/******************************************************************************/
+
+void VectorProbabilisticSiteContainer::setSequence(const string& name, const ProbabilisticSequence& sequence, bool checkNames)
+{
+  // Look for sequence name:
+  size_t pos = getSequencePosition(name);
+  setSequence(pos, sequence, checkNames);
+}
+
+/******************************************************************************/
+
+void VectorProbabilisticSiteContainer::setSequence(size_t pos, const ProbabilisticSequence& sequence, bool checkNames)
+{
+  if (pos >= getNumberOfSequences())
+    throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::setSequence", pos, 0, getNumberOfSequences() - 1);
+
+  // New sequence's alphabet and site container's alphabet matching verification
+  if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    throw AlphabetMismatchException("VectorProbabilisticSiteContainer::setSequence", getAlphabet(), sequence.getAlphabet());
+
+  const string& sname = sequence.getName();
+
+  // If the container has only one sequence, we set the size to the size of this sequence:
+  if (getNumberOfSequences() == 1)
+  {
+    realloc(sequence.size());
+
+    VectorMappedContainer<ProbabilisticSequence>::appendObject(std::shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(sname, Table<double>(std::vector<string>()), getAlphabet())), sname);
+  }
+  else
+  {
+    if (sequence.size() != getNumberOfSites())
+      throw BadSizeException("VectorProbabilisticSiteContainer::setSequence. Sequence has not the appropriate length.", sequence.size(), getNumberOfSites());
+    
+    if (checkNames)
+    {
+      if (VectorMappedContainer<ProbabilisticSequence>::hasObject(sname) && VectorMappedContainer<ProbabilisticSequence>::getObjectPosition(sname) != pos)
+        throw Exception("VectorProbabilisticSiteContainer::setSequence. Name already exists in another sequence in container " + sname);
+    }
+
+    // Update name:
+
+    VectorMappedContainer<ProbabilisticSequence>::setObjectName(pos, sname);
+    VectorMappedContainer<ProbabilisticSequence>::getObject(pos)->setName(sname);
+  }
+
+  // Update elements at each site:
+  for (size_t i = 0; i < getNumberOfSites(); i++)
+  {
+    getSite(i)->setElement(pos, sequence.getValue(i));
+  }
+
+  // comments
+  VectorMappedContainer<ProbabilisticSequence>::getObject_(pos)->setComments(sequence.getComments());
 }
