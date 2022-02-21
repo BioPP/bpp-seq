@@ -48,6 +48,7 @@
 #include <vector>
 
 #include "../Transliterator.h"
+#include <Bpp/Seq/ProbabilisticSequence.h>
 
 namespace bpp
 {
@@ -77,8 +78,8 @@ namespace bpp
  *
  * For nucleotides with three alleles, the underlying states are for instance:
  *
- * _3_0 (-1), A3_0 (0), C3_0 (1), G3_0 (2), T3_0 (3), A1C2 (6), A2C1 (7), A1G2 (8), A2G2 (9),
- * A1T2 (10), A2T1 (11), C1G2 (16), C2G1 (17), C1T2 (18), C2T1 (19), G1T2 (26), G2T1 (27). ?3_0 (32)
+ * _3_0 (-1), A3_0 (0), C3_0 (1), G3_0 (2), T3_0 (3), A2C1 (6), A1C2 (7), A2G1 (8), A1G2 (9),
+ * A2T1 (10), A1T2 (11), C2G1 (16), C1G2 (17), C2T1 (18), C1T2 (19), G2T1 (26), G1T2 (27). ?3_0 (32)
  *
  * 
  */
@@ -221,7 +222,7 @@ namespace bpp
         return getTargetAlphabet()->intToChar(getSourceAlphabet()->charToInt(state));
       }
 
-      /*
+      /**
        * @brief States of the original alphabet are the first ones of
        * the allelic alphabet.
        *
@@ -238,8 +239,27 @@ namespace bpp
       }
     };
 
-    Sequence* convertFromStateAlphabet(const Sequence& sequence) const;
+    /**
+     * @brief Convert a CoreSequence in StateAlphabet to a
+     * ProbabilisticSequence of the likelihoods of the di-allelic
+     * Alphabet (so if counts are not on only two states, the
+     * likelihood is null).
+     *
+     * @param sequence the CoreSequence to be converted.
+     * 
+     *  Gaps are directly translated in vectors of 1.
+     */
+    
+    BasicProbabilisticSequence* convertFromStateAlphabet(const CoreSequence& sequence) const;
+    
+    /**
+     * @brief Fills the vector of the likelihoods of a vector of
+     * counts in the states alphabet, given the di-alleless.
+     *
+     **/
 
+    void computeLikelihoods(const Vdouble& counts, Vdouble& likelihoods) const;
+    
    private:
      /**
       * @name Inner utilitary functions

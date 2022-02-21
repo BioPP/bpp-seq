@@ -157,8 +157,132 @@ std::vector<std::string> AllelicAlphabet::getAlias(const std::string& state) con
 
 /******************************************************************************/
 
-Sequence*  AllelicAlphabet::convertFromStateAlphabet(const Sequence& sequence) const
+BasicProbabilisticSequence* AllelicAlphabet::convertFromStateAlphabet(const CoreSequence& sequence) const
 {
-  AllelicAlphabet::AllelicTransliterator t(*this);
-  return t.translate(sequence);
+  auto seq=dynamic_cast<const Sequence*>(&sequence);
+  auto probseq=dynamic_cast<const ProbabilisticSequence*>(&sequence);
+
+  if (!seq && !probseq)
+    throw Exception("AllelicAlphabet::convertFromStateAlphabet: unknown type for sequence: " + sequence.getName());
+
+  const auto alphabet = seq? seq->getAlphabet(): probseq->getAlphabet();
+  
+  if (alphabet->getAlphabetType() != getStateAlphabet().getAlphabetType())
+      throw AlphabetMismatchException("AllelicAlphabet::convertFromStateAlphabet", &getStateAlphabet(), alphabet);
+
+  BasicProbabilisticSequence* tSeq = new BasicProbabilisticSequence(this);
+  tSeq->setName(sequence.getName());
+  tSeq->setComments(sequence.getComments());
+
+  auto tt=tSeq->getTable();
+  
+  auto size = seq? seq->size(): probseq->size();
+
+  auto alphasize=alphabet->getSize();
+  
+  int gap = alphabet->getGapCharacterCode();
+
+  Vdouble tstate(alphasize);
+  Vdouble likelihood(getSize());
+  
+  for (unsigned int pos = 0; pos < size; ++pos)
+  {
+    // first observed values
+    if (seq)
+    {
+      int state = seq->getValue(pos);
+      if (state == gap)
+      {
+        for (size_t a=0;a<alphasize;a++)
+          tstate[a]=1;
+        tSeq->addElement(tstate);
+        continue;   // no binomial calculation
+      }
+      else
+      {
+        for (size_t a=0;a<alphasize;a++)
+          tstate[a]=0;
+        tstate[(size_t)state]=1;  
+      }
+    }
+    else
+      tstate=probseq->getValue(pos);
+
+    computeLikelihoods(tstate, likelihood);
+    tSeq->addElement(likelihood);
+  }
+  
+  return tSeq;
+}
+
+
+void AllelicAlphabet::computeLikelihoods(const Vdouble& counts, Vdouble& likelihoods) const
+{
+  auto alphasize=getStateAlphabet().getSize();
+  if (counts.size()!=alphasize)
+    throw BadSizeException("AllelicAlphabet::computeLikelihoods: bad vector size for counts.", alphasize, counts.size());
+  
+  likelihoods.resize(getSize());
+
+  // vector of bool if strictly positive counts
+  std::vector<bool> presence(alphasize);
+  for (size_t state = 0; state < alphasize; ++state)
+  {
+    presence[state]= (counts[state]> NumConstants::TINY());
+  }
+  
+  // Monomorphic states (likelihood = 1 or 0)
+  for (size_t state = 0; state < alphasize; ++state)
+  {
+    if (presence[state])
+    {
+      likelihoods[state]=1;
+      for (size_t ns=0; ns<alphasize; ns++)
+      {
+        if (ns==state)
+          continue;
+        
+        if (presence[ns])
+        {
+          likelihoods[state]=0;
+          break;
+        }
+      }
+    }
+    else
+      likelihoods[state]=0;
+  }
+  
+  // Polymorphic states are such as "A4C2"
+
+  auto numetat=alphasize;
+  for (int i = 0; i < alphasize-1; ++i)   // A
+    for (int j = i+1; j < alphasize; ++j) // C
+    {
+      bool todo=true;
+      for (size_t ns=0; ns<alphasize; ns++)
+      {
+        if ((ns==i) || (ns==j))
+          continue;
+        if (presence[ns])   // non null mismatch count
+        {
+          for (size_t nba=1 ; nba<nbAlleles_; nba++)
+          {
+            likelihoods[numetat++]=0;
+          }
+          todo=false;
+          break;
+        }
+      }
+
+      if (todo)
+      {
+        auto lnorm = std::lgamma(counts[size_t(i)]+counts[size_t(j)]+1)-std::lgamma(counts[size_t(i)]+1)-std::lgamma(counts[size_t(j)]+1);
+        for (size_t nba=1 ; nba < nbAlleles_; nba++)
+        {
+          auto lprob=std::log((double)(nbAlleles_-nba)/nbAlleles_)*counts[size_t(i)]+std::log((double)nba/nbAlleles_)*counts[size_t(j)];
+          likelihoods[numetat++]=std::exp(lprob+lnorm);
+        }
+      }
+    }
 }
