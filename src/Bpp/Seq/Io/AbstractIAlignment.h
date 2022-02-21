@@ -203,12 +203,12 @@ public:
     appendAlignmentFromFile(path, sc);
   }
 
-  virtual ProbabilisticSiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const
+  virtual VectorProbabilisticSiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const
   {
     return readAlignmentFromFile(path, alpha);
   }
 
-  virtual ProbabilisticSiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const
+  virtual VectorProbabilisticSiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const
   {
     return readAlignmentFromStream(input, alpha);
   }
@@ -250,7 +250,7 @@ protected:
    * @param alpha  The alphabet to use.
    * @return A sequence container.
    */
-  virtual ProbabilisticSiteContainer* readAlignmentFromStream(std::istream& input, const Alphabet* alpha) const
+  virtual VectorProbabilisticSiteContainer* readAlignmentFromStream(std::istream& input, const Alphabet* alpha) const
   {
     VectorProbabilisticSiteContainer* asc = new VectorProbabilisticSiteContainer(alpha);
     appendAlignmentFromStream(input, *asc);
@@ -264,7 +264,7 @@ protected:
    * @param alpha The alphabet to use.
    * @return A sequence container.
    */
-  virtual ProbabilisticSiteContainer* readAlignmentFromFile(const std::string& path, const Alphabet* alpha) const
+  virtual VectorProbabilisticSiteContainer* readAlignmentFromFile(const std::string& path, const Alphabet* alpha) const
   {
     VectorProbabilisticSiteContainer* asc = new VectorProbabilisticSiteContainer(alpha);
     appendAlignmentFromFile(path, *asc);

@@ -118,13 +118,13 @@ public:
    * @{
    */
 
-  virtual void writeSequence(std::ostream& output, const ProbabilisticSequence& ps) const = 0;
+  virtual void writeSequence(std::ostream& output, const ProbabilisticSequence& ps, bool header=true) const = 0;
 
-  void writeSequence(const std::string& path, const ProbabilisticSequence& ps, bool overwrite = true) const
+  void writeSequence(const std::string& path, const ProbabilisticSequence& ps, bool header=true, bool overwrite = true) const
   {
     // Open file in specified mode
     std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
-    writeSequence(output, ps);
+    writeSequence(output, ps, header);
     output.close();
   }
 

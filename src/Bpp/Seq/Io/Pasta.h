@@ -114,9 +114,9 @@ public:
    * @}
    */
 
-  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq) const;
+  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq, bool header=true) const;
 
-  void writeSequence(std::ostream& output, const Sequence& seq) const;
+  void writeSequence(std::ostream& output, const Sequence& seq, bool header=true) const;
 
   /**
    * @name The "IOProbabilisticSequence interface"
