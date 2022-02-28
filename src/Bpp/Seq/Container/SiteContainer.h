@@ -148,11 +148,20 @@ public:
    * toward it is returned.
    *
    * @param siteIndex The position of the site in the container.
-   * @return A pointer toward site i in the alignment.
+   * @return A pointer toward the given site in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
+  virtual std::shared_ptr<Site> removeSite(size_t siteIndex) = 0;
 
-  virtual std::shared_ptr<Site> deleteSite(size_t siteIndex) = 0;
+  /**
+   * @brief Delete a site from the container.
+   *
+   * The site is deleted (ie the container is shortened).
+   *
+   * @param siteIndex The position of the site in the container.
+   * @throw IndexOutOfBoundsException If the specified site does not exists.
+   */
+  virtual void deleteSite(size_t siteIndex) = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINER_H

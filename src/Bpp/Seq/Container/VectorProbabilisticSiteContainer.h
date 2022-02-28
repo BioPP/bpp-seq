@@ -173,7 +173,6 @@ public:
    * are not, and information is not consistent any more.
    *
    */
-
   const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const;
 
   /**
@@ -181,7 +180,6 @@ public:
    * @param name Name of the sequence
    *
    */
-
   const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const;
 
   bool hasSequence(const std::string& name) const

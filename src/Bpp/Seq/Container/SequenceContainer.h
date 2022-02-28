@@ -110,7 +110,7 @@ public:
    *
    * @param name The name of the sequence.
    */
-  virtual Sequence* removeSequence(const std::string& name) = 0;
+  virtual std::shared_ptr<Sequence> removeSequence(const std::string& name) = 0;
 
   /**
    * @name Provide direct access to sequences content.

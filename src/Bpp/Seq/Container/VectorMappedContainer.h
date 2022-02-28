@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -66,9 +66,9 @@ namespace bpp
 
 template<class T>
 class VectorMappedContainer :
-  virtual public PositionedNamedContainer<T>,
-  virtual public MappedNamedContainer<T>,
-  virtual public VectorPositionedContainer<T>
+  public PositionedNamedContainer<T>,
+  public MappedNamedContainer<T>,
+  public VectorPositionedContainer<T>
 {
 private:
   /*

@@ -137,8 +137,6 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
 
 VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc) :
   VectorPositionedContainer<ProbabilisticSite>(vpsc),
-  MappedNamedContainer<BasicProbabilisticSequence>(vpsc),
-  VectorPositionedContainer<BasicProbabilisticSequence>(vpsc),
   VectorMappedContainer<BasicProbabilisticSequence>(vpsc),
   AbstractValuesContainer(vpsc),
   AbstractProbabilisticSequenceContainer(vpsc)

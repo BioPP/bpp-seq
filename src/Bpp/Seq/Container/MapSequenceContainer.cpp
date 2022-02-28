@@ -277,7 +277,7 @@ void MapSequenceContainer::setSequenceByKey(const string& key, const Sequence& s
 
 /******************************************************************************/
 
-Sequence* MapSequenceContainer::removeSequence(size_t i)
+shared_ptr<Sequence> MapSequenceContainer::removeSequence(size_t i)
 {
   if (i >= sequences_.size())
     throw IndexOutOfBoundsException("MapSequenceContainer::removeSequence", i, 0, sequences_.size() - 1);
@@ -288,12 +288,12 @@ Sequence* MapSequenceContainer::removeSequence(size_t i)
   }
   Sequence* old = it->second;
   sequences_.erase(it);
-  return old;
+  return shared_ptr<Sequence>(old);
 }
 
 /******************************************************************************/
 
-Sequence* MapSequenceContainer::removeSequence(const string& name)
+shared_ptr<Sequence> MapSequenceContainer::removeSequence(const string& name)
 {
   for (map<string, Sequence*>::iterator it = sequences_.begin(); it != sequences_.end(); it++)
   {
@@ -301,7 +301,7 @@ Sequence* MapSequenceContainer::removeSequence(const string& name)
     {
       Sequence* old = it->second;
       sequences_.erase(it);
-      return old;
+      return shared_ptr<Sequence>(old);
     }
   }
   throw SequenceNotFoundException("MapSequenceContainer::removeSequence", name);

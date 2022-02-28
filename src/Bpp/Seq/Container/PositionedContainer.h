@@ -106,17 +106,15 @@ public:
   virtual void insertObject(std::shared_ptr<T> object, size_t objectIndex) {}
 
   /**
-   * @brief Extract and remove a object from the container.
-   * The container size is unchanged, the positioned is set to null.
+   * @brief Remove an object from the container.
    *
    * @param objectIndex The position of the object.
+   * @return A smart pointer toward the removed object.
    */
-
   virtual std::shared_ptr<T> removeObject(size_t objectIndex) = 0;
 
   /**
-   * @brief Extract and remove a object from the container.
-   * The container is then shortened
+   * @brief Delete an object from the container.
    *
    * @param name The name of the object.
    */

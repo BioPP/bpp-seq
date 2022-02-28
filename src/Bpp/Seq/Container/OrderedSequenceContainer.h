@@ -90,7 +90,7 @@ public:
    * @param sequenceIndex The position of the sequence.
    */
 
-  virtual Sequence* removeSequence(size_t sequenceIndex) = 0;
+  virtual std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex) = 0;
 
   /**
    * @name Provide direct access to sequences content.
@@ -163,7 +163,7 @@ public:
   virtual std::string toString(const std::string& name) const = 0;
   virtual const Sequence& getSequence(const std::string& name) const = 0;
   virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) = 0;
-  virtual Sequence* removeSequence(const std::string& name) = 0;
+  virtual std::shared_ptr<Sequence> removeSequence(const std::string& name) = 0;
   virtual size_t getNumberOfSequences() const = 0;
   virtual std::vector<std::string> getSequencesNames() const = 0;
   virtual void setSequencesNames(const std::vector<std::string>& names, bool checkNames) = 0;

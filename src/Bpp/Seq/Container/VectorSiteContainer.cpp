@@ -583,16 +583,15 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
 
 /******************************************************************************/
 
-Sequence* VectorSiteContainer::removeSequence(size_t i)
+std::shared_ptr<Sequence> VectorSiteContainer::removeSequence(size_t i)
 {
   getSequence(i);
-
-  return VectorMappedContainer<Sequence>::getObject(i).get();
+  return VectorMappedContainer<Sequence>::getObject(i);
 }
 
 /******************************************************************************/
 
-Sequence* VectorSiteContainer::removeSequence(const string& name)
+std::shared_ptr<Sequence> VectorSiteContainer::removeSequence(const string& name)
 {
   // Look for sequence name:
   size_t pos = getSequencePosition(name);

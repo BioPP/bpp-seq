@@ -174,7 +174,7 @@ public:
     setSequence(getSequencePosition(name), sequence, checkName);
   }
 
-  Sequence* removeSequence(const std::string& name)
+  std::shared_ptr<Sequence> removeSequence(const std::string& name)
   {
     return removeSequence(getSequencePosition(name));
   }
@@ -254,9 +254,9 @@ public:
     addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
   }
 
-  Sequence* removeSequence(size_t sequenceIndex)
+  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex)
   {
-    return removeObject(sequenceIndex).get();
+    return removeObject(sequenceIndex);
   }
 
   void setComments(size_t sequenceIndex, const Comments& comments)

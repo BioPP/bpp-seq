@@ -7,7 +7,7 @@
 //
 
 /*
-  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -70,7 +70,7 @@ class VectorPositionedContainer :
   public virtual Clonable
 {
 protected:
-  std::vector<std::shared_ptr<T> > positions_;
+  std::vector< std::shared_ptr<T> > positions_;
 
 public:
   /**
@@ -189,23 +189,19 @@ public:
       throw IndexOutOfBoundsException("VectorPositionedContainer::removeObject.", objectIndex, 0, getSize());
 
     std::shared_ptr<T> ret = positions_[objectIndex];
-
-    positions_[objectIndex] = nullptr;
+    
+    positions_.erase(positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
 
     return ret;
   }
 
   using PositionedContainer<T>::deleteObject;
-  std::shared_ptr<T> deleteObject(size_t objectIndex)
+  void deleteObject(size_t objectIndex)
   {
     if (objectIndex >= getSize())
       throw IndexOutOfBoundsException("VectorPositionedContainer::deleteObject.", objectIndex, 0, getSize());
 
-    std::shared_ptr<T> ret = positions_[objectIndex];
-
     positions_.erase(positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
-
-    return ret;
   }
 
   void deleteObjects(size_t objectIndex, size_t length)

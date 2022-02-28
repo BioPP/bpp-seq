@@ -173,7 +173,8 @@ public:
   virtual Site& getSite(size_t siteIndex);
   
   virtual void  setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
-  std::shared_ptr<Site> deleteSite(size_t siteIndex);
+  std::shared_ptr<Site> removeSite(size_t siteIndex);
+  void deleteSite(size_t siteIndex);
   void addSite(const Site& site, bool checkPosition = true);
   void addSite(const Site& site, int position, bool checkPosition = true);
   void addSite(const Site& site, size_t siteIndex, bool checkPosition = true);

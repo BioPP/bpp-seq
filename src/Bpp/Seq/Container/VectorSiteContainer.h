@@ -151,7 +151,12 @@ public:
 
   void setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
 
-  std::shared_ptr<Site> deleteSite(size_t siteIndex)
+  std::shared_ptr<Site> removeSite(size_t siteIndex)
+  {
+    return VectorPositionedContainer<Site>::removeObject(siteIndex);
+  }
+
+  void deleteSite(size_t siteIndex)
   {
     return VectorPositionedContainer<Site>::deleteObject(siteIndex);
   }
@@ -228,8 +233,8 @@ public:
     return VectorMappedContainer<Sequence>::getObjectPosition(name);
   }
 
-  Sequence* removeSequence(size_t sequenceIndex);
-  Sequence* removeSequence(const std::string& name);
+  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex);
+  std::shared_ptr<Sequence> removeSequence(const std::string& name);
 
   size_t getNumberOfSequences() const
   {

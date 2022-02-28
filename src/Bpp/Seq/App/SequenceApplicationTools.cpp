@@ -804,7 +804,7 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
     vector<string> seqNames = allSequences.getSequencesNames();
     for (auto name: seqNames) {
       if (! binary_search(selection.begin(), selection.end(), name)) {
-        delete allSequences.removeSequence(name);
+        allSequences.removeSequence(name);
         if (verbose) {
           ApplicationTools::displayResult("Discard sequence", name);
         }
@@ -818,7 +818,7 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
     sort(seqNames.begin(), seqNames.end());
     for (auto name: selection) {
       if (binary_search(seqNames.begin(), seqNames.end(), name)) {
-        delete allSequences.removeSequence(name);
+        allSequences.removeSequence(name);
         if (verbose) {
           ApplicationTools::displayResult("Discard sequence", name);
         }

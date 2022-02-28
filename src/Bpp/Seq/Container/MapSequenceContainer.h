@@ -8,7 +8,7 @@
 //
 
 /*
-  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -162,7 +162,7 @@ public:
     addSequence(sequence.getName(), sequence, checkNames);
   }
   void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true);
-  Sequence* removeSequence(const std::string& name);
+  std::shared_ptr<Sequence> removeSequence(const std::string& name);
   void deleteSequence(const std::string& name);
   size_t getNumberOfSequences() const { return sequences_.size(); }
   void clear();
@@ -211,7 +211,7 @@ public:
   const Sequence& getSequence(size_t sequenceIndex) const;
   size_t getSequencePosition(const std::string& name) const;
   void            setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true);
-  Sequence*    removeSequence(size_t sequenceIndex);
+  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex);
   void         deleteSequence(size_t sequenceIndex);
   void setComments(size_t sequenceIndex, const Comments& comments);
   std::vector<std::string> getSequencesNames() const;

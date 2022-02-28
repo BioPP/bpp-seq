@@ -211,10 +211,10 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
 
 /******************************************************************************/
 
-std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos)
+std::shared_ptr<Site> AlignedSequenceContainer::removeSite(size_t pos)
 {
   if (pos >= getNumberOfSites())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites());
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::removeSite", pos, 0, getNumberOfSites());
 
   // Get old site
   getSite(pos); // Creates the site!
@@ -230,7 +230,28 @@ std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos)
   length_--;
 
   // Actualizes the 'sites' vector:
-  return VectorPositionedContainer<Site>::deleteObject(pos);
+  return VectorPositionedContainer<Site>::removeObject(pos);
+}
+
+/******************************************************************************/
+
+void AlignedSequenceContainer::deleteSite(size_t pos)
+{
+  if (pos >= getNumberOfSites())
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites());
+
+  // For all sequences
+  for (size_t j = 0; j < getNumberOfSequences(); j++)
+  {
+    getSequence_(j).deleteElement(pos);
+  }
+
+  // Delete site's position
+  positions_.erase(positions_.begin() + static_cast<ptrdiff_t>(pos));
+  length_--;
+
+  // Actualizes the 'sites' vector:
+  VectorPositionedContainer<Site>::deleteObject(pos);
 }
 
 /******************************************************************************/

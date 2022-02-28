@@ -279,10 +279,10 @@ void CompressedVectorSiteContainer::setSite(size_t pos, const Site& site, bool c
 
 /******************************************************************************/
 
-std::shared_ptr<Site> CompressedVectorSiteContainer::deleteSite(size_t siteIndex)
+std::shared_ptr<Site> CompressedVectorSiteContainer::removeSite(size_t siteIndex)
 {
   if (siteIndex >= getNumberOfSites())
-    throw IndexOutOfBoundsException("CompressedVectorSiteContainer::deleteSite.", siteIndex, 0, getNumberOfSites() - 1);
+    throw IndexOutOfBoundsException("CompressedVectorSiteContainer::removeSite.", siteIndex, 0, getNumberOfSites() - 1);
   // Here we need to check whether the pattern corresponding to this site is unique:
 
   std::shared_ptr<Site> ss = VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
@@ -300,7 +300,7 @@ std::shared_ptr<Site> CompressedVectorSiteContainer::deleteSite(size_t siteIndex
   if (test)
   {
     // There was no other site pointing toward this pattern, so we remove it.
-    VectorPositionedContainer<Site>::deleteObject(index_[siteIndex]).get();
+    VectorPositionedContainer<Site>::removeObject(index_[siteIndex]).get();
 
     // Now we have to correct all indices:
     for (size_t j = 0; j < index_.size(); ++j)
@@ -312,6 +312,17 @@ std::shared_ptr<Site> CompressedVectorSiteContainer::deleteSite(size_t siteIndex
   index_.erase(index_.begin() + static_cast<ptrdiff_t>(siteIndex));
 
   return ss;
+}
+
+/******************************************************************************/
+
+void CompressedVectorSiteContainer::deleteSite(size_t siteIndex)
+{
+  if (siteIndex >= getNumberOfSites())
+    throw IndexOutOfBoundsException("CompressedVectorSiteContainer::deleteSite.", siteIndex, 0, getNumberOfSites() - 1);
+  // Here we need to check whether the pattern corresponding to this site is unique:
+
+  removeSite(siteIndex); //This effectively delete the object as the shared_ptr is not forwarded and will be destroyed.
 }
 
 /******************************************************************************/
