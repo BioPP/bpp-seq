@@ -135,6 +135,8 @@ public:
     return VectorPositionedContainer<T>::getSize();
   }
 
+protected:
+
   /*
    * @brief real number of objects
    *
@@ -220,8 +222,8 @@ public:
     vNames_[pos] = name;
   }
 
-  using VectorPositionedContainer<T>::addObject;
-  using MappedNamedContainer<T>::addObject;
+  // using VectorPositionedContainer<T>::addObject;
+  // using PositionedNamedContainer<T>::addObject;
   void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false)
   {
     VectorPositionedContainer<T>::addObject(object, objectIndex, check);
@@ -264,7 +266,6 @@ public:
     return obj;
   }
 
-  using PositionedContainer<T>::deleteObject;
   std::shared_ptr<T> deleteObject(size_t objectIndex)
   {
     std::shared_ptr<T> obj = VectorPositionedContainer<T>::deleteObject(objectIndex);
@@ -286,6 +287,16 @@ public:
     return removeObject(mNames_[name]);
   }
 
+  void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
+  {
+    VectorPositionedContainer<T>::addObject_(object, objectIndex, check);
+    MappedNamedContainer<T>::addObject_(object, name, check);
+    const_cast<std::vector<std::string>& >(vNames_)[objectIndex] = name;
+    const_cast<std::map<std::string, size_t>&>(mNames_)[name] = objectIndex;
+  }
+
+public:
+
   void clear()
   {
     MappedNamedContainer<T>::clear();
@@ -294,14 +305,7 @@ public:
     mNames_.clear();
   }
 
-protected:
-  void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
-  {
-    VectorPositionedContainer<T>::addObject_(object, objectIndex, check);
-    MappedNamedContainer<T>::addObject_(object, name, check);
-    const_cast<std::vector<std::string>& >(vNames_)[objectIndex] = name;
-    const_cast<std::map<std::string, size_t>&>(mNames_)[name] = objectIndex;
-  }
+
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORMAPPEDCONTAINER_H

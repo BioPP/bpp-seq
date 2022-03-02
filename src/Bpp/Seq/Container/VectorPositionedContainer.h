@@ -131,6 +131,26 @@ public:
     return positions_.size();
   }
 
+  bool isAvailablePosition(size_t objectIndex) const
+  {
+    return objectIndex < getSize() && positions_[objectIndex] == nullptr;
+  }
+
+  void setSize(size_t size)
+  {
+    if (positions_.size() > size)
+      throw Exception("VectorPositionedContainer::setSize : not possible to shorten the vector.");
+
+    positions_.resize(size);
+  }
+
+  void clear()
+  {
+    positions_.clear();
+  }
+
+protected:
+
   const std::shared_ptr<T> getObject(size_t objectIndex) const
   {
     if (objectIndex >= getSize())
@@ -152,6 +172,7 @@ public:
    * @param objectIndex The new position of the object
    * @param checkPosition Look if the position is empty.
    */
+
   void addObject(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false)
   {
     if (objectIndex >= getSize())
@@ -178,11 +199,6 @@ public:
   }
 
 
-  bool isAvailablePosition(size_t objectIndex) const
-  {
-    return objectIndex < getSize() && positions_[objectIndex] == nullptr;
-  }
-
   std::shared_ptr<T> removeObject(size_t objectIndex)
   {
     if (objectIndex >= getSize())
@@ -195,7 +211,7 @@ public:
     return ret;
   }
 
-  using PositionedContainer<T>::deleteObject;
+//  using PositionedContainer<T>::deleteObject;
   std::shared_ptr<T> deleteObject(size_t objectIndex)
   {
     if (objectIndex >= getSize())
@@ -221,20 +237,6 @@ public:
     positions_.push_back(object);
   }
 
-  void setSize(size_t size)
-  {
-    if (positions_.size() > size)
-      throw Exception("VectorPositionedContainer::setSize : not possible to shorten the vector.");
-
-    positions_.resize(size);
-  }
-
-  void clear()
-  {
-    positions_.clear();
-  }
-
-protected:
   std::shared_ptr<T> getObject_(size_t objectIndex) const
   {
     if (objectIndex >= VectorPositionedContainer<T>::getSize())

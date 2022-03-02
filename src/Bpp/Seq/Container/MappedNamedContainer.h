@@ -99,7 +99,7 @@ public:
   virtual ~MappedNamedContainer()
   {}
 
-
+protected:
   /**
    * @brief Get a object.
    *
@@ -162,6 +162,22 @@ public:
   }
 
   /**
+   * @return All objects keys.
+   */
+  virtual std::vector<std::string> getObjectsNames() const
+  {
+    std::vector<std::string> vNames;
+
+    for (auto it : mObjects_)
+    {
+      vNames.push_back(it.first);
+    }
+
+    return vNames;
+  }
+
+public:
+  /**
    * @brief change the key of an object.
    *
    * @param okey The present key of the object.
@@ -181,21 +197,6 @@ public:
     std::shared_ptr<T> obj = mObjects_[okey];
     mObjects_.erase(okey);
     mObjects_[nkey] = obj;
-  }
-
-  /**
-   * @return All objects keys.
-   */
-  virtual std::vector<std::string> getObjectsNames() const
-  {
-    std::vector<std::string> vNames;
-
-    for (auto it : mObjects_)
-    {
-      vNames.push_back(it.first);
-    }
-
-    return vNames;
   }
 
   size_t getSize() const { return mObjects_.size(); }

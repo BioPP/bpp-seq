@@ -285,6 +285,20 @@ public:
    *
    */
 
+  // using VectorPositionedContainer<ProbabilisticSite>::addObject;
+  // using VectorMappedContainer<ProbabilisticSequence>::addObject;
+  template<typename T = ProbabilisticSite>
+  void addObject(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false)
+   {
+     VectorPositionedContainer<T>::addObject(object, objectIndex, checkPosition);
+   }
+
+  template<typename T = ProbabilisticSequence>
+  void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool checkPosition = false)
+  {
+    VectorMappedContainer<T>::addObject(object, objectIndex, name, checkPosition);
+  }
+
   /*
    * @brief Append a Site. The shared_ptr is shared.
    *
