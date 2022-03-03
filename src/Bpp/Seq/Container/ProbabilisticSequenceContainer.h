@@ -93,32 +93,42 @@ public:
    * @return A reference toward the Sequence with corresponding name.
    * @throw SequenceNotFoundException If the name does not match any sequence in the container.
    */
-  virtual const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const = 0;
+  virtual const ProbabilisticSequence& getSequence(const std::string& name) const = 0;
 
   /**
-   * @brief Add a probabilistic sequence to the container.
+   * @brief Replace a probabilistic sequence in the container.
    *
+   * @param name      The name of the sequence.
    * @param sequence  The sequence to add.
    * @param checkName Tell if the container must check if the name of the sequence
    * is already used in the container before adding it.
-   * @throw Exception Any other kind of exception, if the name of the sequence is
-   * already used, are whatever else depending on the implementation.
    */
+  virtual void setSequence(const std::string& name, const ProbabilisticSequence& sequence, bool checkName) = 0;
 
-  virtual void addSequence(const std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true) = 0;
+  // /**
+  //  * @brief Add a probabilistic sequence to the container.
+  //  *
+  //  * @param sequence  The sequence to add.
+  //  * @param checkName Tell if the container must check if the name of the sequence
+  //  * is already used in the container before adding it.
+  //  * @throw Exception Any other kind of exception, if the name of the sequence is
+  //  * already used, are whatever else depending on the implementation.
+  //  */
 
-  /**
-   * @brief Add a regular sequence to the container throw conversion
-   * in a probabilistic sequence.
-   *
-   * @param sequence  The sequence to add.
-   * @param checkName Tell if the container must check if the name of the sequence
-   * is already used in the container before adding it.
-   * @throw Exception Any other kind of exception, if the name of the sequence is
-   * already used, are whatever else depending on the implementation.
-   */
+  // virtual void addSequence(const std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true) = 0;
 
-  virtual void addSequence(const Sequence& sequence, bool checkName = true) = 0;
+  // /**
+  //  * @brief Add a regular sequence to the container throw conversion
+  //  * in a probabilistic sequence.
+  //  *
+  //  * @param sequence  The sequence to add.
+  //  * @param checkName Tell if the container must check if the name of the sequence
+  //  * is already used in the container before adding it.
+  //  * @throw Exception Any other kind of exception, if the name of the sequence is
+  //  * already used, are whatever else depending on the implementation.
+  //  */
+
+  // virtual void addSequence(const Sequence& sequence, bool checkName = true) = 0;
 
   /**
    * @brief converts and outputs the sequence to a string

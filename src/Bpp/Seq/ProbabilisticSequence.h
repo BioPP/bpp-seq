@@ -44,6 +44,7 @@
 
 #include "CoreSequenceSymbolList.h"
 #include "ProbabilisticSymbolList.h"
+#include <Bpp/Numeric/Table.h>
 
 // From the STL :
 #include <string>
@@ -63,8 +64,28 @@ namespace bpp
  * @see Alphabet
  */
 
-typedef ProbaCoreSequenceSymbolList ProbabilisticSequence;
+  class ProbabilisticSequence:
+    public virtual ProbaCoreSequenceSymbolList
+  {
+  public:
+    virtual ~ProbabilisticSequence() {}
 
+  public:
+    virtual ProbabilisticSequence* clone() const = 0;
+    
+    // virtual void setContent(const Table<double>& content)  = 0;
+
+    virtual const std::vector<std::vector<double> >& getContent() const = 0;
+
+    /**
+     * @brief Get contents with alphabet states as column names.
+     *
+     */
+     
+    virtual const Table<double>& getTable() const = 0;
+
+  };
+    
 /**
  * @brief A basic implementation of the ProbabilisticSequence interface.
  *
@@ -78,87 +99,95 @@ typedef ProbaCoreSequenceSymbolList ProbabilisticSequence;
  * @see Alphabet
  */
 
-class BasicProbabilisticSequence :
-  public virtual ProbabilisticSequence,
-  public virtual AbstractCoreSequence,
-  public virtual BasicProbabilisticSymbolList
-{
-public:
-  /**
-   * @brief Empty constructor : build a void ProbabilisticSequence with just an Alphabet
-   *
-   * One can use it safely for all types of Alphabet in order to build
-   * an empty ProbabilisticSequence, i.e., without name nor sequence
-   * data.
-   *
-   * @param alpha A pointer to the Alphabet to be used with this ProbabilisticSequence.
-   */
-  BasicProbabilisticSequence(const Alphabet* alpha);
-
-  /**
-   * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
-   *
-   * One can use it safely for RNA, DNA and protein sequences.
-   *
-   * @param name The sequence name.
-   * @param sequence The entire sequence to parsed as a Table<double>.
-   * @param alpha A pointer to the alphabet associated with this sequence.
-   * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
-   */
-
-  BasicProbabilisticSequence(const std::string& name, const Table<double>& sequence, const Alphabet* alpha);
-
-  /**
-   * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
-   *
-   * One can use it safely for RNA, DNA and protein sequences.
-   *
-   * @param name The sequence name.
-   * @param sequence The entire sequence to parsed as a Table<double>.
-   * @param comments Comments to add to the sequence.
-   * @param alpha A pointer to the alphabet associated with this sequence.
-   * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
-   */
-  BasicProbabilisticSequence(const std::string& name, const Table<double>& sequence, const Comments& comments, const Alphabet* alpha);
-
-  /**
-   * @brief The copy constructor.  This does not perform a hard copy of the alphabet object.
-   */
-  BasicProbabilisticSequence(const BasicProbabilisticSequence& s);
-
-  /**
-   * @brief The assignment operator.  This does not perform a hard cop of the alphabet object.
-   *
-   * @return A reference to the assigned BasicProbabilisticSequence.
-   */
-  BasicProbabilisticSequence& operator=(const BasicProbabilisticSequence& s);
-
-  /**
-   * @name The Clonable interface
-   *
-   * @{
-   */
-  BasicProbabilisticSequence* clone() const { return new BasicProbabilisticSequence(*this); }
-
-  /**
-   * @}
-   */
-
-  // class destructor
-  virtual ~BasicProbabilisticSequence() {}
-
-public:
-  using ProbabilisticSequence::setContent;
-  void setContent(const Table<double>& content) { BasicProbabilisticSymbolList::setContent(content); }
-
-  const std::vector<std::vector<double> >& getContent() const
+  class BasicProbabilisticSequence :
+    public virtual ProbabilisticSequence,
+    public virtual AbstractCoreSequence,
+    public virtual BasicProbabilisticSymbolList
   {
-    return BasicProbabilisticSymbolList::getContent();
-  }
+  public:
+    /**
+     * @brief Empty constructor : build a void ProbabilisticSequence with just an Alphabet
+     *
+     * One can use it safely for all types of Alphabet in order to build
+     * an empty ProbabilisticSequence, i.e., without name nor sequence
+     * data.
+     *
+     * @param alpha A pointer to the Alphabet to be used with this ProbabilisticSequence.
+     */
+    BasicProbabilisticSequence(const Alphabet* alpha);
 
-  void setToSizeR(size_t newSize) {} // leave empty for now
+    /**
+     * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
+     *
+     * One can use it safely for RNA, DNA and protein sequences.
+     *
+     * @param name The sequence name.
+     * @param sequence The entire sequence to parsed as a Table<double>.
+     * @param alpha A pointer to the alphabet associated with this sequence.
+     * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
+     */
 
-  void setToSizeL(size_t newSize) {}
-};
+    BasicProbabilisticSequence(const std::string& name, const Table<double>& sequence, const Alphabet* alpha);
+
+    /**
+     * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
+     *
+     * One can use it safely for RNA, DNA and protein sequences.
+     *
+     * @param name The sequence name.
+     * @param sequence The entire sequence to parsed as a Table<double>.
+     * @param comments Comments to add to the sequence.
+     * @param alpha A pointer to the alphabet associated with this sequence.
+     * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
+     */
+    BasicProbabilisticSequence(const std::string& name, const Table<double>& sequence, const Comments& comments, const Alphabet* alpha);
+
+    /**
+     * @brief The copy constructor.  This does not perform a hard copy of the alphabet object.
+     */
+    BasicProbabilisticSequence(const BasicProbabilisticSequence& s);
+
+    /**
+     * @brief The assignment operator.  This does not perform a hard cop of the alphabet object.
+     *
+     * @return A reference to the assigned BasicProbabilisticSequence.
+     */
+    BasicProbabilisticSequence& operator=(const BasicProbabilisticSequence& s);
+
+    /**
+     * @name The Clonable interface
+     *
+     * @{
+     */
+    BasicProbabilisticSequence* clone() const { return new BasicProbabilisticSequence(*this); }
+
+    /**
+     * @}
+     */
+
+    // class destructor
+    virtual ~BasicProbabilisticSequence() {}
+
+  public:
+    using ProbabilisticSequence::setContent;
+    void setContent(const Table<double>& content) { BasicProbabilisticSymbolList::setContent(content); }
+
+    const std::vector<std::vector<double> >& getContent() const
+    {
+      return BasicProbabilisticSymbolList::getContent();
+    }
+
+    const DataTable& getTable() const
+    {
+      return BasicProbabilisticSymbolList::getTable();
+    }
+
+    void setToSizeR(size_t newSize) {} // leave empty for now
+
+    void setToSizeL(size_t newSize) {}
+
+    void clearComments() { Commentable::clearComments(); } // Must be here, do not know why
+
+  };
 } // end of namespace bpp
 #endif // BPP_SEQ_PROBABILISTICSEQUENCE_H

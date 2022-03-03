@@ -296,7 +296,7 @@ void Pasta::appendSequencesFromStream(istream& input, VectorProbabilisticSiteCon
       c = last_c;
       shared_ptr<BasicProbabilisticSequence> tmpseq(new BasicProbabilisticSequence(container.getAlphabet())); // add probabilistic sequences instead
       hasSeq = nextSequence(input, *tmpseq, hasLabels, permutationMap);
-      container.addSequence(tmpseq, checkNames_);
+      container.addSequence(*tmpseq, checkNames_);
     }
   }
   if (extended_ && cmts.size())
@@ -394,7 +394,7 @@ void Pasta::writeAlignedValues(ostream& output, const AlignedValuesContainer& av
   if (vpsc)
     for (auto name : vpsc->getSequencesNames())
     {
-      writeSequence(output, *vpsc->getSequence(name));
+      writeSequence(output, vpsc->getSequence(name));
     }
   else
   {

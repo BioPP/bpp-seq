@@ -44,6 +44,7 @@ SET(CPP_FILES
   Bpp/Seq/Container/SiteContainerExceptions.cpp
   Bpp/Seq/Container/SiteContainerIterator.cpp
   Bpp/Seq/Container/SiteContainerTools.cpp
+  Bpp/Seq/Container/VectorProbabilisticSequenceContainer.cpp
   Bpp/Seq/Container/VectorProbabilisticSiteContainer.cpp
   Bpp/Seq/Container/VectorSequenceContainer.cpp
   Bpp/Seq/Container/VectorSiteContainer.cpp

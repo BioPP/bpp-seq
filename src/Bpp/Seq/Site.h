@@ -154,35 +154,15 @@ public:
   using SymbolList<int>::setElement;
 
   using BasicIntSymbolList::addElement;
-  // void addElement(const std::string& s)
-  // {
-  //   BasicIntSymbolList::addElement(s);
-  // }
 
   using SymbolList<int>::addElement;
-  // void addElement(int v)
-  // {
-  //   SymbolList<int>::addElement(v);
-  // }
-
-  // void addElement(size_t pos, int v)
-  // {
-  //   SymbolList<int>::addElement(pos, v);
-  // }
-
-  /**
-   * @brief Get the position of this site.
-   *
-   * @return This site position.
-   */
-  virtual int getPosition() const { return AbstractCoreSite::getPosition(); }
 
   /**
    * @brief Set the position of this site.
    *
    * @param position The new position of the site.
    */
-  virtual void setPosition(int position) { AbstractCoreSite::setPosition(position); }
+//  virtual void setPosition(int position) { AbstractCoreSite::setPosition(position); }
 };
 
 // Sites comparison operators overload
