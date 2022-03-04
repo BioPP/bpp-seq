@@ -267,7 +267,7 @@ double ChromosomeAlphabet::getProbabilityOfChar(int state1, int state2) const
      if (state2 == states[j]){
          // it is a composite state
         if (state1 > getMax() + 1){
-          return getProbabilityForState(state2, states[j]);
+          return getProbabilityForState(state1, states[j]);
 
         }else{
           return 1.;
