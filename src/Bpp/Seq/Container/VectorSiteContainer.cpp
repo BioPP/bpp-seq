@@ -66,9 +66,7 @@ VectorSiteContainer::VectorSiteContainer(
   // Seq names and comments:
 
   for (size_t i = 0; i < nbSeq; i++)
-  {
-    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", alpha)), "Seq_" + TextTools::toString(i));
-  }
+    VectorMappedContainer<Sequence>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
 
   // Now try to add each site:
   for (size_t i = 0; i < vs.size(); i++)
@@ -96,9 +94,7 @@ VectorSiteContainer::VectorSiteContainer(
   // Seq names and comments:
 
   for (size_t i = 0; i < nbSeq; i++)
-  {
-    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", alpha)), "Seq_" + TextTools::toString(i));
-  }
+    VectorMappedContainer<Sequence>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
 
   // Now try to add each site:
   for (size_t i = 0; i < vs.size(); i++)
@@ -116,9 +112,8 @@ VectorSiteContainer::VectorSiteContainer(size_t size, const Alphabet* alpha) :
 {
   // Seq names and comments:
   for (size_t i = 0; i < size; i++)
-  {
-    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", alpha)), "Seq_" + TextTools::toString(i));
-  }
+    VectorMappedContainer<Sequence>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
+
 }
 
 /******************************************************************************/
@@ -130,9 +125,8 @@ VectorSiteContainer::VectorSiteContainer(const std::vector<std::string>& names, 
 {
   // Seq names and comments:
   for (auto i : names)
-  {
-    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence(i, "", alpha)), i);
-  }
+    VectorMappedContainer<Sequence>::appendObject(nullptr, i);
+
 }
 
 /******************************************************************************/
@@ -147,15 +141,13 @@ VectorSiteContainer::VectorSiteContainer(const Alphabet* alpha) :
 
 VectorSiteContainer::VectorSiteContainer(const VectorSiteContainer& vsc) :
   VectorPositionedContainer<Site>(),
-  VectorMappedContainer<Sequence>(),
+  VectorMappedContainer<Sequence>(vsc),
   AbstractSequenceContainer(vsc)
 {
   // Now try to add each site:
   for (size_t i = 0; i < vsc.getNumberOfSites(); i++)
-  {
     addSite(vsc.getSite(i), false); // We assume that positions are correct.
-  }
-  setSequencesNames(vsc.getSequencesNames(), false);
+
 }
 
 /******************************************************************************/
@@ -167,10 +159,10 @@ VectorSiteContainer::VectorSiteContainer(const SiteContainer& sc) :
 {
   // Now try to add each site:
   for (size_t i = 0; i < sc.getNumberOfSites(); i++)
-  {
     addSite(sc.getSite(i), false); // We assume that positions are correct.
-  }
-  setSequencesNames(sc.getSequencesNames(), false);
+
+  for (auto i : sc.getSequencesNames())
+    VectorMappedContainer<Sequence>::appendObject(nullptr, i);
 }
 
 /******************************************************************************/
@@ -181,9 +173,8 @@ VectorSiteContainer::VectorSiteContainer(const OrderedSequenceContainer& osc) :
   AbstractSequenceContainer(osc)
 {
   for (size_t i = 0; i < osc.getNumberOfSequences(); i++)
-  {
     addSequence(osc.getSequence(i), false);
-  }
+
   reindexSites();
 }
 
@@ -196,9 +187,8 @@ VectorSiteContainer::VectorSiteContainer(const SequenceContainer& sc) :
 {
   vector<string> names = sc.getSequencesNames();
   for (size_t i = 0; i < names.size(); i++)
-  {
     addSequence(sc.getSequence(names[i]), false);
-  }
+
   reindexSites();
 }
 
@@ -209,21 +199,13 @@ VectorSiteContainer::VectorSiteContainer(const AlignedValuesContainer& avc) :
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(avc.getAlphabet())
 {
-  const Alphabet* alpha = avc.getAlphabet();
-
   if (avc.getNumberOfSites() == 0)
     throw Exception("VectorSiteContainer::VectorSiteContainer(AlignedValuesContainer): Empty site set.");
 
-  size_t nbSeq = avc.getNumberOfSequences();
-
   // Seq names and comments:
 
-  for (size_t i = 0; i < nbSeq; i++)
-  {
-    std::shared_ptr<Sequence> ps(new BasicSequence(avc.getName(i), "", alpha));
-
-    VectorMappedContainer<Sequence>::appendObject(ps, avc.getName(i));
-  }
+  for (size_t i = 0; i < avc.getNumberOfSequences(); i++)
+    VectorMappedContainer<Sequence>::appendObject(nullptr, avc.getName(i));
 
   // Now try to add each site:
   for (size_t i = 0; i < avc.getNumberOfSites(); i++)
@@ -241,12 +223,12 @@ VectorSiteContainer& VectorSiteContainer::operator=(const VectorSiteContainer& v
 {
   clear();
   AbstractSequenceContainer::operator=(vsc);
+  VectorMappedContainer<Sequence>::operator=(vsc);
+  
   // Now try to add each site:
   for (size_t i = 0; i < vsc.getNumberOfSites(); i++)
-  {
     addSite(vsc.getSite(i), false); // We assume that positions are correct.
-  }
-  setSequencesNames(vsc.getSequencesNames(), false);
+
   return *this;
 }
 
@@ -258,11 +240,11 @@ VectorSiteContainer& VectorSiteContainer::operator=(const SiteContainer& sc)
   AbstractSequenceContainer::operator=(sc);
   // Now try to add each site:
   for (size_t i = 0; i < sc.getNumberOfSites(); i++)
-  {
     addSite(sc.getSite(i), false); // We assume that positions are correct.
-  }
-  setSequencesNames(sc.getSequencesNames(), false);
 
+  for (auto i : sc.getSequencesNames())
+    VectorMappedContainer<Sequence>::appendObject(nullptr, i);
+  
   return *this;
 }
 
@@ -275,9 +257,8 @@ VectorSiteContainer& VectorSiteContainer::operator=(const OrderedSequenceContain
 
   size_t nbSeq = osc.getNumberOfSequences();
   for (size_t i = 0; i < nbSeq; i++)
-  {
     addSequence(osc.getSequence(i), false);
-  }
+
   reindexSites();
 
   return *this;
@@ -292,9 +273,8 @@ VectorSiteContainer& VectorSiteContainer::operator=(const SequenceContainer& sc)
 
   vector<string> names = sc.getSequencesNames();
   for (size_t i = 0; i < names.size(); i++)
-  {
     addSequence(sc.getSequence(names[i]), false);
-  }
+
   reindexSites();
 
   return *this;
@@ -326,7 +306,15 @@ void VectorSiteContainer::setSite(size_t pos, const Site& site, bool checkPositi
         throw SiteException("VectorSiteContainer::setSite: Site position already exists in container", &site);
     }
   }
+
   VectorPositionedContainer<Site>::addObject(shared_ptr<Site>(site.clone()), pos, false);
+
+  // Clean Sequence Container cache
+  for (size_t i=0; i<getNumberOfSequences(); i++)
+  {
+    if (VectorMappedContainer<Sequence>::getObject(i))
+      VectorMappedContainer<Sequence>::getObject(i)= shared_ptr<Sequence> (new BasicSequence(VectorMappedContainer<Sequence>::getObjectName(i), "", VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet()));
+  }
 }
 
 /******************************************************************************/
@@ -357,9 +345,17 @@ void VectorSiteContainer::addSite(const Site& site, bool checkPositions)
 
   if (getNumberOfSequences() == 0)
     for (size_t i = 0; i < site.size(); i++)
+      VectorMappedContainer<Sequence>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
+  else
+  {
+    for (size_t i=0; i<getNumberOfSequences(); i++)
     {
-      VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", getAlphabet())), "Seq_" + TextTools::toString(i));
+      if (VectorMappedContainer<Sequence>::getObject(i))
+        VectorMappedContainer<Sequence>::getObject(i)= shared_ptr<Sequence> (new BasicSequence(VectorMappedContainer<Sequence>::getObjectName(i), "", VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet()));
     }
+    
+  }
+
 }
 
 /******************************************************************************/
@@ -391,9 +387,9 @@ void VectorSiteContainer::addSite(const Site& site, int position, bool checkPosi
 
   if (getNumberOfSequences() == 0)
     for (size_t i = 0; i < site.size(); i++)
-    {
-      VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence("Seq_" + TextTools::toString(i), "", getAlphabet())), "Seq_" + TextTools::toString(i));
-    }
+      VectorMappedContainer<Sequence>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
+  else
+    VectorMappedContainer<Sequence>::nullify();
 }
 
 /******************************************************************************/
@@ -409,9 +405,7 @@ void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool check
 
   // New site's alphabet and site container's alphabet matching verification
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-  {
     throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site.getAlphabet());
-  }
 
   // Check position:
   if (checkPositions)
@@ -426,6 +420,18 @@ void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, bool check
   }
 
   VectorPositionedContainer<Site>::insertObject(shared_ptr<Site>(site.clone()), siteIndex);
+
+  if (getNumberOfSequences() == 0)
+    for (size_t i = 0; i < site.size(); i++)
+      VectorMappedContainer<Sequence>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
+  else
+  {
+    for (size_t i=0; i<getNumberOfSequences(); i++)
+    {
+      if (VectorMappedContainer<Sequence>::getObject(i))
+        VectorMappedContainer<Sequence>::getObject(i)= shared_ptr<Sequence> (new BasicSequence(VectorMappedContainer<Sequence>::getObjectName(i), "", VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet()));
+    }
+  }
 }
 
 /******************************************************************************/
@@ -459,6 +465,18 @@ void VectorSiteContainer::addSite(const Site& site, size_t siteIndex, int positi
   shared_ptr<Site> nsite(shared_ptr<Site>(site.clone()));
   nsite->setPosition(position);
   VectorPositionedContainer<Site>::insertObject(nsite, siteIndex);
+
+  if (getNumberOfSequences() == 0)
+    for (size_t i = 0; i < site.size(); i++)
+      VectorMappedContainer<Sequence>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
+  else
+  {
+    for (size_t i=0; i<getNumberOfSequences(); i++)
+    {
+      if (VectorMappedContainer<Sequence>::getObject(i))
+        VectorMappedContainer<Sequence>::getObject(i)= shared_ptr<Sequence> (new BasicSequence(VectorMappedContainer<Sequence>::getObjectName(i), "", VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet()));
+    }
+  }
 }
 
 
@@ -504,13 +522,19 @@ const Sequence& VectorSiteContainer::getSequence(size_t i) const
   if (i >= getNumberOfSequences())
     throw IndexOutOfBoundsException("VectorSiteContainer::getSequence.", i, 0, getNumberOfSequences() - 1);
 
+  // If Sequence already exsits
+  auto name = VectorMappedContainer<Sequence>::getObjectName(i);
+  if (!isAvailableName(name))
+    return *VectorMappedContainer<Sequence>::getObject(i);
+
   // Main loop : for all sites
   size_t n = getNumberOfSites();
   vector<int> sequence(n);
   for (size_t j = 0; j < n; j++)
     sequence[j] = getSite(j)[i];
 
-  shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(VectorMappedContainer<Sequence>::getObjectName(i), sequence, VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet())));
+  
+  shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(name, sequence, VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet())));
 
   VectorMappedContainer<Sequence>::addObject_(ns, i, ns->getName(), false);
 
@@ -552,7 +576,6 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
   if (getNumberOfSequences() == 1)
   {
     realloc(sequence.size());
-    VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence(sname, "", getAlphabet())), sname);
   }
   else
   {
@@ -565,10 +588,6 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
         throw SequenceException("VectorSiteContainer::setSequence. Name already exists in another sequence in container.", &sequence);
     }
 
-    // Update name:
-
-    VectorMappedContainer<Sequence>::setObjectName(pos, sname);
-    VectorMappedContainer<Sequence>::getObject(pos)->setName(sname);
   }
 
   // Update elements at each site:
@@ -577,22 +596,31 @@ void VectorSiteContainer::setSequence(size_t pos, const Sequence& sequence, bool
     getSite(i).setElement(pos, sequence.getValue(i));
   }
 
-  // comments
-  VectorMappedContainer<Sequence>::getObject_(pos)->setComments(sequence.getComments());
+  // Update name:
+  VectorMappedContainer<Sequence>::changeName(getObjectName(pos), sname);
+
+  // clear related Sequence in Container 
+  if (VectorMappedContainer<Sequence>::getObject(pos))
+  {
+    VectorMappedContainer<Sequence>::getObject(pos)= shared_ptr<Sequence> (new BasicSequence(sname, "", VectorMappedContainer<Sequence>::getObject(pos)->getComments(), getAlphabet()));
+  }
 }
 
 /******************************************************************************/
 
-Sequence* VectorSiteContainer::removeSequence(size_t i)
+std::shared_ptr<Sequence> VectorSiteContainer::removeSequence(size_t iseq)
 {
-  getSequence(i);
+  getSequence(iseq);
 
-  return VectorMappedContainer<Sequence>::getObject(i).get();
+  for (size_t i = 0; i < getNumberOfSites(); i++)
+    getSite(i).deleteElement(iseq);
+  
+  return VectorMappedContainer<Sequence>::removeObject(iseq);
 }
 
-/******************************************************************************/
+// /******************************************************************************/
 
-Sequence* VectorSiteContainer::removeSequence(const string& name)
+std::shared_ptr<Sequence> VectorSiteContainer::removeSequence(const string& name)
 {
   // Look for sequence name:
   size_t pos = getSequencePosition(name);
@@ -619,13 +647,12 @@ void VectorSiteContainer::addSequence(const Sequence& sequence, bool checkNames)
   if (checkNames && VectorMappedContainer<Sequence>::hasObject(sname))
     throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
 
-  VectorMappedContainer<Sequence>::appendObject(std::shared_ptr<Sequence>(new BasicSequence(sname, "", sequence.getComments(), getAlphabet())), sname);
-
   // Update elements at each site:
   for (size_t i = 0; i < getNumberOfSites(); i++)
-  {
     getSite(i).addElement(sequence.getValue(i));
-  }
+
+  // Add empty sequence
+  VectorMappedContainer<Sequence>::appendObject(shared_ptr<Sequence> (new BasicSequence(sname, "", sequence.getComments(), getAlphabet())), sname);
 }
 
 /******************************************************************************/
@@ -647,13 +674,12 @@ void VectorSiteContainer::addSequence(const Sequence& sequence, size_t pos, bool
   if (checkNames && VectorMappedContainer<Sequence>::hasObject(sname))
     throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", &sequence);
 
-  VectorMappedContainer<Sequence>::insertObject(std::shared_ptr<Sequence>(new BasicSequence(sname, "", sequence.getComments(), getAlphabet())), pos, sname);
-
   // Update elements at each site:
   for (size_t i = 0; i < getNumberOfSites(); i++)
-  {
     getSite(i).addElement(pos, sequence.getValue(i));
-  }
+
+  VectorMappedContainer<Sequence>::insertObject(shared_ptr<Sequence> (new BasicSequence(sname, "", sequence.getComments(), getAlphabet())), pos, sname);
+
 }
 
 /******************************************************************************/

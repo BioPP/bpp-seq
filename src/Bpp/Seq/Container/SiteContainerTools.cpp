@@ -86,7 +86,7 @@ AlignedValuesContainer* SiteContainerTools::getSitesWithoutGaps(const AlignedVal
       if (vsc)
         ngc->addSite(vsc->getSite(i));
       else
-        ngcp->appendSite(vpsc->getSite(i));
+        ngcp->addSite(vpsc->getSite(i));
     }
   }
   return noGapCont;
@@ -117,7 +117,7 @@ AlignedValuesContainer* SiteContainerTools::getCompleteSites(const AlignedValues
       if (vsc)
         ngc->addSite(vsc->getSite(i));
       else
-        ngcp->appendSite(vpsc->getSite(i));
+        ngcp->addSite(vpsc->getSite(i));
     }
   }
 
@@ -156,7 +156,7 @@ AlignedValuesContainer* SiteContainerTools::getSelectedSites(
 
       for (size_t i = 0; i < selection.size(); i++)
       {
-        nsc->appendSite(psc->getSite(selection[i]), false);
+        nsc->addSite(psc->getSite(selection[i]), false);
         // We do not check positions, we suppose that the container passed as an argument is correct.
         // WARNING: what if selection contains many times the same indice? ...
       }
@@ -930,7 +930,7 @@ AlignedValuesContainer* SiteContainerTools::sampleSites(const AlignedValuesConta
     if (vsc)
       nvsc->addSite(vsc->getSite(pos), false);
     else
-      nvpsc->appendSite(vpsc->getSite(pos), false);
+      nvpsc->addSite(vpsc->getSite(pos), false);
 
     if (index)
       index->push_back(pos);

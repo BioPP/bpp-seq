@@ -7,7 +7,7 @@
 //
 
 /*
-  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -70,7 +70,7 @@ class VectorPositionedContainer :
   public virtual Clonable
 {
 protected:
-  std::vector<std::shared_ptr<T> > positions_;
+  std::vector< std::shared_ptr<T> > positions_;
 
 public:
   /**
@@ -133,7 +133,7 @@ public:
 
   bool isAvailablePosition(size_t objectIndex) const
   {
-    return objectIndex < getSize() && positions_[objectIndex] == nullptr;
+    return objectIndex < getSize() && (positions_[objectIndex] == nullptr || positions_[objectIndex]->size()==0); 
   }
 
   void setSize(size_t size)
@@ -144,9 +144,25 @@ public:
     positions_.resize(size);
   }
 
+  /**
+   * @brief Destroys  the vector
+   *
+   */
+  
   void clear()
   {
     positions_.clear();
+  }
+
+  
+  /**
+   * @brief Nullify all elements
+   *
+   */
+  
+  void nullify()
+  {
+    std::fill(positions_.begin(), positions_.end(), nullptr);
   }
 
 protected:
@@ -205,23 +221,18 @@ protected:
       throw IndexOutOfBoundsException("VectorPositionedContainer::removeObject.", objectIndex, 0, getSize());
 
     std::shared_ptr<T> ret = positions_[objectIndex];
-
-    positions_[objectIndex] = nullptr;
+    
+    positions_.erase(positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
 
     return ret;
   }
 
-//  using PositionedContainer<T>::deleteObject;
-  std::shared_ptr<T> deleteObject(size_t objectIndex)
+  void deleteObject(size_t objectIndex)
   {
     if (objectIndex >= getSize())
       throw IndexOutOfBoundsException("VectorPositionedContainer::deleteObject.", objectIndex, 0, getSize());
 
-    std::shared_ptr<T> ret = positions_[objectIndex];
-
     positions_.erase(positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
-
-    return ret;
   }
 
   void deleteObjects(size_t objectIndex, size_t length)

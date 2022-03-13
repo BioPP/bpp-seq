@@ -90,11 +90,19 @@ protected:
 
   /**
    * @brief Extract and remove a object from the container.
-   * The container size is preserved.
+   *
+   * @param name The name of the object.
+
+   */
+  virtual std::shared_ptr<T> removeObject(const std::string& name) = 0;
+
+  /**
+   * @brief Remove a object from the container.
    *
    * @param name The name of the object.
    */
-  virtual std::shared_ptr<T> removeObject(const std::string& name) = 0;
+  
+  virtual void deleteObject(const std::string& name) = 0;
 
   /**
    * @brief Get all the names of the objects in the container.

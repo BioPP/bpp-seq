@@ -93,12 +93,18 @@ protected:
 
   /**
    * @brief Extract and remove a object from the container.
-   * The container size is unchanged, the positioned is set to null.
    *
    * @param objectIndex The position of the object.
+   * @return A smart pointer toward the removed object.
    */
-
   virtual std::shared_ptr<T> removeObject(size_t objectIndex) = 0;
+
+  /**
+   * @brief Delete an object from the container.
+   *
+   * @param name The name of the object.
+   */
+  virtual void deleteObject(size_t objectIndex) = 0;
 
 };
 } // end of namespace bpp.

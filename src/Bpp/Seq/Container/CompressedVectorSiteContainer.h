@@ -146,14 +146,26 @@ public:
     return *VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
   }
 
+  const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const
+  {
+     return getSite(siteIndex);
+  }
+  
   Site& getSite(size_t siteIndex)
   {
     return *VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
   }
 
+  CruxSymbolListSite& getSymbolListSite(size_t siteIndex)
+  {
+    return getSite(siteIndex);
+  }
+  
   void setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
 
-  std::shared_ptr<Site> deleteSite(size_t siteIndex);
+  std::shared_ptr<Site> removeSite(size_t siteIndex);
+  
+  void deleteSite(size_t siteIndex);
 
 
   void addSite(const Site& site, bool checkPosition = false);
@@ -242,13 +254,13 @@ public:
     }
   }
 
-  Sequence* removeSequence(size_t sequenceIndex)
+  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex)
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::removeSequence.");
   }
 
-  Sequence* removeSequence(const std::string& name)
+  std::shared_ptr<Sequence> removeSequence(const std::string& name)
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::removeSequence.");

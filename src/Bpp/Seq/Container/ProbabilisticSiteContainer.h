@@ -96,7 +96,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    */
 
-  virtual void appendSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false) = 0;
+  virtual void addSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false) = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_PROBABILISTICSITECONTAINER_H

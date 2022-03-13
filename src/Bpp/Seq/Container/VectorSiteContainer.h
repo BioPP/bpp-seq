@@ -63,10 +63,15 @@ namespace bpp
  * Site access is hence in \f$O(1)\f$, and sequence access in \f$O(l)\f$, where
  * \f$l\f$ is the number of sites in the container.
  *
- * See AlignedSequenceContainer for an alternative implementation.
+ * Sequences are built & stored on the fly, with a cache for time
+ * efficiency.
+ *
+ * See VectorSequenceContainer for an alternative implementation.
  *
  * @see Sequence, Site, AlignedSequenceContainer
+ *
  */
+  
 class VectorSiteContainer :
   public AbstractSequenceContainer,
 // This container implements the SequenceContainer interface
@@ -144,16 +149,31 @@ public:
     return *VectorPositionedContainer<Site>::getObject(siteIndex);
   }
 
+  const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const
+  {
+    return getSite(siteIndex);
+  }
+
   Site& getSite(size_t siteIndex)
   {
     return *VectorPositionedContainer<Site>::getObject(siteIndex);
   }
 
+  CruxSymbolListSite& getSymbolListSite(size_t siteIndex)
+  {
+    return getSite(siteIndex);
+  }
+
   void setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
 
-  std::shared_ptr<Site> deleteSite(size_t siteIndex)
+  std::shared_ptr<Site> removeSite(size_t siteIndex)
   {
-    return VectorPositionedContainer<Site>::deleteObject(siteIndex);
+    return VectorPositionedContainer<Site>::removeObject(siteIndex);
+  }
+
+  void deleteSite(size_t siteIndex)
+  {
+    VectorPositionedContainer<Site>::deleteObject(siteIndex);
   }
 
   void        addSite(const Site& site,                                 bool checkPosition = true);
@@ -228,8 +248,9 @@ public:
     return VectorMappedContainer<Sequence>::getObjectPosition(name);
   }
 
-  Sequence* removeSequence(size_t sequenceIndex);
-  Sequence* removeSequence(const std::string& name);
+  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex);
+
+  std::shared_ptr<Sequence> removeSequence(const std::string& name);
 
   size_t getNumberOfSequences() const
   {

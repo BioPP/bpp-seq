@@ -55,9 +55,7 @@ VectorProbabilisticSequenceContainer::VectorProbabilisticSequenceContainer(
   AbstractValuesContainer(alpha)
 {
   for (auto i = vs.begin(); i < vs.end(); i++)
-  {
     addSequence(*i);
-  }
 }
 
 /** Copy constructors: ********************************************************/
@@ -69,9 +67,8 @@ VectorProbabilisticSequenceContainer::VectorProbabilisticSequenceContainer(
 {
   size_t max = vsc.getNumberOfSequences();
   for (size_t i = 0; i < max; i++)
-  {
     addSequence(vsc.getSequence(i), false);
-  }
+
 }
 
 /** Assignation operator: *****************************************************/

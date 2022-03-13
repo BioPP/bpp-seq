@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -66,9 +66,9 @@ namespace bpp
 
 template<class T>
 class VectorMappedContainer :
-  virtual public PositionedNamedContainer<T>,
-  virtual public MappedNamedContainer<T>,
-  virtual public VectorPositionedContainer<T>
+  public PositionedNamedContainer<T>,
+  public MappedNamedContainer<T>,
+  public VectorPositionedContainer<T>
 {
 private:
   /*
@@ -163,6 +163,7 @@ protected:
     return vNames_[objectIndex];
   }
 
+  
   const std::shared_ptr<T> getObject(size_t objectIndex) const
   {
     return VectorPositionedContainer<T>::getObject(objectIndex);
@@ -262,16 +263,6 @@ protected:
     std::shared_ptr<T> obj = VectorPositionedContainer<T>::removeObject(objectIndex);
     MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
     mNames_.erase(vNames_[objectIndex]);
-    vNames_[objectIndex] = "";
-    return obj;
-  }
-
-  std::shared_ptr<T> deleteObject(size_t objectIndex)
-  {
-    std::shared_ptr<T> obj = VectorPositionedContainer<T>::deleteObject(objectIndex);
-    MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
-
-    mNames_.erase(vNames_[objectIndex]);
     for (auto it : mNames_)
     {
       if (it.second > objectIndex)
@@ -281,10 +272,29 @@ protected:
     return obj;
   }
 
+  void deleteObject(size_t objectIndex)
+  {
+    VectorPositionedContainer<T>::deleteObject(objectIndex);
+    MappedNamedContainer<T>::deleteObject(vNames_[objectIndex]);
+
+    mNames_.erase(vNames_[objectIndex]);
+    for (auto it : mNames_)
+    {
+      if (it.second > objectIndex)
+        it.second--;
+    }
+    vNames_.erase(vNames_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
+  }
+
 
   std::shared_ptr<T> removeObject(const std::string& name)
   {
     return removeObject(mNames_[name]);
+  }
+
+  void deleteObject(const std::string& name)
+  {
+    deleteObject(mNames_[name]);
   }
 
   void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
@@ -304,8 +314,7 @@ public:
     vNames_.clear();
     mNames_.clear();
   }
-
-
 };
 } // end of namespace bpp.
+
 #endif // BPP_SEQ_CONTAINER_VECTORMAPPEDCONTAINER_H
