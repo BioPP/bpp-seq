@@ -148,6 +148,62 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
   return *this;
 }
 
+bool VectorSequenceContainer::hasSequenceByName(const std::string& name) const
+{
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+    if (getSequence(i).getName()==name)
+      return true;
+  return false;
+}
+
+const Sequence& VectorSequenceContainer::getSequenceByName(const std::string& name) const
+{
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+  {
+    const Sequence& seq = getSequence(i);
+    if (seq.getName()==name)
+      return seq;
+  }
+  throw Exception("VectorSequenceContainer::getSequenceByName: Unknown sequence name: " + name);
+}
+
+std::vector<std::string> VectorSequenceContainer::getSequencesNames() const
+{
+  std::vector<std::string> vs;
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+    vs.push_back(getSequence(i).getName());
+
+  return vs;
+}
+
+std::shared_ptr<Sequence> VectorSequenceContainer::removeSequenceByName(const std::string& name)
+{
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+  {
+    const Sequence& seq = getSequence(i);
+    if (seq.getName()==name)
+      return removeSequence(i);
+  }
+  throw Exception("VectorSequenceContainer::removeSequenceByName: Unknown sequence name: " + name);
+}
+
+void VectorSequenceContainer::deleteSequenceByName(const std::string& name)
+{
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+  {
+    const Sequence& seq = getSequence(i);
+    if (seq.getName()==name)
+      deleteSequence(i);
+  }
+  throw Exception("VectorSequenceContainer::deleteSequenceByName: Unknown sequence name: " + name);
+}
+
+
 /******************************************************************************/
 
 void VectorSequenceContainer::setSequencesNames(

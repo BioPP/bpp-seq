@@ -237,20 +237,21 @@ public:
   /**
    *
    * @brief Method to get position of a sequence in sequence
-   * container from his name. This method is used by delete and
+   * container from its key. This method is used by delete and
    * remove methods
    *
    */
-  size_t getSequencePosition(const std::string& name) const
+  
+  size_t getSequencePosition(const std::string& key) const
   {
     try
     {
       // Look for sequence name:
-      return VectorMappedContainer<Sequence>::getObjectPosition(name);
+      return VectorMappedContainer<Sequence>::getObjectPosition(key);
     }
     catch (Exception& e)
     {
-      throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", name);
+      throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", key);
     }
   }
 

@@ -506,7 +506,6 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   else
     sites = sites2;
 
-
   // Look for site selection:
   if (iAln->getFormatName() == "MASE file")
   {

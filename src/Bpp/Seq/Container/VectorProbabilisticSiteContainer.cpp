@@ -110,7 +110,6 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
 
   // Seq names and comments:
 
-  auto alpha = avc.getAlphabet();
   auto vn = avc.getSequencesNames();
   for (const auto& n : vn)
     VectorMappedContainer<ProbabilisticSequence>::appendObject(nullptr, n);

@@ -223,8 +223,6 @@ protected:
     vNames_[pos] = name;
   }
 
-  // using VectorPositionedContainer<T>::addObject;
-  // using PositionedNamedContainer<T>::addObject;
   void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false)
   {
     VectorPositionedContainer<T>::addObject(object, objectIndex, check);
