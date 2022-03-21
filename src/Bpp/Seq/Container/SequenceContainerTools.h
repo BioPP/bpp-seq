@@ -217,10 +217,9 @@ public:
    */
   static void append(SequenceContainer& seqCont1, const SequenceContainer& seqCont2, bool checkNames = true)
   {
-    std::vector<std::string> seqNames = seqCont2.getSequencesNames();
-    for (size_t i = 0; i < seqNames.size(); i++)
+    for (const auto& name: seqCont2.getSequenceNames())
     {
-      seqCont1.addSequence(seqCont2.getSequence(seqNames[i]), checkNames);
+      seqCont1.addSequence(seqCont2.getSequence(name), checkNames);
     }
   }
   /**
@@ -257,11 +256,10 @@ public:
     if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
       throw AlphabetMismatchException("SequenceContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
 
-    std::vector<std::string> seqNames = seqCont1.getSequencesNames();
-    for (size_t i = 0; i < seqNames.size(); i++)
+    for (const auto& name: seqCont1.getSequenceNames())
     {
-      BasicSequence tmp = seqCont1.getSequence(seqNames[i]);
-      tmp.append(seqCont2.getSequence(seqNames[i]));
+      BasicSequence tmp = seqCont1.getSequence(name);
+      tmp.append(seqCont2.getSequence(name));
       outputCont.addSequence(tmp, false);
     }
   }
@@ -276,11 +274,10 @@ public:
    */
   static void convertAlphabet(const SequenceContainer& seqCont, SequenceContainer& outputCont)
   {
-    std::vector<std::string> seqNames = seqCont.getSequencesNames();
     bool checkNames = outputCont.getNumberOfSequences() > 0;
-    for (size_t i = 0; i < seqNames.size(); i++)
+    for (const auto& name: seqCont.getSequenceNames())
     {
-      BasicSequence seq(seqNames[i], seqCont.toString(seqNames[i]), outputCont.getAlphabet());
+      BasicSequence seq(name, seqCont.toString(name), outputCont.getAlphabet());
       outputCont.addSequence(seq, checkNames);
     }
   }

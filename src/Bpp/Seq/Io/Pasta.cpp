@@ -391,19 +391,19 @@ void Pasta::writeAlignedValues(ostream& output, const AlignedValuesContainer& av
 
   const AbstractProbabilisticSequenceContainer* vpsc = dynamic_cast<const AbstractProbabilisticSequenceContainer*>(&avc);
 
-  if (vpsc)
-    for (auto name : vpsc->getSequencesNames())
+  if (vpsc) {
+    for (const auto& name : vpsc->getSequenceNames())
     {
       writeSequence(output, vpsc->getSequence(name));
     }
-  else
-  {
+  } else {
     const SequenceContainer* sc = dynamic_cast<const SiteContainer*>(&avc);
 
-    if (sc)
-      for (auto name : sc->getSequencesNames())
+    if (sc) {
+      for (const auto& name : sc->getSequenceNames())
       {
         writeSequence(output, sc->getSequence(name));
       }
+    }
   }
 }

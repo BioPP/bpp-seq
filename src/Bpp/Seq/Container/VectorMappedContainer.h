@@ -195,15 +195,15 @@ protected:
     return MappedNamedContainer<T>::hasObject(name);
   }
 
-  std::vector<std::string> getObjectsNames() const
+  std::vector<std::string> getObjectNames() const
   {
     return vNames_;
   }
 
-  void setObjectsNames(const std::vector<std::string>& names)
+  void setObjectNames(const std::vector<std::string>& names)
   {
     if (names.size() != vNames_.size())
-      throw BadSizeException("VectorMappedContainer::setObjectsNames: bad number of new names", vNames_.size(), names.size());
+      throw BadSizeException("VectorMappedContainer::setObjectNames: bad number of new names", vNames_.size(), names.size());
 
     mNames_.clear();
 

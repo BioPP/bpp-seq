@@ -85,7 +85,7 @@ VectorProbabilisticSequenceContainer& VectorProbabilisticSequenceContainer::oper
 
 /******************************************************************************/
 
-void VectorProbabilisticSequenceContainer::setSequencesNames(
+void VectorProbabilisticSequenceContainer::setSequenceNames(
   const std::vector<std::string>& names,
   bool checkNames)
 {
@@ -99,7 +99,7 @@ void VectorProbabilisticSequenceContainer::setSequencesNames(
       for (size_t j = 0; j < i; j++)
       {
         if (names[j] == names[i])
-          throw Exception("VectorSiteContainer::setSequencesNames : Sequence's name already exists in container");
+          throw Exception("VectorSiteContainer::setSequenceNames : Sequence's name already exists in container");
       }
     }
   }
@@ -108,7 +108,7 @@ void VectorProbabilisticSequenceContainer::setSequencesNames(
     getSequence_(i).setName(names[i]);
   }
 
-  setObjectsNames(names);
+  setObjectNames(names);
 }
 
 /******************************************************************************/

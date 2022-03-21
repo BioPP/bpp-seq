@@ -269,14 +269,14 @@ public:
 
   size_t getNumberOfSequences() const { return VectorMappedContainer<Sequence>::getNumberOfObjects(); }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return VectorMappedContainer<Sequence>::getObjectsNames();
+    return VectorMappedContainer<Sequence>::getObjectNames();
   }
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true)
   {
-    VectorMappedContainer<Sequence>::setObjectsNames(names);
+    VectorMappedContainer<Sequence>::setObjectNames(names);
   }
 
   void clear();

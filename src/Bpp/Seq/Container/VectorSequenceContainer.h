@@ -302,7 +302,7 @@ public:
    *
    */
   
-  std::vector<std::string> getSequencesNames() const;
+  std::vector<std::string> getSequenceNames() const;
 
   /**
    * @brief get Sequences keys (ie the strings used to store them in
@@ -310,9 +310,9 @@ public:
    *
    */
   
-  std::vector<std::string> getSequencesKeys() const
+  std::vector<std::string> getSequenceKeys() const
   {
-    return getObjectsNames();
+    return getObjectNames();
   }
 
   /**
@@ -321,7 +321,7 @@ public:
    *
    */
   
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true);
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true);
 
   VectorSequenceContainer* createEmptyContainer() const;
 

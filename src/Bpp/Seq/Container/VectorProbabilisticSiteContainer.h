@@ -193,14 +193,14 @@ public:
     return VectorMappedContainer<ProbabilisticSequence>::getObjectPosition(name);
   }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return VectorMappedContainer<ProbabilisticSequence>::getObjectsNames();
+    return VectorMappedContainer<ProbabilisticSequence>::getObjectNames();
   }
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true)
   {
-    VectorMappedContainer<ProbabilisticSequence>::setObjectsNames(names);
+    VectorMappedContainer<ProbabilisticSequence>::setObjectNames(names);
   }
 
 

@@ -177,7 +177,7 @@ protected:
   /**
    * @return All objects keys.
    */
-  virtual std::vector<std::string> getObjectsNames() const
+  virtual std::vector<std::string> getObjectNames() const
   {
     std::vector<std::string> vNames;
 
