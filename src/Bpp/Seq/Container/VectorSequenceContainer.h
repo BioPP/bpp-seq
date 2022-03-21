@@ -445,6 +445,27 @@ public:
   }
 
   /**
+   * @brief Add a sequence with a given key at the end of the container.
+   *
+   * The sequence is copied into the container.
+   * If checkNames is set to true, the method check if the name of the
+   * sequence is already used in the container, and sends an exception if it
+   * is the case. Otherwise, do not check the name: the method is hence faster,
+   * but use it at your own risks!
+   *
+   * @param sequence The sequence to add.
+   * @param key the key in the map
+   */
+
+  virtual void addSequence(const Sequence& sequence, const std::string& key)
+  {
+    if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
+
+    appendObject(std::shared_ptr<Sequence>(sequence.clone()), key, false);
+  }
+
+  /**
   * @brief Add a sequence at the end of the container.
   *
   * The sequence is shared with the container.
@@ -486,6 +507,27 @@ public:
   virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true)
   {
     addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
+  }
+
+  /**
+   * @brief Add a sequence to the container at a particular position with a given key
+   *
+   * The sequence is copied into the container.
+   * If checkName is set to true, the method check if the name of the
+   * sequence is already used in the container, and sends an exception if it
+   * is the case. Otherwise, do not check the name: the method is hence faster,
+   * but use it at your own risks!
+   *
+   * @param sequence The sequence to add.
+   * @param key the key in the map
+   * @param sequenceIndex The position where to insert the new sequence.
+   * All the following sequences will be pushed.
+   * @throw Exception If the sequence couldn't be added to the container.
+   */
+  
+  virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, const std::string& key)
+  {
+    addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, key);
   }
 
 protected:
