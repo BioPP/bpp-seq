@@ -110,7 +110,7 @@ protected:
    * @return A vector of strings with all object names.
    */
 
-  virtual std::vector<std::string> getObjectsNames() const = 0;
+  virtual std::vector<std::string> getObjectNames() const = 0;
 
 public:
   /**

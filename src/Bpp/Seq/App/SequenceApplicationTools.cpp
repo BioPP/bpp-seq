@@ -506,7 +506,6 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
   else
     sites = sites2;
 
-
   // Look for site selection:
   if (iAln->getFormatName() == "MASE file")
   {
@@ -671,7 +670,7 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
       sites = new VectorSiteContainer(alpha);
 
       const SequenceTools ST;
-      for (auto name : sites2->getSequencesNames())
+      for (const auto& name : sites2->getSequenceNames())
       {
         sites->addSequence(*(ST.RNYslice(sites2->getSequence(name))), false);
       }
@@ -801,8 +800,7 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
   if (optionKeep != "all") {
     vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.keep_names", params, ',', optionKeep, suffix, suffixIsOptional, warn);
     sort(selection.begin(), selection.end());
-    vector<string> seqNames = allSequences.getSequencesNames();
-    for (auto name: seqNames) {
+    for (const auto& name: allSequences.getSequenceNames()) {
       if (! binary_search(selection.begin(), selection.end(), name)) {
         allSequences.removeSequence(name);
         if (verbose) {
@@ -814,9 +812,9 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
   string optionRemove = ApplicationTools::getStringParameter("input.sequence.remove_names", params, "none", suffix, suffixIsOptional, warn);
   if (optionRemove != "none") {
     vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.remove_names", params, ',', optionRemove, suffix, suffixIsOptional, warn);
-    vector<string> seqNames = allSequences.getSequencesNames();
+    vector<string> seqNames = allSequences.getSequenceNames();
     sort(seqNames.begin(), seqNames.end());
-    for (auto name: selection) {
+    for (const auto& name: selection) {
       if (binary_search(seqNames.begin(), seqNames.end(), name)) {
         allSequences.removeSequence(name);
         if (verbose) {

@@ -89,16 +89,17 @@ public:
   /**
    * @brief Retrieve a probabilistic sequence object from the container.
    *
-   * @param name The name of the sequence.
+   * @param name The name of the sequence in the map.
    * @return A reference toward the Sequence with corresponding name.
    * @throw SequenceNotFoundException If the name does not match any sequence in the container.
    */
+  
   virtual const ProbabilisticSequence& getSequence(const std::string& name) const = 0;
 
   /**
    * @brief Replace a probabilistic sequence in the container.
    *
-   * @param name      The name of the sequence.
+   * @param name      The name of the sequence in the map.
    * @param sequence  The sequence to add.
    * @param checkName Tell if the container must check if the name of the sequence
    * is already used in the container before adding it.

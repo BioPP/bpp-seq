@@ -58,7 +58,10 @@ namespace bpp
  * @brief The VectorSequenceContainer class.
  *
  * This is the simplest implementation of the OrderedSequenceContainer interface.
- * Sequences are stored in a std::vector of shared pointers.
+ * std::shared_ptr<Sequence> are stored in a std::vector, as well as in a std::map.
+ *
+ * 
+ * 
  */
 
 class VectorSequenceContainer :
@@ -69,6 +72,8 @@ public:
 
   /**
    * @brief Build a container with shared Sequences.
+   *
+   * The keys of the map are the names of the Sequences
    *
    */
   
@@ -92,21 +97,31 @@ public:
    * @brief Copy from a VectorSequenceContainer.
    *
    * @param vsc The VectorSequenceContainer to copy into this container.
+   *
    */
+  
   VectorSequenceContainer(const VectorSequenceContainer& vsc);
 
   /**
    * @brief Copy from an OrderedSequenceContainer.
    *
    * @param osc The OrderedSequenceContainer to copy into this container.
+   *
+   * The keys of the map are the names of the Sequences
+   *
    */
+
   VectorSequenceContainer(const OrderedSequenceContainer& osc);
 
   /**
    * @brief Copy from a SequenceContainer.
    *
    * @param osc The SequenceContainer to copy into this container.
+   *
+   * The keys of the map are the names of the Sequences
+   *
    */
+
   VectorSequenceContainer(const SequenceContainer& osc);
 
   /** @} */
@@ -122,21 +137,23 @@ public:
    * @brief Copy from an OrderedSequenceContainer.
    *
    * @param osc The OrderedSequenceContainer to copy into this container.
+   *
+   * The keys of the map are the names of the Sequences
+   *
    */
+  
   VectorSequenceContainer& operator=(const OrderedSequenceContainer& osc);
 
   /**
    * @brief Copy from a SequenceContainer.
    *
    * @param osc The SequenceContainer to copy into this container.
+   *
+   * The keys of the map are the names of the Sequences
+   *
    */
+  
   VectorSequenceContainer& operator=(const SequenceContainer& osc);
-
-  /**
-   * @brief Container destructor: delete all sequences in the container.
-   */
-  virtual ~VectorSequenceContainer()
-  {}
 
   void clear()
   {
@@ -157,45 +174,181 @@ public:
    *
    * @{
    */
+
+  /**
+   * @brief check if there is a Sequence with this name in the map
+   * (same as hasSequenceByKey).
+   *
+   */
+  
   bool hasSequence(const std::string& name) const
+  {
+    return hasSequenceByKey(name);
+  }
+
+  bool hasSequenceByName(const std::string& name) const;
+
+  /**
+   * @brief check if there is a Sequence with this key in the map.
+   *
+   */
+  
+  bool hasSequenceByKey(const std::string& name) const
   {
     return hasObject(name);
   }
 
+  /**
+   * @brief get the Sequence with this name in the map (same as
+   * getSequenceByKey).
+   *
+   */
+
   const Sequence& getSequence(const std::string& name) const
+  {
+    return getSequenceByKey(name);
+  }
+
+  const Sequence& getSequenceByName(const std::string& name) const;
+
+  /**
+   * @brief check if there is a Sequence with this key in the map.
+   *
+   */
+  
+  const Sequence& getSequenceByKey(const std::string& name) const
   {
     return *getObject(name);
   }
 
+  /**
+   * @brief Copy a Sequence to the given key in the map.
+   *
+   */
+  
   void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true)
   {
     setSequence(getSequencePosition(name), sequence, checkName);
   }
 
+  /**
+   * @brief get the Sequence with this name in the map (same as
+   * removeSequenceByKey).
+   *
+   */
+
   std::shared_ptr<Sequence> removeSequence(const std::string& name)
+  {
+    return removeSequenceByKey(name);
+  }
+
+  /**
+   * @brief remove & return a Sequence with this key from the map.
+   *
+   */
+  
+  std::shared_ptr<Sequence> removeSequenceByKey(const std::string& name)
   {
     return removeSequence(getSequencePosition(name));
   }
 
-  size_t getNumberOfSequences() const { return getSize(); }
+  /**
+   * @brief remove & return a Sequence with this name.
+   *
+   */
+  
+  std::shared_ptr<Sequence> removeSequenceByName(const std::string& name);
 
-  std::vector<std::string> getSequencesNames() const
+  /**
+   * @brief delete the Sequence with this name in the map (same as
+   * deleteSequenceByKey).
+   *
+   */
+
+  void deleteSequence(const std::string& name)
   {
-    return getObjectsNames();
+    deleteSequenceByKey(name);
   }
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true);
+  void deleteSequence(size_t pos)
+  {
+    deleteObject(pos);
+  }
+
+  /**
+   * @brief remove & return a Sequence with this key from the map.
+   *
+   */
+  
+  void deleteSequenceByKey(const std::string& name)
+  {
+    deleteSequence(getSequencePosition(name));
+  }
+
+  /**
+   * @brief remove & return a Sequence with this name.
+   *
+   */
+  void deleteSequenceByName(const std::string& name);
+
+  /**
+   * @return The list of key used to index the sequences.
+   */
+  std::vector<std::string> getKeys() const { return getObjectNames(); }
+
+  size_t getNumberOfSequences() const { return getSize(); }
+
+  
+  /**
+   * @brief get Sequences proper names (may be different from the keys
+   * used to store them in the map), in the order of the vector.
+   *
+   */
+  
+  std::vector<std::string> getSequenceNames() const;
+
+  /**
+   * @brief get Sequences keys (ie the strings used to store them in
+   * the map, may be different from their proper names), in the order of the vector.
+   *
+   */
+  
+  std::vector<std::string> getSequenceKeys() const
+  {
+    return getObjectNames();
+  }
+
+  /**
+   * @brief set the proper names of the Sequences, in the order of the
+   * vector.
+   *
+   */
+  
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true);
 
   VectorSequenceContainer* createEmptyContainer() const;
 
+  /**
+   * @brief Get the value of an element, given sequenceName in the map
+   * and the elementIndex position.
+   *
+   */
+  
   int& valueAt(const std::string& sequenceName, size_t elementIndex)
   {
     return getSequence_(sequenceName)[elementIndex];
   }
 
-  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
+  /**
+   * @brief Get the value at a Position in a Sequence with given
+   * sequenceName in the map (may be not the actual name of the
+   * Sequence..
+   *
+   */
+  
+  const int& valueAt(const std::string& key, size_t elementIndex) const
   {
-    return getSequence(sequenceName)[elementIndex];
+    return getSequenceByKey(key)[elementIndex];
   }
 
   int& operator()(const std::string& sequenceName, size_t elementIndex)
@@ -234,6 +387,8 @@ public:
    *
    * @{
    */
+
+  
   size_t getSequencePosition(const std::string& name) const
   {
     return getObjectPosition(name);
@@ -293,6 +448,27 @@ public:
   }
 
   /**
+   * @brief Add a sequence with a given key at the end of the container.
+   *
+   * The sequence is copied into the container.
+   * If checkNames is set to true, the method check if the name of the
+   * sequence is already used in the container, and sends an exception if it
+   * is the case. Otherwise, do not check the name: the method is hence faster,
+   * but use it at your own risks!
+   *
+   * @param sequence The sequence to add.
+   * @param key the key in the map
+   */
+
+  virtual void addSequence(const Sequence& sequence, const std::string& key)
+  {
+    if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
+
+    appendObject(std::shared_ptr<Sequence>(sequence.clone()), key, false);
+  }
+
+  /**
   * @brief Add a sequence at the end of the container.
   *
   * The sequence is shared with the container.
@@ -336,6 +512,27 @@ public:
     addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
   }
 
+  /**
+   * @brief Add a sequence to the container at a particular position with a given key
+   *
+   * The sequence is copied into the container.
+   * If checkName is set to true, the method check if the name of the
+   * sequence is already used in the container, and sends an exception if it
+   * is the case. Otherwise, do not check the name: the method is hence faster,
+   * but use it at your own risks!
+   *
+   * @param sequence The sequence to add.
+   * @param key the key in the map
+   * @param sequenceIndex The position where to insert the new sequence.
+   * All the following sequences will be pushed.
+   * @throw Exception If the sequence couldn't be added to the container.
+   */
+  
+  virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, const std::string& key)
+  {
+    addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, key);
+  }
+
 protected:
   /**
    * @name AbstractSequenceContainer methods.
@@ -348,9 +545,14 @@ protected:
   }
 
 
-  Sequence& getSequence_(const std::string& name)
+  /**
+   * @brief getSequence with given key
+   *
+   */
+  
+  Sequence& getSequence_(const std::string& key)
   {
-    return *getObject(name);
+    return *getObject(key);
   }
 
   /** @} */
@@ -360,6 +562,12 @@ protected:
    *
    * @{
    */
+
+  /**
+   * @brief get Value at given state with given key in the Sequence Map
+   *
+   */
+  
   double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
   {
     return getSequence(sequenceName).getStateValueAt(siteIndex, state);

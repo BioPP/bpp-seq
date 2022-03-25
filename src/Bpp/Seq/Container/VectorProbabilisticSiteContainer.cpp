@@ -109,9 +109,8 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(
     throw Exception("VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(AlignedValuesContainer). Empty site set.");
 
   // Seq names and comments:
-  auto vn = avc.getSequencesNames();
-  for (const auto& n : vn)
-    VectorMappedContainer<ProbabilisticSequence>::appendObject(nullptr, n);
+  for (const auto& name : avc.getSequenceNames())
+    VectorMappedContainer<ProbabilisticSequence>::appendObject(nullptr, name);
 
   // Now add each site:
   for (size_t i = 0; i < avc.getNumberOfSites(); i++)
@@ -143,7 +142,7 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const Ordered
   for (size_t i = 0; i < osc.getNumberOfSequences(); i++)
     addSequence(osc.getSequence(i), false); // We assume that positions are correct.
   
-  setSequencesNames(osc.getSequencesNames(), false);
+  setSequenceNames(osc.getSequenceNames(), false);
 }
 
 /******************************************************************************/
@@ -157,7 +156,7 @@ VectorProbabilisticSiteContainer& VectorProbabilisticSiteContainer::operator=(co
   for (size_t i = 0; i < vpsc.getNumberOfSites(); i++)
     addSite(shared_ptr<ProbabilisticSite>(vpsc.getSite(i)->clone()), false); // We assume that positions are correct.
 
-  const auto& vnames=vpsc.getSequencesNames();
+  const auto& vnames=vpsc.getSequenceNames();
   for (const auto& name:vnames)
     VectorMappedContainer<ProbabilisticSequence>::appendObject(nullptr, name);
 

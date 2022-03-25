@@ -237,20 +237,21 @@ public:
   /**
    *
    * @brief Method to get position of a sequence in sequence
-   * container from his name. This method is used by delete and
+   * container from its key. This method is used by delete and
    * remove methods
    *
    */
-  size_t getSequencePosition(const std::string& name) const
+  
+  size_t getSequencePosition(const std::string& key) const
   {
     try
     {
       // Look for sequence name:
-      return VectorMappedContainer<Sequence>::getObjectPosition(name);
+      return VectorMappedContainer<Sequence>::getObjectPosition(key);
     }
     catch (Exception& e)
     {
-      throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", name);
+      throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", key);
     }
   }
 
@@ -268,14 +269,14 @@ public:
 
   size_t getNumberOfSequences() const { return VectorMappedContainer<Sequence>::getNumberOfObjects(); }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return VectorMappedContainer<Sequence>::getObjectsNames();
+    return VectorMappedContainer<Sequence>::getObjectNames();
   }
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true)
   {
-    VectorMappedContainer<Sequence>::setObjectsNames(names);
+    VectorMappedContainer<Sequence>::setObjectNames(names);
   }
 
   void clear();

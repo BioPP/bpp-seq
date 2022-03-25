@@ -112,10 +112,8 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(const CompressedVec
   AbstractSequenceContainer(vsc),
   index_(vsc.index_)
 {
-  vector<string> vNames = vsc.getSequencesNames();
-
-  for (size_t i = 0; i < vsc.getNumberOfSequences(); i++)
-    VectorMappedContainer<Sequence>::appendObject(nullptr, vNames[i]); 
+  for (const auto& name: vsc.getSequenceNames())
+    VectorMappedContainer<Sequence>::appendObject(nullptr, name); 
   
   // Now try to add each site:
   for (size_t i = 0; i < vsc.getNumberOfSites(); i++)
@@ -130,11 +128,8 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(const SiteContainer
   AbstractSequenceContainer(sc),
   index_(0)
 {
-  vector<string> vNames = sc.getSequencesNames();
-
-  for (size_t i = 0; i < sc.getNumberOfSequences(); i++)
-    VectorMappedContainer<Sequence>::appendObject(nullptr, vNames[i]);
-
+  for (const auto& name: sc.getSequenceNames())
+    VectorMappedContainer<Sequence>::appendObject(nullptr, name);
  
   // Now try to add each site:
   for (size_t i = 0; i < sc.getNumberOfSites(); i++)
@@ -149,9 +144,8 @@ CompressedVectorSiteContainer& CompressedVectorSiteContainer::operator=(const Co
   clear();
   AbstractSequenceContainer::operator=(vsc);
 
-  vector<string> vNames = vsc.getSequencesNames();
-  for (size_t i = 0; i < vsc.getNumberOfSequences(); i++)
-    VectorMappedContainer<Sequence>::appendObject(nullptr, vNames[i]); 
+  for (const auto& name: vsc.getSequenceNames())
+    VectorMappedContainer<Sequence>::appendObject(nullptr, name);
 
   for (size_t i = 0; i < vsc.getNumberOfSites(); i++)
     addSite(vsc.getSite(i), false);
@@ -168,9 +162,8 @@ CompressedVectorSiteContainer& CompressedVectorSiteContainer::operator=(const Si
   clear();
   AbstractSequenceContainer::operator=(sc);
   // Now try to add each site:
-  vector<string> vNames = sc.getSequencesNames();
-  for (size_t i = 0; i < sc.getNumberOfSequences(); i++)
-    VectorMappedContainer<Sequence>::appendObject(nullptr, vNames[i]); 
+  for (const auto& name: sc.getSequenceNames())
+    VectorMappedContainer<Sequence>::appendObject(nullptr, name);
 
   for (size_t i = 0; i < sc.getNumberOfSites(); i++)
     addSite(sc.getSite(i), false);

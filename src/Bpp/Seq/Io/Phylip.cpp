@@ -244,10 +244,10 @@ std::vector<std::string> Phylip::getSizedNames(const std::vector<std::string>& n
 void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc) const
 {
   // cout << "Write sequential" << endl;
-  size_t numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
+  size_t numberOfSites = sc.getSequence(sc.getSequenceNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
   out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
 
-  vector<string> seqNames = sc.getSequencesNames();
+  vector<string> seqNames = sc.getSequenceNames();
   vector<string> names = getSizedNames(seqNames);
   for (size_t i = 0; i < seqNames.size(); ++i)
   {
@@ -264,10 +264,10 @@ void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc) con
 void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc) const
 {
   // cout << "Write interleaved;" << endl;
-  size_t numberOfSites = sc.getSequence(sc.getSequencesNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
+  size_t numberOfSites = sc.getSequence(sc.getSequenceNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
   out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
 
-  vector<string> seqNames = sc.getSequencesNames();
+  vector<string> seqNames = sc.getSequenceNames();
   vector<string> names = getSizedNames(seqNames);
   // Split sequences:
   vector< vector<string> > seqs(sc.getNumberOfSequences());

@@ -67,7 +67,7 @@ AlignedValuesContainer* SiteContainerTools::getSitesWithoutGaps(const AlignedVal
   const VectorSiteContainer* vsc = dynamic_cast<const VectorSiteContainer*>(&sites);
   const VectorProbabilisticSiteContainer* vpsc = dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
 
-  vector<string> seqNames = sites.getSequencesNames();
+  vector<string> seqNames = sites.getSequenceNames();
 
   VectorSiteContainer* ngc = vsc ? new VectorSiteContainer(seqNames, sites.getAlphabet()) : 0;
 
@@ -78,7 +78,7 @@ AlignedValuesContainer* SiteContainerTools::getSitesWithoutGaps(const AlignedVal
                                       dynamic_cast<AlignedValuesContainer*>(ngc) :
                                       dynamic_cast<AlignedValuesContainer*>(ngcp);
 
-  noGapCont->setSequencesNames(seqNames, false);
+  noGapCont->setSequenceNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     if (!SymbolListTools::hasGap(sites.getSymbolListSite(i)))
@@ -99,7 +99,7 @@ AlignedValuesContainer* SiteContainerTools::getCompleteSites(const AlignedValues
   const VectorSiteContainer* vsc = dynamic_cast<const VectorSiteContainer*>(&sites);
   const VectorProbabilisticSiteContainer* vpsc = dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
 
-  vector<string> seqNames = sites.getSequencesNames();
+  vector<string> seqNames = sites.getSequenceNames();
 
   VectorSiteContainer* ngc = vsc ? new VectorSiteContainer(seqNames, sites.getAlphabet()) : 0;
 
@@ -109,7 +109,7 @@ AlignedValuesContainer* SiteContainerTools::getCompleteSites(const AlignedValues
                                       dynamic_cast<AlignedValuesContainer*>(ngc) :
                                       dynamic_cast<AlignedValuesContainer*>(ngcp);
 
-  noGapCont->setSequencesNames(seqNames, false);
+  noGapCont->setSequenceNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     if (SymbolListTools::isComplete(sites.getSymbolListSite(i)))
@@ -130,13 +130,13 @@ AlignedValuesContainer* SiteContainerTools::getSelectedSites(
   const AlignedValuesContainer& sequences,
   const SiteSelection& selection)
 {
-  vector<string> seqNames = sequences.getSequencesNames();
+  vector<string> seqNames = sequences.getSequenceNames();
 
   const SiteContainer* sc = dynamic_cast<const SiteContainer*>(&sequences);
   if (sc)
   {
     VectorSiteContainer* nsc = new VectorSiteContainer(seqNames.size(), sequences.getAlphabet());
-    nsc->setSequencesNames(seqNames, false);
+    nsc->setSequenceNames(seqNames, false);
 
     for (size_t i = 0; i < selection.size(); i++)
     {
@@ -305,9 +305,9 @@ SiteContainer* SiteContainerTools::removeGapOnlySites(const SiteContainer& sites
 {
   if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeGapOnlySites. Container is empty.");
-  vector<string> seqNames = sites.getSequencesNames();
+  vector<string> seqNames = sites.getSequenceNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
-  noGapCont->setSequencesNames(seqNames, false);
+  noGapCont->setSequenceNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     const Site& site = sites.getSite(i);
@@ -358,9 +358,9 @@ SiteContainer* SiteContainerTools::removeGapOrUnresolvedOnlySites(const SiteCont
   if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeGapOrUnresolvedOnlySites. Container is empty.");
 
-  vector<string> seqNames = sites.getSequencesNames();
+  vector<string> seqNames = sites.getSequenceNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
-  noGapCont->setSequencesNames(seqNames, false);
+  noGapCont->setSequenceNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); i++)
   {
     const Site& site = sites.getSite(i);
@@ -411,9 +411,9 @@ SiteContainer* SiteContainerTools::removeGapSites(const SiteContainer& sites, do
   if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeGapSites. Container is empty.");
 
-  vector<string> seqNames = sites.getSequencesNames();
+  vector<string> seqNames = sites.getSequenceNames();
   VectorSiteContainer* noGapCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
-  noGapCont->setSequencesNames(seqNames, false);
+  noGapCont->setSequenceNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i)
   {
     map<int, double> freq;
@@ -450,9 +450,9 @@ SiteContainer* SiteContainerTools::removeStopCodonSites(const SiteContainer& sit
   if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeStopCodonSites. Container is empty.");
 
-  vector<string> seqNames = sites.getSequencesNames();
+  vector<string> seqNames = sites.getSequenceNames();
   VectorSiteContainer* noStopCont = new VectorSiteContainer(seqNames.size(), sites.getAlphabet());
-  noStopCont->setSequencesNames(seqNames, false);
+  noStopCont->setSequenceNames(seqNames, false);
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i)
   {
     const Site& site = sites.getSite(i);
@@ -537,7 +537,7 @@ SiteContainer* SiteContainerTools::resolveDottedAlignment(
   }
 
   // Seq sequence names:
-  sites->setSequencesNames(dottedAln.getSequencesNames());
+  sites->setSequenceNames(dottedAln.getSequenceNames());
 
   // Delete the copied sequence:
   delete refSeq;
@@ -921,8 +921,8 @@ AlignedValuesContainer* SiteContainerTools::sampleSites(const AlignedValuesConta
   const VectorSiteContainer* vsc = dynamic_cast<const VectorSiteContainer*>(&sites);
   const VectorProbabilisticSiteContainer* vpsc = dynamic_cast<const VectorProbabilisticSiteContainer*>(&sites);
 
-  VectorSiteContainer* nvsc = vsc ? new VectorSiteContainer(sites.getSequencesNames(), sites.getAlphabet()) : 0;
-  VectorProbabilisticSiteContainer* nvpsc = vpsc ? new VectorProbabilisticSiteContainer(sites.getSequencesNames(), sites.getAlphabet()) : 0;
+  VectorSiteContainer* nvsc = vsc ? new VectorSiteContainer(sites.getSequenceNames(), sites.getAlphabet()) : 0;
+  VectorProbabilisticSiteContainer* nvpsc = vpsc ? new VectorProbabilisticSiteContainer(sites.getSequenceNames(), sites.getAlphabet()) : 0;
 
   for (size_t i = 0; i < nbSites; i++)
   {
@@ -1016,7 +1016,7 @@ double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequenc
 DistanceMatrix* SiteContainerTools::computeSimilarityMatrix(const SiteContainer& sites, bool dist, const std::string& gapOption, bool unresolvedAsGap)
 {
   size_t n = sites.getNumberOfSequences();
-  DistanceMatrix* mat = new DistanceMatrix(sites.getSequencesNames());
+  DistanceMatrix* mat = new DistanceMatrix(sites.getSequenceNames());
   string pairwiseGapOption = gapOption;
   SiteContainer* sites2;
   if (gapOption == SIMILARITY_NOFULLGAP)
@@ -1062,8 +1062,8 @@ void SiteContainerTools::merge(SiteContainer& seqCont1, const SiteContainer& seq
     throw AlphabetMismatchException("SiteContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
 
 
-  vector<string> seqNames1 = seqCont1.getSequencesNames();
-  vector<string> seqNames2 = seqCont2.getSequencesNames();
+  vector<string> seqNames1 = seqCont1.getSequenceNames();
+  vector<string> seqNames2 = seqCont2.getSequenceNames();
   const SiteContainer* seqCont2bis = 0;
   bool del = false;
   if (seqNames1 == seqNames2)

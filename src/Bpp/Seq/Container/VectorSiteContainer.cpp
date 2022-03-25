@@ -161,7 +161,7 @@ VectorSiteContainer::VectorSiteContainer(const SiteContainer& sc) :
   for (size_t i = 0; i < sc.getNumberOfSites(); i++)
     addSite(sc.getSite(i), false); // We assume that positions are correct.
 
-  for (auto i : sc.getSequencesNames())
+  for (auto i : sc.getSequenceNames())
     VectorMappedContainer<Sequence>::appendObject(nullptr, i);
 }
 
@@ -185,9 +185,8 @@ VectorSiteContainer::VectorSiteContainer(const SequenceContainer& sc) :
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(sc)
 {
-  vector<string> names = sc.getSequencesNames();
-  for (size_t i = 0; i < names.size(); i++)
-    addSequence(sc.getSequence(names[i]), false);
+  for (auto name: sc.getSequenceNames())
+    addSequence(sc.getSequence(name), false);
 
   reindexSites();
 }
@@ -242,7 +241,7 @@ VectorSiteContainer& VectorSiteContainer::operator=(const SiteContainer& sc)
   for (size_t i = 0; i < sc.getNumberOfSites(); i++)
     addSite(sc.getSite(i), false); // We assume that positions are correct.
 
-  for (auto i : sc.getSequencesNames())
+  for (auto i : sc.getSequenceNames())
     VectorMappedContainer<Sequence>::appendObject(nullptr, i);
   
   return *this;
@@ -271,9 +270,8 @@ VectorSiteContainer& VectorSiteContainer::operator=(const SequenceContainer& sc)
   clear();
   AbstractSequenceContainer::operator=(sc);
 
-  vector<string> names = sc.getSequencesNames();
-  for (size_t i = 0; i < names.size(); i++)
-    addSequence(sc.getSequence(names[i]), false);
+  for (auto name: sc.getSequenceNames())
+    addSequence(sc.getSequence(name), false);
 
   reindexSites();
 

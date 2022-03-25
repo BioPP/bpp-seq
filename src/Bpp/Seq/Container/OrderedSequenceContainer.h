@@ -163,8 +163,8 @@ public:
   using SequenceContainer::getSequence;
   using SequenceContainer::setSequence;
   using SequenceContainer::removeSequence;
-  using SequenceContainer::getSequencesNames;
-  using SequenceContainer::setSequencesNames;
+  using SequenceContainer::getSequenceNames;
+  using SequenceContainer::setSequenceNames;
 
   /*
    * @brief For backward compatibility

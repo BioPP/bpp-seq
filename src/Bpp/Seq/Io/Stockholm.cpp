@@ -65,9 +65,9 @@ void Stockholm::writeAlignment(ostream& output, const SiteContainer& sc) const
   }
 
   // Main loop : for all sequences in vector container
-  vector<string> names = sc.getSequencesNames();
+  vector<string> names = sc.getSequenceNames();
   size_t maxSize = 0;
-  for (unsigned int i = 0; i < names.size(); ++i)
+  for (size_t i = 0; i < names.size(); ++i)
   {
     names[i] = TextTools::removeWhiteSpaces(names[i]);
     if (names[i].size() > maxSize)

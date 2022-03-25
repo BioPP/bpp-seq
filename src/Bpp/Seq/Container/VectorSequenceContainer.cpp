@@ -80,7 +80,7 @@ VectorSequenceContainer::VectorSequenceContainer(
   VectorMappedContainer<Sequence>()
 {
   // Sequences insertion
-  for (unsigned int i = 0; i < osc.getNumberOfSequences(); i++)
+  for (size_t i = 0; i < osc.getNumberOfSequences(); i++)
   {
     addSequence(osc.getSequence(i), false);
   }
@@ -92,10 +92,9 @@ VectorSequenceContainer::VectorSequenceContainer(
   VectorMappedContainer<Sequence>()
 {
   // Sequences insertion
-  std::vector<std::string> names = sc.getSequencesNames();
-  for (unsigned int i = 0; i < names.size(); i++)
+  for (auto name: sc.getSequenceNames())
   {
-    addSequence(sc.getSequence(names[i]), false);
+    addSequence(sc.getSequence(name), false);
   }
 
   setGeneralComments(sc.getGeneralComments());
@@ -137,20 +136,73 @@ VectorSequenceContainer& VectorSequenceContainer::operator=(
   clear();
   AbstractSequenceContainer::operator=(sc);
 
-  // Seq names:
-  std::vector<std::string> names = sc.getSequencesNames();
-
-  for (unsigned int i = 0; i < names.size(); i++)
+  for (auto name: sc.getSequenceNames())
   {
-    addSequence(sc.getSequence(names[i]), false);
+    addSequence(sc.getSequence(name), false);
   }
 
   return *this;
 }
 
+bool VectorSequenceContainer::hasSequenceByName(const std::string& name) const
+{
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+    if (getSequence(i).getName()==name)
+      return true;
+  return false;
+}
+
+const Sequence& VectorSequenceContainer::getSequenceByName(const std::string& name) const
+{
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+  {
+    const Sequence& seq = getSequence(i);
+    if (seq.getName()==name)
+      return seq;
+  }
+  throw Exception("VectorSequenceContainer::getSequenceByName: Unknown sequence name: " + name);
+}
+
+std::vector<std::string> VectorSequenceContainer::getSequenceNames() const
+{
+  std::vector<std::string> vs;
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+    vs.push_back(getSequence(i).getName());
+
+  return vs;
+}
+
+std::shared_ptr<Sequence> VectorSequenceContainer::removeSequenceByName(const std::string& name)
+{
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+  {
+    const Sequence& seq = getSequence(i);
+    if (seq.getName()==name)
+      return removeSequence(i);
+  }
+  throw Exception("VectorSequenceContainer::removeSequenceByName: Unknown sequence name: " + name);
+}
+
+void VectorSequenceContainer::deleteSequenceByName(const std::string& name)
+{
+  auto nbseq=getSize();
+  for (size_t i=0;i<nbseq;i++)
+  {
+    const Sequence& seq = getSequence(i);
+    if (seq.getName()==name)
+      deleteSequence(i);
+  }
+  throw Exception("VectorSequenceContainer::deleteSequenceByName: Unknown sequence name: " + name);
+}
+
+
 /******************************************************************************/
 
-void VectorSequenceContainer::setSequencesNames(
+void VectorSequenceContainer::setSequenceNames(
   const std::vector<std::string>& names,
   bool checkNames)
 {
@@ -164,7 +216,7 @@ void VectorSequenceContainer::setSequencesNames(
       for (size_t j = 0; j < i; j++)
       {
         if (names[j] == names[i])
-          throw Exception("VectorSiteContainer::setSequencesNames : Sequence's name already exists in container");
+          throw Exception("VectorSiteContainer::setSequenceNames : Sequence's name already exists in container");
       }
     }
   }
@@ -173,7 +225,7 @@ void VectorSequenceContainer::setSequencesNames(
     getSequence_(i).setName(names[i]);
   }
 
-  setObjectsNames(names);
+  setObjectNames(names);
 }
 
 /******************************************************************************/

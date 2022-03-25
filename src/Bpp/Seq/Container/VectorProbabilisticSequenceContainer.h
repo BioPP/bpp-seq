@@ -186,12 +186,12 @@ public:
 
   size_t getNumberOfSequences() const { return getSize(); }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return getObjectsNames();
+    return getObjectNames();
   }
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true);
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true);
 
   VectorProbabilisticSequenceContainer* createEmptyContainer() const;
 
