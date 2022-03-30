@@ -531,7 +531,6 @@ const Sequence& VectorSiteContainer::getSequence(size_t i) const
   for (size_t j = 0; j < n; j++)
     sequence[j] = getSite(j)[i];
 
-  
   shared_ptr<Sequence> ns(new BasicSequence(
         name,
         sequence,
