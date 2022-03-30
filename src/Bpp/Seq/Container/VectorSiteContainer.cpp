@@ -532,7 +532,7 @@ const Sequence& VectorSiteContainer::getSequence(size_t i) const
     sequence[j] = getSite(j)[i];
 
   
-  shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(name, sequence, VectorMappedContainer<Sequence>::getObject(i)->getComments(), getAlphabet())));
+  shared_ptr<Sequence> ns(shared_ptr<Sequence>(new BasicSequence(name, sequence, VectorMappedContainer<Sequence>::getObject(i)?VectorMappedContainer<Sequence>::getObject(i)->getComments():std::vector<string>(1,""), getAlphabet())));
 
   VectorMappedContainer<Sequence>::addObject_(ns, i, ns->getName(), false);
 
