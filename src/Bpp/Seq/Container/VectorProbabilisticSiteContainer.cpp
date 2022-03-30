@@ -372,7 +372,11 @@ const ProbabilisticSequence& VectorProbabilisticSiteContainer::getSequence(std::
     sequence.addColumn((*getSite(j))[i]);
   }
 
-  shared_ptr<ProbabilisticSequence> ns(shared_ptr<ProbabilisticSequence>(new BasicProbabilisticSequence(name, sequence, VectorMappedContainer<ProbabilisticSequence>::getObject(i)?VectorMappedContainer<ProbabilisticSequence>::getObject(i)->getComments():std::vector<string>(1,""), getAlphabet())));
+  shared_ptr<ProbabilisticSequence> ns(new BasicProbabilisticSequence(
+        name,
+        sequence,
+        VectorMappedContainer<ProbabilisticSequence>::getObject(i) ? VectorMappedContainer<ProbabilisticSequence>::getObject(i)->getComments() : std::vector<string>(1, ""),
+        getAlphabet()));
 
   VectorMappedContainer<ProbabilisticSequence>::addObject_(ns, i, ns->getName(), false);
 
