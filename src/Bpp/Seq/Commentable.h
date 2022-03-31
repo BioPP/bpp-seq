@@ -58,29 +58,53 @@ typedef std::vector<std::string> Comments;
 
 class Commentable
 {
+public:
+  Commentable() {}
+  virtual ~Commentable() {}
+
+  /**
+   * @brief Get the comments.
+   *
+   * @return The comments.
+   */
+  virtual const Comments& getComments() const = 0;
+
+  /**
+   * @brief Set the comments.
+   *
+   * @param comments The new comments.
+   */
+  virtual void setComments(const Comments& comments) = 0;
+
+  virtual void clearComments() = 0;
+};
+
+class SimpleCommentable:
+  public virtual Commentable
+{
 protected:
   Comments comments_;
 
 public:
-  Commentable() :
+  SimpleCommentable() :
     comments_()
   {}
 
-  Commentable(const Comments& comments) :
+  SimpleCommentable(const Comments& comments) :
     comments_(comments)
   {}
 
-  Commentable(const Commentable& com) :
+  SimpleCommentable(const Commentable& com) :
     comments_(com.comments_)
   {}
 
-  Commentable& operator=(const Commentable& com)
+  SimpleCommentable& operator=(const SimpleCommentable& com)
   {
     comments_ = com.comments_;
     return *this;
   }
 
-  virtual ~Commentable()
+  virtual ~SimpleCommentable()
   {}
 
   /**
@@ -99,5 +123,6 @@ public:
 
   void clearComments() { comments_.clear(); }
 };
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_COMMENTABLE_H

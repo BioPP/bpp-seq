@@ -3,6 +3,7 @@
 // Authors:
 //   Guillaume Deuchst
 //   Julien Dutheil
+//   Laurent Guéguen
 // Created: 2003-07-25 00:00:00
 //
 
@@ -42,9 +43,11 @@
 #ifndef BPP_SEQ_CONTAINER_SEQUENCECONTAINER_H
 #define BPP_SEQ_CONTAINER_SEQUENCECONTAINER_H
 
+#include <Bpp/Clonable.h>
 
-#include "../Sequence.h"
-#include "SequencedValuesContainer.h"
+#include "../Alphabet/Alphabet.h"
+#include "../Commentable.h"
+#include "SequenceContainerExceptions.h"
 
 // From the STL:
 #include <string>
@@ -54,33 +57,19 @@ namespace bpp
 /**
  * @brief The SequenceContainer interface.
  *
- * This interface is the most general one in the container hierarchy
- * for sequences. No assumption is made on the sequences in the
- * container (no ordering, no alignment). Sequences may be retrieved
- * using their names, which must be unique.
- *
- * The container is the only one responsible for the
- * allocation/destruction of sequences it contains. This means that
- * any sequence passed to it will be <strong>copied</strong> into the
- * container. The container also provides methods that send const
- * pointers towards these sequences (without performing any copy of
- * the underlying objects).
- *
- * Notes :
- * 1. methods for adding sequences to the container are not declared here
- * (so they can't be used throught this interface),
- * because these methods take sequence container's type specific parameters
- * (i.e. a key for map sequence containers);
- * 2. to delete a sequence from a container, one must use the appropriate method
- * (removeSequence()).
- * These methods performs a few check, and properly update pointers.
- * You should never delete a sequence from a container by yourself.
+ * This is the base interface of the container hierarchy.
+ * Sequence objects are stored internally and indexed.
+ * The interface implements two access methods:
+ * - Per key,
+ * - Per position in the container. 
  *
  * @see Sequence
  */
 
+template<class SequenceType, class HashType = std::string>
 class SequenceContainer :
-  public virtual SequencedValuesContainer
+  public virtual Clonable,
+  public virtual Commentable
 {
 public:
   SequenceContainer() {}
@@ -88,96 +77,239 @@ public:
 
 public:
   /**
-   * @brief Retrieve a sequence object from the container.
+   * @brief Get container's alphabet.
    *
-   * @param name The name of the sequence.
-   * @return A reference toward the Sequence with corresponding name.
+   * @return The alphabet associated to this container.
    */
-  virtual const Sequence& getSequence(const std::string& name) const = 0;
+  virtual std::shared_ptr<const Alphabet> getAlphabet() const = 0;
 
   /**
-   * @brief Replace a sequence in the container.
+   * @brief Get the number of sequences in the container.
    *
-   * @param name      The name of the sequence.
-   * @param sequence  The sequence to add.
-   * @param checkName Tell if the container must check if the name of the sequence
-   * is already used in the container before adding it.
+   * @return The number of sequences in the container.
    */
-  virtual void setSequence(const std::string& name, const Sequence& sequence, bool checkName) = 0;
+  virtual size_t getNumberOfSequences() const = 0;
 
   /**
-   * @brief Extract (and remove) a sequence from the container.
+   * @brief Get the value of a state at a given position
    *
-   * @param name The name of the sequence.
+   * @param siteIndex  index of the site
+   * @param sequenceKey key of the sequence in the container
+   * @param state  state in the alphabet
    */
-  virtual std::shared_ptr<Sequence> removeSequence(const std::string& name) = 0;
+  virtual double getStateValueAt(size_t siteIndex, const HashType& sequenceKey, int state) const = 0;
+
+  virtual double operator()(size_t siteIndex, const HashType& sequenceKey, int state) const = 0;
 
   /**
-   * @name Provide direct access to sequences content.
+   * @brief Element access function.
    *
-   * @warning These operators allow you to modifiy the content of the sequences.
-   * No checking is performed for your modifications, so use with care, or
-   * consider using the setContent() methods.
+   * Allows direct access to the data stored in the container.
+   *
+   * @param sequenceKey key of the sequence in the container
+   * @param elementIndex The element position within the sequence.
+   */
+  //Note (Julien): I think this function is very dangerous, as the underlying sequence will not be notified of the change! Let's try to do without... 
+  //virtual int& valueAt(const HashType& sequenceName, size_t elementIndex) = 0;
+
+  /**
+   * @brief Element access function.
+   *
+   * Allows direct access to the data stored in the container.
+   *
+   * @param sequenceKey key of the sequence in the container
+   * @param elementIndex The element position within the sequence.
+   */
+  virtual const int& valueAt(const HashType& sequenceKey, size_t elementIndex) const = 0;
+
+  /**
+   * @brief Element access operator.
+   *
+   * Allows direct access to the data stored in the container.
+   *
+   * @param sequenceIndex The sequence position.
+   * @param elementIndex The element position within the sequence.
+   */
+  virtual const int& valueAt(size_t sequenceIndex, size_t elementIndex) const = 0;
+
+
+  /**
+   * @brief Element access operator.
+   *
+   * Allows direct access to the data stored in the container.
+   * This method is faster then the valueAt function, but input
+   * parameters are not checked!
+   *
+   * @param sequenceKey key of the sequence in the container
+   * @param elementIndex The element position within the sequence.
+   */
+  //Note (Julien): I think this function is very dangerous, as the underlying sequence will not be notified of the change! Let's try to do without... 
+  //virtual int& operator()(const HashType& sequenceKey, size_t elementIndex) = 0;
+
+  /**
+   * @brief Element access operator.
+   *
+   * Allows direct access to the data stored in the container.
+   * This method is faster then the valueAt function, but input
+   * parameters are not checked!
+   *
+   * @param sequenceKey key of the sequence in the container
+   * @param elementIndex The element position within the sequence.
+   */
+  virtual const int& operator()(const HashType& sequenceKey, size_t elementIndex) const = 0;
+
+  /**
+   * @brief Element access operator.
+   *
+   * Allows direct access to the data stored in the container.
+   * This method is faster then the valueAt function, but input
+   * parameters are not checked!
+   *
+   * @param sequenceIndex The sequence position.
+   * @param elementIndex The element position within the sequence.
+   */
+  virtual const int& operator()(size_t sequenceIndex, size_t elementIndex) const = 0;
+ 
+  /**
+   * @brief Delete all data in the container.
+   */
+  virtual void clear() = 0;
+
+  /**
+   * @brief Return a copy of this container, but with no data inside.
+   *
+   * This method creates a new SequencedContainer objet.
+   * The class of this container depends on the class implementing this interface.
+   *
+   * @return A new empty container, with the same alphabet as this one.
+   */
+
+  virtual std::shared_ptr< SequencedContainer<SequenceType, HashType> > createEmptyContainer() const = 0;
+
+
+
+
+
+
+
+
+  /**
+   * @name Access by key
    *
    * @{
    */
 
   /**
-   * @brief Element access function.
+   * @brief Check if a certain key is associated to a sequence in the container.
    *
-   * Allows direct access to the data stored in the container.
-   *
-   * @param sequenceName The sequence name.
-   * @param elementIndex The element position within the sequence.
+   * @param name The key to which the sequence is associated.
+   * @return True if the key was found in the contained.
    */
-  virtual int& valueAt(const std::string& sequenceName, size_t elementIndex) = 0;
+  virtual bool hasSequence(const HashType& key) const = 0;
 
   /**
-   * @brief Element access function.
+   * @brief Retrieve a sequence object from the container.
    *
-   * Allows direct access to the data stored in the container.
-   *
-   * @param sequenceName The sequence name.
-   * @param elementIndex The element position within the sequence.
+   * @param sequenceKey The key to which the sequence is associated.
+   * @return A reference toward the Sequence with corresponding name.
    */
-  virtual const int& valueAt(const std::string& sequenceName, size_t elementIndex) const = 0;
+  virtual const SequenceType& getSequence(const HashType& sequenceKey) const = 0;
 
   /**
-   * @brief Element access operator.
+   * @brief Replace a sequence in the container.
    *
-   * Allows direct access to the data stored in the container.
-   * This method is faster then the valueAt function, but input
-   * parameters are not checked!
+   * If a sequence is found with the given key, it will be udated with the new one.
+   * If no sequence with the given key is found, the new sequence will be added to the container.
    *
-   * @param sequenceName The sequence name.
-   * @param elementIndex The element position within the sequence.
+   * @param sequenceKey The key to which the sequence is associated.
+   * @param sequence  The sequence to set.
    */
-  virtual int& operator()(const std::string& sequenceName, size_t elementIndex) = 0;
+  virtual void setSequence(const HashType& sequenceKey, const SequenceType& sequence) = 0;
 
   /**
-   * @brief Element access operator.
+   * @brief Remove a sequence from the container.
    *
-   * Allows direct access to the data stored in the container.
-   * This method is faster then the valueAt function, but input
-   * parameters are not checked!
-   *
-   * @param sequenceName The sequence name.
-   * @param elementIndex The element position within the sequence.
+   * @param sequenceKey The key to which the sequence is associated.
    */
-  virtual const int& operator()(const std::string& sequenceName, size_t elementIndex) const = 0;
+  virtual std::shared_ptr<SequenceType> removeSequence(const HashType& sequenceKey) = 0;
 
   /**
    * @brief Add a sequence to the container.
    *
+   * Similar to setSequence, with the exception that an Exception will be raised in case of an existing key.
+   * Existing sequences will not be updated, only new ones will be appended.
+   *
+   * @param sequenceKey The key to which the sequence is associated.
    * @param sequence  The sequence to add.
-   * @param checkName Tell if the container must check if the name of the sequence
-   * is already used in the container before adding it.
-   * @throw Exception Any other kind of exception, if the name of the sequence is
-   * already used, are whatever else depending on the implementation.
    */
-  virtual void addSequence(const Sequence& sequence, bool checkName) = 0;
+  virtual void addSequence(const HashType& sequenceKey, const SequenceType& sequence) = 0;
 
   /** @} */
+
+
+
+
+
+  /**
+   * @name Access by position
+   *
+   * @{
+   */
+  
+  /**
+   * @brief Retrieve a sequence object from the container.
+   *
+   * @param sequenceIndex The position of the sequence.
+   * @return A reference toward the Sequence object with corresponding name.
+   */
+  virtual const SequenceType& getSequence(size_t sequenceIndex) const = 0;
+
+  /**
+   * @brief Replace a sequence in the container.
+   *
+   * The underlying key may be updated, depending on the actual implementation of this interface.
+   *
+   * @param sequenceIndex The position of the sequence.
+   * @param sequence      The sequence to add.
+   */
+  virtual void setSequence(size_t sequenceIndex, const SequenceType& sequence) = 0;
+
+  /**
+   * @brief Remove a sequence from the container.
+   *
+   * @param sequenceIndex The position of the sequence.
+   */
+  virtual std::shared_ptr<SequenceType> removeSequence(size_t sequenceIndex) = 0;
+
+  /**@} */
+
+
+  /**
+   * @name Index management
+   *
+   * Position to key and key to position.
+   *
+   * @{
+   */
+
+  /**
+   * @brief Get the key associated to a given sequence.
+   *
+   * @param sequenceIndex The position of the sequence in the container.
+   * @return The key to which the sequence is associated.
+   */
+  virtual const HashType& getKey(size_t sequenceIndex) const = 0;
+
+  /**
+   * @brief Get the position of a sequence with a given key in the container.
+   *
+   * @param sequenceKey The key to which the sequence is associated.
+   * @return The position of the sequence with name 'name', if it exists.
+   */
+  virtual size_t getSequencePosition(const HashType& sequenceKey) const = 0;
+
+  /** @} */
+  
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCECONTAINER_H

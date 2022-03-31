@@ -50,7 +50,6 @@
 #include "../Alphabet/CodonAlphabet.h"
 #include "../Alphabet/DefaultAlphabet.h"
 #include "../Alphabet/LexicalAlphabet.h"
-#include "../Container/OrderedSequenceContainer.h"
 #include "../Container/VectorProbabilisticSiteContainer.h"
 #include "../GeneticCode/AscidianMitochondrialGeneticCode.h"
 #include "../GeneticCode/CiliateNuclearGeneticCode.h"

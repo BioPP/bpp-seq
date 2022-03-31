@@ -41,10 +41,12 @@
 #ifndef BPP_SEQ_CONTAINER_ABSTRACTSEQUENCECONTAINER_H
 #define BPP_SEQ_CONTAINER_ABSTRACTSEQUENCECONTAINER_H
 
+#include <Bpp/Exceptions.h>
 
+#include "../Alphabet/Alphabet.h"
 #include "../Sequence.h"
-#include "AbstractValuesContainer.h"
-#include "OrderedSequenceContainer.h"
+#include "../Commentable.h"
+#include "SequenceContainer.h"
 
 namespace bpp
 {
@@ -54,27 +56,50 @@ namespace bpp
  * This abstract class provides an alphabet and comments, with associated methods.
  */
 class AbstractSequenceContainer :
-  public virtual OrderedSequenceContainer,
-  public AbstractValuesContainer
+  public virtual SequenceContainer,
+  public Commentable
 {
+
+protected:
+  /**
+   * @brief The container's alphabet.
+   */
+  const std::shared_ptr<const Alphabet> alphabet_;
+
+
 public:
   /**
-   * @brief This constructor initialize the alphabet pointer.
+   * @brief This constructor initializes the alphabet pointer.
    *
    * This constructor is to be called by constructors of derived classes.
    *
-   * @param alpha The alphabet to be associated to this container.
+   * @param alphabet The alphabet to be associated to this container.
    */
-  AbstractSequenceContainer(const Alphabet* alpha) :
-    AbstractValuesContainer(alpha) {}
+  AbstractSequenceContainer(std::shared_ptr<const Alphabet> alphabet) :
+    Commentable(), alphabet_(alphabet)
+  {}
+
+  /**
+   * @brief This constructor initializes the alphabet pointer and the comments field.
+   *
+   * This constructor is to be called by constructors of derived classes.
+   *
+   * @param alphabet The alphabet to be associated to this container.
+   * @param comments General comments to be associated to this container.
+   */
+  AbstractSequenceContainer(std::shared_ptr<const Alphabet> alphabet, const Comments& comments) :
+    Commentable(comments),
+    alphabet_(alphabet)
+  {}
 
   AbstractSequenceContainer(const AbstractSequenceContainer& sc) :
-    AbstractValuesContainer(sc)
+    Commentable(sc), alphabet_(sc.alphabet_)
   {}
 
   AbstractSequenceContainer& operator=(const AbstractSequenceContainer& sc)
   {
-    AbstractValuesContainer::operator=(sc);
+    Commentable::operator=(sc);
+    alphabet_ = sc.alphabet_;
     return *this;
   }
 
@@ -84,7 +109,8 @@ public:
    * @param sc Another sequence container.
    */
   AbstractSequenceContainer(const SequenceContainer& sc) :
-    AbstractValuesContainer(sc.getGeneralComments(), sc.getAlphabet())
+    Commentable(sc.getGeneralComments()),
+    alphabet_(sc.getAlphabet())
   {}
 
   /**
@@ -103,28 +129,9 @@ public:
   virtual ~AbstractSequenceContainer() {}
 
 public:
-  std::string toString(const std::string& name) const
-  {
-    return getSequence(name).toString();
-  }
-
-  const Comments& getComments(const std::string& name) const
-  {
-    return getSequence(name).getComments();
-  }
-
-  void setComments(const std::string& name, const Comments& comments)
-  {
-    size_t pos = getSequencePosition(name);
-    setComments(pos, comments);
-  }
-
-  /**
-   * @name From the OrderedSequenceContainer interface
-   *
-   * @{
-   */
-  virtual const std::string& getName(size_t sequenceIndex) const
+  const std::shared_ptr<const Alphabet> getAlphabet() const { return alphabet_; }
+  
+  virtual const std::string& getKey(size_t sequenceIndex) const
   {
     return getSequence(sequenceIndex).getName();
   }
