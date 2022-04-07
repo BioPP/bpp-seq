@@ -60,6 +60,7 @@ typedef std::vector<size_t> SiteSelection;
 /**
  * @brief Utilitary methods dealing with sequence containers.
  */
+template<class SequenceType, class HashType>
 class SequenceContainerTools
 {
 public:
@@ -67,6 +68,34 @@ public:
   virtual ~SequenceContainerTools() {}
 
 public:
+
+  /**
+   * @name Work with sequence names
+   *
+   * Note that in case the container is indexed by sequence names, methods working directly on sequence keys will be more efficient!
+   *
+   * @{
+   */
+
+  /**
+   * @brief Tells whether a sequence with the given name is present in the container.
+   *
+   * @param sc The sequence container to check.
+   * @param name The query sequence name.
+   */
+  static bool hasSequenceWithName(const SequenceContainer& sc, const std::string& name)
+  {
+    size_t nbSeq = sc.getNumberOfSequences();
+    for (size_t i = 0; i < nbSeq; ++i) {
+      if (getSequence(i).getName() == name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** @} */
+  
   /**
    * @brief Create a container with @f$n@f$ void sequences.
    *

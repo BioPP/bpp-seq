@@ -53,15 +53,15 @@
 namespace bpp
 {
 /**
- * @brief The template PositionedNamedContainer class, that links
+ * @brief The template PositionedNamedContainer interface, that links
  * position & name containers.
  *
+ * This interface also includes addObject and insertObject methods.
  */
-
 template<class T>
 class PositionedNamedContainer :
-  private PositionedContainer<T>,
-  private NamedContainer<T>
+  public virtual PositionedContainer<T>,
+  public virtual NamedContainer<T>
 {
 public:
   /**
@@ -69,7 +69,6 @@ public:
    *
    * @{
    */
-
   virtual PositionedNamedContainer<T>* clone() const = 0;
 
   /** @} */
@@ -77,7 +76,7 @@ public:
   virtual ~PositionedNamedContainer()
   {}
 
-protected:
+public:
   virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) = 0;
 
   virtual void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name) = 0;

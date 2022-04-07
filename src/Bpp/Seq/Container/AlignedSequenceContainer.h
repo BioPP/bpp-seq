@@ -2,7 +2,8 @@
 // File: AlignedSequenceContainer.h
 // Authors:
 //   Guillaume Deuchst
-//   // Julien Dutheil
+//   Julien Dutheil
+//   Laurent Guéguen
 // Last modified: 2003-08-22 00:00:00
 //
 

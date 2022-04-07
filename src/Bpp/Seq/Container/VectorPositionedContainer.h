@@ -195,7 +195,7 @@ protected:
       throw IndexOutOfBoundsException("VectorPositionedContainer::addObject.", objectIndex, 0, getSize());
 
     if (checkPosition && positions_[objectIndex] != nullptr)
-      throw BadIntegerException("VectorPositionedContainer::setObject: object position already occupied in container ", (int)objectIndex);
+      throw BadIntegerException("VectorPositionedContainer::addObject: object position already occupied in container ", (int)objectIndex);
 
     positions_[objectIndex] = object;
   }

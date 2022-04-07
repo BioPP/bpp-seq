@@ -66,7 +66,7 @@ namespace bpp
 
 template<class T>
 class VectorMappedContainer :
-  public PositionedNamedContainer<T>,
+  public virtual PositionedNamedContainer<T>,
   public MappedNamedContainer<T>,
   public VectorPositionedContainer<T>
 {
@@ -232,6 +232,7 @@ protected:
   }
 
   using VectorPositionedContainer<T>::insertObject;
+
   void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name)
   {
     MappedNamedContainer<T>::addObject(object, name, true);

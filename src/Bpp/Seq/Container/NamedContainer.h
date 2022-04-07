@@ -43,7 +43,7 @@
 #ifndef BPP_SEQ_CONTAINER_NAMEDCONTAINER_H
 #define BPP_SEQ_CONTAINER_NAMEDCONTAINER_H
 
-
+#include <Bpp/Clonable.h>
 
 // From the STL:
 #include <string>
@@ -59,8 +59,10 @@ namespace bpp
  */
 
 template<class T>
-class NamedContainer
+class NamedContainer:
+    public virtual Clonable
 {
+
 public:
   NamedContainer() {}
   virtual ~NamedContainer() {}

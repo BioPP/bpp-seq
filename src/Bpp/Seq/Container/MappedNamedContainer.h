@@ -44,12 +44,13 @@
 #ifndef BPP_SEQ_CONTAINER_MAPPEDNAMEDCONTAINER_H
 #define BPP_SEQ_CONTAINER_MAPPEDNAMEDCONTAINER_H
 
-#include <Bpp/Clonable.h>
+#include "NamedContainer.h"
+
+//From the STL:
+
 #include <map>
 #include <memory>
 #include <string>
-
-#include "NamedContainer.h"
 
 namespace bpp
 {
@@ -57,13 +58,10 @@ namespace bpp
  * @brief MappedNamedContainer class
  *
  * Objects are stored using a key std::string, in a map object.
- *
  */
-
 template<class T>
 class MappedNamedContainer :
-  virtual public NamedContainer<T>,
-  virtual public Clonable
+  public virtual NamedContainer<T>
 {
 private:
   std::map<std::string, std::shared_ptr<T> > mObjects_;
@@ -81,6 +79,9 @@ public:
     mObjects_(msc.mObjects_)
   {}
 
+  virtual ~MappedNamedContainer()
+  {}
+
   /**
    * @name The clonable interface
    *
@@ -90,16 +91,14 @@ public:
   /**
    * @}
    */
+
   MappedNamedContainer& operator=(const MappedNamedContainer& msc)
   {
     mObjects_ = msc.mObjects_;
     return *this;
   }
 
-  virtual ~MappedNamedContainer()
-  {}
-
-protected:
+public:
   /**
    * @brief Get a object.
    *
@@ -189,7 +188,6 @@ protected:
     return vNames;
   }
 
-public:
   /**
    * @brief change the key of an object.
    *
@@ -220,7 +218,7 @@ public:
   }
 
   /**
-   * @brief Return if the name is in the map keys and the mapped
+   * @return whether the name is in the map keys and the mapped
    * object is nullptr or empty.
    *
    */
@@ -230,7 +228,6 @@ public:
     return hasObject(objectName) && (getObject(objectName) == nullptr || getObject(objectName)->size()==0);
   }
 
-protected:
   void addObject_(std::shared_ptr<T> object, const std::string& name, bool checkName = false) const
   {
     if (checkName && hasObject(name))
@@ -240,5 +237,6 @@ protected:
     const_cast<std::map<std::string, std::shared_ptr<T> >& >(mObjects_)[nn] = object;
   }
 };
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_MAPPEDNAMEDCONTAINER_H

@@ -41,8 +41,11 @@
 #ifndef BPP_SEQ_CONTAINER_POSITIONEDCONTAINER_H
 #define BPP_SEQ_CONTAINER_POSITIONEDCONTAINER_H
 
-#include <memory>
+#include <Bpp/Clonable.h>
 
+//From the STL:
+
+#include <memory>
 
 namespace bpp
 {
@@ -55,11 +58,10 @@ namespace bpp
  *
  * All Objects must have a position, accessible through getPosition
  * and setPosition methods (see Site class).
- *
  */
-
 template<class T>
-class PositionedContainer
+class PositionedContainer:
+    public virtual Clonable
 {
 public:
   PositionedContainer() {}
