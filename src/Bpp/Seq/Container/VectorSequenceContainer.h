@@ -377,5 +377,10 @@ protected:
   /** @} */
 
  };
+
+  //Aliases:
+  using BasicVectorSequenceContainer = VectorSequenceContainer<Sequence>;
+  using ProbabilisticVectorSequenceContainer = VectorSequenceContainer<ProbabilisticSequence>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORSEQUENCECONTAINER_H
