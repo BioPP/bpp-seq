@@ -68,29 +68,32 @@ class VectorSequenceContainer :
 public:
 
   /**
-   * @brief Build a container with shared Sequences.
+   * @brief Build a container with pointers to sequence objects.
    *
-   * The keys of the map are the names of the Sequences
+   * The keys of the map are set to the names of the sequences.
+   *
+   * @param alphabet The alphabet of the container.
+   * @param vs       A vector of smart pointers toward sequence objects.
    */
   VectorSequenceContainer(
-      const std::vector< std::shared_ptr<SequenceType> >& vs,
-      const Alphabet* alpha):
-    AbstractSequenceContainer<SequenceType, std::string>(alpha),
+      const std::shared_ptr<const Alphabet> alphabet,
+      const std::vector< std::unique_ptr<SequenceType> >& vs):
+    AbstractSequenceContainer<SequenceType, std::string>(alphabet),
     VectorMappedContainer<SequenceType>()
   {
     for (auto seq: vs)
     {
-      addSequence(*seq);
+      addSequence(seq);
     }
   }
 
   /**
    * @brief Build an empty container that will contain sequences of a particular alphabet.
    *
-   * @param alpha The alphabet of the container.
+   * @param alphabet The alphabet of the container.
    */
-  VectorSequenceContainer(const Alphabet* alpha) :
-      AbstractSequenceContainer<SequenceType, std::string>(alpha),
+  VectorSequenceContainer(const std::shared_ptr<const Alphabet> alphabet) :
+      AbstractSequenceContainer<SequenceType, std::string>(alphabet),
       VectorMappedContainer<SequenceType>()
   {}
 

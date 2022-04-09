@@ -49,9 +49,7 @@ namespace bpp
 {
 /**
  * @brief The CruxSymbolListSite interface, from CoreSite and CruxSymbolList
- *
  */
-
 class CruxSymbolListSite :
   public virtual CoreSite,
   public virtual CruxSymbolList

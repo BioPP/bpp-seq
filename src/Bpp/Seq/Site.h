@@ -62,7 +62,7 @@ namespace bpp
  * This should not be a constraint, since you never read sites directly from a file.
  */
 class Site :
-  virtual public CruxSymbolListSite,
+  public CruxSymbolListSite,
   public AbstractCoreSite,
   public BasicIntSymbolList
 {
@@ -70,69 +70,102 @@ public:
   /**
    * @brief Build a new void Site object with the specified alphabet.
    *
-   * @param alpha The alphabet to use.
+   * @param alphabet The alphabet to use.
    */
-  Site(const Alphabet* alpha);
+  Site(const std::shared<const Alphabet>& alphabet):
+      SymbolList<int>(alphabet),
+      AbstractCoreSite(),
+      BasicIntSymbolList(alphabet)
+  {}
 
   /**
    * @brief Build a new void Site object with the specified alphabet and position.
    *
-   * @param alpha    The alphabet to use.
-   * @param position The position attribute for this site.
+   * @param alphabet   The alphabet to use.
+   * @param coordinate The coordinate attribute of this site.
    */
-  Site(const Alphabet* alpha, int position);
+  Site(const std::shared_ptr<Alphabet>& alphabet, int coordinate) :
+      SymbolList<int>(alphabet),
+      AbstractCoreSite(coordinate),
+      BasicIntSymbolList(alphabet)
+  {}
 
   /**
    * @brief Build a new Site object with the specified alphabet.
    * The content of the site is initialized from a vector of characters.
    *
    * @param site     The content of the site.
-   * @param alpha    The alphabet to use.
+   * @param alphabet The alphabet to use.
    * @throw BadCharException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<std::string>& site, const Alphabet* alpha);
+  Site(const std::vector<std::string>& site, const shared_ptr<Alphabet>& alphabet):
+      SymbolList<int>(alphabet),
+      AbstractCoreSite(),
+      BasicIntSymbolList(site, alphabet)
+  {}
 
   /**
    * @brief Build a new Site object with the specified alphabet and position.
    * The content of the site is initialized from a vector of characters.
    *
-   * @param site     The content of the site.
-   * @param alpha    The alphabet to use.
-   * @param position The position attribute for this site.
+   * @param site       The content of the site.
+   * @param alphabet   The alphabet to use.
+   * @param coordinate The coordinate attribute of this site.
    * @throw BadCharException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<std::string>& site, const Alphabet* alpha, int position);
+  Site(const std::vector<std::string>& site, const std::shared_ptr<Alphabet>& alphabet, int coordinate):
+      SymbolList<int>(alphabet),
+      AbstractCoreSite(coordinate),
+      BasicIntSymbolList(site, alphabet)
+  {}
 
   /**
    * @brief Build a new Site object with the specified alphabet.
    * The content of the site is initialized from a vector of integers.
    *
    * @param site     The content of the site.
-   * @param alpha    The alphabet to use.
+   * @param alphabet The alphabet to use.
    * @throw BadIntException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<int>& site, const Alphabet* alpha);
+  Site(const std::vector<int>& site, const shared_ptr<Alphabet>& alphabet):
+      SymbolList<int>(site, alphabet),
+      AbstractCoreSite(),
+      BasicIntSymbolList(site, alphabet)
+  {}
 
   /**
    * @brief Build a new Site object with the specified alphabet and position.
    * The content of the site is initialized from a vector of integers.
    *
-   * @param site     The content of the site.
-   * @param alpha    The alphabet to use.
-   * @param position The position attribute for this site.
+   * @param site       The content of the site.
+   * @param alphabet   The alphabet to use.
+   * @param coordinate The coordinate attribute of this site.
    * @throw BadIntException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<int>& site, const Alphabet* alpha, int position);
+  Site(const std::vector<int>& site, const shared_ptr<Alphabet> alphabet, int coordinate) : 
+      SymbolList<int>(alphabet),
+      AbstractCoreSite(coordinate),
+      BasicIntSymbolList(site, alphabet)
+  {}
 
   /**
    * @brief The copy constructor.
    */
-  Site(const Site& site);
+  Site(const Site& site):
+      SymbolList<int>(site.getContent(), site.getAlphabet()),
+      AbstractCoreSite(site.getCoordinate()),
+      BasicIntSymbolList(site)
+  {}
 
   /**
    * @brief The assignment operator.
    */
-  Site& operator=(const Site& s);
+  Site& operator=(const Site& s)
+  {
+    AbstractCoreSite::operator=(s);
+    BasicIntSymbolList::operator=(s);
+    return *this;
+  }
 
   virtual ~Site() {}
 
@@ -157,16 +190,31 @@ public:
 
   using SymbolList<int>::addElement;
 
-  /**
-   * @brief Set the position of this site.
-   *
-   * @param position The new position of the site.
-   */
-//  virtual void setPosition(int position) { AbstractCoreSite::setPosition(position); }
 };
 
 // Sites comparison operators overload
-bool operator==(const Site& site1, const Site& site2);
-bool operator<(const Site& site1, const Site& site2);
+bool operator==(const Site& site1, const Site& site2)
+{
+  // Verify that site's size, position and content are equals
+  if (site1.size() != site2.size())
+    return false;
+  if (site1.getCoordinate() != site2.getCoordinate()) {
+    return false;
+  } else {
+    for (size_t i = 0; i < site1.size(); i++)
+    {
+      if (site1[i] != site2[i])
+        return false;
+    }
+    return true;
+  }
+}
+
+bool operator<(const Site& site1, const Site& site2)
+{
+  return site1.getCoordinate() < site2.getCoordinate();
+}
+
 } // end of namespace bpp.
+
 #endif // BPP_SEQ_SITE_H

@@ -1,7 +1,7 @@
 //
 // File: PositionedContainer.h
 // Authors:
-//   Laurent GuÃ©guen
+//   Laurent Guéguen
 // Last modified: mardi 21 mars 2017, Ã  15h 02
 //
 
@@ -79,18 +79,20 @@ public:
 
   virtual void clear() = 0;
 
-protected:
   /**
-   * @brief Retrieve an object from the container. Set as protected
-   * since they will be public under T specific names.
-   * 
+   * @brief Retrieve an object from the container.
    *
    * @param objectIndex The position of the object.
    * @return A reference toward the Object object with corresponding name.
    */
-
   virtual const std::shared_ptr<T> getObject(size_t objectIndex) const = 0;
 
+  /**
+   * @brief Retrieve an object from the container.
+   *
+   * @param objectIndex The position of the object.
+   * @return A reference toward the Object object with corresponding name.
+   */
   virtual std::shared_ptr<T> getObject(size_t objectIndex) = 0;
 
   /**

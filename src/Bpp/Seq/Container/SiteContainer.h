@@ -3,6 +3,7 @@
 // Authors:
 //   Guillaume Deuchst
 //   Julien Dutheil
+//   Laurent Guéguen
 //
 
 /*
@@ -41,10 +42,7 @@
 #ifndef BPP_SEQ_CONTAINER_SITECONTAINER_H
 #define BPP_SEQ_CONTAINER_SITECONTAINER_H
 
-
-#include "../Site.h"
-#include "AlignedValuesContainer.h"
-#include "OrderedSequenceContainer.h"
+#include "SequenceContainer.h"
 
 // From the STL:
 #include <string>
@@ -57,17 +55,16 @@ namespace bpp
  * Container implementing the SiteContainer interface deal with <em>aligned</em> sequences.
  * This interface provides methods to retrieve, add or set sites in the alignment.
  * As for SequenceContainers, the maintenance of Sites is up to the container.
- * All site objects are cloned befored being added and retrieved.
  */
+template<class SequenceType, class HashType, class SiteType>
 class SiteContainer :
-  public virtual OrderedSequenceContainer,
-  public virtual AlignedValuesContainer
+  public virtual SequenceContainer<SequenceType, HashType>
 {
 public:
   SiteContainer() {}
   virtual ~SiteContainer() {}
 
-  SiteContainer* clone() const = 0;
+  SiteContainer* clone() const overide = 0;
 
 public:
   /**
@@ -77,13 +74,14 @@ public:
    * @return A site objet corresponding to site i in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
+  virtual const SiteType& getSite(size_t siteIndex) const = 0;
 
-  virtual const Site& getSite(size_t siteIndex) const = 0;
-  virtual Site& getSite(size_t siteIndex) = 0;
-
+  /**
+   * @brief Get a CruxSymbolListSite from a given position.
+   *
+   * @param siteIndex The position
+   */
   virtual const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const = 0;
-
-  virtual CruxSymbolListSite& getSymbolListSite(size_t siteIndex) = 0;
 
   /**
    * @brief Set a site in the container.
@@ -93,7 +91,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void setSite(size_t siteIndex, const Site& site, bool checkPosition = true) = 0;
+  virtual void setSite(size_t siteIndex, const SiteType& site, bool checkPosition = true) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -102,7 +100,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const Site& site, bool checkPosition) = 0;
+  virtual void addSite(const SiteType& site, bool checkPosition) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -112,7 +110,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const Site& site, int position, bool checkPosition) = 0;
+  virtual void addSite(const SiteType& site, int position, bool checkPosition) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -122,7 +120,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const Site& site, size_t siteIndex, bool checkPosition) = 0;
+  virtual void addSite(const SiteType& site, size_t siteIndex, bool checkPosition) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -133,7 +131,7 @@ public:
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition) = 0;
+  virtual void addSite(const SiteType& site, size_t siteIndex, int position, bool checkPosition) = 0;
 
   /**
    * @brief Remove a site from the container.
@@ -145,7 +143,7 @@ public:
    * @return A pointer toward the given site in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual std::shared_ptr<Site> removeSite(size_t siteIndex) = 0;
+  virtual std::shared_ptr<SiteType> removeSite(size_t siteIndex) = 0;
 
   /**
    * @brief Delete a site from the container.
@@ -156,6 +154,42 @@ public:
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
   virtual void deleteSite(size_t siteIndex) = 0;
+
+  /**
+   * @brief Remove a continuous range of sites in the container.
+   *
+   * @param siteIndex The position of the first site in the container.
+   * @param length The length of the region to delete, starting at pposition siteIndex.
+   * @throw IndexOutOfBoundsException If the specified range is not valid.
+   */
+  virtual void deleteSites(size_t siteIndex, size_t length) = 0;
+
+  /**
+   * @brief Get the number of aligned positions in the container.
+   *
+   * @return The number of sites in the container.
+   */
+  virtual size_t getNumberOfSites() const = 0;
+
+  /**
+   * @brief Set all positions attributes.
+   */
+  virtual void reindexSites() = 0;
+
+  /**
+   * @brief Get all position attributes of sites.
+   *
+   * @return A vector with all site positions.
+   */
+  virtual Vint getSitePositions() const = 0;
+
+  /**
+   * @brief Set all position attributes of sites.
+   *
+   * @param positions A vector with all site positions.
+   */
+  virtual void setSitePositions(const Vint& positions) = 0;
+
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINER_H

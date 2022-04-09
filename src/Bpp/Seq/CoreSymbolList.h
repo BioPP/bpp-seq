@@ -1,7 +1,7 @@
 //
 // File: CoreSymbolList.h
 // Authors:
-//   Laurent GuÃ©guen
+//   Laurent Guéguen
 // Created: dimanche 2 avril 2017, Ã  22h 23
 //
 
@@ -81,7 +81,7 @@ public:
    * @return A const pointer to the alphabet.
    * @see Alphabet class.
    */
-  virtual const Alphabet* getAlphabet() const = 0;
+  virtual std::shared<const Alphabet> getAlphabet() const = 0;
 
   /**
    * @brief Get the number of elements in the list.

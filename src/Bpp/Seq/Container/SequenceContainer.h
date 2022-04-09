@@ -65,7 +65,6 @@ namespace bpp
  *
  * @see Sequence
  */
-
 template<class SequenceType, class HashType = std::string>
 class SequenceContainer :
   public virtual Clonable,
