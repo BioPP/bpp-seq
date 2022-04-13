@@ -64,74 +64,74 @@ public:
   SiteContainer() {}
   virtual ~SiteContainer() {}
 
-  SiteContainer* clone() const overide = 0;
+  SiteContainer* clone() const override = 0;
 
 public:
   /**
    * @brief Get a site from the container.
    *
-   * @param siteIndex The position of the site in the container.
+   * @param sitePosition The position of the site in the container.
    * @return A site objet corresponding to site i in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual const SiteType& getSite(size_t siteIndex) const = 0;
+  virtual const SiteType& getSite(size_t sitePosition) const = 0;
 
   /**
    * @brief Get a CruxSymbolListSite from a given position.
    *
-   * @param siteIndex The position
+   * @param sitePosition The position
    */
-  virtual const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const = 0;
+  virtual const CruxSymbolListSite& getSymbolListSite(size_t sitePosition) const = 0;
 
   /**
    * @brief Set a site in the container.
    *
-   * @param siteIndex     The position of the site in the container.
-   * @param site          The site to set.
-   * @param checkPosition Look if the position of the new site match a position attribute in the container.
+   * @param sitePosition       The position of the site in the container.
+   * @param site            The site to set.
+   * @param checkCoordinate Look if the coordinate of the new site match a coordinate attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void setSite(size_t siteIndex, const SiteType& site, bool checkPosition = true) = 0;
+  virtual void setSite(size_t sitePosition, const SiteType& site, bool checkCoordinate = true) = 0;
+
+  /**
+   * @brief Add a site in the container.
+   *
+   * @param site            The site to add.
+   * @param checkCoordinate Look if the coordinate of the new site match a coordinate attribute in the container.
+   * @throw Exception If the specified site does not exists or is not correct.
+   */
+  virtual void addSite(const SiteType& site, bool checkCoordinate) = 0;
+
+  /**
+   * @brief Add a site in the container.
+   *
+   * @param site            The site to add.
+   * @param coordinate      The new coordinate of the site, to superseed the one in 'site'.
+   * @param checkCoordinate Look if the coordinate of the new site match a coordinate attribute in the container.
+   * @throw Exception If the specified site does not exists or is not correct.
+   */
+  virtual void addSite(const SiteType& site, int coordinate, bool checkCoordinate) = 0;
+
+  /**
+   * @brief Add a site in the container.
+   *
+   * @param site            The site to add.
+   * @param sitePosition       The coordinate where to insert the site.
+   * @param checkCoordinate Look if the coordinate of the new site match a coordinate attribute in the container.
+   * @throw Exception If the specified site does not exists or is not correct.
+   */
+  virtual void addSite(const SiteType& site, size_t sitePosition, bool checkCoordinate) = 0;
 
   /**
    * @brief Add a site in the container.
    *
    * @param site          The site to add.
+   * @param sitePosition     The position where to insert the site.
+   * @param coordinate    The new coordinate of the site, to superseed the one in 'site'.
    * @param checkPosition Look if the position of the new site match a position attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const SiteType& site, bool checkPosition) = 0;
-
-  /**
-   * @brief Add a site in the container.
-   *
-   * @param site          The site to add.
-   * @param position      The new position of the site, to superseed the one in 'site'.
-   * @param checkPosition Look if the position of the new site match a position attribute in the container.
-   * @throw Exception If the specified site does not exists or is not correct.
-   */
-  virtual void addSite(const SiteType& site, int position, bool checkPosition) = 0;
-
-  /**
-   * @brief Add a site in the container.
-   *
-   * @param site          The site to add.
-   * @param siteIndex     The position where to insert the site.
-   * @param checkPosition Look if the position of the new site match a position attribute in the container.
-   * @throw Exception If the specified site does not exists or is not correct.
-   */
-  virtual void addSite(const SiteType& site, size_t siteIndex, bool checkPosition) = 0;
-
-  /**
-   * @brief Add a site in the container.
-   *
-   * @param site          The site to add.
-   * @param siteIndex     The position where to insert the site.
-   * @param position      The new position of the site, to superseed the one in 'site'.
-   * @param checkPosition Look if the position of the new site match a position attribute in the container.
-   * @throw Exception If the specified site does not exists or is not correct.
-   */
-  virtual void addSite(const SiteType& site, size_t siteIndex, int position, bool checkPosition) = 0;
+  virtual void addSite(const SiteType& site, size_t sitePosition, int coordinate, bool checkPosition) = 0;
 
   /**
    * @brief Remove a site from the container.
@@ -139,30 +139,30 @@ public:
    * The site is deleted (ie the container is shortened) and a pointer
    * toward it is returned.
    *
-   * @param siteIndex The position of the site in the container.
+   * @param sitePosition The position of the site in the container.
    * @return A pointer toward the given site in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual std::shared_ptr<SiteType> removeSite(size_t siteIndex) = 0;
+  virtual std::shared_ptr<SiteType> removeSite(size_t sitePosition) = 0;
 
   /**
    * @brief Delete a site from the container.
    *
    * The site is deleted (ie the container is shortened).
    *
-   * @param siteIndex The position of the site in the container.
+   * @param sitePosition The position of the site in the container.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual void deleteSite(size_t siteIndex) = 0;
+  virtual void deleteSite(size_t sitePosition) = 0;
 
   /**
    * @brief Remove a continuous range of sites in the container.
    *
-   * @param siteIndex The position of the first site in the container.
-   * @param length The length of the region to delete, starting at pposition siteIndex.
+   * @param sitePosition The position of the first site in the container.
+   * @param length The length of the region to delete, starting at pposition sitePosition.
    * @throw IndexOutOfBoundsException If the specified range is not valid.
    */
-  virtual void deleteSites(size_t siteIndex, size_t length) = 0;
+  virtual void deleteSites(size_t sitePosition, size_t length) = 0;
 
   /**
    * @brief Get the number of aligned positions in the container.
@@ -172,23 +172,23 @@ public:
   virtual size_t getNumberOfSites() const = 0;
 
   /**
-   * @brief Set all positions attributes.
+   * @brief Set all coordinate attributes.
    */
   virtual void reindexSites() = 0;
 
   /**
    * @brief Get all position attributes of sites.
    *
-   * @return A vector with all site positions.
+   * @return A vector with all site coordinates.
    */
-  virtual Vint getSitePositions() const = 0;
+  virtual Vint getSiteCoordinates() const = 0;
 
   /**
    * @brief Set all position attributes of sites.
    *
-   * @param positions A vector with all site positions.
+   * @param positions A vector with all site coordinates.
    */
-  virtual void setSitePositions(const Vint& positions) = 0;
+  virtual void setSiteCoordinates(const Vint& coordinates) = 0;
 
 };
 } // end of namespace bpp.
