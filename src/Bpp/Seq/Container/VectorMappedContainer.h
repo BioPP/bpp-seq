@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -66,9 +66,9 @@ namespace bpp
 
 template<class T>
 class VectorMappedContainer :
-  virtual public PositionedNamedContainer<T>,
-  virtual public MappedNamedContainer<T>,
-  virtual public VectorPositionedContainer<T>
+  public PositionedNamedContainer<T>,
+  public MappedNamedContainer<T>,
+  public VectorPositionedContainer<T>
 {
 private:
   /*
@@ -135,6 +135,8 @@ public:
     return VectorPositionedContainer<T>::getSize();
   }
 
+protected:
+
   /*
    * @brief real number of objects
    *
@@ -161,6 +163,7 @@ public:
     return vNames_[objectIndex];
   }
 
+  
   const std::shared_ptr<T> getObject(size_t objectIndex) const
   {
     return VectorPositionedContainer<T>::getObject(objectIndex);
@@ -192,15 +195,15 @@ public:
     return MappedNamedContainer<T>::hasObject(name);
   }
 
-  std::vector<std::string> getObjectsNames() const
+  std::vector<std::string> getObjectNames() const
   {
     return vNames_;
   }
 
-  void setObjectsNames(const std::vector<std::string>& names)
+  void setObjectNames(const std::vector<std::string>& names)
   {
     if (names.size() != vNames_.size())
-      throw BadSizeException("VectorMappedContainer::setObjectsNames: bad number of new names", vNames_.size(), names.size());
+      throw BadSizeException("VectorMappedContainer::setObjectNames: bad number of new names", vNames_.size(), names.size());
 
     mNames_.clear();
 
@@ -220,8 +223,6 @@ public:
     vNames_[pos] = name;
   }
 
-  using VectorPositionedContainer<T>::addObject;
-  using MappedNamedContainer<T>::addObject;
   void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false)
   {
     VectorPositionedContainer<T>::addObject(object, objectIndex, check);
@@ -260,17 +261,6 @@ public:
     std::shared_ptr<T> obj = VectorPositionedContainer<T>::removeObject(objectIndex);
     MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
     mNames_.erase(vNames_[objectIndex]);
-    vNames_[objectIndex] = "";
-    return obj;
-  }
-
-  using PositionedContainer<T>::deleteObject;
-  std::shared_ptr<T> deleteObject(size_t objectIndex)
-  {
-    std::shared_ptr<T> obj = VectorPositionedContainer<T>::deleteObject(objectIndex);
-    MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
-
-    mNames_.erase(vNames_[objectIndex]);
     for (auto it : mNames_)
     {
       if (it.second > objectIndex)
@@ -280,11 +270,40 @@ public:
     return obj;
   }
 
+  void deleteObject(size_t objectIndex)
+  {
+    VectorPositionedContainer<T>::deleteObject(objectIndex);
+    MappedNamedContainer<T>::deleteObject(vNames_[objectIndex]);
+
+    mNames_.erase(vNames_[objectIndex]);
+    for (auto it : mNames_)
+    {
+      if (it.second > objectIndex)
+        it.second--;
+    }
+    vNames_.erase(vNames_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
+  }
+
 
   std::shared_ptr<T> removeObject(const std::string& name)
   {
     return removeObject(mNames_[name]);
   }
+
+  void deleteObject(const std::string& name)
+  {
+    deleteObject(mNames_[name]);
+  }
+
+  void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
+  {
+    VectorPositionedContainer<T>::addObject_(object, objectIndex, check);
+    MappedNamedContainer<T>::addObject_(object, name, check);
+    const_cast<std::vector<std::string>& >(vNames_)[objectIndex] = name;
+    const_cast<std::map<std::string, size_t>&>(mNames_)[name] = objectIndex;
+  }
+
+public:
 
   void clear()
   {
@@ -293,15 +312,7 @@ public:
     vNames_.clear();
     mNames_.clear();
   }
-
-protected:
-  void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
-  {
-    VectorPositionedContainer<T>::addObject_(object, objectIndex, check);
-    MappedNamedContainer<T>::addObject_(object, name, check);
-    const_cast<std::vector<std::string>& >(vNames_)[objectIndex] = name;
-    const_cast<std::map<std::string, size_t>&>(mNames_)[name] = objectIndex;
-  }
 };
 } // end of namespace bpp.
+
 #endif // BPP_SEQ_CONTAINER_VECTORMAPPEDCONTAINER_H

@@ -107,7 +107,7 @@ public:
    *
    * @return A vector of strings with all sequence names.
    */
-  virtual std::vector<std::string> getSequencesNames() const = 0;
+  virtual std::vector<std::string> getSequenceNames() const = 0;
 
   /**
    * @brief Set all sequence names.
@@ -119,7 +119,7 @@ public:
    * is already used in the container before adding it.
    * @throw Exception If there are redundant names in the input vector.
    */
-  virtual void setSequencesNames(const std::vector<std::string>& names, bool checkNames) = 0;
+  virtual void setSequenceNames(const std::vector<std::string>& names, bool checkNames) = 0;
 
   /**
    * @brief get value of a state in a position

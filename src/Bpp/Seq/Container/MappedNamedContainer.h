@@ -9,7 +9,7 @@
 //
 
 /*
-  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -99,7 +99,7 @@ public:
   virtual ~MappedNamedContainer()
   {}
 
-
+protected:
   /**
    * @brief Get a object.
    *
@@ -149,6 +149,19 @@ public:
    * @brief Remove a object.
    *
    * @param name The key of the object.
+   */
+  void deleteObject(const std::string& name)
+  {
+    if (!hasObject(name))
+      throw Exception("MappedNamedContainer::deleteObject : Object's name does not exist in container : " + name);
+
+    mObjects_.erase(name);
+  }
+
+  /**
+   * @brief Remove and returns a object.
+   *
+   * @param name The key of the object.
    * @return The object previously associated to the given key.
    */
   std::shared_ptr<T> removeObject(const std::string& name)
@@ -161,6 +174,22 @@ public:
     return obj;
   }
 
+  /**
+   * @return All objects keys.
+   */
+  virtual std::vector<std::string> getObjectNames() const
+  {
+    std::vector<std::string> vNames;
+
+    for (auto it : mObjects_)
+    {
+      vNames.push_back(it.first);
+    }
+
+    return vNames;
+  }
+
+public:
   /**
    * @brief change the key of an object.
    *
@@ -183,26 +212,22 @@ public:
     mObjects_[nkey] = obj;
   }
 
-  /**
-   * @return All objects keys.
-   */
-  virtual std::vector<std::string> getObjectsNames() const
-  {
-    std::vector<std::string> vNames;
-
-    for (auto it : mObjects_)
-    {
-      vNames.push_back(it.first);
-    }
-
-    return vNames;
-  }
-
   size_t getSize() const { return mObjects_.size(); }
 
   void clear()
   {
     mObjects_.clear();
+  }
+
+  /**
+   * @brief Return if the name is in the map keys and the mapped
+   * object is nullptr or empty.
+   *
+   */
+  
+  bool isAvailableName(std::string objectName) const
+  {
+    return hasObject(objectName) && (getObject(objectName) == nullptr || getObject(objectName)->size()==0);
   }
 
 protected:

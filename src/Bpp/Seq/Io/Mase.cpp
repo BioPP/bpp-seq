@@ -147,10 +147,9 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const
   string seq, temp = "";  // Initialization
 
   // Main loop : for all sequences
-  vector<string> names = sc.getSequencesNames();
-  for (size_t i = 0; i < names.size(); i++)
+  for (const auto& name: sc.getSequenceNames())
   {
-    comments = sc.getComments(names[i]);
+    comments = sc.getComments(name);
 
     // Writing all sequence comments in file
     // If no comments are associated with current sequence, an empy commentary line will be writed
@@ -167,10 +166,10 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const
     }
 
     // Sequence name writing
-    output << names[i] << endl;
+    output << name << endl;
 
     // Sequence cutting to specified characters number per line
-    seq = sc.toString(names[i]);
+    seq = sc.toString(name);
     while (seq != "")
     {
       if (seq.size() > charsByLine_)

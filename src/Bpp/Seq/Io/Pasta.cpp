@@ -408,7 +408,7 @@ void Pasta::writeAlignedValues(ostream& output, const AlignedValuesContainer& av
   if (vpsc)
   {
     bool first=true;
-    for (auto name : vpsc->getSequencesNames())
+    for (const auto& name : vpsc->getSequenceNames())
     {
       writeSequence(output, vpsc->getSequence(name), first);
       first=false;
@@ -421,7 +421,7 @@ void Pasta::writeAlignedValues(ostream& output, const AlignedValuesContainer& av
     if (sc)
     {
       bool first=true;
-      for (auto name : sc->getSequencesNames())
+      for (const auto& name : sc->getSequenceNames())
       {
         writeSequence(output, sc->getSequence(name), first);
         first=false;

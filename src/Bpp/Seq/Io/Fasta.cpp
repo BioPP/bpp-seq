@@ -228,7 +228,7 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const
   }
 
   // Main loop : for all sequences in vector container
-  vector<string> names = sc.getSequencesNames();
+  vector<string> names = sc.getSequenceNames();
   for (size_t i = 0; i < names.size(); ++i)
   {
     writeSequence(output, sc.getSequence(names[i]));

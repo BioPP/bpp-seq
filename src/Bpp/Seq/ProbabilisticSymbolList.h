@@ -248,7 +248,9 @@ public:
     return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  void shuffle(){}
+  void shuffle(){
+    throw Exception("ProbabilisticSymbolList::shuffle not implemented, yet.");
+  }
 };
 } // end of namespace bpp
 #endif // BPP_SEQ_PROBABILISTICSYMBOLLIST_H

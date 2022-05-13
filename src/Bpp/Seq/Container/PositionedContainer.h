@@ -77,9 +77,12 @@ public:
 
   virtual void clear() = 0;
 
+protected:
   /**
-   * @brief Retrieve an object from the container.
-
+   * @brief Retrieve an object from the container. Set as protected
+   * since they will be public under T specific names.
+   * 
+   *
    * @param objectIndex The position of the object.
    * @return A reference toward the Object object with corresponding name.
    */
@@ -89,46 +92,20 @@ public:
   virtual std::shared_ptr<T> getObject(size_t objectIndex) = 0;
 
   /**
-   * @brief Add  an object in the container.
-   *
-   * @param object  The object to add.
-   * @param objectIndex The new position of the object
-   * @param checkPosition Look if the position is empty.
-   */
-  virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false) {}
-
-  /**
-   * @brief Insert an object in the container.
-   *
-   * @param object          The object to add.
-   * @param objectIndex The new position of the object
-   */
-  virtual void insertObject(std::shared_ptr<T> object, size_t objectIndex) {}
-
-  /**
    * @brief Extract and remove a object from the container.
-   * The container size is unchanged, the positioned is set to null.
    *
    * @param objectIndex The position of the object.
+   * @return A smart pointer toward the removed object.
    */
-
   virtual std::shared_ptr<T> removeObject(size_t objectIndex) = 0;
 
   /**
-   * @brief Extract and remove a object from the container.
-   * The container is then shortened
+   * @brief Delete an object from the container.
    *
    * @param name The name of the object.
    */
-  virtual std::shared_ptr<T> deleteObject(const std::string& name) {return 0;}
+  virtual void deleteObject(size_t objectIndex) = 0;
 
-
-  /**
-   * @brief Add a object at the end of the container.
-   *
-   * @param object          The object to add.
-   */
-  virtual void appendObject(std::shared_ptr<T> object) {}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_POSITIONEDCONTAINER_H

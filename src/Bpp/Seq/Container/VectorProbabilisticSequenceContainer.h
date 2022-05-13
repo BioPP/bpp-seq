@@ -152,7 +152,11 @@ public:
    *
    * @{
    */
-  VectorProbabilisticSequenceContainer* clone() const { return new VectorProbabilisticSequenceContainer(*this); }
+  VectorProbabilisticSequenceContainer* clone() const
+  {
+    return new VectorProbabilisticSequenceContainer(*this);
+  }
+
   /** @} */
 
   /**
@@ -175,19 +179,19 @@ public:
     setSequence(getSequencePosition(name), sequence, checkName);
   }
 
-  ProbabilisticSequence* removeSequence(const std::string& name)
+  std::shared_ptr<ProbabilisticSequence> removeSequence(const std::string& name)
   {
     return removeSequence(getSequencePosition(name));
   }
 
   size_t getNumberOfSequences() const { return getSize(); }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return getObjectsNames();
+    return getObjectNames();
   }
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true);
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true);
 
   VectorProbabilisticSequenceContainer* createEmptyContainer() const;
 
@@ -207,9 +211,9 @@ public:
     addObject(std::shared_ptr<ProbabilisticSequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
   }
 
-  ProbabilisticSequence* removeSequence(size_t sequenceIndex)
+  std::shared_ptr<ProbabilisticSequence> removeSequence(size_t sequenceIndex)
   {
-    return removeObject(sequenceIndex).get();
+    return removeObject(sequenceIndex);
   }
 
   void setComments(size_t sequenceIndex, const Comments& comments)

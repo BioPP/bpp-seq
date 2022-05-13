@@ -55,9 +55,7 @@ VectorProbabilisticSequenceContainer::VectorProbabilisticSequenceContainer(
   AbstractValuesContainer(alpha)
 {
   for (auto i = vs.begin(); i < vs.end(); i++)
-  {
     addSequence(*i);
-  }
 }
 
 /** Copy constructors: ********************************************************/
@@ -69,9 +67,8 @@ VectorProbabilisticSequenceContainer::VectorProbabilisticSequenceContainer(
 {
   size_t max = vsc.getNumberOfSequences();
   for (size_t i = 0; i < max; i++)
-  {
     addSequence(vsc.getSequence(i), false);
-  }
+
 }
 
 /** Assignation operator: *****************************************************/
@@ -88,7 +85,7 @@ VectorProbabilisticSequenceContainer& VectorProbabilisticSequenceContainer::oper
 
 /******************************************************************************/
 
-void VectorProbabilisticSequenceContainer::setSequencesNames(
+void VectorProbabilisticSequenceContainer::setSequenceNames(
   const std::vector<std::string>& names,
   bool checkNames)
 {
@@ -102,7 +99,7 @@ void VectorProbabilisticSequenceContainer::setSequencesNames(
       for (size_t j = 0; j < i; j++)
       {
         if (names[j] == names[i])
-          throw Exception("VectorSiteContainer::setSequencesNames : Sequence's name already exists in container");
+          throw Exception("VectorSiteContainer::setSequenceNames : Sequence's name already exists in container");
       }
     }
   }
@@ -111,7 +108,7 @@ void VectorProbabilisticSequenceContainer::setSequencesNames(
     getSequence_(i).setName(names[i]);
   }
 
-  setObjectsNames(names);
+  setObjectNames(names);
 }
 
 /******************************************************************************/

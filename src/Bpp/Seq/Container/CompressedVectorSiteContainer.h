@@ -146,14 +146,26 @@ public:
     return *VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
   }
 
+  const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const
+  {
+     return getSite(siteIndex);
+  }
+  
   Site& getSite(size_t siteIndex)
   {
     return *VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
   }
 
+  CruxSymbolListSite& getSymbolListSite(size_t siteIndex)
+  {
+    return getSite(siteIndex);
+  }
+  
   void setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
 
-  std::shared_ptr<Site> deleteSite(size_t siteIndex);
+  std::shared_ptr<Site> removeSite(size_t siteIndex);
+  
+  void deleteSite(size_t siteIndex);
 
 
   void addSite(const Site& site, bool checkPosition = false);
@@ -225,30 +237,31 @@ public:
   /**
    *
    * @brief Method to get position of a sequence in sequence
-   * container from his name. This method is used by delete and
+   * container from its key. This method is used by delete and
    * remove methods
    *
    */
-  size_t getSequencePosition(const std::string& name) const
+  
+  size_t getSequencePosition(const std::string& key) const
   {
     try
     {
       // Look for sequence name:
-      return VectorMappedContainer<Sequence>::getObjectPosition(name);
+      return VectorMappedContainer<Sequence>::getObjectPosition(key);
     }
     catch (Exception& e)
     {
-      throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", name);
+      throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", key);
     }
   }
 
-  Sequence* removeSequence(size_t sequenceIndex)
+  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex)
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::removeSequence.");
   }
 
-  Sequence* removeSequence(const std::string& name)
+  std::shared_ptr<Sequence> removeSequence(const std::string& name)
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::removeSequence.");
@@ -256,14 +269,14 @@ public:
 
   size_t getNumberOfSequences() const { return VectorMappedContainer<Sequence>::getNumberOfObjects(); }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return VectorMappedContainer<Sequence>::getObjectsNames();
+    return VectorMappedContainer<Sequence>::getObjectNames();
   }
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true)
   {
-    VectorMappedContainer<Sequence>::setObjectsNames(names);
+    VectorMappedContainer<Sequence>::setObjectNames(names);
   }
 
   void clear();

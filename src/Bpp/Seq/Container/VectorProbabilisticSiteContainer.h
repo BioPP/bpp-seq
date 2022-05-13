@@ -168,25 +168,18 @@ public:
 
   /**
    * @brief Get Sequence from a position in the container.
+   *
    * @param i  index of the sequence
-   *
-   * @brief If needed, those methods will create Sequences from the
-   * Sites Container, BUT those Sequences are independent from the set
-   * of Sites. Which means that if those are modified, the sites
-   * are not, and information is not consistent any more.
-   *
+   * @return A read-only reference to the selected sequence.
    */
-
   const ProbabilisticSequence& getSequence(std::size_t i) const;
 
   /**
    * @brief Get Sequence from its name in the container.
    * @param name Name of the sequence
-   *
+   * @return A read-only reference to the selected sequence.
    */
-
   const ProbabilisticSequence& getSequence(const std::string& name) const;
-
   
   bool hasSequence(const std::string& name) const
   {
@@ -200,14 +193,14 @@ public:
     return VectorMappedContainer<ProbabilisticSequence>::getObjectPosition(name);
   }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return VectorMappedContainer<ProbabilisticSequence>::getObjectsNames();
+    return VectorMappedContainer<ProbabilisticSequence>::getObjectNames();
   }
 
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true)
   {
-    VectorMappedContainer<ProbabilisticSequence>::setObjectsNames(names);
+    VectorMappedContainer<ProbabilisticSequence>::setObjectNames(names);
   }
 
 
@@ -281,16 +274,11 @@ public:
    */
 
   /*
-   * @brief Add elements
-   *
-   */
-
-  /*
    * @brief Append a Site. The shared_ptr is shared.
    *
    */
 
-  void appendSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false);
+  void addSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false);
 
   /*
    * @brief Add a Sequence of sites. Sites are copied.

@@ -74,7 +74,7 @@ SequenceContainer* SequenceContainerTools::createContainerWithSequenceNames(
   const vector<string>& seqNames)
 {
   SequenceContainer* sc = createContainerOfSpecifiedSize(alphabet, seqNames.size());
-  sc->setSequencesNames(seqNames, true);
+  sc->setSequenceNames(seqNames, true);
   return sc;
 }
 
@@ -120,7 +120,7 @@ void SequenceContainerTools::keepOnlySelectedSequences(
   OrderedSequenceContainer& sequences,
   const SequenceSelection& selection)
 {
-  vector<string> names = sequences.getSequencesNames();
+  vector<string> names = sequences.getSequenceNames();
   for (size_t i = 0; i < names.size(); i++)
   {
     // We need to do this because after removal the indices will not be the same!
@@ -140,7 +140,7 @@ void SequenceContainerTools::keepOnlySelectedSequences(
 
 bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer& sequences)
 {
-  vector<string> seqNames = sequences.getSequencesNames();
+  vector<string> seqNames = sequences.getSequenceNames();
   if (seqNames.size() <= 1)
     return true;
   size_t length = sequences.getSequence(seqNames[0]).size();
@@ -157,24 +157,23 @@ bool SequenceContainerTools::sequencesHaveTheSameLength(const SequenceContainer&
 void SequenceContainerTools::getFrequencies(const SequencedValuesContainer& sequences, std::map<int, double>& f, double pseudoCount)
 {
   double n = 0;
-  vector<string> names = sequences.getSequencesNames();
 
   const SequenceContainer* sc = dynamic_cast<const SequenceContainer*>(&sequences);
   const ProbabilisticSequenceContainer* psc = dynamic_cast<const ProbabilisticSequenceContainer*>(&sequences);
 
-  for (size_t j = 0; j < names.size(); j++)
+  for (const auto& name: sequences.getSequenceNames())
   {
     if (sc)
     {
-      const Sequence& seq = sc->getSequence(names[j]);
+      const Sequence& seq = sc->getSequence(name);
       SymbolListTools::getCounts(seq, f, true);
-      n += (double)seq.size();
+      n += static_cast<double>(seq.size());
     }
     else if (psc)
     {
-      const ProbabilisticSequence& seq = psc->getSequence(names[j]);
+      const ProbabilisticSequence& seq = psc->getSequence(name);
       SymbolListTools::getCounts(seq, f, true);
-      n += (double)seq.size();
+      n += static_cast<double>(seq.size());
     }
     else
       throw Exception("SequenceContainerTools::getFrequencies : unknown SequenceContainer type.");
@@ -201,16 +200,13 @@ void SequenceContainerTools::getFrequencies(const SequencedValuesContainer& sequ
 
 void SequenceContainerTools::getCounts(const SequenceContainer& sequences, std::map<int, int>& f)
 {
-  size_t n = 0;
-  vector<string> names = sequences.getSequencesNames();
-  for (size_t j = 0; j < names.size(); j++)
+  for (const auto& name: sequences.getSequenceNames())
   {
-    const Sequence& seq = sequences.getSequence(names[j]);
+    const Sequence& seq = sequences.getSequence(name);
     for (size_t i = 0; i < seq.size(); i++)
     {
       f[seq[i]]++;
     }
-    n += seq.size();
   }
 }
 
@@ -221,17 +217,16 @@ SequenceContainer* SequenceContainerTools::getCodonPosition(const SequenceContai
   const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(sequences.getAlphabet());
   if (!calpha)
     throw AlphabetException("SequenceContainerTools::getCodonPosition. Input sequences should be of type codon.");
-  vector<string> names = sequences.getSequencesNames();
   VectorSequenceContainer* newcont = new VectorSequenceContainer(calpha->getNucleicAlphabet());
-  for (size_t j = 0; j < names.size(); j++)
+  for (const auto& name: sequences.getSequenceNames())
   {
-    const Sequence& seq = sequences.getSequence(names[j]);
+    const Sequence& seq = sequences.getSequence(name);
     vector<int> newseq(seq.size());
     for (size_t i = 0; i < seq.size(); i++)
     {
       newseq[i] = calpha->getNPosition(seq[i], pos);
     }
-    BasicSequence s(names[j], newseq, sequences.getComments(names[j]), calpha->getNucleicAlphabet());
+    BasicSequence s(name, newseq, sequences.getComments(name), calpha->getNucleicAlphabet());
     newcont->addSequence(s);
   }
   return newcont;

@@ -65,7 +65,7 @@ public:
   NamedContainer() {}
   virtual ~NamedContainer() {}
 
-public:
+protected:
   /**
    * @brief Retrieve an object from the container.
    *
@@ -74,6 +74,7 @@ public:
    */
 
   virtual const std::shared_ptr<T> getObject(const std::string& name) const = 0;
+
   virtual std::shared_ptr<T> getObject(const std::string& name) = 0;
 
   /**
@@ -88,31 +89,20 @@ public:
   virtual bool hasObject(const std::string& name) const = 0;
 
   /**
-   * @brief Add a object to the container.
+   * @brief Extract and remove a object from the container.
    *
-   * @param object  The object to add.
-   * @param name the name of the object.
-   * @param checkName Tell if the container must check if the name
-   * of the object is already used in the container before adding
-   * it.
+   * @param name The name of the object.
+
    */
-  virtual void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = false) {}
+  virtual std::shared_ptr<T> removeObject(const std::string& name) = 0;
 
   /**
-   * @brief Extract and remove a object from the container.
-   * The container size is preserved.
+   * @brief Remove a object from the container.
    *
    * @param name The name of the object.
    */
-  virtual std::shared_ptr<T> removeObject(const std::string& name) {return 0;}
-
-  /**
-   * @brief Get the number of objects in the container.
-   *
-   * @return The number of objects in the container.
-   */
-
-  virtual size_t getSize() const = 0;
+  
+  virtual void deleteObject(const std::string& name) = 0;
 
   /**
    * @brief Get all the names of the objects in the container.
@@ -120,7 +110,16 @@ public:
    * @return A vector of strings with all object names.
    */
 
-  virtual std::vector<std::string> getObjectsNames() const = 0;
+  virtual std::vector<std::string> getObjectNames() const = 0;
+
+public:
+  /**
+   * @brief Get the number of objects in the container.
+   *
+   * @return The number of objects in the container.
+   */
+
+  virtual size_t getSize() const = 0;
 
   /**
    * @brief Delete all objects in the container.

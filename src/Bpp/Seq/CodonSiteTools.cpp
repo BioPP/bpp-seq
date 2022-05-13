@@ -590,8 +590,8 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
   for (const auto& it : freqs)
   {
     int state = it.first;
-    if (alphabet->isUnresolved(state) ||
-        alphabet->isGap(state))
+    if (!alphabet->isUnresolved(state) &&
+        !alphabet->isGap(state))
     {
       double freq = it.second;
       total += freq;

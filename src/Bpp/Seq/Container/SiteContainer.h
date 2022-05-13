@@ -81,15 +81,9 @@ public:
   virtual const Site& getSite(size_t siteIndex) const = 0;
   virtual Site& getSite(size_t siteIndex) = 0;
 
-  const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const
-  {
-    return getSite(siteIndex);
-  }
+  virtual const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const = 0;
 
-  CruxSymbolListSite& getSymbolListSite(size_t siteIndex)
-  {
-    return getSite(siteIndex);
-  }
+  virtual CruxSymbolListSite& getSymbolListSite(size_t siteIndex) = 0;
 
   /**
    * @brief Set a site in the container.
@@ -148,11 +142,20 @@ public:
    * toward it is returned.
    *
    * @param siteIndex The position of the site in the container.
-   * @return A pointer toward site i in the alignment.
+   * @return A pointer toward the given site in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
+  virtual std::shared_ptr<Site> removeSite(size_t siteIndex) = 0;
 
-  virtual std::shared_ptr<Site> deleteSite(size_t siteIndex) = 0;
+  /**
+   * @brief Delete a site from the container.
+   *
+   * The site is deleted (ie the container is shortened).
+   *
+   * @param siteIndex The position of the site in the container.
+   * @throw IndexOutOfBoundsException If the specified site does not exists.
+   */
+  virtual void deleteSite(size_t siteIndex) = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINER_H
