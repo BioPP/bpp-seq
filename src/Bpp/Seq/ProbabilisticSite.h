@@ -75,7 +75,11 @@ public:
    *
    * @param alpha The alphabet to use.
    */
-  ProbabilisticSite(const Alphabet* alpha);
+  ProbabilisticSite(std::shared_ptr<const Alphabet>& alpha) :
+    AbstractCoreSite(), 
+    BasicProbabilisticSymbolList(alpha)
+  {}
+
 
   /**
    * @brief Build a new void ProbabilisticSite object with the specified alphabet and position.
@@ -83,7 +87,11 @@ public:
    * @param alpha    The alphabet to use.
    * @param position The position attribute for this probabilistic site.
    */
-  ProbabilisticSite(const Alphabet* alpha, int position);
+  ProbabilisticSite(std::shared_ptr<const Alphabet>& alpha, int position) :
+    AbstractCoreSite(position),
+    BasicProbabilisticSymbolList(alpha)
+  {}
+
 
   /**
    * @brief Build a new ProbabilisticSite object with the specified alphabet.
@@ -93,7 +101,11 @@ public:
    * @param alpha    The alphabet to use.
    * @throw Exception If the content does not match the specified alphabet or is internally inconsistent.
    */
-  ProbabilisticSite(const Table<double>& site, const Alphabet* alpha);
+  ProbabilisticSite(const Table<double>& site, std::shared_ptr<const Alphabet>& alpha) :
+    AbstractCoreSite(),
+    BasicProbabilisticSymbolList(site, alpha)
+  {}
+
 
   /**
    * @brief Build a new ProbabilisticSite object with the specified alphabet and position.
@@ -104,20 +116,38 @@ public:
    * @param position The position attribute for this site.
    * @throw Exception If the content does not match the specified alphabet or is internally insconsistent.
    */
-  ProbabilisticSite(const Table<double>& site, const Alphabet* alpha, int position);
+  ProbabilisticSite(const Table<double>& site, std::shared_ptr<const Alphabet>& alpha, int position) :
+    AbstractCoreSite(position),
+    BasicProbabilisticSymbolList(site, alpha)
+  {}
+
 
   /**
    * @brief The copy constructor.
    */
-  ProbabilisticSite(const ProbabilisticSite& site);
+  ProbabilisticSite(const ProbabilisticSite& site) :
+    AbstractCoreSite(site),
+    BasicProbabilisticSymbolList(site)
+  {}
 
-  ProbabilisticSite(const CruxSymbolListSite& site);
+
+  ProbabilisticSite(const CruxSymbolListSite& site) :
+    AbstractCoreSite(site.getCoordinate()),
+    BasicProbabilisticSymbolList(site)
+  {}
+
 
   /**
    * @brief The assignment operator.
    */
-  ProbabilisticSite& operator=(const ProbabilisticSite& site);
+  ProbabilisticSite& operator=(const ProbabilisticSite& site)
+  {
+    AbstractCoreSite::operator=(site);
+    BasicProbabilisticSymbolList::operator=(site);
+    return *this;
+  }
 
+  
   /**
    * @name The Clonable interface
    *

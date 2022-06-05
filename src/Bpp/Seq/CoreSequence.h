@@ -154,7 +154,7 @@ public:
  */
 class AbstractCoreSequence :
   public virtual CoreSequence,
-  public virtual Commentable
+  public virtual SimpleCommentable
 {
 private:
   /**
@@ -169,7 +169,7 @@ public:
    * @param name     The sequence name.
    */
   AbstractCoreSequence(const std::string& name) :
-    Commentable(),
+    SimpleCommentable(),
     name_(name) {}
 
   /**
@@ -179,11 +179,11 @@ public:
    * @param comments Comments to add to the sequence.
    */
   AbstractCoreSequence(const std::string& name, const Comments& comments) :
-    Commentable(comments),
+    SimpleCommentable(comments),
     name_(name) {}
 
   AbstractCoreSequence() :
-    Commentable(),
+    SimpleCommentable(),
     name_() {}
 
   AbstractCoreSequence(const AbstractCoreSequence& s) :
@@ -192,19 +192,19 @@ public:
 
   AbstractCoreSequence& operator=(const AbstractCoreSequence& s)
   {
-    Commentable::operator=(s);
+    SimpleCommentable::operator=(s);
     name_ = s.name_;
     return *this;
   }
 
   AbstractCoreSequence(const CoreSequence& s) :
-    Commentable(s.getComments()),
+    SimpleCommentable(s.getComments()),
     name_(s.getName())
   {}
 
   AbstractCoreSequence& operator=(const CoreSequence& s)
   {
-    Commentable::setComments(s.getComments());
+    SimpleCommentable::setComments(s.getComments());
     name_ = s.getName();
     return *this;
   }

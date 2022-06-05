@@ -60,7 +60,7 @@ private:
   /**
    * @brief A pointer toward a site object.
    */
-  const CoreSite* site_;
+	std::shared_ptr<const CoreSite> site_;
 
 public:
   // Class constructor
@@ -71,7 +71,7 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param s    A const pointer toward the site that threw the exception.
    */
-  SiteException(const std::string& text, const CoreSite* s = 0);
+  SiteException(const std::string& text, std::shared_ptr<const CoreSite> s = 0);
 
   SiteException(const SiteException& se) : Exception(se), site_(se.site_) {}
 
@@ -91,7 +91,7 @@ public:
    *
    * @return A const pointer toward the site.
    */
-  virtual const CoreSite* getSite() const { return site_; }
+  virtual std::shared_ptr<const CoreSite> getSite() const { return site_; }
 };
 
 /**
@@ -101,7 +101,7 @@ class EmptySiteException :
   public SiteException
 {
 public:
-  EmptySiteException(const std::string& text, const CoreSite* s = 0) : SiteException(text, s) {}
+  EmptySiteException(const std::string& text, std::shared_ptr<const CoreSite> s = 0) : SiteException(text, s) {}
 
   virtual ~EmptySiteException() {}
 };
@@ -114,7 +114,7 @@ class SiteWithGapException :
   public SiteException
 {
 public:
-  SiteWithGapException(const std::string& text, const CoreSite* s = 0) : SiteException(text, s) {}
+  SiteWithGapException(const std::string& text, std::shared_ptr<const CoreSite> s = 0) : SiteException(text, s) {}
 
   virtual ~SiteWithGapException() {}
 };

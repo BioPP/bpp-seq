@@ -62,13 +62,14 @@
 
 namespace bpp
 {
+
 class RNY : public AbstractAlphabet
 {
 private:
-  const NucleicAlphabet&  nuclalph_;
+  std::shared_ptr<const NucleicAlphabet>  nuclalph_;
 
 public:
-  RNY(const NucleicAlphabet&);
+  RNY(std::shared_ptr<const NucleicAlphabet> na);
 
   RNY(const RNY& bia) : AbstractAlphabet(bia), nuclalph_(bia.nuclalph_) {}
 
@@ -101,9 +102,14 @@ public:
   bool isUnresolved(int state) const;
   bool isUnresolved(const std::string& state) const;
 
-  std::string getAlphabetType() const { return "RNY(letter=" + nuclalph_.getAlphabetType() + ")"; }
+  std::string getAlphabetType() const { return "RNY(letter=" + nuclalph_->getAlphabetType() + ")"; }
 
-  const NucleicAlphabet& getLetterAlphabet() const;
+  std::shared_ptr<const NucleicAlphabet> getLetterAlphabet() const
+  {
+    return nuclalph_;
+  }
+
+
 
 public:
   /**

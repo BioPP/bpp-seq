@@ -56,7 +56,7 @@ class InvertebrateMitochondrialGeneticCode :
   public virtual GeneticCode
 {
 public:
-  InvertebrateMitochondrialGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+  InvertebrateMitochondrialGeneticCode(std::shared_ptr<const NucleicAlphabet>& alphabet) :
     GeneticCode(alphabet)
   {
     init_();

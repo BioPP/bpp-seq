@@ -42,13 +42,12 @@
 #define BPP_SEQ_SITEITERATOR_H
 
 
-#include "Site.h"
-
 namespace bpp
 {
 /**
  * @brief Generic site iterator interface, allowing to loop over sites.
  */
+template<class SiteType>
 class SiteIterator
 {
 public:
@@ -56,13 +55,14 @@ public:
   virtual ~SiteIterator() {}
 
 public:
-  virtual Site* nextSite() = 0;
+  virtual SiteType& nextSite() = 0;
   virtual bool hasMoreSites() const = 0;
 };
 
 /**
  * @brief Generic const site iterator interface, allowing to loop over const sites.
  */
+template<SiteType>
 class ConstSiteIterator
 {
 public:
@@ -70,7 +70,7 @@ public:
   virtual ~ConstSiteIterator() {}
 
 public:
-  virtual const Site* nextSite() = 0;
+  virtual const SiteType& nextSite() = 0;
   virtual bool hasMoreSites() const = 0;
 };
 } // end of namespace bpp.

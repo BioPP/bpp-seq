@@ -56,7 +56,7 @@ class EchinodermMitochondrialGeneticCode :
   public virtual GeneticCode
 {
 public:
-  EchinodermMitochondrialGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+  EchinodermMitochondrialGeneticCode(std::shared_ptr<const NucleicAlphabet>& alphabet) :
     GeneticCode(alphabet)
   {
     init_();

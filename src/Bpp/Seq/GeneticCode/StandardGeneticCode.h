@@ -55,7 +55,7 @@ class StandardGeneticCode :
   public virtual GeneticCode
 {
 public:
-  StandardGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+  StandardGeneticCode(std::shared_ptr<const NucleicAlphabet> alphabet) :
     GeneticCode(alphabet)
   {
     init_();

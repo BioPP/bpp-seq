@@ -61,6 +61,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 namespace bpp
 {
@@ -147,9 +148,9 @@ public:
    * @param end   The last position of the subsequence.
    * @return A new sequence object with the given subsequence.
    */
-  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end)
+  static std::unique_ptr<Sequence> subseq(const Sequence& sequence, size_t begin, size_t end)
   {
-    Sequence* seq = new BasicSequence(sequence.getAlphabet());
+    auto seq = std::make_unique<BasicSequence>(sequence.getAlphabet());
     seq->setName(sequence.getName());
     seq->setComments(sequence.getComments());
     subseq(sequence, begin, end, *seq);
@@ -176,11 +177,10 @@ public:
    * @brief Complement the nucleotide sequence itself
    *
    * @param seq The sequence to be complemented.
-   * @return A ref toward the complemented sequence.
    * @throw AlphabetException if the sequence is not a nucleotide sequence.
    * @author Sylvain Gaillard
    */
-  static Sequence& complement(Sequence& seq);
+  static void complement(Sequence& seq);
 
   /**
    * @brief Get the complementary sequence of a nucleotide sequence.
@@ -190,7 +190,7 @@ public:
    * @param sequence The sequence to complement.
    * @throw AlphabetException If the sequence is not a nucleotide sequence.
    */
-  static Sequence* getComplement(const Sequence& sequence);
+  static std::unique_ptr<Sequence> getComplement(const Sequence& sequence);
 
   /**
    * @brief Get the transcription sequence of a DNA sequence.
@@ -202,7 +202,7 @@ public:
    * @param sequence The sequence to transcript.
    * @throw AlphabetException If the sequence is not a DNA sequence.
    */
-  static Sequence* transcript(const Sequence& sequence);
+  static std::unique_ptr<Sequence> transcript(const Sequence& sequence);
 
   /**
    * @brief Get the reverse-transcription sequence of a RNA sequence.
@@ -214,7 +214,7 @@ public:
    * @param sequence The sequence to reverse-transcript.
    * @throw AlphabetException If the sequence is not a RNA sequence.
    */
-  static Sequence* reverseTranscript(const Sequence& sequence);
+  static std::unique_ptr<Sequence> reverseTranscript(const Sequence& sequence);
 
   /**
    * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
@@ -223,10 +223,9 @@ public:
    * inhibited).
    *
    * @param seq The sequence to inverse.
-   * @return A ref toward the sequence.
    * @author Sylvain Gaillard
    */
-  static Sequence& invert(Sequence& seq);
+  static void invert(Sequence& seq);
 
   /**
    * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
@@ -238,7 +237,7 @@ public:
    * @return A new sequence object containing the inverted sequence.
    * @author Sylvain Gaillard
    */
-  static Sequence* getInvert(const Sequence& sequence);
+  static std::unique_ptr<Sequence> getInvert(const Sequence& sequence);
 
   /**
    * @brief Inverse and complement a sequence.
@@ -247,10 +246,9 @@ public:
    * separatly.
    *
    * @param seq The sequence to inverse and complement.
-   * @return A ref toward the sequence.
    * @author Sylvain Gaillard
    */
-  static Sequence& invertComplement(Sequence& seq);
+  static void invertComplement(Sequence& seq);
 
   /**
    * @return The identity percent of 2 sequence.
@@ -284,7 +282,7 @@ public:
    * @param seq The sequence to analyse.
    */
 
-  static Sequence* getSequenceWithCompleteSites(const Sequence& seq);
+  static std::unique_ptr<Sequence> getSequenceWithCompleteSites(const Sequence& seq);
 
   /**
    * @return The number of unresolved sites in the sequence.
@@ -314,7 +312,7 @@ public:
    * @param seq The sequence to analyse.
    * @return A new sequence object without gaps.
    */
-  static Sequence* getSequenceWithoutGaps(const Sequence& seq);
+  static std::unique_ptr<Sequence> getSequenceWithoutGaps(const Sequence& seq);
 
   /**
    * @brief Remove stops from a codon sequence.
@@ -337,7 +335,7 @@ public:
    * @return A new sequence object without stops.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static Sequence* getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode);
+  static std::unique_ptr<Sequence> getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode);
 
   /**
    * @brief Replace stop codons by gaps.
@@ -364,7 +362,7 @@ public:
    * @return A BowkerTest object with the computed statistic and p-value (computed from a chi square distribution).
    * @throw SequenceNotAlignedException If the two sequences do not have the same length.
    */
-  static BowkerTest* bowkerTest(const Sequence& seq1, const Sequence& seq2);
+  static std::unique_ptr<BowkerTest> bowkerTest(const Sequence& seq1, const Sequence& seq2);
 
   /**
    * @brief Get all putatives haplotypes from an heterozygous sequence.
@@ -386,7 +384,7 @@ public:
    * @author Sylvain Gaillard
    */
 
-  static Sequence* combineSequences(const Sequence& s1, const Sequence& s2);
+  static std::unique_ptr<Sequence> combineSequences(const Sequence& s1, const Sequence& s2);
 
   /**
    * @brief Subtract haplotype from an heterozygous sequence.
@@ -413,24 +411,36 @@ public:
    *
    * @author Sylvain Gaillard
    */
-  static Sequence* subtractHaplotype(const Sequence& s, const Sequence& h, std::string name = "", unsigned int level = 1);
+  static std::unique_ptr<Sequence> subtractHaplotype(const Sequence& s, const Sequence& h, std::string name = "", unsigned int level = 1);
 
   /**
-   * @brief Get the RNY decomposition of a DNA sequence; with a given
-   * phase between 1 and 3, it gives the decomposition in this phase;
-   * in phase 1, the first triplet is centered on the first character.
-   * Without a phase the function gives the alternative succession in
-   * phases 1, 2 and 3.
+   * @brief Get the RNY decomposition of a DNA sequence
+   *
+   * This function gives the decomposition in the given phase.
+   * In phase 1, the first triplet is centered on the first character.
    *
    * @return sequence A new sequence object with the transcription sequence.
    * @param sequence The sequence to transcript.
    * @param ph The phase to use (1,2 or 3).
    * @throw AlphabetException If the sequence is not a DNA sequence.
    *
-   * @author Laurent GuÃ©guen
+   * @author Laurent Guéguen
    */
-  static Sequence* RNYslice(const Sequence& sequence, int ph);
-  static Sequence* RNYslice(const Sequence& sequence);
+  static std::unique_ptr<BasicSequence> RNYslice(const Sequence& sequence, int ph);
+
+  /**
+   * @brief Get the RNY decomposition of a DNA sequence
+   *
+   * This function gives the alternative succession in
+   * phases 1, 2 and 3.
+   *
+   * @return sequence A new sequence object with the transcription sequence.
+   * @param sequence The sequence to transcript.
+   * @throw AlphabetException If the sequence is not a DNA sequence.
+   *
+   * @author Laurent Guéguen
+   */
+  static std::unique_ptr<BasicSequence> RNYslice(const Sequence& sequence);
 
   /**
    * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.
@@ -463,7 +473,7 @@ public:
    * @param length The length of the sequence to generate.
    * @return A pointer toward a new Sequence object.
    */
-  static Sequence* getRandomSequence(const Alphabet* alphabet, size_t length);
+  static std::unique_ptr<Sequence> getRandomSequence(const Alphabet* alphabet, size_t length);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCETOOLS_H

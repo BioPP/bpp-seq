@@ -60,11 +60,11 @@ namespace bpp
  * @see Alphabet
  */
 class IntSymbolList :
-  virtual public SymbolList<int>
+  public SymbolList<int>
 {
 public:
-  IntSymbolList() :
-    SymbolList<int>(0)
+  IntSymbolList(std::shared_ptr<const Alphabet>& alpha) :
+    SymbolList<int>(alpha)
   {}
 
 
@@ -146,12 +146,12 @@ public:
  *
  * @see Alphabet
  */
-
 class BasicIntSymbolList :
-  public virtual IntSymbolList
+  public IntSymbolList
 {
 public:
-  BasicIntSymbolList(const Alphabet* alpha) : SymbolList<int>(alpha)
+  BasicIntSymbolList(std::shared_ptr<const Alphabet>& alpha) : 
+    IntSymbolList(alpha)
   {}
 
 
@@ -162,7 +162,7 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  BasicIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
+  BasicIntSymbolList(const std::vector<std::string>& list, std::shared_ptr<const Alphabet>& alpha);
 
   /**
    * @brief Build a new BasicIntSymbolList object with the specified alphabet.
@@ -171,7 +171,7 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha);
+  BasicIntSymbolList(const std::vector<int>& list, std::shared_ptr<const Alphabet>& alpha);
 
   /**
    * @brief The copy constructor.
@@ -193,28 +193,28 @@ public:
    *
    * @{
    */
-  BasicIntSymbolList* clone() const { return new BasicIntSymbolList(*this); }
+  BasicIntSymbolList* clone() const override { return new BasicIntSymbolList(*this); }
   /** @} */
 
   // Class destructor
   virtual ~BasicIntSymbolList() {}
 
 public:
-  void setContent(const std::vector<int>& list);
+  void setContent(const std::vector<int>& list) override;
 
-  void setContent(const std::vector<std::string>& list);
+  void setContent(const std::vector<std::string>& list) override;
 
-  std::string toString() const;
+  std::string toString() const override;
 
-  virtual void addElement(const std::string& c);
+  void addElement(const std::string& c) override;
 
-  virtual void addElement(size_t pos, const std::string& c);
+  void addElement(size_t pos, const std::string& c) override;
 
-  virtual void setElement(size_t pos, const std::string& c);
+  void setElement(size_t pos, const std::string& c) override;
 
-  virtual std::string getChar(size_t pos) const;
+  std::string getChar(size_t pos) const override;
 
-  virtual double getStateValueAt(size_t siteIndex, int state) const
+  double getStateValueAt(size_t siteIndex, int state) const override
   {
     if (siteIndex >= content_.size())
       throw IndexOutOfBoundsException("IntSymbolList::getStateValueAt.", siteIndex, 0, content_.size() - 1);
@@ -222,7 +222,7 @@ public:
     return getAlphabet()->isResolvedIn(content_[siteIndex], state) ? 1. : 0.;
   }
 
-  virtual double operator()(size_t siteIndex, int state) const
+  double operator()(size_t siteIndex, int state) const override
   {
     return getAlphabet()->isResolvedIn(content_[siteIndex], state) ? 1. : 0.;
   }
@@ -260,7 +260,7 @@ public:
    *
    * @param alpha The alphabet to use.
    */
-  EdIntSymbolList(const Alphabet* alpha) : EdSymbolList<int>(alpha) {}
+  EdIntSymbolList(std::shared_ptr<const Alphabet>& alpha) : EdSymbolList<int>(alpha) {}
 
 
   /**
@@ -270,7 +270,7 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  EdIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
+  EdIntSymbolList(const std::vector<std::string>& list, std::shared_ptr<const Alphabet>& alpha);
 
   /**
    * @brief Build a new EdIntSymbolList object with the specified alphabet.
@@ -279,7 +279,7 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  EdIntSymbolList(const std::vector<int>& list, const Alphabet* alpha);
+  EdIntSymbolList(const std::vector<int>& list, std::shared_ptr<const Alphabet>& alpha);
 
   /**
    * @brief The generic copy constructor.

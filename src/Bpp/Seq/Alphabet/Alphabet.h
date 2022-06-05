@@ -129,7 +129,8 @@ namespace bpp
  * @see AlphabetException, BadCharException, BadIntException
  */
 class Alphabet :
-  public virtual Clonable
+  public virtual Clonable,
+  public std::enable_shared_from_this<Alphabet>
 {
 public:
   Alphabet() {}

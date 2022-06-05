@@ -53,7 +53,7 @@ namespace bpp
 {
 /**
  * @brief Codon alphabet class.
- * @author Laurent GuÃ©guen, Julien Dutheil
+ * @author Laurent Guéguen, Julien Dutheil
  *
  * Since codons are made of 3 nucleic bases (RNA or DNA), this class
  * has a NucleicAlphabet field used to check char description. This
@@ -66,7 +66,7 @@ class CodonAlphabet :
   public AbstractAlphabet
 {
 protected:
-  std::shared_ptr<NucleicAlphabet> nAlph_;
+  std::shared_ptr<const NucleicAlphabet> nAlph_;
 
 public:
   // Constructor and destructor.
@@ -83,7 +83,7 @@ public:
     build_();
   }
 
-  CodonAlphabet(std::shared_ptr<NucleicAlphabet> alpha) :
+  CodonAlphabet(std::shared_ptr<const NucleicAlphabet>& alpha) :
     AbstractAlphabet(),
     nAlph_(alpha)
   {
@@ -103,7 +103,7 @@ public:
     return *this;
   }
 
-  CodonAlphabet* clone() const
+  CodonAlphabet* clone() const override
   {
     return new CodonAlphabet(*this);
   }
@@ -111,7 +111,7 @@ public:
   virtual ~CodonAlphabet()
   {}
 
-  std::string getAlphabetType() const
+  std::string getAlphabetType() const override
   {
     return "Codon(letter=" + nAlph_->getAlphabetType() + ")";
   }
@@ -122,9 +122,9 @@ private:
    *
    * @{
    */
-  bool containsUnresolved(const std::string& state) const;
+  bool containsUnresolved(const std::string& state) const override;
 
-  bool containsGap(const std::string& state) const;
+  bool containsGap(const std::string& state) const override;
 
   void build_();
 
@@ -136,48 +136,48 @@ public:
    *
    * @{
    */
-  unsigned int getNumberOfTypes() const {return 65;}
+  unsigned int getNumberOfTypes() const override { return 65; }
 
-  unsigned int getSize() const
+  unsigned int getSize() const override
   {
     return 64;
   }
 
-  int getUnknownCharacterCode() const
+  int getUnknownCharacterCode() const override
   {
     return 64;
   }
 
-  bool isUnresolved(int state) const
+  bool isUnresolved(int state) const override
   {
     return state >= 64;
   }
 
-  bool isUnresolved(const std::string& state) const
+  bool isUnresolved(const std::string& state) const override
   {
     return isUnresolved(charToInt(state));
   }
 
-  bool isResolvedIn(int state1, int state2) const;
+  bool isResolvedIn(int state1, int state2) const override;
 
-  std::vector<int> getAlias(int state) const;
+  std::vector<int> getAlias(int state) const override;
 
-  std::vector<std::string> getAlias(const std::string& state) const;
+  std::vector<std::string> getAlias(const std::string& state) const override;
 
-  int getGeneric(const std::vector<int>& states) const
+  int getGeneric(const std::vector<int>& states) const override
   {
     return states[0];
   }
 
-  std::string getGeneric(const std::vector<std::string>& states) const
+  std::string getGeneric(const std::vector<std::string>& states) const override
   {
     return states[0];
   }
 
-  int charToInt(const std::string& state) const
+  int charToInt(const std::string& state) const override
   {
     if (state.size() != 3)
-      throw BadCharException(state, "CodonAlphabet::charToInt", this);
+      throw BadCharException(state, "CodonAlphabet::charToInt", shared_from_this());
     if (containsUnresolved(state))
       return static_cast<int>(getSize());
     if (containsGap(state))
@@ -303,22 +303,22 @@ public:
    *
    * @{
    */
-  unsigned int getLength() const
+  unsigned int getLength() const override
   {
     return 3;
   }
 
-  bool hasUniqueAlphabet() const
+  bool hasUniqueAlphabet() const override
   {
     return true;
   }
 
-  const Alphabet* getNAlphabet(size_t n) const
+  std::shared_ptr<const Alphabet> getNAlphabet(size_t n) const override
   {
-    return nAlph_.get();
+    return nAlph_;
   }
 
-  int getWord(const Sequence& seq, size_t pos = 0) const
+  int getWord(const Sequence& seq, size_t pos = 0) const override
   {
     if (seq.size() < pos + 3)
       throw IndexOutOfBoundsException("CodonAlphabet::getWord", pos, 0, seq.size() - 3);
@@ -335,7 +335,7 @@ public:
    * @return The string of the word.
    * @throw IndexOutOfBoundsException In case of wrong position.
    */
-  std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const
+  std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const override
   {
     if (vpos.size() < pos + 3)
       throw IndexOutOfBoundsException("CodonAlphabet::getWord", pos, 0, vpos.size() - 3);
@@ -343,7 +343,7 @@ public:
     return getCodon(vpos[pos], vpos[pos + 1], vpos[pos + 2]);
   }
 
-  int getWord(const std::vector<int>& vpos, size_t pos = 0) const
+  int getWord(const std::vector<int>& vpos, size_t pos = 0) const override
   {
     if (vpos.size() < pos + 3)
       throw IndexOutOfBoundsException("CodonAlphabet::getWord", pos, 0, vpos.size() - 3);
@@ -352,7 +352,7 @@ public:
   }
 
 
-  int getNPosition(int codon, size_t pos) const
+  int getNPosition(int codon, size_t pos) const override
   {
     if (isUnresolved(codon))
       return nAlph_->getUnknownCharacterCode();
@@ -368,7 +368,7 @@ public:
    * @param word The int description of the word.
    * @return The int description of the positions of the codon.
    */
-  std::vector<int> getPositions(int word) const
+  std::vector<int> getPositions(int word) const override
   {
     if (isUnresolved(word))
     {
@@ -388,7 +388,7 @@ public:
    * @param pos the position in the codon (starting at 0)
    * @return The char description of the position of the codon.
    */
-  std::string getNPosition(const std::string& codon, size_t pos) const
+  std::string getNPosition(const std::string& codon, size_t pos) const override
   {
     return codon.substr(pos, 1);
   }
@@ -399,7 +399,7 @@ public:
    * @param word The char description of the word.
    * @return The char description of the three positions of the word.
    */
-  std::vector<std::string> getPositions(const std::string& word) const
+  std::vector<std::string> getPositions(const std::string& word) const override
   {
     return std::vector<std::string>{word.substr(0, 1), word.substr(1, 1), word.substr(2, 1)};
   }
@@ -413,7 +413,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence* translate(const Sequence& sequence, size_t = 0) const;
+  Sequence* translate(const Sequence& sequence, size_t = 0) const override;
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -423,7 +423,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence* reverse(const Sequence& sequence) const;
+  Sequence* reverse(const Sequence& sequence) const override;
 
   /*
    *
@@ -441,12 +441,7 @@ public:
   /**
    * @return The nucleic alphabet associated to this codon alphabet.
    */
-  const NucleicAlphabet* const getNucleicAlphabet() const
-  {
-    return nAlph_.get();
-  }
-
-  std::shared_ptr<NucleicAlphabet> const shareNucleicAlphabet() const
+  std::shared_ptr<const NucleicAlphabet> getNucleicAlphabet() const
   {
     return nAlph_;
   }
@@ -455,7 +450,7 @@ public:
    * @name Overloaded AbstractAlphabet methods.
    * @{
    */
-  unsigned int getStateCodingSize() const { return 3; }
+  unsigned int getStateCodingSize() const override { return 3; }
   /** @} */
 };
 } // end of namespace bpp.

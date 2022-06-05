@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
@@ -46,6 +46,7 @@
 
 // From the STL:
 #include <vector>
+#include <memory>
 
 namespace bpp
 {
@@ -60,7 +61,7 @@ class AlphabetException :
   public Exception
 {
 private:
-  const Alphabet* alphabet_;
+  std::shared_ptr<const Alphabet> alphabet_;
 
 public:
   /**
@@ -69,7 +70,7 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param alpha A const pointer toward the alphabet that threw the exception.
    */
-  AlphabetException(const std::string& text, const Alphabet* alpha = 0);
+  AlphabetException(const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
   AlphabetException(const AlphabetException& ae) : Exception(ae), alphabet_(ae.alphabet_) {}
   AlphabetException& operator=(const AlphabetException& ae)
@@ -87,7 +88,7 @@ public:
    *
    * @return a const pointer toward the alphabet.
    */
-  virtual const Alphabet* getAlphabet() const { return alphabet_; }
+  virtual std::shared_ptr<const Alphabet> getAlphabet() const { return alphabet_; }
 };
 
 /**
@@ -107,7 +108,7 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param alpha A const pointer toward the alphabet that threw the exception.
    */
-  BadCharException(const std::string& badChar, const std::string& text = "", const Alphabet* alpha = 0);
+  BadCharException(const std::string& badChar, const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
   virtual ~BadCharException() {}
 
@@ -136,7 +137,7 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param alpha A const pointer toward the alphabet that threw the exception.
    */
-  BadIntException(int badInt, const std::string& text = "", const Alphabet* alpha = 0);
+  BadIntException(int badInt, const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
   virtual ~BadIntException() {}
 
@@ -158,7 +159,7 @@ public:
 class AlphabetMismatchException : public Exception
 {
 private:
-  const Alphabet* alphabet1_, * alphabet2_;
+	std::shared_ptr<const Alphabet> alphabet1_, alphabet2_;
 
 public:
   /**
@@ -168,7 +169,10 @@ public:
    * @param alpha1 A const pointer toward the first alphabet.
    * @param alpha2 A const pointer toward the second alphabet, i.e. the one which does not match with the first.
    */
-  AlphabetMismatchException(const std::string& text = "", const Alphabet* alpha1 = 0, const Alphabet* alpha2 = 0);
+  AlphabetMismatchException(
+		  const std::string& text,
+		  std::shared_ptr<const Alphabet> alpha1,
+		  std::shared_ptr<const Alphabet> alpha2);
 
   AlphabetMismatchException(const AlphabetMismatchException& ame) : Exception(ame), alphabet1_(ame.alphabet1_), alphabet2_(ame.alphabet2_) {}
   AlphabetMismatchException& operator=(const AlphabetMismatchException& ame)
@@ -187,7 +191,7 @@ public:
    *
    * @return a vector of pointers toward the alphabets.
    */
-  std::vector<const Alphabet*> getAlphabets() const;
+  std::vector< std::shared_ptr<const Alphabet> > getAlphabets() const;
 };
 
 /**
@@ -202,7 +206,7 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param alpha A const pointer toward the alphabet that threw the exception.
    */
-  CharStateNotSupportedException(const std::string& text = "", const Alphabet* alpha = 0);
+  CharStateNotSupportedException(const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
   virtual ~CharStateNotSupportedException() {}
 };

@@ -247,10 +247,9 @@ protected:
     mNames_[name] = objectIndex;
   }
 
-  using VectorPositionedContainer<T>::appendObject;
-  void appendObject(std::shared_ptr<T> object, const std::string& name, bool check = true)
+  virtual void appendObject(std::shared_ptr<T> object, const std::string& name, bool checkNames = true)
   {
-    MappedNamedContainer<T>::addObject(object, name, check);
+    MappedNamedContainer<T>::addObject(object, name, checkNames);
     VectorPositionedContainer<T>::appendObject(object);
 
     vNames_.push_back(name);

@@ -87,7 +87,7 @@ public:
    * @return A pointer toward a new ISequence object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual ISequence* createReader(const std::string& format);
+  virtual std::unique_ptr<IBasicSequence> createReader(const std::string& format);
 
   /**
    * @brief Get a new dynamically created IAlignment object.
@@ -96,7 +96,7 @@ public:
    * @return A pointer toward a new IAlignment object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual IAlignment* createAlignmentReader(const std::string& format);
+  virtual std::unique_ptr<IBasicAlignment> createAlignmentReader(const std::string& format);
 
   /**
    * @brief Get a new dynamically created OSequence object.
@@ -105,7 +105,7 @@ public:
    * @return A pointer toward a new OSequence object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual OSequence* createWriter(const std::string& format);
+  virtual std::unique_ptr<OBasicSequence> createWriter(const std::string& format);
 
   /**
    * @brief Get a new dynamically created OAlignment object.
@@ -114,7 +114,7 @@ public:
    * @return A pointer toward a new OAlignment object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual OAlignment* createAlignmentWriter(const std::string& format);
+  virtual std::unique_ptr<OBasicAlignment> createAlignmentWriter(const std::string& format);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_IOSEQUENCEFACTORY_H

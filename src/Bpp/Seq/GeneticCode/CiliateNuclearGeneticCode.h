@@ -56,7 +56,7 @@ class CiliateNuclearGeneticCode :
   public virtual GeneticCode
 {
 public:
-  CiliateNuclearGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+  CiliateNuclearGeneticCode(std::shared_ptr<const NucleicAlphabet>& alphabet) :
     GeneticCode(alphabet)
   {
     init_();

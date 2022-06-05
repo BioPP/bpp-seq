@@ -56,7 +56,7 @@ class MoldMitochondrialGeneticCode :
   public virtual GeneticCode
 {
 public:
-  MoldMitochondrialGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+  MoldMitochondrialGeneticCode(std::shared_ptr<const NucleicAlphabet>& alphabet) :
     GeneticCode(alphabet)
   {
     init_();

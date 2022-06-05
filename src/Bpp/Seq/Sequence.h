@@ -148,11 +148,11 @@ namespace bpp
  * @see Alphabet
  */
 
-  class BasicSequence :
-    public virtual Sequence,
-    public virtual AbstractCoreSequence,
-    public virtual BasicIntSymbolList
-  {
+class BasicSequence :
+  public virtual Sequence,
+  public virtual AbstractCoreSequence,
+  public virtual BasicIntSymbolList
+{
   public:
     /**
      * @brief Empty constructor: build a void Sequence with just an Alphabet
@@ -162,7 +162,7 @@ namespace bpp
      *
      * @param alpha    A pointer toward the Alphabet to be used with this Sequence.
      */
-    BasicSequence(const Alphabet* alpha);
+    BasicSequence(std::shared_ptr<const Alphabet> alpha);
 
     /**
      * @brief Direct constructor: build a Sequence object from a std::string
@@ -176,7 +176,10 @@ namespace bpp
      * @param sequence The whole sequence to be parsed as a std::string.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::string& sequence, const Alphabet* alpha);
+    BasicSequence(
+        const std::string& name,
+	const std::string& sequence,
+	std::shared_ptr<const Alphabet> alpha);
 
     /**
      * @brief Direct constructor: build a Sequence object from a std::string.
@@ -192,7 +195,11 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha);
+    BasicSequence(
+	const std::string& name,
+	const std::string& sequence,
+	const Comments& comments,
+	std::shared_ptr<const Alphabet> alpha);
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -204,7 +211,10 @@ namespace bpp
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha);
+    BasicSequence(
+	const std::string& name,
+	const std::vector<std::string>& sequence,
+	std::shared_ptr<const Alphabet> alpha);
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -217,7 +227,11 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha);
+    BasicSequence(
+	const std::string& name,
+	const std::vector<std::string>& sequence,
+	const Comments& comments,
+	std::shared_ptr<const Alphabet> alpha);
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -226,7 +240,10 @@ namespace bpp
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha);
+    BasicSequence(
+        const std::string& name,
+	const std::vector<int>& sequence,
+	std::shared_ptr<const Alphabet> alpha);
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -236,7 +253,11 @@ namespace bpp
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha);
+    BasicSequence(
+	const std::string& name,
+	const std::vector<int>& sequence,
+	const Comments& comments,
+	std::shared_ptr<const Alphabet> alpha);
 
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.

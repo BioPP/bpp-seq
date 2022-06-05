@@ -84,12 +84,12 @@ class GeneticCode :
   public virtual Clonable
 {
 protected:
-  CodonAlphabet codonAlphabet_;
-  ProteicAlphabet proteicAlphabet_;
+  const CodonAlphabet codonAlphabet_;
+  const ProteicAlphabet proteicAlphabet_;
   std::map<int, int> tlnTable_;
 
 public:
-  GeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+  GeneticCode(std::shared_ptr<const NucleicAlphabet>& alphabet) :
     AbstractTransliterator(),
     codonAlphabet_(alphabet),
     proteicAlphabet_(),

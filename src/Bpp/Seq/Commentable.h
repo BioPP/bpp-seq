@@ -94,7 +94,7 @@ public:
     comments_(comments)
   {}
 
-  SimpleCommentable(const Commentable& com) :
+  SimpleCommentable(const SimpleCommentable& com) :
     comments_(com.comments_)
   {}
 

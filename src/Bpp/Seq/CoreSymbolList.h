@@ -81,7 +81,7 @@ public:
    * @return A const pointer to the alphabet.
    * @see Alphabet class.
    */
-  virtual std::shared<const Alphabet> getAlphabet() const = 0;
+  virtual std::shared_ptr<const Alphabet> getAlphabet() const = 0;
 
   /**
    * @brief Get the number of elements in the list.

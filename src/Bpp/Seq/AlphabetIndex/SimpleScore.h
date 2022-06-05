@@ -62,7 +62,7 @@ class SimpleScore :
 {
 private:
   LinearMatrix<double> distanceMatrix_;
-  const Alphabet* alphabet_;
+  std::shared_ptr<const Alphabet> alphabet_;
 
 public:
   /**
@@ -98,7 +98,7 @@ public:
    */
   double getIndex(int state1, int state2) const;
   double getIndex(const std::string& state1, const std::string& state2) const;
-  const Alphabet* getAlphabet() const { return alphabet_; }
+  std::shared_ptr<const Alphabet> getAlphabet() const { return alphabet_; }
   LinearMatrix<double>* getIndexMatrix() const;
   bool isSymmetric() const { return true; }
   /** @} */

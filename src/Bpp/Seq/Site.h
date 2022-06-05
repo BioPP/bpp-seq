@@ -72,8 +72,7 @@ public:
    *
    * @param alphabet The alphabet to use.
    */
-  Site(const std::shared<const Alphabet>& alphabet):
-      SymbolList<int>(alphabet),
+  Site(std::shared_ptr<const Alphabet>& alphabet):
       AbstractCoreSite(),
       BasicIntSymbolList(alphabet)
   {}
@@ -84,8 +83,7 @@ public:
    * @param alphabet   The alphabet to use.
    * @param coordinate The coordinate attribute of this site.
    */
-  Site(const std::shared_ptr<Alphabet>& alphabet, int coordinate) :
-      SymbolList<int>(alphabet),
+  Site(std::shared_ptr<const Alphabet>& alphabet, int coordinate) :
       AbstractCoreSite(coordinate),
       BasicIntSymbolList(alphabet)
   {}
@@ -98,8 +96,7 @@ public:
    * @param alphabet The alphabet to use.
    * @throw BadCharException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<std::string>& site, const shared_ptr<Alphabet>& alphabet):
-      SymbolList<int>(alphabet),
+  Site(const std::vector<std::string>& site, std::shared_ptr<const Alphabet>& alphabet):
       AbstractCoreSite(),
       BasicIntSymbolList(site, alphabet)
   {}
@@ -113,8 +110,7 @@ public:
    * @param coordinate The coordinate attribute of this site.
    * @throw BadCharException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<std::string>& site, const std::shared_ptr<Alphabet>& alphabet, int coordinate):
-      SymbolList<int>(alphabet),
+  Site(const std::vector<std::string>& site, std::shared_ptr<const Alphabet>& alphabet, int coordinate):
       AbstractCoreSite(coordinate),
       BasicIntSymbolList(site, alphabet)
   {}
@@ -127,8 +123,7 @@ public:
    * @param alphabet The alphabet to use.
    * @throw BadIntException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<int>& site, const shared_ptr<Alphabet>& alphabet):
-      SymbolList<int>(site, alphabet),
+  Site(const std::vector<int>& site, std::shared_ptr<const Alphabet>& alphabet):
       AbstractCoreSite(),
       BasicIntSymbolList(site, alphabet)
   {}
@@ -142,8 +137,7 @@ public:
    * @param coordinate The coordinate attribute of this site.
    * @throw BadIntException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<int>& site, const shared_ptr<Alphabet> alphabet, int coordinate) : 
-      SymbolList<int>(alphabet),
+  Site(const std::vector<int>& site, std::shared_ptr<const Alphabet> alphabet, int coordinate) : 
       AbstractCoreSite(coordinate),
       BasicIntSymbolList(site, alphabet)
   {}
@@ -152,7 +146,6 @@ public:
    * @brief The copy constructor.
    */
   Site(const Site& site):
-      SymbolList<int>(site.getContent(), site.getAlphabet()),
       AbstractCoreSite(site.getCoordinate()),
       BasicIntSymbolList(site)
   {}

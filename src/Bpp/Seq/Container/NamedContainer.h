@@ -55,9 +55,7 @@ namespace bpp
  * through names.
  *
  * The objects are all stored as shared pointers.
- *
  */
-
 template<class T>
 class NamedContainer:
     public virtual Clonable
@@ -87,7 +85,6 @@ protected:
    * @return True if a object with the given name is present in the
    * container.
    */
-
   virtual bool hasObject(const std::string& name) const = 0;
 
   /**

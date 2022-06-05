@@ -576,7 +576,7 @@ Sequence* SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h,
 
 /******************************************************************************/
 
-Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph)
+unique_ptr<BasicSequence> SequenceTools::RNYslice(const Sequence& seq, int ph)
 {
   // Alphabet type checking
   if (AlphabetTools::isDNAAlphabet(seq.getAlphabet()))
@@ -611,14 +611,13 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq, int ph)
   }
 
   // New sequence creating, and sense reversing
-  Sequence* sq = new BasicSequence(seq.getName(), content,
-                                   seq.getComments(), &RNY_);
+  auto seqPtr = make_unique<BasicSequence>(seq.getName(), content, seq.getComments(), RNY_);
 
   // Send result
-  return sq;
+  return seqPtr;
 }
 
-Sequence* SequenceTools::RNYslice(const Sequence& seq)
+unique_ptr<BasicSequence> SequenceTools::RNYslice(const Sequence& seq)
 {
   // Alphabet type checking
   if (AlphabetTools::isDNAAlphabet(seq.getAlphabet()))
@@ -646,11 +645,10 @@ Sequence* SequenceTools::RNYslice(const Sequence& seq)
   }
 
   // New sequence creating, and sense reversing
-  Sequence* s = new BasicSequence(seq.getName(), content,
-                                  seq.getComments(), &RNY_);
+  auto seqPtr = make_unique<BasicSequence>(seq.getName(), content, seq.getComments(), &RNY_);
 
   // Send result
-  return s;
+  return seqPtr;
 }
 
 /******************************************************************************/

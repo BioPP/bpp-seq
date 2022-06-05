@@ -65,7 +65,7 @@ protected:
   /**
    * @brief The container's alphabet.
    */
-  const std::shared_ptr<const Alphabet> alphabet_;
+  std::shared_ptr<const Alphabet> alphabet_;
 
 
 public:
@@ -109,8 +109,8 @@ public:
    *
    * @param sc Another sequence container.
    */
-  AbstractSequenceContainer(const SequenceContainer& sc) :
-    SimpleCommentable(sc.getGeneralComments()),
+  AbstractSequenceContainer(const SequenceContainer<SequenceType, HashType>& sc) :
+    SimpleCommentable(sc.getComments()),
     alphabet_(sc.getAlphabet())
   {}
 
@@ -119,7 +119,7 @@ public:
    *
    * @param sc Another sequence container.
    */
-  AbstractSequenceContainer& operator=(const SequenceContainer& sc)
+  AbstractSequenceContainer& operator=(const SequenceContainer<SequenceType, HashType>& sc)
   {
     alphabet_ = sc.getAlphabet();
     setComments(sc.getComments());
@@ -130,8 +130,8 @@ public:
   virtual ~AbstractSequenceContainer() {}
 
 public:
-  const std::shared_ptr<const Alphabet> getAlphabet() const { return alphabet_; }
-  
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
+ 
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_ABSTRACTSEQUENCECONTAINER_H

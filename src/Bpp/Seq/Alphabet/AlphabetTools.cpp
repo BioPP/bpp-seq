@@ -54,7 +54,8 @@ using namespace std;
 
 const DNA AlphabetTools::DNA_ALPHABET;
 const RNA AlphabetTools::RNA_ALPHABET;
-const CodonAlphabet AlphabetTools::DNA_CODON_ALPHABET(make_shared<DNA>());
+const CodonAlphabet AlphabetTools::DNA_CODON_ALPHABET(DNA_ALPHABET);
+const CodonAlphabet AlphabetTools::RNA_CODON_ALPHABET(RNA_ALPHABET);
 const ProteicAlphabet AlphabetTools::PROTEIN_ALPHABET;
 const DefaultAlphabet AlphabetTools::DEFAULT_ALPHABET;
 
@@ -115,7 +116,7 @@ bool AlphabetTools::checkAlphabetCodingSize(const Alphabet* alphabet)
 unsigned int AlphabetTools::getAlphabetCodingSize(const Alphabet& alphabet)
 {
   if (!checkAlphabetCodingSize(alphabet))
-    throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().");
+    throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().", alphabet.shared_from_this());
   return static_cast<unsigned int>(alphabet.intToChar(0).size());
 }
 

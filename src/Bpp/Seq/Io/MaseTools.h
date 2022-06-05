@@ -43,7 +43,6 @@
 
 #include <Bpp/Exceptions.h>
 
-#include "../Container/OrderedSequenceContainer.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/SequenceContainerTools.h"
 #include "../Container/SiteContainer.h"
@@ -94,7 +93,17 @@ public:
    * @param setName   The name of the set to retrieve.
    * @throw IOException If the specified set is not found.
    */
-  static SiteContainer* getSelectedSites(const SiteContainer& sequences, const std::string& setName);
+  template<class SiteType, class SequenceType>
+  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
+  getSelectedSites(
+      const SiteContainer<SiteType, SequenceType, std::string>& sequences,
+      const std::string& setName)
+  {
+    SiteSelection ss = getSiteSet(sequences.getGeneralComments(), setName);
+    return SiteContainerTools::getSelectedPositions<SiteType, SequenceType>(sequences, ss);
+  }
+
+
 
   /**
    * @brief Create a new container corresponding to a site set given in the mase+ format.
@@ -108,7 +117,16 @@ public:
    * @param setName   The name of the set to retrieve.
    * @throw IOException If the specified set is not found.
    */
-  static SequenceContainer* getSelectedSequences(const OrderedSequenceContainer& sequences, const std::string& setName);
+  template<class SequenceType, class HashType>
+  static std::unique_ptr< SequenceContainer<SequenceType, HashType> > 
+  getSelectedSequences(
+      const SequenceContainer<SequenceType, HashType>& sequences,
+      const std::string& setName)
+  {
+    SequenceSelection ss = getSequenceSet(sequences.getGeneralComments(), setName);
+    return SequenceContainerTools::getSelectedSequences<SequenceType, HashType>(sequences, ss);
+  }
+
 
   /**
    * @brief Get a list of all available site selections.

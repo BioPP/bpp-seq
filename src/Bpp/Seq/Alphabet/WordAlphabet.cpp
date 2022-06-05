@@ -50,14 +50,14 @@ using namespace bpp;
 
 using namespace std;
 
-WordAlphabet::WordAlphabet(const vector<const Alphabet*>& vAlpha) :
+WordAlphabet::WordAlphabet(const vector< std::shared_ptr<const Alphabet> >& vAlpha) :
   AbstractAlphabet(),
   vAbsAlph_(vAlpha)
 {
   build_();
 }
 
-WordAlphabet::WordAlphabet(const Alphabet* pAlpha, size_t num) :
+WordAlphabet::WordAlphabet(std::shared_ptr<const Alphabet> pAlpha, size_t num) :
   AbstractAlphabet(),
   vAbsAlph_(0)
 {
@@ -164,7 +164,7 @@ bool WordAlphabet::containsUnresolved(const std::string& state) const
 {
   size_t s = vAbsAlph_.size();
   if (state.length() != s)
-    throw BadCharException(state, "WordAlphabet::containsUnresolved", this);
+    throw BadCharException(state, "WordAlphabet::containsUnresolved", shared_from_this());
 
   for (size_t i = 0; i < vAbsAlph_.size(); i++)
   {
@@ -182,7 +182,7 @@ bool WordAlphabet::containsGap(const std::string& state) const
 {
   size_t s = vAbsAlph_.size();
   if (state.length() != s)
-    throw BadCharException(state, "WordAlphabet::containsGap", this);
+    throw BadCharException(state, "WordAlphabet::containsGap", shared_from_this());
 
   for (size_t i = 0; i < vAbsAlph_.size(); i++)
   {
@@ -198,7 +198,7 @@ bool WordAlphabet::containsGap(const std::string& state) const
 std::string WordAlphabet::getName(const std::string& state) const
 {
   if (state.size() != vAbsAlph_.size())
-    throw BadCharException(state, "WordAlphabet::getName", this);
+    throw BadCharException(state, "WordAlphabet::getName", shared_from_this());
   if (containsUnresolved(state))
     return getStateAt(getSize() + 1).getName();
   if (containsGap(state))
@@ -212,13 +212,13 @@ std::string WordAlphabet::getName(const std::string& state) const
 bool WordAlphabet::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
-    throw BadIntException(state1, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.");
+    throw BadIntException(state1, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.", shared_from_this());
 
   if (!isIntInAlphabet(state2))
-    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.");
+    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.", shared_from_this());
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Unresolved base.");
+    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Unresolved base.", shared_from_this());
 
   return (state1 == (int)getSize()) ? (state2 >= 0) : (state1 == state2);
 }
@@ -228,7 +228,7 @@ bool WordAlphabet::isResolvedIn(int state1, int state2) const
 std::vector<int> WordAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
+    throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.", shared_from_this());
   vector<int> v;
   size_t s = getSize();
 
@@ -253,7 +253,7 @@ std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
-    throw BadCharException(locstate, "WordAlphabet::getAlias(string): Specified base unknown.");
+    throw BadCharException(locstate, "WordAlphabet::getAlias(string): Specified base unknown.", shared_from_this());
   vector<string> v;
 
   size_t s = getSize();
@@ -363,7 +363,7 @@ Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const
     i += l;
   }
 
-  return new BasicSequence(sequence.getName(), content, this);
+  return new BasicSequence(sequence.getName(), content, shared_from_this());
 }
 
 /****************************************************************************************/
@@ -372,7 +372,7 @@ Sequence* WordAlphabet::reverse(const Sequence& sequence) const
 {
   if ((!hasUniqueAlphabet()) or
       (sequence.getAlphabet()->getAlphabetType() != getAlphabetType()))
-    throw AlphabetMismatchException("No matching alphabets");
+    throw AlphabetMismatchException("No matching alphabets", sequence.getAlphabet(), shared_from_this());
 
   Sequence* pseq = new BasicSequence(sequence.getName(), "", getNAlphabet(0));
 

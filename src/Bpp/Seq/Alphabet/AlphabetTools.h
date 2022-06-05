@@ -68,6 +68,7 @@ public:
   static const DNA DNA_ALPHABET;
   static const RNA RNA_ALPHABET;
   static const CodonAlphabet DNA_CODON_ALPHABET;
+  static const CodonAlphabet RNA_CODON_ALPHABET;
   static const ProteicAlphabet PROTEIN_ALPHABET;
   static const DefaultAlphabet DEFAULT_ALPHABET;
 

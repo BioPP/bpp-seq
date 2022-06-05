@@ -67,7 +67,7 @@ public:
   virtual ~AlphabetIndex1() {}
 
 public:
-  virtual AlphabetIndex1* clone() const = 0;
+  virtual AlphabetIndex1* clone() const override = 0;
 
   /**
    * @brief Get the index associated to a state.
@@ -90,7 +90,7 @@ public:
    *
    * @return Alphabet The alphabet associated to this index.
    */
-  virtual const Alphabet* getAlphabet() const = 0;
+  virtual std::shared_ptr<const Alphabet> getAlphabet() const = 0;
 
   /**
    * @return A vector object with all indices.
@@ -107,13 +107,13 @@ class ProteicAlphabetIndex1 :
   virtual public AlphabetIndex1
 {
 private:
-  const ProteicAlphabet* alpha_;
+  std::shared_ptr<const ProteicAlphabet> alpha_;
 
 public:
-  ProteicAlphabetIndex1() : alpha_(&AlphabetTools::PROTEIN_ALPHABET) {}
+  ProteicAlphabetIndex1() : alpha_(std::dynamic_pointer_cast<const ProteicAlphabet>(AlphabetTools::PROTEIN_ALPHABET.shared_from_this())) {}
   virtual ~ProteicAlphabetIndex1() {}
 
-  virtual ProteicAlphabetIndex1* clone() const = 0;
+  virtual ProteicAlphabetIndex1* clone() const override = 0;
 
   ProteicAlphabetIndex1(const ProteicAlphabetIndex1& pt) :
     alpha_(pt.alpha_)
@@ -125,7 +125,7 @@ public:
     return *this;
   }
 
-  const Alphabet* getAlphabet() const { return alpha_; }
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return alpha_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_ALPHABETINDEX1_H

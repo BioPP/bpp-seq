@@ -87,7 +87,7 @@ public:
    *
    * @{
    */
-  MappedNamedContainer* clone() const { return new MappedNamedContainer(*this); }
+  MappedNamedContainer* clone() const override { return new MappedNamedContainer(*this); }
   /**
    * @}
    */
@@ -105,7 +105,7 @@ public:
    * @param name The key of the object to retrieve.
    * @return The object associated to the given key.
    */
-  const std::shared_ptr<T> getObject(const std::string& name) const
+  const std::shared_ptr<T> getObject(const std::string& name) const override
   {
     const auto it = mObjects_.find(name);
     if (it == mObjects_.end())
@@ -114,7 +114,7 @@ public:
     return it->second;
   }
 
-  std::shared_ptr<T> getObject(const std::string& name)
+  std::shared_ptr<T> getObject(const std::string& name) override
   {
     auto it = mObjects_.find(name);
     if (it == mObjects_.end())
@@ -123,7 +123,7 @@ public:
     return it->second;
   }
 
-  bool hasObject(const std::string& name) const
+  bool hasObject(const std::string& name) const override
   {
     return mObjects_.find(name) != mObjects_.end();
   }
@@ -149,7 +149,7 @@ public:
    *
    * @param name The key of the object.
    */
-  void deleteObject(const std::string& name)
+  void deleteObject(const std::string& name) override
   {
     if (!hasObject(name))
       throw Exception("MappedNamedContainer::deleteObject : Object's name does not exist in container : " + name);
@@ -163,7 +163,7 @@ public:
    * @param name The key of the object.
    * @return The object previously associated to the given key.
    */
-  std::shared_ptr<T> removeObject(const std::string& name)
+  std::shared_ptr<T> removeObject(const std::string& name) override
   {
     if (!hasObject(name))
       throw Exception("MappedNamedContainer::removeObject : Object's name does not exist in container : " + name);
@@ -176,7 +176,7 @@ public:
   /**
    * @return All objects keys.
    */
-  virtual std::vector<std::string> getObjectNames() const
+  virtual std::vector<std::string> getObjectNames() const override
   {
     std::vector<std::string> vNames;
 
@@ -210,9 +210,9 @@ public:
     mObjects_[nkey] = obj;
   }
 
-  size_t getSize() const { return mObjects_.size(); }
+  size_t getSize() const override { return mObjects_.size(); }
 
-  void clear()
+  void clear() override
   {
     mObjects_.clear();
   }

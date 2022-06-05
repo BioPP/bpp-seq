@@ -73,6 +73,7 @@ private:
    * @brief Alphabet: vector of AlphabetState.
    */
   std::vector<AlphabetState*> alphabet_;
+
   /**
    * @name maps used to quick search for letter and num.
    * @{

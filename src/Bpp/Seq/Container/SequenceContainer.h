@@ -48,6 +48,8 @@
 #include "../Alphabet/Alphabet.h"
 #include "../Commentable.h"
 #include "SequenceContainerExceptions.h"
+#include "../Sequence.h"
+#include "../ProbabilisticSequence.h"
 
 // From the STL:
 #include <string>
@@ -95,6 +97,11 @@ public:
   virtual std::vector<HashType> getSequenceKeys() const = 0;
 
   /**
+   * @brief Reset all sequence keys.
+   */
+  virtual void setSequenceKeys(const std::vector<HashType>& sequenceKeys) = 0;
+
+  /**
    * @brief Get the value of a state at a given position
    *
    * @param sitePosition  index of the site
@@ -103,77 +110,17 @@ public:
    */
   virtual double getStateValueAt(size_t sitePosition, const HashType& sequenceKey, int state) const = 0;
 
+  /**
+   * @brief Get the value of a state at a given position
+   *
+   * Same as getValueAt.
+   * 
+   * @param sitePosition  index of the site
+   * @param sequenceKey key of the sequence in the container
+   * @param state  state in the alphabet
+   */
   virtual double operator()(size_t sitePosition, const HashType& sequenceKey, int state) const = 0;
 
-  /**
-   * @brief Element access function.
-   *
-   * Allows direct access to the data stored in the container.
-   *
-   * @param sequenceKey key of the sequence in the container
-   * @param elementPosition The element position within the sequence.
-   */
-  //Note (Julien): I think this function is very dangerous, as the underlying sequence will not be notified of the change! Let's try to do without... 
-  //virtual int& valueAt(const HashType& sequenceName, size_t elementPosition) = 0;
-
-  /**
-   * @brief Element access function.
-   *
-   * Allows direct access to the data stored in the container.
-   *
-   * @param sequenceKey key of the sequence in the container
-   * @param elementPosition The element position within the sequence.
-   */
-  virtual const int& valueAt(const HashType& sequenceKey, size_t elementPosition) const = 0;
-
-  /**
-   * @brief Element access operator.
-   *
-   * Allows direct access to the data stored in the container.
-   *
-   * @param sequencePosition The sequence position.
-   * @param elementPosition The element position within the sequence.
-   */
-  virtual const int& valueAt(size_t sequencePosition, size_t elementPosition) const = 0;
-
-
-  /**
-   * @brief Element access operator.
-   *
-   * Allows direct access to the data stored in the container.
-   * This method is faster then the valueAt function, but input
-   * parameters are not checked!
-   *
-   * @param sequenceKey key of the sequence in the container
-   * @param elementPosition The element position within the sequence.
-   */
-  //Note (Julien): I think this function is very dangerous, as the underlying sequence will not be notified of the change! Let's try to do without... 
-  //virtual int& operator()(const HashType& sequenceKey, size_t elementPosition) = 0;
-
-  /**
-   * @brief Element access operator.
-   *
-   * Allows direct access to the data stored in the container.
-   * This method is faster then the valueAt function, but input
-   * parameters are not checked!
-   *
-   * @param sequenceKey key of the sequence in the container
-   * @param elementPosition The element position within the sequence.
-   */
-  virtual const int& operator()(const HashType& sequenceKey, size_t elementPosition) const = 0;
-
-  /**
-   * @brief Element access operator.
-   *
-   * Allows direct access to the data stored in the container.
-   * This method is faster then the valueAt function, but input
-   * parameters are not checked!
-   *
-   * @param sequencePosition The sequence position.
-   * @param elementPosition The element position within the sequence.
-   */
-  virtual const int& operator()(size_t sequencePosition, size_t elementPosition) const = 0;
- 
   /**
    * @brief Delete all data in the container.
    */
@@ -187,7 +134,7 @@ public:
    *
    * @return A new empty container, with the same alphabet as this one.
    */
-  virtual SequencedContainer<SequenceType, HashType>* createEmptyContainer() const = 0;
+  virtual SequenceContainer<SequenceType, HashType>* createEmptyContainer() const = 0;
 
 
 
@@ -226,16 +173,8 @@ public:
    *
    * @param sequenceKey The key to which the sequence is associated.
    * @param sequence    The sequence to set.
-   * @param updateKey   Tell if the corresponding key should be updated with the one of the new sequence.
    */
-  virtual void setSequence(const HashType& sequenceKey, std::unique_ptr<SequenceType>& sequence, bool updateKey) = 0;
-
-  /**
-   * @brief Remove a sequence from the container.
-   *
-   * @param sequenceKey The key to which the sequence is associated.
-   */
-  virtual std::unique_ptr<SequenceType> removeSequence(const HashType& sequenceKey) = 0;
+  virtual void setSequence(const HashType& sequenceKey, std::unique_ptr<SequenceType>& sequence) = 0;
 
   /**
    * @brief Add a sequence to the container.
@@ -247,6 +186,20 @@ public:
    * @param sequence  The sequence to add.
    */
   virtual void addSequence(const HashType& sequenceKey, std::unique_ptr<SequenceType>& sequence) = 0;
+
+  /**
+   * @brief Remove a sequence from the container.
+   *
+   * @param sequenceKey The key to which the sequence is associated.
+   */
+  virtual std::unique_ptr<SequenceType> removeSequence(const HashType& sequenceKey) = 0;
+
+  /**
+   * @brief Remove and delete a sequence from the container.
+   *
+   * @param sequenceKey The key to which the sequence is associated.
+   */
+  virtual void deleteSequence(const HashType& sequenceKey) = 0;
 
   /** @} */
 
@@ -271,11 +224,30 @@ public:
   /**
    * @brief Replace a sequence in the container.
    *
+   * The original key associated to the sequence will be kept.
    * @param sequencePosition The position of the sequence.
    * @param sequence         The sequence to add.
-   * @param updateKey        Tell if the corresponding key should be updated with the one of the new sequence.
    */
-  virtual void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, bool updateKey) = 0;
+  virtual void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence) = 0;
+
+  /**
+   * @brief Replace a sequence in the container.
+   *
+   * The original key associated to the sequence will be kept.
+   * @param sequencePosition The position of the sequence.
+   * @param sequence         The sequence to add.
+   * @param sequenceKey      The new key of the sequence.
+   */
+  virtual void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const HashType& sequenceKey) = 0;
+
+  /**
+   * @brief Insert a sequence in the container.
+   *
+   * @param sequencePosition The position of the sequence.
+   * @param sequence         The sequence to add.
+   * @param sequenceKey      The new key of the sequence.
+   */
+  virtual void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const HashType& sequenceKey) = 0;
 
   /**
    * @brief Remove a sequence from the container.
@@ -284,7 +256,14 @@ public:
    */
   virtual std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition) = 0;
 
-  /**@} */
+  /**
+   * @brief Remove and delete a sequence from the container.
+   *
+   * @param sequencePosition The position of the sequence.
+   */
+  virtual void deleteSequence(size_t sequencePosition) = 0;
+
+   /**@} */
 
 
 
@@ -342,5 +321,32 @@ public:
   /** @} */
 
 };
+
+//Aliases:
+using BasicSequenceContainer = SequenceContainer<BasicSequence>;
+using ProbabilisticSequenceContainer = SequenceContainer<ProbabilisticSequence>;
+
+template<class T>
+class SwitchDeleter
+{
+private:
+  bool doDelete_;
+
+public:
+  SwitchDeleter(): doDelete_(true) {}
+
+public:
+  void operator()(T* ptr) const {
+    if (doDelete_) delete ptr;
+  }
+
+  void on() { doDelete_ = true; }
+  void off() { doDelete_ = false; }
+
+  bool isOn() const { return doDelete_; }
+};
+
+
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCECONTAINER_H

@@ -80,14 +80,15 @@ public:
    * @return A new IAlignment object according to options specified.
    * @throw Exception if an error occured.
    */
-  IAlignment* read(const std::string& description);
+  std::unique_ptr<IBasicAlignment> read(const std::string& description);
 
-  IProbabilisticAlignment* readProbabilistic(const std::string& description);
+  std::unique_ptr<IProbabilisticAlignment> readProbabilistic(const std::string& description);
 
   /**
    * @return The arguments and their unparsed values from the last call of the read function, if there are any.
    */
   virtual const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 };
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_BPPOALIGNMENTREADERFORMAT_H

@@ -50,6 +50,7 @@
 // From the STL:
 #include <string>
 #include <vector>
+#include <random>
 #include <algorithm>
 #include <iostream>
 
@@ -65,7 +66,6 @@ namespace bpp
  *
  * @see Alphabet
  */
-
 template<class T>
 class SymbolList :
   public virtual CoreSymbolList<T>
@@ -76,7 +76,7 @@ private:
    *
    * To apply another alphabet to a list you'll have to create a new list.
    */
-  const Alphabet* alphabet_;
+  std::shared_ptr<const Alphabet> alphabet_;
 
 protected:
   /**
@@ -90,8 +90,7 @@ public:
    *
    * @param alpha The alphabet to use.
    */
-
-  SymbolList(const Alphabet* alpha) : alphabet_(alpha), content_() {}
+  SymbolList(std::shared_ptr<const Alphabet>& alpha) : alphabet_(alpha), content_() {}
 
   /**
    * @brief Build a new SymbolList object with the specified alphabet.
@@ -100,8 +99,7 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-
-  SymbolList(const std::vector<T>& list, const Alphabet* alpha) :
+  SymbolList(const std::vector<T>& list, const std::shared_ptr<Alphabet>& alpha) :
     alphabet_(alpha), content_()
   {
     setContent(list);
@@ -159,49 +157,49 @@ public:
    * @{
    */
 
-  virtual SymbolList<T>* clone() const = 0;// return new SymbolList<T>(* this); }
+  virtual SymbolList<T>* clone() const override = 0;
   /** @} */
 
   // Class destructor
   virtual ~SymbolList() {}
 
 public:
-  const Alphabet* getAlphabet() const { return alphabet_; }
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
 
-  size_t size() const { return static_cast<size_t>(content_.size()); }
+  size_t size() const override { return static_cast<size_t>(content_.size()); }
 
-  virtual void setContent(const std::vector<T>& list)
+  virtual void setContent(const std::vector<T>& list) override
   {
     content_ = list;
   }
 
-  virtual const std::vector<T>& getContent() const { return content_; }
+  virtual const std::vector<T>& getContent() const override { return content_; }
 
-  virtual std::string toString() const
+  virtual std::string toString() const override
   {
     return "";
   }
 
-  void deleteElement(size_t pos)
+  void deleteElement(size_t pos) override
   {
     if (pos >= content_.size())
       throw IndexOutOfBoundsException("SymbolList::deleteElement. Invalid position.", pos, 0, size() - 1);
     content_.erase(content_.begin() + static_cast<std::ptrdiff_t>(pos));
   }
 
-  void deleteElements(size_t pos, size_t len)
+  void deleteElements(size_t pos, size_t len) override
   {
     if (pos + len > content_.size())
       throw IndexOutOfBoundsException("SymbolList::deleteElements. Invalid position.", pos + len, 0, size() - 1);
     content_.erase(content_.begin() + static_cast<std::ptrdiff_t>(pos), content_.begin() + static_cast<std::ptrdiff_t>(pos + len));
   }
 
-  void addElement(const T& v)
+  void addElement(const T& v) override
   {
     content_.push_back(v);
   }
 
-  void addElement(size_t pos, const T& v)
+  void addElement(size_t pos, const T& v) override
   {
     // test:
     if (pos >= content_.size())
@@ -209,7 +207,7 @@ public:
     content_.insert(content_.begin() + static_cast<std::ptrdiff_t>(pos), v);
   }
 
-  void setElement(size_t pos, const T& v)
+  void setElement(size_t pos, const T& v) override
   {
     // test:
     if (pos >= content_.size())
@@ -217,27 +215,29 @@ public:
     content_[pos] = v;
   }
 
-  virtual const T& getElement(size_t pos) const
+  const T& getElement(size_t pos) const override
   {
     if (pos >= content_.size())
       throw IndexOutOfBoundsException("SymbolList::getElement. Invalid position.", pos, 0, size() - 1);
     return content_[pos];
   }
 
-  virtual const T& getValue(size_t pos) const
+  const T& getValue(size_t pos) const override
   {
     if (pos >= content_.size())
       throw IndexOutOfBoundsException("SymbolList::getValue. Invalid position.", pos, 0, size() - 1);
     return content_[pos];
   }
 
-  virtual const T& operator[](size_t pos) const { return content_[pos]; }
+  const T& operator[](size_t pos) const override { return content_[pos]; }
 
-  virtual T& operator[](size_t pos) { return content_[pos]; }
+  T& operator[](size_t pos) override { return content_[pos]; }
 
-  virtual void shuffle()
+  void shuffle() override
   {
-    random_shuffle(content_.begin(), content_.end());
+    std::random_device rng;
+    std::mt19937 urng(rng());
+    std::shuffle(content_.begin(), content_.end(), urng);
   }
 };
 
@@ -262,7 +262,7 @@ protected:
    * @param alpha The alphabet to use.
    */
 
-  EdSymbolList(const Alphabet* alpha) : SymbolList<T>(alpha), propagateEvents_(true), listeners_() {}
+  EdSymbolList(std::shared_ptr<const Alphabet>& alpha) : SymbolList<T>(alpha), propagateEvents_(true), listeners_() {}
 
   /**
    * @brief Build a new CoreSymbolList object with the specified alphabet.

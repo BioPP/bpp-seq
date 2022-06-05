@@ -116,7 +116,7 @@ private:
    * To apply another alphabet to the list requires creating another
    * list.
    */
-  const Alphabet* alphabet_;
+  std::shared_ptr<const Alphabet> alphabet_;
 
 protected:
   /**
@@ -131,7 +131,7 @@ public:
    * @param alpha the alphabet to use.
    */
 
-  BasicProbabilisticSymbolList(const Alphabet* alpha);
+  BasicProbabilisticSymbolList(std::shared_ptr<const Alphabet>& alpha);
 
   /**
    * @brief Build a new BasicProbabilisticSymbolList object with the specified alphabet.
@@ -140,7 +140,7 @@ public:
    * @param alpha The alphabet to use.
    * @throw If the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
-  BasicProbabilisticSymbolList(const DataTable& list, const Alphabet* alpha);
+  BasicProbabilisticSymbolList(const DataTable& list, std::shared_ptr<const Alphabet>& alpha);
 
   /**
    * @brief The generic copy constructor.
@@ -180,7 +180,7 @@ public:
   virtual ~BasicProbabilisticSymbolList() {}
 
 public:
-  const Alphabet* getAlphabet() const { return alphabet_; }
+  std::shared_ptr<const Alphabet> getAlphabet() const { return alphabet_; }
 
   size_t size() const { return static_cast<size_t>(content_.getNumberOfColumns()); }
 
@@ -194,9 +194,7 @@ public:
    *
    * with letters ordered alphabetically. Value is written with
    * scientific format, and precision 8.
-   *
    */
-
   std::string toString() const;
 
   void addElement(const std::vector<double>& element);

@@ -43,6 +43,8 @@
 #define BPP_SEQ_CONTAINER_SITECONTAINER_H
 
 #include "SequenceContainer.h"
+#include "../Site.h"
+#include "../ProbabilisticSite.h"
 
 // From the STL:
 #include <string>
@@ -56,7 +58,7 @@ namespace bpp
  * This interface provides methods to retrieve, add or set sites in the alignment.
  * As for SequenceContainers, the maintenance of Sites is up to the container.
  */
-template<class SequenceType, class HashType, class SiteType>
+template<class SiteType, class SequenceType, class HashType>
 class SiteContainer :
   public virtual SequenceContainer<SequenceType, HashType>
 {
@@ -77,21 +79,14 @@ public:
   virtual const SiteType& getSite(size_t sitePosition) const = 0;
 
   /**
-   * @brief Get a CruxSymbolListSite from a given position.
-   *
-   * @param sitePosition The position
-   */
-  virtual const CruxSymbolListSite& getSymbolListSite(size_t sitePosition) const = 0;
-
-  /**
    * @brief Set a site in the container.
    *
-   * @param sitePosition       The position of the site in the container.
+   * @param sitePosition    The position of the site in the container.
    * @param site            The site to set.
    * @param checkCoordinate Look if the coordinate of the new site match a coordinate attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void setSite(size_t sitePosition, const SiteType& site, bool checkCoordinate = true) = 0;
+  virtual void setSite(size_t sitePosition, std::unique_ptr<SiteType>& site, bool checkCoordinate = true) = 0;
 
   /**
    * @brief Add a site in the container.
@@ -100,38 +95,17 @@ public:
    * @param checkCoordinate Look if the coordinate of the new site match a coordinate attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const SiteType& site, bool checkCoordinate) = 0;
+  virtual void addSite(std::unique_ptr<SiteType>& site, bool checkCoordinate) = 0;
 
   /**
    * @brief Add a site in the container.
    *
    * @param site            The site to add.
-   * @param coordinate      The new coordinate of the site, to superseed the one in 'site'.
+   * @param sitePosition    The coordinate where to insert the site.
    * @param checkCoordinate Look if the coordinate of the new site match a coordinate attribute in the container.
    * @throw Exception If the specified site does not exists or is not correct.
    */
-  virtual void addSite(const SiteType& site, int coordinate, bool checkCoordinate) = 0;
-
-  /**
-   * @brief Add a site in the container.
-   *
-   * @param site            The site to add.
-   * @param sitePosition       The coordinate where to insert the site.
-   * @param checkCoordinate Look if the coordinate of the new site match a coordinate attribute in the container.
-   * @throw Exception If the specified site does not exists or is not correct.
-   */
-  virtual void addSite(const SiteType& site, size_t sitePosition, bool checkCoordinate) = 0;
-
-  /**
-   * @brief Add a site in the container.
-   *
-   * @param site          The site to add.
-   * @param sitePosition     The position where to insert the site.
-   * @param coordinate    The new coordinate of the site, to superseed the one in 'site'.
-   * @param checkPosition Look if the position of the new site match a position attribute in the container.
-   * @throw Exception If the specified site does not exists or is not correct.
-   */
-  virtual void addSite(const SiteType& site, size_t sitePosition, int coordinate, bool checkPosition) = 0;
+  virtual void addSite(std::unique_ptr<SiteType>& site, size_t sitePosition, bool checkCoordinate) = 0;
 
   /**
    * @brief Remove a site from the container.
@@ -143,7 +117,7 @@ public:
    * @return A pointer toward the given site in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual std::shared_ptr<SiteType> removeSite(size_t sitePosition) = 0;
+  virtual std::unique_ptr<SiteType> removeSite(size_t sitePosition) = 0;
 
   /**
    * @brief Delete a site from the container.
@@ -191,5 +165,10 @@ public:
   virtual void setSiteCoordinates(const Vint& coordinates) = 0;
 
 };
+
+//Aliases:
+using BasicSiteContainer = SiteContainer<Site, BasicSequence, std::string>;
+using ProbabilisticSiteContainer = SiteContainer<ProbabilisticSite, ProbabilisticSequence, std::string>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINER_H

@@ -82,7 +82,7 @@ public:
    * @return A new OAlignment object according to options specified.
    * @throw Exception if an error occured.
    */
-  OAlignment* read(const std::string& description);
+  std::unique_ptr<OBasicAlignment> read(const std::string& description);
 
   /**
    * @return The arguments and their unparsed values from the last call of the read function, if there are any.

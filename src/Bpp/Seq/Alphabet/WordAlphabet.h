@@ -70,7 +70,7 @@ public:
 
   virtual bool hasUniqueAlphabet() const = 0;
 
-  virtual const Alphabet* getNAlphabet(size_t n) const = 0;
+  virtual std::shared_ptr<const Alphabet> getNAlphabet(size_t n) const = 0;
 
   virtual int getWord(const Sequence& seq, size_t pos = 0) const = 0;
 
@@ -186,7 +186,7 @@ class WordAlphabet :
   public AbstractAlphabet
 {
 protected:
-  std::vector<const Alphabet* > vAbsAlph_;
+  std::vector< std::shared_ptr<const Alphabet> > vAbsAlph_;
 
 public:
   // Constructor and destructor.
@@ -198,7 +198,7 @@ public:
    *
    * @param vAlpha The vector of Alphabets to be used.
    */
-  WordAlphabet(const std::vector<const Alphabet*>& vAlpha);
+  WordAlphabet(const std::vector< std::shared_ptr<const Alphabet> >& vAlpha);
 
   /**
    * @brief Builds a new word alphabet from a pointer to number of
@@ -207,7 +207,7 @@ public:
    * @param pAlpha The Pointer to the Alphabet to be used.
    * @param num the length of the words.
    */
-  WordAlphabet(const Alphabet* pAlpha, size_t num);
+  WordAlphabet(std::shared_ptr<const Alphabet> pAlpha, size_t num);
 
   WordAlphabet(const WordAlphabet& bia) : AbstractAlphabet(bia), vAbsAlph_(bia.vAbsAlph_) {}
 
@@ -218,7 +218,7 @@ public:
     return *this;
   }
 
-  WordAlphabet* clone() const
+  WordAlphabet* clone() const override
   {
     return new WordAlphabet(*this);
   }
@@ -241,12 +241,12 @@ public:
    * @return The name of the state.
    * @throw BadCharException When state is not a valid char description.
    */
-  std::string getName(const std::string& state) const;
+  std::string getName(const std::string& state) const override;
 
-  int charToInt(const std::string& state) const
+  int charToInt(const std::string& state) const override
   {
     if (state.size() != vAbsAlph_.size())
-      throw BadCharException(state, "WordAlphabet::charToInt", this);
+      throw BadCharException(state, "WordAlphabet::charToInt", shared_from_this());
     if (containsUnresolved(state))
       return static_cast<int>(getSize());
     if (containsGap(state))
@@ -254,7 +254,7 @@ public:
     else return AbstractAlphabet::charToInt(state);
   }
 
-  unsigned int getSize() const
+  unsigned int getSize() const override
   {
     return getNumberOfChars() - 2;
   }
@@ -262,20 +262,20 @@ public:
   /** @} */
 
 
-  bool isResolvedIn(int state1, int state2) const;
+  bool isResolvedIn(int state1, int state2) const override;
 
   /**
    * @brief Returns True if the Alphabet of the letters in the word
    * are the same type.
    *
    */
-  bool hasUniqueAlphabet() const;
+  bool hasUniqueAlphabet() const override;
 
   /**
    * @brief Returns the length of the word
    *
    */
-  unsigned int getLength() const
+  unsigned int getLength() const override
   {
     return static_cast<unsigned int>(vAbsAlph_.size());
   }
@@ -285,28 +285,28 @@ public:
    * @brief Returns the number of resolved states + one for unresolved
    *
    */
-  unsigned int getNumberOfTypes() const
+  unsigned int getNumberOfTypes() const override
   {
     return getNumberOfChars() - 1;
   }
 
-  std::string getAlphabetType() const;
+  std::string getAlphabetType() const override;
 
-  int getUnknownCharacterCode() const
+  int getUnknownCharacterCode() const override
   {
     return static_cast<int>(getSize());
   }
 
-  bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
-  bool isUnresolved(const std::string& state) const { return charToInt(state) == getUnknownCharacterCode(); }
+  bool isUnresolved(int state) const override { return state == getUnknownCharacterCode(); }
+  bool isUnresolved(const std::string& state) const override { return charToInt(state) == getUnknownCharacterCode(); }
 
-  std::vector<int> getAlias(int state) const;
+  std::vector<int> getAlias(int state) const override;
 
-  std::vector<std::string> getAlias(const std::string& state) const;
+  std::vector<std::string> getAlias(const std::string& state) const override;
 
-  int getGeneric(const std::vector<int>& states) const;
+  int getGeneric(const std::vector<int>& states) const override;
 
-  std::string getGeneric(const std::vector<std::string>& states) const;
+  std::string getGeneric(const std::vector<std::string>& states) const override;
 
 private:
   /**
@@ -314,8 +314,8 @@ private:
    *
    * @{
    */
-  bool containsUnresolved(const std::string& state) const;
-  bool containsGap(const std::string& state) const;
+  bool containsUnresolved(const std::string& state) const override;
+  bool containsGap(const std::string& state) const override;
   void build_();
   /** @} */
 
@@ -327,12 +327,12 @@ public:
    */
 
   /**
-   * @brief Get the pointer to the Alphabet  of the n-position.
+   * @brief Get the pointer to the Alphabet at the n-position.
    *
    * @param n The position in the word (starting at 0).
    * @return The pointer to the Alphabet of the n-position.
    */
-  const Alphabet* getNAlphabet(size_t n) const
+  std::shared_ptr<const Alphabet> getNAlphabet(size_t n) const override
   {
     if (n >= vAbsAlph_.size())
       throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
@@ -350,7 +350,7 @@ public:
    * @throw IndexOutOfBoundsException In case of wrong position.
    */
 
-  virtual int getWord(const Sequence& seq, size_t pos = 0) const;
+  virtual int getWord(const Sequence& seq, size_t pos = 0) const override;
 
 
   /**
@@ -363,7 +363,7 @@ public:
    * @throw IndexOutOfBoundsException In case of wrong position.
    */
 
-  virtual int getWord(const std::vector<int>& vint, size_t pos = 0) const;
+  virtual int getWord(const std::vector<int>& vint, size_t pos = 0) const override;
 
   /**
    * @brief Get the char code for a word given the char code of the
@@ -376,7 +376,7 @@ public:
    * @throw IndexOutOfBoundsException In case of wrong position.
    */
 
-  virtual std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const;
+  virtual std::string getWord(const std::vector<std::string>& vpos, size_t pos = 0) const override;
 
   /**
    * @brief Get the int code of the n-position of a word given its int description.
@@ -385,7 +385,7 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The int description of the n-position of the word.
    */
-  int getNPosition(int word, size_t n) const
+  int getNPosition(int word, size_t n) const override
   {
     if (n >= vAbsAlph_.size())
       throw IndexOutOfBoundsException("WordAlphabet::getNPosition", n, 0, vAbsAlph_.size());
@@ -400,7 +400,7 @@ public:
    * @param word The int description of the word.
    * @return The int description of the positions of the codon.
    */
-  std::vector<int> getPositions(int word) const
+  std::vector<int> getPositions(int word) const override
   {
     std::string s = intToChar(word);
     std::vector<int> positions;
@@ -418,10 +418,10 @@ public:
    * @param n The position in the word (starting at 0).
    * @return The char description of the n-position of the word.
    */
-  std::string getNPosition(const std::string& word, size_t n) const
+  std::string getNPosition(const std::string& word, size_t n) const override
   {
     if (n > vAbsAlph_.size())
-      throw BadCharException("", "WordAlphabet::getNPosition", this);
+      throw BadCharException("", "WordAlphabet::getNPosition", shared_from_this());
     // Test:
     charToInt(word);
 
@@ -435,7 +435,7 @@ public:
    * @param word The char description of the word.
    * @return The char description of the three positions of the word.
    */
-  std::vector<std::string> getPositions(const std::string& word) const
+  std::vector<std::string> getPositions(const std::string& word) const override
   {
     charToInt(word);
     std::vector<std::string> positions;
@@ -457,7 +457,7 @@ public:
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
 
-  Sequence* translate(const Sequence& sequence, size_t = 0) const;
+  Sequence* translate(const Sequence& sequence, size_t = 0) const override;
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -468,7 +468,7 @@ public:
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
 
-  Sequence* reverse(const Sequence& sequence) const;
+  Sequence* reverse(const Sequence& sequence) const override;
 
   /** @} */
 
@@ -476,7 +476,9 @@ public:
    * @name Overloaded AbstractAlphabet methods.
    * @{
    */
-  unsigned int getStateCodingSize() const { return static_cast<unsigned int>(vAbsAlph_.size()); }
+  unsigned int getStateCodingSize() const override {
+    return static_cast<unsigned int>(vAbsAlph_.size());
+  }
   /** @} */
 };
 } // end of namespace bpp.

@@ -45,6 +45,7 @@
 
 #include "../Alphabet/Alphabet.h"
 #include "../Sequence.h"
+#include "../ProbabilisticSequence.h"
 #include "AbstractSequenceContainer.h"
 #include "VectorMappedContainer.h"
 
@@ -62,8 +63,8 @@ namespace bpp
  */
 template<class SequenceType>
 class VectorSequenceContainer :
-  virtual public AbstractSequenceContainer<SequenceType, std::string>,
-  virtual private VectorMappedContainer<SequenceType>
+  public AbstractSequenceContainer<SequenceType, std::string>,
+  private VectorMappedContainer<SequenceType>
 {
 public:
 
@@ -76,13 +77,12 @@ public:
    * @param vs       A vector of smart pointers toward sequence objects.
    */
   VectorSequenceContainer(
-      const std::shared_ptr<const Alphabet> alphabet,
+      std::shared_ptr<const Alphabet>& alphabet,
       const std::vector< std::unique_ptr<SequenceType> >& vs):
     AbstractSequenceContainer<SequenceType, std::string>(alphabet),
     VectorMappedContainer<SequenceType>()
   {
-    for (auto seq: vs)
-    {
+    for (auto seq: vs) {
       addSequence(seq);
     }
   }
@@ -92,8 +92,8 @@ public:
    *
    * @param alphabet The alphabet of the container.
    */
-  VectorSequenceContainer(const std::shared_ptr<const Alphabet> alphabet) :
-      AbstractSequenceContainer<SequenceType, std::string>(alphabet),
+  VectorSequenceContainer(std::shared_ptr<const Alphabet>& alphabet) :
+      AbstractSequenceContainer<SequenceType>(alphabet),
       VectorMappedContainer<SequenceType>()
   {}
 
@@ -109,7 +109,7 @@ public:
    * @param vsc The VectorSequenceContainer to copy into this container.
    */
   VectorSequenceContainer(
-      const VectorSequenceContainer<SequenceType, std::string>& vsc):
+      const VectorSequenceContainer<SequenceType>& vsc):
     AbstractSequenceContainer<SequenceType, std::string>(vsc),
     VectorMappedContainer<SequenceType>()
   {
@@ -128,13 +128,13 @@ public:
    * @param sc The SequenceContainer to copy into this container.
    */
   VectorSequenceContainer(const SequenceContainer<SequenceType, std::string>& sc):
-    AbstractSequenceContainer(sc.getAlphabet()),
-    VectorMappedContainer<Sequence>()
+    AbstractSequenceContainer<SequenceType>(sc.getAlphabet()),
+    VectorMappedContainer<SequenceType>()
   {
-    size_t max = vsc.getNumberOfSequences();
+    size_t max = sc.getNumberOfSequences();
     for (size_t i = 0; i < max; i++)
     {
-      addSequence(vsc.getSequenceKey(i), vsc.getSequence(i));
+      addSequence(sc.getSequenceKey(i), sc.getSequence(i));
     }
     setComments(sc.getComments());
   }
@@ -150,7 +150,7 @@ public:
   VectorSequenceContainer& operator=(const VectorSequenceContainer& vsc)
   {
     clear();
-    AbstractSequenceContainer::operator=(vsc);
+    AbstractSequenceContainer<SequenceType>::operator=(vsc);
     size_t max = vsc.getNumberOfSequences();
     for (size_t i = 0; i < max; i++)
     {
@@ -164,20 +164,20 @@ public:
    *
    * @param sc The SequenceContainer to copy into this container.
    */
-  VectorSequenceContainer& operator=(const SequenceContainer& sc)
+  VectorSequenceContainer& operator=(const SequenceContainer<SequenceType, std::string>& sc)
   {
     clear();
-    AbstractSequenceContainer::operator=(sc);
-    size_t max = vsc.getNumberOfSequences();
+    AbstractSequenceContainer<SequenceType>::operator=(sc);
+    size_t max = sc.getNumberOfSequences();
     for (size_t i = 0; i < max; i++)
     {
-      addSequence(vsc.getSequenceKey(i), vsc.getSequence(i));
+      addSequence(sc.getSequenceKey(i), sc.getSequence(i));
     }
     setComments(sc.getComments());
     return *this;
   }
 
-  void clear()
+  void clear() override
   {
     VectorMappedContainer<Sequence>::clear();
   }
@@ -188,7 +188,7 @@ public:
    *
    * @{
    */
-  VectorSequenceContainer* clone() const { return new VectorSequenceContainer(*this); }
+  VectorSequenceContainer<SequenceType>* clone() const override { return new VectorSequenceContainer<SequenceType>(*this); }
   /** @} */
 
 
@@ -198,20 +198,23 @@ public:
    *
    * @{
    */
-  VectorSequenceContainer* createEmptyContainer() const 
+  using AbstractSequenceContainer<SequenceType, std::string>::getAlphabet;
+  using AbstractSequenceContainer<SequenceType, std::string>::getComments;
+
+  VectorSequenceContainer<SequenceType>* createEmptyContainer() const override 
   {
-    VectorSequenceContainer* vsc = new VectorSequenceContainer(getAlphabet(), getComments());
+    VectorSequenceContainer<SequenceType>* vsc = new VectorSequenceContainer<SequenceType>(getAlphabet(), getComments());
     return vsc;
   }
  
-  double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const
+  double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return getSequence(sequenceName).getStateValueAt(sitePosition, state);
+    return getSequence(sequenceKey).getStateValueAt(sitePosition, state);
   }
 
-  double operator()(size_t sitePosition, const std::string& sequenceKey, int state) const
+  double operator()(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return getSequence(sequenceName)(sitePosition, state);
+    return getSequence(sequenceKey)(sitePosition, state);
   }
 
   double getStateValueAt(size_t sitePosition, size_t sequencePosition, int state) const
@@ -230,95 +233,129 @@ public:
     return getAlphabet()->isResolvedIn(getSequence(sequencePosition)[sitePosition], state) ? 1. : 0.;
   }
  
-  std::vector<std::string> getSequenceKeys() const { return getObjectNames(); }
-
-  size_t getNumberOfSequences() const { return getSize(); }
+  size_t getNumberOfSequences() const override
+  { 
+    return VectorSequenceContainer<SequenceType>::getSize();
+  }
  
-  size_t getSequencePosition(const std::string& sequenceKey) const
-  {
-    return getObjectPosition(sequenceKey);
+  std::vector<std::string> getSequenceKeys() const override { 
+    return VectorMappedContainer<SequenceType>::getObjectNames();
   }
 
-  const int& valueAt(const std::string& sequenceKey, size_t elementPosition) const
+  void setSequenceKeys(const std::vector<std::string>& sequenceKeys) override
+  {
+    VectorMappedContainer<SequenceType>::setObjectNames(sequenceKeys);
+  }
+
+  const std::string& getSequenceKey(size_t sequencePosition) const override
+  { 
+    return VectorMappedContainer<SequenceType>::getObjectName(sequencePosition);
+  }
+
+  size_t getSequencePosition(const std::string& sequenceKey) const override
+  {
+    return VectorMappedContainer<SequenceType>::getObjectPosition(sequenceKey);
+  }
+
+  const int& valueAt(const std::string& sequenceKey, size_t elementPosition) const override
   {
     return getSequence(sequenceKey)[elementPosition];
   }
 
-  const int& operator()(const std::string& sequenceKey, size_t elementPosition) const
+  const int& operator()(const std::string& sequenceKey, size_t elementPosition) const override
   {
     return getSequence(sequenceKey)[elementPosition];
   }
 
-  const int& valueAt(size_t sequencePosition, size_t elementPosition) const
+  const int& valueAt(size_t sequencePosition, size_t elementPosition) const override
   {
     return getSequence(sequencePosition)[elementPosition];
   }
 
-  const int& operator()(size_t sequencePosition, size_t elementPosition) const
+  const int& operator()(size_t sequencePosition, size_t elementPosition) const override
   {
     return getSequence(sequencePosition)[elementPosition];
   }
 
 
-  bool hasSequence(const std::string& sequenceKey) const
+  bool hasSequence(const std::string& sequenceKey) const override
   {
-    return hasObject(sequenceKey);
+    return VectorMappedContainer<SequenceType>::hasObject(sequenceKey);
   }
 
-  const SequenceType& getSequence(const std::string& sequenceKey) const
+  const SequenceType& getSequence(const std::string& sequenceKey) const override
   {
-    return *getObject(sequenceKey);
+    return *VectorMappedContainer<SequenceType>::getObject(sequenceKey);
   }
 
-  void setSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence, bool updateKey = false)
+  void setSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence) override
   {
-    setSequence(getSequencePosition(sequenceKey), sequence, updateKey);
+    setSequence(getSequencePosition(sequenceKey), sequence);
   }
 
-  std::unique_ptr<SequenceType> removeSequence(const std::string& sequenceKey)
-  {
-    std::shared_ptr<SequenceType> ptr = removeObject(sequenceKey);
-    return(make_unique<SequenceType>(ptr.release())); //Not elegant but safe because of the private inheritence.
-  }
-
-  void deleteSequence(const std::string& sequenceKey)
-  {
-    deleteObject(sequenceKey);
-  }
-
-  void deleteSequence(size_t sequencePosition)
-  {
-    deleteObject(sequencePosition);
-  }
-
-  const SequenceType& getSequence(size_t sequencePosition) const
-  {
-    return *getObject(sequencePosition);
-  }
-
-  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, bool updateKey)
-  {
-    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
-
-    addObject(std::shared_ptr<SequenceType>(sequence), sequencePosition, updateKey ? sequence->getName() : getSequenceKey(sequencePosition), false);
-  }
-
-  std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition)
-  {
-    std::shared_ptr<SequenceType> ptr = removeObject(sequencePosition);
-    return(make_unique<SequenceType>(ptr.release())); //Not elegant but safe because of the private inheritence.
-  }
-
-  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence)
+  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence) override
   {
     if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
       throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets do not match.", getAlphabet(), sequence->getAlphabet());
 
-    appendObject(std::shared_ptr<SequenceType>(sequence), key, false);
+    std::shared_ptr<SequenceType> sequencePtr(sequence.get(), SwitchDeleter<SequenceType>());
+    VectorMappedContainer<SequenceType>::appendObject(sequencePtr, sequenceKey, true);
   }
  
-  std::vector<std::string> getSequenceNames() const
+  std::unique_ptr<SequenceType> removeSequence(const std::string& sequenceKey) override
+  {
+    std::shared_ptr<SequenceType> ptr = VectorMappedContainer<SequenceType>::removeObject(sequenceKey);
+    std::get_deleter<SwitchDeleter, SequenceType>(ptr).off();
+    return(std::unique_ptr<SequenceType>(ptr.release())); //Not elegant but safe because of the private inheritence.
+  }
+
+  void deleteSequence(const std::string& sequenceKey) override
+  {
+    VectorMappedContainer<SequenceType>::deleteObject(sequenceKey);
+  }
+
+  void deleteSequence(size_t sequencePosition) override
+  {
+    VectorMappedContainer<SequenceType>::deleteObject(sequencePosition);
+  }
+
+  const SequenceType& getSequence(size_t sequencePosition) const override
+  {
+    return *VectorMappedContainer<SequenceType>::getObject(sequencePosition);
+  }
+
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence) override
+  {
+    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
+
+    VectorMappedContainer<SequenceType>::addObject(std::shared_ptr<SequenceType>(sequence), sequencePosition, getSequenceKey(sequencePosition), false);
+  }
+
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const std::string& sequenceKey) override
+  {
+    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
+
+    VectorMappedContainer<SequenceType>::addObject(std::shared_ptr<SequenceType>(sequence), sequencePosition, sequenceKey, false);
+  }
+
+  void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const std::string& sequenceKey) override
+  {
+    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::insertSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
+
+    VectorMappedContainer<SequenceType>::insertObject(std::shared_ptr<SequenceType>(sequence), sequencePosition, sequenceKey);
+  }
+
+  std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition) override
+  {
+    std::shared_ptr<SequenceType> ptr = VectorMappedContainer<SequenceType>::removeObject(sequencePosition);
+    return(std::unique_ptr<SequenceType>(ptr.release())); //Not elegant but safe because of the private inheritence.
+  }
+
+ 
+  std::vector<std::string> getSequenceNames() const override
   {
     size_t nbSeq = getNumberOfSequences();
     std::vector<std::string> vs(nbSeq);
@@ -329,7 +366,7 @@ public:
   }
 
 
-  void setSequenceNames(const std::vector<std::string>& names, bool updateKeys)
+  void setSequenceNames(const std::vector<std::string>& names, bool updateKeys) override
   {
     if (names.size() != getNumberOfSequences())
       throw DimensionException("VectorSequenceContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences(), getNumberOfSequences());
@@ -337,8 +374,8 @@ public:
     {
       getSequence_(i).setName(names[i]);
     }
-    if (updateKey) {
-      setObjectNames(names);
+    if (updateKeys) {
+      VectorMappedContainer<SequenceType>::setObjectNames(names);
     }
   }
 
@@ -351,19 +388,16 @@ public:
    *
    * @param sequence  The sequence to add.
    */
-  void addSequence(const std::unique_ptr<SequenceType> sequencePtr)
+  virtual void addSequence(const std::unique_ptr<SequenceType>& sequence)
   {
-    if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::addSequence: Alphabets do not match.", getAlphabet(), sequencePtr->getAlphabet());
-
-    appendObject(sequencePtr, sequencePtr->getName(), false);
+    addSequence(sequence->getName(), sequence);
   }
  
 protected:
 
-  SequenceType& getSequence_(size_t sequencePosition)
+  virtual SequenceType& getSequence_(size_t sequencePosition)
   {
-    return *getObject(sequencePosition);
+    return *VectorMappedContainer<SequenceType>::getObject(sequencePosition);
   }
 
 
@@ -372,18 +406,18 @@ protected:
    *
    */
   
-  SequenceType& getSequence_(const std::string& sequenceKey)
+  virtual SequenceType& getSequence_(const std::string& sequenceKey)
   {
-    return *getObject(key);
+    return *VectorMappedContainer<SequenceType>::getObject(sequenceKey);
   }
 
   /** @} */
 
- };
+};
 
-  //Aliases:
-  using BasicVectorSequenceContainer = VectorSequenceContainer<Sequence>;
-  using ProbabilisticVectorSequenceContainer = VectorSequenceContainer<ProbabilisticSequence>;
+//Aliases:
+using BasicVectorSequenceContainer = VectorSequenceContainer<BasicSequence>;
+using ProbabilisticVectorSequenceContainer = VectorSequenceContainer<ProbabilisticSequence>;
 
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORSEQUENCECONTAINER_H
