@@ -66,9 +66,9 @@ class Sequence;
 class SequencedValuesContainer :
   public virtual Clonable
 {
-public:
-  SequencedValuesContainer() {}
-  virtual ~SequencedValuesContainer() {}
+// public:
+//   SequencedValuesContainer() {}
+//   virtual ~SequencedValuesContainer() {}
 
 public:
   /**

@@ -45,6 +45,7 @@
 
 // From the STL:
 #include <string>
+#include <iostream>
 
 namespace bpp
 {
@@ -72,7 +73,8 @@ public:
 
   Commentable(const Commentable& com) :
     comments_(com.comments_)
-  {}
+  {
+  }
 
   Commentable& operator=(const Commentable& com)
   {
