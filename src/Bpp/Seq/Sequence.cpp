@@ -141,7 +141,8 @@ BasicSequence::BasicSequence(const BasicSequence& s) :
   AbstractCoreSequence(s),
   SymbolList<int>(s.getContent(), s.getAlphabet()),
   BasicIntSymbolList(s.getContent(), s.getAlphabet())
-{}
+{
+}
 
 /* Assignation operator: ******************************************************/
 

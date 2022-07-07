@@ -144,7 +144,7 @@ public:
    * @param siteIndex  index of the site
    * @param state  state in the alphabet
    */
-  virtual double getStateValueAt(size_t siteIndex, int state) const
+  virtual double getStateValueAt(size_t siteIndex, int state) const   
   {
     throw Exception("CruxSymbolList::getStateValueAt should not be called.");
     return 0;
@@ -413,10 +413,10 @@ public:
    * @brief From CruxSymbolList
    *
    */
-  virtual double getStateValueAt(size_t siteIndex, int state) const
-  {
-    return CoreSymbolList<T>::getStateValueAt(siteIndex, state);
-  }
+   virtual double getStateValueAt(size_t siteIndex, int state) const
+   {
+     return CoreSymbolList<T>::getStateValueAt(siteIndex, state);
+   }
 
   virtual double operator()(size_t siteIndex, int state) const
   {
