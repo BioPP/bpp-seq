@@ -76,39 +76,28 @@ public:
   }
 
 public:
-  size_t getNumberOfStopCodons() const { return 2; }
+  size_t getNumberOfStopCodons() const { return 4; }
 
   std::vector<int> getStopCodonsAsInt() const
   {
-    std::vector<int> v(4);
-    v[0] = 8;
-    v[1] = 10;
-    v[2] = 48;
-    v[3] = 50;
-    return v;
+    return std::vector<int> ({8, 10, 48, 50});
   }
 
   std::vector<std::string> getStopCodonsAsChar() const
   {
-    std::vector<std::string> v(4);
-    v[0] = "AGA";
-    v[1] = "AGG";
-    v[2] = "TAA";
-    v[4] = "TAG";
-    return v;
+    return std::vector<std::string> ({"AGA", "AGG", "TAA", "TAG"});
   }
 
   bool isStop(int state) const
   {
     // Test:
     codonAlphabet_.intToChar(state); // throw exception if invalid state!
-    return state == 48 || state == 50;
+    return state == 8 || state == 10 || state == 48 || state == 50;
   }
 
   bool isStop(const std::string& state) const
   {
-    int i = codonAlphabet_.charToInt(state);
-    return i == 48 || i == 50;
+    return isStop(codonAlphabet_.charToInt(state));
   }
 
   bool isAltStart(int state) const
