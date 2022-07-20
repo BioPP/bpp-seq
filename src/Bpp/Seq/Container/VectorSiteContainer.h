@@ -74,9 +74,9 @@ namespace bpp
  *
  */
 template<class SiteType, class SequenceType>  
-class VectorSiteContainer :
-  public AbstractSequenceContainer<SequenceType, std::string>,
-  public virtual SiteContainer<SiteType, SequenceType, std::string>,
+class TemplateVectorSiteContainer :
+  public AbstractTemplateSequenceContainer<SequenceType, std::string>,
+  public virtual TemplateSiteContainerInterface<SiteType, SequenceType, std::string>,
   private VectorPositionedContainer<SiteType>,
   private VectorMappedContainer<SequenceType>
 {
@@ -94,13 +94,13 @@ public:
    * @param checkPositions Check for the redundancy of site position tag. This may turn to be very time consuming!
    * @throw Exception If sites differ in size or in alphabet.
    */
-  VectorSiteContainer(
+  TemplateVectorSiteContainer(
       const std::vector<std::unique_ptr<SiteType> >& vs,
       std::shared_ptr<const Alphabet>& alphabet,
       bool checkPositions = true) :
     VectorPositionedContainer<SiteType>(),
     VectorMappedContainer<SequenceType>(),
-    AbstractSequenceContainer<SequenceType>(alphabet),
+    AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     sequenceNames_(),
     sequenceComments_()
   {
@@ -126,12 +126,12 @@ public:
    * @param size     Number of sequences in the container.
    * @param alphabet The alphabet for this container.
    */
-  VectorSiteContainer(
+  TemplateVectorSiteContainer(
       size_t size,
       std::shared_ptr<const Alphabet>& alphabet) :
     VectorPositionedContainer<SiteType>(),
     VectorMappedContainer<SequenceType>(),
-    AbstractSequenceContainer<SequenceType>(alphabet),
+    AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     sequenceNames_(),
     sequenceComments_()
   {
@@ -150,10 +150,10 @@ public:
    * @param sequenceKeys Sequence keys. This will set the number of sequences in the container.
    * @param alphabet The alphabet for this container.
    */
-  VectorSiteContainer(
+  TemplateVectorSiteContainer(
       const std::vector<std::string>& sequenceKeys,
       std::shared_ptr<const Alphabet>& alphabet) :
-    AbstractSequenceContainer<SequenceType>(alphabet),
+    AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     VectorPositionedContainer<SiteType>(),
     VectorMappedContainer<SequenceType>(),
     sequenceNames_(),
@@ -174,27 +174,29 @@ public:
    *
    * @param alphabet The alphabet for this container.
    */
-  VectorSiteContainer(std::shared_ptr<const Alphabet>& alphabet) :
-    AbstractSequenceContainer<SequenceType>(alphabet),
+  TemplateVectorSiteContainer(std::shared_ptr<const Alphabet>& alphabet) :
+    AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     VectorPositionedContainer<SiteType>(),
     VectorMappedContainer<SequenceType>()
   {}
 
 
-  VectorSiteContainer(const VectorSiteContainer<SequenceType, SiteType>& vsc) :
-    AbstractSequenceContainer<SequenceType>(vsc),
+  TemplateVectorSiteContainer(const TemplateVectorSiteContainer<SiteType, SequenceType>& vsc) :
+    AbstractTemplateSequenceContainer<SequenceType>(vsc),
     VectorPositionedContainer<SiteType>(),
     VectorMappedContainer<SequenceType>(vsc),
     sequenceNames_(),
     sequenceComments_()
   {
-    for (size_t i = 0; i < vsc.getNumberOfSites(); ++i)
-      addSite(vsc.getSite(i), false); // We assume that positions are already correct.
+    for (size_t i = 0; i < vsc.getNumberOfSites(); ++i) {
+      auto sitePtr = std::unique_ptr<SiteType>(vsc.getSite(i).clone());
+      addSite(sitePtr, false); // We assume that positions are already correct.
+    }
   } 
 
 
-  VectorSiteContainer(const SiteContainer<SiteType, SequenceType, std::string>&  sc) :
-    AbstractSequenceContainer<SequenceType>(sc),
+  TemplateVectorSiteContainer(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>&  sc) :
+    AbstractTemplateSequenceContainer<SequenceType>(sc),
     VectorPositionedContainer<SiteType>(),
     VectorMappedContainer<SequenceType>(),
     sequenceNames_(),
@@ -214,8 +216,8 @@ public:
     }
   }
 
-  VectorSiteContainer(const SequenceContainer<SequenceType, std::string>& sc) :
-    AbstractSequenceContainer<SequenceType>(sc),
+  TemplateVectorSiteContainer(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc) :
+    AbstractTemplateSequenceContainer<SequenceType>(sc),
     VectorPositionedContainer<SiteType>(),
     VectorMappedContainer<SequenceType>()
   {
@@ -225,10 +227,10 @@ public:
     reindexSites();
   }
 
-  VectorSiteContainer& operator=(const VectorSiteContainer<SiteType, SequenceType>& vsc)
+  TemplateVectorSiteContainer<SiteType, SequenceType>& operator=(const TemplateVectorSiteContainer<SiteType, SequenceType>& vsc)
   {
     clear();
-    AbstractSequenceContainer<SequenceType>::operator=(vsc);
+    AbstractTemplateSequenceContainer<SequenceType>::operator=(vsc);
     VectorMappedContainer<SequenceType>::operator=(vsc);
     sequenceNames_ = vsc.sequenceNames_;
     for (size_t i = 0; i < vsc.getNumberOfSequences(); ++i)
@@ -241,10 +243,10 @@ public:
   }
 
 
-  VectorSiteContainer& operator=(const SiteContainer<SiteType, SequenceType, std::string>&  sc)
+  TemplateVectorSiteContainer<SiteType, SequenceType>& operator=(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>&  sc)
   {
     clear();
-    AbstractSequenceContainer<SequenceType>::operator=(sc);
+    AbstractTemplateSequenceContainer<SequenceType>::operator=(sc);
     sequenceNames_ = sc.sequenceNames_;
     for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
       sequenceComments_.push_back(std::shared_ptr<Comments>(sc.getSequence(i).getComment()->clone())); 
@@ -259,10 +261,10 @@ public:
   }
 
 
-  VectorSiteContainer& operator=(const SequenceContainer<SequenceType, std::string>&  sc)
+  TemplateVectorSiteContainer<SiteType, SequenceType>& operator=(const TemplateSequenceContainerInterface<SequenceType, std::string>&  sc)
   {
     clear();
-    AbstractSequenceContainer<SequenceType>::operator=(sc);
+    AbstractTemplateSequenceContainer<SequenceType>::operator=(sc);
 
     for (auto sequenceKey: sc.getSequenceKeys())
       addSequence(sc.getSequence(sequenceKey), false);
@@ -273,7 +275,10 @@ public:
   }
 
 
-  virtual ~VectorSiteContainer() { clear(); }
+  virtual ~TemplateVectorSiteContainer()
+  {
+    clear();
+  }
 
 public:
   /**
@@ -281,7 +286,10 @@ public:
    *
    * @{
    */
-  VectorSiteContainer* clone() const override { return new VectorSiteContainer(*this); }
+  TemplateVectorSiteContainer<SiteType, SequenceType>* clone() const override
+  {
+    return new TemplateVectorSiteContainer<SiteType, SequenceType>(*this);
+  }
   /** @} */
 
   /**
@@ -302,23 +310,25 @@ public:
   void setSite(size_t sitePosition, std::unique_ptr<SiteType>& site, bool checkCoordinate = true) override
   {
     if (sitePosition >= getNumberOfSites())
-      throw IndexOutOfBoundsException("VectorSiteContainer::setSite.", sitePosition, 0, getNumberOfSites() - 1);
+      throw IndexOutOfBoundsException("TemplateVectorSiteContainer::setSite.", sitePosition, 0, getNumberOfSites() - 1);
 
     // Check size:
-    if (site->size() != getNumberOfSequences())
-      throw SiteException("AlignedSequenceContainer::setSite. Site does not have the appropriate length", std::move(site));
+    if (site->size() != getNumberOfSequences()) {
+      throw SiteException("TemplateVectorSiteContainer::setSite. Site does not have the appropriate length", *site);
+    }
 
     // New site's alphabet and site container's alphabet matching verification
     if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSiteContainer::setSite", getAlphabet(), site->getAlphabet());
+      throw AlphabetMismatchException("TemplateVectorSiteContainer::setSite", *getAlphabet(), *site->getAlphabet());
 
     // Check coordinate:
     if (checkCoordinate) {
       int coordinate = site->getCoordinate();
       // For all coordinates in vector: throw exception if position already exists
       for (size_t i = 0; i < getNumberOfSites(); ++i) {
-        if (i != sitePosition && getSite(i).getCoordinate() == coordinate)
-          throw SiteException("VectorSiteContainer::setSite: Site position already exists in container", std::move(site));
+        if (i != sitePosition && getSite(i).getCoordinate() == coordinate) {
+          throw SiteException("TemplateVectorSiteContainer::setSite: Site position already exists in container", *site);
+	}
       }
     }
 
@@ -347,11 +357,11 @@ public:
   {
     // Check size:
     if (getNumberOfSequences() != 0 && (site->size() != getNumberOfSequences()))
-      throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", std::move(site));
+      throw SiteException("TemplateVectorSiteContainer::addSite. Site does not have the appropriate length", *site);
 
     // New site's alphabet and site container's alphabet matching verification
     if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
+      throw AlphabetMismatchException("TemplateVectorSiteContainer::addSite", *getAlphabet(), *site->getAlphabet());
 
     // Check coordinate:
     if (checkCoordinate) {
@@ -359,7 +369,7 @@ public:
       // For all positions in vector : throw exception if position already exists
       for (size_t i = 0; i < getNumberOfSites(); ++i) {
         if (getSite(i).getCoordinate() == coordinate)
-          throw SiteException("VectorSiteContainer::addSite(site, bool): Site position already exists in container", std::move(site));
+          throw SiteException("TemplateVectorSiteContainer::addSite(site, bool): Site position already exists in container", *site);
       }
     }
 
@@ -378,15 +388,15 @@ public:
   void addSite(std::unique_ptr<SiteType>& site, size_t sitePosition, bool checkCoordinate = true) override
   {
     if (sitePosition >= getNumberOfSites())
-      throw IndexOutOfBoundsException("VectorSiteContainer::addSite", sitePosition, 0, getNumberOfSites() - 1);
+      throw IndexOutOfBoundsException("TemplateVectorSiteContainer::addSite", sitePosition, 0, getNumberOfSites() - 1);
 
     // Check size:
     if (site->size() != getNumberOfSequences())
-      throw SiteException("VectorSiteContainer::addSite. Site does not have the appropriate length", std::move(site));
+      throw SiteException("TemplateVectorSiteContainer::addSite. Site does not have the appropriate length", *site);
 
     // New site's alphabet and site container's alphabet matching verification
     if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
+      throw AlphabetMismatchException("TemplateVectorSiteContainer::addSite", *getAlphabet(), *site->getAlphabet());
 
     // Check coordinate:
     if (checkCoordinate) {
@@ -394,7 +404,7 @@ public:
       // For all positions in vector : throw exception if position already exists
       for (size_t i = 0; i < getNumberOfSites(); i++) {
         if (i != sitePosition && getSite(i).getCoordinate() == coordinate)
-          throw SiteException("VectorSiteContainer::addSite. Site coordinate already exists in container", std::move(site));
+          throw SiteException("TemplateVectorSiteContainer::addSite. Site coordinate already exists in container", *site);
       }
     }
 
@@ -439,7 +449,7 @@ public:
   void setSiteCoordinates(const Vint& vCoordinates) override
   {
     if (vCoordinates.size() != getNumberOfSites())
-      throw BadSizeException("VectorSiteContainer::setSiteCoordinates bad size of coordinates vector", vCoordinates.size(), getNumberOfSites());
+      throw BadSizeException("TemplateVectorSiteContainer::setSiteCoordinates bad size of coordinates vector", vCoordinates.size(), getNumberOfSites());
 
     for (size_t i = 0; i < getNumberOfSites(); ++i) {
       getSite(i).setCoordinate(vCoordinates[i]);
@@ -476,24 +486,25 @@ public:
   const SequenceType& getSequence(size_t sequencePosition) const override
   {
     if (sequencePosition >= getNumberOfSequences())
-      throw IndexOutOfBoundsException("VectorSiteContainer::getSequence.", sequencePosition, 0, getNumberOfSequences() - 1);
+      throw IndexOutOfBoundsException("TemplateVectorSiteContainer::getSequence.", sequencePosition, 0, getNumberOfSequences() - 1);
 
     // If Sequence already exsits
     auto name = VectorMappedContainer<SequenceType>::getObjectName(sequencePosition);
-    if (!isAvailableName(name))
+    if (!VectorMappedContainer<SequenceType>::isAvailableName(name))
       return *VectorMappedContainer<SequenceType>::getObject(sequencePosition);
 
     // Main loop : for all sites
     size_t n = getNumberOfSites();
-    std::vector<int> sequence(n);
+    std::vector<typename SequenceType::SymbolType> sequence(n);
     for (size_t j = 0; j < n; ++j)
       sequence[j] = getSite(j)[sequencePosition];
-
+    
+    auto alphaPtr = getAlphabet();
     std::shared_ptr<SequenceType> ns(new SequenceType(
           sequenceNames_[sequencePosition],
           sequence,
-          sequenceComments_[sequencePosition],
-          getAlphabet()));
+          *sequenceComments_[sequencePosition],
+          alphaPtr));
 
     VectorMappedContainer<SequenceType>::addObject_(ns, sequencePosition, getSequenceKey(sequencePosition), false);
 
@@ -574,7 +585,7 @@ public:
   void setSequenceNames(const std::vector<std::string>& names, bool updateKeys) override
   {
     if (names.size() != getNumberOfSequences())
-      throw DimensionException("VectorSiteContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
+      throw DimensionException("TemplateVectorSiteContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
     VectorMappedContainer<SequenceType>::clear();
     sequenceNames_ = names;
     if (updateKeys) {
@@ -590,88 +601,38 @@ public:
     sequenceComments_.clear();
   }
 
-  VectorSiteContainer* createEmptyContainer() const override
+  TemplateVectorSiteContainer<SiteType, SequenceType>* createEmptyContainer() const override
   {
     auto alphaP = getAlphabet();
-    VectorSiteContainer* vsc = new VectorSiteContainer<SiteType, SequenceType>(alphaP);
+    auto vsc = new TemplateVectorSiteContainer<SiteType, SequenceType>(alphaP);
     vsc->setComments(getComments());
     return vsc;
   }
 
-  int& valueAt(const std::string& sequenceKey, size_t elementIndex)
-  {
-    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
-    return (*VectorPositionedContainer<SiteType>::getObject(elementIndex))[getSequencePosition(sequenceKey)];
-  }
-
-  const int& valueAt(const std::string& sequenceKey, size_t elementIndex) const override
-  {
-    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
-    return (*VectorPositionedContainer<SiteType>::getObject(elementIndex))[getSequencePosition(sequenceKey)];
-  }
-
-  int& operator()(const std::string& sequenceKey, size_t elementIndex)
-  {
-    return (*VectorPositionedContainer<SiteType>::getObject(elementIndex))[getSequencePosition(sequenceKey)];
-  }
-
-  const int& operator()(const std::string& sequenceKey, size_t elementIndex) const override
-  {
-    return (*VectorPositionedContainer<SiteType>::getObject(elementIndex))[getSequencePosition(sequenceKey)];
-  }
-
-  int& valueAt(size_t sequencePosition, size_t elementIndex)
-  {
-    if (sequencePosition >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", sequencePosition, 0, getNumberOfSequences() - 1);
-    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
-    return (*VectorPositionedContainer<SiteType>::getObject(elementIndex))[sequencePosition];
-  }
-
-  const int& valueAt(size_t sequencePosition, size_t elementIndex) const override
-  {
-    if (sequencePosition >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", sequencePosition, 0, getNumberOfSequences() - 1);
-    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
-    return (*VectorPositionedContainer<SiteType>::getObject(elementIndex))[sequencePosition];
-  }
-
-  int& operator()(size_t sequencePosition, size_t elementIndex)
-  {
-    return (*VectorPositionedContainer<Site>::getObject(elementIndex))[sequencePosition];
-  }
-  const int& operator()(size_t sequencePosition, size_t elementIndex) const override
-  {
-    return (*VectorPositionedContainer<Site>::getObject(elementIndex))[sequencePosition];
-  }
-
   double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    if (sitePosition  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", sitePosition, 0, getNumberOfSites() - 1);
-
-    return getAlphabet()->isResolvedIn(valueAt(sequenceKey, sitePosition), state) ? 1. : 0.;
+    return getSite(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
   }
 
   double operator()(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return getAlphabet()->isResolvedIn(valueAt(sequenceKey, sitePosition), state) ? 1. : 0.;
+    return getSite(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
   }
 
-  /*
+  /**
    * @brief get value of a state at a position
    * @param sitePosition  index of the site in the container
    * @param sequencePosition index of the looked value in the site
    * @param state  state in the alphabet
    */
-  double getStateValueAt(size_t sitePosition, size_t sequencePosition, int state) const
+  double getStateValueAt(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    if (sequencePosition >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", sequencePosition, 0, getNumberOfSequences() - 1);
-    if (sitePosition  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", sitePosition, 0, getNumberOfSites() - 1);
-
-    return getAlphabet()->isResolvedIn(valueAt(sequencePosition, sitePosition), state) ? 1. : 0.;
+    return getSite(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
-  double operator()(size_t sitePosition, size_t sequencePosition, int state) const
+  double operator()(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    return getAlphabet()->isResolvedIn(valueAt(sequencePosition, sitePosition), state) ? 1. : 0.;
+    return getSite(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
 
@@ -694,11 +655,11 @@ public:
       throw IndexOutOfBoundsException("VectorSiteContainer::setSequence.", sequencePosition, 0, getNumberOfSequences() - 1);
 
     if (sequence->size() != getNumberOfSites())
-      throw SequenceNotAlignedException("VectorSiteContainer::setSequence", sequence.get());
+      throw SequenceNotAlignedException<SequenceType>("VectorSiteContainer::setSequence", std::shared_ptr<const SequenceType>(sequence.release()));
 
     // New sequence's alphabet and site container's alphabet matching verification
    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSiteContainer::setSequence", getAlphabet(), sequence->getAlphabet());
+      throw AlphabetMismatchException("VectorSiteContainer::setSequence", *getAlphabet(), *sequence->getAlphabet());
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); i++)
@@ -716,20 +677,20 @@ public:
 
     // New sequence's alphabet and site container's alphabet matching verification
     if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSiteContainer::addSequence", getAlphabet(), sequence->getAlphabet());
+      throw AlphabetMismatchException("VectorSiteContainer::addSequence", *getAlphabet(), *sequence->getAlphabet());
 
     if (sequence->size() != getNumberOfSites())
-      throw SequenceException("VectorSiteContainer::addSequence. Sequence has not the appropriate length: " + TextTools::toString(sequence->size()) + ", should be " + TextTools::toString(getNumberOfSites()) + ".", sequence.get());
+      throw SequenceException<SequenceType>("VectorSiteContainer::addSequence. Sequence has not the appropriate length: " + TextTools::toString(sequence->size()) + ", should be " + TextTools::toString(getNumberOfSites()) + ".", std::move(sequence));
 
     if (VectorMappedContainer<SequenceType>::hasObject(sequenceKey))
-      throw SequenceException("VectorSiteContainer::addSequence. Name already exists in container.", sequence.get());
+      throw SequenceException<SequenceType>("VectorSiteContainer::addSequence. Name already exists in container.", std::move(sequence));
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); ++i)
       getSite(i).addElement(sequence->getValue(i));
 
     // Add sequence
-    VectorMappedContainer<SequenceType>::appendObject(sequence, sequenceKey);
+    VectorMappedContainer<SequenceType>::appendObject(std::move(sequence), sequenceKey);
   }
 
 
@@ -740,11 +701,11 @@ public:
       throw IndexOutOfBoundsException("VectorSiteContainer::insertSequence.", sequencePosition, 0, getNumberOfSequences() - 1);
 
     if (sequence->size() != getNumberOfSites())
-      throw SequenceNotAlignedException("VectorSiteContainer::insertSequence", sequence.get());
+      throw SequenceNotAlignedException<SequenceType>("VectorSiteContainer::insertSequence", std::shared_ptr<const SequenceType>(sequence.release()));
 
     // New sequence's alphabet and site container's alphabet matching verification
    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSiteContainer::insertSequence", getAlphabet(), sequence->getAlphabet());
+      throw AlphabetMismatchException("VectorSiteContainer::insertSequence", *getAlphabet(), *sequence->getAlphabet());
 
     //if (checkNames && VectorMappedContainer<Sequence>::hasObject(sequenceKey))
     //  throw SequenceException("VectorSiteContainer::insertSequence. Name already exists in container.", &sequence);
@@ -757,8 +718,8 @@ public:
   }
 
   //Needed because of the template class
-  using AbstractSequenceContainer<SequenceType>::getAlphabet;
-  using AbstractSequenceContainer<SequenceType>::getComments;
+  using AbstractTemplateSequenceContainer<SequenceType>::getAlphabet;
+  using AbstractTemplateSequenceContainer<SequenceType>::getComments;
   /** @} */
 
 protected:
@@ -766,10 +727,13 @@ protected:
   void realloc(size_t n)
   {
     clear();
-    SiteType s(getAlphabet());
+    std::shared_ptr<const Alphabet> alphaPtr = getAlphabet();
+    SiteType s(alphaPtr);
 
-    for (size_t i = 0; i < n; ++i)
-      addSite(std::unique_ptr<SiteType>(s.clone()), false);
+    for (size_t i = 0; i < n; ++i) {
+      std::unique_ptr<SiteType> sitePtr(s.clone());
+      addSite(sitePtr, false);
+    }
 
     reindexSites();
   }
@@ -777,8 +741,8 @@ protected:
 };
 
 //Aliases:
-using BasicVectorSiteContainer = VectorSiteContainer<Site, BasicSequence>;
-using ProbabilisticVectorSiteContainer = VectorSiteContainer<ProbabilisticSite, ProbabilisticSequence>;
+using VectorSiteContainer = TemplateVectorSiteContainer<Site, Sequence>;
+using ProbabilisticVectorSiteContainer = TemplateVectorSiteContainer<ProbabilisticSite, ProbabilisticSequence>;
 
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORSITECONTAINER_H

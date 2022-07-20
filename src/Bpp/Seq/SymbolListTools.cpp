@@ -55,7 +55,7 @@ using namespace bpp;
 
 /******************************************************************************/
 
-bool SymbolListTools::hasGap(const IntCoreSymbolList& site)
+bool SymbolListTools::hasGap(const IntSymbolList& site)
 {
   // Main loop : for all characters in site
   for (size_t i = 0; i < site.size(); i++)
@@ -79,7 +79,7 @@ bool SymbolListTools::hasGap(const ProbabilisticSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::hasUnresolved(const IntCoreSymbolList& site)
+bool SymbolListTools::hasUnresolved(const IntSymbolList& site)
 {
   // Main loop : for all characters in site
   for (size_t i = 0; i < site.size(); i++)
@@ -92,7 +92,7 @@ bool SymbolListTools::hasUnresolved(const IntCoreSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::isGapOnly(const IntCoreSymbolList& site)
+bool SymbolListTools::isGapOnly(const IntSymbolList& site)
 {
   // Main loop : for all characters in site
   for (size_t i = 0; i < site.size(); i++)
@@ -117,7 +117,7 @@ bool SymbolListTools::isGapOnly(const ProbabilisticSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::isGapOrUnresolvedOnly(const IntCoreSymbolList& site)
+bool SymbolListTools::isGapOrUnresolvedOnly(const IntSymbolList& site)
 {
   // Main loop : for all characters in site
   for (size_t i = 0; i < site.size(); i++)

@@ -1,8 +1,7 @@
 //
-// File: Commentable.h
+// File: AlignmentData.h
 // Authors:
 //   Laurent Guéguen
-// Created: lundi 15 mai 2017, Ã  00h 03
 //
 
 /*
@@ -38,91 +37,81 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef BPP_SEQ_COMMENTABLE_H
-#define BPP_SEQ_COMMENTABLE_H
+#ifndef BPP_SEQ_CONTAINER_ALIGNMENTDATA_H
+#define BPP_SEQ_CONTAINER_ALIGNMENTDATA_H
 
-
+#include <Bpp/Exceptions.h>
+#include <Bpp/Numeric/VectorTools.h>
+#include "SequenceData.h"
+#include "../CoreSite.h"
 
 // From the STL:
 #include <string>
-
 namespace bpp
 {
 /**
- * @brief Declaration of Comments type.
+ * @brief The Container of Aligned Values interface.
  *
- * Comments are defined as a std::vector of std::strings to allow the later creation of a
- * full Comments class.
+ * Container implementing the AlignedValuesContainer interface deal
+ * with <em>aligned</em> data.
  */
-typedef std::vector<std::string> Comments;
-
-class Commentable
+template<class HashType = std::string>
+class AlignmentDataInterface :
+  public virtual SequenceDataInterface<HashType>
 {
 public:
-  Commentable() {}
-  virtual ~Commentable() {}
+  AlignmentDataInterface() {}
+  virtual ~AlignmentDataInterface() {}
+
+  AlignmentDataInterface* clone() const override = 0;
+
 
   /**
-   * @brief Get the comments.
+   * @brief Get a site from a given position.
    *
-   * @return The comments.
+   * @param siteIndex The position
    */
-  virtual const Comments& getComments() const = 0;
+
+  virtual const CoreSiteInterface& getSite(size_t siteIndex) const = 0;
 
   /**
-   * @brief Set the comments.
+   * @brief Remove a continuous range of sites in the container.
    *
-   * @param comments The new comments.
+   * @param siteIndex The position of the first site in the container.
+   * @param length The length of the region to delete, starting at pposition siteIndex.
+   * @throw IndexOutOfBoundsException If the specified range is not valid.
    */
-  virtual void setComments(const Comments& comments) = 0;
+  virtual void deleteSites(size_t siteIndex, size_t length) = 0;
 
-  virtual void clearComments() = 0;
+  /**
+   * @brief Get the number of aligned positions in the container.
+   *
+   * @return The number of sites in the container.
+   */
+
+  virtual size_t getNumberOfSites() const = 0;
+
+  /**
+   * @brief Set all positions attributes.
+   */
+
+  virtual void reindexSites() = 0;
+
+  /**
+   * @brief Get all coordinates of sites.
+   *
+   * @return A vector with all site coordinates.
+   */
+
+  virtual Vint getSiteCoordinates() const = 0;
+
+  /**
+   * @brief Set all coordinates of sites.
+   *
+   * @param vPositions A vector with all site coordinates.
+   */
+
+  virtual void setSiteCoordinates(const Vint& coordinates) = 0;
 };
-
-class SimpleCommentable:
-  public virtual Commentable
-{
-protected:
-  Comments comments_;
-
-public:
-  SimpleCommentable() :
-    comments_()
-  {}
-
-  SimpleCommentable(const Comments& comments) :
-    comments_(comments)
-  {}
-
-  SimpleCommentable(const SimpleCommentable& com) :
-    comments_(com.comments_)
-  {}
-
-  SimpleCommentable& operator=(const SimpleCommentable& com)
-  {
-    comments_ = com.comments_;
-    return *this;
-  }
-
-  virtual ~SimpleCommentable()
-  {}
-
-  /**
-   * @brief Get the comments.
-   *
-   * @return The comments.
-   */
-  const Comments& getComments() const { return comments_; }
-
-  /**
-   * @brief Set the comments.
-   *
-   * @param comments The new comments.
-   */
-  void setComments(const Comments& comments) { comments_ = comments; }
-
-  void clearComments() { comments_.clear(); }
-};
-
 } // end of namespace bpp.
-#endif // BPP_SEQ_COMMENTABLE_H
+#endif // BPP_SEQ_CONTAINER_ALIGNEDVALUESCONTAINER_H

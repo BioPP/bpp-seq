@@ -49,6 +49,7 @@
 #include <vector>
 
 #include <Bpp/Clonable.h>
+#include "CoreSymbolList.h"
 #include "Commentable.h"
 
 namespace bpp
@@ -60,18 +61,17 @@ namespace bpp
  * an ordered set of states, a name and some meta data (comments).
  */
 
-class CoreSequence :
-  public virtual Clonable
+class CoreSequenceInterface :
+  public virtual CruxSymbolListInterface,
+  public virtual Commentable
 {
 public:
-  CoreSequence() {}
+  CoreSequenceInterface() {}
 
-  virtual ~CoreSequence() {}
+  virtual ~CoreSequenceInterface() {}
 
 public:
-#ifndef NO_VIRTUAL_COV
-  CoreSequence* clone() const = 0;
-#endif
+  CoreSequenceInterface* clone() const override = 0;
 
   /**
    * @name Setting/getting the name of the sequence.
@@ -94,29 +94,6 @@ public:
   virtual void setName(const std::string& name) = 0;
   /** @} */
 
-
-  /**
-   * @brief Get the comments.
-   *
-   * @return The comments.
-   */
-
-  virtual const Comments& getComments() const = 0;
-
-  /**
-   * @brief Set the comments.
-   *
-   * @param comments The new comments.
-   */
-
-  virtual void setComments(const Comments& comments) = 0;
-
-  /**
-   * @brief Clear the comments.
-   *
-   */
-
-  virtual void clearComments() = 0;
 
   /**
    * @name Adjusting the size of the sequence.
@@ -146,6 +123,16 @@ public:
   virtual void setToSizeL(size_t newSize) = 0;
 
   /** @} */
+
+  /**
+   * @brief get value of a state at a position
+   *
+   * @param sitePosition index of the looked value in the sequence
+   * @param state        state in the alphabet
+   * @return             The state value at the given position.
+   */
+  virtual double getStateValueAt(size_t sitePosition, int state) const override = 0;
+
 };
 
 
@@ -153,8 +140,8 @@ public:
  * @brief A partial implementation of the CoreSequence interface.
  */
 class AbstractCoreSequence :
-  public virtual CoreSequence,
-  public virtual SimpleCommentable
+  public virtual CoreSequenceInterface,
+  public SimpleCommentable
 {
 private:
   /**
@@ -197,12 +184,12 @@ public:
     return *this;
   }
 
-  AbstractCoreSequence(const CoreSequence& s) :
+  AbstractCoreSequence(const CoreSequenceInterface& s) :
     SimpleCommentable(s.getComments()),
     name_(s.getName())
   {}
 
-  AbstractCoreSequence& operator=(const CoreSequence& s)
+  AbstractCoreSequence& operator=(const CoreSequenceInterface& s)
   {
     SimpleCommentable::setComments(s.getComments());
     name_ = s.getName();
@@ -229,17 +216,6 @@ public:
   const std::string& getName() const { return name_; }
 
   void setName(const std::string& name) { name_ = name; }
-
-  const Comments& getComments() const
-  {
-    return Commentable::getComments();
-  }
-
-  void setComments(const Comments& comments)
-  {
-    Commentable::setComments(comments);
-  }
-
   /** @} */
 };
 } // end of namespace bpp.

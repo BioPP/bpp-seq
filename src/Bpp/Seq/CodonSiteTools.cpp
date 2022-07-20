@@ -62,8 +62,8 @@ using namespace std;
 bool CodonSiteTools::hasGapOrStop(const Site& site, const GeneticCode& gCode)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
-    throw AlphabetException("CodonSiteTools::hasGapOrStop: alphabet is not CodonAlphabet", site.getAlphabet());
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
+    throw AlphabetException("CodonSiteTools::hasGapOrStop: alphabet is not CodonAlphabet", *site.getAlphabet());
   for (size_t i = 0; i < site.size(); i++)
   {
     if (site[i] < 0)
@@ -77,8 +77,8 @@ bool CodonSiteTools::hasGapOrStop(const Site& site, const GeneticCode& gCode)
 bool CodonSiteTools::hasStop(const Site& site, const GeneticCode& gCode)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
-    throw AlphabetException("CodonSiteTools::hasStop: alphabet is not CodonAlphabet", site.getAlphabet());
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
+    throw AlphabetException("CodonSiteTools::hasStop: alphabet is not CodonAlphabet", *site.getAlphabet());
   for (size_t i = 0; i < site.size(); i++)
   {
     if (gCode.isStop(site[i]))
@@ -92,25 +92,25 @@ bool CodonSiteTools::hasStop(const Site& site, const GeneticCode& gCode)
 bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
-    throw AlphabetException("CodonSiteTools::isMonoSitePolymorphic: alphabet is not CodonAlphabet", site.getAlphabet());
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
+    throw AlphabetException("CodonSiteTools::isMonoSitePolymorphic: alphabet is not CodonAlphabet", *site.getAlphabet());
   // Empty site checking
   if (site.size() == 0)
-    throw EmptySiteException("CodonSiteTools::isMonoSitePolymorphic: Incorrect specified site", &site);
+    throw EmptySiteException("CodonSiteTools::isMonoSitePolymorphic: Incorrect specified site", site);
 
   // Global polymorphism checking
   if (SymbolListTools::isConstant(site))
     return false;
   // initialisation of the 3 sub-sites ot the codon
   vector<int> pos1, pos2, pos3;
-  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+  auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
   for (size_t i = 0; i < site.size(); i++)
   {
     pos1.push_back(ca->getFirstPosition(site[i]));
     pos2.push_back(ca->getSecondPosition(site[i]));
     pos3.push_back(ca->getThirdPosition(site[i]));
   }
-  const NucleicAlphabet* na = ca->getNucleicAlphabet();
+  shared_ptr<const Alphabet> na = ca->getNucleicAlphabet();
   Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
   // polymorphism checking for each sub-sites
   size_t nbpol = 0;
@@ -130,13 +130,13 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
 bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode& gCode)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
-    throw AlphabetException("CodonSiteTools::isSynonymousPolymorphic: alphabet is not CodonAlphabet", site.getAlphabet());
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
+    throw AlphabetException("CodonSiteTools::isSynonymousPolymorphic: alphabet is not CodonAlphabet", *site.getAlphabet());
   if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
-    throw AlphabetMismatchException("CodonSiteTools::isSynonymousPolymorphic: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
+    throw AlphabetMismatchException("CodonSiteTools::isSynonymousPolymorphic: site and genetic code have not the same codon alphabet.", *site.getAlphabet(), *gCode.getSourceAlphabet());
   // Empty site checking
   if (site.size() == 0)
-    throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic: Incorrect specified site", &site);
+    throw EmptySiteException("CodonSiteTools::isSynonymousPolymorphic: Incorrect specified site", site);
 
   // Global polymorphism checking
   if (SymbolListTools::isConstant(site))
@@ -165,11 +165,11 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode
 Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, const GeneticCode& gCode, double freqmin)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
-    throw AlphabetException("CodonSiteTools::generateCodonSiteWithoutRareVariant: alphabet is not CodonAlphabet", site.getAlphabet());
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
+    throw AlphabetException("CodonSiteTools::generateCodonSiteWithoutRareVariant: alphabet is not CodonAlphabet", *site.getAlphabet());
   // Empty site checking
   if (site.size() == 0)
-    throw EmptySiteException("CodonSiteTools::generateCodonSiteWithoutRareVariant: Incorrect specified site", &site);
+    throw EmptySiteException("CodonSiteTools::generateCodonSiteWithoutRareVariant: Incorrect specified site", site);
 
   if (SymbolListTools::isConstant(site))
   {

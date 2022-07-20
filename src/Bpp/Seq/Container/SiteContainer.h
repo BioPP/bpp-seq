@@ -42,6 +42,7 @@
 #ifndef BPP_SEQ_CONTAINER_SITECONTAINER_H
 #define BPP_SEQ_CONTAINER_SITECONTAINER_H
 
+#include "AlignmentData.h"
 #include "SequenceContainer.h"
 #include "../Site.h"
 #include "../ProbabilisticSite.h"
@@ -59,14 +60,15 @@ namespace bpp
  * As for SequenceContainers, the maintenance of Sites is up to the container.
  */
 template<class SiteType, class SequenceType, class HashType>
-class SiteContainer :
-  public virtual SequenceContainer<SequenceType, HashType>
+class TemplateSiteContainerInterface :
+  public virtual AlignmentDataInterface<HashType>,
+  public virtual TemplateSequenceContainerInterface<SequenceType, HashType>
 {
 public:
-  SiteContainer() {}
-  virtual ~SiteContainer() {}
+  TemplateSiteContainerInterface() {}
+  virtual ~TemplateSiteContainerInterface() {}
 
-  SiteContainer* clone() const override = 0;
+  TemplateSiteContainerInterface<SiteType, SequenceType, HashType>* clone() const override = 0;
 
 public:
   /**
@@ -76,7 +78,7 @@ public:
    * @return A site objet corresponding to site i in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual const SiteType& getSite(size_t sitePosition) const = 0;
+  virtual const SiteType& getSite(size_t sitePosition) const override = 0;
 
   /**
    * @brief Set a site in the container.
@@ -136,39 +138,25 @@ public:
    * @param length The length of the region to delete, starting at pposition sitePosition.
    * @throw IndexOutOfBoundsException If the specified range is not valid.
    */
-  virtual void deleteSites(size_t sitePosition, size_t length) = 0;
+  virtual void deleteSites(size_t sitePosition, size_t length) override = 0;
 
   /**
    * @brief Get the number of aligned positions in the container.
    *
    * @return The number of sites in the container.
    */
-  virtual size_t getNumberOfSites() const = 0;
+  virtual size_t getNumberOfSites() const override = 0;
 
   /**
    * @brief Set all coordinate attributes.
    */
-  virtual void reindexSites() = 0;
-
-  /**
-   * @brief Get all position attributes of sites.
-   *
-   * @return A vector with all site coordinates.
-   */
-  virtual Vint getSiteCoordinates() const = 0;
-
-  /**
-   * @brief Set all position attributes of sites.
-   *
-   * @param positions A vector with all site coordinates.
-   */
-  virtual void setSiteCoordinates(const Vint& coordinates) = 0;
+  virtual void reindexSites() override = 0;
 
 };
 
 //Aliases:
-using BasicSiteContainer = SiteContainer<Site, BasicSequence, std::string>;
-using ProbabilisticSiteContainer = SiteContainer<ProbabilisticSite, ProbabilisticSequence, std::string>;
+using SiteContainerInterface = TemplateSiteContainerInterface<Site, Sequence, std::string>;
+using ProbabilisticSiteContainerInterface = TemplateSiteContainerInterface<ProbabilisticSite, ProbabilisticSequence, std::string>;
 
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINER_H

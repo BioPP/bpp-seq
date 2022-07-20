@@ -262,7 +262,7 @@ unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(shared_pt
 
 /******************************************************************************/
 
-std::unique_ptr<BasicSequenceContainer> SequenceApplicationTools::getSequenceContainer(
+std::unique_ptr<SequenceContainerInterface> SequenceApplicationTools::getSequenceContainer(
   std::shared_ptr<const Alphabet>& alpha,
   const map<string, string>& params,
   const string& suffix,
@@ -273,13 +273,13 @@ std::unique_ptr<BasicSequenceContainer> SequenceApplicationTools::getSequenceCon
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
   BppOSequenceReaderFormat bppoReader(warn);
-  unique_ptr<IBasicSequence> iSeq(bppoReader.read(sequenceFormat));
+  unique_ptr<ISequence> iSeq(bppoReader.read(sequenceFormat));
   if (verbose)
   {
     ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
     ApplicationTools::displayResult("Sequence format " + suffix, iSeq->getFormatName());
   }
-  std::unique_ptr<BasicSequenceContainer> sequences = iSeq->readSequences(sequenceFilePath, alpha);
+  std::unique_ptr<SequenceContainerInterface> sequences = iSeq->readSequences(sequenceFilePath, alpha);
 
   // Apply sequence selection:
   restrictSelectedSequencesByName(*sequences, params, suffix, suffixIsOptional, verbose, warn);
@@ -290,8 +290,8 @@ std::unique_ptr<BasicSequenceContainer> SequenceApplicationTools::getSequenceCon
 
 /******************************************************************************/
 
-map<size_t, unique_ptr<BasicVectorSiteContainer> >
-SequenceApplicationTools::getBasicSiteContainers(
+map<size_t, unique_ptr<VectorSiteContainer> >
+SequenceApplicationTools::getSiteContainers(
   std::shared_ptr<const Alphabet>& alpha,
   const map<string, string>& params,
   const string& prefix,
@@ -302,7 +302,7 @@ SequenceApplicationTools::getBasicSiteContainers(
 {
   vector<string> vContName = ApplicationTools::matchingParameters(prefix + "data*", params);
 
-  map<size_t, unique_ptr<BasicVectorSiteContainer> > mCont;
+  map<size_t, unique_ptr<VectorSiteContainer> > mCont;
 
   for (size_t nT = 0; nT < vContName.size(); nT++)
   {
@@ -359,7 +359,7 @@ SequenceApplicationTools::getBasicSiteContainers(
       ApplicationTools::displayMessage("");
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
 
-      auto vsC = getBasicSiteContainer(alpha, args2, "", true, verbose, warn);
+      auto vsC = getSiteContainer(alpha, args2, "", true, verbose, warn);
       vsC = getSitesToAnalyse(*vsC, args2, "", true, false);
 
       if (mCont.find(num) != mCont.end())
@@ -459,7 +459,7 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
 
 /******************************************************************************/
 
-std::unique_ptr<BasicVectorSiteContainer> SequenceApplicationTools::getBasicSiteContainer(
+std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
   std::shared_ptr<const Alphabet>& alpha,
   const map<string, string>& params,
   const string& suffix,
@@ -470,7 +470,7 @@ std::unique_ptr<BasicVectorSiteContainer> SequenceApplicationTools::getBasicSite
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
   BppOAlignmentReaderFormat bppoReader(warn);
-  unique_ptr<IBasicAlignment> iAln(bppoReader.read(sequenceFormat));
+  unique_ptr<IAlignment> iAln(bppoReader.read(sequenceFormat));
   map<string, string> args(bppoReader.getUnparsedArguments());
   if (verbose)
   {
@@ -484,13 +484,13 @@ std::unique_ptr<BasicVectorSiteContainer> SequenceApplicationTools::getBasicSite
   else
     alpha2 = alpha;
 
-  auto sites2 = make_unique<BasicVectorSiteContainer>(*(iAln->readAlignment(sequenceFilePath, alpha2))); //We copy into a VectorSiteContainer, as most readers will generate an AlignedSequenceContainer)
+  auto sites2 = make_unique<VectorSiteContainer>(*(iAln->readAlignment(sequenceFilePath, alpha2))); //We copy into a VectorSiteContainer, as most readers will generate an AlignedSequenceContainer)
 
-  auto sites = make_unique<BasicVectorSiteContainer>();
+  auto sites = unique_ptr<VectorSiteContainer>();
 
   if (AlphabetTools::isRNYAlphabet(alpha.get()))
   {
-    sites = make_unique<BasicVectorSiteContainer>(alpha);
+    sites = make_unique<VectorSiteContainer>(alpha);
     for (size_t i = 0; i < sites2->getNumberOfSequences(); ++i)
     {
       auto seqP = SequenceTools::RNYslice(sites2->getSequence(i));
@@ -507,7 +507,7 @@ std::unique_ptr<BasicVectorSiteContainer> SequenceApplicationTools::getBasicSite
     string siteSet = ApplicationTools::getStringParameter("siteSelection", args, "none", suffix, suffixIsOptional, warn + 1);
     if (siteSet != "none")
     {
-      unique_ptr<BasicVectorSiteContainer> selectedSites;;
+      unique_ptr<VectorSiteContainer> selectedSites;;
       try
       {
         auto sel = MaseTools::getSelectedSites(*sites, siteSet);
@@ -533,7 +533,7 @@ std::unique_ptr<BasicVectorSiteContainer> SequenceApplicationTools::getBasicSite
 
     string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
 
-    unique_ptr<BasicVectorSiteContainer> selectedSites;;
+    unique_ptr<VectorSiteContainer> selectedSites;;
     if (siteSet != "none")
     {
       if (siteSet[0] == '(')
@@ -710,7 +710,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
 /******************************************************************************/
 
 void SequenceApplicationTools::restrictSelectedSequencesByName(
-  BasicSequenceContainer& allSequences,
+  SequenceContainerInterface& allSequences,
   const map<std::string, std::string>& params,
   string suffix,
   bool suffixIsOptional,
@@ -752,7 +752,7 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
 /******************************************************************************/
 
 void SequenceApplicationTools::writeSequenceFile(
-  const BasicSequenceContainer& sequences,
+  const SequenceContainerInterface& sequences,
   const map<string, string>& params,
   const string& suffix,
   bool verbose,
@@ -761,7 +761,7 @@ void SequenceApplicationTools::writeSequenceFile(
   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, "none", warn);
   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
   BppOSequenceWriterFormat bppoWriter(warn);
-  unique_ptr<OBasicSequence> oSeq(bppoWriter.read(sequenceFormat));
+  unique_ptr<OSequence> oSeq(bppoWriter.read(sequenceFormat));
   if (verbose)
   {
     ApplicationTools::displayResult("Output sequence file " + suffix, sequenceFilePath);
@@ -775,7 +775,7 @@ void SequenceApplicationTools::writeSequenceFile(
 /******************************************************************************/
 
 void SequenceApplicationTools::writeAlignmentFile(
-  const BasicSiteContainer& sites,
+  const SiteContainerInterface& sites,
   const map<string, string>& params,
   const string& suffix,
   bool verbose,
@@ -784,7 +784,7 @@ void SequenceApplicationTools::writeAlignmentFile(
   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, "none", warn);
   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
   BppOAlignmentWriterFormat bppoWriter(warn);
-  unique_ptr<OBasicAlignment> oAln(bppoWriter.read(sequenceFormat));
+  unique_ptr<OAlignment> oAln(bppoWriter.read(sequenceFormat));
   if (verbose)
   {
     ApplicationTools::displayResult("Output alignment file " + suffix, sequenceFilePath);

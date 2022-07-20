@@ -81,7 +81,7 @@ public:
    * @return A new ISequence object according to options specified.
    * @throw Exception if an error occured.
    */
-  std::unique_ptr<IBasicSequence> read(const std::string& description);
+  std::unique_ptr<ISequence> read(const std::string& description);
 
   /**
    * @return The arguments and their unparsed values from the last call of the read function, if there are any.

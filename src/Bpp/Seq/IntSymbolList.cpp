@@ -46,46 +46,6 @@ using namespace bpp;
 
 using namespace std;
 
-/****************************************************************************************/
-
-BasicIntSymbolList::BasicIntSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
-  SymbolList<int>(alpha)
-{
-  setContent(list);
-}
-
-BasicIntSymbolList::BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
-  SymbolList<int>(alpha)
-{
-  setContent(list);
-}
-
-/****************************************************************************************/
-
-// BasicIntSymbolList::BasicIntSymbolList(const IntSymbolList& list):
-//   alphabet_(list.getAlphabet()), content_(list.size())
-// {
-//   for (size_t i = 0; i < list.size(); ++i)
-//     content_[i] = list[i];
-// }
-
-BasicIntSymbolList::BasicIntSymbolList(const BasicIntSymbolList& list) :
-  SymbolList<int>(list) {}
-
-// BasicIntSymbolList& BasicIntSymbolList::operator=(const IntSymbolList& list)
-// {
-//   content_.resize(list.size());
-//   for (size_t i = 0; i < list.size(); ++i)
-//     content_[i] = list[i];
-//   alphabet_ = list.getAlphabet();
-//   return *this;
-// }
-
-BasicIntSymbolList& BasicIntSymbolList::operator=(const BasicIntSymbolList& list)
-{
-  SymbolList<int>::operator=(list);
-  return *this;
-}
 
 /****************************************************************************************/
 
@@ -125,38 +85,6 @@ void BasicIntSymbolList::setContent(const vector<int>& list)
 
 /****************************************************************************************/
 
-string BasicIntSymbolList::toString() const
-{
-  return StringSequenceTools::decodeSequence(content_, getAlphabet());
-}
-
-/****************************************************************************************/
-
-void BasicIntSymbolList::addElement(const string& c)
-{
-  content_.push_back(getAlphabet()->charToInt(c));
-}
-
-/****************************************************************************************/
-
-void BasicIntSymbolList::addElement(size_t pos, const string& c)
-{
-  if (pos >= content_.size())
-    throw IndexOutOfBoundsException("BasicIntSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-  content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), getAlphabet()->charToInt(c));
-}
-
-/****************************************************************************************/
-
-void BasicIntSymbolList::setElement(size_t pos, const string& c)
-{
-  if (pos >= content_.size())
-    throw IndexOutOfBoundsException("BasicIntSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-  content_[pos] = getAlphabet()->charToInt(c);
-}
-
-/****************************************************************************************/
-
 string BasicIntSymbolList::getChar(size_t pos) const
 {
   if (pos >= content_.size())
@@ -172,18 +100,6 @@ string BasicIntSymbolList::getChar(size_t pos) const
   }
   return c;
 }
-
-/****************************************************************************************/
-
-EdIntSymbolList::EdIntSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
-  EdSymbolList<int>(alpha)
-{
-  setContent(list);
-}
-
-EdIntSymbolList::EdIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
-  EdSymbolList<int>(list, alpha)
-{}
 
 /****************************************************************************************/
 

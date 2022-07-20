@@ -48,9 +48,11 @@
 #include "../Alphabet/Alphabet.h"
 #include "../AlphabetIndex/AlphabetIndex1.h"
 #include "../AlphabetIndex/AlphabetIndex2.h"
+#include "../GeneticCode/GeneticCode.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/VectorSiteContainer.h"
-#include "../GeneticCode/GeneticCode.h"
+#include "../Container/SiteContainerTools.h"
+#include "../SiteTools.h"
 
 namespace bpp
 {
@@ -189,7 +191,7 @@ public:
    * @see getSiteContainer to read an alignment.
    */
 
-  static std::unique_ptr<BasicSequenceContainer> getSequenceContainer(
+  static std::unique_ptr<SequenceContainerInterface> getSequenceContainer(
     std::shared_ptr<const Alphabet>& alpha,
     const std::map<std::string, std::string>& params,
     const std::string& suffix = "",
@@ -198,7 +200,7 @@ public:
     int warn = 1);
 
   /**
-   * @brief Build a BasicSiteContainer object according to the BppO syntax.
+   * @brief Build a SiteContainer object according to the BppO syntax.
    *
    * Sequences in file must be aligned.
    * The supported sequence formats are Fasta, DCSE, Clustal, Mase and Phylip.
@@ -211,9 +213,9 @@ public:
    * @param suffixIsOptional Tell if the suffix is absolutely required.
    * @param verbose Print some info to the 'message' output stream.
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
-   * @return A new BasicVectorSiteContainer object according to the description.
+   * @return A new VectorSiteContainer object according to the description.
    */
-  static std::unique_ptr<BasicVectorSiteContainer> getBasicSiteContainer(
+  static std::unique_ptr<VectorSiteContainer> getSiteContainer(
     std::shared_ptr<const Alphabet>& alpha,
     const std::map<std::string, std::string>& params,
     const std::string& suffix = "",
@@ -221,7 +223,7 @@ public:
     bool verbose = true,
     int warn = 1);
 
-   /**
+  /**
    * @brief Build a ProbabilisticSiteContainer object according to the BppO syntax.
    *
    * Sequences in file must be aligned.
@@ -237,35 +239,9 @@ public:
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    * @return A new ProbabilisticVectorSiteContainer object according to the description.
    */
- static std::unique_ptr<ProbabilisticVectorSiteContainer> getProbabilisticSiteContainer(
+  static std::unique_ptr<ProbabilisticVectorSiteContainer> getProbabilisticSiteContainer(
     std::shared_ptr<const Alphabet>& alpha,
     const std::map<std::string, std::string>& params,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool verbose = true,
-    int warn = 1);
-
-  /**
-   * @brief Build multiple BasicSiteContainer objects according to the BppO syntax.
-   *
-   * Sequences in file must be aligned.
-   * The supported sequence formats are Fasta, DCSE, Clustal, Mase and Phylip.
-   *
-   * See the Bio++ program suite manual for a full description of the syntax.
-   *
-   * @param alpha   The alphabet to use in the container.
-   * @param params  The attribute map where options may be found.
-   * @param suffix  A suffix to be applied to each attribute name.
-   * @param suffixIsOptional Tell if the suffix is absolutely required.
-   * @param verbose Print some info to the 'message' output stream.
-   * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
-   * @return A map of BasicVectorSiteContainer objects according to the description.
-   */
- static std::map<size_t, std::unique_ptr<BasicVectorSiteContainer> >
- getBasicSiteContainers(
-    std::shared_ptr<const Alphabet>& alpha,
-    const std::map<std::string, std::string>& params,
-    const std::string& prefix = "input.",
     const std::string& suffix = "",
     bool suffixIsOptional = true,
     bool verbose = true,
@@ -285,10 +261,10 @@ public:
    * @param suffixIsOptional Tell if the suffix is absolutely required.
    * @param verbose Print some info to the 'message' output stream.
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
-   * @return A map of AlignedSequenceContainer objects according to the description.
+   * @return A map of VectorSiteContainer objects according to the description.
    */
-static std::map<size_t, std::unique_ptr<ProbabilisticVectorSiteContainer> >
-getProbabilisticSiteContainers(
+  static std::map<size_t, std::unique_ptr<VectorSiteContainer> >
+  getSiteContainers(
     std::shared_ptr<const Alphabet>& alpha,
     const std::map<std::string, std::string>& params,
     const std::string& prefix = "input.",
@@ -296,6 +272,33 @@ getProbabilisticSiteContainers(
     bool suffixIsOptional = true,
     bool verbose = true,
     int warn = 1);
+
+  /**
+   * @brief Build multiple ProbabilisticSiteContainer objects according to the BppO syntax.
+   *
+   * Sequences in file must be aligned.
+   * The supported sequence format is Pasta.
+   *
+   * See the Bio++ program suite manual for a full description of the syntax.
+   *
+   * @param alpha   The alphabet to use in the container.
+   * @param params  The attribute map where options may be found.
+   * @param suffix  A suffix to be applied to each attribute name.
+   * @param suffixIsOptional Tell if the suffix is absolutely required.
+   * @param verbose Print some info to the 'message' output stream.
+   * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
+   * @return A map of ProbabilisticVectorSiteContainer objects according to the description.
+   */
+  static std::map<size_t, std::unique_ptr<ProbabilisticVectorSiteContainer> >
+  getProbabilisticSiteContainers(
+    std::shared_ptr<const Alphabet>& alpha,
+    const std::map<std::string, std::string>& params,
+    const std::string& prefix = "input.",
+    const std::string& suffix = "",
+    bool suffixIsOptional = true,
+    bool verbose = true,
+    int warn = 1);
+
 
   /**
    * @brief Retrieves selected sequences (by name).
@@ -314,7 +317,7 @@ getProbabilisticSiteContainers(
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    */
   static void restrictSelectedSequencesByName(
-    BasicSequenceContainer& allSequences,
+    SequenceContainerInterface& allSequences,
     const std::map<std::string, std::string>& params,
     std::string suffix = "",
     bool suffixIsOptional = true,
@@ -351,9 +354,9 @@ getProbabilisticSiteContainers(
    * @return A new VectorSiteContainer object containing sites of interest.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
   getSitesToAnalyse(
-    const SiteContainer<SiteType, SequenceType, std::string>& allSites,
+    const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& allSites,
     const std::map<std::string, std::string>& params,
     std::string suffix = "",
     bool suffixIsOptional = true,
@@ -362,7 +365,7 @@ getProbabilisticSiteContainers(
     int warn = 1)
   {
     // Fully resolved sites, i.e. without jokers and gaps:
-    std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> > sitesToAnalyse;
+    std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> > sitesToAnalyse;
 
     size_t numSeq = allSites.getNumberOfSequences();
 
@@ -372,7 +375,7 @@ getProbabilisticSiteContainers(
 
     if (option == "all")
     {
-      sitesToAnalyse = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(allSites);
+      sitesToAnalyse = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(allSites);
       size_t nbSites = sitesToAnalyse->getNumberOfSites();
 
       std::string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional, warn);
@@ -492,7 +495,7 @@ getProbabilisticSiteContainers(
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    */
   static void writeSequenceFile(
-    const BasicSequenceContainer& sequences,
+    const SequenceContainerInterface& sequences,
     const std::map<std::string, std::string>& params,
     const std::string& suffix = "",
     bool verbose = true,
@@ -512,7 +515,7 @@ getProbabilisticSiteContainers(
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    */
   static void writeAlignmentFile(
-    const BasicSiteContainer& sequences,
+    const SiteContainerInterface& sequences,
     const std::map<std::string, std::string>& params,
     const std::string& suffix = "",
     bool verbose = true,

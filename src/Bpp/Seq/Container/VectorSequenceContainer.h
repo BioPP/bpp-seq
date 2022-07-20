@@ -62,8 +62,8 @@ namespace bpp
  * std::shared_ptr<Sequence> are stored in a std::vector, as well as in a std::map.
  */
 template<class SequenceType>
-class VectorSequenceContainer :
-  public AbstractSequenceContainer<SequenceType, std::string>,
+class TemplateVectorSequenceContainer :
+  public AbstractTemplateSequenceContainer<SequenceType, std::string>,
   private VectorMappedContainer<SequenceType>
 {
 public:
@@ -76,10 +76,10 @@ public:
    * @param alphabet The alphabet of the container.
    * @param vs       A vector of smart pointers toward sequence objects.
    */
-  VectorSequenceContainer(
+  TemplateVectorSequenceContainer(
       std::shared_ptr<const Alphabet>& alphabet,
       const std::vector< std::unique_ptr<SequenceType> >& vs):
-    AbstractSequenceContainer<SequenceType, std::string>(alphabet),
+    AbstractTemplateSequenceContainer<SequenceType, std::string>(alphabet),
     VectorMappedContainer<SequenceType>()
   {
     for (auto seq: vs) {
@@ -92,8 +92,8 @@ public:
    *
    * @param alphabet The alphabet of the container.
    */
-  VectorSequenceContainer(std::shared_ptr<const Alphabet>& alphabet) :
-      AbstractSequenceContainer<SequenceType>(alphabet),
+  TemplateVectorSequenceContainer(std::shared_ptr<const Alphabet>& alphabet) :
+      AbstractTemplateSequenceContainer<SequenceType>(alphabet),
       VectorMappedContainer<SequenceType>()
   {}
 
@@ -108,9 +108,9 @@ public:
    *
    * @param vsc The VectorSequenceContainer to copy into this container.
    */
-  VectorSequenceContainer(
-      const VectorSequenceContainer<SequenceType>& vsc):
-    AbstractSequenceContainer<SequenceType, std::string>(vsc),
+  TemplateVectorSequenceContainer(
+      const TemplateVectorSequenceContainer<SequenceType>& vsc):
+    AbstractTemplateSequenceContainer<SequenceType, std::string>(vsc),
     VectorMappedContainer<SequenceType>()
   {
     size_t max = vsc.getNumberOfSequences();
@@ -127,8 +127,8 @@ public:
    *
    * @param sc The SequenceContainer to copy into this container.
    */
-  VectorSequenceContainer(const SequenceContainer<SequenceType, std::string>& sc):
-    AbstractSequenceContainer<SequenceType>(sc.getAlphabet()),
+  TemplateVectorSequenceContainer(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc):
+    AbstractTemplateSequenceContainer<SequenceType>(sc.getAlphabet()),
     VectorMappedContainer<SequenceType>()
   {
     size_t max = sc.getNumberOfSequences();
@@ -147,10 +147,10 @@ public:
    *
    * @param vsc The VectorSequenceContainer to copy into this container.
    */
-  VectorSequenceContainer& operator=(const VectorSequenceContainer& vsc)
+  TemplateVectorSequenceContainer& operator=(const TemplateVectorSequenceContainer& vsc)
   {
     clear();
-    AbstractSequenceContainer<SequenceType>::operator=(vsc);
+    AbstractTemplateSequenceContainer<SequenceType>::operator=(vsc);
     size_t max = vsc.getNumberOfSequences();
     for (size_t i = 0; i < max; i++)
     {
@@ -164,10 +164,10 @@ public:
    *
    * @param sc The SequenceContainer to copy into this container.
    */
-  VectorSequenceContainer& operator=(const SequenceContainer<SequenceType, std::string>& sc)
+  TemplateVectorSequenceContainer& operator=(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc)
   {
     clear();
-    AbstractSequenceContainer<SequenceType>::operator=(sc);
+    AbstractTemplateSequenceContainer<SequenceType>::operator=(sc);
     size_t max = sc.getNumberOfSequences();
     for (size_t i = 0; i < max; i++)
     {
@@ -188,7 +188,7 @@ public:
    *
    * @{
    */
-  VectorSequenceContainer<SequenceType>* clone() const override { return new VectorSequenceContainer<SequenceType>(*this); }
+  TemplateVectorSequenceContainer<SequenceType>* clone() const override { return new TemplateVectorSequenceContainer<SequenceType>(*this); }
   /** @} */
 
 
@@ -198,12 +198,12 @@ public:
    *
    * @{
    */
-  using AbstractSequenceContainer<SequenceType, std::string>::getAlphabet;
-  using AbstractSequenceContainer<SequenceType, std::string>::getComments;
+  using AbstractTemplateSequenceContainer<SequenceType, std::string>::getAlphabet;
+  using AbstractTemplateSequenceContainer<SequenceType, std::string>::getComments;
 
-  VectorSequenceContainer<SequenceType>* createEmptyContainer() const override 
+  TemplateVectorSequenceContainer<SequenceType>* createEmptyContainer() const override 
   {
-    VectorSequenceContainer<SequenceType>* vsc = new VectorSequenceContainer<SequenceType>(getAlphabet(), getComments());
+    TemplateVectorSequenceContainer<SequenceType>* vsc = new TemplateVectorSequenceContainer<SequenceType>(getAlphabet(), getComments());
     return vsc;
   }
  
@@ -235,7 +235,7 @@ public:
  
   size_t getNumberOfSequences() const override
   { 
-    return VectorSequenceContainer<SequenceType>::getSize();
+    return VectorMappedContainer<SequenceType>::getSize();
   }
  
   std::vector<std::string> getSequenceKeys() const override { 
@@ -416,8 +416,8 @@ protected:
 };
 
 //Aliases:
-using BasicVectorSequenceContainer = VectorSequenceContainer<BasicSequence>;
-using ProbabilisticVectorSequenceContainer = VectorSequenceContainer<ProbabilisticSequence>;
+using VectorSequenceContainer = TemplateVectorSequenceContainer<Sequence>;
+using ProbabilisticVectorSequenceContainer = TemplateVectorSequenceContainer<ProbabilisticSequence>;
 
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORSEQUENCECONTAINER_H

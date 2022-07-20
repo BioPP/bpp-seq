@@ -116,7 +116,7 @@ bool AlphabetTools::checkAlphabetCodingSize(const Alphabet* alphabet)
 unsigned int AlphabetTools::getAlphabetCodingSize(const Alphabet& alphabet)
 {
   if (!checkAlphabetCodingSize(alphabet))
-    throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().", alphabet.shared_from_this());
+    throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().", alphabet);
   return static_cast<unsigned int>(alphabet.intToChar(0).size());
 }
 

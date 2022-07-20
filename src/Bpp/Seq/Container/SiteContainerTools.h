@@ -46,6 +46,7 @@
 #include "SiteContainer.h"
 #include "VectorSiteContainer.h"
 #include "AlignedSequenceContainer.h"
+#include "SequenceContainerTools.h"
 #include "../AlphabetIndex/AlphabetIndex2.h"
 #include "../DistanceMatrix.h"
 #include "../GeneticCode/GeneticCode.h"
@@ -53,6 +54,7 @@
 #include "../CodonSiteTools.h"
 #include "../Site.h"
 #include <Bpp/Numeric/Matrix/Matrix.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
 
 // From the STL:
 #include <vector>
@@ -83,12 +85,12 @@ public:
    * @return A pointer toward a new SiteContainer with only sites with no gaps.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
-  getSitesWithoutGaps(const SiteContainer<SiteType, SequenceType, std::string>& sites)
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  getSitesWithoutGaps(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
     std::shared_ptr<const Alphabet> alphaPtr = sites.getAlphabet();
-    auto selectedSites = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
+    auto selectedSites = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       if (!SiteTools::hasGap(sites.getSite(i))) { //This calls the method dedicated to basic sites
         std::unique_ptr<SiteType> sitePtr(sites.getSite(i).clone());
@@ -111,12 +113,12 @@ public:
    * @return A pointer toward a new SiteContainer with only complete sites.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
-  getCompleteSites(const SiteContainer<SiteType, SequenceType, std::string>& sites)
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  getCompleteSites(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
     std::shared_ptr<const Alphabet> alphaPtr = sites.getAlphabet();
-    auto selectedSites = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
+    auto selectedSites = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       if (SiteTools::isComplete(sites.getSite(i))) { //This calls the method dedicated to basic sites
         std::unique_ptr<SiteType> sitePtr(sites.getSite(i).clone());
@@ -138,13 +140,13 @@ public:
    * @return A pointer toward a new SiteContainer.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< SiteContainer<SiteType, SequenceType, std::string> >
-  removeGapOnlySites(const SiteContainer<SiteType, SequenceType, std::string>& sites)
+  static std::unique_ptr< TemplateSiteContainerInterface<SiteType, SequenceType, std::string> >
+  removeGapOnlySites(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
     if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeGapOnlySites. Container is empty.");
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
-    auto newContainer = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, sites.getAlphabet());
+    auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, sites.getAlphabet());
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       const Site& site = sites.getSite(i);
       if (!SiteTools::isGapOnly(site)) {
@@ -163,7 +165,7 @@ public:
    * @param sites The container where the sites have to be removed.
    */
   template<class SiteType, class SequenceType, class HashType>
-  static void removeGapOnlySites(SiteContainer<SiteType, SequenceType, HashType>& sites)
+  static void removeGapOnlySites(TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites)
   {
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::removeGapOnlySites. Container is empty.");
@@ -202,14 +204,14 @@ public:
    * @return A pointer toward a new SiteContainer.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
-  removeGapOrUnresolvedOnlySites(const SiteContainer<SiteType, SequenceType, std::string>& sites)
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  removeGapOrUnresolvedOnlySites(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::removeGapOrUnresolvedOnlySites. Container is empty.");
 
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
-    auto newContainer = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, sites.getAlphabet());
+    auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, sites.getAlphabet());
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       const Site& site = sites.getSite(i);
       if (!SiteTools::isGapOrUnresolvedOnly(site)) {
@@ -228,7 +230,7 @@ public:
    * @param sites The container where the sites have to be removed.
    */
   template<class SiteType, class SequenceType, class HashType>
-  static void removeGapOrUnresolvedOnlySites(SiteContainer<SiteType, SequenceType, HashType>& sites)
+  static void removeGapOrUnresolvedOnlySites(TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites)
 {
   if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeGapOrUnresolvedOnlySites. Container is empty.");
@@ -263,14 +265,16 @@ public:
    * @return A pointer toward a new SiteContainer.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
-  removeGapSites(const SiteContainer<SiteType, SequenceType, std::string>& sites, double maxFreqGaps)
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  removeGapSites(
+		  const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites,
+		  double maxFreqGaps)
   {
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::removeGapSites. Container is empty.");
 
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
-    auto newContainer = std::make_unique<BasicVectorSiteContainer>(sequenceKeys, sites.getAlphabet());
+    auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, sites.getAlphabet());
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       std::map<int, double> freq;
       const Site& site = sites.getSite(i);
@@ -292,7 +296,9 @@ public:
    * @param maxFreqGaps The maximum frequency of gaps in each site.
    */
   template<class SiteType, class SequenceType, class HashType>
-  static void removeGapSites(SiteContainer<SiteType, SequenceType, HashType>& sites, double maxFreqGaps)
+  static void removeGapSites(
+		  TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites,
+		  double maxFreqGaps)
   {
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::removeGapSites. Container is empty.");
@@ -317,17 +323,19 @@ public:
    * @param gCode the genetic code to use to determine stop codons.
    * @return A pointer toward a new SiteContainer.
    */
-  static std::unique_ptr<BasicSiteContainer> getSitesWithoutStopCodon(const BasicSiteContainer& sites, const GeneticCode& gCode)
+  static std::unique_ptr<SiteContainerInterface> getSitesWithoutStopCodon(
+		  const SiteContainerInterface& sites,
+		  const GeneticCode& gCode)
   {
     std::shared_ptr<const CodonAlphabet> pca = std::dynamic_pointer_cast<const CodonAlphabet>(sites.getAlphabet());
     if (!pca)
-      throw AlphabetException("Not a Codon Alphabet", sites.getAlphabet());
+      throw AlphabetException("Not a Codon Alphabet", *sites.getAlphabet());
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::getSitesWithoutStopCodon. Container is empty.");
 
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
     auto alphaP = sites.getAlphabet();
-    auto newContainer = std::make_unique<BasicVectorSiteContainer>(sequenceKeys, alphaP);
+    auto newContainer = std::make_unique<VectorSiteContainer>(sequenceKeys, alphaP);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       const Site& site = sites.getSite(i);
       if (!CodonSiteTools::hasStop(site, gCode)) {
@@ -344,11 +352,13 @@ public:
    * @param sites The container to analyse.
    * @param gCode the genetic code to use to determine stop codons.
    */
-  static void removeSitesWithStopCodon(BasicSiteContainer& sites, const GeneticCode& gCode)
+  static void removeSitesWithStopCodon(
+		  SiteContainerInterface& sites,
+		  const GeneticCode& gCode)
   {
     std::shared_ptr<const CodonAlphabet> pca = std::dynamic_pointer_cast<const CodonAlphabet>(sites.getAlphabet());
     if (!pca)
-      throw AlphabetException("Not a Codon Alphabet", sites.getAlphabet());
+      throw AlphabetException("Not a Codon Alphabet", *sites.getAlphabet());
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::removeSitesWithStopCodon. Container is empty.");
 
@@ -357,6 +367,18 @@ public:
       if (CodonSiteTools::hasStop(site, gCode))
         sites.deleteSite(i - 1);
     }
+  }
+
+/**
+   * @brief Remove sites with stop codons, if the alphabet is a CodonAlphabet, otherwise throws an Exception.
+   *
+   * Note: this method is currently not implemented for probabilistic objects. An exception is thrown when called.
+   * @param sites The container to analyse.
+   * @param gCode the genetic code to use to determine stop codons.
+   */
+  static void removeSitesWithStopCodon(ProbabilisticSiteContainerInterface& sites, const GeneticCode& gCode)
+  {
+    throw Exception("SiteContainerTools::removeSitesWithStopCodon. Method not supported for probabilistic sequences.");
   }
 
   /**
@@ -372,12 +394,13 @@ public:
    */
   template<class SiteType, class SequenceType, class HashType>
   static void getSelectedSites(
-      const SiteContainer<SiteType, SequenceType, HashType>& sites,
+      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites,
       const SiteSelection& selection,
-      SiteContainer<SiteType, SequenceType, HashType>& outputSites)
+      TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& outputSites)
   {
     for (auto pos : selection) {
-      outputSites.addSite(std::unique_ptr<SiteType>(sites.getSite(pos).clone()));
+      auto sitePtr = std::unique_ptr<SiteType>(sites.getSite(pos).clone());
+      outputSites.addSite(sitePtr, false);
     }
   }
 
@@ -393,12 +416,13 @@ public:
    * @return A VectorSiteContainer with the selected sites. Comments from the original container will be copied.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
   getSelectedSites(
-      const SiteContainer<SiteType, SequenceType, std::string>& sites,
+      const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites,
       const SiteSelection& selection)
   {
-    auto outputSites = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(sites.getSequenceKeys(), sites.getAlphabet());
+    auto alphaPtr = sites.getAlphabet();
+    auto outputSites = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sites.getSequenceKeys(), alphaPtr);
     outputSites->setComments(sites.getComments());
     getSelectedSites<SiteType, SequenceType, std::string>(sites, selection, *outputSites);
     return outputSites;
@@ -420,9 +444,9 @@ public:
    */
   template<class SiteType, class SequenceType, class HashType>
   static void getSelectedPositions(
-      const SiteContainer<SiteType, SequenceType, HashType>& sites,
+      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites,
       const SiteSelection& selection,
-      SiteContainer<SiteType, SequenceType, HashType>& outputSites)
+      TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& outputSites)
   {
     size_t wsize = sites.getAlphabet()->getStateCodingSize();
     if (wsize > 1) {
@@ -459,14 +483,15 @@ public:
    * @return A VectorSiteContainer with the selected positions. Comments from the original container will be copied.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
   getSelectedPositions(
-      const SiteContainer<SiteType, SequenceType, std::string>& sites,
+      const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites,
       const SiteSelection& selection)
   {
-    auto outputSites = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(sites.getSequenceKeys(), sites.getAlphabet());
+    auto alphaPtr = sites.getAlphabet();
+    auto outputSites = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sites.getSequenceKeys(), alphaPtr);
     outputSites->setComments(sites.getComments());
-    getSelectedPositions<Site, Sequence, std::string>(sites, selection, *outputSites);
+    getSelectedPositions<SiteType, SequenceType, std::string>(sites, selection, *outputSites);
     return outputSites;
   }
 
@@ -484,17 +509,21 @@ public:
    * If this option is set to true, a consensus sequence will never contain an unknown character.
    * @return A new Sequence object with the consensus sequence.
    */
-  static std::unique_ptr<Sequence> getConsensus(const BasicSiteContainer& sc, const std::string& name = "consensus", bool ignoreGap = true, bool resolveUnknown = false);
+  static std::unique_ptr<Sequence> getConsensus(
+		  const SiteContainerInterface& sc,
+		  const std::string& name = "consensus",
+		  bool ignoreGap = true,
+		  bool resolveUnknown = false);
 
   /**
-   * @brief Change all gaps to unknown state in a BasicSiteContainer, according to its alphabet.
+   * @brief Change all gaps to unknown state in a SiteContainer, according to its alphabet.
    *
    * For DNA alphabets, this change all '-' to 'N'.
    * For Protein alphabets, this change all '-' to 'X'.
    *
    * @param sites The container to be modified.
    */
-  static void changeGapsToUnknownCharacters(BasicSiteContainer& sites);
+  static void changeGapsToUnknownCharacters(SiteContainerInterface& sites);
 
   /**
    * @brief Change all gaps to unknown state in a ProbabilisticSiteContainer, according to its alphabet.
@@ -502,16 +531,16 @@ public:
    * This changes in each sequence all sites that sum to 0 into sites where all values equal 1.
    * @param sites The container to be modified.
    */
-  static void changeGapsToUnknownCharacters(ProbabilisticSiteContainer& sites);
+  static void changeGapsToUnknownCharacters(ProbabilisticSiteContainerInterface& sites);
 
   /**
-   * @brief Change all unresolved characters to gaps in a BasicSiteContainer, according to its alphabet.
+   * @brief Change all unresolved characters to gaps in a SiteContainer, according to its alphabet.
    *
    * For DNA alphabets, this change all 'N', 'M', 'R', etc.  to '-'.
    *
    * @param sites The container to be modified.
    */
-  static void changeUnresolvedCharactersToGaps(BasicSiteContainer& sites);
+  static void changeUnresolvedCharactersToGaps(SiteContainerInterface& sites);
 
   /**
    * @brief Resolve a container with "." notations.
@@ -541,7 +570,9 @@ public:
    * @throw AlphabetException If the alphabet of the input alignment is not of class DefaultAlphabet, or if one character does not match with the output alphabet.
    * @throw Exception If no reference sequence was found, or if the input alignment contains no sequence.
    */
-  static std::unique_ptr<BasicSiteContainer> resolveDottedAlignment(const BasicSiteContainer& dottedAln, std::shared_ptr<const Alphabet>& resolvedAlphabet);
+  static std::unique_ptr<SiteContainerInterface> resolveDottedAlignment(
+		  const SiteContainerInterface& dottedAln,
+		  std::shared_ptr<const Alphabet>& resolvedAlphabet);
 
   /**
    * @name Sequences coordinates.
@@ -581,7 +612,9 @@ public:
    * @param positions A matrix object which is going to be resized and filled with the corresponding positions.
    * @author Julien Dutheil
    */
-  static void getSequencePositions(const BasicSiteContainer& sites, Matrix<size_t>& positions);
+  static void getSequencePositions(
+		  const SiteContainerInterface& sites,
+		  Matrix<size_t>& positions);
   /** @} */
 
   /**
@@ -597,7 +630,9 @@ public:
    * @throw AlphabetMismatchException If the sequences do not share the same alphabet.
    * @throw Exception If the sequence do not match.
    */
-  static std::map<size_t, size_t> translateAlignment(const Sequence& seq1, const Sequence& seq2);
+  static std::map<size_t, size_t> translateAlignment(
+		  const Sequence& seq1,
+		  const Sequence& seq2);
 
   /**
    * @brief Translate sequence positions from a sequence to another in the same alignment.
@@ -610,7 +645,10 @@ public:
    * @param i2 The index of the reference sequence.
    * @return A map with original sequence positions as keys, and translated positions as values.
    */
-  static std::map<size_t, size_t> translateSequence(const BasicSiteContainer& sequences, size_t i1, size_t i2);
+  static std::map<size_t, size_t> translateSequence(
+		  const SiteContainerInterface& sequences,
+		  size_t i1,
+		  size_t i2);
 
   /**
    * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -626,7 +664,11 @@ public:
    * @return A new SiteContainer instance.
    * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
    */
-  static std::unique_ptr<BasicAlignedSequenceContainer> alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2& s, double gap);
+  static std::unique_ptr<AlignedSequenceContainer> alignNW(
+		  const Sequence& seq1,
+		  const Sequence& seq2,
+		  const AlphabetIndex2& s,
+		  double gap);
 
   /**
    * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -643,7 +685,12 @@ public:
    * @return A new SiteContainer instance.
    * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
    */
-  static std::unique_ptr<BasicAlignedSequenceContainer> alignNW(const Sequence& seq1, const Sequence& seq2, const AlphabetIndex2& s, double opening, double extending);
+  static std::unique_ptr<AlignedSequenceContainer> alignNW(
+		  const Sequence& seq1,
+		  const Sequence& seq2,
+		  const AlphabetIndex2& s,
+		  double opening,
+		  double extending);
 
   /**
    * @brief Sample sites in an alignment.
@@ -660,9 +707,9 @@ public:
    */
   template<class SiteType, class SequenceType, class HashType>
   static void sampleSites(
-		  const SiteContainer<SiteType, SequenceType, HashType>& sites,
+		  const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites,
 		  size_t nbSites,
-		  SiteContainer<SiteType, SequenceType, HashType>& outSites,
+		  TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& outSites,
 		  std::shared_ptr< std::vector<size_t> > index = nullptr)
   {
     for (size_t i = 0; i < nbSites; ++i) {
@@ -690,13 +737,13 @@ public:
    * @return A container with the sampled sites.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
   sampleSites(
-      const SiteContainer<SiteType, SequenceType, std::string>& sites,
+      const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites,
       size_t nbSites,
       std::shared_ptr< std::vector<size_t> > index = nullptr)
   {
-    auto sampledSites = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(sites.getAlphabet());
+    auto sampledSites = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sites.getAlphabet());
     sampleSites<SiteType, SequenceType, std::string>(sites, nbSites, *sampledSites, index);
     return sampledSites;   
   }
@@ -716,8 +763,8 @@ public:
    */
   template<class SiteType, class SequenceType, class HashType>
   static void bootstrapSites(
-		  const SiteContainer<SiteType, SequenceType, HashType>& sites,
-		  SiteContainer<SiteType, SequenceType, HashType>& outputSites)
+		  const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites,
+		  TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& outputSites)
   {
     sampleSites(sites, sites.getNumberOfSites(), nullptr, outputSites);
   }
@@ -736,10 +783,10 @@ public:
    * @return A container that contains the sampled alignment.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< VectorSiteContainer<SiteType, SequenceType> > 
-  bootstrapSites(const SiteContainer<SiteType, SequenceType, std::string>& sites)
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> > 
+  bootstrapSites(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
-    auto outputSites = std::make_unique< VectorSiteContainer<SiteType, SequenceType> >(sites.getAlphabet());
+    auto outputSites = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sites.getAlphabet());
     bootstrapSites<SiteType, SequenceType, std::string>(sites, *outputSites);
     return outputSites;
   }
@@ -797,7 +844,7 @@ public:
    * @return All pairwise similarity measures.
    */
   static std::unique_ptr<DistanceMatrix> computeSimilarityMatrix(
-		  const BasicSiteContainer& sites,
+		  const SiteContainerInterface& sites,
 		  bool dist = false,
 		  const std::string& gapOption = SIMILARITY_NOFULLGAP,
 		  bool unresolvedAsGap = true);
@@ -829,8 +876,8 @@ public:
    */
   template<class SiteType, class SequenceType, class HashType>
   static void merge(
-		  SiteContainer<SiteType, SequenceType, HashType>& seqCont1, 
-		  const SiteContainer<SiteType, SequenceType, HashType>& seqCont2,
+		  TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& seqCont1, 
+		  const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& seqCont2,
 		  bool leavePositionAsIs = false)
   {
     if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
@@ -838,13 +885,13 @@ public:
 
     std::vector<HashType> seqKeys1 = seqCont1.getSequenceKeys();
     std::vector<HashType> seqKeys2 = seqCont2.getSequenceKeys();
-    const SiteContainer<SiteType, SequenceType, HashType>* seqCont2bis = 0;
+    const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>* seqCont2bis = 0;
     bool del = false;
     if (seqKeys1 == seqKeys2) {
       seqCont2bis = &seqCont2;
     } else {
       // We shall reorder sequences first:
-      SiteContainer<SiteType, SequenceType, HashType>* seqCont2ter = seqCont2.createEmptyContainer();
+      TemplateSiteContainerInterface<SiteType, SequenceType, HashType>* seqCont2ter = seqCont2.createEmptyContainer();
       SequenceContainerTools::getSelectedSequences(seqCont2, seqKeys1, *seqCont2ter);
       seqCont2bis = seqCont2ter;
       del = true;

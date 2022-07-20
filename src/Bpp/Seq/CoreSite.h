@@ -43,7 +43,7 @@
 #define BPP_SEQ_CORESITE_H
 
 #include <Bpp/Clonable.h>
-
+#include "CoreSymbolList.h"
 
 namespace bpp
 {
@@ -57,8 +57,8 @@ namespace bpp
  * used as a unique identifier, in the same manner that names identify
  * sequence objects.
  */
-class CoreSite :
-  public virtual Clonable
+class CoreSiteInterface :
+  public virtual CruxSymbolListInterface
 {
 public:
   /**
@@ -66,14 +66,14 @@ public:
    *
    * @{
    */
-  CoreSite* clone() const = 0;
+  CoreSiteInterface* clone() const override = 0;
 
   /**
    * @}
    */
 
   // class destructor
-  virtual ~CoreSite() {}
+  virtual ~CoreSiteInterface() {}
 
   /**
    * @name Setting/getting the position of the site.
@@ -98,13 +98,23 @@ public:
   /**
    * @}
    */
+
+  /**
+   * @brief get value of a state at a position
+   *
+   * @param sequencePosition index of the looked value in the site
+   * @param state            state in the alphabet
+   * @return                 The state value at the given position.
+   */
+  virtual double getStateValueAt(size_t sequencePosition, int state) const override = 0;
+
 };
 
 /**
  * @brief A partial implementation of the CoreSite interface.
  */
 class AbstractCoreSite :
-  public virtual CoreSite
+  public virtual CoreSiteInterface
 {
 private:
   /**
@@ -134,7 +144,7 @@ public:
    *
    * @{
    */
-  AbstractCoreSite(const CoreSite& site) :
+  AbstractCoreSite(const CoreSiteInterface& site) :
     coordinate_(site.getCoordinate()) {}
 
   AbstractCoreSite(const AbstractCoreSite& site) :
@@ -149,7 +159,7 @@ public:
    *
    * @{
    */
-  AbstractCoreSite& operator=(const CoreSite& site)
+  AbstractCoreSite& operator=(const CoreSiteInterface& site)
   {
     coordinate_ = site.getCoordinate();
     return *this;

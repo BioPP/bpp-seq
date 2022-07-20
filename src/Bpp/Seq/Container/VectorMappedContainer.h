@@ -118,7 +118,7 @@ public:
    *
    * @{
    */
-  VectorMappedContainer<T>* clone() const
+  VectorMappedContainer<T>* clone() const override
   {
     return new VectorMappedContainer(*this);
   }
@@ -130,7 +130,7 @@ public:
    * !! may be different than the actual number of objects
    *
    */
-  size_t getSize() const
+  size_t getSize() const override
   {
     return VectorPositionedContainer<T>::getSize();
   }
@@ -146,7 +146,7 @@ protected:
     return MappedNamedContainer<T>::getSize();
   }
 
-  size_t getObjectPosition(const std::string& name) const
+  size_t getObjectPosition(const std::string& name) const override
   {
     auto it = mNames_.find(name);
     if (it == mNames_.end())
@@ -155,7 +155,7 @@ protected:
     return it->second;
   }
 
-  std::string getObjectName(size_t objectIndex) const
+  const std::string& getObjectName(size_t objectIndex) const override
   {
     if (objectIndex >= getSize())
       throw IndexOutOfBoundsException("VectorMappedContainer::getObjectName.", objectIndex, 0, getSize() - 1);
@@ -164,12 +164,12 @@ protected:
   }
 
   
-  const std::shared_ptr<T> getObject(size_t objectIndex) const
+  const std::shared_ptr<T> getObject(size_t objectIndex) const override
   {
     return VectorPositionedContainer<T>::getObject(objectIndex);
   }
 
-  std::shared_ptr<T> getObject(size_t objectIndex)
+  std::shared_ptr<T> getObject(size_t objectIndex) override
   {
     return VectorPositionedContainer<T>::getObject(objectIndex);
   }
@@ -180,22 +180,22 @@ protected:
    * @param name The key of the object to retrieve.
    * @return The object associated to the given key.
    */
-  const std::shared_ptr<T> getObject(const std::string& name) const
+  const std::shared_ptr<T> getObject(const std::string& name) const override
   {
     return MappedNamedContainer<T>::getObject(name);
   }
 
-  std::shared_ptr<T> getObject(const std::string& name)
+  std::shared_ptr<T> getObject(const std::string& name) override
   {
     return MappedNamedContainer<T>::getObject(name);
   }
 
-  bool hasObject(const std::string& name) const
+  bool hasObject(const std::string& name) const override
   {
     return MappedNamedContainer<T>::hasObject(name);
   }
 
-  std::vector<std::string> getObjectNames() const
+  std::vector<std::string> getObjectNames() const override
   {
     return vNames_;
   }
@@ -223,7 +223,7 @@ protected:
     vNames_[pos] = name;
   }
 
-  void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false)
+  void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) override
   {
     VectorPositionedContainer<T>::addObject(object, objectIndex, check);
     MappedNamedContainer<T>::addObject(object, name, check);
@@ -233,7 +233,7 @@ protected:
 
   using VectorPositionedContainer<T>::insertObject;
 
-  void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name)
+  void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name) override
   {
     MappedNamedContainer<T>::addObject(object, name, true);
     VectorPositionedContainer<T>::insertObject(object, objectIndex);
@@ -256,7 +256,7 @@ protected:
     mNames_[name] = vNames_.size() - 1;
   }
 
-  std::shared_ptr<T> removeObject(size_t objectIndex)
+  std::shared_ptr<T> removeObject(size_t objectIndex) override
   {
     std::shared_ptr<T> obj = VectorPositionedContainer<T>::removeObject(objectIndex);
     MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
@@ -270,7 +270,7 @@ protected:
     return obj;
   }
 
-  void deleteObject(size_t objectIndex)
+  void deleteObject(size_t objectIndex) override
   {
     VectorPositionedContainer<T>::deleteObject(objectIndex);
     MappedNamedContainer<T>::deleteObject(vNames_[objectIndex]);
@@ -285,12 +285,12 @@ protected:
   }
 
 
-  std::shared_ptr<T> removeObject(const std::string& name)
+  std::shared_ptr<T> removeObject(const std::string& name) override
   {
     return removeObject(mNames_[name]);
   }
 
-  void deleteObject(const std::string& name)
+  void deleteObject(const std::string& name) override
   {
     deleteObject(mNames_[name]);
   }
@@ -305,7 +305,7 @@ protected:
 
 public:
 
-  void clear()
+  void clear() override
   {
     MappedNamedContainer<T>::clear();
     VectorPositionedContainer<T>::clear();

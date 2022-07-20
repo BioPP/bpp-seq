@@ -69,9 +69,9 @@ GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
 {
   if (state1 < 0 || state1 > 19)
-    throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", getAlphabet());
+    throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", *getAlphabet());
   if (state2 < 0 || state2 > 19)
-    throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", getAlphabet());
+    throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", *getAlphabet());
   double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   if (sign_ == SIGN_NONE)
     return NumTools::abs<double>(d);

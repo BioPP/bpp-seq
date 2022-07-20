@@ -43,7 +43,7 @@
 #define BPP_SEQ_SEQUENCE_H
 
 
-#include "CoreSequenceSymbolList.h"
+#include "CoreSequence.h"
 #include "IntSymbolList.h"
 #include "SequenceExceptions.h"
 
@@ -65,15 +65,15 @@ namespace bpp
  *
  * @see Alphabet
  */
-
-  class Sequence :
-    public virtual IntCoreSequenceSymbolList
-  {
+class SequenceInterface :
+  public virtual CoreSequenceInterface,
+  public virtual IntSymbolListInterface
+{
   public:
-    virtual ~Sequence() {}
+    virtual ~SequenceInterface() {}
 
   public:
-    Sequence* clone() const = 0;
+    SequenceInterface* clone() const = 0;
 
 
     /**
@@ -147,11 +147,10 @@ namespace bpp
  *
  * @see Alphabet
  */
-
-class BasicSequence :
-  public virtual Sequence,
-  public virtual AbstractCoreSequence,
-  public virtual BasicIntSymbolList
+class Sequence :
+  public virtual SequenceInterface,
+  public AbstractCoreSequence,
+  public IntSymbolList
 {
   public:
     /**
@@ -162,7 +161,7 @@ class BasicSequence :
      *
      * @param alpha    A pointer toward the Alphabet to be used with this Sequence.
      */
-    BasicSequence(std::shared_ptr<const Alphabet> alpha);
+    Sequence(std::shared_ptr<const Alphabet>& alpha);
 
     /**
      * @brief Direct constructor: build a Sequence object from a std::string
@@ -176,10 +175,10 @@ class BasicSequence :
      * @param sequence The whole sequence to be parsed as a std::string.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(
+    Sequence(
         const std::string& name,
 	const std::string& sequence,
-	std::shared_ptr<const Alphabet> alpha);
+	std::shared_ptr<const Alphabet>& alpha);
 
     /**
      * @brief Direct constructor: build a Sequence object from a std::string.
@@ -195,11 +194,11 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(
+    Sequence(
 	const std::string& name,
 	const std::string& sequence,
 	const Comments& comments,
-	std::shared_ptr<const Alphabet> alpha);
+	std::shared_ptr<const Alphabet>& alpha);
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -211,10 +210,10 @@ class BasicSequence :
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(
+    Sequence(
 	const std::string& name,
 	const std::vector<std::string>& sequence,
-	std::shared_ptr<const Alphabet> alpha);
+	std::shared_ptr<const Alphabet>& alpha);
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -227,11 +226,11 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(
+    Sequence(
 	const std::string& name,
 	const std::vector<std::string>& sequence,
 	const Comments& comments,
-	std::shared_ptr<const Alphabet> alpha);
+	std::shared_ptr<const Alphabet>& alpha);
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -240,10 +239,10 @@ class BasicSequence :
      * @param sequence The sequence content.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(
+    Sequence(
         const std::string& name,
 	const std::vector<int>& sequence,
-	std::shared_ptr<const Alphabet> alpha);
+	std::shared_ptr<const Alphabet>& alpha);
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -253,37 +252,37 @@ class BasicSequence :
      * @param comments Comments to add to the sequence.
      * @param alpha    A pointer toward the alphabet to be used with this sequence.
      */
-    BasicSequence(
+    Sequence(
 	const std::string& name,
 	const std::vector<int>& sequence,
 	const Comments& comments,
-	std::shared_ptr<const Alphabet> alpha);
+	std::shared_ptr<const Alphabet>& alpha);
 
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
      */
-    BasicSequence(const Sequence& s);
+    Sequence(const SequenceInterface& s);
 
     /**
      * @brief The Sequence copy constructor. This does not perform a hard copy of the alphabet object.
      */
-    BasicSequence(const BasicSequence& s);
+    Sequence(const Sequence& s);
 
     /**
      * @brief The Sequence generic assignment operator. This does not perform a hard copy of the alphabet object.
      *
      * @return A ref toward the assigned Sequence.
      */
-    BasicSequence& operator=(const Sequence& s);
+    Sequence& operator=(const SequenceInterface& s);
 
     /**
      * @brief The Sequence assignment operator. This does not perform a hard copy of the alphabet object.
      *
      * @return A ref toward the assigned Sequence.
      */
-    BasicSequence& operator=(const BasicSequence& s);
+    Sequence& operator=(const Sequence& s);
 
-    virtual ~BasicSequence() {}
+    virtual ~Sequence() {}
 
   public:
     /**
@@ -291,7 +290,7 @@ class BasicSequence :
      *
      * @{
      */
-    BasicSequence* clone() const { return new BasicSequence(*this); }
+    Sequence* clone() const override { return new Sequence(*this); }
     /** @} */
 
     /**
@@ -299,47 +298,58 @@ class BasicSequence :
      *
      * @{
      */
+    void setContent(const std::string& sequence) override;
 
-    void setContent(const std::string& sequence);
+    using IntSymbolList::addElement;
 
-    using SymbolList<int>::addElement;
-
-    void setContent(const std::vector<std::string>& list)
+    void setContent(const std::vector<std::string>& list) override
     {
-      BasicIntSymbolList::setContent(list);
+      IntSymbolList::setContent(list);
     }
 
-    void setContent(const std::vector<int>& list)
+    void setContent(const std::vector<int>& list) override
     {
-      BasicIntSymbolList::setContent(list);
+      IntSymbolList::setContent(list);
     }
 
-    std::string toString() const
+    std::string toString() const override
     {
-      return BasicIntSymbolList::toString();
+      return IntSymbolList::toString();
     }
 
-    std::string getChar(size_t pos) const
+    std::string getChar(size_t pos) const override
     {
-      return BasicIntSymbolList::getChar(pos);
+      return IntSymbolList::getChar(pos);
     }
 
-    void setToSizeR(size_t newSize);
+    void setToSizeR(size_t newSize) override;
 
-    void setToSizeL(size_t newSize);
+    void setToSizeL(size_t newSize) override;
 
-    void append(const Sequence& seq);
+    void append(const Sequence& seq) override;
 
-    void append(const std::vector<int>& content);
+    void append(const std::vector<int>& content) override;
 
-    void append(const std::vector<std::string>& content);
+    void append(const std::vector<std::string>& content) override;
 
-    void append(const std::string& content);
+    void append(const std::string& content) override;
 
-    void clearComments() { Commentable::clearComments(); } // Must be here, do not know why
+    void setComments(const Comments& comments) override { Commentable::setComments(comments); }
+
+    const Comments& getComments() const override { return Commentable::getComments(); }
+    
+    void clearComments() override { Commentable::clearComments(); }
 
 
     /** @} */
+
+
+    double getStateValueAt(size_t sitePosition, int state) const override
+    {
+      if (sitePosition  >= size()) throw IndexOutOfBoundsException("BasicSequence::getStateValueAt.", sitePosition, 0, size() - 1);
+      return getAlphabet()->isResolvedIn((*this)[sitePosition], state) ? 1. : 0.;
+    }
+    
   };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCE_H

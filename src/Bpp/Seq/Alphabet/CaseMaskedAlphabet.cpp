@@ -73,14 +73,14 @@ CaseMaskedAlphabet::CaseMaskedAlphabet(const LetterAlphabet* nocaseAlphabet) :
 int CaseMaskedAlphabet::getMaskedEquivalentState(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. Unsupported state code.", shared_from_this());
+    throw BadIntException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. Unsupported state code.", *this);
   if (state >= 100)
     return state;
   else
   {
     state += 100;
     if (!isIntInAlphabet(state))
-      throw BadIntException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. State has masked equivalent.", shared_from_this());
+      throw BadIntException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. State has masked equivalent.", *this);
     return state;
   }
 }
@@ -88,7 +88,7 @@ int CaseMaskedAlphabet::getMaskedEquivalentState(int state) const
 const string CaseMaskedAlphabet::getMaskedEquivalentState(const string& state) const
 {
   if (!isCharInAlphabet(state))
-    throw BadCharException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. Unsupported state code.", shared_from_this());
+    throw BadCharException(state, "CaseMaskedAlphabet::getMaskedEquivalentState. Unsupported state code.", *this);
   int code = charToInt(state);
   if (code >= 100)
     return state;
@@ -96,7 +96,7 @@ const string CaseMaskedAlphabet::getMaskedEquivalentState(const string& state) c
   {
     code += 100;
     if (!isIntInAlphabet(code))
-      throw BadIntException(code, "CaseMaskedAlphabet::getMaskedEquivalentState. State has masked equivalent.", shared_from_this());
+      throw BadIntException(code, "CaseMaskedAlphabet::getMaskedEquivalentState. State has masked equivalent.", *this);
     return intToChar(code);
   }
 }

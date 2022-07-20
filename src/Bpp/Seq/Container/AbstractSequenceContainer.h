@@ -56,8 +56,8 @@ namespace bpp
  * This abstract class provides an alphabet and comments, with associated methods.
  */
 template<class SequenceType, class HashType = std::string>
-class AbstractSequenceContainer :
-  public virtual SequenceContainer<SequenceType, HashType>,
+class AbstractTemplateSequenceContainer :
+  public virtual TemplateSequenceContainerInterface<SequenceType, HashType>,
   public SimpleCommentable
 {
 
@@ -76,7 +76,7 @@ public:
    *
    * @param alphabet The alphabet to be associated to this container.
    */
-  AbstractSequenceContainer(std::shared_ptr<const Alphabet> alphabet) :
+  AbstractTemplateSequenceContainer(std::shared_ptr<const Alphabet> alphabet) :
     SimpleCommentable(), alphabet_(alphabet)
   {}
 
@@ -88,16 +88,16 @@ public:
    * @param alphabet The alphabet to be associated to this container.
    * @param comments General comments to be associated to this container.
    */
-  AbstractSequenceContainer(std::shared_ptr<const Alphabet> alphabet, const Comments& comments) :
+  AbstractTemplateSequenceContainer(std::shared_ptr<const Alphabet> alphabet, const Comments& comments) :
     SimpleCommentable(comments),
     alphabet_(alphabet)
   {}
 
-  AbstractSequenceContainer(const AbstractSequenceContainer& sc) :
+  AbstractTemplateSequenceContainer(const AbstractTemplateSequenceContainer<SequenceType, HashType>& sc) :
     SimpleCommentable(sc), alphabet_(sc.alphabet_)
   {}
 
-  AbstractSequenceContainer& operator=(const AbstractSequenceContainer& sc)
+  AbstractTemplateSequenceContainer& operator=(const AbstractTemplateSequenceContainer<SequenceType, HashType>& sc)
   {
     SimpleCommentable::operator=(sc);
     alphabet_ = sc.alphabet_;
@@ -109,7 +109,7 @@ public:
    *
    * @param sc Another sequence container.
    */
-  AbstractSequenceContainer(const SequenceContainer<SequenceType, HashType>& sc) :
+  AbstractTemplateSequenceContainer(const TemplateSequenceContainerInterface<SequenceType, HashType>& sc) :
     SimpleCommentable(sc.getComments()),
     alphabet_(sc.getAlphabet())
   {}
@@ -119,7 +119,7 @@ public:
    *
    * @param sc Another sequence container.
    */
-  AbstractSequenceContainer& operator=(const SequenceContainer<SequenceType, HashType>& sc)
+  AbstractTemplateSequenceContainer& operator=(const TemplateSequenceContainerInterface<SequenceType, HashType>& sc)
   {
     alphabet_ = sc.getAlphabet();
     setComments(sc.getComments());
@@ -127,7 +127,7 @@ public:
     return *this;
   }
 
-  virtual ~AbstractSequenceContainer() {}
+  virtual ~AbstractTemplateSequenceContainer() {}
 
 public:
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }

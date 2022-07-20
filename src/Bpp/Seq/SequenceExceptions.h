@@ -45,6 +45,9 @@
 
 #include "Alphabet/Alphabet.h"
 
+#include<string>
+#include<memory>
+
 namespace bpp
 {
 class Sequence;
@@ -54,6 +57,7 @@ class Sequence;
  *
  * @see Exception
  */
+template<class SequenceType>
 class SequenceException :
   public Exception
 {
@@ -61,7 +65,7 @@ private:
   /**
    * @brief A pointer toward a sequence object.
    */
-  const Sequence* sequence_;
+  std::shared_ptr<const SequenceType> sequence_;
 
 public:
   /**
@@ -70,9 +74,16 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param seq A const pointer toward the sequence that threw the exception.
    */
-  SequenceException(const std::string& text, const Sequence* seq = 0);
+  SequenceException(const std::string& text, std::shared_ptr<const SequenceType> seq):
+      Exception("SequenceException: " + text + (seq ? "(" + seq->getName() + ")" : std::string(""))),
+  sequence_(seq)
+  {}
+  
+  SequenceException(const SequenceException& se) :
+      Exception(se),
+      sequence_(se.sequence_)
+  {}
 
-  SequenceException(const SequenceException& se) : Exception(se), sequence_(se.sequence_) {}
   SequenceException& operator=(const SequenceException& se)
   {
     Exception::operator=(se);
@@ -88,14 +99,15 @@ public:
    *
    * @return A const pointer toward the sequence.
    */
-  virtual const Sequence* getSequence() const { return sequence_; }
+  virtual std::shared_ptr<const SequenceType> getSequence() const { return sequence_; }
 };
 
 /**
  * @brief Exception thrown when a sequence is found to be empty and it should not.
  */
+template<class SequenceType>
 class EmptySequenceException :
-  public SequenceException
+  public SequenceException<SequenceType>
 {
 public:
   /**
@@ -104,7 +116,9 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param seq A const pointer toward the sequence that threw the exception.
    */
-  EmptySequenceException(const std::string& text, const Sequence* seq = 0);
+  EmptySequenceException(const std::string& text, std::shared_ptr<const SequenceType>& seq) :
+      SequenceException<SequenceType>("EmptySequenceException: " + text, seq)
+  {}
 
   virtual ~EmptySequenceException() {}
 };
@@ -112,8 +126,9 @@ public:
 /**
  * @brief Exception thrown when a sequence is found to have gap and it should not.
  */
+template<class SequenceType>
 class SequenceWithGapException :
-  public SequenceException
+  public SequenceException<SequenceType>
 {
 public:
   /**
@@ -122,7 +137,9 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param seq A const pointer toward the sequence that threw the exception.
    */
-  SequenceWithGapException(const std::string& text, const Sequence* seq = 0);
+  SequenceWithGapException(const std::string& text, std::shared_ptr<const SequenceType>& seq) :
+      SequenceException<SequenceType>("SequenceWithGapException: " + text, seq)
+  {}
 
   virtual ~SequenceWithGapException() {}
 };
@@ -132,8 +149,9 @@ public:
  *
  * Typically, this may occur when you try to add a bad sequence to a site container.
  */
+template<class SequenceType>
 class SequenceNotAlignedException :
-  public SequenceException
+  public SequenceException<SequenceType>
 {
 public:
   /**
@@ -142,7 +160,9 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param seq  A const pointer toward the sequence that threw the exception.
    */
-  SequenceNotAlignedException(const std::string& text, const Sequence* seq);
+  SequenceNotAlignedException(const std::string& text, std::shared_ptr<const SequenceType> seq) :
+      SequenceException<SequenceType>("SequenceNotAlignedException: " + text, seq)
+  {}
 
   virtual ~SequenceNotAlignedException() {}
 };

@@ -2,7 +2,7 @@
 // File: SymbolList.h
 // Authors:
 //   Julien Dutheil
-//   Laurent GuÃ©guen
+//   Laurent Guéguen
 // Created: 2005-04-09 00:00:00
 //
 
@@ -56,19 +56,17 @@
 
 namespace bpp
 {
+
 /**
- * @brief A SymbolList object.
+ * @brief A partial implementation of a SymbolList object.
  *
- * This is a general purpose container, containing an ordered list
- * of T states. The states that allowed to be present in the list
- * are defined by an alphabet object, which is passed to the list
- * constructor by a pointer.
- *
+ * This class implements most of the CoreSymbolList interface, with the excpetion of the getStateValueAt function, which depend on the template type.
+ * 
  * @see Alphabet
  */
 template<class T>
-class SymbolList :
-  public virtual CoreSymbolList<T>
+class AbstractTemplateSymbolList :
+  public virtual TemplateCoreSymbolListInterface<T>
 {
 private:
   /**
@@ -90,7 +88,8 @@ public:
    *
    * @param alpha The alphabet to use.
    */
-  SymbolList(std::shared_ptr<const Alphabet>& alpha) : alphabet_(alpha), content_() {}
+  AbstractTemplateSymbolList(std::shared_ptr<const Alphabet>& alpha) :
+      alphabet_(alpha), content_() {}
 
   /**
    * @brief Build a new SymbolList object with the specified alphabet.
@@ -99,8 +98,8 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  SymbolList(const std::vector<T>& list, const std::shared_ptr<Alphabet>& alpha) :
-    alphabet_(alpha), content_()
+  AbstractTemplateSymbolList(const std::vector<T>& list, const std::shared_ptr<const Alphabet>& alpha) :
+      alphabet_(alpha), content_()
   {
     setContent(list);
   }
@@ -108,8 +107,7 @@ public:
   /**
    * @brief The generic copy constructor.
    */
-
-  SymbolList(const SymbolList<T>& list) :
+  AbstractTemplateSymbolList(const AbstractTemplateSymbolList<T>& list) :
     alphabet_(list.alphabet_), content_(list.content_)
   {}
 
@@ -117,7 +115,7 @@ public:
   /**
    * @brief The copy constructor.
    */
-  SymbolList(const CoreSymbolList<T>& list) :
+  AbstractTemplateSymbolList(const TemplateCoreSymbolListInterface<T>& list) :
     alphabet_(list.getAlphabet()), content_(list.size())
   {
     for (size_t i = 0; i < list.size(); ++i)
@@ -130,7 +128,7 @@ public:
   /**
    * @brief The generic assignment operator.
    */
-  SymbolList<T>& operator=(const CoreSymbolList<T>& list)
+  AbstractTemplateSymbolList<T>& operator=(const TemplateCoreSymbolListInterface<T>& list)
   {
     content_.resize(list.size());
     for (size_t i = 0; i < list.size(); ++i)
@@ -144,24 +142,15 @@ public:
   /**
    * @brief The assignment operator.
    */
-  SymbolList<T>& operator=(const SymbolList<T>& list)
+  AbstractTemplateSymbolList<T>& operator=(const AbstractTemplateSymbolList<T>& list)
   {
     content_  = list.content_;
     alphabet_ = list.alphabet_;
     return *this;
   }
 
-  /**
-   * @name The Clonable interface
-   *
-   * @{
-   */
-
-  virtual SymbolList<T>* clone() const override = 0;
-  /** @} */
-
   // Class destructor
-  virtual ~SymbolList() {}
+  virtual ~AbstractTemplateSymbolList() {}
 
 public:
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
@@ -242,10 +231,20 @@ public:
 };
 
 
+
+
+
+/**
+ * @brief A partial implementation of a EventDrivenSymbolList object.
+ *
+ * This class implements most of the CoreSymbolList interface, with the excpetion of the getStateValueAt function, which depend on the template type.
+ * 
+ * @see Alphabet
+ */
 template<class T>
-class EdSymbolList :
-  public SymbolList<T>,
-  public virtual EdCoreSymbolList<T>
+class AbstractTemplateEventDrivenSymbolList :
+  public virtual AbstractTemplateSymbolList<T>, //Note: this needs to be virtual because of diamond inheritence
+  public virtual TemplateEventDrivenCoreSymbolListInterface<T>
 {
 private:
   bool propagateEvents_;
@@ -257,39 +256,42 @@ protected:
   std::vector<CoreSymbolListListener<T>* > listeners_;
 
   /**
-   * @brief Build a new void CoreSymbolList object with the specified alphabet.
+   * @brief Build a new void EventDrivenSymbolList object with the specified alphabet.
    *
    * @param alpha The alphabet to use.
    */
-
-  EdSymbolList(std::shared_ptr<const Alphabet>& alpha) : SymbolList<T>(alpha), propagateEvents_(true), listeners_() {}
+  AbstractTemplateEventDrivenSymbolList(std::shared_ptr<const Alphabet>& alpha) :
+      AbstractTemplateSymbolList<T>(alpha), propagateEvents_(true), listeners_() {}
 
   /**
-   * @brief Build a new CoreSymbolList object with the specified alphabet.
+   * @brief Build a new EventDrivenSymbolList object with the specified alphabet.
    * The content of the site is initialized from a vector of integers.
    *
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    * @throw BadIntException If the content does not match the specified alphabet.
    */
-
-  EdSymbolList(const std::vector<T>& list, const Alphabet* alpha) :
-    SymbolList<T>(list, alpha), propagateEvents_(true), listeners_()
+  AbstractTemplateEventDrivenSymbolList(const std::vector<T>& list, std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<T>(list, alpha), propagateEvents_(true), listeners_()
   {}
 
   /**
    * @brief The generic copy constructor.
    */
-  EdSymbolList(const CoreSymbolList<T>& list) :
-    SymbolList<T>(list), propagateEvents_(true), listeners_()
+  AbstractTemplateEventDrivenSymbolList(const TemplateCoreSymbolListInterface<T>& list) :
+    AbstractTemplateSymbolList<T>(list),
+    propagateEvents_(true),
+    listeners_()
   {}
 
 
   /**
    * @brief The copy constructor.
    */
-  EdSymbolList(const EdSymbolList<T>& list) :
-    SymbolList<T>(list), propagateEvents_(list.propagateEvents_), listeners_(list.listeners_)
+  AbstractTemplateEventDrivenSymbolList(const AbstractTemplateEventDrivenSymbolList<T>& list) :
+    AbstractTemplateSymbolList<T>(list),
+    propagateEvents_(list.propagateEvents_),
+    listeners_(list.listeners_)
   {
     for (size_t i = 0; i < listeners_.size(); ++i)
     {
@@ -304,9 +306,9 @@ protected:
   /**
    * @brief The generic assignment operator.
    */
-  EdSymbolList<T>& operator=(const CoreSymbolList<T>& list)
+  AbstractTemplateEventDrivenSymbolList<T>& operator=(const TemplateCoreSymbolListInterface<T>& list)
   {
-    SymbolList<T>::operator=(list);
+    AbstractTemplateSymbolList<T>::operator=(list);
     propagateEvents_ = true;
     for (size_t i = 0; i < listeners_.size(); ++i)
     {
@@ -321,9 +323,9 @@ protected:
   /**
    * @brief The assignment operator.
    */
-  EdSymbolList<T>& operator=(const EdSymbolList& list)
+  AbstractTemplateEventDrivenSymbolList<T>& operator=(const AbstractTemplateEventDrivenSymbolList& list)
   {
-    SymbolList<T>::operator=(list);
+    AbstractTemplateSymbolList<T>::operator=(list);
     propagateEvents_ = list.propagateEvents_;
     listeners_ = list.listeners_;
     for (size_t i = 0; i < listeners_.size(); ++i)
@@ -343,16 +345,8 @@ protected:
     return *this;
   }
 
-  /**
-   * @name The Clonable interface
-   *
-   * @{
-   */
-  EdSymbolList* clone() const { return new EdSymbolList(*this); }
-  /** @} */
-
   // Class destructor
-  virtual ~EdSymbolList()
+  virtual ~AbstractTemplateEventDrivenSymbolList()
   {
     for (size_t i = 0; i < listeners_.size(); ++i)
     {
@@ -370,7 +364,7 @@ public:
     fireBeforeSequenceChanged(event);
 
     // Sequence is valid:
-    SymbolList<T>::setContent(list);
+    AbstractTemplateSymbolList<T>::setContent(list);
     fireAfterSequenceChanged(event);
   }
 
@@ -378,7 +372,7 @@ public:
   {
     CoreSymbolListDeletionEvent<T> event(this, pos, 1);
     fireBeforeSequenceDeleted(event);
-    SymbolList<T>::deleteElement(pos);
+    AbstractTemplateSymbolList<T>::deleteElement(pos);
     fireAfterSequenceDeleted(event);
   }
 
@@ -387,15 +381,15 @@ public:
   {
     CoreSymbolListDeletionEvent<T> event(this, pos, len);
     fireBeforeSequenceDeleted(event);
-    SymbolList<T>::deleteElements(pos, len);
+    AbstractTemplateSymbolList<T>::deleteElements(pos, len);
     fireAfterSequenceDeleted(event);
   }
 
   virtual void addElement(const T& v)
   {
-    CoreSymbolListInsertionEvent<T> event(this, SymbolList<T>::size(), 1);
+    CoreSymbolListInsertionEvent<T> event(this, AbstractTemplateSymbolList<T>::size(), 1);
     fireBeforeSequenceInserted(event);
-    SymbolList<T>::addElement(v);
+    AbstractTemplateSymbolList<T>::addElement(v);
     fireAfterSequenceInserted(event);
   }
 
@@ -403,7 +397,7 @@ public:
   {
     CoreSymbolListInsertionEvent<T> event(this, pos, 1);
     fireBeforeSequenceInserted(event);
-    SymbolList<T>::addElement(pos, v);
+    AbstractTemplateSymbolList<T>::addElement(pos, v);
     fireAfterSequenceInserted(event);
   }
 
@@ -411,7 +405,7 @@ public:
   {
     CoreSymbolListSubstitutionEvent<T> event(this, pos, pos);
     fireBeforeSequenceSubstituted(event);
-    SymbolList<T>::setElement(pos, v);
+    AbstractTemplateSymbolList<T>::setElement(pos, v);
     fireAfterSequenceSubstituted(event);
   }
 
@@ -425,14 +419,14 @@ public:
   virtual const CoreSymbolListListener<T>& getListener(size_t i) const
   {
     if (listeners_[i] == 0)
-      std::cout << "EdSymbolList::getListener: aie!!!" << std::endl;
+      std::cout << "EventDrivenSymbolList::getListener: aie!!!" << std::endl;
     return *listeners_[i];
   }
 
   virtual CoreSymbolListListener<T>& getListener(size_t i)
   {
     if (listeners_[i] == 0)
-      std::cout << "EdSymbolList::getListener: aie!!!" << std::endl;
+      std::cout << "EventDrivenSymbolList::getListener: aie!!!" << std::endl;
     return *listeners_[i];
   }
 
@@ -446,7 +440,7 @@ public:
     if (listener->isRemovable())
       listeners_.erase(remove(listeners_.begin(), listeners_.end(), listener), listeners_.end());
     else
-      throw Exception("EdSymbolList::removeCoreSymbolListListener. Listener is not removable.");
+      throw Exception("EventDrivenSymbolList::removeCoreSymbolListListener. Listener is not removable.");
   }
 
 protected:
@@ -544,5 +538,6 @@ protected:
   void propagateEvents(bool yn) { propagateEvents_ = yn; }
   bool propagateEvents() const { return propagateEvents_; }
 };
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_SYMBOLLIST_H

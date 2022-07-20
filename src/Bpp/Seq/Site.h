@@ -43,12 +43,29 @@
 
 
 #include "CoreSite.h"
-#include "CruxSymbolListSite.h"
 #include "IntSymbolList.h"
 #include "SiteExceptions.h"
 
 namespace bpp
 {
+/**
+ * @brief The site interface.
+ *
+ * Define specific attributes and methods for sites manipulation.
+ * Currently, this interface does not add any additional method to the CoreSite interface, but this may change in the future.
+ */
+class SiteInterface :
+  public virtual CoreSiteInterface,
+  public virtual IntSymbolListInterface
+{
+  public:
+    virtual ~SiteInterface() {}
+
+  public:
+    SiteInterface* clone() const = 0;
+
+};
+
 /**
  * @brief The Site class.
  *
@@ -62,9 +79,9 @@ namespace bpp
  * This should not be a constraint, since you never read sites directly from a file.
  */
 class Site :
-  public CruxSymbolListSite,
+  public virtual SiteInterface,
   public AbstractCoreSite,
-  public BasicIntSymbolList
+  public IntSymbolList
 {
 public:
   /**
@@ -73,8 +90,9 @@ public:
    * @param alphabet The alphabet to use.
    */
   Site(std::shared_ptr<const Alphabet>& alphabet):
+      AbstractTemplateSymbolList(alphabet),
       AbstractCoreSite(),
-      BasicIntSymbolList(alphabet)
+      IntSymbolList(alphabet)
   {}
 
   /**
@@ -84,8 +102,9 @@ public:
    * @param coordinate The coordinate attribute of this site.
    */
   Site(std::shared_ptr<const Alphabet>& alphabet, int coordinate) :
+      AbstractTemplateSymbolList(alphabet),
       AbstractCoreSite(coordinate),
-      BasicIntSymbolList(alphabet)
+      IntSymbolList(alphabet)
   {}
 
   /**
@@ -97,8 +116,9 @@ public:
    * @throw BadCharException If the content does not match the specified alphabet.
    */
   Site(const std::vector<std::string>& site, std::shared_ptr<const Alphabet>& alphabet):
+      AbstractTemplateSymbolList(alphabet),
       AbstractCoreSite(),
-      BasicIntSymbolList(site, alphabet)
+      IntSymbolList(site, alphabet)
   {}
 
   /**
@@ -111,8 +131,9 @@ public:
    * @throw BadCharException If the content does not match the specified alphabet.
    */
   Site(const std::vector<std::string>& site, std::shared_ptr<const Alphabet>& alphabet, int coordinate):
+      AbstractTemplateSymbolList(alphabet),
       AbstractCoreSite(coordinate),
-      BasicIntSymbolList(site, alphabet)
+      IntSymbolList(site, alphabet)
   {}
 
   /**
@@ -124,8 +145,9 @@ public:
    * @throw BadIntException If the content does not match the specified alphabet.
    */
   Site(const std::vector<int>& site, std::shared_ptr<const Alphabet>& alphabet):
+      AbstractTemplateSymbolList(alphabet),
       AbstractCoreSite(),
-      BasicIntSymbolList(site, alphabet)
+      IntSymbolList(site, alphabet)
   {}
 
   /**
@@ -138,16 +160,18 @@ public:
    * @throw BadIntException If the content does not match the specified alphabet.
    */
   Site(const std::vector<int>& site, std::shared_ptr<const Alphabet> alphabet, int coordinate) : 
+      AbstractTemplateSymbolList(alphabet),
       AbstractCoreSite(coordinate),
-      BasicIntSymbolList(site, alphabet)
+      IntSymbolList(site, alphabet)
   {}
 
   /**
    * @brief The copy constructor.
    */
   Site(const Site& site):
+      AbstractTemplateSymbolList(site),
       AbstractCoreSite(site.getCoordinate()),
-      BasicIntSymbolList(site)
+      IntSymbolList(site)
   {}
 
   /**
@@ -155,8 +179,9 @@ public:
    */
   Site& operator=(const Site& s)
   {
+    AbstractTemplateSymbolList::operator=(s);
     AbstractCoreSite::operator=(s);
-    BasicIntSymbolList::operator=(s);
+    IntSymbolList::operator=(s);
     return *this;
   }
 
@@ -171,17 +196,11 @@ public:
   Site* clone() const { return new Site(*this); }
   /** @} */
 
-  /**
-   * @name Setting/getting the position of the site.
-   *
-   * @{
-   */
-
-  using SymbolList<int>::setElement;
-
-  using BasicIntSymbolList::addElement;
-
-  using SymbolList<int>::addElement;
+   double getStateValueAt(size_t sequencePosition, int state) const
+   {
+     if (sequencePosition  >= size()) throw IndexOutOfBoundsException("Site::getStateValueAt.", sequencePosition, 0, size() - 1);
+     return getAlphabet()->isResolvedIn((*this)[sequencePosition], state) ? 1. : 0.;
+   }
 
 };
 

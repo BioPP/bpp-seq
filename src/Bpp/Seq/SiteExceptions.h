@@ -42,11 +42,11 @@
 #define BPP_SEQ_SITEEXCEPTIONS_H
 
 #include <Bpp/Exceptions.h>
+#include "CoreSite.h"
 
 
 namespace bpp
 {
-class CoreSite;
 
 /**
  * @brief The site exception base class.
@@ -58,9 +58,9 @@ class SiteException :
 {
 private:
   /**
-   * @brief A pointer toward a site object.
+   * @brief A reference toward a site object.
    */
-	std::shared_ptr<const CoreSite> site_;
+  const CoreSiteInterface& site_;
 
 public:
   // Class constructor
@@ -69,18 +69,9 @@ public:
    * @brief Build a new SiteException object.
    *
    * @param text A message to be passed to the exception hierarchy.
-   * @param s    A const pointer toward the site that threw the exception.
+   * @param s    A const reference toward the site that threw the exception.
    */
-  SiteException(const std::string& text, std::shared_ptr<const CoreSite> s = 0);
-
-  SiteException(const SiteException& se) : Exception(se), site_(se.site_) {}
-
-  SiteException& operator=(const SiteException& se)
-  {
-    Exception::operator=(se);
-    site_ = se.site_;
-    return *this;
-  }
+  SiteException(const std::string& text, const CoreSiteInterface& s);
 
   // Class destructor
   virtual ~SiteException() {}
@@ -89,9 +80,9 @@ public:
   /**
    * @brief Get the site that threw the exception.
    *
-   * @return A const pointer toward the site.
+   * @return A const reference toward the site.
    */
-  virtual std::shared_ptr<const CoreSite> getSite() const { return site_; }
+  virtual const CoreSiteInterface& getSite() const { return site_; }
 };
 
 /**
@@ -101,7 +92,8 @@ class EmptySiteException :
   public SiteException
 {
 public:
-  EmptySiteException(const std::string& text, std::shared_ptr<const CoreSite> s = 0) : SiteException(text, s) {}
+  EmptySiteException(const std::string& text, const CoreSiteInterface& s) :
+	 SiteException(text, s) {}
 
   virtual ~EmptySiteException() {}
 };
@@ -109,12 +101,12 @@ public:
 /**
  * @brief Exception sent when a site containing gap is found.
  */
-
 class SiteWithGapException :
   public SiteException
 {
 public:
-  SiteWithGapException(const std::string& text, std::shared_ptr<const CoreSite> s = 0) : SiteException(text, s) {}
+  SiteWithGapException(const std::string& text, const CoreSiteInterface& s) :
+	 SiteException(text, s) {}
 
   virtual ~SiteWithGapException() {}
 };

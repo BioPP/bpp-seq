@@ -46,7 +46,6 @@
 #include <string>
 #include <vector>
 
-#include "AlphabetExceptions.h"
 #include "AlphabetState.h"
 
 /**

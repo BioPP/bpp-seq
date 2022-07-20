@@ -99,7 +99,7 @@ int CodonAlphabet::getGCinCodon(int codon) const
 bool CodonAlphabet::containsUnresolved(const std::string& state) const
 {
   if (state.length() != 3)
-    throw BadCharException(state, "CodonAlphabet::containsUnresolved", shared_from_this());
+    throw BadCharException(state, "CodonAlphabet::containsUnresolved", *this);
 
   for (size_t i = 0; i < 3; i++)
   {
@@ -116,7 +116,7 @@ bool CodonAlphabet::containsUnresolved(const std::string& state) const
 bool CodonAlphabet::containsGap(const std::string& state) const
 {
   if (state.length() != 3)
-    throw BadCharException(state, "CodonAlphabet::containsGap", shared_from_this());
+    throw BadCharException(state, "CodonAlphabet::containsGap", *this);
 
   for (size_t i = 0; i < 3; i++)
   {
@@ -130,7 +130,7 @@ bool CodonAlphabet::containsGap(const std::string& state) const
 
 /****************************************************************************************/
 
-Sequence* CodonAlphabet::translate(const Sequence& sequence, size_t pos) const
+unique_ptr<SequenceInterface> CodonAlphabet::translate(const SequenceInterface& sequence, size_t pos) const
 {
   vector<int> content;
 
@@ -143,22 +143,24 @@ Sequence* CodonAlphabet::translate(const Sequence& sequence, size_t pos) const
     i += 3;
   }
 
-  return new BasicSequence(sequence.getName(), content, shared_from_this());
+  auto alphaPtr = shared_from_this();
+  return make_unique<Sequence>(sequence.getName(), content, alphaPtr);
 }
 
 /****************************************************************************************/
 
-Sequence* CodonAlphabet::reverse(const Sequence& sequence) const
+unique_ptr<SequenceInterface> CodonAlphabet::reverse(const SequenceInterface& sequence) const
 {
-  Sequence* pseq = new BasicSequence(sequence.getName(), "", getNAlphabet(0));
+  auto alphaPtr = getNAlphabet(0);
+  auto seqPtr = make_unique<Sequence>(sequence.getName(), "", alphaPtr);
 
   size_t s = sequence.size();
   for (size_t i = 0; i < s; i++)
   {
-    pseq->append(getPositions(sequence[i]));
+    seqPtr->append(getPositions(sequence[i]));
   }
 
-  return pseq;
+  return seqPtr;
 }
 
 /****************************************************************************************/
@@ -166,7 +168,7 @@ Sequence* CodonAlphabet::reverse(const Sequence& sequence) const
 std::vector<int> CodonAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.", shared_from_this());
+    throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.", *this);
   vector<int> v;
 
   if (state == 64)
@@ -190,7 +192,7 @@ std::vector<std::string> CodonAlphabet::getAlias(const std::string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
-    throw BadCharException(locstate, "CodonAlphabet::getAlias(string): Specified base unknown.", shared_from_this());
+    throw BadCharException(locstate, "CodonAlphabet::getAlias(string): Specified base unknown.", *this);
   vector<string> v;
 
   if (locstate == "NNN")
@@ -212,13 +214,13 @@ std::vector<std::string> CodonAlphabet::getAlias(const std::string& state) const
 bool CodonAlphabet::isResolvedIn(int state1, int state2) const
 {
   if (state1 < 0 || !isIntInAlphabet(state1))
-    throw BadIntException(state1, "CodonAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.", shared_from_this());
+    throw BadIntException(state1, "CodonAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.", *this);
 
   if (state2 < 0 || !isIntInAlphabet(state2))
-    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.", shared_from_this());
+    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.", *this);
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2), shared_from_this());
+    throw BadIntException(state2, "CodonAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2), *this);
 
   return (state1 == 64) ? (state2 >= 0) : (state1 == state2);
 }

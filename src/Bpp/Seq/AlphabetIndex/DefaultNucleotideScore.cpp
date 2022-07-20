@@ -76,9 +76,9 @@ DefaultNucleotideScore::DefaultNucleotideScore(const NucleicAlphabet* alphabet) 
 double DefaultNucleotideScore::getIndex(int state1, int state2) const
 {
   if (alpha_->isGap(state1) || !alpha_->isIntInAlphabet(state1))
-    throw BadIntException(state1, "DefaultNucleotideScore::getIndex(). Invalid state1.", alpha_);
+    throw BadIntException(state1, "DefaultNucleotideScore::getIndex(). Invalid state1.", *alpha_);
   if (alpha_->isGap(state2) || !alpha_->isIntInAlphabet(state2))
-    throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state1.", alpha_);
+    throw BadIntException(state2, "DefaultNucleotideScore::getIndex(). Invalid state1.", *alpha_);
   if (!alpha_->isUnresolved(state1) && !alpha_->isUnresolved(state2))
     return distanceMatrix_(
       static_cast<size_t>(state1),

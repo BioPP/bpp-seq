@@ -43,7 +43,6 @@
 
 
 #include "CoreSite.h"
-#include "CruxSymbolListSite.h"
 #include "ProbabilisticSymbolList.h"
 
 namespace bpp
@@ -56,18 +55,24 @@ namespace bpp
  * object (a site is a vertical probabilistic sequence!),
  * ProbabilisticSites have a 'position' attribute.
  *
- * This attribute stands for an index in an alignment, and may be used
- * as a unique identifier, in the same manner that names identify
- * probabilistic sequence objects.  But for now, we do not allow to
- * construct a ProbabilisticSite directly from a string.  This should
- * not be a constraint, since you never read probabilistic sites
- * directly from a file.
+ * Currently, this interface does not add any additional method to the CoreSite interface, but this may change in the future.
  */
+class ProbabilisticSiteInterface :
+  public virtual CoreSiteInterface,
+  public virtual ProbabilisticSymbolListInterface
+{
+  public:
+    virtual ~ProbabilisticSiteInterface() {}
+
+  public:
+    virtual ProbabilisticSiteInterface* clone() const = 0;
+	
+};
 
 class ProbabilisticSite :
-  virtual public CruxSymbolListSite,
+  public virtual ProbabilisticSiteInterface,
   public AbstractCoreSite,
-  public BasicProbabilisticSymbolList
+  public virtual ProbabilisticSymbolList //Diamond inheritence
 {
 public:
   /**
@@ -76,8 +81,8 @@ public:
    * @param alpha The alphabet to use.
    */
   ProbabilisticSite(std::shared_ptr<const Alphabet>& alpha) :
-    AbstractCoreSite(), 
-    BasicProbabilisticSymbolList(alpha)
+    ProbabilisticSymbolList(alpha),
+    AbstractCoreSite()
   {}
 
 
@@ -88,8 +93,8 @@ public:
    * @param position The position attribute for this probabilistic site.
    */
   ProbabilisticSite(std::shared_ptr<const Alphabet>& alpha, int position) :
-    AbstractCoreSite(position),
-    BasicProbabilisticSymbolList(alpha)
+    ProbabilisticSymbolList(alpha),
+    AbstractCoreSite(position)
   {}
 
 
@@ -102,8 +107,8 @@ public:
    * @throw Exception If the content does not match the specified alphabet or is internally inconsistent.
    */
   ProbabilisticSite(const Table<double>& site, std::shared_ptr<const Alphabet>& alpha) :
-    AbstractCoreSite(),
-    BasicProbabilisticSymbolList(site, alpha)
+    ProbabilisticSymbolList(site, alpha),
+    AbstractCoreSite()
   {}
 
 
@@ -117,8 +122,8 @@ public:
    * @throw Exception If the content does not match the specified alphabet or is internally insconsistent.
    */
   ProbabilisticSite(const Table<double>& site, std::shared_ptr<const Alphabet>& alpha, int position) :
-    AbstractCoreSite(position),
-    BasicProbabilisticSymbolList(site, alpha)
+    ProbabilisticSymbolList(site, alpha),
+    AbstractCoreSite(position)
   {}
 
 
@@ -126,14 +131,14 @@ public:
    * @brief The copy constructor.
    */
   ProbabilisticSite(const ProbabilisticSite& site) :
-    AbstractCoreSite(site),
-    BasicProbabilisticSymbolList(site)
+    ProbabilisticSymbolList(site),
+    AbstractCoreSite(site)
   {}
 
 
-  ProbabilisticSite(const CruxSymbolListSite& site) :
-    AbstractCoreSite(site.getCoordinate()),
-    BasicProbabilisticSymbolList(site)
+  ProbabilisticSite(const ProbabilisticSiteInterface& site) :
+    ProbabilisticSymbolList(site),
+    AbstractCoreSite(site.getCoordinate())
   {}
 
 
@@ -142,12 +147,18 @@ public:
    */
   ProbabilisticSite& operator=(const ProbabilisticSite& site)
   {
+    ProbabilisticSymbolList::operator=(site);
     AbstractCoreSite::operator=(site);
-    BasicProbabilisticSymbolList::operator=(site);
     return *this;
   }
 
-  
+   ProbabilisticSite& operator=(const ProbabilisticSiteInterface& site)
+  {
+    ProbabilisticSymbolList::operator=(site);
+    AbstractCoreSite::operator=(site);
+    return *this;
+  }
+ 
   /**
    * @name The Clonable interface
    *
@@ -162,8 +173,12 @@ public:
   // class destructor
   virtual ~ProbabilisticSite() {}
 
-public:
-//  void setPosition(int position) { AbstractCoreSite::setPosition(position); }
+  double getStateValueAt(size_t sequencePosition, int state) const
+  {
+    if (sequencePosition  >= size()) throw IndexOutOfBoundsException("ProbabilisticSites::getStateValueAt.", sequencePosition, 0, size() - 1);
+    return (*this)[sequencePosition][static_cast<size_t>(state)];
+  }
+
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_PROBABILISTICSITE_H

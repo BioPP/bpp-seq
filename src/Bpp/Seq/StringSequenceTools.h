@@ -174,7 +174,7 @@ public:
    * @return A vector of int codes.
    * @throw BarCharException If some character does not match the specified alphabet.
    */
-  static std::vector<int> codeSequence(const std::string& sequence, const Alphabet* alphabet);
+  static std::vector<int> codeSequence(const std::string& sequence, std::shared_ptr<const Alphabet>& alphabet);
 
   /**
    * @brief Convert a sequence to its string representation.
@@ -184,7 +184,7 @@ public:
    * @return A string representation of the sequence.
    * @throw BarIntException If some value does not match the specified alphabet.
    */
-  static std::string decodeSequence(const std::vector<int>& sequence, const Alphabet* alphabet);
+  static std::string decodeSequence(const std::vector<int>& sequence, std::shared_ptr<const Alphabet>& alphabet);
 
   /**
    * @brief Parse a sequence and try to guess the correct alphabet to use.

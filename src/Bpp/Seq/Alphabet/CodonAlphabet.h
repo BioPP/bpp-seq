@@ -177,7 +177,7 @@ public:
   int charToInt(const std::string& state) const override
   {
     if (state.size() != 3)
-      throw BadCharException(state, "CodonAlphabet::charToInt", shared_from_this());
+      throw BadCharException(state, "CodonAlphabet::charToInt", *this);
     if (containsUnresolved(state))
       return static_cast<int>(getSize());
     if (containsGap(state))
@@ -413,7 +413,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence* translate(const Sequence& sequence, size_t = 0) const override;
+  std::unique_ptr<SequenceInterface> translate(const SequenceInterface& sequence, size_t = 0) const override;
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -423,7 +423,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  Sequence* reverse(const Sequence& sequence) const override;
+  std::unique_ptr<SequenceInterface> reverse(const SequenceInterface& sequence) const override;
 
   /*
    *

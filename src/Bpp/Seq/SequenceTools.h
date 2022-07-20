@@ -150,7 +150,8 @@ public:
    */
   static std::unique_ptr<Sequence> subseq(const Sequence& sequence, size_t begin, size_t end)
   {
-    auto seq = std::make_unique<BasicSequence>(sequence.getAlphabet());
+    auto alphaPtr = sequence.getAlphabet();
+    auto seq = std::make_unique<Sequence>(alphaPtr);
     seq->setName(sequence.getName());
     seq->setComments(sequence.getComments());
     subseq(sequence, begin, end, *seq);
@@ -426,7 +427,7 @@ public:
    *
    * @author Laurent Guéguen
    */
-  static std::unique_ptr<BasicSequence> RNYslice(const Sequence& sequence, int ph);
+  static std::unique_ptr<Sequence> RNYslice(const Sequence& sequence, int ph);
 
   /**
    * @brief Get the RNY decomposition of a DNA sequence
@@ -440,7 +441,7 @@ public:
    *
    * @author Laurent Guéguen
    */
-  static std::unique_ptr<BasicSequence> RNYslice(const Sequence& sequence);
+  static std::unique_ptr<Sequence> RNYslice(const Sequence& sequence);
 
   /**
    * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.

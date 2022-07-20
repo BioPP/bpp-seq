@@ -71,9 +71,9 @@ public:
    *
    * Example:
    * @code
-   * Alphabet* alphabet = new DNA();
-   * ISequence* seqReader = IoSequenceFactory().createReader(IoSequenceFactory::FASTA_FORMAT);
-   * SequenceContainer* sequences = seqReader->read("file.fasta", alphabet);
+   * auto AlphabetTools::DNA_ALPHABET;
+   * auto seqReader = IoSequenceFactory().createReader(IoSequenceFactory::FASTA_FORMAT);
+   * unique_ptr<SequenceContainer> sequences = seqReader->read("file.fasta", alphabet);
    * delete seqReader;
    * @endcode
    */
@@ -87,7 +87,7 @@ public:
    * @return A pointer toward a new ISequence object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual std::unique_ptr<IBasicSequence> createReader(const std::string& format);
+  virtual std::unique_ptr<ISequence> createReader(const std::string& format);
 
   /**
    * @brief Get a new dynamically created IAlignment object.
@@ -96,7 +96,7 @@ public:
    * @return A pointer toward a new IAlignment object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual std::unique_ptr<IBasicAlignment> createAlignmentReader(const std::string& format);
+  virtual std::unique_ptr<IAlignment> createAlignmentReader(const std::string& format);
 
   /**
    * @brief Get a new dynamically created OSequence object.
@@ -105,7 +105,7 @@ public:
    * @return A pointer toward a new OSequence object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual std::unique_ptr<OBasicSequence> createWriter(const std::string& format);
+  virtual std::unique_ptr<OSequence> createWriter(const std::string& format);
 
   /**
    * @brief Get a new dynamically created OAlignment object.
@@ -114,7 +114,7 @@ public:
    * @return A pointer toward a new OAlignment object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual std::unique_ptr<OBasicAlignment> createAlignmentWriter(const std::string& format);
+  virtual std::unique_ptr<OAlignment> createAlignmentWriter(const std::string& format);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_IOSEQUENCEFACTORY_H

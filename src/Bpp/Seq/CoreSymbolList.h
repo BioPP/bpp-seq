@@ -57,9 +57,10 @@ namespace bpp
 /**
  * @brief The CruxSymbolList interface.
  *
+ * This contains all methods that do not depend on the content type of the SymbolList
  */
 
-class CruxSymbolList :
+class CruxSymbolListInterface :
   public virtual Clonable
 {
 public:
@@ -68,11 +69,11 @@ public:
    *
    * @{
    */
-  CruxSymbolList* clone() const = 0;
+  CruxSymbolListInterface* clone() const override = 0;
   /** @} */
 
   // Class destructor
-  virtual ~CruxSymbolList() {}
+  virtual ~CruxSymbolListInterface() {}
 
 public:
   /**
@@ -139,23 +140,25 @@ public:
   virtual void shuffle() = 0;
   /** @} */
 
-  /*
-   * @brief get value of a state in a position
-   * @param siteIndex  index of the site
-   * @param state  state in the alphabet
+  /**
+   * @brief get value of a state at a position
+   *
+   * @param position  position in the list
+   * @param state     state in the alphabet
+   * @return          The state value at the given position.
    */
-  virtual double getStateValueAt(size_t siteIndex, int state) const
-  {
-    throw Exception("CruxSymbolList::getStateValueAt should not be called.");
-    return 0;
-  }
+  virtual double getStateValueAt(size_t position, int state) const = 0;
 
-
-  virtual double operator()(size_t siteIndex, int state) const
-  {
-    throw Exception("CruxSymbolList::operator() should not be called.");
-    return 0;
-  }
+  /**
+   * @brief get value of a state at a position
+   *
+   * Short-cut for getStateValueAt.
+   *
+   * @param position  position in the list
+   * @param state     state in the alphabet
+   * @return          The state value at the given position.
+   */
+ virtual double operator()(size_t position, int state) const = 0;
 };
 
 
@@ -164,8 +167,8 @@ public:
  *
  */
 template<class T>
-class CoreSymbolList :
-  public virtual CruxSymbolList
+class TemplateCoreSymbolListInterface :
+  public virtual CruxSymbolListInterface
 {
 public:
   /**
@@ -173,11 +176,11 @@ public:
    *
    * @{
    */
-  CoreSymbolList* clone() const = 0;
+  TemplateCoreSymbolListInterface* clone() const = 0;
   /** @} */
 
   // Class destructor
-  virtual ~CoreSymbolList() {}
+  virtual ~TemplateCoreSymbolListInterface() {}
 
 public:
   /**
@@ -225,7 +228,6 @@ public:
    * @param pos The position of the character to set.
    * @param c   The value of the element.
    */
-
   virtual void setElement(size_t pos, const T& c) = 0;
 
   /**
@@ -253,7 +255,6 @@ public:
    * @param pos The position to retrieve.
    * @return The T value of character at position pos.
    */
-
   virtual const T& getValue(size_t pos) const = 0;
 
   /**
@@ -262,8 +263,8 @@ public:
    * @param pos The position to retrieve.
    * @return The T value of character at position pos.
    */
-
   virtual const T& operator[](size_t pos) const = 0;
+
   /**
    * @brief Operator [] overloaded for quick access to a character in list.
    *
@@ -275,15 +276,18 @@ public:
   /** @} */
 };
 
+using IntCoreSymbolListInterface = TemplateCoreSymbolListInterface<int>;
+using ProbabilisticCoreSymbolListInterface = TemplateCoreSymbolListInterface< std::vector<double> >;
+
 
 template<class T>
 class CoreSymbolListEditionEvent
 {
 private:
-  CoreSymbolList<T>* list_;
+  TemplateCoreSymbolListInterface<T>* list_;
 
 public:
-  CoreSymbolListEditionEvent(CoreSymbolList<T>* list) :
+  CoreSymbolListEditionEvent(TemplateCoreSymbolListInterface<T>* list) :
     list_(list) {}
 
   CoreSymbolListEditionEvent(const CoreSymbolListEditionEvent<T>& slee) : list_(slee.list_) {}
@@ -297,8 +301,8 @@ public:
   virtual ~CoreSymbolListEditionEvent() {}
 
 public:
-  virtual CoreSymbolList<T>* getCoreSymbolList() { return list_; }
-  virtual const CoreSymbolList<T>* getCoreSymbolList() const { return list_; }
+  virtual TemplateCoreSymbolListInterface<T>* getCoreSymbolList() { return list_; }
+  virtual const TemplateCoreSymbolListInterface<T>* getCoreSymbolList() const { return list_; }
 };
 
 
@@ -311,7 +315,7 @@ private:
   size_t len_;
 
 public:
-  CoreSymbolListInsertionEvent(CoreSymbolList<T>* list, size_t pos, size_t len) :
+  CoreSymbolListInsertionEvent(TemplateCoreSymbolListInterface<T>* list, size_t pos, size_t len) :
     CoreSymbolListEditionEvent<T>(list), pos_(pos), len_(len) {}
 
 public:
@@ -329,7 +333,7 @@ private:
   size_t len_;
 
 public:
-  CoreSymbolListDeletionEvent(CoreSymbolList<T>* list, size_t pos, size_t len) :
+  CoreSymbolListDeletionEvent(TemplateCoreSymbolListInterface<T>* list, size_t pos, size_t len) :
     CoreSymbolListEditionEvent<T>(list), pos_(pos), len_(len) {}
 
 public:
@@ -347,7 +351,7 @@ private:
   size_t end_;
 
 public:
-  CoreSymbolListSubstitutionEvent(CoreSymbolList<T>* list, size_t begin, size_t end) :
+  CoreSymbolListSubstitutionEvent(TemplateCoreSymbolListInterface<T>* list, size_t begin, size_t end) :
     CoreSymbolListEditionEvent<T>(list), begin_(begin), end_(end) {}
 
 public:
@@ -379,7 +383,7 @@ public:
 
 
 /**
- * @brief A event-driven CoreSymbolList object.
+ * @brief Interface for event-driven CoreSymbolList objects.
  *
  * This is a general purpose container, containing an ordered list of states(= letters).
  * The states that allowed to be present in the list are defined by an alphabet object,
@@ -390,10 +394,9 @@ public:
  *
  * @see Alphabet
  */
-
 template<class T>
-class EdCoreSymbolList :
-  public virtual CoreSymbolList<T>
+class TemplateEventDrivenCoreSymbolListInterface :
+  public virtual TemplateCoreSymbolListInterface<T>
 {
 public:
   /**
@@ -401,28 +404,13 @@ public:
    *
    * @{
    */
-  virtual EdCoreSymbolList* clone() const = 0;
+  virtual TemplateEventDrivenCoreSymbolListInterface* clone() const = 0;
   /** @} */
 
   // Class destructor
-  virtual ~EdCoreSymbolList()
-  {}
+  virtual ~TemplateEventDrivenCoreSymbolListInterface(){}
 
 public:
-  /**
-   * @brief From CruxSymbolList
-   *
-   */
-  virtual double getStateValueAt(size_t siteIndex, int state) const
-  {
-    return CoreSymbolList<T>::getStateValueAt(siteIndex, state);
-  }
-
-  virtual double operator()(size_t siteIndex, int state) const
-  {
-    return CoreSymbolList<T>::operator()(siteIndex, state);
-  }
-
 
   /**
    * @name Events handling
@@ -476,5 +464,10 @@ protected:
   virtual void propagateEvents(bool yn) = 0;
   virtual bool propagateEvents() const = 0;
 };
+
+using IntEventDrivenCoreSymbolListInterface = TemplateEventDrivenCoreSymbolListInterface<int>;
+using ProbabilisticEventDrivenCoreSymbolListInterface = TemplateEventDrivenCoreSymbolListInterface< std::vector<double> >;
+
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CORESYMBOLLIST_H

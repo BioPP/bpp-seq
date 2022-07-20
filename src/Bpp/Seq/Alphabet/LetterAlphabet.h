@@ -50,6 +50,7 @@
 
 // From Seq
 #include "AbstractAlphabet.h"
+#include "AlphabetExceptions.h"
 
 namespace bpp
 {
@@ -96,7 +97,7 @@ public:
   int charToInt(const std::string& state) const
   {
     if (!isCharInAlphabet(state))
-      throw BadCharException(state, "LetterAlphabet::charToInt: Unknown state", shared_from_this());
+      throw BadCharException(state, "LetterAlphabet::charToInt: Unknown state", *this);
     return letters_[static_cast<unsigned int>(state[0])];
   }
 

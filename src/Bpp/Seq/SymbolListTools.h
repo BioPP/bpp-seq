@@ -44,7 +44,6 @@
 #include <Bpp/Numeric/VectorExceptions.h>
 
 #include "Alphabet/AlphabetExceptions.h"
-#include "CoreSequenceSymbolList.h"
 #include "ProbabilisticSymbolList.h"
 
 // From the STL:
@@ -66,69 +65,89 @@ public:
    * @param site A site.
    * @return True if the site contains one or several gap(s).
    */
-  static bool hasGap(const IntCoreSymbolList& site);
+  static bool hasGap(const IntSymbolList& site);
   static bool hasGap(const ProbabilisticSymbolList& site);
 
-  static bool hasGap(const CruxSymbolList& site)
+  static bool hasGap(const CruxSymbolListInterface& site)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
       return hasGap(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntCoreSymbolList*>(&site))
-      return hasGap(dynamic_cast<const IntCoreSymbolList&>(site));
+    else if (dynamic_cast<const IntSymbolList*>(&site))
+      return hasGap(dynamic_cast<const IntSymbolList&>(site));
     else
-      throw Exception("SymbolListTools::hasGap : this should not happen.");
+      throw Exception("SymbolListTools::hasGap. Unsupported SymbolList type.");
   }
 
   /**
    * @param site A site.
    * @return True if the site contains one or several unresolved state.
    */
-  static bool hasUnresolved(const IntCoreSymbolList& site);
+  static bool hasUnresolved(const IntSymbolList& site);
 
   /**
    * @param site A site.
    * @return True if the site contains only gaps.
    */
-  static bool isGapOnly(const IntCoreSymbolList& site);
+  static bool isGapOnly(const IntSymbolList& site);
   static bool isGapOnly(const ProbabilisticSymbolList& site);
+
+  static bool isGapOnly(const CruxSymbolListInterface& site)
+  {
+    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
+      return isGapOnly(dynamic_cast<const ProbabilisticSymbolList&>(site));
+    else if (dynamic_cast<const IntSymbolList*>(&site))
+      return isGapOnly(dynamic_cast<const IntSymbolList&>(site));
+    else
+      throw Exception("SymbolListTools::numberOfGaps. Unsupported SymbolList type.");
+  }
 
   /**
    * @param site A site.
    * @return the numbed of gaps.
    */
-  static size_t numberOfGaps(const IntCoreSymbolList& site);
+  static size_t numberOfGaps(const IntSymbolList& site);
   static size_t numberOfGaps(const ProbabilisticSymbolList& site);
 
-  static size_t numberOfGaps(const CruxSymbolList& site)
+  static size_t numberOfGaps(const CruxSymbolListInterface& site)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
       return numberOfGaps(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntCoreSymbolList*>(&site))
-      return numberOfGaps(dynamic_cast<const IntCoreSymbolList&>(site));
+    else if (dynamic_cast<const IntSymbolList*>(&site))
+      return numberOfGaps(dynamic_cast<const IntSymbolList&>(site));
     else
-      throw Exception("SymbolListTools::numberOfGaps : this should not happen.");
+      throw Exception("SymbolListTools::numberOfGaps. Unsupported SymbolList type.");
   }
 
   /**
    * @param site A site.
    * @return True if the site contains only gaps.
    */
-  static bool isGapOrUnresolvedOnly(const IntCoreSymbolList& site);
+  static bool isGapOrUnresolvedOnly(const IntSymbolList& site);
   static bool isGapOrUnresolvedOnly(const ProbabilisticSymbolList& site);
+
+  static bool isGapOrUnresolvedOnly(const CruxSymbolListInterface& site)
+  {
+    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
+      return isGapOrUnresolvedOnly(dynamic_cast<const ProbabilisticSymbolList&>(site));
+    else if (dynamic_cast<const IntSymbolList*>(&site))
+      return isGapOrUnresolvedOnly(dynamic_cast<const IntSymbolList&>(site));
+    else
+      throw Exception("SymbolListTools::hasUnknown : this should not happen.");
+  }
 
   /**
    * @param site A site.
    * @return the numbed of unresolved.
    */
-  static size_t numberOfUnresolved(const IntCoreSymbolList& site);
+  static size_t numberOfUnresolved(const IntSymbolList& site);
   static size_t numberOfUnresolved(const ProbabilisticSymbolList& site);
 
-  static size_t numberOfUnresolved(const CruxSymbolList& site)
+  static size_t numberOfUnresolved(const CruxSymbolListInterface& site)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
       return numberOfUnresolved(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntCoreSymbolList*>(&site))
-      return numberOfUnresolved(dynamic_cast<const IntCoreSymbolList&>(site));
+    else if (dynamic_cast<const IntSymbolList*>(&site))
+      return numberOfUnresolved(dynamic_cast<const IntSymbolList&>(site));
     else
       throw Exception("SymbolListTools::numberOfUnresolved : this should not happen.");
   }
@@ -137,22 +156,32 @@ public:
    * @param site A site.
    * @return True if the site contains one or several unknwn characters.
    */
-  static bool hasUnknown(const IntCoreSymbolList& site);
+  static bool hasUnknown(const IntSymbolList& site);
   static bool hasUnknown(const ProbabilisticSymbolList& site);
+
+  static bool hasUnknown(const CruxSymbolListInterface& site)
+  {
+    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
+      return hasUnknown(dynamic_cast<const ProbabilisticSymbolList&>(site));
+    else if (dynamic_cast<const IntSymbolList*>(&site))
+      return hasUnknown(dynamic_cast<const IntSymbolList&>(site));
+    else
+      throw Exception("SymbolListTools::hasUnknown : this should not happen.");
+  }
 
   /**
    * @param site A site.
    * @return True if the site contains no gap and no unknown characters.
    */
-  static bool isComplete(const IntCoreSymbolList& site);
+  static bool isComplete(const IntSymbolList& site);
   static bool isComplete(const ProbabilisticSymbolList& site);
 
-  static bool isComplete(const CruxSymbolList& site)
+  static bool isComplete(const CruxSymbolListInterface& site)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
       return isComplete(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntCoreSymbolList*>(&site))
-      return isComplete(dynamic_cast<const IntCoreSymbolList&>(site));
+    else if (dynamic_cast<const IntSymbolList*>(&site))
+      return isComplete(dynamic_cast<const IntSymbolList&>(site));
     else
       throw Exception("SymbolListTools::isComplete : this should not happen.");
   }
@@ -167,34 +196,49 @@ public:
    * @param unresolvedRaisesException In case of ambiguous case (gap only site for instance), throw an exception. Otherwise returns false.
    * @return True if the site is made of only one state.
    */
-  static bool isConstant(const IntCoreSymbolList& site, bool ignoreUnknown = false, bool unresolvedRaisesException = true);
+  static bool isConstant(
+		  const IntSymbolList& site,
+		  bool ignoreUnknown = false,
+		  bool unresolvedRaisesException = true);
 
-  static bool isConstant(const CruxSymbolList& site, bool ignoreUnknown = false, bool unresolvedRaisesException = true)
+  static bool isConstant(
+		  const CruxSymbolListInterface& site,
+		  bool ignoreUnknown = false,
+		  bool unresolvedRaisesException = true)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
       return isConstant(dynamic_cast<const ProbabilisticSymbolList&>(site), unresolvedRaisesException);
-    else if (dynamic_cast<const IntCoreSymbolList*>(&site))
-      return isConstant(dynamic_cast<const IntCoreSymbolList&>(site), ignoreUnknown, unresolvedRaisesException);
+    else if (dynamic_cast<const IntSymbolList*>(&site))
+      return isConstant(dynamic_cast<const IntSymbolList&>(site), ignoreUnknown, unresolvedRaisesException);
     else
       throw Exception("SymbolListTools::isConstant : this should not happen.");
   }
 
-  static bool isConstant(const ProbabilisticSymbolList& site, bool unresolvedRaisesException = true);
+  static bool isConstant(
+		  const ProbabilisticSymbolList& site,
+		  bool unresolvedRaisesException = true);
 
   /**
    * @param site1 The first site.
    * @param site2 The second site.
    * @return True if the two sites have the same content (and, of course, alphabet).
    */
-  static bool areSymbolListsIdentical(const IntCoreSymbolList& site1, const IntCoreSymbolList& site2);
-  static bool areSymbolListsIdentical(const ProbabilisticSymbolList& site1, const ProbabilisticSymbolList& site2);
+  static bool areSymbolListsIdentical(
+		  const IntSymbolList& site1,
+		  const IntSymbolList& site2);
 
-  static bool areSymbolListsIdentical(const CruxSymbolList& l1, const CruxSymbolList& l2)
+  static bool areSymbolListsIdentical(
+		  const ProbabilisticSymbolList& site1,
+		  const ProbabilisticSymbolList& site2);
+
+  static bool areSymbolListsIdentical(
+		  const CruxSymbolListInterface& l1,
+		  const CruxSymbolListInterface& l2)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&l1) && dynamic_cast<const ProbabilisticSymbolList*>(&l2))
       return areSymbolListsIdentical(dynamic_cast<const ProbabilisticSymbolList&>(l1), dynamic_cast<const ProbabilisticSymbolList&>(l2));
-    else if (dynamic_cast<const IntCoreSymbolList*>(&l1) && dynamic_cast<const IntCoreSymbolList*>(&l2))
-      return areSymbolListsIdentical(dynamic_cast<const IntCoreSymbolList&>(l1), dynamic_cast<const IntCoreSymbolList&>(l2));
+    else if (dynamic_cast<const IntSymbolList*>(&l1) && dynamic_cast<const IntSymbolList*>(&l2))
+      return areSymbolListsIdentical(dynamic_cast<const IntSymbolList&>(l1), dynamic_cast<const IntSymbolList&>(l2));
     else
       throw Exception("SymbolListTools::areSymbolListsIdentical : this should not happen.");
   }
@@ -208,7 +252,9 @@ public:
    * @param counts The output map to store the counts (existing counts will be incremented).
 
    */
-  static void getCounts(const IntCoreSymbolList& list, std::map<int, size_t>& counts)
+  static void getCounts(
+		  const IntSymbolList& list,
+		  std::map<int, size_t>& counts)
   {
     for (size_t i = 0; i < list.size(); ++i)
     {
@@ -223,12 +269,14 @@ public:
    * @param counts The output map to store the sum for all states
    * (existing counts will be summed).
    */
-  static void getCounts(const ProbabilisticSymbolList& list, std::map<int, double_t>& counts)
+  static void getCounts(
+		  const ProbabilisticSymbolList& list,
+		  std::map<int, double_t>& counts)
   {
     for (size_t i = 0; i < list.size(); ++i)
     {
       const std::vector<double>& c = list[i];
-      for (size_t j = 0; j < c.size(); j++)
+      for (size_t j = 0; j < c.size(); ++j)
       {
         counts[(int)j] += c.at(j);
       }
@@ -247,10 +295,13 @@ public:
    * @param list2 The second list.
    * @param counts The output map to store the counts (existing counts will be incremented).
    */
-  static void getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2, std::map<int, std::map<int, size_t> >& counts)
+  static void getCounts(
+		  const IntSymbolList& list1,
+		  const IntSymbolList& list2,
+		  std::map<int, std::map<int, size_t> >& counts)
   {
     if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
-    for (size_t i = 0; i < list1.size(); i++)
+    for (size_t i = 0; i < list1.size(); ++i)
     {
       counts[list1[i]][list2[i]]++;
     }
@@ -269,7 +320,10 @@ public:
    * @param list2 The second list.
    * @param counts The output map to store the counts (existing counts will be summed).
    */
-  static void getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2, std::map<int, std::map<int, double> >& counts)
+  static void getCounts(
+		  const ProbabilisticSymbolList& list1,
+		  const ProbabilisticSymbolList& list2,
+		  std::map<int, std::map<int, double> >& counts)
   {
     if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
     for (size_t i = 0; i < list1.size(); i++)
@@ -297,18 +351,24 @@ public:
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return A map with all states and corresponding counts.
    */
-  static void getCounts(const CruxSymbolList& list, std::map<int, double>& counts, bool resolveUnknowns = false)
+  static void getCounts(
+		  const CruxSymbolListInterface& list,
+		  std::map<int, double>& counts,
+		  bool resolveUnknowns = false)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&list))
       getCounts(dynamic_cast<const ProbabilisticSymbolList&>(list), counts, resolveUnknowns);
-    else if (dynamic_cast<const IntCoreSymbolList*>(&list))
-      getCounts(dynamic_cast<const IntCoreSymbolList&>(list), counts, resolveUnknowns);
+    else if (dynamic_cast<const IntSymbolList*>(&list))
+      getCounts(dynamic_cast<const IntSymbolList&>(list), counts, resolveUnknowns);
     else
       throw Exception("SymbolListTools::getCounts : this should not happen.");
   }
 
 
-  static void getCounts(const IntCoreSymbolList& list, std::map<int, double>& counts, bool resolveUnknowns);
+  static void getCounts(
+		  const IntSymbolList& list,
+		  std::map<int, double>& counts,
+		  bool resolveUnknowns);
 
   /**
    * @brief Count all states in the list, optionaly normalizing unknown characters.
@@ -323,7 +383,10 @@ public:
    * @return A map with all states and corresponding counts.
    */
 
-  static void getCounts(const ProbabilisticSymbolList& list, std::map<int, double>& counts, bool resolveUnknowns);
+  static void getCounts(
+		  const ProbabilisticSymbolList& list,
+		  std::map<int, double>& counts,
+		  bool resolveUnknowns);
 
   /**
    * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
@@ -342,17 +405,25 @@ public:
    * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
    * @return A map with all states and corresponding counts.
    */
-  static void getCounts(const CruxSymbolList& list1, const CruxSymbolList& list2, std::map<int, std::map<int, double> >& counts, bool resolveUnknowns)
+  static void getCounts(
+		  const CruxSymbolListInterface& list1,
+		  const CruxSymbolListInterface& list2,
+		  std::map<int, std::map<int, double> >& counts,
+		  bool resolveUnknowns)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&list1) && dynamic_cast<const ProbabilisticSymbolList*>(&list2))
       getCounts(dynamic_cast<const ProbabilisticSymbolList&>(list1), dynamic_cast<const ProbabilisticSymbolList&>(list2), counts, resolveUnknowns);
-    else if (dynamic_cast<const IntCoreSymbolList*>(&list1) && dynamic_cast<const IntCoreSymbolList*>(&list2))
-      getCounts(dynamic_cast<const IntCoreSymbolList&>(list1), dynamic_cast<const IntCoreSymbolList&>(list2), counts, resolveUnknowns);
+    else if (dynamic_cast<const IntSymbolList*>(&list1) && dynamic_cast<const IntSymbolList*>(&list2))
+      getCounts(dynamic_cast<const IntSymbolList&>(list1), dynamic_cast<const IntSymbolList&>(list2), counts, resolveUnknowns);
     else
       throw Exception("SymbolListTools::getCounts : this should not happen.");
   }
 
-  static void getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns);
+  static void getCounts(
+		  const IntSymbolList& list1,
+		  const IntSymbolList& list2,
+		  std::map< int, std::map<int, double> >& counts,
+		  bool resolveUnknowns);
 
   /**
    * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
@@ -371,7 +442,11 @@ public:
    * @return A map with all states and corresponding counts.
    */
 
-  static void getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2,  std::map< int, std::map<int, double> >& counts, bool resolveUnknowns);
+  static void getCounts(
+		  const ProbabilisticSymbolList& list1,
+		  const ProbabilisticSymbolList& list2,
+		  std::map< int, std::map<int, double> >& counts,
+		  bool resolveUnknowns);
 
   /**
    * @brief Get all states frequencies in the list.
@@ -383,7 +458,10 @@ public:
    * @param frequencies The output map with all states and corresponding frequencies. Existing frequencies will be erased if any.
    */
 
-  static void getFrequencies(const CruxSymbolList& list, std::map<int, double>& frequencies, bool resolveUnknowns = false);
+  static void getFrequencies(
+		  const CruxSymbolListInterface& list,
+		  std::map<int, double>& frequencies,
+		  bool resolveUnknowns = false);
 
   /**
    * @brief Get all state pairs frequencies for two lists of the same size.
@@ -398,7 +476,11 @@ public:
    * @param frequencies The output map with all state pairs and corresponding frequencies. Existing frequencies will be erased if any.
    */
 
-  static void getFrequencies(const CruxSymbolList& list1, const CruxSymbolList& list2, std::map<int, std::map<int, double> >& frequencies, bool resolveUnknowns = false);
+  static void getFrequencies(
+		  const CruxSymbolListInterface& list1,
+		  const CruxSymbolListInterface& list2,
+		  std::map<int, std::map<int, double> >& frequencies,
+		  bool resolveUnknowns = false);
 
   /**
    * @brief Get the GC content of a symbol list.
@@ -413,9 +495,15 @@ public:
    * @throw AlphabetException If the list is not made of nucleotide states.
    */
 
-  static double getGCContent(const IntCoreSymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true);
+  static double getGCContent(
+		  const IntSymbolList& list,
+		  bool ignoreUnresolved = true,
+		  bool ignoreGap = true);
 
-  static double getGCContent(const ProbabilisticSymbolList& list, bool ignoreUnresolved = true, bool ignoreGap = true);
+  static double getGCContent(
+		  const ProbabilisticSymbolList& list,
+		  bool ignoreUnresolved = true,
+		  bool ignoreGap = true);
 
   /**
    * @brief Get the number of distinct positions.
@@ -428,16 +516,22 @@ public:
    * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
    */
 
-  static size_t getNumberOfDistinctPositions(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2);
+  static size_t getNumberOfDistinctPositions(
+		  const IntSymbolList& l1,
+		  const IntSymbolList& l2);
 
-  static size_t getNumberOfDistinctPositions(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2);
+  static size_t getNumberOfDistinctPositions(
+		  const ProbabilisticSymbolList& l1,
+		  const ProbabilisticSymbolList& l2);
 
-  static size_t getNumberOfDistinctPositions(const CruxSymbolList& l1, const CruxSymbolList& l2)
+  static size_t getNumberOfDistinctPositions(
+		  const CruxSymbolListInterface& l1,
+		  const CruxSymbolListInterface& l2)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&l1) && dynamic_cast<const ProbabilisticSymbolList*>(&l2))
       return getNumberOfDistinctPositions(dynamic_cast<const ProbabilisticSymbolList&>(l1), dynamic_cast<const ProbabilisticSymbolList&>(l2));
-    else if (dynamic_cast<const IntCoreSymbolList*>(&l1) && dynamic_cast<const IntCoreSymbolList*>(&l2))
-      return getNumberOfDistinctPositions(dynamic_cast<const IntCoreSymbolList&>(l1), dynamic_cast<const IntCoreSymbolList&>(l2));
+    else if (dynamic_cast<const IntSymbolList*>(&l1) && dynamic_cast<const IntSymbolList*>(&l2))
+      return getNumberOfDistinctPositions(dynamic_cast<const IntSymbolList&>(l1), dynamic_cast<const IntSymbolList&>(l2));
     else
       throw Exception("SymbolListTools::getNumberOfDistinctPositions : this should not happen.");
   }
@@ -453,17 +547,22 @@ public:
    * least a non zero value)
    * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
    */
+  static size_t getNumberOfPositionsWithoutGap(
+		  const IntSymbolList& l1,
+		  const IntSymbolList& l2);
 
-  static size_t getNumberOfPositionsWithoutGap(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2);
+  static size_t getNumberOfPositionsWithoutGap(
+		  const ProbabilisticSymbolList& l1,
+		  const ProbabilisticSymbolList& l2);
 
-  static size_t getNumberOfPositionsWithoutGap(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2);
-
-  static size_t getNumberOfPositionsWithoutGap(const CruxSymbolList& l1, const CruxSymbolList& l2)
+  static size_t getNumberOfPositionsWithoutGap(
+		  const CruxSymbolListInterface& l1,
+		  const CruxSymbolListInterface& l2)
   {
     if (dynamic_cast<const ProbabilisticSymbolList*>(&l1) && dynamic_cast<const ProbabilisticSymbolList*>(&l2))
       return getNumberOfPositionsWithoutGap(dynamic_cast<const ProbabilisticSymbolList&>(l1), dynamic_cast<const ProbabilisticSymbolList&>(l2));
-    else if (dynamic_cast<const IntCoreSymbolList*>(&l1) && dynamic_cast<const IntCoreSymbolList*>(&l2))
-      return getNumberOfPositionsWithoutGap(dynamic_cast<const IntCoreSymbolList&>(l1), dynamic_cast<const IntCoreSymbolList&>(l2));
+    else if (dynamic_cast<const IntSymbolList*>(&l1) && dynamic_cast<const IntSymbolList*>(&l2))
+      return getNumberOfPositionsWithoutGap(dynamic_cast<const IntSymbolList&>(l1), dynamic_cast<const IntSymbolList&>(l2));
     else
       throw Exception("SymbolListTools::getNumberOfPositionsWithoutGap : this should not happen.");
   }
@@ -475,16 +574,16 @@ public:
    * @param l The input list of characters.
    */
 
-  static void changeGapsToUnknownCharacters(IntCoreSymbolList& l);
+  static void changeGapsToUnknownCharacters(IntSymbolList& l);
 
   static void changeGapsToUnknownCharacters(ProbabilisticSymbolList& l);
 
-  static void changeGapsToUnknownCharacters(CruxSymbolList& l)
+  static void changeGapsToUnknownCharacters(CruxSymbolListInterface& l)
   {
     if (dynamic_cast<ProbabilisticSymbolList*>(&l))
       changeGapsToUnknownCharacters(dynamic_cast<ProbabilisticSymbolList&>(l));
-    else if (dynamic_cast<IntCoreSymbolList*>(&l))
-      changeGapsToUnknownCharacters(dynamic_cast<IntCoreSymbolList&>(l));
+    else if (dynamic_cast<IntSymbolList*>(&l))
+      changeGapsToUnknownCharacters(dynamic_cast<IntSymbolList&>(l));
     else
       throw Exception("SymbolListTools::changeGapsToUnknownCharacters : this should not happen.");
   }
@@ -496,7 +595,7 @@ public:
    * @param l The input list of characters.
    */
 
-  static void changeUnresolvedCharactersToGaps(IntCoreSymbolList& l);
+  static void changeUnresolvedCharactersToGaps(IntSymbolList& l);
 
   static void changeUnresolvedCharactersToGaps(ProbabilisticSymbolList& l);
 
@@ -514,7 +613,9 @@ public:
    * @return The Shannon entropy index of this site.
    */
 
-  static double variabilityShannon(const CruxSymbolList& site, bool resolveUnknowns);
+  static double variabilityShannon(
+		  const CruxSymbolListInterface& site,
+		  bool resolveUnknowns);
 
   /**
    * @brief Compute the factorial diversity index of a site.
@@ -528,7 +629,7 @@ public:
    * @param site A site.
    * @return The factorial diversity index of this site.
    */
-  static double variabilityFactorial(const IntCoreSymbolList& site);
+  static double variabilityFactorial(const IntSymbolList& site);
 
   /**
    * @brief Compute the mutual information between two sites.
@@ -545,7 +646,10 @@ public:
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return The mutual information for the pair of sites.
    */
-  static double mutualInformation(const CruxSymbolList& site1, const CruxSymbolList& site2, bool resolveUnknowns);
+  static double mutualInformation(
+		  const CruxSymbolListInterface& site1,
+		  const CruxSymbolListInterface& site2,
+		  bool resolveUnknowns);
 
   /**
    * @brief Compute the entropy of a site. This is an alias of method variabilityShannon.
@@ -560,7 +664,7 @@ public:
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return The Shannon entropy index of this site.
    */
-  static double entropy(const CruxSymbolList& site, bool resolveUnknowns)
+  static double entropy(const CruxSymbolListInterface& site, bool resolveUnknowns)
   {
     return variabilityShannon(site, resolveUnknowns);
   }
@@ -580,7 +684,10 @@ public:
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return The mutual information for the pair of sites.
    */
-  static double jointEntropy(const CruxSymbolList& site1, const CruxSymbolList& site2, bool resolveUnknowns);
+  static double jointEntropy(
+		  const CruxSymbolListInterface& site1,
+		  const CruxSymbolListInterface& site2,
+		  bool resolveUnknowns);
 
   /**
    * @brief Compute the heterozygosity index of a site.
@@ -593,7 +700,7 @@ public:
    * @param site A site.
    * @return The heterozygosity index of this site.
    */
-  static double heterozygosity(const CruxSymbolList& site);
+  static double heterozygosity(const CruxSymbolListInterface& site);
 
   /**
    * @brief Give the number of distinct characters at a site.
@@ -601,7 +708,7 @@ public:
    * @param site a Site
    * @return The number of distinct characters in the given site.
    */
-  static size_t getNumberOfDistinctCharacters(const IntCoreSymbolList& site);
+  static size_t getNumberOfDistinctCharacters(const IntSymbolList& site);
 
   /**
    * @brief return the number of occurrences of the most common allele.
@@ -609,7 +716,7 @@ public:
    * @param site a Site
    * @return The frequency (number of sequences) displaying the most frequent state.
    */
-  static size_t getMajorAlleleFrequency(const IntCoreSymbolList& site);
+  static size_t getMajorAlleleFrequency(const IntSymbolList& site);
 
   /**
    * @brief return the state corresponding to the most common allele.
@@ -617,7 +724,7 @@ public:
    * @param site a Site
    * @return The most frequent state.
    */
-  static int getMajorAllele(const CruxSymbolList& site);
+  static int getMajorAllele(const CruxSymbolListInterface& site);
 
   /**
    * @brief return the number of occurrences of the least common allele.
@@ -625,7 +732,7 @@ public:
    * @param site a Site
    * @return The frequency (number of sequences) displaying the less frequent state.
    */
-  static size_t getMinorAlleleFrequency(const IntCoreSymbolList& site);
+  static size_t getMinorAlleleFrequency(const IntSymbolList& site);
 
   /**
    * @brief return the state corresponding to the least common allele.
@@ -633,7 +740,7 @@ public:
    * @param site a Site
    * @return The less frequent state.
    */
-  static int getMinorAllele(const CruxSymbolList& site);
+  static int getMinorAllele(const CruxSymbolListInterface& site);
 
   /**
    * @brief Tell if a site has singletons
@@ -642,7 +749,7 @@ public:
    * @param site a Site.
    * @return True if the site has singletons.
    */
-  static bool hasSingleton(const IntCoreSymbolList& site);
+  static bool hasSingleton(const IntSymbolList& site);
 
   /**
    * @brief Tell if a site is a parsimony informative site.
@@ -652,7 +759,7 @@ public:
    * @param site a Site.
    * @return True if the site is parsimony informative.
    */
-  static bool isParsimonyInformativeSite(const IntCoreSymbolList& site);
+  static bool isParsimonyInformativeSite(const IntSymbolList& site);
 
 
   /**
@@ -661,7 +768,7 @@ public:
    * @param site a Site.
    * @return True if the site has more than 2 distinct characters
    */
-  static bool isTriplet(const IntCoreSymbolList& site);
+  static bool isTriplet(const IntSymbolList& site);
 
   /**
    * @brief Tell if a site has exactly 2 distinct characters
@@ -669,7 +776,7 @@ public:
    * @param site a Site.
    * @return True if the site has exactly 2 distinct characters
    */
-  static bool isDoubleton(const IntCoreSymbolList& site);
+  static bool isDoubleton(const IntSymbolList& site);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SYMBOLLISTTOOLS_H

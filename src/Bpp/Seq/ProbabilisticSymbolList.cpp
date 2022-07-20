@@ -48,13 +48,20 @@ using namespace std;
 
 /****************************************************************************************/
 
-BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const Alphabet* alpha) :
+ProbabilisticSymbolList::ProbabilisticSymbolList(shared_ptr<const Alphabet>& alpha) :
   alphabet_(alpha), content_(alpha->getResolvedChars().size(), 0)
 {
   content_.setRowNames(alphabet_->getResolvedChars());
 }
 
-BasicProbabilisticSymbolList::BasicProbabilisticSymbolList(const DataTable& list, const Alphabet* alpha) :
+ProbabilisticSymbolList::ProbabilisticSymbolList(const DataTable& list, shared_ptr<const Alphabet>& alpha) :
+  alphabet_(alpha), content_(alpha->getResolvedChars().size(), 0)
+{
+  content_.setRowNames(alpha->getResolvedChars());
+  setContent(list);
+}
+
+ProbabilisticSymbolList::ProbabilisticSymbolList(const vector< vector<double> >& list, shared_ptr<const Alphabet>& alpha) :
   alphabet_(alpha), content_(alpha->getResolvedChars().size(), 0)
 {
   content_.setRowNames(alpha->getResolvedChars());
@@ -107,21 +114,21 @@ void BasicProbabilisticSymbolList::setContent(const DataTable& list)
   if (list.hasRowNames())
   {
     if (list.getRowNames().size() != alphabet_->getResolvedChars().size())
-      throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list.getRowNames().size(), alphabet_->getResolvedChars().size());
+      throw DimensionException("ProbabilisticSymbolList::setContent. ", list.getRowNames().size(), alphabet_->getResolvedChars().size());
 
     std::vector<std::string> column_names = list.getRowNames();
     std::vector<std::string> resolved_chars = alphabet_->getResolvedChars();
     for (std::size_t i = 0; i < list.getRowNames().size(); ++i)
     {
       if (column_names[i] != resolved_chars[i])
-        throw Exception("BasicProbabilisticSymbolList::setContent. Row names / resolved characters of alphabet mismatch at " + TextTools::toString(column_names[i]) + " and " + TextTools::toString(resolved_chars[i]) + ".");
+        throw Exception("ProbabilisticSymbolList::setContent. Row names / resolved characters of alphabet mismatch at " + TextTools::toString(column_names[i]) + " and " + TextTools::toString(resolved_chars[i]) + ".");
     }
   }
   else// DataTable has no row names
 
   {
     if (list.getNumberOfRows() != alphabet_->getResolvedChars().size())
-      throw DimensionException("BasicProbabilisticSymbolList::setContent. ", list.getNumberOfRows(), alphabet_->getResolvedChars().size());
+      throw DimensionException("ProbabilisticSymbolList::setContent. ", list.getNumberOfRows(), alphabet_->getResolvedChars().size());
   }
 
   content_ = list; // final check passes, content_ becomes DataTable
@@ -158,7 +165,7 @@ string BasicProbabilisticSymbolList::toString() const
 
 /****************************************************************************************/
 
-void BasicProbabilisticSymbolList::setContent(const std::vector<std::vector<double> >& list)
+void ProbabilisticSymbolList::setContent(const std::vector<std::vector<double> >& list)
 {
   if (list.size() == 0)
     return;

@@ -141,7 +141,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  virtual Sequence* translate(const Sequence& sequence, size_t pos = 0) const = 0;
+  virtual std::unique_ptr<SequenceInterface> translate(const SequenceInterface& sequence, size_t pos = 0) const = 0;
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -151,7 +151,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-  virtual Sequence* reverse(const Sequence& sequence) const = 0;
+  virtual std::unique_ptr<SequenceInterface> reverse(const SequenceInterface& sequence) const = 0;
 
 private:
   /**
@@ -246,7 +246,7 @@ public:
   int charToInt(const std::string& state) const override
   {
     if (state.size() != vAbsAlph_.size())
-      throw BadCharException(state, "WordAlphabet::charToInt", shared_from_this());
+      throw BadCharException(state, "WordAlphabet::charToInt", *this);
     if (containsUnresolved(state))
       return static_cast<int>(getSize());
     if (containsGap(state))
@@ -421,7 +421,7 @@ public:
   std::string getNPosition(const std::string& word, size_t n) const override
   {
     if (n > vAbsAlph_.size())
-      throw BadCharException("", "WordAlphabet::getNPosition", shared_from_this());
+      throw BadCharException("", "WordAlphabet::getNPosition", *this);
     // Test:
     charToInt(word);
 
@@ -456,8 +456,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-
-  Sequence* translate(const Sequence& sequence, size_t = 0) const override;
+  std::unique_ptr<SequenceInterface> translate(const SequenceInterface& sequence, size_t = 0) const override;
 
   /**
    * @brief Translate a whole sequence from words alphabet to letters alphabet.
@@ -467,8 +466,7 @@ public:
    * @throw AlphabetMismatchException If the sequence alphabet do not match the target alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
    */
-
-  Sequence* reverse(const Sequence& sequence) const override;
+  std::unique_ptr<SequenceInterface> reverse(const SequenceInterface& sequence) const override;
 
   /** @} */
 

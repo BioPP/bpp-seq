@@ -80,7 +80,7 @@ public:
    * @return A new IAlignment object according to options specified.
    * @throw Exception if an error occured.
    */
-  std::unique_ptr<IBasicAlignment> read(const std::string& description);
+  std::unique_ptr<IAlignment> read(const std::string& description);
 
   std::unique_ptr<IProbabilisticAlignment> readProbabilistic(const std::string& description);
 
