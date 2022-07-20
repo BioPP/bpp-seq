@@ -330,12 +330,12 @@ protected:
     if (siteIndex >= seq.size())
       throw IndexOutOfBoundsException("VectorProbabilisticSequenceContainer::getStateValueAt.", siteIndex, 0, seq.size() - 1);
 
-    return (getSequence(sequenceIndex))[siteIndex][(size_t)state];
+    return (getSequence(sequenceIndex))[siteIndex][getAlphabet()->getStateIndex(state)-1];
   }
 
   double operator()(size_t siteIndex, size_t sequenceIndex, int state) const
   {
-    return (getSequence(sequenceIndex))[siteIndex][(size_t)state];
+    return (getSequence(sequenceIndex))[siteIndex][getAlphabet()->getStateIndex(state)-1];
   }
 
 };
