@@ -154,7 +154,7 @@ public:
  */
 class AbstractCoreSequence :
   public virtual CoreSequence,
-  public virtual Commentable
+  public Commentable
 {
 private:
   /**
@@ -188,7 +188,8 @@ public:
 
   AbstractCoreSequence(const AbstractCoreSequence& s) :
     Commentable(s),
-    name_(s.name_) {}
+    name_(s.name_) {
+  }
 
   AbstractCoreSequence& operator=(const AbstractCoreSequence& s)
   {
@@ -200,7 +201,8 @@ public:
   AbstractCoreSequence(const CoreSequence& s) :
     Commentable(s.getComments()),
     name_(s.getName())
-  {}
+  {
+  }
 
   AbstractCoreSequence& operator=(const CoreSequence& s)
   {
