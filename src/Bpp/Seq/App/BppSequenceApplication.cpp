@@ -116,7 +116,9 @@ map<size_t, const AlignedValuesContainer*> BppSequenceApplication::getConstAlign
   const std::string& suffix,
   bool suffixIsOptional) const
 {
-  auto mSites = getAlignmentsMap(alphabet, changeGapsToUnknownCharacters, optionalData, prefix, suffix, suffixIsOptional);
+  map<size_t, AlignedValuesContainer*>  mSites;
+  
+  mSites = getAlignmentsMap(alphabet, changeGapsToUnknownCharacters, optionalData, prefix, suffix, suffixIsOptional);
 
   map<size_t, const AlignedValuesContainer*> mSitesconst;
   for (auto it:mSites)

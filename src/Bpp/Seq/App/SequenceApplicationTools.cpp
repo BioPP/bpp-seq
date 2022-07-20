@@ -46,6 +46,7 @@
 #include <algorithm>
 
 #include "../Alphabet/AlphabetTools.h"
+#include "../Alphabet/AllelicAlphabet.h"
 #include "../Alphabet/BinaryAlphabet.h"
 #include "../Alphabet/CodonAlphabet.h"
 #include "../Alphabet/DefaultAlphabet.h"
@@ -197,6 +198,22 @@ Alphabet* SequenceApplicationTools::getAlphabet(
       throw Exception("Alphabet not known in Codon : " + alphn);
 
     chars = new CodonAlphabet(pnalph);
+  }
+  else if (alphabet == "Allelic")
+  {
+    if (args.find("base") == args.end())
+      throw Exception("Missing 'base' argument in Allelic for sequence alphabet :" + alphabet);
+
+    if (args.find("N") == args.end())
+      throw Exception("Missing 'N' argument in Allelic for number of alleles:" + alphabet);
+
+    uint N = TextTools::to<unsigned int>(args["N"]);
+
+    args["alphabet"] = args["base"];
+
+    auto inAlphabet = std::shared_ptr<Alphabet>(SequenceApplicationTools::getAlphabet(args, suffix, suffixIsOptional, false, allowGeneric, warn + 1));
+
+    chars = new AllelicAlphabet(*inAlphabet->clone(), N);
   }
   else
     throw Exception("Alphabet not known: " + alphabet);
@@ -445,7 +462,7 @@ map<size_t, AlignedValuesContainer*> SequenceApplicationTools::getAlignedContain
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
 
       AlignedValuesContainer* vsC = getAlignedContainer(alpha, args2, "", true, verbose, warn);
-
+      
       AlignedValuesContainer* vsC2 = getSitesToAnalyse(*vsC, args2, "", true, false);
       delete vsC;
 
@@ -457,6 +474,7 @@ map<size_t, AlignedValuesContainer*> SequenceApplicationTools::getAlignedContain
       mCont[num] = vsC2;
     }
   }
+  
   return mCont;
 }
 
@@ -644,41 +662,41 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   if (AlphabetTools::isRNYAlphabet(alpha))
     alpha2 = &dynamic_cast<const RNY*>(alpha)->getLetterAlphabet();
   else
-    alpha2 = alpha;
-
-  AlignedValuesContainer* avc2 = iAln ? dynamic_cast<AlignedValuesContainer*>(iAln->readAlignment(sequenceFilePath, alpha2)) : dynamic_cast<AlignedValuesContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2));
-
-  VectorSiteContainer* sites2;
-  AlignedValuesContainer* avc;
-
-  try
   {
-    sites2 = new VectorSiteContainer(*avc2);
-  }
-  catch (Exception& e)
-  {
-    sites2 = 0;
+    if (AlphabetTools::isAllelicAlphabet(alpha))
+      alpha2= &dynamic_cast<const AllelicAlphabet*>(alpha)->getStateAlphabet();
+    else
+      alpha2 = alpha;
   }
 
-  if (sites2)
+  
+  VectorSiteContainer* sites(0);
+  VectorProbabilisticSiteContainer* psites(0);
+
+  if (iAln)
+    sites=dynamic_cast<VectorSiteContainer*>(iAln->readAlignment(sequenceFilePath, alpha2));
+  else
+    psites=dynamic_cast<VectorProbabilisticSiteContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2));
+
+  if (sites)
   {
-    VectorSiteContainer* sites;
+    SiteContainer* tmpsites;
 
     /// Look for RNY translation
     if (AlphabetTools::isRNYAlphabet(alpha))
     {
-      sites = new VectorSiteContainer(alpha);
+      tmpsites = new VectorSiteContainer(alpha);
 
       const SequenceTools ST;
-      for (const auto& name : sites2->getSequenceNames())
+      for (const auto& name : sites->getSequenceNames())
       {
-        sites->addSequence(*(ST.RNYslice(sites2->getSequence(name))), false);
+        tmpsites->addSequence(*(ST.RNYslice(sites->getSequence(name))), false);
       }
-      delete sites2;
-    }
+      delete sites;
+    }    
     else
-      sites = sites2;
-
+      tmpsites = sites;
+    
     // Look for site selection:
 
     if (iAln->getFormatName() == "MASE file")
@@ -690,7 +708,7 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
         VectorSiteContainer* selectedSites;
         try
         {
-          selectedSites = dynamic_cast<VectorSiteContainer*>(MaseTools::getSelectedSites(*sites, siteSet));
+          selectedSites = dynamic_cast<VectorSiteContainer*>(MaseTools::getSelectedSites(*tmpsites, siteSet));
           if (verbose)
             ApplicationTools::displayResult("Set found", TextTools::toString(siteSet) + " sites.");
         }
@@ -702,16 +720,40 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
         {
           throw Exception("Site set '" + siteSet + "' is empty.");
         }
-        delete sites;
+        delete tmpsites;
         sites = selectedSites;
       }
     }
-    avc = sites;
   }
-  else
-    avc = new VectorProbabilisticSiteContainer(*avc2);
+  
+  /// Look for Allelic translation
+  
+  if (AlphabetTools::isAllelicAlphabet(alpha))
+  {
+    auto pallsites = new VectorProbabilisticSiteContainer(alpha);
 
-  delete avc2;
+    auto names=sites? sites->getSequenceNames():psites->getSequenceNames();
+    for (const auto& name : names)
+    {
+      BasicProbabilisticSequence* seq;
+      
+      if (sites)
+        seq=dynamic_cast<const AllelicAlphabet*>(alpha)->convertFromStateAlphabet(sites->getSequence(name));
+      else
+        seq=dynamic_cast<const AllelicAlphabet*>(alpha)->convertFromStateAlphabet(psites->getSequence(name));
+      pallsites->addSequence(*seq);
+    }
+    if (sites)
+    {
+      delete sites;
+      sites=0;
+    }
+    if (psites)
+      delete psites;
+    psites=pallsites;
+  }
+
+  AlignedValuesContainer* avc = sites?dynamic_cast<AlignedValuesContainer*>(sites):dynamic_cast<AlignedValuesContainer*>(psites);
 
   // getting site set:
   size_t nbSites = avc->getNumberOfSites();

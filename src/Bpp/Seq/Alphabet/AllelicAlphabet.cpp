@@ -106,7 +106,7 @@ AllelicAlphabet::AllelicAlphabet(const Alphabet& alph, uint nbAlleles) :
 
 std::string AllelicAlphabet::getAlphabetType() const
 {
-  return "Allelic(alphabet="+alph_.getAlphabetType()+",nbAlleles_="+std::to_string(nbAlleles_);
+  return "Allelic(alphabet="+alph_.getAlphabetType()+",nbAlleles_="+std::to_string(nbAlleles_)+")";
 }
 
 
@@ -222,7 +222,7 @@ void AllelicAlphabet::computeLikelihoods(const Vdouble& counts, Vdouble& likelih
   if (counts.size()!=alphasize)
     throw BadSizeException("AllelicAlphabet::computeLikelihoods: bad vector size for counts.", alphasize, counts.size());
   
-  likelihoods.resize(getSize());
+  likelihoods.resize(getSize(),0);
 
   // vector of bool if strictly positive counts
   std::vector<bool> presence(alphasize);
@@ -242,7 +242,7 @@ void AllelicAlphabet::computeLikelihoods(const Vdouble& counts, Vdouble& likelih
         if (ns==state)
           continue;
         
-        if (presence[ns])
+        if (presence[ns])  // because polymorphic state
         {
           likelihoods[state]=0;
           break;
@@ -268,7 +268,8 @@ void AllelicAlphabet::computeLikelihoods(const Vdouble& counts, Vdouble& likelih
         {
           for (size_t nba=1 ; nba<nbAlleles_; nba++)
           {
-            likelihoods[numetat++]=0;
+            likelihoods[numetat]=0;
+            numetat++;
           }
           todo=false;
           break;
@@ -281,7 +282,10 @@ void AllelicAlphabet::computeLikelihoods(const Vdouble& counts, Vdouble& likelih
         for (size_t nba=1 ; nba < nbAlleles_; nba++)
         {
           auto lprob=std::log((double)(nbAlleles_-nba)/nbAlleles_)*counts[size_t(i)]+std::log((double)nba/nbAlleles_)*counts[size_t(j)];
-          likelihoods[numetat++]=std::exp(lprob+lnorm);
+          likelihoods[numetat]=std::exp(lprob+lnorm);
+          if (likelihoods[numetat]<NumConstants::TINY())
+            likelihoods[numetat]=0;
+          numetat++;
         }
       }
     }
