@@ -221,8 +221,6 @@ public:
     getSequence_(sequenceIndex).setComments(comments);
   }
 
-  /** @} */
-
   /**
    * @name Add sequence to this container.
    *

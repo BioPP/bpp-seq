@@ -84,8 +84,10 @@ public:
   /**
    * @brief Build a container with the specified alphabet, with shared Sequences.
    *
+   * @param vseq the vector of shared_ptr<Sequence> that will be copied. 
    * @param alpha The alphabet to use.
    */
+  
   AlignedSequenceContainer(std::vector<std::shared_ptr<Sequence>> vseq, const Alphabet* alpha);
   
   /**

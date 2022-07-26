@@ -135,7 +135,8 @@ VectorSiteContainer::VectorSiteContainer(const Alphabet* alpha) :
   VectorPositionedContainer<Site>(),
   VectorMappedContainer<Sequence>(),
   AbstractSequenceContainer(alpha)
-{}
+{
+}
 
 /******************************************************************************/
 
@@ -161,8 +162,7 @@ VectorSiteContainer::VectorSiteContainer(const SiteContainer& sc) :
   for (size_t i = 0; i < sc.getNumberOfSites(); i++)
     addSite(sc.getSite(i), false); // We assume that positions are correct.
 
-  for (auto i : sc.getSequenceNames())
-    VectorMappedContainer<Sequence>::appendObject(nullptr, i);
+  VectorMappedContainer<Sequence>::setObjectNames(sc.getSequenceNames());
 }
 
 /******************************************************************************/

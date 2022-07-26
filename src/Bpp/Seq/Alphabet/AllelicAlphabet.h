@@ -79,7 +79,7 @@ namespace bpp
  * For nucleotides with three alleles, the underlying states are for instance:
  *
  * _3_0 (-1), A3_0 (0), C3_0 (1), G3_0 (2), T3_0 (3), A2C1 (6), A1C2 (7), A2G1 (8), A1G2 (9),
- * A2T1 (10), A1T2 (11), C2G1 (16), C1G2 (17), C2T1 (18), C1T2 (19), G2T1 (26), G1T2 (27). ?3_0 (32)
+ * A2T1 (10), A1T2 (11), C2G1 (16), C1G2 (17), C2T1 (18), C1T2 (19), G2T1 (26), G1T2 (27), ?3_0 (32)
  *
  * 
  */

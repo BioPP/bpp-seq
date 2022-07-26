@@ -47,6 +47,7 @@
 #include "AlignedValuesContainer.h"
 #include "OrderedSequenceContainer.h"
 #include "ProbabilisticSiteContainer.h"
+#include "VectorProbabilisticSequenceContainer.h"
 #include "VectorMappedContainer.h"
 #include "VectorPositionedContainer.h"
 
@@ -128,8 +129,7 @@ public:
 
   VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc);
 
-  VectorProbabilisticSiteContainer(const OrderedSequenceContainer& osc);
-
+  VectorProbabilisticSiteContainer(const VectorProbabilisticSequenceContainer& osc);
 
   VectorProbabilisticSiteContainer& operator=(const VectorProbabilisticSiteContainer& vpsc);
 

@@ -132,7 +132,7 @@ VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const VectorP
 
 /******************************************************************************/
 
-VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const OrderedSequenceContainer& osc) :
+VectorProbabilisticSiteContainer::VectorProbabilisticSiteContainer(const VectorProbabilisticSequenceContainer& osc) :
   AbstractValuesContainer(osc.getGeneralComments(), osc.getAlphabet()),
   VectorPositionedContainer<ProbabilisticSite>(),
   VectorMappedContainer<ProbabilisticSequence>(),

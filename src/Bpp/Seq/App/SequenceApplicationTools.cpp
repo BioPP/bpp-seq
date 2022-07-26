@@ -669,23 +669,26 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
       alpha2 = alpha;
   }
 
+
   
   VectorSiteContainer* sites(0);
   VectorProbabilisticSiteContainer* psites(0);
 
+  SiteContainer* ialn = iAln->readAlignment(sequenceFilePath, alpha2);
+
   if (iAln)
-    sites=dynamic_cast<VectorSiteContainer*>(iAln->readAlignment(sequenceFilePath, alpha2));
+    sites=new VectorSiteContainer(*ialn);
   else
-    psites=dynamic_cast<VectorProbabilisticSiteContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2));
+    psites=new VectorProbabilisticSiteContainer(*iProbAln->readAlignment(sequenceFilePath, alpha2));
 
   if (sites)
   {
     SiteContainer* tmpsites;
 
     /// Look for RNY translation
-    if (AlphabetTools::isRNYAlphabet(alpha))
+    if (AlphabetTools::isRNYAlphabet(alpha2))
     {
-      tmpsites = new VectorSiteContainer(alpha);
+      tmpsites = new VectorSiteContainer(alpha2);
 
       const SequenceTools ST;
       for (const auto& name : sites->getSequenceNames())
@@ -725,7 +728,7 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
       }
     }
   }
-  
+
   /// Look for Allelic translation
   
   if (AlphabetTools::isAllelicAlphabet(alpha))
@@ -825,7 +828,7 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
     avc = selectedSites;
   }
 
-  return avc;
+ return avc;
 }
 
 /******************************************************************************/
