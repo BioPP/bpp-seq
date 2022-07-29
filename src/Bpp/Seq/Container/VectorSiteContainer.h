@@ -302,11 +302,6 @@ public:
     return *VectorPositionedContainer<SiteType>::getObject(sitePosition);
   }
 
-  SiteType& getSite(size_t sitePosition)
-  {
-    return *VectorPositionedContainer<SiteType>::getObject(sitePosition);
-  }
-
   void setSite(size_t sitePosition, std::unique_ptr<SiteType>& site, bool checkCoordinate = true) override
   {
     if (sitePosition >= getNumberOfSites())
@@ -433,7 +428,7 @@ public:
   void reindexSites() override
   {
     for (size_t i = 0; i < getNumberOfSites(); ++i) {
-      getSite(i).setCoordinate(static_cast<int>(i) + 1);
+      getSite_(i).setCoordinate(static_cast<int>(i) + 1);
     }
   }
 
@@ -452,7 +447,7 @@ public:
       throw BadSizeException("TemplateVectorSiteContainer::setSiteCoordinates bad size of coordinates vector", vCoordinates.size(), getNumberOfSites());
 
     for (size_t i = 0; i < getNumberOfSites(); ++i) {
-      getSite(i).setCoordinate(vCoordinates[i]);
+      getSite_(i).setCoordinate(vCoordinates[i]);
     }
   }
 
@@ -500,11 +495,11 @@ public:
       sequence[j] = getSite(j)[sequencePosition];
     
     auto alphaPtr = getAlphabet();
-    std::shared_ptr<SequenceType> ns(new SequenceType(
+    auto ns = std::make_shared<SequenceType>(
           sequenceNames_[sequencePosition],
           sequence,
           *sequenceComments_[sequencePosition],
-          alphaPtr));
+          alphaPtr);
 
     VectorMappedContainer<SequenceType>::addObject_(ns, sequencePosition, getSequenceKey(sequencePosition), false);
 
@@ -517,7 +512,7 @@ public:
     getSequence(sequencePosition); // this creates the sequence if it does not exist.
 
     for (size_t i = 0; i < getNumberOfSites(); ++i)
-      getSite(i).deleteElement(sequencePosition);
+      getSite_(i).deleteElement(sequencePosition);
 
     auto d = static_cast<std::vector<std::string>::difference_type>(sequencePosition);
     sequenceNames_.erase(std::next(sequenceNames_.begin(), d));
@@ -540,7 +535,7 @@ public:
   void deleteSequence(size_t sequencePosition) override
   {
     for (size_t i = 0; i < getNumberOfSites(); ++i)
-      getSite(i).deleteElement(sequencePosition);
+      getSite_(i).deleteElement(sequencePosition);
 
     auto posN = static_cast<std::vector<std::string>::difference_type>(sequencePosition);
     sequenceNames_.erase(sequenceNames_.begin() + posN);
@@ -663,17 +658,17 @@ public:
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); i++)
-      getSite(i).addElement(sequencePosition, sequence->getValue(i));
+      getSite_(i).addElement(sequencePosition, sequence->getValue(i));
 
     VectorMappedContainer<SequenceType>::addObject(std::move(sequence), sequencePosition, sequenceKey);
   }
 
 
-  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence)override
+  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence) override
   {
     // If the container has no sequence, we set the size to the size of this sequence:
     if (getNumberOfSequences() == 0)
-      realloc(sequence->size());
+      realloc_(sequence->size());
 
     // New sequence's alphabet and site container's alphabet matching verification
     if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
@@ -687,7 +682,7 @@ public:
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); ++i)
-      getSite(i).addElement(sequence->getValue(i));
+      getSite_(i).addElement(sequence->getValue(i));
 
     // Add sequence
     VectorMappedContainer<SequenceType>::appendObject(std::move(sequence), sequenceKey);
@@ -712,7 +707,7 @@ public:
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); ++i)
-      getSite(i).addElement(sequencePosition, sequence->getValue(i));
+      getSite_(i).addElement(sequencePosition, sequence->getValue(i));
 
     VectorMappedContainer<SequenceType>::insertObject(std::move(sequence), sequencePosition, sequenceKey);
   }
@@ -723,8 +718,20 @@ public:
   /** @} */
 
 protected:
+  /**
+   * Get a non-const reference to a site in the container. 
+   * It is a convenient short-cut for use within the class only, as this can potentially mess up the data.
+   *
+   * @param sitePosition the index of the site to retrieve.
+   * @return A reference to the selected site.
+   */
+  SiteType& getSite_(size_t sitePosition)
+  {
+    return *VectorPositionedContainer<SiteType>::getObject(sitePosition);
+  }
+
   // Create n void sites:
-  void realloc(size_t n)
+  void realloc_(size_t n)
   {
     clear();
     std::shared_ptr<const Alphabet> alphaPtr = getAlphabet();

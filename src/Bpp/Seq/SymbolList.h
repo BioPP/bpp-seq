@@ -43,6 +43,7 @@
 #define BPP_SEQ_SYMBOLLIST_H
 
 #include <Bpp/Clonable.h>
+#include <Bpp/Exceptions.h>
 
 #include "Alphabet/Alphabet.h"
 #include "CoreSymbolList.h"
