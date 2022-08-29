@@ -1,1 +1,43 @@
+# files to be ignored
+
+BppSeq.tag
+CMakeCache.txt
+CMakeFiles
+*.cmake
+Makefile
+html
+install_manifest.txt
+libbpp-seq.*
 .clang_complete
+
+# file to be specifically not ignored by previous rules
+
+!/CTestConfig.cmake
+!/cmake/*
+
+# ignore .vscode folder
+.vscode/
+
+#ignore build folder
+build/
+
+# ignore all files except for the ones with the below suffices
+*.*
+
+!*.txt
+!*.cpp
+!*.c
+!*.py
+!*.pas
+!*.jar
+!*.md
+!*.tex
+!*.bak
+!*.h
+!*.hpp
+!*.lyx
+
+# ignore the gitignore file:)
+!*.gitignore
+.gitignore
+
