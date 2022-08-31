@@ -281,8 +281,8 @@ vector<int> StringSequenceTools::codeSequence(const string& sequence, const Alph
   
   size_t pos = 0;
   size_t count = 0;
-  if (alphabet->getAlphabetType() == "Chromosome"){
-    vector<int> code(static_cast<size_t>(floor(static_cast<double>(size))));
+  if (alphabet->getAlphabetType() == "Integer"){
+    vector<int> code(static_cast<size_t>(ceil(static_cast<double>(sequence.size()) / static_cast<double>(size))));
     code[count] = alphabet->charToInt(sequence.substr(pos, sequence.size()));
     return code;
     

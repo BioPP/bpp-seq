@@ -113,10 +113,12 @@ bool AlphabetTools::checkAlphabetCodingSize(const Alphabet* alphabet)
 unsigned int AlphabetTools::getAlphabetCodingSize(const Alphabet& alphabet)
 {
   //Anat's addition to the code
-  if (alphabet.getAlphabetType() == "Chromosome"){
+  if (alphabet.getAlphabetType() == "Integer"){
+    string max_state = alphabet.getCharCodeAt(alphabet.getSize());
+    
     //int number_of_types = alphabet.getNumberOfTypes();
     //string str_state_of_max = std :: to_string(number_of_types-1);
-    return static_cast<unsigned int> (1);
+    return static_cast<unsigned int> (max_state.length());
     /////////////////////////////////////////////////////////////////
   }
   if (!checkAlphabetCodingSize(alphabet))

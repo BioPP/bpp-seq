@@ -49,7 +49,7 @@ using namespace bpp;
 IntegerAlphabet::IntegerAlphabet(unsigned int max, unsigned int min) : MIN_(min), MAX_(max)
 {
   // Alphabet size definition
-  resize(MAX_-MIN_+3); // the vector should be resized such that it will include min, max, unresolved state, and gap
+  //reserve(MAX_-MIN_+3); // the vector should be resized such that it will include min, max, unresolved state, and gap
 
   // Alphabet content definition
   registerState(new AlphabetState(-1, "-", "Gap"));

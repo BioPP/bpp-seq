@@ -89,7 +89,7 @@ public:
   
   bool isUnresolved(int state) const { return state == static_cast<int>(MAX_+1); }
   
-  bool isUnresolved(const std::string& state) const { return false; }
+  bool isUnresolved(const std::string& state) const { return state == "X"; }
   
   unsigned int getMin() const { return MIN_; }
 
