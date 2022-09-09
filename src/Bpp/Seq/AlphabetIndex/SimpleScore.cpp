@@ -78,7 +78,3 @@ double SimpleScore::getIndex(const std::string& state1, const std::string& state
   return distanceMatrix_(stateIndex1, stateIndex2);
 }
 
-LinearMatrix<double>* SimpleScore::getIndexMatrix() const
-{
-  return new LinearMatrix<double>(distanceMatrix_);
-}

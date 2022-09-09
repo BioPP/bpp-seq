@@ -88,7 +88,7 @@ public:
 
   virtual ~SimpleScore() {}
 
-  SimpleScore* clone() const { return new SimpleScore(*this); }
+  SimpleScore* clone() const override { return new SimpleScore(*this); }
 
 public:
   /**
@@ -96,11 +96,11 @@ public:
    *
    * @{
    */
-  double getIndex(int state1, int state2) const;
-  double getIndex(const std::string& state1, const std::string& state2) const;
-  std::shared_ptr<const Alphabet> getAlphabet() const { return alphabet_; }
-  LinearMatrix<double>* getIndexMatrix() const;
-  bool isSymmetric() const { return true; }
+  double getIndex(int state1, int state2) const override;
+  double getIndex(const std::string& state1, const std::string& state2) const override;
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
+  const Matrix<double>& getIndexMatrix() const override { return distanceMatrix_; }
+  bool isSymmetric() const override { return true; }
   /** @} */
 };
 } // end of namespace bpp.

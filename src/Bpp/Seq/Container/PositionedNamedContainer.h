@@ -59,9 +59,9 @@ namespace bpp
  * This interface also includes addObject and insertObject methods.
  */
 template<class T>
-class PositionedNamedContainer :
-  public virtual PositionedContainer<T>,
-  public virtual NamedContainer<T>
+class PositionedNamedContainerInterface :
+  public virtual PositionedContainerInterface<T>,
+  public virtual NamedContainerInterface<T>
 {
 public:
   /**
@@ -69,12 +69,11 @@ public:
    *
    * @{
    */
-  virtual PositionedNamedContainer<T>* clone() const = 0;
+  virtual PositionedNamedContainerInterface<T>* clone() const = 0;
 
   /** @} */
 
-  virtual ~PositionedNamedContainer()
-  {}
+  virtual ~PositionedNamedContainerInterface() {}
 
 public:
   virtual void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) = 0;

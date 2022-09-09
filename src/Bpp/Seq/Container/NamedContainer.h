@@ -57,13 +57,13 @@ namespace bpp
  * The objects are all stored as shared pointers.
  */
 template<class T>
-class NamedContainer:
+class NamedContainerInterface:
     public virtual Clonable
 {
 
 public:
-  NamedContainer() {}
-  virtual ~NamedContainer() {}
+  NamedContainerInterface() {}
+  virtual ~NamedContainerInterface() {}
 
 protected:
   /**

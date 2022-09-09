@@ -330,6 +330,16 @@ public:
     throw NotImplementedException("CompressedVectorSiteContainer::insertSequence.");
   }
 
+  const int& getValueAt(const std::string& sequenceKey, size_t sitePosition) const override
+  {
+    return getSite(sitePosition).getValue(getSequencePosition(sequenceKey));
+  }
+  
+  const int& getValueAt(size_t sequencePosition, size_t sitePosition) const override
+  {
+    return getSite(sitePosition).getValue(sequencePosition);
+  }
+	 
   /**
    * @name SequenceData methods.
    *

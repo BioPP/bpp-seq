@@ -89,13 +89,13 @@ RNA::RNA(bool exclamationMarkCountsAsGap)
 bool RNA::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
-    throw BadIntException(state1, "RNA::isResolvedIn(int, int): Specified base unknown.", *this);
+    throw BadIntException(state1, "RNA::isResolvedIn(int, int): Specified base unknown.", this);
 
   if (!isIntInAlphabet(state2))
-    throw BadIntException(state2, "RNA::isResolvedIn(int, int): Specified base unknown.", *this);
+    throw BadIntException(state2, "RNA::isResolvedIn(int, int): Specified base unknown.", this);
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "RNA::isResolvedIn(int, int): Unresolved base.", *this);
+    throw BadIntException(state2, "RNA::isResolvedIn(int, int): Unresolved base.", this);
 
   if (state1 == -1)
     return state2 == -1;
@@ -113,7 +113,7 @@ bool RNA::isResolvedIn(int state1, int state2) const
   case 3:
     return st1.getBinaryCode() & 8;
   default:
-    throw BadIntException(state2, "RNA::isResolvedIn : this should not happen", *this);
+    throw BadIntException(state2, "RNA::isResolvedIn : this should not happen", this);
   }
 }
 
@@ -122,7 +122,7 @@ bool RNA::isResolvedIn(int state1, int state2) const
 std::vector<int> RNA::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "RNA::getAlias(int): Specified base unknown.", *this);
+    throw BadIntException(state, "RNA::getAlias(int): Specified base unknown.", this);
   vector<int> v;
   const NucleicAlphabetState& st = getState(state);
   if (state == -1)
@@ -145,7 +145,7 @@ std::vector<std::string> RNA::getAlias(const std::string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
-    throw BadCharException(locstate, "RNA::getAlias(int): Specified base unknown.", *this);
+    throw BadCharException(locstate, "RNA::getAlias(int): Specified base unknown.", this);
   vector<int> vi = this->getAlias(this->charToInt(state));
   vector<string> v;
   for (unsigned int i = 0; i < vi.size(); i++)
@@ -163,7 +163,7 @@ int RNA::getGeneric(const std::vector<int>& states) const
   for (size_t i = 0; i < states.size(); ++i)
   {
     if (!isIntInAlphabet(states[i]))
-      throw BadIntException(states[i], "RNA::getGeneric(const vector<int>& states): Specified base unknown.", *this);
+      throw BadIntException(states[i], "RNA::getGeneric(const vector<int>& states): Specified base unknown.", this);
     v |= getState(states[i]).getBinaryCode();
   }
   return getStateByBinCode(v).getNum();
@@ -177,7 +177,7 @@ std::string RNA::getGeneric(const std::vector<std::string>& states) const
   for (unsigned int i = 0; i < states.size(); ++i)
   {
     if (!isCharInAlphabet(states[i]))
-      throw BadCharException(states[i], "DNA::getGeneric(const vector<string>& states): Specified base unknown.", *this);
+      throw BadCharException(states[i], "DNA::getGeneric(const vector<string>& states): Specified base unknown.", this);
     vi.push_back(this->charToInt(states[i]));
   }
   return intToChar(getGeneric(vi));

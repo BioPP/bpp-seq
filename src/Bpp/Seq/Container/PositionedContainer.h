@@ -60,19 +60,17 @@ namespace bpp
  * and setPosition methods (see Site class).
  */
 template<class T>
-class PositionedContainer:
+class PositionedContainerInterface:
     public virtual Clonable
 {
 public:
-  PositionedContainer() {}
-  virtual ~PositionedContainer() {}
+  PositionedContainerInterface() {}
+  virtual ~PositionedContainerInterface() {}
 
 public:
   /**
    * @brief the size
-   *
-   **/
-
+   */
   virtual size_t getSize() const = 0;
 
   virtual void setSize(size_t size) {}

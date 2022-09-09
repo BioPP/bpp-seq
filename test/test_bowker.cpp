@@ -45,14 +45,14 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-BasicSequence* getRandomSequence(const Alphabet* alphabet, unsigned int size) {
+unique_ptr<Sequence> getRandomSequence(shared_ptr<const Alphabet> alphabet, size_t size) {
   string seq = "";
-  for (unsigned int i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
     seq += alphabet->intToChar(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(static_cast<int>(alphabet->getSize())));
-  return new BasicSequence("random seq", seq, alphabet);
+  return make_unique<Sequence>("random seq", seq, alphabet);
 }
 
-int test(const Alphabet* alphabet, unsigned int size, unsigned int rep) {
+int test(shared_ptr<const Alphabet> alphabet, size_t size, unsigned int rep) {
   double n01 = 0;
   double n05 = 0;
   double n10 = 0;
@@ -61,9 +61,9 @@ int test(const Alphabet* alphabet, unsigned int size, unsigned int rep) {
   //ofstream out("pvalues.txt", ios::out);
   for (unsigned int i = 0; i < rep; ++i) {
     ApplicationTools::displayGauge(i, rep-1);
-    unique_ptr<BasicSequence> seq1(getRandomSequence(alphabet, size));
-    unique_ptr<BasicSequence> seq2(getRandomSequence(alphabet, size));
-    unique_ptr<BowkerTest> test(SequenceTools::bowkerTest(*seq1, *seq2));
+    auto seq1 = getRandomSequence(alphabet, size);
+    auto seq2 = getRandomSequence(alphabet, size);
+    auto test = SequenceTools::bowkerTest(*seq1, *seq2);
     double p = test->getPValue();
     if (p <= 0.01) n01++;
     if (p <= 0.05) n05++;
@@ -86,16 +86,14 @@ int test(const Alphabet* alphabet, unsigned int size, unsigned int rep) {
 }
 
 int main() {
-  //ProteicAlphabet* alpha = new ProteicAlphabet;
-  RNA* alpha = new RNA();
-  BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
-  BasicSequence seq2("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
-  unique_ptr<BowkerTest> btest(SequenceTools::bowkerTest(seq1, seq2));
+  shared_ptr<const Alphabet> alpha = AlphabetTools::RNA_ALPHABET;
+  auto seq1 = make_unique<Sequence>("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
+  auto seq2 = make_unique<Sequence>("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
+  auto btest = SequenceTools::bowkerTest(*seq1, *seq2);
   cout << btest->getStatistic() << "\t" << btest->getPValue() << endl;
-  delete alpha;
 
-  test(&AlphabetTools::DNA_ALPHABET, 1000, 5000);
-  test(&AlphabetTools::PROTEIN_ALPHABET, 20000, 5000);
+  test(AlphabetTools::DNA_ALPHABET, 1000, 5000);
+  test(AlphabetTools::PROTEIN_ALPHABET, 20000, 5000);
  
   return 0;
 }

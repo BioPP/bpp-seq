@@ -223,11 +223,11 @@ void CompressedVectorSiteContainer::setSite(size_t sitePosition, unique_ptr<Site
 
   // Check size:
   if (site->size() != getNumberOfSequences())
-    throw SiteException("AlignedSequenceContainer::setSite. Site does not have the appropriate length", *site);
+    throw SiteException("AlignedSequenceContainer::setSite. Site does not have the appropriate length", site.get());
 
   // New site's alphabet and site container's alphabet matching verification
   if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-    throw AlphabetMismatchException("CompressedVectorSiteContainer::setSite", *getAlphabet(), *site->getAlphabet());
+    throw AlphabetMismatchException("CompressedVectorSiteContainer::setSite", getAlphabet(), site->getAlphabet());
 
   size_t current = index_[sitePosition];
   size_t siteIndex = getSiteIndex_(*site);
@@ -361,12 +361,12 @@ void CompressedVectorSiteContainer::addSite(std::unique_ptr<Site>& site, bool ch
 {
   // Check size:
   if (getNumberOfSequences() != 0 && site->size() != getNumberOfSequences())
-    throw SiteException("CompressedVectorSiteContainer::addSite. Site does not have the appropriate length", *site);
+    throw SiteException("CompressedVectorSiteContainer::addSite. Site does not have the appropriate length", site.get());
 
   // New site's alphabet and site container's alphabet matching verification
   if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
   {
-    throw AlphabetMismatchException("CompressedVectorSiteContainer::addSite", *getAlphabet(), *site->getAlphabet());
+    throw AlphabetMismatchException("CompressedVectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
   }
 
   size_t siteIndex = getSiteIndex_(*site);
@@ -396,12 +396,12 @@ void CompressedVectorSiteContainer::addSite(std::unique_ptr<Site>& site, size_t 
 
   // Check size:
   if (site->size() != getNumberOfSequences())
-    throw SiteException("CompressedVectorSiteContainer::addSite. Site does not have the appropriate length", *site);
+    throw SiteException("CompressedVectorSiteContainer::addSite. Site does not have the appropriate length", site.get());
 
   // New site's alphabet and site container's alphabet matching verification
   if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
   {
-    throw AlphabetMismatchException("CompressedVectorSiteContainer::addSite", *getAlphabet(), *site->getAlphabet());
+    throw AlphabetMismatchException("CompressedVectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
   }
 
   size_t index = getSiteIndex_(*site);

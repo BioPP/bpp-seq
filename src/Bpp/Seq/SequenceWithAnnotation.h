@@ -61,7 +61,7 @@ class SequenceAnnotation :
   public virtual IntSymbolListListener
 {
 public:
-  virtual SequenceAnnotation* clone() const = 0;
+  virtual SequenceAnnotation* clone() const override = 0;
 
   /**
    * Creates a default annotation according to a given sequence.
@@ -98,7 +98,7 @@ public:
    * @param pos Starting point of the region.
    * @param len The length of the region, in number of positions.
    */
-  virtual SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const = 0;
+  virtual std::unique_ptr<SequenceAnnotation> getPartAnnotation(size_t pos, size_t len) const = 0;
 };
 
 /**
@@ -119,9 +119,9 @@ public:
  * @see BasicSequence
  */
 class SequenceWithAnnotation :
-  public virtual Sequence,
+  public virtual SequenceInterface,
   public AbstractCoreSequence,
-  public EdIntSymbolList
+  public EventDrivenIntSymbolList
 {
 public:
   /**
@@ -132,7 +132,12 @@ public:
    *
    * @param alpha    A pointer toward the Alphabet to be used with this Sequence.
    */
-  SequenceWithAnnotation(const Alphabet* alpha);
+  SequenceWithAnnotation(std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList(alpha),
+    AbstractCoreSequence(""),
+    EventDrivenIntSymbolList(alpha)
+  {}
+
 
   /**
    * @brief Direct constructor: build a Sequence object from a std::string
@@ -146,7 +151,18 @@ public:
    * @param sequence The whole sequence to be parsed as a std::string.
    * @param alpha    A pointer toward the alphabet to be used with this sequence.
    */
-  SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha);
+  SequenceWithAnnotation(
+      const std::string& name,
+      const std::string& sequence,
+      std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList(alpha),
+    AbstractCoreSequence(name),
+    EventDrivenIntSymbolList(alpha)
+  {
+    if (sequence != "")
+      setContent(sequence);
+  }
+
 
   /**
    * @brief Direct constructor: build a Sequence object from a std::string.
@@ -162,7 +178,19 @@ public:
    * @param comments Comments to add to the sequence.
    * @param alpha    A pointer toward the alphabet to be used with this sequence.
    */
-  SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha);
+  SequenceWithAnnotation(
+      const std::string& name,
+      const std::string& sequence,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList(alpha),
+    AbstractCoreSequence(name, comments),
+    EventDrivenIntSymbolList(alpha)
+  {
+    if (sequence != "")
+      setContent(sequence);
+  }
+
 
   /**
    * @brief General purpose constructor, can be used with any alphabet.
@@ -174,7 +202,15 @@ public:
    * @param sequence The sequence content.
    * @param alpha    A pointer toward the alphabet to be used with this sequence.
    */
-  SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha);
+  SequenceWithAnnotation(
+      const std::string& name,
+      const std::vector<std::string>& sequence,
+      std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList(alpha),
+    AbstractCoreSequence(name),
+    EventDrivenIntSymbolList(sequence, alpha)
+  {}
+
 
   /**
    * @brief General purpose constructor, can be used with any alphabet.
@@ -187,7 +223,16 @@ public:
    * @param comments Comments to add to the sequence.
    * @param alpha    A pointer toward the alphabet to be used with this sequence.
    */
-  SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha);
+  SequenceWithAnnotation(
+      const std::string& name,
+      const std::vector<std::string>& sequence,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList(alpha),
+    AbstractCoreSequence(name, comments),
+    EventDrivenIntSymbolList(sequence, alpha)
+  {}
+
 
   /**
    * @brief General purpose constructor, can be used with any alphabet.
@@ -196,7 +241,15 @@ public:
    * @param sequence The sequence content.
    * @param alpha    A pointer toward the alphabet to be used with this sequence.
    */
-  SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha);
+  SequenceWithAnnotation(
+      const std::string& name,
+      const std::vector<int>& sequence,
+      std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList(sequence, alpha),
+    AbstractCoreSequence(name),
+    EventDrivenIntSymbolList(sequence, alpha)
+  {}
+
 
   /**
    * @brief General purpose constructor, can be used with any alphabet.
@@ -206,32 +259,63 @@ public:
    * @param comments Comments to add to the sequence.
    * @param alpha    A pointer toward the alphabet to be used with this sequence.
    */
-  SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha);
+  SequenceWithAnnotation(
+      const std::string& name,
+      const std::vector<int>& sequence,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList(sequence, alpha),
+    AbstractCoreSequence(name, comments),
+    EventDrivenIntSymbolList(sequence, alpha)
+  {}
+
 
   /**
-   * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
+   * @brief The Sequence generic copy constructor.
    */
+  SequenceWithAnnotation(const Sequence& s) :
+    AbstractTemplateSymbolList(s.getContent(), s.getAlphabet()),
+    AbstractCoreSequence(s.getName(), s.getComments()),
+    EventDrivenIntSymbolList(s.getContent(), s.getAlphabet())
+  {}
 
-  SequenceWithAnnotation(const Sequence& s);
 
   /**
-   * @brief The Sequence copy constructor. This does not perform a hard copy of the alphabet object.
+   * @brief The Sequence copy constructor.
    */
-  SequenceWithAnnotation(const SequenceWithAnnotation& s);
+  SequenceWithAnnotation(const SequenceWithAnnotation& s) :
+    AbstractTemplateSymbolList(s.getContent(), s.getAlphabet()),
+    AbstractCoreSequence(s.getName(), s.getComments()),
+    EventDrivenIntSymbolList(s.getContent(), s.getAlphabet())
+  {}
+
 
   /**
-   * @brief The Sequence generic assignment operator. This does not perform a hard copy of the alphabet object.
+   * @brief The Sequence generic assignment operator.
    *
    * @return A ref toward the assigned Sequence.
    */
-  SequenceWithAnnotation& operator=(const Sequence& s);
+  SequenceWithAnnotation& operator=(const Sequence& s)
+  {
+    setContent(s.getContent());
+    setName(s.getName());
+    setComments(s.getComments());
+    return *this;
+  }
+
 
   /**
    * @brief The Sequence assignment operator. This does not perform a hard copy of the alphabet object.
    *
    * @return A ref toward the assigned Sequence.
    */
-  SequenceWithAnnotation& operator=(const SequenceWithAnnotation& s);
+  SequenceWithAnnotation& operator=(const SequenceWithAnnotation& s)
+  {
+    AbstractCoreSequence::operator=(s);
+    EventDrivenIntSymbolList::operator=(s);
+    return *this;
+  }
+
 
   virtual ~SequenceWithAnnotation() {}
 
@@ -241,7 +325,7 @@ public:
    *
    * @{
    */
-  SequenceWithAnnotation* clone() const { return new SequenceWithAnnotation(*this); }
+  SequenceWithAnnotation* clone() const override { return new SequenceWithAnnotation(*this); }
   /** @} */
 
 
@@ -257,26 +341,21 @@ public:
    * @param sequence The new content of the sequence.
    * @see The Sequence constructor for information about the way sequences are internaly stored.
    */
-  virtual void setContent(const std::string& sequence);
+  virtual void setContent(const std::string& sequence) override;
 
-  void setContent(const std::vector<std::string>& list)
+  void setContent(const std::vector<std::string>& list) override
   {
-    EdIntSymbolList::setContent(list);
+    EventDrivenIntSymbolList::setContent(list);
   }
 
-  void setContent(const std::vector<int>& list)
+  void setContent(const std::vector<int>& list) override
   {
-    EdIntSymbolList::setContent(list);
+    EventDrivenIntSymbolList::setContent(list);
   }
 
-  std::string getChar(size_t pos) const
-  {
-    return EdIntSymbolList::getChar(pos);
-  }
+  void setToSizeR(size_t newSize) override;
 
-  void setToSizeR(size_t newSize);
-
-  void setToSizeL(size_t newSize);
+  void setToSizeL(size_t newSize) override;
 
   /**
    * @brief Append the content of a sequence to the current one.
@@ -284,13 +363,13 @@ public:
    * @param seq The sequence to append. Only the raw content is appended, not additional fields such as annotations if any.
    * @throw AlphabetMismatchException In case the alphabet does not match the current one.
    */
-  void append(const Sequence& seq);
+  void append(const SequenceInterface& seq) override;
 
-  void append(const std::vector<int>& content);
+  void append(const std::vector<int>& content) override;
 
-  void append(const std::vector<std::string>& content);
+  void append(const std::vector<std::string>& content) override;
 
-  void append(const std::string& content);
+  void append(const std::string& content) override;
 
   /** @} */
 
@@ -362,15 +441,6 @@ public:
    */
   virtual void merge(const SequenceWithAnnotation& swa);
 
-  const Comments& getComments() const { return Commentable::getComments(); }
-
-  void setComments(const Comments& comments) { Commentable::setComments(comments); }
-
-  void clearComments() { Commentable::clearComments(); }
-
-  const std::string& getName() const { return AbstractCoreSequence::getName(); }
-
-  void setName(const std::string& name) { AbstractCoreSequence::setName(name); }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCEWITHANNOTATION_H

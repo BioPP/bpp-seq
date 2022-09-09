@@ -58,22 +58,22 @@ class CodonFromProteicAlphabetIndex2 :
   public AlphabetIndex2
 {
 private:
-  const CodonAlphabet* alpha_;
-  const GeneticCode* gencode_;
+  std::shared_ptr<const CodonAlphabet> alpha_;
+  std::shared_ptr<const GeneticCode> gencode_;
 
   LinearMatrix<double> vIndex_;
 
   bool isSymmetric_;
 
 public:
-  CodonFromProteicAlphabetIndex2(const GeneticCode* gencode, const AlphabetIndex2* protalphindex) :
+  CodonFromProteicAlphabetIndex2(std::shared_ptr<const GeneticCode> gencode, std::shared_ptr<const AlphabetIndex2> protalphindex) :
     AlphabetIndex2(),
-    alpha_(&AlphabetTools::DNA_CODON_ALPHABET),
+    alpha_(AlphabetTools::DNA_CODON_ALPHABET),
     gencode_(gencode),
     vIndex_(64, 64),
     isSymmetric_(protalphindex->isSymmetric())
   {
-    if (!AlphabetTools::isProteicAlphabet(protalphindex->getAlphabet()))
+    if (!AlphabetTools::isProteicAlphabet(protalphindex->getAlphabet().get()))
       throw Exception("CodonFromProteicAlphabetIndex2: Not a Proteic Alphabet for CodonAlphabetIndex2.");
     fillIndex_(protalphindex);
   }
@@ -97,36 +97,36 @@ public:
 
   virtual ~CodonFromProteicAlphabetIndex2() {}
 
-  CodonFromProteicAlphabetIndex2* clone() const { return new CodonFromProteicAlphabetIndex2(*this); }
+  CodonFromProteicAlphabetIndex2* clone() const override { return new CodonFromProteicAlphabetIndex2(*this); }
 
 public:
-  double getIndex(int state1, int state2) const
+  double getIndex(int state1, int state2) const override
   {
     return vIndex_(getAlphabet()->getStateIndex(state1) - 1, getAlphabet()->getStateIndex(state2) - 1);
   }
 
-  double getIndex(const std::string& state1, const std::string& state2) const
+  double getIndex(const std::string& state1, const std::string& state2) const override
   {
     return vIndex_(getAlphabet()->getStateIndex(state1) - 1, getAlphabet()->getStateIndex(state2) - 1);
   }
 
-  const Alphabet* getAlphabet() const
+  std::shared_ptr<const Alphabet> getAlphabet() const override
   {
     return alpha_;
   }
 
-  Matrix<double>* getIndexMatrix() const
+  const Matrix<double>& getIndexMatrix() const override
   {
-    return new LinearMatrix<double>(vIndex_);
+    return vIndex_;
   }
 
-  bool isSymmetric() const
+  bool isSymmetric() const override
   {
     return isSymmetric_;
   }
 
 private:
-  void fillIndex_(const AlphabetIndex2* protAlphIndex_)
+  void fillIndex_(std::shared_ptr<const AlphabetIndex2>& protAlphIndex_)
   {
     for (size_t i = 0; i < 64; i++)
     {

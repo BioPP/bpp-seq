@@ -54,24 +54,25 @@
 namespace bpp
 {
 /**
- * @brief Partial implementation of the OSequence and OAlignment interfaces.
+ * @brief Partial implementation of the OSequence interface.
  */
 class AbstractOSequence :
-  public virtual OSequence,
-  public virtual OAlignment
+  public virtual OSequence
 {
 public:
   AbstractOSequence() {}
   virtual ~AbstractOSequence() {}
 
 public:
+
   /**
    * @name OSequence methods:
    *
    * @{
    */
-  void writeSequences(std::ostream& output, const SequenceContainer& sc) const = 0;
-  void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const
+  void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override = 0;
+
+  void writeSequences(const std::string& path, const SequenceContainerInterface& sc, bool overwrite = true) const override
   {
     // Open file in specified mode
     std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
@@ -79,6 +80,24 @@ public:
     output.close();
   }
   /** @} */
+
+};
+
+/**
+ * @brief Partial implementation of the OAlignment interface.
+ *
+ * This implementation is for sequence formats that can store both aligned and non-aligned sequences.
+ * Alignment sequences are written as simple sequences with gaps.
+ */
+class AbstractOSequence2 :
+  public virtual AbstractOSequence, //in case for Diamond inheritence
+  public virtual OAlignment
+{
+public:
+  AbstractOSequence2() {}
+  virtual ~AbstractOSequence2() {}
+
+public:
 
   /**
    * @name OAlignment methods:
@@ -89,56 +108,37 @@ public:
    * to a SequenceContainer.
    * @{
    */
-  void writeAlignment(std::ostream& output, const SiteContainer& sc) const
+  void writeAlignment(std::ostream& output, const SiteContainerInterface& sc) const override
   {
-    writeSequences(output, dynamic_cast<const SequenceContainer&>(sc));
+    writeSequences(output, sc);
   }
-  void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const
+
+  void writeAlignment(const std::string& path, const SiteContainerInterface& sc, bool overwrite = true) const override
   {
-    writeSequences(path, dynamic_cast<const SequenceContainer&>(sc), overwrite);
+    writeSequences(path, sc, overwrite);
   }
   /** @} */
 };
 
 /**
- * @brief Partial implementation of the OProbabilisticAlignment interfaces.
+ * @brief Partial implementation of the OProbabilisticSequence interface.
  */
-
-class AbstractOProbabilisticAlignment :
-  public virtual OProbabilisticAlignment
+class AbstractOProbabilisticSequence :
+  public virtual OProbabilisticSequence
 {
 public:
-  AbstractOProbabilisticAlignment() {}
-  virtual ~AbstractOProbabilisticAlignment() {}
+  AbstractOProbabilisticSequence() {}
+  virtual ~AbstractOProbabilisticSequence() {}
 
 public:
   /**
-   * @name OSequence methods:
+   * @name OProbabilisticSequence methods:
    *
    * @{
    */
+  void writeSequences(std::ostream& output, const ProbabilisticSequenceContainerInterface& psc) const override = 0;
 
-  virtual void writeSequence(std::ostream& output, const ProbabilisticSequence& ps) const = 0;
-
-  void writeSequence(const std::string& path, const ProbabilisticSequence& ps, bool overwrite = true) const
-  {
-    // Open file in specified mode
-    std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
-    writeSequence(output, ps);
-    output.close();
-  }
-
-  /** @} */
-
-  /**
-   * @name OProbabilisticSequences methods:
-   *
-   * @{
-   */
-
-  virtual void writeSequences(std::ostream& output, const ProbabilisticSequenceContainer& psc) const = 0;
-
-  void writeSequences(const std::string& path, const ProbabilisticSequenceContainer& psc, bool overwrite = true) const
+  void writeSequences(const std::string& path, const ProbabilisticSequenceContainerInterface& psc, bool overwrite = true) const override
   {
     // Open file in specified mode
     std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
@@ -147,6 +147,23 @@ public:
   }
 
   /** @} */
+};
+
+/**
+ * @brief Partial implementation of the OProbabilisticAlignment interface.
+ * 
+ * This implementation is for formats that can store both aligned and non-aligned sequences.
+ * Alignment sequences are written as simple sequences with gaps.
+ */
+class AbstractOProbabilisticSequence2 :
+  public AbstractOProbabilisticSequence,
+  public virtual OProbabilisticAlignment
+{
+public:
+  AbstractOProbabilisticSequence2() {}
+  virtual ~AbstractOProbabilisticSequence2() {}
+
+public:
   /**
 
    * @name OProbabilisticAlignment methods:
@@ -160,14 +177,14 @@ public:
    *
    * @{
    */
-  void writeAlignment(std::ostream& output, const ProbabilisticSiteContainer& sc)
+  void writeAlignment(std::ostream& output, const ProbabilisticSiteContainerInterface& sc) const override
   {
-    writeSequences(output, dynamic_cast<const ProbabilisticSequenceContainer&>(sc));
+    writeSequences(output, sc);
   }
 
-  void writeAlignment(const std::string& path, const ProbabilisticSiteContainer& sc, bool overwrite = true)
+  void writeAlignment(const std::string& path, const ProbabilisticSiteContainerInterface& sc, bool overwrite = true) const override
   {
-    writeSequences(path, dynamic_cast<const ProbabilisticSequenceContainer&>(sc), overwrite);
+    writeSequences(path, sc, overwrite);
   }
 
   /** @} */

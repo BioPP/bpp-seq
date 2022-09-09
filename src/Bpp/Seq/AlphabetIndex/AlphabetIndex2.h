@@ -95,7 +95,7 @@ public:
   /**
    * @return A matrix object with all indices.
    */
-  virtual Matrix<double>* getIndexMatrix() const = 0;
+  virtual const Matrix<double>& getIndexMatrix() const = 0;
 
   /**
    * @return True if the index is symatric (that is, index(i,j) == index(j, i)).
@@ -103,11 +103,9 @@ public:
   virtual bool isSymmetric() const = 0;
 };
 
-/*
+/**
  * @brief Virtual AlphabetIndex2 for proteic alphabet
- *
  */
-
 class ProteicAlphabetIndex2 :
   virtual public AlphabetIndex2
 {
@@ -115,7 +113,7 @@ private:
   std::shared_ptr<const ProteicAlphabet> alpha_;
 
 public:
-  ProteicAlphabetIndex2() : alpha_(std::dynamic_pointer_cast<const ProteicAlphabet>(AlphabetTools::PROTEIN_ALPHABET.shared_from_this())) {}
+  ProteicAlphabetIndex2() : alpha_(AlphabetTools::PROTEIN_ALPHABET) {}
   virtual ~ProteicAlphabetIndex2() {}
 
   virtual ProteicAlphabetIndex2* clone() const override = 0;

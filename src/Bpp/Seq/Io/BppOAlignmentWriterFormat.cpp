@@ -52,7 +52,7 @@
 using namespace bpp;
 using namespace std;
 
-OAlignment* BppOAlignmentWriterFormat::read(const std::string& description)
+unique_ptr<OAlignment> BppOAlignmentWriterFormat::read(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";
@@ -100,7 +100,7 @@ OAlignment* BppOAlignmentWriterFormat::read(const std::string& description)
     else
       throw Exception("BppOAlignmentWriterFormat::read. Invalid argument 'type' for phylip format: " + type);
 
-    oAln.reset(new Phylip(extended, sequential, ncol, true, split));
+    oAln.reset(new Phylip(extended, sequential, ncol, split));
   }
   else if (format == "Stockholm")
   {
@@ -111,5 +111,5 @@ OAlignment* BppOAlignmentWriterFormat::read(const std::string& description)
     throw Exception("Sequence format '" + format + "' unknown.");
   }
 
-  return oAln.release();
+  return oAln;
 }

@@ -70,7 +70,7 @@ const std::vector<std::string> NexusIOSequence::splitNameAndSequence_(const std:
 
 /******************************************************************************/
 
-void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) const
+void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& vsc) const
 {
   // Checking the existence of specified file
   if (!input)
@@ -105,7 +105,7 @@ void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContain
   }
   if (argsUp["NTAX"] == "")
     throw Exception("NexusIOSequence::appendFromStream(). DIMENSIONS command does not have a NTAX argument.");
-  unsigned int ntax = TextTools::to<unsigned int>(argsUp["NTAX"]);
+  size_t ntax = TextTools::to<size_t>(argsUp["NTAX"]);
 
   // Look for the FORMAT command:
   while (cmdName != "FORMAT")
@@ -121,11 +121,8 @@ void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContain
   // Check if the alignment is dotted or not:
   bool matchChar = TextTools::hasSubstring(TextTools::toUpper(cmdArgs), "MATCHCHAR");
 
-  SiteContainer* alignment = 0;
-  if (matchChar)
-    alignment = new AlignedSequenceContainer(&AlphabetTools::DEFAULT_ALPHABET);
-  else
-    alignment = &vsc;
+  auto alphaPtr = std::dynamic_pointer_cast<const Alphabet>(AlphabetTools::DEFAULT_ALPHABET);
+  auto alignment = make_unique<AlignedSequenceContainer>(alphaPtr);
 
   // Look for the MATRIX command:
   line = "";
@@ -140,7 +137,7 @@ void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContain
   vector<string> names, seqs;
   // Read first block:
   bool commandFinished = false;
-  for (unsigned int i = 0; i < ntax && !input.eof(); i++)
+  for (size_t i = 0; i < ntax && !input.eof(); ++i)
   {
     if (TextTools::endsWith(line, ";"))
     {
@@ -162,7 +159,7 @@ void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContain
   commandFinished = TextTools::removeSurroundingWhiteSpaces(line) == ";"; // In case the end of command is on a separate line.
   while (!commandFinished)
   {
-    for (unsigned int i = 0; i < ntax && !input.eof(); i++)
+    for (size_t i = 0; i < ntax && !input.eof(); ++i)
     {
       if (TextTools::endsWith(line, ";"))
       {
@@ -183,22 +180,30 @@ void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SiteContain
       commandFinished = TextTools::removeSurroundingWhiteSpaces(line) == ";"; // In case the end of command is on a separate line.
     }
   }
-  for (unsigned int i = 0; i < names.size(); i++)
+  for (size_t i = 0; i < names.size(); ++i)
   {
-    alignment->addSequence(BasicSequence(names[i], seqs[i], vsc.getAlphabet()), checkNames_);
+    auto seqPtr = make_unique<Sequence>(names[i], seqs[i], alphaPtr);
+    alignment->addSequence(seqPtr->getName(), seqPtr);
   }
 
   if (matchChar)
   {
     // Now we resolve the alignment:
-    SiteContainer* resolvedAlignment =
-      SiteContainerTools::resolveDottedAlignment(*alignment, vsc.getAlphabet());
-    delete alignment;
-    for (unsigned int i = 0; i < resolvedAlignment->getNumberOfSequences(); i++)
+    auto resolvedAlignment =
+      SiteContainerTools::resolveDottedAlignment(*alignment, alphaPtr);
+    for (size_t i = 0; i < resolvedAlignment->getNumberOfSequences(); ++i)
     {
-      vsc.addSequence(resolvedAlignment->getSequence(i), false);
+      auto seqPtr = unique_ptr<Sequence>(resolvedAlignment->getSequence(i).clone());
+      vsc.addSequence(seqPtr->getName(), seqPtr);
     }
-    delete resolvedAlignment;
+  }
+  else
+  {
+    for (size_t i = 0; i < alignment->getNumberOfSequences(); ++i)
+    {
+      auto seqPtr = unique_ptr<Sequence>(alignment->getSequence(i).clone());
+      vsc.addSequence(seqPtr->getName(), seqPtr);
+    }
   }
 }
 

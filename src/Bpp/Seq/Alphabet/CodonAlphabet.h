@@ -76,14 +76,7 @@ public:
    *
    * @param alpha The nucleic alphabet to be used.
    */
-  CodonAlphabet(const NucleicAlphabet& alpha) :
-    AbstractAlphabet(),
-    nAlph_(alpha.clone())
-  {
-    build_();
-  }
-
-  CodonAlphabet(std::shared_ptr<const NucleicAlphabet>& alpha) :
+  CodonAlphabet(std::shared_ptr<const NucleicAlphabet> alpha) :
     AbstractAlphabet(),
     nAlph_(alpha)
   {
@@ -177,7 +170,7 @@ public:
   int charToInt(const std::string& state) const override
   {
     if (state.size() != 3)
-      throw BadCharException(state, "CodonAlphabet::charToInt", *this);
+      throw BadCharException(state, "CodonAlphabet::charToInt", this);
     if (containsUnresolved(state))
       return static_cast<int>(getSize());
     if (containsGap(state))

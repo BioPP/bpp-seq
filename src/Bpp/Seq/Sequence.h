@@ -70,10 +70,13 @@ class SequenceInterface :
   public virtual IntSymbolListInterface
 {
   public:
+    typedef int ElementType;
+
+  public:
     virtual ~SequenceInterface() {}
 
   public:
-    SequenceInterface* clone() const = 0;
+    SequenceInterface* clone() const override = 0;
 
 
     /**
@@ -90,11 +93,9 @@ class SequenceInterface :
      */
     virtual void setContent(const std::string& sequence) = 0;
 
-    virtual void setContent(const std::vector<std::string>& list) = 0;
+    virtual void setContent(const std::vector<std::string>& list) override = 0;
 
-    virtual void setContent(const std::vector<int>& list) = 0;
-
-    virtual std::string getChar(size_t pos) const = 0;
+    virtual void setContent(const std::vector<int>& list) override = 0;
 
     /**
      * @brief Append the content of the sequence.
@@ -102,7 +103,7 @@ class SequenceInterface :
      * @param seq The sequence to append.
      * @throw AlphabetMismatchException If the alphabet of the specified sequence does not match the current alphabet.
      */
-    virtual void append(const Sequence& seq) = 0;
+    virtual void append(const SequenceInterface& seq) = 0;
 
     /**
      * @brief Append the specified content to the sequence.
@@ -161,7 +162,12 @@ class Sequence :
      *
      * @param alpha    A pointer toward the Alphabet to be used with this Sequence.
      */
-    Sequence(std::shared_ptr<const Alphabet>& alpha);
+    Sequence(std::shared_ptr<const Alphabet>& alpha) :
+      AbstractTemplateSymbolList<int>(alpha),
+      AbstractCoreSequence(),
+      IntSymbolList(alpha)
+    {}
+
 
     /**
      * @brief Direct constructor: build a Sequence object from a std::string
@@ -178,7 +184,15 @@ class Sequence :
     Sequence(
         const std::string& name,
 	const std::string& sequence,
-	std::shared_ptr<const Alphabet>& alpha);
+	std::shared_ptr<const Alphabet>& alpha) :
+      AbstractTemplateSymbolList<int>(alpha),
+      AbstractCoreSequence(name),
+      IntSymbolList(alpha)
+    {
+      if (sequence != "")
+        setContent(sequence);
+    }
+
 
     /**
      * @brief Direct constructor: build a Sequence object from a std::string.
@@ -198,7 +212,15 @@ class Sequence :
 	const std::string& name,
 	const std::string& sequence,
 	const Comments& comments,
-	std::shared_ptr<const Alphabet>& alpha);
+	std::shared_ptr<const Alphabet>& alpha) :
+      AbstractTemplateSymbolList<int>(alpha),
+      AbstractCoreSequence(name, comments),
+      IntSymbolList(alpha)
+    {
+      if (sequence != "")
+        setContent(sequence);
+    }
+
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -213,7 +235,12 @@ class Sequence :
     Sequence(
 	const std::string& name,
 	const std::vector<std::string>& sequence,
-	std::shared_ptr<const Alphabet>& alpha);
+	std::shared_ptr<const Alphabet>& alpha) :
+      AbstractTemplateSymbolList<int>(alpha),
+      AbstractCoreSequence(name),
+      IntSymbolList(sequence, alpha)
+    {}
+
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -230,7 +257,12 @@ class Sequence :
 	const std::string& name,
 	const std::vector<std::string>& sequence,
 	const Comments& comments,
-	std::shared_ptr<const Alphabet>& alpha);
+	std::shared_ptr<const Alphabet>& alpha) :
+      AbstractTemplateSymbolList<int>(alpha),
+      AbstractCoreSequence(name, comments),
+      IntSymbolList(sequence, alpha)
+    {}
+
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -242,7 +274,12 @@ class Sequence :
     Sequence(
         const std::string& name,
 	const std::vector<int>& sequence,
-	std::shared_ptr<const Alphabet>& alpha);
+	std::shared_ptr<const Alphabet>& alpha) :
+      AbstractTemplateSymbolList<int>(sequence, alpha),
+      AbstractCoreSequence(name),
+      IntSymbolList(sequence, alpha)
+    {}
+
 
     /**
      * @brief General purpose constructor, can be used with any alphabet.
@@ -256,31 +293,60 @@ class Sequence :
 	const std::string& name,
 	const std::vector<int>& sequence,
 	const Comments& comments,
-	std::shared_ptr<const Alphabet>& alpha);
+	std::shared_ptr<const Alphabet>& alpha) :
+      AbstractTemplateSymbolList<int>(sequence, alpha),
+      AbstractCoreSequence(name, comments),
+      IntSymbolList(sequence, alpha)
+    {}
+
 
     /**
      * @brief The Sequence generic copy constructor. This does not perform a hard copy of the alphabet object.
      */
-    Sequence(const SequenceInterface& s);
+    Sequence(const SequenceInterface& s) :
+      AbstractTemplateSymbolList<int>(s.getContent(), s.getAlphabet()),
+      AbstractCoreSequence(s),
+      IntSymbolList(s.getContent(), s.getAlphabet())
+    {}
+
 
     /**
      * @brief The Sequence copy constructor. This does not perform a hard copy of the alphabet object.
      */
-    Sequence(const Sequence& s);
+    Sequence(const Sequence& s) :
+      AbstractTemplateSymbolList<int>(s.getContent(), s.getAlphabet()),
+      AbstractCoreSequence(s),
+      IntSymbolList(s.getContent(), s.getAlphabet())
+    {}
+
 
     /**
      * @brief The Sequence generic assignment operator. This does not perform a hard copy of the alphabet object.
      *
      * @return A ref toward the assigned Sequence.
      */
-    Sequence& operator=(const SequenceInterface& s);
+    Sequence& operator=(const SequenceInterface& s)
+    {
+      AbstractCoreSequence::operator=(s);
+      setContent(s.getContent());
+      return *this;
+    }
+
+
 
     /**
      * @brief The Sequence assignment operator. This does not perform a hard copy of the alphabet object.
      *
      * @return A ref toward the assigned Sequence.
      */
-    Sequence& operator=(const Sequence& s);
+    Sequence& operator=(const Sequence& s)
+    {
+      AbstractCoreSequence::operator=(s);
+      IntSymbolList::operator=(s);
+      return *this;
+    }
+
+
 
     virtual ~Sequence() {}
 
@@ -326,20 +392,13 @@ class Sequence :
 
     void setToSizeL(size_t newSize) override;
 
-    void append(const Sequence& seq) override;
+    void append(const SequenceInterface& seq) override;
 
     void append(const std::vector<int>& content) override;
 
     void append(const std::vector<std::string>& content) override;
 
     void append(const std::string& content) override;
-
-    void setComments(const Comments& comments) override { Commentable::setComments(comments); }
-
-    const Comments& getComments() const override { return Commentable::getComments(); }
-    
-    void clearComments() override { Commentable::clearComments(); }
-
 
     /** @} */
 

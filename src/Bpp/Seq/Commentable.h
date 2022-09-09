@@ -112,16 +112,16 @@ public:
    *
    * @return The comments.
    */
-  const Comments& getComments() const { return comments_; }
+  const Comments& getComments() const override { return comments_; }
 
   /**
    * @brief Set the comments.
    *
    * @param comments The new comments.
    */
-  void setComments(const Comments& comments) { comments_ = comments; }
+  void setComments(const Comments& comments) override { comments_ = comments; }
 
-  void clearComments() { comments_.clear(); }
+  void clearComments() override { comments_.clear(); }
 };
 
 } // end of namespace bpp.

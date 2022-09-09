@@ -195,7 +195,7 @@ public:
    * @throw SequenceException if their is an ambiguity between several alphabet.
    * @throw AlphabetException if the sequence does not match any alphabet.
    */
-  static Alphabet* getAlphabetFromSequence(const std::string& sequence);
+  static std::shared_ptr<const Alphabet> getAlphabetFromSequence(const std::string& sequence);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_STRINGSEQUENCETOOLS_H

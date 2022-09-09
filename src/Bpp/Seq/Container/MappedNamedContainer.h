@@ -61,7 +61,7 @@ namespace bpp
  */
 template<class T>
 class MappedNamedContainer :
-  public virtual NamedContainer<T>
+  public virtual NamedContainerInterface<T>
 {
 private:
   std::map<std::string, std::shared_ptr<T> > mObjects_;
@@ -79,8 +79,7 @@ public:
     mObjects_(msc.mObjects_)
   {}
 
-  virtual ~MappedNamedContainer()
-  {}
+  virtual ~MappedNamedContainer() {}
 
   /**
    * @name The clonable interface

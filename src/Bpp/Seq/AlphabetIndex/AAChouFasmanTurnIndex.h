@@ -87,20 +87,24 @@ public:
 
   virtual ~AAChouFasmanTurnIndex() {}
 
-  AAChouFasmanTurnIndex* clone() const { return new AAChouFasmanTurnIndex(); }
+  AAChouFasmanTurnIndex* clone() const override {
+    return new AAChouFasmanTurnIndex();
+  }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return turn_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return turn_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(turn_); }
+  const std::vector<double>& getIndexVector() const override {
+    return turn_;
+  }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHOUFASMANTURNINDEX_H

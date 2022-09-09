@@ -110,7 +110,7 @@ BppSequenceApplication::getAlignmentsMap(
 
     map<size_t, unique_ptr<AlignmentDataInterface<std::string> > > mSites2;
     for (auto& sites : mSites) {
-      mSites2[sites.first] = std::move(sites.second);
+      mSites2.emplace(sites.first, unique_ptr< AlignmentDataInterface<string> >(sites.second.release()));
     }
 
     return mSites2;
@@ -135,7 +135,7 @@ BppSequenceApplication::getAlignmentsMap(
 
     map<size_t, unique_ptr<AlignmentDataInterface<std::string> > > mSites2;
     for (auto& sites : mSites) {
-      mSites2[sites.first] = std::move(sites.second);
+      mSites2.emplace(sites.first, unique_ptr< AlignmentDataInterface<string> >(sites.second.release()));
     }
 
     return mSites2;

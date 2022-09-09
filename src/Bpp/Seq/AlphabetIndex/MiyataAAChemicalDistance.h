@@ -72,6 +72,7 @@ class MiyataAAChemicalDistance :
 {
 private:
   LinearMatrix<double> distanceMatrix_;
+  LinearMatrix<double> indexMatrix_;
   bool sym_;
 
 public:
@@ -80,6 +81,7 @@ public:
   MiyataAAChemicalDistance(const MiyataAAChemicalDistance& md) :
     ProteicAlphabetIndex2(md),
     distanceMatrix_(md.distanceMatrix_),
+    indexMatrix_(md.indexMatrix_),
     sym_(md.sym_)
   {}
 
@@ -88,13 +90,14 @@ public:
     ProteicAlphabetIndex2::operator=(*this);
 
     distanceMatrix_ = md.distanceMatrix_;
+    indexMatrix_ = md.indexMatrix_;
     sym_ = md.sym_;
     return *this;
   }
 
   virtual ~MiyataAAChemicalDistance() {}
 
-  MiyataAAChemicalDistance* clone() const { return new MiyataAAChemicalDistance(); }
+  MiyataAAChemicalDistance* clone() const override { return new MiyataAAChemicalDistance(); }
 
 public:
   /**
@@ -102,14 +105,20 @@ public:
    *
    * @{
    */
-  double getIndex(int state1, int state2) const;
-  double getIndex(const std::string& state1, const std::string& state2) const;
-  Matrix<double>* getIndexMatrix() const;
+  double getIndex(int state1, int state2) const override;
+  double getIndex(const std::string& state1, const std::string& state2) const override;
+  const Matrix<double>& getIndexMatrix() const override { return indexMatrix_; }
   /** @} */
 
+protected:
+  void computeIndexMatrix_();
+
 public:
-  void setSymmetric(bool yn) { sym_ = yn; }
-  bool isSymmetric() const { return sym_; }
+  void setSymmetric(bool yn) {
+    sym_ = yn;
+    computeIndexMatrix_();
+  }
+  bool isSymmetric() const override { return sym_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_MIYATAAACHEMICALDISTANCE_H

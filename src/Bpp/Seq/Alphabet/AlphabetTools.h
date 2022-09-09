@@ -65,12 +65,12 @@ namespace bpp
 class AlphabetTools
 {
 public:
-  static const DNA DNA_ALPHABET;
-  static const RNA RNA_ALPHABET;
-  static const CodonAlphabet DNA_CODON_ALPHABET;
-  static const CodonAlphabet RNA_CODON_ALPHABET;
-  static const ProteicAlphabet PROTEIN_ALPHABET;
-  static const DefaultAlphabet DEFAULT_ALPHABET;
+  static std::shared_ptr<const DNA> DNA_ALPHABET;
+  static std::shared_ptr<const RNA> RNA_ALPHABET;
+  static std::shared_ptr<const CodonAlphabet> DNA_CODON_ALPHABET;
+  static std::shared_ptr<const CodonAlphabet> RNA_CODON_ALPHABET;
+  static std::shared_ptr<const ProteicAlphabet> PROTEIN_ALPHABET;
+  static std::shared_ptr<const DefaultAlphabet> DEFAULT_ALPHABET;
 
 public:
   AlphabetTools() {}
@@ -210,7 +210,7 @@ public:
    * @param i First character to check.
    * @param j Secondt character to check.
    */
-  static bool match(const Alphabet* alphabet, int i, int j)
+  static bool match(std::shared_ptr<const Alphabet> alphabet, int i, int j)
   {
     std::vector<int> a = alphabet->getAlias(i);
     std::vector<int> b = alphabet->getAlias(j);

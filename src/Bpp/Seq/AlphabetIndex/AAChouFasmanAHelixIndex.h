@@ -87,20 +87,22 @@ public:
 
   virtual ~AAChouFasmanAHelixIndex() {}
 
-  AAChouFasmanAHelixIndex* clone() const { return new AAChouFasmanAHelixIndex(); }
+  AAChouFasmanAHelixIndex* clone() const override {
+    return new AAChouFasmanAHelixIndex();
+  }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return aHelix_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return aHelix_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(aHelix_); }
+  const std::vector<double>& getIndexVector() const override { return aHelix_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHOUFASMANAHELIXINDEX_H

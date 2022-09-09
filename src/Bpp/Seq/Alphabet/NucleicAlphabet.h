@@ -158,7 +158,7 @@ public:
   {
     std::map<int, size_t>::const_iterator it = binCodes_.find(code);
     if (it == binCodes_.end())
-      throw BadIntException(code, "NucleicAlphabet::getState(unsigned char): Binary code not in alphabet", *this);
+      throw BadIntException(code, "NucleicAlphabet::getState(unsigned char): Binary code not in alphabet", this);
     return getStateAt(it->second);
   }
 

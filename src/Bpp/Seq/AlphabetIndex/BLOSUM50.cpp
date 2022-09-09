@@ -58,9 +58,9 @@ BLOSUM50::BLOSUM50() :
 double BLOSUM50::getIndex(int state1, int state2) const
 {
   if (state1 < 0 || state1 > 19)
-    throw BadIntException(state1, "BLOSUM50::getIndex(). Invalid state1.", *getAlphabet());
+    throw BadIntException(state1, "BLOSUM50::getIndex(). Invalid state1.", getAlphabet().get());
   if (state2 < 0 || state2 > 19)
-    throw BadIntException(state2, "BLOSUM50::getIndex(). Invalid state2.", *getAlphabet());
+    throw BadIntException(state2, "BLOSUM50::getIndex(). Invalid state2.", getAlphabet().get());
   double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   return d;
 }
@@ -70,7 +70,7 @@ double BLOSUM50::getIndex(const std::string& state1, const std::string& state2) 
   return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
 }
 
-LinearMatrix<double>* BLOSUM50::getIndexMatrix() const
+const Matrix<double>& BLOSUM50::getIndexMatrix() const
 {
-  return new LinearMatrix<double>(distanceMatrix_);
+  return distanceMatrix_;
 }

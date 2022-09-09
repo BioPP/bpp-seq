@@ -146,11 +146,12 @@ public:
     if (sites.getNumberOfSequences() == 0)
     throw Exception("SiteContainerTools::removeGapOnlySites. Container is empty.");
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
-    auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, sites.getAlphabet());
+    auto alphaPtr = sites.getAlphabet();
+    auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       const Site& site = sites.getSite(i);
       if (!SiteTools::isGapOnly(site)) {
-        auto site2 = std::make_unique<SiteType>(site.clone());
+        auto site2 = std::unique_ptr<SiteType>(site.clone());
         newContainer->addSite(site2, false);
       }
     }
@@ -174,12 +175,12 @@ public:
     size_t i = n;
     while (i > 1) {
       ApplicationTools::displayGauge(n - i + 1, n);
-      const SiteType& site = sites.getSite(i - 1);
-      if (SiteTools::isGapOnly(site)) {
+      const SiteType* site = &sites.getSite(i - 1);
+      if (SiteTools::isGapOnly(*site)) {
         size_t end = i;
-        while (SiteTools::isGapOnly(site) && i > 1) {
+        while (SiteTools::isGapOnly(*site) && i > 1) {
           --i;
-         site = sites.getSite(i - 1);
+         site = &sites.getSite(i - 1);
         }
         sites.deleteSites(i, end - i);
       } else {
@@ -187,8 +188,8 @@ public:
       }
     }
     ApplicationTools::displayGauge(n, n);
-    const Site& site = sites.getSite(0);
-    if (SiteTools::isGapOnly(site))
+    const Site* site = &sites.getSite(0);
+    if (SiteTools::isGapOnly(*site))
       sites.deleteSite(0);
   }
 
@@ -211,11 +212,12 @@ public:
       throw Exception("SiteContainerTools::removeGapOrUnresolvedOnlySites. Container is empty.");
 
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
-    auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, sites.getAlphabet());
+    auto alphaPtr = sites.getAlphabet();
+    auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       const Site& site = sites.getSite(i);
       if (!SiteTools::isGapOrUnresolvedOnly(site)) {
-        auto site2 = std::make_unique<SiteType>(site.clone());
+        auto site2 = std::unique_ptr<SiteType>(site.clone());
         newContainer->addSite(site2, false);
       }
     }
@@ -329,7 +331,7 @@ public:
   {
     std::shared_ptr<const CodonAlphabet> pca = std::dynamic_pointer_cast<const CodonAlphabet>(sites.getAlphabet());
     if (!pca)
-      throw AlphabetException("Not a Codon Alphabet", *sites.getAlphabet());
+      throw AlphabetException("Not a Codon Alphabet", sites.getAlphabet().get());
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::getSitesWithoutStopCodon. Container is empty.");
 
@@ -358,7 +360,7 @@ public:
   {
     std::shared_ptr<const CodonAlphabet> pca = std::dynamic_pointer_cast<const CodonAlphabet>(sites.getAlphabet());
     if (!pca)
-      throw AlphabetException("Not a Codon Alphabet", *sites.getAlphabet());
+      throw AlphabetException("Not a Codon Alphabet", sites.getAlphabet().get());
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::removeSitesWithStopCodon. Container is empty.");
 

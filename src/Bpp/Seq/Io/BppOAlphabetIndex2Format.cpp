@@ -57,7 +57,7 @@
 using namespace bpp;
 using namespace std;
 
-AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
+unique_ptr<AlphabetIndex2> BppOAlphabetIndex2Format::read(const std::string& description)
 {
   if (description != "None")
   {
@@ -67,32 +67,33 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
     if (verbose_)
       ApplicationTools::displayResult(message_, description);
 
-    if (AlphabetTools::isCodonAlphabet(alphabet_))
+    if (AlphabetTools::isCodonAlphabet(alphabet_.get()))
     {
       if (!gencode_)
         throw Exception("BppOAlphabetIndex2Format::read. Missing genetic code for codon alphabet.");
 
-      BppOAlphabetIndex2Format reader2(gencode_->getTargetAlphabet(), message_, false);
+      auto alphaPtr = gencode_->getTargetAlphabet();
+      BppOAlphabetIndex2Format reader2(alphaPtr, message_, false);
 
       shared_ptr<AlphabetIndex2> ai2(reader2.read(description));
-      if (!AlphabetTools::isProteicAlphabet(ai2->getAlphabet()))
+      if (!AlphabetTools::isProteicAlphabet(ai2->getAlphabet().get()))
         throw Exception("BppOAlphabetIndex2Format::read. Not a Proteic Alphabet for CodonAlphabetIndex2.");
 
-      return new CodonFromProteicAlphabetIndex2(gencode_, ai2.get());
+      return make_unique<CodonFromProteicAlphabetIndex2>(gencode_, ai2);
     }
 
     // Currently, only protein indices are supported:
-    if (!AlphabetTools::isProteicAlphabet(alphabet_))
+    if (!AlphabetTools::isProteicAlphabet(alphabet_.get()))
       throw Exception("BppOAlphabetIndex2Format::read. This index is only supported with a protein alphabet.");
 
     if (name == "Blosum50")
     {
-      return new BLOSUM50();
+      return make_unique<BLOSUM50>();
     }
     else if (name == "Grantham")
     {
       bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true, 1);
-      GranthamAAChemicalDistance* M = new GranthamAAChemicalDistance();
+      auto M = make_unique<GranthamAAChemicalDistance>();
       M->setSymmetric(sym);
       if (!sym)
         M->setPC1Sign(true);
@@ -101,7 +102,7 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
     else if (name == "Miyata")
     {
       bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true, 1);
-      MiyataAAChemicalDistance* M = new MiyataAAChemicalDistance();
+      auto M = make_unique<MiyataAAChemicalDistance>();
       M->setSymmetric(sym);
       return M;
     }
@@ -110,10 +111,10 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
       string index1Desc = ApplicationTools::getStringParameter("index1", args, "None", "", true, 1);
       bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true);
       BppOAlphabetIndex1Format index1Reader(alphabet_, "", false);
-      AlphabetIndex1* index1 = index1Reader.read(index1Desc);
+      auto index1 = index1Reader.read(index1Desc);
       if (index1)
       {
-        SimpleIndexDistance* M = new SimpleIndexDistance(index1);
+        auto M = make_unique<SimpleIndexDistance>(std::move(index1));
         M->setSymmetric(sym);
         return M;
       }
@@ -127,7 +128,7 @@ AlphabetIndex2* BppOAlphabetIndex2Format::read(const std::string& description)
       bool sym = ApplicationTools::getBooleanParameter("symmetrical", args, true, "", true, 1);
       string aax2FilePath = ApplicationTools::getAFilePath("file", args, true, true, "", false);
       ifstream aax2File(aax2FilePath.c_str(), ios::in);
-      AAIndex2Entry* M = new AAIndex2Entry(aax2File, sym);
+      auto M = make_unique<AAIndex2Entry>(aax2File, sym);
       aax2File.close();
       return M;
     }

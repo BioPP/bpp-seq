@@ -47,17 +47,18 @@ using namespace bpp;
 // From the STL:
 #include <ctype.h>
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
 /**********************************************************************************************/
 
-const DNA AlphabetTools::DNA_ALPHABET;
-const RNA AlphabetTools::RNA_ALPHABET;
-const CodonAlphabet AlphabetTools::DNA_CODON_ALPHABET(DNA_ALPHABET);
-const CodonAlphabet AlphabetTools::RNA_CODON_ALPHABET(RNA_ALPHABET);
-const ProteicAlphabet AlphabetTools::PROTEIN_ALPHABET;
-const DefaultAlphabet AlphabetTools::DEFAULT_ALPHABET;
+auto AlphabetTools::DNA_ALPHABET = make_shared<const DNA>();
+auto AlphabetTools::RNA_ALPHABET = make_shared<const RNA>();
+auto AlphabetTools::DNA_CODON_ALPHABET = make_shared<const CodonAlphabet>(dynamic_pointer_cast<const NucleicAlphabet>(DNA_ALPHABET));
+auto AlphabetTools::RNA_CODON_ALPHABET = make_shared<const CodonAlphabet>(dynamic_pointer_cast<const NucleicAlphabet>(RNA_ALPHABET));
+auto AlphabetTools::PROTEIN_ALPHABET = make_shared<const ProteicAlphabet>();
+auto AlphabetTools::DEFAULT_ALPHABET = make_shared<const DefaultAlphabet>();
 
 /**********************************************************************************************/
 
@@ -66,9 +67,9 @@ int AlphabetTools::getType(char state)
   if (state == '-')
     return -1;
   state = static_cast<char>(toupper(static_cast<int>(state))); // toupper works on int
-  bool d = DNA_ALPHABET.isCharInAlphabet(TextTools::toString(state));
-  bool r = RNA_ALPHABET.isCharInAlphabet(TextTools::toString(state));
-  bool p = PROTEIN_ALPHABET.isCharInAlphabet(TextTools::toString(state));
+  bool d = DNA_ALPHABET->isCharInAlphabet(TextTools::toString(state));
+  bool r = RNA_ALPHABET->isCharInAlphabet(TextTools::toString(state));
+  bool p = PROTEIN_ALPHABET->isCharInAlphabet(TextTools::toString(state));
 
   if (!d && !r && !p)
     return 0;                 // Unknown character
@@ -116,7 +117,7 @@ bool AlphabetTools::checkAlphabetCodingSize(const Alphabet* alphabet)
 unsigned int AlphabetTools::getAlphabetCodingSize(const Alphabet& alphabet)
 {
   if (!checkAlphabetCodingSize(alphabet))
-    throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().", alphabet);
+    throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().", &alphabet);
   return static_cast<unsigned int>(alphabet.intToChar(0).size());
 }
 

@@ -103,21 +103,21 @@ public:
 
   virtual ~KleinAANetChargeIndex() {}
 
-  KleinAANetChargeIndex* clone() const { return new KleinAANetChargeIndex(); }
+  KleinAANetChargeIndex* clone() const override { return new KleinAANetChargeIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     if (state < 0 || state > 19) throw BadIntException(state, "KleinAANetChargeIndex::getIndex(). Invalid state.", getAlphabet());
     return charge_[static_cast<size_t>(state)];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return charge_[static_cast<size_t>(getAlphabet()->charToInt(state))];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(charge_); }
+  const std::vector<double>& getIndexVector() const override { return charge_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_KLEINAANETCHARGEINDEX_H

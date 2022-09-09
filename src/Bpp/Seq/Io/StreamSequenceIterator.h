@@ -52,20 +52,35 @@ namespace bpp
 {
 /**
  * @brief A sequence iterator based on a sequence stream.
- *
- * This iterator uses a bpp::BasicSequence object for storing sequences.
  */
-class StreamSequenceIterator :
-  public virtual SequenceIterator
+template<class SequenceType>
+class TemplateStreamSequenceIterator :
+  public virtual TemplateSequenceIteratorInterface<SequenceType>
 {
 private:
-  const Alphabet* alphabet_;
-  const ISequenceStream* seqStream_;
-  std::istream* stream_;
-  BasicSequence* nextSeq_;
+  std::shared_ptr<const Alphabet> alphabet_;
+  std::shared_ptr< const ISequenceStream<SequenceType> > seqStream_;
+  str::shared_ptr<std::istream> stream_;
+  SequenceType* nextSeq_;
 
 public:
-  StreamSequenceIterator(ISequenceStream& seqStream, std::istream& stream, const Alphabet* alphabet);
+  StreamSequenceIterator(
+      std::shared_ptr<ISequenceStream> seqStream,
+      std::shared_ptr<std::istream> stream,
+      std::shared_ptr<const Alphabet> alphabet):
+    alphabet_(alphabet),
+    seqStream_(seqStream),
+    stream_(stream),
+    nextSeq_(new SequenceType(alphabet_))
+
+  {
+    bool test = seqStream_->nextSequence(*stream_, *nextSeq_);
+    if (!test)
+    {
+      delete nextSeq_;
+      nextSeq_ = 0; // No more sequence available
+    }
+  }
 
   virtual ~StreamSequenceIterator() {}
 
@@ -87,51 +102,28 @@ private:
   }
 
 public:
-  virtual Sequence* nextSequence();
-
-  virtual bool hasMoreSequences() const { return nextSeq_ != 0; }
-};
-
-/**
- * @brief A sequence iterator based on a sequence stream.
- *
- * This iterator uses a bpp::SequenceWithQuality object for storing sequences.
- */
-class StreamSequenceWithQualityIterator :
-  public virtual SequenceWithQualityIterator
-{
-private:
-  const Alphabet* alphabet_;
-  const ISequenceStream* seqStream_;
-  std::istream* stream_;
-  SequenceWithQuality* nextSeq_;
-
-public:
-  StreamSequenceWithQualityIterator(ISequenceStream& seqStream, std::istream& stream, const Alphabet* alphabet);
-
-  virtual ~StreamSequenceWithQualityIterator() {}
-
-private:
-  // Recopy is forbidden
-  StreamSequenceWithQualityIterator(const StreamSequenceWithQualityIterator& ssi) :
-    alphabet_(ssi.alphabet_),
-    seqStream_(ssi.seqStream_),
-    stream_(ssi.stream_),
-    nextSeq_(0) {}
-
-  StreamSequenceWithQualityIterator& operator=(const StreamSequenceWithQualityIterator& ssi)
+  std::unique_ptr<SequenceType> nextSequence() override
   {
-    alphabet_  = ssi.alphabet_;
-    seqStream_ = ssi.seqStream_;
-    stream_    = ssi.stream_;
-    nextSeq_   = 0;
-    return *this;
+    unique_ptr<SequenceType> seq(nextSeq_);
+    if (nextSeq_)
+    {
+      nextSeq_ = new SequenceType(alphabet_);
+      bool test = seqStream_->nextSequence(*stream_, *nextSeq_);
+      if (!test)
+      {
+        delete nextSeq_;
+        nextSeq_ = 0; // No more sequence available
+      }
+    }
+    return seq;
   }
 
-public:
-  virtual SequenceWithQuality* nextSequence();
-
-  virtual bool hasMoreSequences() const { return nextSeq_ != 0; }
+  bool hasMoreSequences() const override { return nextSeq_ != 0; }
 };
+
+using StreamSequenceIterator=TemplateStreamSequenceIterator<Sequence>
+using StreamSequenceWithQualityIterator=TemplateStreamSequenceIterator<SequenceWithQuality>
+using StreamProbabilisticSequenceIterator=TemplateStreamSequenceIterator<ProbabilisticSequence>
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_STREAMSEQUENCEITERATOR_H

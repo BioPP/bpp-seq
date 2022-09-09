@@ -89,7 +89,7 @@ public:
    *
    * @param alpha The alphabet to use.
    */
-  AbstractTemplateSymbolList(std::shared_ptr<const Alphabet>& alpha) :
+  AbstractTemplateSymbolList(std::shared_ptr<const Alphabet> alpha) :
       alphabet_(alpha), content_() {}
 
   /**
@@ -99,7 +99,7 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  AbstractTemplateSymbolList(const std::vector<T>& list, const std::shared_ptr<const Alphabet>& alpha) :
+  AbstractTemplateSymbolList(const std::vector<T>& list, std::shared_ptr<const Alphabet> alpha) :
       alphabet_(alpha), content_()
   {
     setContent(list);
@@ -261,7 +261,7 @@ protected:
    *
    * @param alpha The alphabet to use.
    */
-  AbstractTemplateEventDrivenSymbolList(std::shared_ptr<const Alphabet>& alpha) :
+  AbstractTemplateEventDrivenSymbolList(std::shared_ptr<const Alphabet> alpha) :
       AbstractTemplateSymbolList<T>(alpha), propagateEvents_(true), listeners_() {}
 
   /**
@@ -272,7 +272,7 @@ protected:
    * @param alpha    The alphabet to use.
    * @throw BadIntException If the content does not match the specified alphabet.
    */
-  AbstractTemplateEventDrivenSymbolList(const std::vector<T>& list, std::shared_ptr<const Alphabet>& alpha) :
+  AbstractTemplateEventDrivenSymbolList(const std::vector<T>& list, std::shared_ptr<const Alphabet> alpha) :
     AbstractTemplateSymbolList<T>(list, alpha), propagateEvents_(true), listeners_()
   {}
 

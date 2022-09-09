@@ -42,13 +42,13 @@
 #include <Bpp/App/ApplicationTools.h>
 
 #include "../Alphabet/AlphabetTools.h"
+#include "../Site.h"
 #include "../CodonSiteTools.h"
 #include "../SequenceTools.h"
 #include "../SymbolListTools.h"
 #include "SequenceContainerTools.h"
 #include "SiteContainerIterator.h"
 #include "SiteContainerTools.h"
-#include "VectorProbabilisticSiteContainer.h"
 #include "VectorSiteContainer.h"
 
 using namespace bpp;
@@ -62,47 +62,52 @@ using namespace std;
 
 /******************************************************************************/
 
-unique_ptr<Sequence> SiteContainerTools::getConsensus(const BasicSiteContainer& sc, const std::string& name, bool ignoreGap, bool resolveUnknown)
+unique_ptr<Sequence> SiteContainerTools::getConsensus(
+    const SiteContainerInterface& sc,
+    const std::string& name,
+    bool ignoreGap,
+    bool resolveUnknown)
 {
   Vint consensus;
-  SimpleSiteContainerIterator<Site> ssi(sc);
-  const Site& site;
+  SimpleSiteContainerIterator ssi(sc);
+  const Site* site;
   while (ssi.hasMoreSites())
   {
-    site = ssi.nextSite();
+    site = &ssi.nextSite();
     map<int, double> freq;
-    SiteTools::getFrequencies(site, freq, resolveUnknown);
+    SiteTools::getFrequencies(*site, freq, resolveUnknown);
     double max = 0;
     int cons = -1; // default result
     if (ignoreGap) {
-      for (auto it : freq) {
-        if (it->second > max && it->first != -1) {
-          max = it->second;
-          cons = it->first;
+      for (auto& it : freq) {
+        if (it.second > max && it.first != -1) {
+          max = it.second;
+          cons = it.first;
         }
       }
     } else {
-      for (auto it : freq) {
-        if (it->second > max) {
-          max = it->second;
-          cons = it->first;
+      for (auto& it : freq) {
+        if (it.second > max) {
+          max = it.second;
+          cons = it.first;
         }
       }
     }
     consensus.push_back(cons);
   }
-  auto seqConsensus = make_unique<BasicSequence>(name, consensus, sc.getAlphabet());
+  auto alphaPtr = sc.getAlphabet();
+  auto seqConsensus = make_unique<Sequence>(name, consensus, alphaPtr);
   return seqConsensus;
 }
 
 /******************************************************************************/
 
-void SiteContainerTools::changeGapsToUnknownCharacters(BasicSiteContainer& sites)
+void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainerInterface& sites)
 {
   int unknownCode = sites.getAlphabet()->getUnknownCharacterCode();
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
     unique_ptr<Site> site(sites.getSite(i).clone());
-    if (SiteTools::hasGap(site)) {
+    if (SiteTools::hasGap(*site)) {
       for (size_t j = 0; j < sites.getNumberOfSequences(); ++j) {
         if (sites.getAlphabet()->isGap((*site)[j])) {
           (*site)[j] = unknownCode;
@@ -115,12 +120,11 @@ void SiteContainerTools::changeGapsToUnknownCharacters(BasicSiteContainer& sites
 
 /******************************************************************************/
 
-void SiteContainerTools::changeGapsToUnknownCharacters(ProbabilisticSiteContainer& sites)
+void SiteContainerTools::changeGapsToUnknownCharacters(ProbabilisticSiteContainerInterface& sites)
 {
-  int unknownCode = sites.getAlphabet()->getUnknownCharacterCode();
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
     unique_ptr<ProbabilisticSite> site(sites.getSite(i).clone());
-    if (SiteTools::hasGap(site)) {
+    if (SiteTools::hasGap(*site)) {
       for (size_t j = 0; j < sites.getNumberOfSequences(); ++j) {
         vector<double>& element = (*site)[j];
         if (VectorTools::sum(element) <= NumConstants::TINY()) {
@@ -134,13 +138,13 @@ void SiteContainerTools::changeGapsToUnknownCharacters(ProbabilisticSiteContaine
 
 /******************************************************************************/
 
-void SiteContainerTools::changeUnresolvedCharactersToGaps(BasicSiteContainer& sites)
+void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainerInterface& sites)
 {
   // NB: use iterators for a better algorithm?
   int gapCode = sites.getAlphabet()->getGapCharacterCode();
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
     unique_ptr<Site> site(sites.getSite(i).clone());
-    if (SiteTools::hasUnresolved(site)) {
+    if (SiteTools::hasUnresolved(*site)) {
       for (size_t j = 0; j < sites.getNumberOfSequences(); ++j) {
         if (sites.getAlphabet()->isUnresolved((*site)[j]))
           (*site)[j] = gapCode;
@@ -152,11 +156,11 @@ void SiteContainerTools::changeUnresolvedCharactersToGaps(BasicSiteContainer& si
 
 /******************************************************************************/
 
-unique_ptr<BasicSiteContainer> SiteContainerTools::resolveDottedAlignment(
-  const BasicSiteContainer& dottedAln,
+unique_ptr<SiteContainerInterface> SiteContainerTools::resolveDottedAlignment(
+  const SiteContainerInterface& dottedAln,
   std::shared_ptr<const Alphabet>& resolvedAlphabet)
 {
-  if (!AlphabetTools::isDefaultAlphabet(dottedAln.getAlphabet()))
+  if (!AlphabetTools::isDefaultAlphabet(dottedAln.getAlphabet().get()))
     throw AlphabetException("SiteContainerTools::resolveDottedAlignment. Alignment alphabet should of class 'DefaultAlphabet'.", dottedAln.getAlphabet());
 
   // First we look for the reference sequence:
@@ -183,7 +187,7 @@ unique_ptr<BasicSiteContainer> SiteContainerTools::resolveDottedAlignment(
     throw Exception("SiteContainerTools::resolveDottedAlignment. No reference sequence was found in the input alignment.");
 
   // Now we build a new VectorSiteContainer:
-  auto sites = make_unique<BasicVectorSiteContainer>(dottedAln.getSequenceKeys(), resolvedAlphabet);
+  auto sites = make_unique<VectorSiteContainer>(dottedAln.getSequenceKeys(), resolvedAlphabet);
   sites->setComments(dottedAln.getComments());
 
   // We add each site one by one:
@@ -193,7 +197,7 @@ unique_ptr<BasicSiteContainer> SiteContainerTools::resolveDottedAlignment(
   {
     string resolved = refSeq->getChar(i);
     const Site& site = dottedAln.getSite(i);
-    auto resolvedSite = make_unique<Site>(resolvedAlphabet, site.getPosition());
+    auto resolvedSite = make_unique<Site>(resolvedAlphabet, site.getCoordinate());
     for (size_t j = 0; j < n; ++j)
     {
       state = site.getChar(j);
@@ -201,7 +205,7 @@ unique_ptr<BasicSiteContainer> SiteContainerTools::resolveDottedAlignment(
       {
         state = resolved;
       }
-      resolvedSite.addElement(state);
+      resolvedSite->addElement(state);
     }
     // Add the new site:
     sites->addSite(resolvedSite, false);
@@ -320,7 +324,7 @@ std::map<size_t, size_t> SiteContainerTools::translateAlignment(const Sequence& 
 
 /******************************************************************************/
 
-std::map<size_t, size_t> SiteContainerTools::translateSequence(const BasicSiteContainer& sequences, size_t i1, size_t i2)
+std::map<size_t, size_t> SiteContainerTools::translateSequence(const SiteContainerInterface& sequences, size_t i1, size_t i2)
 {
   const Sequence& seq1 = sequences.getSequence(i1);
   const Sequence& seq2 = sequences.getSequence(i2);
@@ -347,7 +351,7 @@ std::map<size_t, size_t> SiteContainerTools::translateSequence(const BasicSiteCo
 
 /******************************************************************************/
 
-std::unique_ptr<BasicAlignedSequenceContainer> SiteContainerTools::alignNW(
+std::unique_ptr<AlignedSequenceContainer> SiteContainerTools::alignNW(
   const Sequence& seq1,
   const Sequence& seq2,
   const AlphabetIndex2& s,
@@ -438,7 +442,8 @@ std::unique_ptr<BasicAlignedSequenceContainer> SiteContainerTools::alignNW(
   }
   s1->setContent(vector<int>(a1.begin(), a1.end()));
   s2->setContent(vector<int>(a2.begin(), a2.end()));
-  auto asc = make_unique<BasicAlignedSequenceContainer>(s1->getAlphabet());
+  auto alphaPtr = s1->getAlphabet();
+  auto asc = make_unique<AlignedSequenceContainer>(alphaPtr);
   asc->addSequence(s1->getName(), s1);
   asc->addSequence(s2->getName(), s2);
   return asc;
@@ -446,7 +451,7 @@ std::unique_ptr<BasicAlignedSequenceContainer> SiteContainerTools::alignNW(
 
 /******************************************************************************/
 
-unique_ptr<BasicAlignedSequenceContainer> SiteContainerTools::alignNW(
+unique_ptr<AlignedSequenceContainer> SiteContainerTools::alignNW(
   const Sequence& seq1,
   const Sequence& seq2,
   const AlphabetIndex2& s,
@@ -575,7 +580,8 @@ unique_ptr<BasicAlignedSequenceContainer> SiteContainerTools::alignNW(
   }
   s1->setContent(vector<int>(a1.begin(), a1.end()));
   s2->setContent(vector<int>(a2.begin(), a2.end()));
-  auto asc = make_unique<BasicAlignedSequenceContainer>(s1->getAlphabet());
+  auto alphaPtr = s1->getAlphabet();
+  auto asc = make_unique<AlignedSequenceContainer>(alphaPtr);
   asc->addSequence(s1->getName(), s1);
   asc->addSequence(s2->getName(), s2);
   return asc;
@@ -646,7 +652,7 @@ double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequenc
 /******************************************************************************/
 
 std::unique_ptr<DistanceMatrix> SiteContainerTools::computeSimilarityMatrix(
-		const SiteContainer& sites,
+		const SiteContainerInterface& sites,
 		bool dist,
 		const std::string& gapOption,
 		bool unresolvedAsGap)
@@ -654,45 +660,44 @@ std::unique_ptr<DistanceMatrix> SiteContainerTools::computeSimilarityMatrix(
   size_t n = sites.getNumberOfSequences();
   auto mat = make_unique<DistanceMatrix>(sites.getSequenceNames());
   string pairwiseGapOption = gapOption;
-  SiteContainer* sites2;
+  unique_ptr<SiteContainerInterface> sites2;
   if (gapOption == SIMILARITY_NOFULLGAP)
   {
     if (unresolvedAsGap)
     {
-      SiteContainer* tmp = removeGapOrUnresolvedOnlySites(sites);
-      sites2 = new AlignedSequenceContainer(*tmp);
-      delete tmp;
+      auto tmp = removeGapOrUnresolvedOnlySites(sites);
+      sites2 = make_unique<AlignedSequenceContainer>(*tmp);
     }
     else
     {
-      SiteContainer* tmp = removeGapOnlySites(sites);
-      sites2 = new AlignedSequenceContainer(*tmp);
-      delete tmp;
+      auto tmp = removeGapOnlySites(sites);
+      sites2 = make_unique<AlignedSequenceContainer>(*tmp);
     }
     pairwiseGapOption = SIMILARITY_ALL;
   }
   else
   {
-    sites2 = new AlignedSequenceContainer(sites);
+    sites2 = make_unique<AlignedSequenceContainer>(sites);
   }
 
-  for (size_t i = 0; i < n; i++)
+  for (size_t i = 0; i < n; ++i)
   {
     (*mat)(i, i) = dist ? 0. : 1.;
-    const Sequence* seq1 = &sites2->getSequence(i);
-    for (size_t j = i + 1; j < n; j++)
+    const Sequence& seq1 = sites2->getSequence(i);
+    for (size_t j = i + 1; j < n; ++j)
     {
-      const Sequence* seq2 = &sites2->getSequence(j);
-      (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(*seq1, *seq2, dist, pairwiseGapOption, unresolvedAsGap);
+      const Sequence& seq2 = sites2->getSequence(j);
+      (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(seq1, seq2, dist, pairwiseGapOption, unresolvedAsGap);
     }
   }
-  delete sites2;
   return mat;
 }
 
 /******************************************************************************/
 
-void SiteContainerTools::getSequencePositions(const BasicSiteContainer& sites, Matrix<size_t>& positions)
+void SiteContainerTools::getSequencePositions(
+		const SiteContainerInterface& sites,
+		Matrix<size_t>& positions)
 {
   positions.resize(sites.getNumberOfSequences(), sites.getNumberOfSites());
   int gapCode = sites.getAlphabet()->getGapCharacterCode();

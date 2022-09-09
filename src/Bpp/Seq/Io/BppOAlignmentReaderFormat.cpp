@@ -54,7 +54,7 @@
 using namespace bpp;
 using namespace std;
 
-IAlignment* BppOAlignmentReaderFormat::read(const std::string& description)
+unique_ptr<IAlignment> BppOAlignmentReaderFormat::read(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";
@@ -93,7 +93,7 @@ IAlignment* BppOAlignmentReaderFormat::read(const std::string& description)
     else
       throw Exception("BppOAlignmentReaderFormat::read. Invalid argument 'type' for phylip format: " + type);
 
-    iAln.reset(new Phylip(extended, sequential, 100, true, split));
+    iAln.reset(new Phylip(extended, sequential, 100, split));
   }
   else if (format == "Fasta")
   {
@@ -119,11 +119,11 @@ IAlignment* BppOAlignmentReaderFormat::read(const std::string& description)
     throw Exception("Sequence format '" + format + "' unknown.");
   }
 
-  return iAln.release();
+  return iAln;
 }
 
 
-IProbabilisticAlignment* BppOAlignmentReaderFormat::readProbabilistic(const std::string& description)
+unique_ptr<IProbabilisticAlignment> BppOAlignmentReaderFormat::readProbabilistic(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";
@@ -134,12 +134,12 @@ IProbabilisticAlignment* BppOAlignmentReaderFormat::readProbabilistic(const std:
   {
     bool strictNames = ApplicationTools::getBooleanParameter("strict_names", unparsedArguments_, false, "", true, warningLevel_);
     bool extended    = ApplicationTools::getBooleanParameter("extended", unparsedArguments_, false, "", true, warningLevel_);
-    iAln.reset(new Pasta(100, true, extended, strictNames));
+    iAln.reset(new Pasta(100, extended, strictNames));
   }
   else
   {
     throw Exception("Probabilistic Sequence format '" + format + "' unknown.");
   }
 
-  return iAln.release();
+  return iAln;
 }

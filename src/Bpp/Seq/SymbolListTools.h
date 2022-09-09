@@ -44,6 +44,7 @@
 #include <Bpp/Numeric/VectorExceptions.h>
 
 #include "Alphabet/AlphabetExceptions.h"
+#include "IntSymbolList.h"
 #include "ProbabilisticSymbolList.h"
 
 // From the STL:
@@ -65,125 +66,125 @@ public:
    * @param site A site.
    * @return True if the site contains one or several gap(s).
    */
-  static bool hasGap(const IntSymbolList& site);
-  static bool hasGap(const ProbabilisticSymbolList& site);
+  static bool hasGap(const IntSymbolListInterface& site);
+  static bool hasGap(const ProbabilisticSymbolListInterface& site);
 
   static bool hasGap(const CruxSymbolListInterface& site)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
-      return hasGap(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntSymbolList*>(&site))
-      return hasGap(dynamic_cast<const IntSymbolList&>(site));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&site))
+      return hasGap(dynamic_cast<const ProbabilisticSymbolListInterface&>(site));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&site))
+      return hasGap(dynamic_cast<const IntSymbolListInterface&>(site));
     else
-      throw Exception("SymbolListTools::hasGap. Unsupported SymbolList type.");
+      throw Exception("SymbolListTools::hasGap : usupported CruxSymbolListInterface implementation.");
   }
 
   /**
    * @param site A site.
    * @return True if the site contains one or several unresolved state.
    */
-  static bool hasUnresolved(const IntSymbolList& site);
+  static bool hasUnresolved(const IntSymbolListInterface& site);
 
   /**
    * @param site A site.
    * @return True if the site contains only gaps.
    */
-  static bool isGapOnly(const IntSymbolList& site);
-  static bool isGapOnly(const ProbabilisticSymbolList& site);
+  static bool isGapOnly(const IntSymbolListInterface& site);
+  static bool isGapOnly(const ProbabilisticSymbolListInterface& site);
 
   static bool isGapOnly(const CruxSymbolListInterface& site)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
-      return isGapOnly(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntSymbolList*>(&site))
-      return isGapOnly(dynamic_cast<const IntSymbolList&>(site));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&site))
+      return isGapOnly(dynamic_cast<const ProbabilisticSymbolListInterface&>(site));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&site))
+      return isGapOnly(dynamic_cast<const IntSymbolListInterface&>(site));
     else
-      throw Exception("SymbolListTools::numberOfGaps. Unsupported SymbolList type.");
+      throw Exception("SymbolListTools::numberOfGaps : usupported CruxSymbolListInterface implementation.");
   }
 
   /**
    * @param site A site.
    * @return the numbed of gaps.
    */
-  static size_t numberOfGaps(const IntSymbolList& site);
-  static size_t numberOfGaps(const ProbabilisticSymbolList& site);
+  static size_t numberOfGaps(const IntSymbolListInterface& site);
+  static size_t numberOfGaps(const ProbabilisticSymbolListInterface& site);
 
   static size_t numberOfGaps(const CruxSymbolListInterface& site)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
-      return numberOfGaps(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntSymbolList*>(&site))
-      return numberOfGaps(dynamic_cast<const IntSymbolList&>(site));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&site))
+      return numberOfGaps(dynamic_cast<const ProbabilisticSymbolListInterface&>(site));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&site))
+      return numberOfGaps(dynamic_cast<const IntSymbolListInterface&>(site));
     else
-      throw Exception("SymbolListTools::numberOfGaps. Unsupported SymbolList type.");
+      throw Exception("SymbolListTools::numberOfGaps : usupported CruxSymbolListInterface implementation.");
   }
 
   /**
    * @param site A site.
    * @return True if the site contains only gaps.
    */
-  static bool isGapOrUnresolvedOnly(const IntSymbolList& site);
-  static bool isGapOrUnresolvedOnly(const ProbabilisticSymbolList& site);
+  static bool isGapOrUnresolvedOnly(const IntSymbolListInterface& site);
+  static bool isGapOrUnresolvedOnly(const ProbabilisticSymbolListInterface& site);
 
   static bool isGapOrUnresolvedOnly(const CruxSymbolListInterface& site)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
-      return isGapOrUnresolvedOnly(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntSymbolList*>(&site))
-      return isGapOrUnresolvedOnly(dynamic_cast<const IntSymbolList&>(site));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&site))
+      return isGapOrUnresolvedOnly(dynamic_cast<const ProbabilisticSymbolListInterface&>(site));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&site))
+      return isGapOrUnresolvedOnly(dynamic_cast<const IntSymbolListInterface&>(site));
     else
-      throw Exception("SymbolListTools::hasUnknown : this should not happen.");
+      throw Exception("SymbolListTools::isGapOrUnresolvedOnly : usupported CruxSymbolListInterface implementation.");
   }
 
   /**
    * @param site A site.
    * @return the numbed of unresolved.
    */
-  static size_t numberOfUnresolved(const IntSymbolList& site);
-  static size_t numberOfUnresolved(const ProbabilisticSymbolList& site);
+  static size_t numberOfUnresolved(const IntSymbolListInterface& site);
+  static size_t numberOfUnresolved(const ProbabilisticSymbolListInterface& site);
 
   static size_t numberOfUnresolved(const CruxSymbolListInterface& site)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
-      return numberOfUnresolved(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntSymbolList*>(&site))
-      return numberOfUnresolved(dynamic_cast<const IntSymbolList&>(site));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&site))
+      return numberOfUnresolved(dynamic_cast<const ProbabilisticSymbolListInterface&>(site));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&site))
+      return numberOfUnresolved(dynamic_cast<const IntSymbolListInterface&>(site));
     else
-      throw Exception("SymbolListTools::numberOfUnresolved : this should not happen.");
+      throw Exception("SymbolListTools::numberOfUnresolved : usupported CruxSymbolListInterface implementation.");
   }
 
   /**
    * @param site A site.
    * @return True if the site contains one or several unknwn characters.
    */
-  static bool hasUnknown(const IntSymbolList& site);
-  static bool hasUnknown(const ProbabilisticSymbolList& site);
+  static bool hasUnknown(const IntSymbolListInterface& site);
+  static bool hasUnknown(const ProbabilisticSymbolListInterface& site);
 
   static bool hasUnknown(const CruxSymbolListInterface& site)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
-      return hasUnknown(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntSymbolList*>(&site))
-      return hasUnknown(dynamic_cast<const IntSymbolList&>(site));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&site))
+      return hasUnknown(dynamic_cast<const ProbabilisticSymbolListInterface&>(site));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&site))
+      return hasUnknown(dynamic_cast<const IntSymbolListInterface&>(site));
     else
-      throw Exception("SymbolListTools::hasUnknown : this should not happen.");
+      throw Exception("SymbolListTools::hasUnknown : usupported CruxSymbolListInterface implementation.");
   }
 
   /**
    * @param site A site.
    * @return True if the site contains no gap and no unknown characters.
    */
-  static bool isComplete(const IntSymbolList& site);
-  static bool isComplete(const ProbabilisticSymbolList& site);
+  static bool isComplete(const IntSymbolListInterface& site);
+  static bool isComplete(const ProbabilisticSymbolListInterface& site);
 
   static bool isComplete(const CruxSymbolListInterface& site)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
-      return isComplete(dynamic_cast<const ProbabilisticSymbolList&>(site));
-    else if (dynamic_cast<const IntSymbolList*>(&site))
-      return isComplete(dynamic_cast<const IntSymbolList&>(site));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&site))
+      return isComplete(dynamic_cast<const ProbabilisticSymbolListInterface&>(site));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&site))
+      return isComplete(dynamic_cast<const IntSymbolListInterface&>(site));
     else
-      throw Exception("SymbolListTools::isComplete : this should not happen.");
+      throw Exception("SymbolListTools::isComplete : usupported CruxSymbolListInterface implementation.");
   }
 
 
@@ -197,8 +198,12 @@ public:
    * @return True if the site is made of only one state.
    */
   static bool isConstant(
-		  const IntSymbolList& site,
+		  const IntSymbolListInterface& site,
 		  bool ignoreUnknown = false,
+		  bool unresolvedRaisesException = true);
+
+  static bool isConstant(
+		  const ProbabilisticSymbolListInterface& site,
 		  bool unresolvedRaisesException = true);
 
   static bool isConstant(
@@ -206,41 +211,37 @@ public:
 		  bool ignoreUnknown = false,
 		  bool unresolvedRaisesException = true)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&site))
-      return isConstant(dynamic_cast<const ProbabilisticSymbolList&>(site), unresolvedRaisesException);
-    else if (dynamic_cast<const IntSymbolList*>(&site))
-      return isConstant(dynamic_cast<const IntSymbolList&>(site), ignoreUnknown, unresolvedRaisesException);
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&site))
+      return isConstant(dynamic_cast<const ProbabilisticSymbolListInterface&>(site), unresolvedRaisesException);
+    else if (dynamic_cast<const IntSymbolListInterface*>(&site))
+      return isConstant(dynamic_cast<const IntSymbolListInterface&>(site), ignoreUnknown, unresolvedRaisesException);
     else
-      throw Exception("SymbolListTools::isConstant : this should not happen.");
+      throw Exception("SymbolListTools::isConstant : usupported CruxSymbolListInterface implementation.");
   }
 
-  static bool isConstant(
-		  const ProbabilisticSymbolList& site,
-		  bool unresolvedRaisesException = true);
-
   /**
-   * @param site1 The first site.
-   * @param site2 The second site.
+   * @param list1 The first site.
+   * @param list2 The second site.
    * @return True if the two sites have the same content (and, of course, alphabet).
    */
   static bool areSymbolListsIdentical(
-		  const IntSymbolList& site1,
-		  const IntSymbolList& site2);
+		  const IntSymbolListInterface& list1,
+		  const IntSymbolListInterface& list2);
 
   static bool areSymbolListsIdentical(
-		  const ProbabilisticSymbolList& site1,
-		  const ProbabilisticSymbolList& site2);
+		  const ProbabilisticSymbolListInterface& list1,
+		  const ProbabilisticSymbolListInterface& list2);
 
   static bool areSymbolListsIdentical(
 		  const CruxSymbolListInterface& l1,
 		  const CruxSymbolListInterface& l2)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&l1) && dynamic_cast<const ProbabilisticSymbolList*>(&l2))
-      return areSymbolListsIdentical(dynamic_cast<const ProbabilisticSymbolList&>(l1), dynamic_cast<const ProbabilisticSymbolList&>(l2));
-    else if (dynamic_cast<const IntSymbolList*>(&l1) && dynamic_cast<const IntSymbolList*>(&l2))
-      return areSymbolListsIdentical(dynamic_cast<const IntSymbolList&>(l1), dynamic_cast<const IntSymbolList&>(l2));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&l1) && dynamic_cast<const ProbabilisticSymbolListInterface*>(&l2))
+      return areSymbolListsIdentical(dynamic_cast<const ProbabilisticSymbolListInterface&>(l1), dynamic_cast<const ProbabilisticSymbolListInterface&>(l2));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&l1) && dynamic_cast<const IntSymbolListInterface*>(&l2))
+      return areSymbolListsIdentical(dynamic_cast<const IntSymbolListInterface&>(l1), dynamic_cast<const IntSymbolListInterface&>(l2));
     else
-      throw Exception("SymbolListTools::areSymbolListsIdentical : this should not happen.");
+      throw Exception("SymbolListTools::areSymbolListsIdentical : usupported CruxSymbolListInterface implementation.");
   }
 
 
@@ -253,8 +254,8 @@ public:
 
    */
   static void getCounts(
-		  const IntSymbolList& list,
-		  std::map<int, size_t>& counts)
+      const IntSymbolListInterface& list,
+      std::map<int, size_t>& counts)
   {
     for (size_t i = 0; i < list.size(); ++i)
     {
@@ -270,8 +271,8 @@ public:
    * (existing counts will be summed).
    */
   static void getCounts(
-		  const ProbabilisticSymbolList& list,
-		  std::map<int, double_t>& counts)
+      const ProbabilisticSymbolListInterface& list,
+      std::map<int, double_t>& counts)
   {
     for (size_t i = 0; i < list.size(); ++i)
     {
@@ -282,6 +283,103 @@ public:
       }
     }
   }
+
+  /**
+   * @brief Count all states in the list, optionaly normalizing unknown characters.
+   *
+   * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
+   *
+   * @author J. Dutheil
+   * @param list The list.
+   * @param counts The output map to store the counts (existing ocunts will be incremented).
+   * @param resolveUnknowns Tell is unknown characters must be resolved.
+   * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
+   * @return A map with all states and corresponding counts.
+   */
+  static void getCounts(
+      const IntSymbolListInterface& list,
+      std::map<int, double>& counts,
+      bool resolveUnknowns)
+  {
+    if (!resolveUnknowns)
+    {
+      getCounts(list, counts);
+    }
+    else
+    {
+      for (size_t i = 0; i < list.size(); ++i)
+      {
+	std::vector<int> alias = list.getAlphabet()->getAlias(list[i]);
+        double n = static_cast<double>(alias.size());
+        for (auto j : alias)
+        {
+          counts[j] += 1. / n;
+        }
+      }
+    }
+  }
+  /**
+   * @brief Count all states in the list, optionaly normalizing unknown characters.
+   *
+   * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
+   *
+   * @author J. Dutheil
+   * @param list The list.
+   * @param counts The output map to store the counts (existing ocunts will be incremented).
+   * @param resolveUnknowns Tell is unknown characters must be resolved.
+   * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
+   * @return A map with all states and corresponding counts.
+   */
+  static void getCounts(
+		  const ProbabilisticSymbolListInterface& list,
+		  std::map<int, double>& counts,
+		  bool resolveUnknowns)
+  {
+    if (!resolveUnknowns)
+    {
+      getCounts(list, counts);
+    }
+    else
+    {
+      for (size_t i = 0; i < list.size(); ++i)
+      {
+        const std::vector<double>& c = list[i];
+        double s = VectorTools::sum(c);
+
+        if (s != 0)
+          for (size_t j = 0; j < c.size(); j++)
+          {
+            counts[(int)j] += c.at(j) / s;
+          }
+      }
+    }
+  }
+
+
+  /**
+   * @brief Count all states in the list, optionaly resolving unknown characters.
+   *
+   * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
+   *
+   * @author J. Dutheil
+   * @param list The list.
+   * @param counts The output map to store the counts (existing ocunts will be incremented).
+   * @param resolveUnknowns Tell is unknown characters must be resolved.
+   * @return A map with all states and corresponding counts.
+   */
+  static void getCounts(
+		  const CruxSymbolListInterface& list,
+		  std::map<int, double>& counts,
+		  bool resolveUnknowns = false)
+  {
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&list))
+      getCounts(dynamic_cast<const ProbabilisticSymbolListInterface&>(list), counts, resolveUnknowns);
+    else if (dynamic_cast<const IntSymbolListInterface*>(&list))
+      getCounts(dynamic_cast<const IntSymbolListInterface&>(list), counts, resolveUnknowns);
+    else
+      throw Exception("SymbolListTools::getCounts : usupported CruxSymbolListInterface implementation.");
+  }
+
 
   /**
    * @brief Count all pair of states for two lists of the same size.
@@ -296,8 +394,8 @@ public:
    * @param counts The output map to store the counts (existing counts will be incremented).
    */
   static void getCounts(
-		  const IntSymbolList& list1,
-		  const IntSymbolList& list2,
+		  const IntSymbolListInterface& list1,
+		  const IntSymbolListInterface& list2,
 		  std::map<int, std::map<int, size_t> >& counts)
   {
     if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
@@ -321,17 +419,17 @@ public:
    * @param counts The output map to store the counts (existing counts will be summed).
    */
   static void getCounts(
-		  const ProbabilisticSymbolList& list1,
-		  const ProbabilisticSymbolList& list2,
+		  const ProbabilisticSymbolListInterface& list1,
+		  const ProbabilisticSymbolListInterface& list2,
 		  std::map<int, std::map<int, double> >& counts)
   {
     if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
     for (size_t i = 0; i < list1.size(); i++)
     {
       const std::vector<double>& c1(list1[i]), &c2(list2[i]);
-      for (size_t j = 0; j < c1.size(); j++)
+      for (size_t j = 0; j < c1.size(); ++j)
       {
-        for (size_t k = 0; k < c2.size(); k++)
+        for (size_t k = 0; k < c2.size(); ++k)
         {
           counts[(int)j][(int)k] += c1.at(j) * c2.at(k);
         }
@@ -341,52 +439,48 @@ public:
 
 
   /**
-   * @brief Count all states in the list, optionaly resolving unknown characters.
-   *
-   * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
-   *
-   * @author J. Dutheil
-   * @param list The list.
-   * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * @return A map with all states and corresponding counts.
-   */
-  static void getCounts(
-		  const CruxSymbolListInterface& list,
-		  std::map<int, double>& counts,
-		  bool resolveUnknowns = false)
-  {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&list))
-      getCounts(dynamic_cast<const ProbabilisticSymbolList&>(list), counts, resolveUnknowns);
-    else if (dynamic_cast<const IntSymbolList*>(&list))
-      getCounts(dynamic_cast<const IntSymbolList&>(list), counts, resolveUnknowns);
-    else
-      throw Exception("SymbolListTools::getCounts : this should not happen.");
-  }
-
-
-  static void getCounts(
-		  const IntSymbolList& list,
-		  std::map<int, double>& counts,
-		  bool resolveUnknowns);
-
-  /**
-   * @brief Count all states in the list, optionaly normalizing unknown characters.
+   * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
    *
    * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
    *
+   * NB: The two lists do node need to share the same alphabet!
+   * The states of the first list will be used as the first index in the output,
+   * and the ones from the second list as the second index.
+   *
    * @author J. Dutheil
-   * @param list The list.
+   * @param list1 The first list.
+   * @param list2 The second list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
    * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
    * @return A map with all states and corresponding counts.
    */
-
   static void getCounts(
-		  const ProbabilisticSymbolList& list,
-		  std::map<int, double>& counts,
-		  bool resolveUnknowns);
+      const IntSymbolListInterface& list1,
+      const IntSymbolListInterface& list2,
+      std::map< int, std::map<int, double> >& counts,
+      bool resolveUnknowns);
+
+  /**
+   * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
+   *
+   * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
+   *
+   * NB: The two lists do node need to share the same alphabet!
+   * The states of the first list will be used as the first index in the output,
+   * and the ones from the second list as the second index.
+   *
+   * @author J. Dutheil
+   * @param list1 The first list.
+   * @param list2 The second list.
+   * @param counts The output map to store the counts (existing ocunts will be incremented).
+   * @param resolveUnknowns Tell is unknown characters must be resolved.
+   * @return A map with all states and corresponding counts.
+   */
+  static void getCounts(
+      const ProbabilisticSymbolListInterface& list1,
+      const ProbabilisticSymbolListInterface& list2,
+      std::map< int, std::map<int, double> >& counts,
+      bool resolveUnknowns);
 
   /**
    * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
@@ -406,47 +500,20 @@ public:
    * @return A map with all states and corresponding counts.
    */
   static void getCounts(
-		  const CruxSymbolListInterface& list1,
-		  const CruxSymbolListInterface& list2,
-		  std::map<int, std::map<int, double> >& counts,
-		  bool resolveUnknowns)
+      const CruxSymbolListInterface& list1,
+      const CruxSymbolListInterface& list2,
+      std::map<int, std::map<int, double> >& counts,
+      bool resolveUnknowns)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&list1) && dynamic_cast<const ProbabilisticSymbolList*>(&list2))
-      getCounts(dynamic_cast<const ProbabilisticSymbolList&>(list1), dynamic_cast<const ProbabilisticSymbolList&>(list2), counts, resolveUnknowns);
-    else if (dynamic_cast<const IntSymbolList*>(&list1) && dynamic_cast<const IntSymbolList*>(&list2))
-      getCounts(dynamic_cast<const IntSymbolList&>(list1), dynamic_cast<const IntSymbolList&>(list2), counts, resolveUnknowns);
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&list1) && dynamic_cast<const ProbabilisticSymbolListInterface*>(&list2))
+      getCounts(dynamic_cast<const ProbabilisticSymbolListInterface&>(list1), dynamic_cast<const ProbabilisticSymbolListInterface&>(list2), counts, resolveUnknowns);
+    else if (dynamic_cast<const IntSymbolListInterface*>(&list1) && dynamic_cast<const IntSymbolListInterface*>(&list2))
+      getCounts(dynamic_cast<const IntSymbolListInterface&>(list1), dynamic_cast<const IntSymbolListInterface&>(list2), counts, resolveUnknowns);
     else
-      throw Exception("SymbolListTools::getCounts : this should not happen.");
+      throw Exception("SymbolListTools::getCounts : unsupported CruxSymbolListInterface implementation.");
   }
 
-  static void getCounts(
-		  const IntSymbolList& list1,
-		  const IntSymbolList& list2,
-		  std::map< int, std::map<int, double> >& counts,
-		  bool resolveUnknowns);
 
-  /**
-   * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
-   *
-   * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
-   *
-   * NB: The two lists do node need to share the same alphabet!
-   * The states of the first list will be used as the first index in the output,
-   * and the ones from the second list as the second index.
-   *
-   * @author J. Dutheil
-   * @param list1 The first list.
-   * @param list2 The second list.
-   * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * @return A map with all states and corresponding counts.
-   */
-
-  static void getCounts(
-		  const ProbabilisticSymbolList& list1,
-		  const ProbabilisticSymbolList& list2,
-		  std::map< int, std::map<int, double> >& counts,
-		  bool resolveUnknowns);
 
   /**
    * @brief Get all states frequencies in the list.
@@ -457,11 +524,10 @@ public:
    * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
    * @param frequencies The output map with all states and corresponding frequencies. Existing frequencies will be erased if any.
    */
-
   static void getFrequencies(
-		  const CruxSymbolListInterface& list,
-		  std::map<int, double>& frequencies,
-		  bool resolveUnknowns = false);
+      const CruxSymbolListInterface& list,
+      std::map<int, double>& frequencies,
+      bool resolveUnknowns = false);
 
   /**
    * @brief Get all state pairs frequencies for two lists of the same size.
@@ -477,10 +543,10 @@ public:
    */
 
   static void getFrequencies(
-		  const CruxSymbolListInterface& list1,
-		  const CruxSymbolListInterface& list2,
-		  std::map<int, std::map<int, double> >& frequencies,
-		  bool resolveUnknowns = false);
+      const CruxSymbolListInterface& list1,
+      const CruxSymbolListInterface& list2,
+      std::map<int, std::map<int, double> >& frequencies,
+      bool resolveUnknowns = false);
 
   /**
    * @brief Get the GC content of a symbol list.
@@ -494,16 +560,28 @@ public:
    * @param ignoreGap Do not count gaps (or null columns) in total
    * @throw AlphabetException If the list is not made of nucleotide states.
    */
+  static double getGCContent(
+      const IntSymbolListInterface& list,
+      bool ignoreUnresolved = true,
+      bool ignoreGap = true);
 
   static double getGCContent(
-		  const IntSymbolList& list,
-		  bool ignoreUnresolved = true,
-		  bool ignoreGap = true);
+      const ProbabilisticSymbolListInterface& list,
+      bool ignoreUnresolved = true,
+      bool ignoreGap = true);
 
   static double getGCContent(
-		  const ProbabilisticSymbolList& list,
-		  bool ignoreUnresolved = true,
-		  bool ignoreGap = true);
+      const CruxSymbolListInterface& list,
+      bool ignoreUnresolved = true,
+      bool ignoreGap = true)
+  {
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&list))
+      return getGCContent(dynamic_cast<const ProbabilisticSymbolListInterface&>(list));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&list))
+      return getGCContent(dynamic_cast<const IntSymbolListInterface&>(list));
+    else
+      throw Exception("SymbolListTools::getGCContent : usupported CruxSymbolListInterface implementation.");
+  }
 
   /**
    * @brief Get the number of distinct positions.
@@ -517,23 +595,23 @@ public:
    */
 
   static size_t getNumberOfDistinctPositions(
-		  const IntSymbolList& l1,
-		  const IntSymbolList& l2);
+		  const IntSymbolListInterface& l1,
+		  const IntSymbolListInterface& l2);
 
   static size_t getNumberOfDistinctPositions(
-		  const ProbabilisticSymbolList& l1,
-		  const ProbabilisticSymbolList& l2);
+		  const ProbabilisticSymbolListInterface& l1,
+		  const ProbabilisticSymbolListInterface& l2);
 
   static size_t getNumberOfDistinctPositions(
 		  const CruxSymbolListInterface& l1,
 		  const CruxSymbolListInterface& l2)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&l1) && dynamic_cast<const ProbabilisticSymbolList*>(&l2))
-      return getNumberOfDistinctPositions(dynamic_cast<const ProbabilisticSymbolList&>(l1), dynamic_cast<const ProbabilisticSymbolList&>(l2));
-    else if (dynamic_cast<const IntSymbolList*>(&l1) && dynamic_cast<const IntSymbolList*>(&l2))
-      return getNumberOfDistinctPositions(dynamic_cast<const IntSymbolList&>(l1), dynamic_cast<const IntSymbolList&>(l2));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&l1) && dynamic_cast<const ProbabilisticSymbolListInterface*>(&l2))
+      return getNumberOfDistinctPositions(dynamic_cast<const ProbabilisticSymbolListInterface&>(l1), dynamic_cast<const ProbabilisticSymbolListInterface&>(l2));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&l1) && dynamic_cast<const IntSymbolListInterface*>(&l2))
+      return getNumberOfDistinctPositions(dynamic_cast<const IntSymbolListInterface&>(l1), dynamic_cast<const IntSymbolListInterface&>(l2));
     else
-      throw Exception("SymbolListTools::getNumberOfDistinctPositions : this should not happen.");
+      throw Exception("SymbolListTools::getNumberOfDistinctPositions : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -548,23 +626,23 @@ public:
    * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
    */
   static size_t getNumberOfPositionsWithoutGap(
-		  const IntSymbolList& l1,
-		  const IntSymbolList& l2);
+		  const IntSymbolListInterface& l1,
+		  const IntSymbolListInterface& l2);
 
   static size_t getNumberOfPositionsWithoutGap(
-		  const ProbabilisticSymbolList& l1,
-		  const ProbabilisticSymbolList& l2);
+		  const ProbabilisticSymbolListInterface& l1,
+		  const ProbabilisticSymbolListInterface& l2);
 
   static size_t getNumberOfPositionsWithoutGap(
 		  const CruxSymbolListInterface& l1,
 		  const CruxSymbolListInterface& l2)
   {
-    if (dynamic_cast<const ProbabilisticSymbolList*>(&l1) && dynamic_cast<const ProbabilisticSymbolList*>(&l2))
-      return getNumberOfPositionsWithoutGap(dynamic_cast<const ProbabilisticSymbolList&>(l1), dynamic_cast<const ProbabilisticSymbolList&>(l2));
-    else if (dynamic_cast<const IntSymbolList*>(&l1) && dynamic_cast<const IntSymbolList*>(&l2))
-      return getNumberOfPositionsWithoutGap(dynamic_cast<const IntSymbolList&>(l1), dynamic_cast<const IntSymbolList&>(l2));
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&l1) && dynamic_cast<const ProbabilisticSymbolListInterface*>(&l2))
+      return getNumberOfPositionsWithoutGap(dynamic_cast<const ProbabilisticSymbolListInterface&>(l1), dynamic_cast<const ProbabilisticSymbolListInterface&>(l2));
+    else if (dynamic_cast<const IntSymbolListInterface*>(&l1) && dynamic_cast<const IntSymbolListInterface*>(&l2))
+      return getNumberOfPositionsWithoutGap(dynamic_cast<const IntSymbolListInterface&>(l1), dynamic_cast<const IntSymbolListInterface&>(l2));
     else
-      throw Exception("SymbolListTools::getNumberOfPositionsWithoutGap : this should not happen.");
+      throw Exception("SymbolListTools::getNumberOfPositionsWithoutGap : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -573,19 +651,18 @@ public:
    *
    * @param l The input list of characters.
    */
+  static void changeGapsToUnknownCharacters(IntSymbolListInterface& l);
 
-  static void changeGapsToUnknownCharacters(IntSymbolList& l);
-
-  static void changeGapsToUnknownCharacters(ProbabilisticSymbolList& l);
+  static void changeGapsToUnknownCharacters(ProbabilisticSymbolListInterface& l);
 
   static void changeGapsToUnknownCharacters(CruxSymbolListInterface& l)
   {
-    if (dynamic_cast<ProbabilisticSymbolList*>(&l))
-      changeGapsToUnknownCharacters(dynamic_cast<ProbabilisticSymbolList&>(l));
-    else if (dynamic_cast<IntSymbolList*>(&l))
-      changeGapsToUnknownCharacters(dynamic_cast<IntSymbolList&>(l));
+    if (dynamic_cast<ProbabilisticSymbolListInterface*>(&l))
+      changeGapsToUnknownCharacters(dynamic_cast<ProbabilisticSymbolListInterface&>(l));
+    else if (dynamic_cast<IntSymbolListInterface*>(&l))
+      changeGapsToUnknownCharacters(dynamic_cast<IntSymbolListInterface&>(l));
     else
-      throw Exception("SymbolListTools::changeGapsToUnknownCharacters : this should not happen.");
+      throw Exception("SymbolListTools::changeGapsToUnknownCharacters : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -594,10 +671,19 @@ public:
    *
    * @param l The input list of characters.
    */
+  static void changeUnresolvedCharactersToGaps(IntSymbolListInterface& l);
 
-  static void changeUnresolvedCharactersToGaps(IntSymbolList& l);
+  static void changeUnresolvedCharactersToGaps(ProbabilisticSymbolListInterface& l);
 
-  static void changeUnresolvedCharactersToGaps(ProbabilisticSymbolList& l);
+  static void changeUnresolvedCharactersToGaps(CruxSymbolListInterface& l)
+  {
+    if (dynamic_cast<ProbabilisticSymbolListInterface*>(&l))
+      changeUnresolvedCharactersToGaps(dynamic_cast<ProbabilisticSymbolListInterface&>(l));
+    else if (dynamic_cast<IntSymbolListInterface*>(&l))
+      changeUnresolvedCharactersToGaps(dynamic_cast<IntSymbolListInterface&>(l));
+    else
+      throw Exception("SymbolListTools::changeUnresolvedCharactersToGaps : unsupported CruxSymbolListInterface implementation.");
+  }
 
   /**
    * @brief Compute the Shannon entropy index of a SymbolList.
@@ -608,14 +694,13 @@ public:
    * where \f$f_x\f$ is the frequency of state \f$x\f$.
    *
    * @author J. Dutheil
-   * @param site A site.
+   * @param list A list.
    * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * @return The Shannon entropy index of this site.
+   * @return The Shannon entropy index of this list.
    */
-
   static double variabilityShannon(
-		  const CruxSymbolListInterface& site,
-		  bool resolveUnknowns);
+      const CruxSymbolListInterface& list,
+      bool resolveUnknowns);
 
   /**
    * @brief Compute the factorial diversity index of a site.
@@ -626,13 +711,13 @@ public:
    * where \f$p_x\f$ is the number of times state \f$x\f$ is observed in the site.
    *
    * @author J. Dutheil
-   * @param site A site.
-   * @return The factorial diversity index of this site.
+   * @param list A list.
+   * @return The factorial diversity index of this list.
    */
-  static double variabilityFactorial(const IntSymbolList& site);
+  static double variabilityFactorial(const IntSymbolListInterface& list);
 
   /**
-   * @brief Compute the mutual information between two sites.
+   * @brief Compute the mutual information between two lists.
    *
    * \f[
    * MI = \sum_x \sum_y p_{x,y}\ln\left(\frac{p_{x,y}}{p_x \cdot p_y}\right)
@@ -641,15 +726,15 @@ public:
    * \f$p_{x,y}\f$ is the frequency of the pair \f$(x,y)\f$.
    *
    * @author J. Dutheil
-   * @param site1 First site
-   * @param site2 Second site
+   * @param list1 First list
+   * @param list2 Second list
    * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * @return The mutual information for the pair of sites.
+   * @return The mutual information for the pair of lists.
    */
   static double mutualInformation(
-		  const CruxSymbolListInterface& site1,
-		  const CruxSymbolListInterface& site2,
-		  bool resolveUnknowns);
+      const CruxSymbolListInterface& list1,
+      const CruxSymbolListInterface& list2,
+      bool resolveUnknowns);
 
   /**
    * @brief Compute the entropy of a site. This is an alias of method variabilityShannon.
@@ -660,18 +745,17 @@ public:
    * where \f$f_x\f$ is the frequency of state \f$x\f$.
    *
    * @author J. Dutheil
-   * @param site A site.
+   * @param list A list.
    * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * @return The Shannon entropy index of this site.
+   * @return The Shannon entropy index of this list.
    */
-  static double entropy(const CruxSymbolListInterface& site, bool resolveUnknowns)
+  static double entropy(const CruxSymbolListInterface& list, bool resolveUnknowns)
   {
-    return variabilityShannon(site, resolveUnknowns);
+    return variabilityShannon(list, resolveUnknowns);
   }
 
-
   /**
-   * @brief Compute the joint entropy between two sites.
+   * @brief Compute the joint entropy between two lists.
    *
    * \f[
    * H_{i,j} = - \sum_x \sum_y p_{x,y}\ln\left(p_{x,y}\right)
@@ -679,77 +763,77 @@ public:
    * where \f$p_{x,y}\f$ is the frequency of the pair \f$(x,y)\f$.
    *
    * @author J. Dutheil
-   * @param site1 First site
-   * @param site2 Second site
+   * @param list1 First list
+   * @param list2 Second list
    * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * @return The mutual information for the pair of sites.
+   * @return The mutual information for the pair of lists.
    */
   static double jointEntropy(
-		  const CruxSymbolListInterface& site1,
-		  const CruxSymbolListInterface& site2,
-		  bool resolveUnknowns);
+      const CruxSymbolListInterface& list1,
+      const CruxSymbolListInterface& list2,
+      bool resolveUnknowns);
 
   /**
-   * @brief Compute the heterozygosity index of a site.
+   * @brief Compute the heterozygosity index of a list.
    *
    * \f[
    * H = 1 - \sum_x f_x^2
    * \f]
    * where \f$f_x\f$ is the frequency of state \f$x\f$.
    *
-   * @param site A site.
-   * @return The heterozygosity index of this site.
+   * @param list A list.
+   * @return The heterozygosity index of this list.
    */
-  static double heterozygosity(const CruxSymbolListInterface& site);
+  static double heterozygosity(const CruxSymbolListInterface& list);
 
   /**
-   * @brief Give the number of distinct characters at a site.
+   * @brief Give the number of distinct characters at a list.
    *
-   * @param site a Site
-   * @return The number of distinct characters in the given site.
+   * @param list A list
+   * @return The number of distinct characters in the given list.
    */
-  static size_t getNumberOfDistinctCharacters(const IntSymbolList& site);
+  static size_t getNumberOfDistinctCharacters(const IntSymbolListInterface& list);
 
   /**
    * @brief return the number of occurrences of the most common allele.
    *
-   * @param site a Site
+   * @param list A list
    * @return The frequency (number of sequences) displaying the most frequent state.
    */
-  static size_t getMajorAlleleFrequency(const IntSymbolList& site);
+  static size_t getMajorAlleleFrequency(const IntSymbolListInterface& list);
 
   /**
    * @brief return the state corresponding to the most common allele.
    *
-   * @param site a Site
+   * @param list A list
    * @return The most frequent state.
    */
-  static int getMajorAllele(const CruxSymbolListInterface& site);
+  static int getMajorAllele(const CruxSymbolListInterface& list);
 
   /**
    * @brief return the number of occurrences of the least common allele.
    *
-   * @param site a Site
+   * @param list A list
    * @return The frequency (number of sequences) displaying the less frequent state.
    */
-  static size_t getMinorAlleleFrequency(const IntSymbolList& site);
+  static size_t getMinorAlleleFrequency(const IntSymbolListInterface& list);
 
   /**
    * @brief return the state corresponding to the least common allele.
    *
-   * @param site a Site
+   * @param list A list
    * @return The less frequent state.
    */
-  static int getMinorAllele(const CruxSymbolListInterface& site);
+  static int getMinorAllele(const CruxSymbolListInterface& list);
 
   /**
-   * @brief Tell if a site has singletons
+   * @brief Tell if a list has singletons
    *
    *
-   * @param site a Site.
-   * @return True if the site has singletons.
+   * @param list A list.
+   * @return True if the list has singletons.
    */
-  static bool hasSingleton(const IntSymbolList& site);
+  static bool hasSingleton(const IntSymbolListInterface& list);
 
   /**
    * @brief Tell if a site is a parsimony informative site.
@@ -759,24 +843,24 @@ public:
    * @param site a Site.
    * @return True if the site is parsimony informative.
    */
-  static bool isParsimonyInformativeSite(const IntSymbolList& site);
+  static bool isParsimonyInformativeSite(const IntSymbolListInterface& site);
 
 
   /**
-   * @brief Tell if a site has more than 2 distinct characters
+   * @brief Tell if a list has more than 2 distinct characters
    *
-   * @param site a Site.
-   * @return True if the site has more than 2 distinct characters
+   * @param list A list.
+   * @return True if the list has more than 2 distinct characters
    */
-  static bool isTriplet(const IntSymbolList& site);
+  static bool isTriplet(const IntSymbolListInterface& list);
 
   /**
-   * @brief Tell if a site has exactly 2 distinct characters
+   * @brief Tell if a list has exactly 2 distinct characters
    *
-   * @param site a Site.
+   * @param list A list.
    * @return True if the site has exactly 2 distinct characters
    */
-  static bool isDoubleton(const IntSymbolList& site);
+  static bool isDoubleton(const IntSymbolListInterface& list);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SYMBOLLISTTOOLS_H

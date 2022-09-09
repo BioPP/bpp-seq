@@ -66,7 +66,7 @@ namespace bpp
 
 template<class T>
 class VectorPositionedContainer :
-  public virtual PositionedContainer<T>,
+  public virtual PositionedContainerInterface<T>,
   public virtual Clonable
 {
 protected:
@@ -119,24 +119,29 @@ public:
    *
    * @{
    */
-  VectorPositionedContainer<T>* clone() const
+  VectorPositionedContainer<T>* clone() const override
   {
     return new VectorPositionedContainer<T>(*this);
   }
 
   /** @} */
 
-  size_t getSize() const
+  size_t getSize() const override
   {
     return positions_.size();
   }
 
   bool isAvailablePosition(size_t objectIndex) const
   {
-    return objectIndex < getSize() && (positions_[objectIndex] == nullptr || positions_[objectIndex]->size()==0); 
+    return objectIndex < getSize() && (positions_[objectIndex] == nullptr || positions_[objectIndex]->size() == 0); 
   }
 
-  void setSize(size_t size)
+  bool hasObjectWithPosition(size_t objectIndex) const
+  {
+    return objectIndex < getSize() && (positions_[objectIndex] != nullptr && positions_[objectIndex]->size() > 0);
+  }
+
+  void setSize(size_t size) override
   {
     if (positions_.size() > size)
       throw Exception("VectorPositionedContainer::setSize : not possible to shorten the vector.");
@@ -149,7 +154,7 @@ public:
    *
    */
   
-  void clear()
+  void clear() override
   {
     positions_.clear();
   }
@@ -165,16 +170,14 @@ public:
     std::fill(positions_.begin(), positions_.end(), nullptr);
   }
 
-protected:
-
-  const std::shared_ptr<T> getObject(size_t objectIndex) const
+  const std::shared_ptr<T> getObject(size_t objectIndex) const override
   {
     if (objectIndex >= getSize())
       throw IndexOutOfBoundsException("VectorPositionedContainer::getObject.", objectIndex, 0, getSize());
     return positions_[objectIndex];
   }
 
-  std::shared_ptr<T> getObject(size_t objectIndex)
+  std::shared_ptr<T> getObject(size_t objectIndex) override
   {
     if (objectIndex >= getSize())
       throw IndexOutOfBoundsException("VectorPositionedContainer::getObject.", objectIndex, 0, getSize());
@@ -215,7 +218,7 @@ protected:
   }
 
 
-  std::shared_ptr<T> removeObject(size_t objectIndex)
+  std::shared_ptr<T> removeObject(size_t objectIndex) override
   {
     if (objectIndex >= getSize())
       throw IndexOutOfBoundsException("VectorPositionedContainer::removeObject.", objectIndex, 0, getSize());
@@ -227,7 +230,7 @@ protected:
     return ret;
   }
 
-  void deleteObject(size_t objectIndex)
+  void deleteObject(size_t objectIndex) override
   {
     if (objectIndex >= getSize())
       throw IndexOutOfBoundsException("VectorPositionedContainer::deleteObject.", objectIndex, 0, getSize());

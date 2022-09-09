@@ -129,10 +129,16 @@ public:
    */
   virtual std::unique_ptr<SequenceType> removeSequence(const HashType& sequenceKey) = 0;
 
+  /**
+   * @brief Get the content of the dataset at a specific position (sequence key, site postion).
+   *
+   * @param sequenceKey key of the sequence in the container
+   * @param sitePosition  index of the site
+   * @return The element at the given position.
+   */
+  virtual const typename SequenceType::ElementType& getValueAt(const HashType& sequenceKey, size_t sitePosition) const = 0;
+  
   /** @} */
-
-
-
 
 
   /**
@@ -184,7 +190,16 @@ public:
    */
   virtual std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition) = 0;
 
-   /**@} */
+  /**
+   * @brief Get the content of the dataset at a specific position (sequence position, site postion).
+   *
+   * @param sequencePosition index of the sequence in the container
+   * @param sitePosition  index of the site
+   * @return The element at the given position.
+   */
+  virtual const typename SequenceType::ElementType& getValueAt(size_t sequencePosition, size_t sitePosition) const = 0;
+ 
+  /**@} */
 
 };
 

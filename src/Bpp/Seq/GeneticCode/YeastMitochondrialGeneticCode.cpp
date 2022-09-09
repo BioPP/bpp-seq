@@ -113,5 +113,5 @@ void YeastMitochondrialGeneticCode::init_()
   tlnTable_[61] = 13; // TTC -> F
   tlnTable_[62] = 10; // TTG -> L
   tlnTable_[63] = 13; // TTT -> F
-  tlnTable_[codonAlphabet_.getUnknownCharacterCode()] = proteicAlphabet_.getUnknownCharacterCode();
+  tlnTable_[codonAlphabet_->getUnknownCharacterCode()] = proteicAlphabet_->getUnknownCharacterCode();
 }

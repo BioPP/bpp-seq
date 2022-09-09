@@ -100,9 +100,10 @@ public:
    * @param end   The last position of the subsequence.
    * @return A new sequence object with the given subsequence.
    */
-  static SequenceWithQuality* subseq(const SequenceWithQuality& sequence, size_t begin, size_t end)
+  static std::unique_ptr<SequenceWithQuality> subseq(const SequenceWithQuality& sequence, size_t begin, size_t end)
   {
-    SequenceWithQuality* seq = new SequenceWithQuality(sequence.getAlphabet());
+    auto alphaPtr = sequence.getAlphabet();
+    auto seq = std::make_unique<SequenceWithQuality>(alphaPtr);
     seq->setName(sequence.getName());
     seq->setComments(sequence.getComments());
     subseq(sequence, begin, end, *seq);
@@ -123,10 +124,9 @@ public:
    * @throw AlphabetMismatchException If the two alphabets do not match.
    * @throw Exception If the sequence names do not match.
    */
-  static SequenceWithQuality* concatenate(
+  static std::unique_ptr<SequenceWithQuality> concatenate(
     const SequenceWithQuality& seqwq1,
-    const SequenceWithQuality& seqwq2
-    );
+    const SequenceWithQuality& seqwq2);
 
   /**
    * @brief Get the complementary sequence of a nucleotide sequence.
@@ -137,9 +137,8 @@ public:
    * @param sequence The sequence to complement.
    * @throw AlphabetException If the sequence is not a nucleotide sequence.
    */
-  static SequenceWithQuality* complement(
-    const SequenceWithQuality& sequence
-    );
+  static std::unique_ptr<SequenceWithQuality> complement(
+    const SequenceWithQuality& sequence);
 
   /**
    * @brief Get the transcription sequence of a DNA sequence.
@@ -150,9 +149,8 @@ public:
    * @param sequence The sequence to transcript.
    * @throw AlphabetException If the sequence is not a DNA sequence.
    */
-  static SequenceWithQuality* transcript(
-    const SequenceWithQuality& sequence
-    );
+  static std::unique_ptr<SequenceWithQuality> transcript(
+    const SequenceWithQuality& sequence);
 
   /**
    * @brief Get the reverse-transcription sequence of a RNA sequence.
@@ -163,10 +161,9 @@ public:
    * @param sequence The SequenceWithQuality to reverse-transcript.
    * @throw AlphabetException If the sequence is not a RNA sequence.
    */
+  static std::unique_ptr<SequenceWithQuality> reverseTranscript(
+    const SequenceWithQuality& sequence);
 
-  static SequenceWithQuality* reverseTranscript(
-    const SequenceWithQuality& sequence
-    );
   /**
    * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
    *
@@ -177,9 +174,8 @@ public:
    * sequence.
    * @param sequence The SequenceWithQuality to inverse.
    */
-  static SequenceWithQuality* invert(
-    const SequenceWithQuality& sequence
-    );
+  static std::unique_ptr<SequenceWithQuality> invert(
+    const SequenceWithQuality& sequence);
 
   /**
    * @brief Remove gaps from a SequenceWithQuality.
@@ -187,15 +183,8 @@ public:
    * @param seq The sequence to analyse.
    * @return A new SequenceWithQuality object without gaps.
    */
-  static SequenceWithQuality* removeGaps(const SequenceWithQuality& seq);
+  static std::unique_ptr<SequenceWithQuality> removeGaps(const SequenceWithQuality& seq);
 
-  /**
-   * @brief Trim the left part of the sequence according to quality
-   *
-   * @param seq The sequence to analyse.
-   * @return The modified sequence.
-   */
-  static SequenceWithQuality& trimLeft(SequenceWithQuality& seq);
 };
 }
 #endif // BPP_SEQ_SEQUENCEWITHQUALITYTOOLS_H

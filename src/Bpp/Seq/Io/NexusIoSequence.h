@@ -68,7 +68,7 @@ namespace bpp
  * @author Julien Dutheil
  */
 class NexusIOSequence :
-  public AbstractIAlignment,
+  public AbstractIAlignment2,
   public virtual ISequence
 {
 protected:
@@ -81,7 +81,7 @@ protected:
 
 public:
   /**
-   * @brief Build a new Phylip file reader.
+   * @brief Build a new Nexus file reader.
    *
    * @param charsByLine The number of base to display in a row (ignored for now, no writing support).
    * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
@@ -97,25 +97,7 @@ public:
    *
    * @{
    */
-  void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const;
-  /** @} */
-
-  /**
-   * @name The ISequence interface.
-   *
-   * As a SiteContainer is a subclass of SequenceContainer, we hereby implement the ISequence
-   * interface by downcasting the interface.
-   *
-   * @{
-   */
-  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const
-  {
-    return readAlignment(input, alpha);
-  }
-  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const
-  {
-    return readAlignment(path, alpha);
-  }
+  void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
   /** @} */
 
   /**
@@ -123,8 +105,9 @@ public:
    *
    * @{
    */
-  const std::string getFormatName() const;
-  const std::string getFormatDescription() const;
+  const std::string getFormatName() const override;
+
+  const std::string getFormatDescription() const override;
   /** @} */
 
   /**

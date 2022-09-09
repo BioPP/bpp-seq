@@ -37,7 +37,6 @@ SET(CPP_FILES
   Bpp/Seq/App/BppSequenceApplication.cpp
   Bpp/Seq/CodonSiteTools.cpp
   Bpp/Seq/Container/CompressedVectorSiteContainer.cpp
-  Bpp/Seq/Container/SequenceContainerIterator.cpp
   Bpp/Seq/Container/SiteContainerExceptions.cpp
   Bpp/Seq/Container/SiteContainerTools.cpp
   Bpp/Seq/DNAToRNA.cpp
@@ -72,12 +71,9 @@ SET(CPP_FILES
   Bpp/Seq/Io/PhredPoly.cpp
   Bpp/Seq/Io/Phylip.cpp
   Bpp/Seq/Io/Stockholm.cpp
-  Bpp/Seq/Io/StreamSequenceIterator.cpp
   Bpp/Seq/NucleicAcidsReplication.cpp
   Bpp/Seq/ProbabilisticSymbolList.cpp
-  Bpp/Seq/ProbabilisticSequence.cpp
   Bpp/Seq/Sequence.cpp
-  Bpp/Seq/SequenceExceptions.cpp
   Bpp/Seq/SequencePositionIterators.cpp
   Bpp/Seq/SequenceTools.cpp
   Bpp/Seq/SequenceWalker.cpp
@@ -85,7 +81,6 @@ SET(CPP_FILES
   Bpp/Seq/SequenceWithAnnotationTools.cpp
   Bpp/Seq/SequenceWithQuality.cpp
   Bpp/Seq/SequenceWithQualityTools.cpp
-  Bpp/Seq/SiteExceptions.cpp
   Bpp/Seq/StringSequenceTools.cpp
   Bpp/Seq/IntSymbolList.cpp
   Bpp/Seq/SymbolListTools.cpp

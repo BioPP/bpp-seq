@@ -48,7 +48,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-void GenBank::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc) const
+void GenBank::appendSequencesFromStream(std::istream& input, SequenceContainerInterface& vsc) const
 {
   if (!input)
   {
@@ -56,6 +56,7 @@ void GenBank::appendSequencesFromStream(std::istream& input, SequenceContainer& 
   }
 
   string temp, name, sequence = "";  // Initialization
+  auto alphaPtr = vsc.getAlphabet();
 
   // Main loop : for all file lines
   while (!input.eof())
@@ -80,8 +81,8 @@ void GenBank::appendSequencesFromStream(std::istream& input, SequenceContainer& 
       }
       if (name == "")
         throw Exception("GenBank::read(). Sequence with no ACCESSION number!");
-      Sequence* seq = new BasicSequence(name, sequence, vsc.getAlphabet());
-      vsc.addSequence(*seq, true);
+      auto seq = make_unique<Sequence>(name, sequence, alphaPtr);
+      vsc.addSequence(seq->getName(), seq);
       name = "";
     }
   }

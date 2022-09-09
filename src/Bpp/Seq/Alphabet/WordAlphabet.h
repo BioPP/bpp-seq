@@ -246,7 +246,7 @@ public:
   int charToInt(const std::string& state) const override
   {
     if (state.size() != vAbsAlph_.size())
-      throw BadCharException(state, "WordAlphabet::charToInt", *this);
+      throw BadCharException(state, "WordAlphabet::charToInt", this);
     if (containsUnresolved(state))
       return static_cast<int>(getSize());
     if (containsGap(state))
@@ -421,7 +421,7 @@ public:
   std::string getNPosition(const std::string& word, size_t n) const override
   {
     if (n > vAbsAlph_.size())
-      throw BadCharException("", "WordAlphabet::getNPosition", *this);
+      throw BadCharException("", "WordAlphabet::getNPosition", this);
     // Test:
     charToInt(word);
 

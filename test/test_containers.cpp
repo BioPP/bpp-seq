@@ -48,22 +48,22 @@ using namespace std;
 
 int main() {
   //ProteicAlphabet* alpha = new ProteicAlphabet;
-  RNA* alpha = new RNA();
-  SiteContainer* sites = new VectorSiteContainer(alpha);
+  shared_ptr<const Alphabet> alpha = AlphabetTools::RNA_ALPHABET;
+  auto sites = make_unique<VectorSiteContainer>(alpha);
 
-  BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
-  BasicSequence seq2("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
-  sites->addSequence(seq1, false);
-  sites->addSequence(seq2, false);
+  auto seq1 = make_unique<Sequence>("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
+  auto seq2 = make_unique<Sequence>("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
+  sites->addSequence(seq1->getName(), seq1);
+  sites->addSequence(seq2->getName(), seq2);
   cout << sites->getNumberOfSites() << endl;
-  cout << sites->toString("seq1") << endl;
-  cout << sites->toString("seq2") << endl;
+  cout << sites->getSequence("seq1").toString() << endl;
+  cout << sites->getSequence("seq2").toString() << endl;
   SiteContainerTools::removeGapOnlySites(*sites);
   cout << endl;
   
   cout << sites->getNumberOfSites() << endl;
-  cout << sites->toString("seq1") << endl;
-  cout << sites->toString("seq2") << endl;
+  cout << sites->getSequence("seq1").toString() << endl;
+  cout << sites->getSequence("seq2").toString() << endl;
 
   if (sites->getNumberOfSites() != 30)
     throw Exception("Bad removal of gap only sites");
@@ -72,8 +72,8 @@ int main() {
   cout << endl;
   
   cout << sites->getNumberOfSites() << endl;
-  cout << sites->toString("seq1") << endl;
-  cout << sites->toString("seq2") << endl;
+  cout << sites->getSequence("seq1").toString() << endl;
+  cout << sites->getSequence("seq2").toString() << endl;
   
   if (sites->getNumberOfSites() != 24)
     throw Exception("Bad removal of gap sites");
@@ -89,8 +89,8 @@ int main() {
     throw Exception("Bad compression of sites");
 
   cout << cvs.getNumberOfSites() << endl;
-  cout << cvs.toString("seq1") << endl;
-  cout << cvs.toString("seq2") << endl;
+  cout << cvs.getSequence("seq1").toString() << endl;
+  cout << cvs.getSequence("seq2").toString() << endl;
 
-  return (sites->getNumberOfSites()==24? 0 : 1);
+  return (sites->getNumberOfSites() == 24 ? 0 : 1);
 }

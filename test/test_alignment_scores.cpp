@@ -47,14 +47,14 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  RNA* alpha = new RNA();
-  SiteContainer* sites = new VectorSiteContainer(alpha);
-  BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
-  BasicSequence seq2("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
-  BasicSequence seq3("seq3", "---GAA-CCG---G-GU----UUU----VC-GACCGGAG--UUUU--", alpha);
-  sites->addSequence(seq1, false);
-  sites->addSequence(seq2, false);
-  sites->addSequence(seq3, false);
+  shared_ptr<const Alphabet> alpha = AlphabetTools::RNA_ALPHABET;
+  auto sites = make_unique<VectorSiteContainer>(alpha);
+  auto seq1 = make_unique<Sequence>("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
+  auto seq2 = make_unique<Sequence>("seq2", "---GAAGGCG---G-GU----UUU----GC-GACCGACG--UUUU--", alpha);
+  auto seq3 = make_unique<Sequence>("seq3", "---GAA-CCG---G-GU----UUU----VC-GACCGGAG--UUUU--", alpha);
+  sites->addSequence(seq1->getName(), seq1);
+  sites->addSequence(seq2->getName(), seq2);
+  sites->addSequence(seq3->getName(), seq3);
 
   //Create alignment indexes:
   RowMatrix<size_t> index1;
@@ -70,13 +70,13 @@ int main() {
     }
   }
 
-  SiteContainer* sites2 = new VectorSiteContainer(alpha);
-  BasicSequence seq21("seq1", "----AUGCCGGCGU-UUUG--G-CCGACGUGUUUU", alpha);
-  BasicSequence seq22("seq2", "---GAAGGCGG-GUU-UUGC-GACCGAC--GUUUU", alpha);
-  BasicSequence seq23("seq3", "---GAA-CCGG-GUUU-UVC-GACCGGA--GUUUU", alpha);
-  sites2->addSequence(seq21, false);
-  sites2->addSequence(seq22, false);
-  sites2->addSequence(seq23, false);
+  auto sites2 = make_unique<VectorSiteContainer>(alpha);
+  auto seq21 = make_unique<Sequence>("seq1", "----AUGCCGGCGU-UUUG--G-CCGACGUGUUUU", alpha);
+  auto seq22 = make_unique<Sequence>("seq2", "---GAAGGCGG-GUU-UUGC-GACCGAC--GUUUU", alpha);
+  auto seq23 = make_unique<Sequence>("seq3", "---GAA-CCGG-GUUU-UVC-GACCGGA--GUUUU", alpha);
+  sites2->addSequence(seq21->getName(), seq21);
+  sites2->addSequence(seq22->getName(), seq22);
+  sites2->addSequence(seq23->getName(), seq23);
 
   RowMatrix<size_t> index2;
   SiteContainerTools::getSequencePositions(*sites2, index2);

@@ -88,20 +88,20 @@ public:
 
   virtual ~AAVolumeIndex() {}
 
-  AAVolumeIndex* clone() const { return new AAVolumeIndex(); }
+  AAVolumeIndex* clone() const override { return new AAVolumeIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return volume_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return volume_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(volume_); }
+  const std::vector<double>& getIndexVector() const override { return volume_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AAVOLUMEINDEX_H

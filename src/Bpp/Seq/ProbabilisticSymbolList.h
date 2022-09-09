@@ -68,7 +68,7 @@ class ProbabilisticSymbolListInterface :
 {
 public:
   typedef std::vector<double> SymbolType;
-  typedef Table<double> DataTable;
+  typedef Table<double> DTable;
   
 public:
   ProbabilisticSymbolListInterface() {}
@@ -78,11 +78,11 @@ public:
 
 public:
 
-  virtual const DataTable& getTable() const = 0;
+  virtual const DTable& getTable() const = 0;
   
   using ProbabilisticCoreSymbolListInterface::setContent;
   
-  virtual void setContent(const DataTable& list) = 0;
+  virtual void setContent(const DTable& list) = 0;
 };
 
 /**
@@ -95,7 +95,6 @@ public:
  *
  * @see Alphabet
  */
-
 class ProbabilisticSymbolList :
   public virtual ProbabilisticSymbolListInterface
 {
@@ -113,7 +112,7 @@ protected:
   /**
    * @brief The list content.
    */
-  DataTable content_;
+  DTable content_;
 
 public:
   /**
@@ -130,7 +129,7 @@ public:
    * @param alpha The alphabet to use.
    * @throw If the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
-  ProbabilisticSymbolList(const DataTable& list, std::shared_ptr<const Alphabet>& alpha);
+  ProbabilisticSymbolList(const DTable& list, std::shared_ptr<const Alphabet>& alpha);
 
   /**
    * @brief Build a new ProbabilisticSymbolList object with the specified alphabet and contant as a VVdouble.
@@ -184,7 +183,7 @@ public:
 
   void setContent(const std::vector<std::vector<double> >& list) override;
 
-  void setContent(const DataTable& list) override;
+  void setContent(const DTable& list) override;
 
   /*
    * @brief String output, as a concatenate of:
@@ -218,7 +217,7 @@ public:
     return content_.getData();
   }
 
-  const DataTable& getTable() const override
+  const DTable& getTable() const override
   {
     return content_;
   }

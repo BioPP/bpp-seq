@@ -95,7 +95,7 @@ public:
   /**
    * @return A vector object with all indices.
    */
-  virtual std::vector<double>* getIndexVector() const = 0;
+  virtual const std::vector<double>& getIndexVector() const = 0;
 };
 
 /*
@@ -104,13 +104,13 @@ public:
  */
 
 class ProteicAlphabetIndex1 :
-  virtual public AlphabetIndex1
+  public virtual AlphabetIndex1
 {
 private:
   std::shared_ptr<const ProteicAlphabet> alpha_;
 
 public:
-  ProteicAlphabetIndex1() : alpha_(std::dynamic_pointer_cast<const ProteicAlphabet>(AlphabetTools::PROTEIN_ALPHABET.shared_from_this())) {}
+  ProteicAlphabetIndex1() : alpha_(AlphabetTools::PROTEIN_ALPHABET) {}
   virtual ~ProteicAlphabetIndex1() {}
 
   virtual ProteicAlphabetIndex1* clone() const override = 0;

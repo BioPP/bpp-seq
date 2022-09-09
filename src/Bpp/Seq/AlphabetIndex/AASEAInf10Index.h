@@ -85,20 +85,20 @@ public:
 
   virtual ~AASEAInf10Index() {}
 
-  AASEAInf10Index* clone() const { return new AASEAInf10Index(); }
+  AASEAInf10Index* clone() const override { return new AASEAInf10Index(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return seaInf10_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return seaInf10_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(seaInf10_); }
+  const std::vector<double>& getIndexVector() const override { return seaInf10_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AASEAINF10INDEX_H

@@ -61,12 +61,6 @@ public:
     init_();
   }
 
-  StandardGeneticCode(const NucleicAlphabet& alphabet) :
-    GeneticCode(alphabet)
-  {
-    init_();
-  }
-
   virtual ~StandardGeneticCode() {}
 
   virtual StandardGeneticCode* clone() const
@@ -98,26 +92,26 @@ public:
   bool isStop(int state) const
   {
     // Test:
-    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    codonAlphabet_->intToChar(state); // throw exception if invalid state!
     return state == 48 || state == 50 || state == 56;
   }
 
   bool isStop(const std::string& state) const
   {
-    int i = codonAlphabet_.charToInt(state);
+    int i = codonAlphabet_->charToInt(state);
     return i == 48 || i == 50 || i == 56;
   }
 
   bool isAltStart(int state) const
   {
     // Test:
-    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    codonAlphabet_->intToChar(state); // throw exception if invalid state!
     return state == 62 || state == 30;
   }
 
   bool isAltStart(const std::string& state) const
   {
-    int i = codonAlphabet_.charToInt(state);
+    int i = codonAlphabet_->charToInt(state);
     return i == 62 || i == 30;
   }
 

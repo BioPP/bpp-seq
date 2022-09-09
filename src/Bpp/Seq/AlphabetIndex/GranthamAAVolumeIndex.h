@@ -104,21 +104,21 @@ public:
 
   virtual ~GranthamAAVolumeIndex() {}
 
-  GranthamAAVolumeIndex* clone() const { return new GranthamAAVolumeIndex(); }
+  GranthamAAVolumeIndex* clone() const override { return new GranthamAAVolumeIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     if (state < 0 || state > 19) throw BadIntException(state, "GranthamAAVolumeIndex::getIndex(). Invalid state.", getAlphabet());
     return volume_[static_cast<size_t>(state)];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return volume_[static_cast<size_t>(getAlphabet()->charToInt(state))];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(volume_); }
+  const std::vector<double>& getIndexVector() const override { return volume_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_GRANTHAMAAVOLUMEINDEX_H

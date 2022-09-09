@@ -60,7 +60,7 @@ class AlphabetException :
   public Exception
 {
 private:
-  const Alphabet& alphabet_;
+  const Alphabet* alphabet_;
 
 public:
   /**
@@ -69,7 +69,15 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param alpha A const pointer toward the alphabet that threw the exception.
    */
-  AlphabetException(const std::string& text, const Alphabet& alpha);
+  AlphabetException(const std::string& text, const Alphabet* alpha);
+
+  /**
+   * @brief Build a new AlphabetException object.
+   *
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha A const pointer toward the alphabet that threw the exception.
+   */
+  AlphabetException(const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
   virtual ~AlphabetException() {}
 
@@ -79,7 +87,7 @@ public:
    *
    * @return a const pointer toward the alphabet.
    */
-  virtual const Alphabet& getAlphabet() const { return alphabet_; }
+  virtual const Alphabet* getAlphabet() const { return alphabet_; }
 };
 
 /**
@@ -99,7 +107,16 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param alpha A const pointer toward the alphabet that threw the exception.
    */
-  BadCharException(const std::string& badChar, const std::string& text, const Alphabet& alpha);
+  BadCharException(const std::string& badChar, const std::string& text, const Alphabet* alpha);
+
+  /**
+   * @brief Build a new BadCharException.
+   *
+   * @param badChar The faulty character.
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha A const pointer toward the alphabet that threw the exception.
+   */
+  BadCharException(const std::string& badChar, const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
   virtual ~BadCharException() {}
 
@@ -128,7 +145,15 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param alpha A const pointer toward the alphabet that threw the exception.
    */
-  BadIntException(int badInt, const std::string& text, const Alphabet& alpha);
+  BadIntException(int badInt, const std::string& text, const Alphabet* alpha);
+
+  /**
+   * @brief Build a new BadIntException.
+   * @param badInt The faulty integer.
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha A const pointer toward the alphabet that threw the exception.
+   */
+  BadIntException(int badInt, const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
   virtual ~BadIntException() {}
 
@@ -151,8 +176,8 @@ class AlphabetMismatchException :
   public Exception
 {
 private:
-  const Alphabet& alphabet1_;
-  const Alphabet& alphabet2_;
+  const Alphabet* alphabet1_;
+  const Alphabet* alphabet2_;
 
 public:
   /**
@@ -164,8 +189,20 @@ public:
    */
   AlphabetMismatchException(
 		  const std::string& text,
-		  const Alphabet& alpha1,
-		  const Alphabet& alpha2);
+		  const Alphabet* alpha1,
+		  const Alphabet* alpha2);
+
+  /**
+   * @brief Build a new AlphabetMismatchException object.
+   *
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha1 A const smart pointer toward the first alphabet.
+   * @param alpha2 A const smart pointer toward the second alphabet, i.e. the one which does not match with the first.
+   */
+  AlphabetMismatchException(
+		  const std::string& text,
+		  std::shared_ptr<const Alphabet> alpha1,
+		  std::shared_ptr<const Alphabet> alpha2);
 
   virtual ~AlphabetMismatchException() {}
 
@@ -175,14 +212,14 @@ public:
    *
    * @return A reference toward the first alphabet.
    */
-  const Alphabet& getFirstAlphabet() const { return alphabet1_; }
+  const Alphabet* getFirstAlphabet() const { return alphabet1_; }
 
   /**
    * @brief Get the second alphabet.
    *
    * @return A reference toward the seocnd alphabet.
    */
-  const Alphabet& getSecondAlphabet() const { return alphabet2_; }
+  const Alphabet* getSecondAlphabet() const { return alphabet2_; }
 };
 
 /**
@@ -198,7 +235,15 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param alpha A const pointer toward the alphabet that threw the exception.
    */
-  CharStateNotSupportedException(const std::string& text, const Alphabet& alpha);
+  CharStateNotSupportedException(const std::string& text, const Alphabet* alpha);
+
+  /**
+   * @brief Build a new CharStateNotSupportedException.
+   *
+   * @param text A message to be passed to the exception hierarchy.
+   * @param alpha A const pointer toward the alphabet that threw the exception.
+   */
+  CharStateNotSupportedException(const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
   virtual ~CharStateNotSupportedException() {}
 };

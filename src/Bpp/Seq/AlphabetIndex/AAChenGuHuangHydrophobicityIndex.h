@@ -99,20 +99,22 @@ public:
 
   virtual ~AAChenGuHuangHydrophobicityIndex() {}
 
-  AAChenGuHuangHydrophobicityIndex* clone() const { return new AAChenGuHuangHydrophobicityIndex(); }
+  AAChenGuHuangHydrophobicityIndex* clone() const override {
+    return new AAChenGuHuangHydrophobicityIndex();
+  }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return hydrophobicity_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return hydrophobicity_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(hydrophobicity_); }
+  const std::vector<double>& getIndexVector() const override { return hydrophobicity_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHENGUHUANGHYDROPHOBICITYINDEX_H

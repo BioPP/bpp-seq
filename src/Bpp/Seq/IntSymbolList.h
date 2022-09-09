@@ -78,7 +78,7 @@ public:
    *
    */
 
-  using  IntCoreSymbolListInterface::setContent;
+  using IntCoreSymbolListInterface::setContent;
 
   /**
    * @brief Set the whole content of the list.
@@ -148,7 +148,7 @@ class IntSymbolList :
   public virtual AbstractTemplateSymbolList<int> //This needs to be virtual because of diamond inheritence
 {
 public:
-  IntSymbolList(std::shared_ptr<const Alphabet>& alpha) : 
+  IntSymbolList(std::shared_ptr<const Alphabet> alpha) : 
     AbstractTemplateSymbolList<int>(alpha)
   {}
 
@@ -159,7 +159,11 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  IntSymbolList(const std::vector<std::string>& list, std::shared_ptr<const Alphabet>& alpha);
+  IntSymbolList(const std::vector<std::string>& list, std::shared_ptr<const Alphabet> alpha) :
+    AbstractTemplateSymbolList<int>(alpha)
+  {
+    setContent(list);
+  }
 
   /**
    * @brief Build a new IntSymbolList object with the specified alphabet.
@@ -168,7 +172,9 @@ public:
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  IntSymbolList(const std::vector<int>& list, std::shared_ptr<const Alphabet>& alpha);
+  IntSymbolList(const std::vector<int>& list, std::shared_ptr<const Alphabet> alpha) :
+    AbstractTemplateSymbolList<int>(list, alpha)
+  {}
 
   /**
    * @brief The copy constructor.
@@ -285,7 +291,7 @@ public:
    *
    * @param alpha The alphabet to use.
    */
-  EventDrivenIntSymbolList(std::shared_ptr<const Alphabet>& alpha) :
+  EventDrivenIntSymbolList(std::shared_ptr<const Alphabet> alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     IntSymbolList(alpha),
     AbstractTemplateEventDrivenSymbolList<int>(alpha)
@@ -300,7 +306,7 @@ public:
    */
   EventDrivenIntSymbolList(
       const std::vector<std::string>& list,
-      std::shared_ptr<const Alphabet>& alpha):
+      std::shared_ptr<const Alphabet> alpha):
     AbstractTemplateSymbolList<int>(alpha),
     IntSymbolList(alpha),
     AbstractTemplateEventDrivenSymbolList<int>(alpha)
@@ -318,7 +324,7 @@ public:
    */
   EventDrivenIntSymbolList(
       const std::vector<int>& list,
-      std::shared_ptr<const Alphabet>& alpha):
+      std::shared_ptr<const Alphabet> alpha):
     AbstractTemplateSymbolList<int>(list, alpha),
     IntSymbolList(list, alpha),
     AbstractTemplateEventDrivenSymbolList<int>(list, alpha)
@@ -337,17 +343,35 @@ public:
   /**
    * @brief The copy constructor.
    */
-  EventDrivenIntSymbolList(const EventDrivenIntSymbolList& list);
+  EventDrivenIntSymbolList(const EventDrivenIntSymbolList& list) :
+    AbstractTemplateSymbolList<int>(list),
+    IntSymbolList(list),
+    AbstractTemplateEventDrivenSymbolList<int>(list)
+  {}
+
 
   /**
    * @brief The generic assignment operator.
    */
-  EventDrivenIntSymbolList& operator=(const IntSymbolList& list);
+  EventDrivenIntSymbolList& operator=(const IntSymbolList& list)
+  {
+    AbstractTemplateSymbolList<int>::operator=(list);
+    IntSymbolList::operator=(list);
+    AbstractTemplateEventDrivenSymbolList<int>::operator=(list);
+    return *this;
+  }
+
 
   /**
    * @brief The assignment operator.
    */
-  EventDrivenIntSymbolList& operator=(const EventDrivenIntSymbolList& list);
+  EventDrivenIntSymbolList& operator=(const EventDrivenIntSymbolList& list)
+  {
+    AbstractTemplateSymbolList<int>::operator=(list);
+    IntSymbolList::operator=(list);
+    AbstractTemplateEventDrivenSymbolList<int>::operator=(list);
+    return *this;
+  }
 
   /**
    * @name The Clonable interface

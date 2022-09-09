@@ -72,14 +72,35 @@ public:
   /**
    * @brief Create a new container from a stream.
    *
+   * @param input     The input stream to read.
+   * @param container The container where to add data.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readSequences(
+      std::istream& input, 
+      SequenceContainerInterface& container) const = 0;
+  /**
+   * @brief Create a new container from a file.
+   *
+   * @param path      The path to the file to read.
+   * @param container The container where to add data.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readSequences(
+      const std::string& path,
+      SequenceContainerInterface& container) const = 0;
+
+  /**
+   * @brief Create a new container from a stream.
+   *
    * @param input  The input stream to read.
    * @param alpha The alphabet to be associated to the container.
    * @return A new SequenceContainer object.
    * @throw Exception If the file is not in the specified format.
    */
   virtual std::unique_ptr<SequenceContainerInterface> readSequences(
-      std::istream& input, 
-      std::shared_ptr<const Alphabet>& alpha) const = 0;
+       std::istream& input, 
+       std::shared_ptr<const Alphabet>& alpha) const = 0;
   /**
    * @brief Create a new container from a file.
    *
@@ -89,8 +110,8 @@ public:
    * @throw Exception If the file is not in the specified format.
    */
   virtual std::unique_ptr<SequenceContainerInterface> readSequences(
-       const std::string& path, 
-       std::shared_ptr<const Alphabet>& alpha) const = 0;
+      const std::string& path,
+      std::shared_ptr<const Alphabet>& alpha) const = 0;
 };
 
 /**
@@ -107,6 +128,30 @@ public:
 
 public:
   /**
+   * @brief Add the content of a stream to a new container.
+   *
+   * @param input     The input stream to read.
+   * @param container The container where to add data.
+   *                  Needs not be a SiteContainer, as aligned sequences can be stored in a simple SequenceContainer.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readAlignment(
+      std::istream& input, 
+      SequenceContainerInterface& container) const = 0;
+
+  /**
+   * @brief Create a new container from a file.
+   *
+   * @param path      The path to the file to read.
+   * @param container The container where to add data.
+   *                  Needs not be a SiteContainer, as aligned sequences can be stored in a simple SequenceContainer.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readAlignment(
+      const std::string& path,
+      SequenceContainerInterface& container) const = 0;
+
+  /**
    * @brief Create a new container from a stream.
    *
    * @param input  The input stream to read.
@@ -115,8 +160,9 @@ public:
    * @throw Exception If the file is not in the specified format.
    */
   virtual std::unique_ptr<SiteContainerInterface> readAlignment(
-       std::istream& input, 
-       std::shared_ptr<const Alphabet>& alpha) const = 0;
+      std::istream& input, 
+      std::shared_ptr<const Alphabet>& alpha) const = 0;
+
   /**
    * @brief Create a new container from a file.
    *
@@ -147,13 +193,34 @@ public:
   /**
    * @brief Create a new container from a stream.
    *
+   * @param input     The input stream to read.
+   * @param container The container where to add data.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readSequences(
+      std::istream& input, 
+      ProbabilisticSequenceContainerInterface& container) const = 0;
+  /**
+   * @brief Create a new container from a file.
+   *
+   * @param path      The path to the file to read.
+   * @param container The container where to add data.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readSequences(
+      const std::string& path,
+      ProbabilisticSequenceContainerInterface& container) const = 0;
+
+  /**
+   * @brief Create a new container from a stream.
+   *
    * @param input  The input stream to read.
    * @param alpha The alphabet to be associated to the container.
    * @return A new ProbabilisticSequenceContainer object.
    */
   virtual std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(
       std::istream& input,
-      std::shared_ptr<const Alphabet>& alpha) = 0;
+      std::shared_ptr<const Alphabet>& alpha) const = 0;
 
   /**
    * @brief Create a new container from a file.
@@ -162,10 +229,9 @@ public:
    * @param alpha The alphabet to be associated to the container.
    * @return A new ProbabilisticSequenceContainer object.
    */
-
   virtual std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(
       const std::string& path,
-      std::shared_ptr<const Alphabet>& alpha) = 0;
+      std::shared_ptr<const Alphabet>& alpha) const = 0;
 };
 
 /**
@@ -182,6 +248,30 @@ public:
   virtual ~IProbabilisticAlignment() {}
 
 public:
+  /**
+   * @brief Add the content of a stream to a new container.
+   *
+   * @param input     The input stream to read.
+   * @param container The container where to add data.
+   *                  Needs not be a SiteContainer, as aligned sequences can be stored in a simple SequenceContainer.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readAlignment(
+      std::istream& input, 
+      ProbabilisticSequenceContainerInterface& container) const = 0;
+
+  /**
+   * @brief Create a new container from a file.
+   *
+   * @param path      The path to the file to read.
+   * @param container The container where to add data.
+   *                  Needs not be a SiteContainer, as aligned sequences can be stored in a simple SequenceContainer.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readAlignment(
+      const std::string& path,
+      ProbabilisticSequenceContainerInterface& container) const = 0;
+
   /**
    * @brief Create a new container from a stream.
    *

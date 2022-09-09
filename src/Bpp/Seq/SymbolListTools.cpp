@@ -55,36 +55,23 @@ using namespace bpp;
 
 /******************************************************************************/
 
-bool SymbolListTools::hasGap(const IntSymbolList& site)
+bool SymbolListTools::hasGap(const IntSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (site.getAlphabet()->isGap(site[i]))
+    if (list.getAlphabet()->isGap(list[i]))
       return true;
   }
   return false;
 }
 
-bool SymbolListTools::hasGap(const ProbabilisticSymbolList& site)
+bool SymbolListTools::hasGap(const ProbabilisticSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (VectorTools::sum(site[i]) <= NumConstants::TINY())
-      return true;
-  }
-  return false;
-}
-
-/******************************************************************************/
-
-bool SymbolListTools::hasUnresolved(const IntSymbolList& site)
-{
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
-  {
-    if (site.getAlphabet()->isUnresolved(site[i]))
+    if (VectorTools::sum(list[i]) <= NumConstants::TINY())
       return true;
   }
   return false;
@@ -92,24 +79,37 @@ bool SymbolListTools::hasUnresolved(const IntSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::isGapOnly(const IntSymbolList& site)
+bool SymbolListTools::hasUnresolved(const IntSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (!site.getAlphabet()->isGap(site[i]))
+    if (list.getAlphabet()->isUnresolved(list[i]))
+      return true;
+  }
+  return false;
+}
+
+/******************************************************************************/
+
+bool SymbolListTools::isGapOnly(const IntSymbolListInterface& list)
+{
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
+  {
+    if (!list.getAlphabet()->isGap(list[i]))
       return false;
   }
   return true;
 }
 
 
-bool SymbolListTools::isGapOnly(const ProbabilisticSymbolList& site)
+bool SymbolListTools::isGapOnly(const ProbabilisticSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (VectorTools::sum(site[i]) > NumConstants::TINY())
+    if (VectorTools::sum(list[i]) > NumConstants::TINY())
       return false;
   }
   return true;
@@ -117,23 +117,23 @@ bool SymbolListTools::isGapOnly(const ProbabilisticSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::isGapOrUnresolvedOnly(const IntSymbolList& site)
+bool SymbolListTools::isGapOrUnresolvedOnly(const IntSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (!site.getAlphabet()->isGap(site[i]) && !site.getAlphabet()->isUnresolved(site[i]))
+    if (!list.getAlphabet()->isGap(list[i]) && !list.getAlphabet()->isUnresolved(list[i]))
       return false;
   }
   return true;
 }
 
-bool SymbolListTools::isGapOrUnresolvedOnly(const ProbabilisticSymbolList& site)
+bool SymbolListTools::isGapOrUnresolvedOnly(const ProbabilisticSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    double ss = VectorTools::sum(site[i]);
+    double ss = VectorTools::sum(list[i]);
     if (ss > NumConstants::TINY() && ss < 1.)
       return false;
   }
@@ -142,23 +142,23 @@ bool SymbolListTools::isGapOrUnresolvedOnly(const ProbabilisticSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::hasUnknown(const IntCoreSymbolList& site)
+bool SymbolListTools::hasUnknown(const IntSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (site[i] == site.getAlphabet()->getUnknownCharacterCode())
+    if (list[i] == list.getAlphabet()->getUnknownCharacterCode())
       return true;
   }
   return false;
 }
 
-bool SymbolListTools::hasUnknown(const ProbabilisticSymbolList& site)
+bool SymbolListTools::hasUnknown(const ProbabilisticSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    double ss = VectorTools::sum(site[i]);
+    double ss = VectorTools::sum(list[i]);
     if (ss > 1.)
       return true;
   }
@@ -167,23 +167,23 @@ bool SymbolListTools::hasUnknown(const ProbabilisticSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::isComplete(const IntCoreSymbolList& site)
+bool SymbolListTools::isComplete(const IntSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (site.getAlphabet()->isGap(site[i]) || site.getAlphabet()->isUnresolved(site[i]))
+    if (list.getAlphabet()->isGap(list[i]) || list.getAlphabet()->isUnresolved(list[i]))
       return false;
   }
   return true;
 }
 
-bool SymbolListTools::isComplete(const ProbabilisticSymbolList& site)
+bool SymbolListTools::isComplete(const ProbabilisticSymbolListInterface& list)
 {
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    double ss = VectorTools::sum(site[i]);
+    double ss = VectorTools::sum(list[i]);
     if (ss < NumConstants::TINY() || ss > 1.)
       return false;
   }
@@ -192,55 +192,27 @@ bool SymbolListTools::isComplete(const ProbabilisticSymbolList& site)
 
 /******************************************************************************/
 
-size_t SymbolListTools::numberOfGaps(const IntCoreSymbolList& site)
+size_t SymbolListTools::numberOfGaps(const IntSymbolListInterface& list)
 {
   size_t n = 0;
 
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (site.getAlphabet()->isGap(site[i]))
+    if (list.getAlphabet()->isGap(list[i]))
       n++;
   }
   return n;
 }
 
-size_t SymbolListTools::numberOfGaps(const ProbabilisticSymbolList& site)
+size_t SymbolListTools::numberOfGaps(const ProbabilisticSymbolListInterface& list)
 {
   size_t n = 0;
 
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
   {
-    if (VectorTools::sum(site[i]) < NumConstants::TINY())
-      n++;
-  }
-  return n;
-}
-
-/******************************************************************************/
-
-size_t SymbolListTools::numberOfUnresolved(const IntCoreSymbolList& site)
-{
-  size_t n = 0;
-
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
-  {
-    if (site.getAlphabet()->isUnresolved(site[i]))
-      n++;
-  }
-  return n;
-}
-
-size_t SymbolListTools::numberOfUnresolved(const ProbabilisticSymbolList& site)
-{
-  size_t n = 0;
-
-  // Main loop : for all characters in site
-  for (size_t i = 0; i < site.size(); i++)
-  {
-    if (VectorTools::sum(site[i]) > 1.)
+    if (VectorTools::sum(list[i]) < NumConstants::TINY())
       n++;
   }
   return n;
@@ -248,37 +220,69 @@ size_t SymbolListTools::numberOfUnresolved(const ProbabilisticSymbolList& site)
 
 /******************************************************************************/
 
+size_t SymbolListTools::numberOfUnresolved(const IntSymbolListInterface& list)
+{
+  size_t n = 0;
 
-bool SymbolListTools::areSymbolListsIdentical(const IntCoreSymbolList& site1, const IntCoreSymbolList& site2)
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
+  {
+    if (list.getAlphabet()->isUnresolved(list[i]))
+      n++;
+  }
+  return n;
+}
+
+size_t SymbolListTools::numberOfUnresolved(const ProbabilisticSymbolListInterface& list)
+{
+  size_t n = 0;
+
+  // Main loop : for all characters in list
+  for (size_t i = 0; i < list.size(); ++i)
+  {
+    if (VectorTools::sum(list[i]) > 1.)
+      n++;
+  }
+  return n;
+}
+
+/******************************************************************************/
+
+
+bool SymbolListTools::areSymbolListsIdentical(
+    const IntSymbolListInterface& list1,
+    const IntSymbolListInterface& list2)
 {
   // IntCoreSymbolList's size and content checking
-  if (site1.getAlphabet()->getAlphabetType() != site2.getAlphabet()->getAlphabetType())
+  if (list1.getAlphabet()->getAlphabetType() != list2.getAlphabet()->getAlphabetType())
     return false;
-  if (site1.size() != site2.size())
+  if (list1.size() != list2.size())
     return false;
   else
   {
-    for (size_t i = 0; i < site1.size(); i++)
+    for (size_t i = 0; i < list1.size(); ++i)
     {
-      if (site1[i] != site2[i])
+      if (list1[i] != list2[i])
         return false;
     }
     return true;
   }
 }
 
-bool SymbolListTools::areSymbolListsIdentical(const ProbabilisticSymbolList& site1, const ProbabilisticSymbolList& site2)
+bool SymbolListTools::areSymbolListsIdentical(
+    const ProbabilisticSymbolListInterface& list1,
+    const ProbabilisticSymbolListInterface& list2)
 {
   // IntCoreSymbolList's size and content checking
-  if (site1.getAlphabet()->getAlphabetType() != site2.getAlphabet()->getAlphabetType())
+  if (list1.getAlphabet()->getAlphabetType() != list2.getAlphabet()->getAlphabetType())
     return false;
-  if (site1.size() != site2.size())
+  if (list1.size() != list2.size())
     return false;
   else
   {
-    for (size_t i = 0; i < site1.size(); i++)
+    for (size_t i = 0; i < list1.size(); ++i)
     {
-      if (site1[i] != site2[i])
+      if (list1[i] != list2[i])
         return false;
     }
     return true;
@@ -287,22 +291,25 @@ bool SymbolListTools::areSymbolListsIdentical(const ProbabilisticSymbolList& sit
 
 /******************************************************************************/
 
-bool SymbolListTools::isConstant(const IntCoreSymbolList& site, bool ignoreUnknown, bool unresolvedRaisesException)
+bool SymbolListTools::isConstant(
+    const IntSymbolListInterface& list,
+    bool ignoreUnknown,
+    bool unresolvedRaisesException)
 {
-  // Emspty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::isConstant: Incorrect specified site, size must be > 0");
+  // Emspty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::isConstant: Incorrect specified list, size must be > 0");
 
-  // For all site's characters
-  int gap = site.getAlphabet()->getGapCharacterCode();
+  // For all list's characters
+  int gap = list.getAlphabet()->getGapCharacterCode();
   if (ignoreUnknown)
   {
-    int s = site[0];
-    int unknown = site.getAlphabet()->getUnknownCharacterCode();
+    int s = list[0];
+    int unknown = list.getAlphabet()->getUnknownCharacterCode();
     size_t i = 0;
-    while (i < site.size() && (s == gap || s == unknown))
+    while (i < list.size() && (s == gap || s == unknown))
     {
-      s = site[i];
+      s = list[i];
       i++;
     }
     if (s == unknown || s == gap)
@@ -312,32 +319,32 @@ bool SymbolListTools::isConstant(const IntCoreSymbolList& site, bool ignoreUnkno
       else
         return false;
     }
-    while (i < site.size())
+    while (i < list.size())
     {
-      if (site[i] != s && site[i] != gap && site[i] != unknown)
+      if (list[i] != s && list[i] != gap && list[i] != unknown)
         return false;
       i++;
     }
   }
   else
   {
-    int s = site[0];
+    int s = list[0];
     size_t i = 0;
-    while  (i < site.size() && s == gap)
+    while  (i < list.size() && s == gap)
     {
-      s = site[i];
+      s = list[i];
       i++;
     }
     if (s == gap)
     {
       if (unresolvedRaisesException)
-        throw Exception("SymbolListTools::isConstant: IntCoreSymbolList is only made of gaps.");
+        throw Exception("SymbolListTools::isConstant: IntSymbolList is only made of gaps.");
       else
         return false;
     }
-    while (i < site.size())
+    while (i < list.size())
     {
-      if (site[i] != s && site[i] != gap)
+      if (list[i] != s && list[i] != gap)
         return false;
       i++;
     }
@@ -346,19 +353,21 @@ bool SymbolListTools::isConstant(const IntCoreSymbolList& site, bool ignoreUnkno
   return true;
 }
 
-bool SymbolListTools::isConstant(const ProbabilisticSymbolList& site, bool unresolvedRaisesException)
+bool SymbolListTools::isConstant(
+    const ProbabilisticSymbolListInterface& list,
+    bool unresolvedRaisesException)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::isConstant: Incorrect specified site, size must be > 0");
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::isConstant: Incorrect specified list, size must be > 0");
 
-  // For all site's characters
-  Vdouble s = site[0];
+  // For all list's characters
+  Vdouble s = list[0];
   double ss = VectorTools::sum(s);
   size_t i = 0;
-  while (i < site.size() && (ss < NumConstants::TINY()))
+  while (i < list.size() && (ss < NumConstants::TINY()))
   {
-    s = site[i];
+    s = list[i];
     ss = VectorTools::sum(s);
 
     i++;
@@ -366,13 +375,13 @@ bool SymbolListTools::isConstant(const ProbabilisticSymbolList& site, bool unres
   if (ss < NumConstants::TINY())
   {
     if (unresolvedRaisesException)
-      throw Exception("SymbolListTools::isConstant: IntCoreSymbolList is only made of gaps.");
+      throw Exception("SymbolListTools::isConstant: ProbabilisticSymbolList is only made of gaps.");
     else
       return false;
   }
-  while (i < site.size())
+  while (i < list.size())
   {
-    if (site[i] != s && VectorTools::sum(site[i]) < NumConstants::TINY())
+    if (list[i] != s && VectorTools::sum(list[i]) < NumConstants::TINY())
       return false;
     i++;
   }
@@ -381,64 +390,45 @@ bool SymbolListTools::isConstant(const ProbabilisticSymbolList& site, bool unres
 }
 
 
-/**************************************************************/
-/*********** IntCoreSymbolList ******************/
-/**************************************************************/
 
-void SymbolListTools::getCounts(const IntCoreSymbolList& list, map<int, double>& counts, bool resolveUnknowns)
-{
-  if (!resolveUnknowns)
-  {
-    for (size_t i = 0; i < list.size(); ++i)
-    {
-      counts[list[i]]++;
-    }
-  }
-  else
-  {
-    for (size_t i = 0; i < list.size(); ++i)
-    {
-      vector<int> alias = list.getAlphabet()->getAlias(list[i]);
-      double n = static_cast<double>(alias.size());
-      for (size_t j = 0; j < alias.size(); j++)
-      {
-        counts[alias[j]] += 1. / n;
-      }
-    }
-  }
-}
-
-void SymbolListTools::getCounts(const IntCoreSymbolList& list1, const IntCoreSymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns)
+void SymbolListTools::getCounts(
+    const IntSymbolListInterface& list1,
+    const IntSymbolListInterface& list2,
+    map< int, map<int, double> >& counts,
+    bool resolveUnknowns)
 {
   if (list1.size() != list2.size())
-    throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
+    throw DimensionException("SymbolListTools::getCounts: the two lists must have the same size.", list1.size(), list2.size());
   if (!resolveUnknowns)
   {
-    for (size_t i = 0; i < list1.size(); i++)
+    for (size_t i = 0; i < list1.size(); ++i)
     {
       counts[list1[i]][list2[i]]++;
     }
   }
   else
   {
-    for (size_t i = 0; i < list1.size(); i++)
+    for (size_t i = 0; i < list1.size(); ++i)
     {
       vector<int> alias1 = list1.getAlphabet()->getAlias(list1[i]);
       vector<int> alias2 = list2.getAlphabet()->getAlias(list2[i]);
       double n1 = (double)alias1.size();
       double n2 = (double)alias2.size();
-      for (size_t j = 0; j < alias1.size(); j++)
+      for (auto j : alias1)
       {
-        for (size_t k = 0; k < alias2.size(); k++)
+        for (auto k : alias2)
         {
-          counts[alias1[j]][alias2[k]] += 1. / (n1 * n2);
+          counts[j][k] += 1. / (n1 * n2);
         }
       }
     }
   }
 }
 
-void SymbolListTools::getFrequencies(const CruxSymbolList& list, map<int, double>& frequencies, bool resolveUnknowns)
+void SymbolListTools::getFrequencies(
+    const CruxSymbolListInterface& list,
+    map<int, double>& frequencies,
+    bool resolveUnknowns)
 {
   double n = (double)list.size();
   map<int, double> counts;
@@ -451,9 +441,13 @@ void SymbolListTools::getFrequencies(const CruxSymbolList& list, map<int, double
   }
 }
 
-void SymbolListTools::getFrequencies(const CruxSymbolList& list1, const CruxSymbolList& list2, map<int, map<int, double> >& frequencies, bool resolveUnknowns)
+void SymbolListTools::getFrequencies(
+    const CruxSymbolListInterface& list1,
+    const CruxSymbolListInterface& list2,
+    map<int, map<int, double> >& frequencies,
+    bool resolveUnknowns)
 {
-  double n2 = (double)list1.size() * (double)list1.size();
+  double n2 = static_cast<double>(list1.size()) * static_cast<double>(list1.size());
   map<int, map<int, double> > counts;
   getCounts(list1, list2, counts, resolveUnknowns);
 
@@ -466,10 +460,13 @@ void SymbolListTools::getFrequencies(const CruxSymbolList& list1, const CruxSymb
   }
 }
 
-double SymbolListTools::getGCContent(const IntCoreSymbolList& list, bool ignoreUnresolved, bool ignoreGap)
+double SymbolListTools::getGCContent(
+    const IntSymbolListInterface& list,
+    bool ignoreUnresolved,
+    bool ignoreGap)
 {
-  const Alphabet* alphabet = list.getAlphabet();
-  if (!AlphabetTools::isNucleicAlphabet(alphabet))
+  auto alphabet = list.getAlphabet();
+  if (!AlphabetTools::isNucleicAlphabet(alphabet.get()))
     throw AlphabetException("SymbolListTools::getGCContent. Method only works on nucleotides.", alphabet);
   double gc = 0;
   double total = 0;
@@ -517,7 +514,9 @@ double SymbolListTools::getGCContent(const IntCoreSymbolList& list, bool ignoreU
   return total != 0 ? gc / total : 0;
 }
 
-size_t SymbolListTools::getNumberOfDistinctPositions(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2)
+size_t SymbolListTools::getNumberOfDistinctPositions(
+    const IntSymbolListInterface& l1,
+    const IntSymbolListInterface& l2)
 {
   if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
@@ -531,7 +530,9 @@ size_t SymbolListTools::getNumberOfDistinctPositions(const IntCoreSymbolList& l1
   return count;
 }
 
-size_t SymbolListTools::getNumberOfPositionsWithoutGap(const IntCoreSymbolList& l1, const IntCoreSymbolList& l2)
+size_t SymbolListTools::getNumberOfPositionsWithoutGap(
+    const IntSymbolListInterface& l1,
+    const IntSymbolListInterface& l2)
 {
   if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
@@ -545,7 +546,7 @@ size_t SymbolListTools::getNumberOfPositionsWithoutGap(const IntCoreSymbolList& 
   return count;
 }
 
-void SymbolListTools::changeGapsToUnknownCharacters(IntCoreSymbolList& l)
+void SymbolListTools::changeGapsToUnknownCharacters(IntSymbolListInterface& l)
 {
   int unknownCode = l.getAlphabet()->getUnknownCharacterCode();
   for (size_t i = 0; i < l.size(); i++)
@@ -555,7 +556,7 @@ void SymbolListTools::changeGapsToUnknownCharacters(IntCoreSymbolList& l)
   }
 }
 
-void SymbolListTools::changeUnresolvedCharactersToGaps(IntCoreSymbolList& l)
+void SymbolListTools::changeUnresolvedCharactersToGaps(IntSymbolListInterface& l)
 {
   int gapCode = l.getAlphabet()->getGapCharacterCode();
   for (size_t i = 0; i < l.size(); i++)
@@ -566,53 +567,28 @@ void SymbolListTools::changeUnresolvedCharactersToGaps(IntCoreSymbolList& l)
 }
 
 
-/**************************************************************/
-/*********** ProbabilisticSymbolList ******************/
-/**************************************************************/
-
-
-void SymbolListTools::getCounts(const ProbabilisticSymbolList& list, map<int, double>& counts, bool resolveUnknowns)
+void SymbolListTools::getCounts(
+    const ProbabilisticSymbolListInterface& list1,
+    const ProbabilisticSymbolListInterface& list2,
+    map< int, map<int, double> >& counts,
+    bool resolveUnknowns)
 {
   if (!resolveUnknowns)
   {
-    getCounts(list, counts);
-  }
-  else
-  {
-    for (size_t i = 0; i < list.size(); ++i)
-    {
-      const std::vector<double>& c = list[i];
-      double s = VectorTools::sum(c);
-
-      if (s != 0)
-        for (size_t j = 0; j < c.size(); j++)
-        {
-          counts[(int)j] += c.at(j) / s;
-        }
-    }
-  }
-}
-
-
-void SymbolListTools::getCounts(const ProbabilisticSymbolList& list1, const ProbabilisticSymbolList& list2,  map< int, map<int, double> >& counts, bool resolveUnknowns)
-{
-  if (!resolveUnknowns)
-  {
-    getCounts(list1, list2, counts); for (size_t i = 0; i < list1.size(); i++)
-    {}
+    getCounts(list1, list2, counts);
   }
   else
   {
     if (list1.size() != list2.size())
-      throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
+      throw DimensionException("SymbolListTools::getCounts: the two lists must have the same size.", list1.size(), list2.size());
     for (size_t i = 0; i < list1.size(); i++)
     {
       const std::vector<double>& c1(list1[i]), &c2(list2[i]);
       double s12 = VectorTools::sum(c1) * VectorTools::sum(c2);
       if ((s12 != 0))
-        for (size_t j = 0; j < c1.size(); j++)
+        for (size_t j = 0; j < c1.size(); ++j)
         {
-          for (size_t k = 0; k < c2.size(); k++)
+          for (size_t k = 0; k < c2.size(); ++k)
           {
             counts[(int)j][(int)k] += c1.at(j) * c2.at(k) / s12;
           }
@@ -621,14 +597,17 @@ void SymbolListTools::getCounts(const ProbabilisticSymbolList& list1, const Prob
   }
 }
 
-double SymbolListTools::getGCContent(const ProbabilisticSymbolList& list, bool ignoreUnresolved, bool ignoreGap)
+double SymbolListTools::getGCContent(
+    const ProbabilisticSymbolListInterface& list,
+    bool ignoreUnresolved,
+    bool ignoreGap)
 {
-  const Alphabet* alphabet = list.getAlphabet();
-  if (!AlphabetTools::isNucleicAlphabet(alphabet))
+  auto alphabet = list.getAlphabet();
+  if (!AlphabetTools::isNucleicAlphabet(alphabet.get()))
     throw AlphabetException("SymbolListTools::getGCContent. Method only works on nucleotides.", alphabet);
   double gc = 0;
   double total = 0;
-  for (size_t i = 0; i < list.size(); i++)
+  for (size_t i = 0; i < list.size(); ++i)
   {
     const Vdouble& state = list.getValue(i);
     double ss = VectorTools::sum(state);
@@ -655,14 +634,16 @@ double SymbolListTools::getGCContent(const ProbabilisticSymbolList& list, bool i
   return total != 0 ? gc / total : 0;
 }
 
-size_t SymbolListTools::getNumberOfDistinctPositions(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2)
+size_t SymbolListTools::getNumberOfDistinctPositions(
+     const ProbabilisticSymbolListInterface& l1,
+     const ProbabilisticSymbolListInterface& l2)
 {
   if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
 
   size_t n = min(l1.size(), l2.size());
   size_t count = 0;
-  for (size_t i = 0; i < n; i++)
+  for (size_t i = 0; i < n; ++i)
   {
     if (l1[i] != l2[i])
       count++;
@@ -670,13 +651,15 @@ size_t SymbolListTools::getNumberOfDistinctPositions(const ProbabilisticSymbolLi
   return count;
 }
 
-size_t SymbolListTools::getNumberOfPositionsWithoutGap(const ProbabilisticSymbolList& l1, const ProbabilisticSymbolList& l2)
+size_t SymbolListTools::getNumberOfPositionsWithoutGap(
+    const ProbabilisticSymbolListInterface& l1,
+    const ProbabilisticSymbolListInterface& l2)
 {
   if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
   size_t n = min(l1.size(), l2.size());
   size_t count = 0;
-  for (size_t i = 0; i < n; i++)
+  for (size_t i = 0; i < n; ++i)
   {
     if (VectorTools::sum(l1[i]) > NumConstants::TINY() && VectorTools::sum(l2[i]) > NumConstants::TINY())
       count++;
@@ -684,35 +667,37 @@ size_t SymbolListTools::getNumberOfPositionsWithoutGap(const ProbabilisticSymbol
   return count;
 }
 
-void SymbolListTools::changeGapsToUnknownCharacters(ProbabilisticSymbolList& l)
+void SymbolListTools::changeGapsToUnknownCharacters(ProbabilisticSymbolListInterface& l)
 {
-  for (size_t i = 0; i < l.size(); i++)
+  for (size_t i = 0; i < l.size(); ++i)
   {
     if (VectorTools::sum(l[i]) < NumConstants::TINY())
       VectorTools::fill(l[i], 1.);
   }
 }
 
-void SymbolListTools::changeUnresolvedCharactersToGaps(ProbabilisticSymbolList& l)
+void SymbolListTools::changeUnresolvedCharactersToGaps(ProbabilisticSymbolListInterface& l)
 {
-  for (size_t i = 0; i < l.size(); i++)
+  for (size_t i = 0; i < l.size(); ++i)
   {
     if (VectorTools::sum(l[i]) > 1.)
       VectorTools::fill(l[i], 0.);
   }
 }
 
-double SymbolListTools::variabilityShannon(const CruxSymbolList& site, bool resolveUnknown)
+double SymbolListTools::variabilityShannon(
+    const CruxSymbolListInterface& list,
+    bool resolveUnknown)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::variabilityShannon: Incorrect specified site, size must be > 0.");
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::variabilityShannon: Incorrect specified list, size must be > 0.");
 
   map<int, double> p;
-  getFrequencies(site, p, resolveUnknown);
+  getFrequencies(list, p, resolveUnknown);
   // We need to correct frequencies for gaps:
   double s = 0.;
-  for (int i = 0; i < static_cast<int>(site.getAlphabet()->getSize()); i++)
+  for (int i = 0; i < static_cast<int>(list.getAlphabet()->getSize()); i++)
   {
     double f = p[i];
     if (f > 0)
@@ -724,24 +709,27 @@ double SymbolListTools::variabilityShannon(const CruxSymbolList& site, bool reso
 /******************************************************************************/
 
 
-double SymbolListTools::mutualInformation(const CruxSymbolList& site1, const CruxSymbolList& site2, bool resolveUnknown)
+double SymbolListTools::mutualInformation(
+    const CruxSymbolListInterface& list1,
+    const CruxSymbolListInterface& list2,
+    bool resolveUnknown)
 {
-  // Empty site checking
-  if (site1.size() == 0)
-    throw Exception("SymbolListTools::mutualInformation: Incorrect specified site, size must be > 0");
-  if (site2.size() == 0)
-    throw Exception("SymbolListTools::mutualInformation: Incorrect specified site, size must be > 0");
-  if (site1.size() != site2.size())
-    throw DimensionException("SymbolListTools::mutualInformation: sites must have the same size!", site1.size(), site2.size());
-  vector<double> p1(site1.getAlphabet()->getSize());
-  vector<double> p2(site2.getAlphabet()->getSize());
+  // Empty list checking
+  if (list1.size() == 0)
+    throw Exception("SymbolListTools::mutualInformation: Incorrect specified list, size must be > 0");
+  if (list2.size() == 0)
+    throw Exception("SymbolListTools::mutualInformation: Incorrect specified list, size must be > 0");
+  if (list1.size() != list2.size())
+    throw DimensionException("SymbolListTools::mutualInformation: lists must have the same size!", list1.size(), list2.size());
+  vector<double> p1(list1.getAlphabet()->getSize());
+  vector<double> p2(list2.getAlphabet()->getSize());
   map<int, map<int, double> > p12;
-  getCounts(site1, site2, p12, resolveUnknown);
+  getCounts(list1, list2, p12, resolveUnknown);
   double mi = 0, tot = 0, pxy;
   // We need to correct frequencies for gaps:
-  for (size_t i = 0; i < site1.getAlphabet()->getSize(); i++)
+  for (size_t i = 0; i < list1.getAlphabet()->getSize(); i++)
   {
-    for (size_t j = 0; j < site2.getAlphabet()->getSize(); j++)
+    for (size_t j = 0; j < list2.getAlphabet()->getSize(); j++)
     {
       pxy = p12[static_cast<int>(i)][static_cast<int>(j)];
       tot += pxy;
@@ -749,17 +737,17 @@ double SymbolListTools::mutualInformation(const CruxSymbolList& site1, const Cru
       p2[j] += pxy;
     }
   }
-  for (size_t i = 0; i < site1.getAlphabet()->getSize(); i++)
+  for (size_t i = 0; i < list1.getAlphabet()->getSize(); i++)
   {
     p1[i] /= tot;
   }
-  for (size_t j = 0; j < site2.getAlphabet()->getSize(); j++)
+  for (size_t j = 0; j < list2.getAlphabet()->getSize(); j++)
   {
     p2[j] /= tot;
   }
-  for (size_t i = 0; i < site1.getAlphabet()->getSize(); i++)
+  for (size_t i = 0; i < list1.getAlphabet()->getSize(); i++)
   {
-    for (size_t j = 0; j < site2.getAlphabet()->getSize(); j++)
+    for (size_t j = 0; j < list2.getAlphabet()->getSize(); j++)
     {
       pxy = p12[static_cast<int>(i)][static_cast<int>(j)] / tot;
       if (pxy > 0)
@@ -771,30 +759,33 @@ double SymbolListTools::mutualInformation(const CruxSymbolList& site1, const Cru
 
 /******************************************************************************/
 
-double SymbolListTools::jointEntropy(const CruxSymbolList& site1, const CruxSymbolList& site2, bool resolveUnknown)
+double SymbolListTools::jointEntropy(
+    const CruxSymbolListInterface& list1,
+    const CruxSymbolListInterface& list2,
+    bool resolveUnknown)
 {
-  // Empty site checking
-  if (site1.size() == 0)
-    throw Exception("SymbolListTools::jointEntropy: Incorrect specified site, size must be > 0");
-  if (site2.size() == 0)
-    throw Exception("SymbolListTools::jointEntropy: Incorrect specified site, size must be > 0");
-  if (site1.size() != site2.size())
-    throw DimensionException("SymbolListTools::jointEntropy: sites must have the same size!", site1.size(), site2.size());
+  // Empty list checking
+  if (list1.size() == 0)
+    throw Exception("SymbolListTools::jointEntropy: Incorrect specified list, size must be > 0");
+  if (list2.size() == 0)
+    throw Exception("SymbolListTools::jointEntropy: Incorrect specified list, size must be > 0");
+  if (list1.size() != list2.size())
+    throw DimensionException("SymbolListTools::jointEntropy: lists must have the same size!", list1.size(), list2.size());
   map<int, map<int, double> > p12;
-  getCounts(site1, site2, p12, resolveUnknown);
+  getCounts(list1, list2, p12, resolveUnknown);
   double tot = 0, pxy, h = 0;
   // We need to correct frequencies for gaps:
-  for (size_t i = 0; i < site1.getAlphabet()->getSize(); i++)
+  for (size_t i = 0; i < list1.getAlphabet()->getSize(); ++i)
   {
-    for (size_t j = 0; j < site2.getAlphabet()->getSize(); j++)
+    for (size_t j = 0; j < list2.getAlphabet()->getSize(); ++j)
     {
       pxy = p12[static_cast<int>(i)][static_cast<int>(j)];
       tot += pxy;
     }
   }
-  for (size_t i = 0; i < site1.getAlphabet()->getSize(); i++)
+  for (size_t i = 0; i < list1.getAlphabet()->getSize(); ++i)
   {
-    for (size_t j = 0; j < site2.getAlphabet()->getSize(); j++)
+    for (size_t j = 0; j < list2.getAlphabet()->getSize(); ++j)
     {
       pxy = p12[static_cast<int>(i)][static_cast<int>(j)] / tot;
       if (pxy > 0)
@@ -806,13 +797,14 @@ double SymbolListTools::jointEntropy(const CruxSymbolList& site1, const CruxSymb
 
 /******************************************************************************/
 
-double SymbolListTools::variabilityFactorial(const IntCoreSymbolList& site)
+double SymbolListTools::variabilityFactorial(
+    const IntSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::variabilityFactorial: Incorrect specified site, size must be > 0");
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::variabilityFactorial: Incorrect specified list, size must be > 0");
   map<int, size_t> p;
-  getCounts(site, p);
+  getCounts(list, p);
   vector<size_t> c = MapTools::getValues(p);
   size_t s = VectorTools::sum(c);
   long double l = static_cast<long double>(NumTools::fact(s)) / static_cast<long double>(VectorTools::sum(VectorTools::fact(c)));
@@ -821,13 +813,13 @@ double SymbolListTools::variabilityFactorial(const IntCoreSymbolList& site)
 
 /******************************************************************************/
 
-double SymbolListTools::heterozygosity(const CruxSymbolList& site)
+double SymbolListTools::heterozygosity(const CruxSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::heterozygosity: Incorrect specified site, size must be > 0");
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::heterozygosity: Incorrect specified list, size must be > 0");
   map<int, double> p;
-  getFrequencies(site, p);
+  getFrequencies(list, p);
   vector<double> c = MapTools::getValues(p);
   double n = VectorTools::norm<double, double>(MapTools::getValues(p));
   return 1. - n * n;
@@ -835,16 +827,16 @@ double SymbolListTools::heterozygosity(const CruxSymbolList& site)
 
 /******************************************************************************/
 
-size_t SymbolListTools::getNumberOfDistinctCharacters(const IntCoreSymbolList& site)
+size_t SymbolListTools::getNumberOfDistinctCharacters(const IntSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::getNumberOfDistinctCharacters(): Incorrect specified site, size must be > 0");
-  // For all site's characters
-  if (SymbolListTools::isConstant(site))
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::getNumberOfDistinctCharacters(): Incorrect specified list, size must be > 0");
+  // For all list's characters
+  if (SymbolListTools::isConstant(list))
     return 1;
   map<int, size_t> counts;
-  SymbolListTools::getCounts(site, counts);
+  SymbolListTools::getCounts(list, counts);
   size_t s = 0;
   for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
   {
@@ -856,16 +848,16 @@ size_t SymbolListTools::getNumberOfDistinctCharacters(const IntCoreSymbolList& s
 
 /******************************************************************************/
 
-size_t SymbolListTools::getMajorAlleleFrequency(const IntCoreSymbolList& site)
+size_t SymbolListTools::getMajorAlleleFrequency(const IntSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::getMajorAlleleFrequency(): Incorrect specified site, size must be > 0");
-  // For all site's characters
-  if (SymbolListTools::isConstant(site))
-    return site.size();
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::getMajorAlleleFrequency(): Incorrect specified list, size must be > 0");
+  // For all list's characters
+  if (SymbolListTools::isConstant(list))
+    return list.size();
   map<int, size_t> counts;
-  getCounts(site, counts);
+  getCounts(list, counts);
   size_t s = 0;
   for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
   {
@@ -878,17 +870,17 @@ size_t SymbolListTools::getMajorAlleleFrequency(const IntCoreSymbolList& site)
 
 /******************************************************************************/
 
-int SymbolListTools::getMajorAllele(const CruxSymbolList& site)
+int SymbolListTools::getMajorAllele(const CruxSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::getMajorAllele(): Incorrect specified site, size must be > 0");
-  // For all site's characters
-  if (dynamic_cast<const IntCoreSymbolList*>(&site) && SymbolListTools::isConstant(site))
-    return (dynamic_cast<const IntCoreSymbolList&>(site))[0];
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::getMajorAllele(): Incorrect specified list, size must be > 0");
+  // For all list's characters
+  if (dynamic_cast<const IntSymbolListInterface*>(&list) && SymbolListTools::isConstant(list))
+    return (dynamic_cast<const IntSymbolListInterface&>(list))[0];
 
   map<int, double> counts;
-  SymbolListTools::getCounts(site, counts);
+  SymbolListTools::getCounts(list, counts);
   double s = 0;
   int ma = -100;
   for (auto it : counts)
@@ -905,17 +897,17 @@ int SymbolListTools::getMajorAllele(const CruxSymbolList& site)
 
 /******************************************************************************/
 
-size_t SymbolListTools::getMinorAlleleFrequency(const IntCoreSymbolList& site)
+size_t SymbolListTools::getMinorAlleleFrequency(const IntSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::getMinorAlleleFrequency(): Incorrect specified site, size must be > 0.");
-  // For all site's characters
-  if (SymbolListTools::isConstant(site))
-    return site.size();
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::getMinorAlleleFrequency(): Incorrect specified list, size must be > 0.");
+  // For all list's characters
+  if (SymbolListTools::isConstant(list))
+    return list.size();
   map<int, size_t> counts;
-  SymbolListTools::getCounts(site, counts);
-  size_t s = site.size();
+  SymbolListTools::getCounts(list, counts);
+  size_t s = list.size();
   for (auto it : counts)
   {
     if (it.second != 0)
@@ -927,17 +919,17 @@ size_t SymbolListTools::getMinorAlleleFrequency(const IntCoreSymbolList& site)
 
 /******************************************************************************/
 
-int SymbolListTools::getMinorAllele(const CruxSymbolList& site)
+int SymbolListTools::getMinorAllele(const CruxSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::getMinorAllele(): Incorrect specified site, size must be > 0.");
-  // For all site's characters
-  if (dynamic_cast<const IntCoreSymbolList*>(&site) && SymbolListTools::isConstant(site))
-    return (dynamic_cast<const IntCoreSymbolList&>(site))[0];
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::getMinorAllele(): Incorrect specified list, size must be > 0.");
+  // For all list's characters
+  if (dynamic_cast<const IntSymbolListInterface*>(&list) && SymbolListTools::isConstant(list))
+    return (dynamic_cast<const IntSymbolListInterface&>(list))[0];
   map<int, double> counts;
-  SymbolListTools::getCounts(site, counts);
-  double s = (double)site.size();
+  SymbolListTools::getCounts(list, counts);
+  double s = (double)list.size();
   int ma = -100;
   for (auto it : counts)
   {
@@ -953,16 +945,16 @@ int SymbolListTools::getMinorAllele(const CruxSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::hasSingleton(const IntCoreSymbolList& site)
+bool SymbolListTools::hasSingleton(const IntSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::hasSingleton: Incorrect specified site, size must be > 0");
-  // For all site's characters
-  if (SymbolListTools::isConstant(site))
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::hasSingleton: Incorrect specified list, size must be > 0");
+  // For all list's characters
+  if (SymbolListTools::isConstant(list))
     return false;
   map<int, size_t> counts;
-  getCounts(site, counts);
+  getCounts(list, counts);
   for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
   {
     if (it->second == 1)
@@ -973,16 +965,16 @@ bool SymbolListTools::hasSingleton(const IntCoreSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::isParsimonyInformativeSite(const IntCoreSymbolList& site)
+bool SymbolListTools::isParsimonyInformativeSite(const IntSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::isParsimonyInformativeSite: Incorrect specified site, size must be > 0");
-  // For all site's characters
-  if (SymbolListTools::isConstant(site, false, false))
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::isParsimonyInformativeSite: Incorrect specified list, size must be > 0");
+  // For all list's characters
+  if (SymbolListTools::isConstant(list, false, false))
     return false;
   map<int, size_t> counts;
-  SymbolListTools::getCounts(site, counts);
+  SymbolListTools::getCounts(list, counts);
   size_t npars = 0;
   for (map<int, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
   {
@@ -996,24 +988,25 @@ bool SymbolListTools::isParsimonyInformativeSite(const IntCoreSymbolList& site)
 
 /******************************************************************************/
 
-bool SymbolListTools::isTriplet(const IntCoreSymbolList& site)
+bool SymbolListTools::isTriplet(const IntSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::isTriplet: Incorrect specified site, size must be > 0");
-  // For all site's characters
-  return SymbolListTools::getNumberOfDistinctCharacters(site) >= 3;
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::isTriplet: Incorrect specified list, size must be > 0");
+  // For all list's characters
+  return SymbolListTools::getNumberOfDistinctCharacters(list) >= 3;
 }
 
 /******************************************************************************/
 
-bool SymbolListTools::isDoubleton(const IntCoreSymbolList& site)
+bool SymbolListTools::isDoubleton(const IntSymbolListInterface& list)
 {
-  // Empty site checking
-  if (site.size() == 0)
-    throw Exception("SymbolListTools::isDoubleton: Incorrect specified site, size must be > 0");
-  // For all site's characters
-  return SymbolListTools::getNumberOfDistinctCharacters(site) == 2;
+  // Empty list checking
+  if (list.size() == 0)
+    throw Exception("SymbolListTools::isDoubleton: Incorrect specified list, size must be > 0");
+  // For all list's characters
+  return SymbolListTools::getNumberOfDistinctCharacters(list) == 2;
 }
 
 /******************************************************************************/
+

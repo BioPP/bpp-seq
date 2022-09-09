@@ -43,10 +43,12 @@
 
 #include <Bpp/Numeric/Table.h>
 
-#include "../Container/VectorProbabilisticSiteContainer.h"
+#include "../Container/VectorSiteContainer.h"
 #include "../ProbabilisticSequence.h"
+#include "../Container/AlignmentData.h"
 #include "AbstractIAlignment.h"
 #include "AbstractISequence.h"
+#include "AbstractOAlignment.h"
 #include "AbstractOSequence.h"
 
 namespace bpp
@@ -63,7 +65,8 @@ namespace bpp
  */
 class Pasta :
   public AbstractIProbabilisticAlignment,
-  public AbstractOProbabilisticAlignment
+  public AbstractOProbabilisticAlignment,
+  public AbstractOSequence2
 {
 protected:
   /**
@@ -71,7 +74,6 @@ protected:
    */
   unsigned int charsByLine_; // Number of chars by line (output only)
 
-  bool checkNames_;          // If names must be checked
   bool extended_;            // If using HUPO-PSI extensions
   bool strictNames_;         // If name is between '>' and first space
 
@@ -82,11 +84,10 @@ public:
    * @brief Build a new Pasta object.
    *
    * @param charsByLine Number of characters per line when writing files.
-   * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
    * @param extended Tell if we should read general comments and sequence comments in HUPO-PSI format.
    * @param strictSequenceNames Tells if the sequence names should be restricted to the characters between '>' and the first blank one.
    */
-  Pasta(unsigned int charsByLine = 100, bool checkSequenceNames = true, bool extended = false, bool strictSequenceNames = false) : charsByLine_(charsByLine), checkNames_(checkSequenceNames), extended_(extended), strictNames_(strictSequenceNames) {}
+  Pasta(unsigned int charsByLine = 100, bool extended = false, bool strictSequenceNames = false) : charsByLine_(charsByLine), extended_(extended), strictNames_(strictSequenceNames) {}
 
   // class destructor
   virtual ~Pasta() {}
@@ -97,8 +98,8 @@ public:
    *
    * @return format name
    */
-  const std::string getFormatName() const { return "PASTA file"; }
-  const std::string getFormatDescription() const
+  const std::string getFormatName() const override { return "PASTA file"; }
+  const std::string getFormatDescription() const override
   {
     return "By rows: alphabet, then Sequence name (preceded by >) in one line, and rows of sequence content.";
   }
@@ -114,32 +115,56 @@ public:
    * @}
    */
 
-  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq) const;
+  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq, bool header) const;
 
-  void writeSequence(std::ostream& output, const Sequence& seq) const;
+  void writeSequence(std::ostream& output, const Sequence& seq, bool header) const;
 
   /**
-   * @name The "IOProbabilisticSequence interface"
+   * @name The OSequence interface"
    *
    * @{
    */
-  void appendAlignmentFromStream(std::istream& input, ProbabilisticSiteContainer& psc) const
-  {
-    appendSequencesFromStream(input, dynamic_cast<VectorProbabilisticSiteContainer&>(psc)); // This may raise an exception if sequences are not aligned!
-  }
-
-  void appendSequencesFromStream(std::istream& input, VectorProbabilisticSiteContainer& container) const;
-
-  void writeSequences(std::ostream& output, const ProbabilisticSequenceContainer& psc) const
-  {
-    writeAlignedValues(output, dynamic_cast<const AlignedValuesContainer&>(psc));
-  }
-
-  void writeAlignedValues(std::ostream& output, const AlignedValuesContainer& avc) const;
+   void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override
+   {
+     for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
+       writeSequence(output, sc.getSequence(i), i == 0);
+     }
+   }
+   
+   using AbstractOSequence::writeSequences;
 
   /**
    * @}
    */
+
+   /**
+   * @name The "I/OProbabilisticSequence interface"
+   *
+   * @{
+   */
+  void appendAlignmentFromStream(std::istream& input, ProbabilisticSequenceContainerInterface& psc) const override;
+
+  void writeAlignment(std::ostream& output, const ProbabilisticSiteContainerInterface& psc) const override
+  {
+    if (!output)
+      throw IOException("Pasta::write: can't write to ostream output");
+  
+    // Main loop : for all sequences in vector container
+  
+    bool first = true;
+    for (size_t i = 0; i < psc.getNumberOfSequences(); ++i)
+    {
+      writeSequence(output, psc.getSequence(i), first);
+      first = false;
+    }
+  }
+  /**
+   * @}
+   */
+  using AbstractOSequence2::writeAlignment;
+  
+  const std::string getDataType() const override { return "(Probabilistic) sequence container"; }
+
 };
 } // end of namespace bpp
 #endif // BPP_SEQ_IO_PASTA_H

@@ -88,20 +88,20 @@ public:
 
   virtual ~AASurfaceIndex() {}
 
-  AASurfaceIndex* clone() const { return new AASurfaceIndex(); }
+  AASurfaceIndex* clone() const override { return new AASurfaceIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return surface_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return surface_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(surface_); }
+  const std::vector<double>& getIndexVector() const override { return surface_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AASURFACEINDEX_H

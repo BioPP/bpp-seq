@@ -141,7 +141,7 @@ public:
     return charge_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(charge_); }
+  const std::vector<double>& getIndexVector() const { return charge_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHARGEINDEX_H

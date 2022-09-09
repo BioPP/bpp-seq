@@ -66,7 +66,7 @@ namespace bpp
 
 template<class T>
 class VectorMappedContainer :
-  public virtual PositionedNamedContainer<T>,
+  public virtual PositionedNamedContainerInterface<T>,
   public MappedNamedContainer<T>,
   public VectorPositionedContainer<T>
 {
@@ -112,6 +112,8 @@ public:
     return *this;
   }
 
+  virtual ~VectorMappedContainer() {}
+
 public:
   /**
    * @name The Clonable interface.
@@ -134,8 +136,6 @@ public:
   {
     return VectorPositionedContainer<T>::getSize();
   }
-
-protected:
 
   /*
    * @brief real number of objects
@@ -302,8 +302,6 @@ protected:
     const_cast<std::vector<std::string>& >(vNames_)[objectIndex] = name;
     const_cast<std::map<std::string, size_t>&>(mNames_)[name] = objectIndex;
   }
-
-public:
 
   void clear() override
   {

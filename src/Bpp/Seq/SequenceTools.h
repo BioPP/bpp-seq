@@ -101,9 +101,7 @@ class SequenceTools :
   public SymbolListTools
 {
 private:
-  static DNA DNA_;
-  static RNA RNA_;
-  static RNY RNY_;
+  static std::shared_ptr<RNY> RNY_;
   static NucleicAcidsReplication DNARep_;
   static NucleicAcidsReplication RNARep_;
   static NucleicAcidsReplication transc_;
@@ -377,14 +375,13 @@ public:
    *
    * @author Sylvain Gaillard
    */
-  static void getPutativeHaplotypes(const Sequence& seq, std::vector<Sequence*>& hap, unsigned int level = 2);
+  static void getPutativeHaplotypes(const Sequence& seq, std::vector< std::unique_ptr<Sequence> >& hap, unsigned int level = 2);
 
   /**
    * @brief Combine two sequences.
    *
    * @author Sylvain Gaillard
    */
-
   static std::unique_ptr<Sequence> combineSequences(const Sequence& s1, const Sequence& s2);
 
   /**
@@ -474,7 +471,7 @@ public:
    * @param length The length of the sequence to generate.
    * @return A pointer toward a new Sequence object.
    */
-  static std::unique_ptr<Sequence> getRandomSequence(const Alphabet* alphabet, size_t length);
+  static std::unique_ptr<Sequence> getRandomSequence(std::shared_ptr<const Alphabet>& alphabet, size_t length);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCETOOLS_H

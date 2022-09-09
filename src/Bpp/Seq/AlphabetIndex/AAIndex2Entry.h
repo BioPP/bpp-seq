@@ -89,26 +89,26 @@ public:
   virtual ~AAIndex2Entry() {}
 
 public:
-  AAIndex2Entry* clone() const { return new AAIndex2Entry(*this); }
+  AAIndex2Entry* clone() const override { return new AAIndex2Entry(*this); }
 
-  double getIndex(int state1, int state2) const
+  double getIndex(int state1, int state2) const override
   {
     if (state1 < 0 || state1 > 19)
-      throw BadIntException(state1, "AAIndex2Entry::getIndex(). Invalid state1.", *getAlphabet());
+      throw BadIntException(state1, "AAIndex2Entry::getIndex(). Invalid state1.", getAlphabet().get());
     if (state2 < 0 || state2 > 19)
-      throw BadIntException(state2, "AAIndex2Entry::getIndex(). Invalid state2.", *getAlphabet());
+      throw BadIntException(state2, "AAIndex2Entry::getIndex(). Invalid state2.", getAlphabet().get());
     double d = property_(static_cast<size_t>(state1), static_cast<size_t>(state2));
     return d;
   }
 
-  double getIndex(const std::string& state1, const std::string& state2) const
+  double getIndex(const std::string& state1, const std::string& state2) const override
   {
     return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
   }
 
-  LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(property_); }
+  const Matrix<double>& getIndexMatrix() const override { return property_; }
 
-  bool isSymmetric() const { return sym_; }
+  bool isSymmetric() const override { return sym_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AAINDEX2ENTRY_H

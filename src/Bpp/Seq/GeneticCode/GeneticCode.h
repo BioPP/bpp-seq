@@ -43,6 +43,7 @@
 
 #include <Bpp/Exceptions.h>
 
+#include "../Alphabet/AlphabetTools.h"
 #include "../Alphabet/CodonAlphabet.h"
 #include "../Alphabet/ProteicAlphabet.h"
 #include "../Transliterator.h"
@@ -84,28 +85,21 @@ class GeneticCode :
   public virtual Clonable
 {
 protected:
-  const CodonAlphabet codonAlphabet_;
-  const ProteicAlphabet proteicAlphabet_;
+  std::shared_ptr<const CodonAlphabet> codonAlphabet_;
+  std::shared_ptr<const ProteicAlphabet> proteicAlphabet_;
   std::map<int, int> tlnTable_;
 
 public:
-  GeneticCode(std::shared_ptr<const NucleicAlphabet>& alphabet) :
+  GeneticCode(std::shared_ptr<const NucleicAlphabet> alphabet) :
     AbstractTransliterator(),
-    codonAlphabet_(alphabet),
-    proteicAlphabet_(),
-    tlnTable_()
-  {}
-
-  GeneticCode(const NucleicAlphabet& alphabet) :
-    AbstractTransliterator(),
-    codonAlphabet_(alphabet),
-    proteicAlphabet_(),
+    codonAlphabet_(new CodonAlphabet(alphabet)),
+    proteicAlphabet_(AlphabetTools::PROTEIN_ALPHABET),
     tlnTable_()
   {}
 
   virtual ~GeneticCode() {}
 
-  virtual GeneticCode* clone() const = 0;
+  virtual GeneticCode* clone() const override = 0;
 
 public:
   /**
@@ -113,11 +107,15 @@ public:
    *
    * @{
    */
-  const CodonAlphabet* getSourceAlphabet() const { return &codonAlphabet_; }
-  const ProteicAlphabet* getTargetAlphabet() const { return &proteicAlphabet_; }
-  virtual int translate(int state) const;
-  virtual std::string translate(const std::string& state) const;
-  virtual Sequence* translate(const Sequence& sequence) const
+  std::shared_ptr<const Alphabet> getSourceAlphabet() const override { return codonAlphabet_; }
+
+  std::shared_ptr<const Alphabet> getTargetAlphabet() const override { return proteicAlphabet_; }
+
+  int translate(int state) const override;
+
+  std::string translate(const std::string& state) const override;
+
+  std::unique_ptr<Sequence> translate(const Sequence& sequence) const override
   {
     return AbstractTransliterator::translate(sequence);
   }
@@ -129,6 +127,20 @@ public:
    *
    * @{
    */
+
+  /**
+   * @brief Alias for getSourceAlphabet return a pointer toward a CodonAlphabet.
+   *
+   * @return A pointer toward the codon alphabet.
+   */
+  virtual std::shared_ptr<const CodonAlphabet> getCodonAlphabet() const { return codonAlphabet_; }
+
+  /**
+   * @brief Alias for getTargetAlphabet return a pointer toward a ProteicAlphabet.
+   *
+   * @return A pointer toward the protein alphabet.
+   */
+  virtual std::shared_ptr<const ProteicAlphabet> getProteicAlphabet() const { return proteicAlphabet_; }
 
   /**
    * @return The number of stop codons.
@@ -170,7 +182,7 @@ public:
   virtual bool isStart(int state) const
   {
     // Test:
-    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    codonAlphabet_->intToChar(state); // throw exception if invalid state!
     return state == 14;
   }
 
@@ -182,7 +194,7 @@ public:
    */
   virtual bool isStart(const std::string& state) const
   {
-    return isStart(codonAlphabet_.charToInt(state));
+    return isStart(codonAlphabet_->charToInt(state));
   }
 
   /**
@@ -254,7 +266,7 @@ public:
    * @param includeInitCodon (if lookForInitCodon is true) tell if the init codon must be included in the subsequence.
    * @return A nucleotide/codon subsequence.
    */
-  Sequence* getCodingSequence(const Sequence& sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const;
+  std::unique_ptr<Sequence> getCodingSequence(const Sequence& sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const;
   /** @} */
 };
 } // end of namespace bpp.

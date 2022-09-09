@@ -54,6 +54,7 @@
 #include "../SymbolListTools.h"
 #include "SequenceContainer.h"
 #include "VectorSequenceContainer.h"
+#include "../Alphabet/CodonAlphabet.h"
 
 namespace bpp
 {
@@ -467,7 +468,7 @@ public:
 		  const TemplateSequenceContainerInterface<SequenceType, std::string>& sequences,
 		  size_t pos)
   {
-    const CodonAlphabet* calpha = dynamic_cast<const CodonAlphabet*>(sequences.getAlphabet().get());
+    auto calpha = std::dynamic_pointer_cast<const CodonAlphabet>(sequences.getAlphabet());
     if (!calpha)
       throw AlphabetException("SequenceContainerTools::getCodonPosition. Input sequences should be of type codon.", sequences.getAlphabet());
     auto newcont = std::make_unique< TemplateVectorSequenceContainer<SequenceType> >(calpha->getNucleicAlphabet());

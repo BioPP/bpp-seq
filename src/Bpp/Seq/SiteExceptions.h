@@ -60,7 +60,7 @@ private:
   /**
    * @brief A reference toward a site object.
    */
-  const CoreSiteInterface& site_;
+  const CoreSiteInterface* site_;
 
 public:
   // Class constructor
@@ -71,7 +71,11 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param s    A const reference toward the site that threw the exception.
    */
-  SiteException(const std::string& text, const CoreSiteInterface& s);
+  SiteException(const std::string& text, const CoreSiteInterface* s) :
+    Exception(text + (s != 0 ? "(" + TextTools::toString(s->getCoordinate()) + ")" : std::string(""))),
+    site_(s)
+  {}
+
 
   // Class destructor
   virtual ~SiteException() {}
@@ -82,7 +86,7 @@ public:
    *
    * @return A const reference toward the site.
    */
-  virtual const CoreSiteInterface& getSite() const { return site_; }
+  virtual const CoreSiteInterface* getSite() const { return site_; }
 };
 
 /**
@@ -92,7 +96,7 @@ class EmptySiteException :
   public SiteException
 {
 public:
-  EmptySiteException(const std::string& text, const CoreSiteInterface& s) :
+  EmptySiteException(const std::string& text, const CoreSiteInterface* s) :
 	 SiteException(text, s) {}
 
   virtual ~EmptySiteException() {}
@@ -105,7 +109,7 @@ class SiteWithGapException :
   public SiteException
 {
 public:
-  SiteWithGapException(const std::string& text, const CoreSiteInterface& s) :
+  SiteWithGapException(const std::string& text, const CoreSiteInterface* s) :
 	 SiteException(text, s) {}
 
   virtual ~SiteWithGapException() {}

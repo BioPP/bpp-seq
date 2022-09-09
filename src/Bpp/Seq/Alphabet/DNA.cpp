@@ -90,13 +90,13 @@ DNA::DNA(bool exclamationMarkCountsAsGap)
 bool DNA::isResolvedIn(int state1, int state2) const
 {
   if (state1 < 0 || !isIntInAlphabet(state1))
-    throw BadIntException(state1, "AbstractAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.", *this);
+    throw BadIntException(state1, "AbstractAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.", this);
 
   if (state2 < 0 || !isIntInAlphabet(state2))
-    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.", *this);
+    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.", this);
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2), *this);
+    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2), this);
 
   if (state1 == -1)
     return state2 == -1;
@@ -114,7 +114,7 @@ bool DNA::isResolvedIn(int state1, int state2) const
   case 3:
     return st1.getBinaryCode() & 8;
   default:
-    throw BadIntException(state2, "DNA::isResolvedIn : this should not happen", *this);
+    throw BadIntException(state2, "DNA::isResolvedIn : this should not happen", this);
   }
 }
 
@@ -123,7 +123,7 @@ bool DNA::isResolvedIn(int state1, int state2) const
 std::vector<int> DNA::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "DNA::getAlias(int): Specified base unknown.", *this);
+    throw BadIntException(state, "DNA::getAlias(int): Specified base unknown.", this);
   vector<int> v;
   const NucleicAlphabetState& st = getState(state);
   if (state == -1)
@@ -146,7 +146,7 @@ std::vector<std::string> DNA::getAlias(const std::string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
-    throw BadCharException(locstate, "DNA::getAlias(int): Specified base unknown.", *this);
+    throw BadCharException(locstate, "DNA::getAlias(int): Specified base unknown.", this);
   vector<int> vi = this->getAlias(this->charToInt(state));
   vector<string> v;
   for (unsigned int i = 0; i < vi.size(); i++)
@@ -164,7 +164,7 @@ int DNA::getGeneric(const std::vector<int>& states) const
   for (size_t i = 0; i < states.size(); ++i)
   {
     if (!isIntInAlphabet(states[i]))
-      throw BadIntException(states[i], "DNA::getGeneric(const vector<int>& states): Specified base unknown.", *this);
+      throw BadIntException(states[i], "DNA::getGeneric(const vector<int>& states): Specified base unknown.", this);
     v |= getState(states[i]).getBinaryCode();
   }
   return getStateByBinCode(v).getNum();
@@ -178,7 +178,7 @@ std::string DNA::getGeneric(const std::vector<std::string>& states) const
   for (unsigned int i = 0; i < states.size(); ++i)
   {
     if (!isCharInAlphabet(states[i]))
-      throw BadCharException(states[i], "DNA::getGeneric(const vector<string>& states): Specified base unknown.", *this);
+      throw BadCharException(states[i], "DNA::getGeneric(const vector<string>& states): Specified base unknown.", this);
     vi.push_back(this->charToInt(states[i]));
   }
   return intToChar(getGeneric(vi));

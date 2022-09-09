@@ -60,10 +60,14 @@ class DNAToRNA :
   public AbstractReverseTransliterator
 {
 private:
-  const Alphabet* dna_, * rna_;
+  std::shared_ptr<const Alphabet> dna_, rna_;
 
 public:
-  DNAToRNA() : AbstractReverseTransliterator(), dna_(&AlphabetTools::DNA_ALPHABET), rna_(&AlphabetTools::RNA_ALPHABET) {}
+  DNAToRNA() :
+    AbstractReverseTransliterator(),
+    dna_(AlphabetTools::DNA_ALPHABET),
+    rna_(AlphabetTools::RNA_ALPHABET)
+  {}
 
   DNAToRNA(const DNAToRNA& d2r) : AbstractReverseTransliterator(d2r), dna_(d2r.dna_), rna_(d2r.rna_) {}
 
@@ -78,17 +82,25 @@ public:
   virtual ~DNAToRNA() {}
 
 public:
-  virtual const Alphabet* getSourceAlphabet() const { return dna_; }
-  virtual const Alphabet* getTargetAlphabet() const { return rna_; }
-  int translate(int state) const;
-  std::string translate(const std::string& state) const;
-  Sequence* translate(const Sequence& sequence) const
+
+  std::shared_ptr<const Alphabet> getSourceAlphabet() const override { return dna_; }
+
+  std::shared_ptr<const Alphabet> getTargetAlphabet() const override { return rna_; }
+
+  int translate(int state) const override;
+
+  std::string translate(const std::string& state) const override;
+
+  std::unique_ptr<Sequence> translate(const Sequence& sequence) const override
   {
     return AbstractReverseTransliterator::translate(sequence);
   }
-  int reverse(int state) const;
-  std::string reverse(const std::string& state) const;
-  Sequence* reverse(const Sequence& sequence) const
+
+  int reverse(int state) const override;
+
+  std::string reverse(const std::string& state) const override;
+
+  std::unique_ptr<Sequence> reverse(const Sequence& sequence) const override
   {
     return AbstractReverseTransliterator::reverse(sequence);
   }

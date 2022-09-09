@@ -48,28 +48,27 @@
 
 namespace bpp
 {
-/*
+/**
  * @brief AlphabetIndex1 for codon based on ProteicAlphabetIndex1.
- *
  */
-
 class CodonFromProteicAlphabetIndex1 :
-  public AlphabetIndex1
+  public virtual AlphabetIndex1
 {
 private:
-  const CodonAlphabet* alpha_;
-  const GeneticCode* gencode_;
-
+  std::shared_ptr<const CodonAlphabet> alpha_;
+  std::shared_ptr<const GeneticCode> gencode_;
   std::vector<double> vIndex_;
 
 public:
-  CodonFromProteicAlphabetIndex1(const GeneticCode* gencode, const AlphabetIndex1* protalphindex) :
+  CodonFromProteicAlphabetIndex1(
+      std::shared_ptr<const GeneticCode> gencode,
+      std::shared_ptr<const AlphabetIndex1> protalphindex) :
     AlphabetIndex1(),
-    alpha_(&AlphabetTools::DNA_CODON_ALPHABET),
+    alpha_(AlphabetTools::DNA_CODON_ALPHABET),
     gencode_(gencode),
     vIndex_(64)
   {
-    if (!AlphabetTools::isProteicAlphabet(protalphindex->getAlphabet()))
+    if (!AlphabetTools::isProteicAlphabet(protalphindex->getAlphabet().get()))
       throw Exception("CodonFromProteicAlphabetIndex1: Not a Proteic Alphabet for CodonAlphabetIndex1.");
     fillIndex_(protalphindex);
   }
@@ -91,31 +90,33 @@ public:
 
   virtual ~CodonFromProteicAlphabetIndex1() {}
 
-  CodonFromProteicAlphabetIndex1* clone() const { return new CodonFromProteicAlphabetIndex1(*this); }
+  CodonFromProteicAlphabetIndex1* clone() const override {
+    return new CodonFromProteicAlphabetIndex1(*this);
+  }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return vIndex_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return vIndex_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  const Alphabet* getAlphabet() const
+  std::shared_ptr<const Alphabet> getAlphabet() const override
   {
     return alpha_;
   }
 
-  std::vector<double>* getIndexVector() const
+  const std::vector<double>& getIndexVector() const override
   {
-    return new std::vector<double>(vIndex_);
+    return vIndex_;
   }
 
 private:
-  void fillIndex_(const AlphabetIndex1* protAlphIndex_)
+  void fillIndex_(std::shared_ptr<const AlphabetIndex1> protAlphIndex_)
   {
     for (size_t i = 0; i < 64; i++)
     {

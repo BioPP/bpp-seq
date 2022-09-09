@@ -97,7 +97,7 @@ public:
   int charToInt(const std::string& state) const
   {
     if (!isCharInAlphabet(state))
-      throw BadCharException(state, "LetterAlphabet::charToInt: Unknown state", *this);
+      throw BadCharException(state, "LetterAlphabet::charToInt: Unknown state", this);
     return letters_[static_cast<unsigned int>(state[0])];
   }
 

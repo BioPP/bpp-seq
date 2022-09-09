@@ -91,7 +91,7 @@ public:
     return property_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(property_); }
+  const std::vector<double>& getIndexVector() const { return property_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AAINDEX1ENTRY_H

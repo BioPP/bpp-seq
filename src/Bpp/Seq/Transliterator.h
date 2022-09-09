@@ -62,14 +62,14 @@ public:
    *
    * @return The source alphabet.
    */
-  virtual const Alphabet* getSourceAlphabet() const = 0;
+  virtual std::shared_ptr<const Alphabet> getSourceAlphabet() const = 0;
 
   /**
    * @brief Get the target alphabet.
    *
    * @return The target alphabet.
    */
-  virtual const Alphabet* getTargetAlphabet() const = 0;
+  virtual std::shared_ptr<const Alphabet> getTargetAlphabet() const = 0;
 
   /**
    * @brief Translate a given state coded as a int from source alphabet to target alphabet.
@@ -93,7 +93,7 @@ public:
    * @param sequence A sequence in source alphabet.
    * @return The corresponding sequence in target alphabet.
    */
-  virtual Sequence* translate(const Sequence& sequence) const = 0;
+  virtual std::unique_ptr<Sequence> translate(const Sequence& sequence) const = 0;
 };
 
 /**
@@ -129,7 +129,7 @@ public:
    * @param sequence A sequence in target alphabet.
    * @return The corresponding sequence in source alphabet.
    */
-  virtual Sequence* reverse(const Sequence& sequence) const = 0;
+  virtual std::unique_ptr<Sequence> reverse(const Sequence& sequence) const = 0;
 };
 
 /**
@@ -143,16 +143,16 @@ public:
   virtual ~AbstractTransliterator() {}
 
 public:
-  virtual int translate(int state) const = 0;
-  virtual std::string translate(const std::string& state) const = 0;
-  virtual Sequence* translate(const Sequence& sequence) const;
+  int translate(int state) const override = 0;
+  std::string translate(const std::string& state) const override = 0;
+  std::unique_ptr<Sequence> translate(const Sequence& sequence) const override;
 };
 
 /**
  * @brief Partial implementation of the ReverseTransliterator interface.
  */
 class AbstractReverseTransliterator :
-  public ReverseTransliterator,
+  public virtual ReverseTransliterator,
   public AbstractTransliterator
 {
 public:
@@ -160,12 +160,9 @@ public:
   virtual ~AbstractReverseTransliterator() {}
 
 public:
-  // These two redeclarations must be here because of the multiple inheritance.
-  virtual const Alphabet* getSourceAlphabet() const = 0;
-  virtual const Alphabet* getTargetAlphabet() const = 0;
-  virtual int reverse(int state) const = 0;
-  virtual std::string reverse(const std::string& state) const = 0;
-  virtual Sequence* reverse(const Sequence& sequence) const;
+  int reverse(int state) const override = 0;
+  std::string reverse(const std::string& state) const override = 0;
+  std::unique_ptr<Sequence> reverse(const Sequence& sequence) const override;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_TRANSLITERATOR_H

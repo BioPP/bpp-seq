@@ -45,7 +45,9 @@ using namespace bpp;
 
 using namespace std;
 
-NucleicAcidsReplication::NucleicAcidsReplication(const NucleicAlphabet* nuc1, const NucleicAlphabet* nuc2) :
+NucleicAcidsReplication::NucleicAcidsReplication(
+  std::shared_ptr<const NucleicAlphabet> nuc1,
+  std::shared_ptr<const NucleicAlphabet> nuc2) :
   nuc1_(nuc1), nuc2_(nuc2), trans_()
 {
   trans_[-1] = -1;
@@ -81,16 +83,16 @@ std::string NucleicAcidsReplication::translate(const std::string& state) const
   return nuc2_->intToChar(trans_[i]);
 }
 
-Sequence* NucleicAcidsReplication::translate(const Sequence& sequence) const
+unique_ptr<Sequence> NucleicAcidsReplication::translate(const Sequence& sequence) const
 {
   if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("NucleicAcidsReplication::translate", getSourceAlphabet(), getTargetAlphabet());
-  BasicSequence* tSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
-  for (unsigned int i = 0; i < sequence.size(); i++)
+  auto alphaPtr = getTargetAlphabet();
+  auto tSeq = make_unique<Sequence>(sequence.getName(), "", sequence.getComments(), alphaPtr);
+  for (size_t i = 0; i < sequence.size(); ++i)
   {
     tSeq->addElement(translate(sequence.getValue(i)));
   }
-  // tSeq->setSense(!tSeq->getSense());
   return tSeq;
 }
 
@@ -107,15 +109,15 @@ std::string NucleicAcidsReplication::reverse(const std::string& state) const
   return nuc1_->intToChar(trans_[i]);
 }
 
-Sequence* NucleicAcidsReplication::reverse(const Sequence& sequence) const
+unique_ptr<Sequence> NucleicAcidsReplication::reverse(const Sequence& sequence) const
 {
   if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("NucleicAcidsReplication::reverse", getSourceAlphabet(), getTargetAlphabet());
-  BasicSequence* rSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
-  for (unsigned int i = 0; i < sequence.size(); i++)
+  auto alphaPtr = getSourceAlphabet();
+  auto rSeq = make_unique<Sequence>(sequence.getName(), "", sequence.getComments(), alphaPtr);
+  for (size_t i = 0; i < sequence.size(); ++i)
   {
     rSeq->addElement(reverse(sequence.getValue(i)));
   }
-  // rSeq->setSense(! rSeq->getSense());
   return rSeq;
 }

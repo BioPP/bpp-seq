@@ -62,80 +62,80 @@ const string IoSequenceFactory::PAML_FORMAT_SEQUENTIAL    = "PAML S";
 const string IoSequenceFactory::GENBANK_FORMAT            = "GenBank";
 const string IoSequenceFactory::NEXUS_FORMAT              = "Nexus";
 
-ISequence* IoSequenceFactory::createReader(const string& format)
+unique_ptr<ISequence> IoSequenceFactory::createReader(const string& format)
 {
   if (format == FASTA_FORMAT)
-    return new Fasta();
+    return make_unique<Fasta>();
   else if (format == MASE_FORMAT)
-    return new Mase();
+    return make_unique<Mase>();
   else if (format == CLUSTAL_FORMAT)
-    return new Clustal();
+    return make_unique<Clustal>();
   else if (format == DCSE_FORMAT)
-    return new DCSE();
+    return make_unique<DCSE>();
   else if (format == PHYLIP_FORMAT_INTERLEAVED)
-    return new Phylip(false, false);
+    return make_unique<Phylip>(false, false);
   else if (format == PHYLIP_FORMAT_SEQUENTIAL)
-    return new Phylip(false, true);
+    return make_unique<Phylip>(false, true);
   else if (format == PAML_FORMAT_INTERLEAVED)
-    return new Phylip(true, false);
+    return make_unique<Phylip>(true, false);
   else if (format == PAML_FORMAT_SEQUENTIAL)
-    return new Phylip(true, true);
+    return make_unique<Phylip>(true, true);
   else if (format == GENBANK_FORMAT)
-    return new GenBank();
+    return make_unique<GenBank>();
   else if (format == NEXUS_FORMAT)
-    return new NexusIOSequence();
+    return make_unique<NexusIOSequence>();
   else
     throw Exception("Format " + format + " is not supported for sequences input.");
 }
 
-IAlignment* IoSequenceFactory::createAlignmentReader(const string& format)
+unique_ptr<IAlignment> IoSequenceFactory::createAlignmentReader(const string& format)
 {
   if (format == FASTA_FORMAT)
-    return new Fasta();
+    return make_unique<Fasta>();
   else if (format == MASE_FORMAT)
-    return new Mase();
+    return make_unique<Mase>();
   else if (format == CLUSTAL_FORMAT)
-    return new Clustal();
+    return make_unique<Clustal>();
   else if (format == DCSE_FORMAT)
-    return new DCSE();
+    return make_unique<DCSE>();
   else if (format == PHYLIP_FORMAT_INTERLEAVED)
-    return new Phylip(false, false);
+    return make_unique<Phylip>(false, false);
   else if (format == PHYLIP_FORMAT_SEQUENTIAL)
-    return new Phylip(false, true);
+    return make_unique<Phylip>(false, true);
   else if (format == PAML_FORMAT_INTERLEAVED)
-    return new Phylip(true, false);
+    return make_unique<Phylip>(true, false);
   else if (format == PAML_FORMAT_SEQUENTIAL)
-    return new Phylip(true, true);
+    return make_unique<Phylip>(true, true);
   else if (format == NEXUS_FORMAT)
-    return new NexusIOSequence();
+    return make_unique<NexusIOSequence>();
   else
     throw Exception("Format " + format + " is not supported for alignment input.");
 }
 
-OSequence* IoSequenceFactory::createWriter(const string& format)
+unique_ptr<OSequence> IoSequenceFactory::createWriter(const string& format)
 {
   if (format == FASTA_FORMAT)
-    return new Fasta();
+    return make_unique<Fasta>();
   else if (format == MASE_FORMAT)
-    return new Mase();
+    return make_unique<Mase>();
   else
     throw Exception("Format " + format + " is not supported for output.");
 }
 
-OAlignment* IoSequenceFactory::createAlignmentWriter(const string& format)
+unique_ptr<OAlignment> IoSequenceFactory::createAlignmentWriter(const string& format)
 {
   if (format == FASTA_FORMAT)
-    return new Fasta();
+    return make_unique<Fasta>();
   else if (format == MASE_FORMAT)
-    return new Mase();
+    return make_unique<Mase>();
   else if (format == PHYLIP_FORMAT_INTERLEAVED)
-    return new Phylip(false, false);
+    return make_unique<Phylip>(false, false);
   else if (format == PHYLIP_FORMAT_SEQUENTIAL)
-    return new Phylip(false, true);
+    return make_unique<Phylip>(false, true);
   else if (format == PAML_FORMAT_INTERLEAVED)
-    return new Phylip(true, false);
+    return make_unique<Phylip>(true, false);
   else if (format == PAML_FORMAT_SEQUENTIAL)
-    return new Phylip(true, true);
+    return make_unique<Phylip>(true, true);
   else
     throw Exception("Format " + format + " is not supported for output.");
 }

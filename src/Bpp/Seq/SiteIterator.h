@@ -48,30 +48,16 @@ namespace bpp
  * @brief Generic site iterator interface, allowing to loop over sites.
  */
 template<class SiteType>
-class SiteIterator
+class TemplateSiteIteratorInterface
 {
 public:
-  SiteIterator() {}
-  virtual ~SiteIterator() {}
+  TemplateSiteIteratorInterface() {}
+  virtual ~TemplateSiteIteratorInterface() {}
 
 public:
   virtual SiteType& nextSite() = 0;
   virtual bool hasMoreSites() const = 0;
 };
 
-/**
- * @brief Generic const site iterator interface, allowing to loop over const sites.
- */
-template<SiteType>
-class ConstSiteIterator
-{
-public:
-  ConstSiteIterator() {}
-  virtual ~ConstSiteIterator() {}
-
-public:
-  virtual const SiteType& nextSite() = 0;
-  virtual bool hasMoreSites() const = 0;
-};
 } // end of namespace bpp.
 #endif // BPP_SEQ_SITEITERATOR_H

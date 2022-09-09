@@ -62,22 +62,16 @@ GranthamAAChemicalDistance::GranthamAAChemicalDistance() :
 {
   // Load the matrix:
   #include "__GranthamMatrixCode"
+  computeIndexMatrix_();
 }
-
-GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
 
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
 {
   if (state1 < 0 || state1 > 19)
-    throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", *getAlphabet());
+    throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", getAlphabet().get());
   if (state2 < 0 || state2 > 19)
-    throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", *getAlphabet());
-  double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
-  if (sign_ == SIGN_NONE)
-    return NumTools::abs<double>(d);
-  if (sign_ == SIGN_PC1)
-    return signMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2)) * NumTools::abs<double>(d);
-  return d;
+    throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", getAlphabet().get());
+  return indexMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
 }
 
 double GranthamAAChemicalDistance::getIndex(const std::string& state1, const std::string& state2) const
@@ -85,16 +79,16 @@ double GranthamAAChemicalDistance::getIndex(const std::string& state1, const std
   return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
 }
 
-Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const
+void GranthamAAChemicalDistance::computeIndexMatrix_()
 {
-  RowMatrix<double>* m = new RowMatrix<double>(distanceMatrix_);
+  indexMatrix_ = distanceMatrix_;
   if (sign_ == SIGN_NONE)
   {
     for (size_t i = 0; i < 20; ++i)
     {
       for (size_t j = 0; j < 20; ++j)
       {
-        (*m)(i, j) = NumTools::abs<double>((*m)(i, j));
+        indexMatrix_(i, j) = NumTools::abs<double>(indexMatrix_(i, j));
       }
     }
   }
@@ -104,9 +98,8 @@ Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const
     {
       for (size_t j = 0; j < 20; ++j)
       {
-        (*m)(i, j) = signMatrix_(i, j) * NumTools::abs<double>((*m)(i, j));
+        indexMatrix_(i, j) = signMatrix_(i, j) * NumTools::abs<double>(indexMatrix_(i, j));
       }
     }
   }
-  return m;
 }

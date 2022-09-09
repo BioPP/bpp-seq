@@ -64,7 +64,7 @@ namespace bpp
 class Fasta :
   public AbstractISequence,
   public AbstractIAlignment,
-  public AbstractOSequence,
+  public AbstractOSequence2,
   public virtual ISequenceStream,
   public virtual OSequenceStream
 {
@@ -97,7 +97,7 @@ public:
    *
    * @{
    */
-  void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const;
+  void appendSequencesFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
   /** @} */
 
   /**
@@ -105,7 +105,7 @@ public:
    *
    * @{
    */
-  void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const
+  void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override
   {
     appendSequencesFromStream(input, sc); // This may raise an exception if sequences are not aligned!
   }
@@ -116,9 +116,9 @@ public:
    *
    * @{
    */
-  void writeSequences(std::ostream& output, const SequenceContainer& sc) const;
+  void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override;
 
-  void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const
+  void writeSequences(const std::string& path, const SequenceContainerInterface& sc, bool overwrite = true) const override
   {
     AbstractOSequence::writeSequences(path, sc, overwrite);
   }
@@ -129,8 +129,9 @@ public:
    *
    * @{
    */
-  const std::string getFormatName() const { return "FASTA file"; }
-  const std::string getFormatDescription() const
+  const std::string getFormatName() const override { return "FASTA file"; }
+
+  const std::string getFormatDescription() const override
   {
     return "Sequence name (preceded by >) in one line, sequence content, no comments";
   }
@@ -141,7 +142,7 @@ public:
    *
    * @{
    */
-  bool nextSequence(std::istream& input, Sequence& seq) const;
+  bool nextSequence(std::istream& input, Sequence& seq) const override;
   /** @} */
 
   /**
@@ -149,7 +150,7 @@ public:
    *
    * @{
    */
-  void writeSequence(std::ostream& output, const Sequence& seq) const;
+  void writeSequence(std::ostream& output, const Sequence& seq) const override;
   /** @} */
 
   /**

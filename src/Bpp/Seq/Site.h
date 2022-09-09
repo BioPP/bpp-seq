@@ -64,6 +64,28 @@ class SiteInterface :
   public:
     SiteInterface* clone() const = 0;
 
+    virtual bool operator==(const SiteInterface& site)
+    {
+      // Verify that site's size, position and content are equals
+      if (site.size() != size())
+        return false;
+      if (site.getCoordinate() != getCoordinate()) {
+        return false;
+      } else {
+        for (size_t i = 0; i < site.size(); ++i)
+        {
+          if (site[i] != operator[](i))
+            return false;
+        }
+        return true;
+      }
+    }
+
+    virtual bool operator<(const SiteInterface& site)
+    {
+      return site.getCoordinate() < getCoordinate();
+    }
+
 };
 
 /**
@@ -203,29 +225,6 @@ public:
    }
 
 };
-
-// Sites comparison operators overload
-bool operator==(const Site& site1, const Site& site2)
-{
-  // Verify that site's size, position and content are equals
-  if (site1.size() != site2.size())
-    return false;
-  if (site1.getCoordinate() != site2.getCoordinate()) {
-    return false;
-  } else {
-    for (size_t i = 0; i < site1.size(); i++)
-    {
-      if (site1[i] != site2[i])
-        return false;
-    }
-    return true;
-  }
-}
-
-bool operator<(const Site& site1, const Site& site2)
-{
-  return site1.getCoordinate() < site2.getCoordinate();
-}
 
 } // end of namespace bpp.
 

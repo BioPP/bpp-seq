@@ -45,6 +45,7 @@
 
 #include "../Alphabet/Alphabet.h"
 #include "../Commentable.h"
+#include "../CoreSequence.h"
 
 // From the STL:
 #include <string>
@@ -68,7 +69,7 @@ public:
   SequenceDataInterface() {}
   virtual ~SequenceDataInterface() {}
 
-  SequenceDataInterface* clone() const override = 0;
+  SequenceDataInterface<HashType>* clone() const override = 0;
 
 public:
   /**
@@ -94,7 +95,7 @@ public:
    * @brief Reset all sequence keys.
    */
   virtual void setSequenceKeys(const std::vector<HashType>& sequenceKeys) = 0;
-
+ 
   /**
    * @brief Get the value of a state at a given position
    *

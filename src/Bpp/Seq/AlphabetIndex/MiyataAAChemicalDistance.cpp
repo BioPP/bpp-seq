@@ -62,9 +62,9 @@ MiyataAAChemicalDistance::MiyataAAChemicalDistance() :
 double MiyataAAChemicalDistance::getIndex(int state1, int state2) const
 {
   if (state1 < 0 || state1 > 19)
-    throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", *getAlphabet());
+    throw BadIntException(state1, "MiyataAAChemicalDistance::getIndex(). Invalid state1.", getAlphabet().get());
   if (state2 < 0 || state2 > 19)
-    throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", *getAlphabet());
+    throw BadIntException(state2, "MiyataAAChemicalDistance::getIndex(). Invalid state2.", getAlphabet().get());
   double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   return sym_ ? NumTools::abs<double>(d) : d;
 }
@@ -74,18 +74,17 @@ double MiyataAAChemicalDistance::getIndex(const string& state1, const string& st
   return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
 }
 
-Matrix<double>* MiyataAAChemicalDistance::getIndexMatrix() const
+void MiyataAAChemicalDistance::computeIndexMatrix_()
 {
-  RowMatrix<double>* m = new RowMatrix<double>(distanceMatrix_);
+  indexMatrix_ = distanceMatrix_;
   if (sym_)
   {
     for (unsigned int i = 0; i < 20; i++)
     {
       for (unsigned int j = 0; j < 20; j++)
       {
-        (*m)(i, j) = NumTools::abs<double>((*m)(i, j));
+        indexMatrix_(i, j) = NumTools::abs<double>(indexMatrix_(i, j));
       }
     }
   }
-  return m;
 }

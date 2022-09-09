@@ -60,11 +60,11 @@ namespace bpp
  * This interface specifies the 'core' functionality of a sequence, that is,
  * an ordered set of states, a name and some meta data (comments).
  */
-
 class CoreSequenceInterface :
   public virtual CruxSymbolListInterface,
   public virtual Commentable
 {
+public:
 public:
   CoreSequenceInterface() {}
 
@@ -123,15 +123,6 @@ public:
   virtual void setToSizeL(size_t newSize) = 0;
 
   /** @} */
-
-  /**
-   * @brief get value of a state at a position
-   *
-   * @param sitePosition index of the looked value in the sequence
-   * @param state        state in the alphabet
-   * @return             The state value at the given position.
-   */
-  virtual double getStateValueAt(size_t sitePosition, int state) const override = 0;
 
 };
 
@@ -204,7 +195,7 @@ public:
    *
    * @{
    */
-  virtual AbstractCoreSequence* clone() const = 0;
+  virtual AbstractCoreSequence* clone() const override = 0;
   /** @} */
 
 
@@ -213,9 +204,9 @@ public:
    *
    * @{
    */
-  const std::string& getName() const { return name_; }
+  const std::string& getName() const override { return name_; }
 
-  void setName(const std::string& name) { name_ = name; }
+  void setName(const std::string& name) override { name_ = name; }
   /** @} */
 };
 } // end of namespace bpp.
