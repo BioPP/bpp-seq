@@ -166,7 +166,8 @@ public:
 
   AbstractCoreSequence(const AbstractCoreSequence& s) :
     Commentable(s),
-    name_(s.name_) {}
+    name_(s.name_) {
+  }
 
   AbstractCoreSequence& operator=(const AbstractCoreSequence& s)
   {
@@ -178,7 +179,8 @@ public:
   AbstractCoreSequence(const CoreSequenceInterface& s) :
     SimpleCommentable(s.getComments()),
     name_(s.getName())
-  {}
+  {
+  }
 
   AbstractCoreSequence& operator=(const CoreSequenceInterface& s)
   {

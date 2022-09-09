@@ -10,6 +10,7 @@ SET(CPP_FILES
   Bpp/Seq/Alphabet/AbstractAlphabet.cpp
   Bpp/Seq/Alphabet/AlphabetExceptions.cpp
   Bpp/Seq/Alphabet/AlphabetTools.cpp
+  Bpp/Seq/Alphabet/AllelicAlphabet.cpp
   Bpp/Seq/Alphabet/BinaryAlphabet.cpp
   Bpp/Seq/Alphabet/CaseMaskedAlphabet.cpp
   Bpp/Seq/Alphabet/CodonAlphabet.cpp

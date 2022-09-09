@@ -85,7 +85,7 @@ private:
    * @brief Update the private maps letters_ and nums_ when adding a state.
    *
    * @param pos The index of the state in the alphabet_ vector.
-   * @param st The state that have been added or modified
+   * @param st The state that has been added or modified
    */
   void updateMaps_(size_t pos, const AlphabetState& st);
 

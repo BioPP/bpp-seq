@@ -46,6 +46,7 @@
 #include <algorithm>
 
 #include "../Alphabet/AlphabetTools.h"
+#include "../Alphabet/AllelicAlphabet.h"
 #include "../Alphabet/BinaryAlphabet.h"
 #include "../Alphabet/CodonAlphabet.h"
 #include "../Alphabet/DefaultAlphabet.h"
@@ -197,6 +198,22 @@ unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
       throw Exception("Alphabet not known in Codon : " + alphn);
 
     chars = make_unique<CodonAlphabet>(pnalph);
+  }
+  else if (alphabet == "Allelic")
+  {
+    if (args.find("base") == args.end())
+      throw Exception("Missing 'base' argument in Allelic for sequence alphabet :" + alphabet);
+
+    if (args.find("N") == args.end())
+      throw Exception("Missing 'N' argument in Allelic for number of alleles:" + alphabet);
+
+    uint N = TextTools::to<unsigned int>(args["N"]);
+
+    args["alphabet"] = args["base"];
+
+    auto inAlphabet = std::shared_ptr<Alphabet>(SequenceApplicationTools::getAlphabet(args, suffix, suffixIsOptional, false, allowGeneric, warn + 1));
+
+    chars = make_unique<AllelicAlphabet>(inAlphabet, N);
   }
   else
     throw Exception("Alphabet not known: " + alphabet);
@@ -454,6 +471,7 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
       mCont.emplace(num, move(vsC));
     }
   }
+  
   return mCont;
 }
 
@@ -634,6 +652,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     alpha2 = alpha;
 
   auto sites = make_unique<ProbabilisticVectorSiteContainer>(*(iProbAln->readAlignment(sequenceFilePath, alpha2))); //We copy into a VectorSiteContainer
+
 
   // getting site set:
   size_t nbSites = sites->getNumberOfSites();

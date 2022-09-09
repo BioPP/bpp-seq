@@ -1,7 +1,7 @@
 //
-// File: test_alphabets.cpp
-// Created by: Julien Dutheil
-// Created on: Sat Oct 30 17:10 2010
+// File: test_probseq.cpp
+// Created by: Murray Patterson
+// Created on: Fri Oct 9 2015
 //
 
 /*
@@ -37,37 +37,74 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include <Bpp/Seq/Alphabet/DNA.h>
-#include <Bpp/Seq/Alphabet/RNA.h>
-#include <Bpp/Seq/Alphabet/ProteicAlphabet.h>
-#include <Bpp/Seq/Alphabet/DefaultAlphabet.h>
-#include <Bpp/Seq/Alphabet/CodonAlphabet.h>
+// from the STL
+#include <iostream>
+#include <string>
+#include <vector>
+
+// alphabets
+
 #include <Bpp/Seq/Alphabet/AllelicAlphabet.h>
 #include <Bpp/Seq/Alphabet/AlphabetTools.h>
-#include <iostream>
 
-using namespace bpp;
+#include <Bpp/Numeric/Table.h>
+
+// sequences
+#include <Bpp/Seq/Sequence.h>
+#include <Bpp/Seq/ProbabilisticSequence.h>
+
+// sites
+#include <Bpp/Seq/Site.h>
+#include <Bpp/Seq/ProbabilisticSite.h>
+
+// containers
+#include <Bpp/Seq/Container/VectorSiteContainer.h>
+
+// file formats
+#include <Bpp/Seq/Io/Fasta.h>
+#include <Bpp/Seq/Io/Pasta.h>
+
 using namespace std;
+using namespace bpp;
 
+typedef Table<double> DataTable;
+
+// convert a vector of string to a string
+const string str(const vector<string> & v) {
+
+  string s = "[";
+  for(vector<string>::const_iterator i = v.begin(); i != v.end(); ++i)
+    s += " " + *i;
+  s += " ]";
+
+  return s;
+}
+
+/*
+ * MAIN
+ */
 int main() {
-  //This is a very simple test that instanciate all alpahabet classes.
-  auto dna = std::make_shared<DNA>();
-  auto rna = std::make_shared<RNA>();
-  auto pro = std::make_shared<ProteicAlphabet>();
-  auto def = std::make_shared<DefaultAlphabet>();
-  auto cdn = std::make_shared<CodonAlphabet>(rna);
-  auto allelic = std::make_shared<AllelicAlphabet>(dna, 4);
 
-  //Testing functions:
-  if (!AlphabetTools::isDNAAlphabet(dna.get())) return 1;
-  if (!AlphabetTools::isRNAAlphabet(rna.get())) return 1;
-  if (!AlphabetTools::isNucleicAlphabet(dna.get())) return 1;
-  if (!AlphabetTools::isNucleicAlphabet(rna.get())) return 1;
-  if (!AlphabetTools::isProteicAlphabet(pro.get())) return 1;
-  if (!AlphabetTools::isCodonAlphabet(cdn.get())) return 1;
 
-  for (size_t i=0; i< allelic->getNumberOfStates(); i++)
-    cerr << i << " -> " << allelic->getStateAt(i).getNum() << " -> " << allelic->getStateAt(i).getLetter() << endl;
+  string nameSeq = "counts.pa";
+  Pasta pasta;
+  auto allelicAlpha = make_shared<const AllelicAlphabet>(AlphabetTools::DNA_ALPHABET, 4);
+ 
+  auto stateAlpha =  allelicAlpha->getStateAlphabet();
+  auto alphaPtr = dynamic_pointer_cast<const Alphabet>(stateAlpha);
+  auto sites = pasta.readAlignment(nameSeq, alphaPtr);
+
+  auto alphaPtr2 = dynamic_pointer_cast<const Alphabet>(allelicAlpha);
+  ProbabilisticVectorSiteContainer sites2(alphaPtr2);
+  for (size_t ns=0;ns < sites->getNumberOfSequences(); ns++)
+  {
+    auto seq = allelicAlpha->convertFromStateAlphabet(sites->getSequence(ns));
+    sites2.addSequence(seq->getName(), seq);
+  }
+
+  pasta.writeSequence(cerr, sites2.getSequence("D"), true);
+
   
-  return (0);
+
+  return 0;
 }

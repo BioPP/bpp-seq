@@ -104,7 +104,7 @@ public:
   /**
    * @brief Delete an object from the container.
    *
-   * @param name The name of the object.
+   * @param objectIndex The index of the object in the container.
    */
   virtual void deleteObject(size_t objectIndex) = 0;
 

@@ -184,7 +184,7 @@ bool SymbolListTools::isComplete(const ProbabilisticSymbolListInterface& list)
   for (size_t i = 0; i < list.size(); ++i)
   {
     double ss = VectorTools::sum(list[i]);
-    if (ss < NumConstants::TINY() || ss > 1.)
+    if (ss < NumConstants::TINY())// || ss > 1.)
       return false;
   }
   return true;
