@@ -45,6 +45,7 @@
 #include <Bpp/Clonable.h>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "AlphabetState.h"
 
@@ -62,7 +63,7 @@
  * The bpp::SequenceTools static class provides simple analysis tools, like base frequencies measures,
  * concatenation, etc.
  *
- * @par SeqLib also provides tools to perform <i>in silico</i>
+ * @par bpp-seq  also provides tools to perform <i>in silico</i>
  * molecular biology, like complementation, transcription,
  * translation, etc. All these methods are particular cases of
  * alphabet translation, and are implemented via the interface
