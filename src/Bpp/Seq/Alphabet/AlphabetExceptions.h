@@ -79,6 +79,18 @@ public:
    */
   AlphabetException(const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
+  AlphabetException(const AlphabetException& ae):
+    Exception(ae),
+    alphabet_(ae.alphabet_)
+  {}
+
+  AlphabetException& operator=(const AlphabetException& ae)
+  { 
+    Exception::operator=(ae);
+    alphabet_ = ae.alphabet_;
+    return *this;
+  }
+
   virtual ~AlphabetException() {}
 
 public:
@@ -203,6 +215,21 @@ public:
 		  const std::string& text,
 		  std::shared_ptr<const Alphabet> alpha1,
 		  std::shared_ptr<const Alphabet> alpha2);
+
+  AlphabetMismatchException(const AlphabetMismatchException& ame):
+    Exception(ame),
+    alphabet1_(ame.alphabet1_),
+    alphabet2_(ame.alphabet2_)
+  {}
+
+  AlphabetMismatchException& operator=(const AlphabetMismatchException& ame)
+  { 
+    Exception::operator=(ame);
+    alphabet1_ = ame.alphabet1_;
+    alphabet2_ = ame.alphabet2_;
+    return *this;
+  }
+
 
   virtual ~AlphabetMismatchException() {}
 

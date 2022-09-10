@@ -58,6 +58,7 @@ GranthamAAChemicalDistance::GranthamAAChemicalDistance() :
   ProteicAlphabetIndex2(),
   distanceMatrix_(20, 20),
   signMatrix_(20, 20),
+  indexMatrix_(20, 20),
   sign_(0)
 {
   // Load the matrix:

@@ -117,7 +117,7 @@ public:
 
   bool hasMoreSites() const override
   {
-    return currentPosition_ < sites_->getNumberOfSites();
+    return static_cast<unsigned int>(currentPosition_) < sites_->getNumberOfSites();
   }
 
 };

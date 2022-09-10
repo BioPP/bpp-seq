@@ -90,27 +90,22 @@ class AllelicAlphabet :
 protected:
   std::shared_ptr<const Alphabet> alph_;
 
-  /*
+  /**
    * @brief the number of alleles.
-   *
    */
+  unsigned int nbAlleles_;
 
-  uint nbAlleles_;
-
-  /*
-   *@brief the unknown state number
-   *
+  /**
+   * @brief the unknown state number
    */
-
   int nbUnknown_;
 
 public:
   // Constructor and destructor.
   /**
    * @brief Builds a new word alphabet from an  Alphabet
-   *
    */
-  AllelicAlphabet(std::shared_ptr<const Alphabet> alph, uint nbAlleles);
+  AllelicAlphabet(std::shared_ptr<const Alphabet> alph, unsigned int nbAlleles);
 
   AllelicAlphabet(const AllelicAlphabet& bia) :
     AbstractAlphabet(bia),
@@ -118,16 +113,6 @@ public:
     nbAlleles_(bia.nbAlleles_),
     nbUnknown_(bia.nbUnknown_)
   {}
-
-  // AllelicAlphabet& operator=(const AllelicAlphabet& bia)
-  // {
-  //   AbstractAlphabet::operator=(bia);
-  //   alph_ = bia.pAlph_;
-  //   nbAlleles_ = bia.nbAlleles_;
-  //   nbUnknown_ = bia.nbUnknown_;
-
-  //   return *this;
-  // }
 
   AllelicAlphabet* clone() const override
   {
@@ -279,7 +264,7 @@ private:
    */
   unsigned int getStateCodingSize() const override
   {
-    auto x = 2 * ((uint)alph_->getStateCodingSize() + (uint)std::to_string(nbAlleles_).size());
+    auto x = 2 * ((unsigned int)alph_->getStateCodingSize() + (unsigned int)std::to_string(nbAlleles_).size());
     return x;
   }
 

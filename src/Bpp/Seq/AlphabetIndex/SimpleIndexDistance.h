@@ -100,9 +100,9 @@ public:
 public:
   double getIndex(int state1, int state2) const override
   {
-    if (state1 < 0 || state1 >= size_)
+    if (state1 < 0 || static_cast<unsigned int>(state1) >= size_)
       throw BadIntException(state1, "SimpleIndexDistance::getIndex(). Invalid state1.", getAlphabet().get());
-    if (state2 < 0 || state2 >= size_)
+    if (state2 < 0 || static_cast<unsigned int>(state2) >= size_)
       throw BadIntException(state2, "SimpleIndexDistance::getIndex(). Invalid state2.", getAlphabet().get());
     return indexMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   }

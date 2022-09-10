@@ -177,7 +177,9 @@ public:
   TemplateVectorSiteContainer(std::shared_ptr<const Alphabet>& alphabet) :
     AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     VectorPositionedContainer<SiteType>(),
-    VectorMappedContainer<SequenceType>()
+    VectorMappedContainer<SequenceType>(),
+    sequenceNames_(),
+    sequenceComments_()
   {}
 
 
@@ -219,7 +221,9 @@ public:
   TemplateVectorSiteContainer(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc) :
     AbstractTemplateSequenceContainer<SequenceType>(sc),
     VectorPositionedContainer<SiteType>(),
-    VectorMappedContainer<SequenceType>()
+    VectorMappedContainer<SequenceType>(),
+    sequenceNames_(),
+    sequenceComments_()
   {
     for (auto sequenceKey: sc.getSequenceKeys())
       addSequence(sc.getSequence(sequenceKey), false);

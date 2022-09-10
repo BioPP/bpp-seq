@@ -76,6 +76,17 @@ public:
     site_(s)
   {}
 
+  SiteException(const SiteException& se):
+    Exception(se),
+    site_(se.site_)
+  {}
+
+  SiteException& operator=(const SiteException& se)
+  {
+    Exception::operator=(se);
+    site_ = se.site_;
+    return *this;
+  }
 
   // Class destructor
   virtual ~SiteException() {}
