@@ -292,7 +292,7 @@ public:
     if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
       throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets do not match.", getAlphabet(), sequence->getAlphabet());
 
-    std::shared_ptr<SequenceType> sequencePtr(sequence.get(), SwitchDeleter<SequenceType>());
+    std::shared_ptr<SequenceType> sequencePtr(sequence.release(), SwitchDeleter<SequenceType>());
     sequenceVectorMap_.appendObject(sequencePtr, sequenceKey, true);
   }
  

@@ -170,7 +170,7 @@ public:
     length_()
   {
     // Initializing
-    for (size_t i = 0; i < sc.getNumberOfSequences(); i++) {
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
       addSequence(sc.getSequence(i), true);
     }
     if (sc.getNumberOfSequences() > 0) {

@@ -74,7 +74,7 @@ AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> alph, uint nbAl
   // Monomorphic states are such as "A6-0"
 
 
-  for (unsigned int i = 0; i < size; ++i)
+  for (int i = 0; i < static_cast<int>(size); ++i)
   {
     auto desc = alph_->intToChar(i) + std::to_string(nbAlleles_) + gapword;
     registerState(new AlphabetState(i, desc, desc));
@@ -82,17 +82,17 @@ AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> alph, uint nbAl
 
   // Polymorphic states are such as "A4C2"
 
-  for (unsigned int i = 0; i < size - 1; ++i)
+  for (int i = 0; i < static_cast<int>(size) - 1; ++i)
   {
-    for (unsigned int j = i + 1; j < size; ++j)
+    for ( int j = i + 1; j < static_cast<int>(size); ++j)
     {
-      auto nbl = (i * (int)size + j) * (int)(nbAlleles_ - 1) + (int)size;
-      for (unsigned int nba = 1; nba < nbAlleles_; ++nba)
+      auto nbl = (i * static_cast<int>(size) + j) * static_cast<int>(nbAlleles_ - 1) + static_cast<int>(size);
+      for (int nba = 1; nba < static_cast<int>(nbAlleles_); ++nba)
       {
-        auto sni = std::string("0", snb - std::to_string((int)nbAlleles_ - nba).size()) + std::to_string((int)nbAlleles_ - nba);
+        auto sni = std::string("0", snb - std::to_string(static_cast<int>(nbAlleles_) - nba).size()) + std::to_string(static_cast<int>(nbAlleles_) - nba);
         auto snj = std::string("0", snb - std::to_string(nba).size()) + std::to_string(nba);
         auto desc = alph_->intToChar(i) + sni + alph_->intToChar(j) + snj;
-        registerState(new AlphabetState((int)(nbl + nba - 1), desc, desc));
+        registerState(new AlphabetState(static_cast<int>(nbl) + nba - 1, desc, desc));
       }
     }
   }

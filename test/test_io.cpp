@@ -68,11 +68,11 @@ int main() {
   Phylip phylip3(true, true);
   auto sites5 = phylip3.readAlignment("example.ph3", alpha);
 
-  cout << sites1->getNumberOfSequences() << "\t" << sites1->getNumberOfSites() << endl;
-  cout << sites2->getNumberOfSequences() << "\t" << sites2->getNumberOfSites() << endl;
-  cout << sites3->getNumberOfSequences() << "\t" << sites3->getNumberOfSites() << endl;
-  cout << sites4->getNumberOfSequences() << "\t" << sites4->getNumberOfSites() << endl;
-  cout << sites5->getNumberOfSequences() << "\t" << sites5->getNumberOfSites() << endl;
+  cout << "Fasta:    " << sites1->getNumberOfSequences() << "\t" << sites1->getNumberOfSites() << endl;
+  cout << "Mase:     " << sites2->getNumberOfSequences() << "\t" << sites2->getNumberOfSites() << endl;
+  cout << "Clustal:  " << sites3->getNumberOfSequences() << "\t" << sites3->getNumberOfSites() << endl;
+  cout << "Phylip:   " << sites4->getNumberOfSequences() << "\t" << sites4->getNumberOfSites() << endl;
+  cout << "Phylip 3: " << sites5->getNumberOfSequences() << "\t" << sites5->getNumberOfSites() << endl;
   
   //Test:
   bool test = sites1->getNumberOfSequences() == sites2->getNumberOfSequences()
@@ -84,5 +84,6 @@ int main() {
            && sites1->getNumberOfSites()     == sites4->getNumberOfSites()
            && sites1->getNumberOfSites()     == sites5->getNumberOfSites();
 
+  cout << (test ? "Succeeded." : "Failed.") << endl;
   return (test ? 0 : 1);
 }
