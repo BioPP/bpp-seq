@@ -79,8 +79,9 @@ int main() {
     throw Exception("Bad removal of gap sites");
 
   cout << endl;
-  
+ cout << "before" << endl; 
   CompressedVectorSiteContainer cvs(*sites);
+ cout << "after" << endl; 
 
   cout << "Compressed sequence" << endl;
   

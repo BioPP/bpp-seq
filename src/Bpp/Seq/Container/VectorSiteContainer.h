@@ -376,7 +376,7 @@ public:
     VectorPositionedContainer<SiteType>::appendObject(sitePtr);
 
     if (getNumberOfSequences() == 0) {
-      for (size_t i = 0; i < site->size(); ++i) 
+      for (size_t i = 0; i < sitePtr->size(); ++i) 
         VectorMappedContainer<SequenceType>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
     } else {
       VectorMappedContainer<SequenceType>::nullify();
@@ -411,7 +411,7 @@ public:
     VectorPositionedContainer<SiteType>::insertObject(sitePtr, sitePosition);
 
     if (getNumberOfSequences() == 0) {
-      for (size_t i = 0; i < site->size(); i++)
+      for (size_t i = 0; i < sitePtr->size(); i++)
         VectorMappedContainer<SequenceType>::appendObject(nullptr, "Seq_" + TextTools::toString(i));
     } else {
       VectorMappedContainer<SequenceType>::nullify();

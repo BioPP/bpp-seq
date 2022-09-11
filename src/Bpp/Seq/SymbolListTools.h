@@ -251,11 +251,11 @@ public:
    * @author J. Dutheil
    * @param list The list.
    * @param counts The output map to store the counts (existing counts will be incremented).
-
    */
+  template<class count_type>
   static void getCounts(
       const IntSymbolListInterface& list,
-      std::map<int, size_t>& counts)
+      std::map<int, count_type>& counts)
   {
     for (size_t i = 0; i < list.size(); ++i)
     {
@@ -285,73 +285,54 @@ public:
   }
 
   /**
-   * @brief Count all states in the list, optionaly normalizing unknown characters.
+   * @brief Count all states in the list normalizing unknown characters.
    *
    * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
    *
    * @author J. Dutheil
    * @param list The list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
    * @return A map with all states and corresponding counts.
    */
-  static void getCounts(
+  static void getCountsResolveUnknowns(
       const IntSymbolListInterface& list,
-      std::map<int, double>& counts,
-      bool resolveUnknowns)
+      std::map<int, double>& counts)
   {
-    if (!resolveUnknowns)
+    for (size_t i = 0; i < list.size(); ++i)
     {
-      getCounts(list, counts);
-    }
-    else
-    {
-      for (size_t i = 0; i < list.size(); ++i)
+      std::vector<int> alias = list.getAlphabet()->getAlias(list[i]);
+      double n = static_cast<double>(alias.size());
+      for (auto j : alias)
       {
-	std::vector<int> alias = list.getAlphabet()->getAlias(list[i]);
-        double n = static_cast<double>(alias.size());
-        for (auto j : alias)
-        {
-          counts[j] += 1. / n;
-        }
+        counts[j] += 1. / n;
       }
     }
   }
+
   /**
-   * @brief Count all states in the list, optionaly normalizing unknown characters.
+   * @brief Count all states in the list normalizing unknown characters.
    *
    * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
    *
    * @author J. Dutheil
    * @param list The list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
    * @return A map with all states and corresponding counts.
    */
-  static void getCounts(
+  static void getCountsResolveUnknowns(
 		  const ProbabilisticSymbolListInterface& list,
-		  std::map<int, double>& counts,
-		  bool resolveUnknowns)
+		  std::map<int, double>& counts)
   {
-    if (!resolveUnknowns)
+    for (size_t i = 0; i < list.size(); ++i)
     {
-      getCounts(list, counts);
-    }
-    else
-    {
-      for (size_t i = 0; i < list.size(); ++i)
-      {
-        const std::vector<double>& c = list[i];
-        double s = VectorTools::sum(c);
+      const std::vector<double>& c = list[i];
+      double s = VectorTools::sum(c);
 
-        if (s != 0)
-          for (size_t j = 0; j < c.size(); j++)
-          {
-            counts[(int)j] += c.at(j) / s;
-          }
-      }
+      if (s != 0)
+        for (size_t j = 0; j < c.size(); j++)
+        {
+          counts[(int)j] += c.at(j) / s;
+        }
     }
   }
 
@@ -372,11 +353,19 @@ public:
 		  std::map<int, double>& counts,
 		  bool resolveUnknowns = false)
   {
-    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&list))
-      getCounts(dynamic_cast<const ProbabilisticSymbolListInterface&>(list), counts, resolveUnknowns);
-    else if (dynamic_cast<const IntSymbolListInterface*>(&list))
-      getCounts(dynamic_cast<const IntSymbolListInterface&>(list), counts, resolveUnknowns);
-    else
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&list)) {
+      if (resolveUnknowns) {
+        getCountsResolveUnknowns(dynamic_cast<const ProbabilisticSymbolListInterface&>(list), counts);
+      } else {
+        getCounts(dynamic_cast<const ProbabilisticSymbolListInterface&>(list), counts);
+      }
+    } else if (dynamic_cast<const IntSymbolListInterface*>(&list)) {
+      if (resolveUnknowns) {
+        getCountsResolveUnknowns(dynamic_cast<const IntSymbolListInterface&>(list), counts);
+      } else {
+	getCounts<double>(dynamic_cast<const IntSymbolListInterface&>(list), counts);
+      }
+    } else
       throw Exception("SymbolListTools::getCounts : usupported CruxSymbolListInterface implementation.");
   }
 
@@ -393,10 +382,11 @@ public:
    * @param list2 The second list.
    * @param counts The output map to store the counts (existing counts will be incremented).
    */
+  template<class count_type>
   static void getCounts(
 		  const IntSymbolListInterface& list1,
 		  const IntSymbolListInterface& list2,
-		  std::map<int, std::map<int, size_t> >& counts)
+		  std::map<int, std::map<int, count_type> >& counts)
   {
     if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
     for (size_t i = 0; i < list1.size(); ++i)
@@ -424,7 +414,7 @@ public:
 		  std::map<int, std::map<int, double> >& counts)
   {
     if (list1.size() != list2.size()) throw DimensionException("SymbolListTools::getCounts: the two sites must have the same size.", list1.size(), list2.size());
-    for (size_t i = 0; i < list1.size(); i++)
+    for (size_t i = 0; i < list1.size(); ++i)
     {
       const std::vector<double>& c1(list1[i]), &c2(list2[i]);
       for (size_t j = 0; j < c1.size(); ++j)
@@ -437,9 +427,9 @@ public:
     }
   }
 
-
+	
   /**
-   * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
+   * @brief Count all pairs of states for two lists of the same size resolving unknown characters.
    *
    * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
    *
@@ -451,17 +441,15 @@ public:
    * @param list1 The first list.
    * @param list2 The second list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return A map with all states and corresponding counts.
    */
-  static void getCounts(
+  static void getCountsResolveUnknowns(
       const IntSymbolListInterface& list1,
       const IntSymbolListInterface& list2,
-      std::map< int, std::map<int, double> >& counts,
-      bool resolveUnknowns);
+      std::map< int, std::map<int, double> >& counts);
 
   /**
-   * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
+   * @brief Count all pairs of states for two lists of the same size resolving unknown characters.
    *
    * For instance, (1,1,1,1) will be counted as (1/4,1/4,1/4,1/4).
    *
@@ -473,14 +461,12 @@ public:
    * @param list1 The first list.
    * @param list2 The second list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @param resolveUnknowns Tell is unknown characters must be resolved.
    * @return A map with all states and corresponding counts.
    */
-  static void getCounts(
+  static void getCountsResolveUnknowns(
       const ProbabilisticSymbolListInterface& list1,
       const ProbabilisticSymbolListInterface& list2,
-      std::map< int, std::map<int, double> >& counts,
-      bool resolveUnknowns);
+      std::map< int, std::map<int, double> >& counts);
 
   /**
    * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
@@ -505,11 +491,19 @@ public:
       std::map<int, std::map<int, double> >& counts,
       bool resolveUnknowns)
   {
-    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&list1) && dynamic_cast<const ProbabilisticSymbolListInterface*>(&list2))
-      getCounts(dynamic_cast<const ProbabilisticSymbolListInterface&>(list1), dynamic_cast<const ProbabilisticSymbolListInterface&>(list2), counts, resolveUnknowns);
-    else if (dynamic_cast<const IntSymbolListInterface*>(&list1) && dynamic_cast<const IntSymbolListInterface*>(&list2))
-      getCounts(dynamic_cast<const IntSymbolListInterface&>(list1), dynamic_cast<const IntSymbolListInterface&>(list2), counts, resolveUnknowns);
-    else
+    if (dynamic_cast<const ProbabilisticSymbolListInterface*>(&list1) && dynamic_cast<const ProbabilisticSymbolListInterface*>(&list2)) {
+      if (resolveUnknowns) {
+        getCountsResolveUnknowns(dynamic_cast<const ProbabilisticSymbolListInterface&>(list1), dynamic_cast<const ProbabilisticSymbolListInterface&>(list2), counts);
+      } else {
+        getCounts(dynamic_cast<const ProbabilisticSymbolListInterface&>(list1), dynamic_cast<const ProbabilisticSymbolListInterface&>(list2), counts);
+      }
+    } else if (dynamic_cast<const IntSymbolListInterface*>(&list1) && dynamic_cast<const IntSymbolListInterface*>(&list2)) {
+      if (resolveUnknowns) {
+        getCountsResolveUnknowns(dynamic_cast<const IntSymbolListInterface&>(list1), dynamic_cast<const IntSymbolListInterface&>(list2), counts);
+      } else {
+        getCounts<double>(dynamic_cast<const IntSymbolListInterface&>(list1), dynamic_cast<const IntSymbolListInterface&>(list2), counts);
+      }
+    } else
       throw Exception("SymbolListTools::getCounts : unsupported CruxSymbolListInterface implementation.");
   }
 

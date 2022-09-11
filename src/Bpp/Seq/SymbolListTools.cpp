@@ -391,35 +391,24 @@ bool SymbolListTools::isConstant(
 
 
 
-void SymbolListTools::getCounts(
+void SymbolListTools::getCountsResolveUnknowns(
     const IntSymbolListInterface& list1,
     const IntSymbolListInterface& list2,
-    map< int, map<int, double> >& counts,
-    bool resolveUnknowns)
+    map< int, map<int, double> >& counts)
 {
   if (list1.size() != list2.size())
     throw DimensionException("SymbolListTools::getCounts: the two lists must have the same size.", list1.size(), list2.size());
-  if (!resolveUnknowns)
+  for (size_t i = 0; i < list1.size(); ++i)
   {
-    for (size_t i = 0; i < list1.size(); ++i)
+    vector<int> alias1 = list1.getAlphabet()->getAlias(list1[i]);
+    vector<int> alias2 = list2.getAlphabet()->getAlias(list2[i]);
+    double n1 = (double)alias1.size();
+    double n2 = (double)alias2.size();
+    for (auto j : alias1)
     {
-      counts[list1[i]][list2[i]]++;
-    }
-  }
-  else
-  {
-    for (size_t i = 0; i < list1.size(); ++i)
-    {
-      vector<int> alias1 = list1.getAlphabet()->getAlias(list1[i]);
-      vector<int> alias2 = list2.getAlphabet()->getAlias(list2[i]);
-      double n1 = (double)alias1.size();
-      double n2 = (double)alias2.size();
-      for (auto j : alias1)
+      for (auto k : alias2)
       {
-        for (auto k : alias2)
-        {
-          counts[j][k] += 1. / (n1 * n2);
-        }
+        counts[j][k] += 1. / (n1 * n2);
       }
     }
   }
@@ -567,33 +556,25 @@ void SymbolListTools::changeUnresolvedCharactersToGaps(IntSymbolListInterface& l
 }
 
 
-void SymbolListTools::getCounts(
+void SymbolListTools::getCountsResolveUnknowns(
     const ProbabilisticSymbolListInterface& list1,
     const ProbabilisticSymbolListInterface& list2,
-    map< int, map<int, double> >& counts,
-    bool resolveUnknowns)
+    map< int, map<int, double> >& counts)
 {
-  if (!resolveUnknowns)
+  if (list1.size() != list2.size())
+    throw DimensionException("SymbolListTools::getCounts: the two lists must have the same size.", list1.size(), list2.size());
+  for (size_t i = 0; i < list1.size(); ++i)
   {
-    getCounts(list1, list2, counts);
-  }
-  else
-  {
-    if (list1.size() != list2.size())
-      throw DimensionException("SymbolListTools::getCounts: the two lists must have the same size.", list1.size(), list2.size());
-    for (size_t i = 0; i < list1.size(); i++)
-    {
-      const std::vector<double>& c1(list1[i]), &c2(list2[i]);
-      double s12 = VectorTools::sum(c1) * VectorTools::sum(c2);
-      if ((s12 != 0))
-        for (size_t j = 0; j < c1.size(); ++j)
+    const std::vector<double>& c1(list1[i]), &c2(list2[i]);
+    double s12 = VectorTools::sum(c1) * VectorTools::sum(c2);
+    if ((s12 != 0))
+      for (size_t j = 0; j < c1.size(); ++j)
+      {
+        for (size_t k = 0; k < c2.size(); ++k)
         {
-          for (size_t k = 0; k < c2.size(); ++k)
-          {
-            counts[(int)j][(int)k] += c1.at(j) * c2.at(k) / s12;
-          }
+          counts[(int)j][(int)k] += c1.at(j) * c2.at(k) / s12;
         }
-    }
+      }
   }
 }
 

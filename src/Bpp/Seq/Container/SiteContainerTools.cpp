@@ -2,7 +2,7 @@
 // File: SiteContainerTools.cpp
 // Authors:
 //   Julien Dutheil
-//   Sylvain GlÃ©min
+//   Sylvain Glémin
 // Created: 2003-12-12 18:55:06
 //
 
