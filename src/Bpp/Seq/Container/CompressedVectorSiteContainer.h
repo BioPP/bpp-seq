@@ -76,13 +76,13 @@ namespace bpp
  */
 class CompressedVectorSiteContainer :
   public AbstractTemplateSequenceContainer<Sequence, std::string>,
-  public virtual TemplateSiteContainerInterface<Site, Sequence, std::string>,
-  private VectorPositionedContainer<Site>,
-  private VectorMappedContainer<Sequence>
+  public virtual TemplateSiteContainerInterface<Site, Sequence, std::string>
 {
 protected:
+  VectorPositionedContainer<Site> siteContainer_;
+  VectorMappedContainer<Sequence> sequenceContainer_;
   std::vector<std::string> sequenceNames_;
-  std::vector< std::shared_ptr<Comments> > sequenceComments_;
+  std::vector<Comments> sequenceComments_;
   std::vector<size_t> index_; // For all sites, give the actual position in the set.
 
 public:
@@ -151,7 +151,7 @@ public:
    */
   const Site& getSite(size_t sitePosition) const override
   {
-    return *VectorPositionedContainer<Site>::getObject(index_[sitePosition]);
+    return *siteContainer_.getObject(index_[sitePosition]);
   }
 
   void setSite(size_t sitePosition, std::unique_ptr<Site>& site, bool checkCoordinate = true) override;
@@ -183,7 +183,7 @@ public:
    **/
   size_t getNumberOfUniqueSites() const
   {
-    return VectorPositionedContainer<Site>::getSize();
+    return siteContainer_.getSize();
   }
 
 
@@ -206,7 +206,7 @@ public:
   bool hasSequence(const std::string& name) const override
   {
     // Look for sequence name:
-    return VectorMappedContainer<Sequence>::hasObject(name);
+    return sequenceContainer_.hasObject(name);
   }
 
   size_t getSequencePosition(const std::string& sequenceKey) const override
@@ -214,7 +214,7 @@ public:
     try
     {
       // Look for sequence name:
-      return VectorMappedContainer<Sequence>::getObjectPosition(sequenceKey);
+      return sequenceContainer_.getObjectPosition(sequenceKey);
     }
     catch (Exception& e)
     {
@@ -247,22 +247,22 @@ public:
   }
 
   size_t getNumberOfSequences() const override {
-    return VectorMappedContainer<Sequence>::getNumberOfObjects();
+    return sequenceContainer_.getNumberOfObjects();
   }
 
   std::vector<std::string> getSequenceKeys() const override
   {
-    return VectorMappedContainer<Sequence>::getObjectNames();
+    return sequenceContainer_.getObjectNames();
   }
 
   void setSequenceKeys(const std::vector<std::string>& sequenceKeys) override
   {
-    VectorMappedContainer<Sequence>::setObjectNames(sequenceKeys);
+    sequenceContainer_.setObjectNames(sequenceKeys);
   }
 
   const std::string& getSequenceKey(size_t sequencePosition) const override
   { 
-    return VectorMappedContainer<Sequence>::getObjectName(sequencePosition);
+    return sequenceContainer_.getObjectName(sequencePosition);
   }
 
   std::vector<std::string> getSequenceNames() const override
@@ -274,17 +274,22 @@ public:
   {
     if (names.size() != getNumberOfSequences())
       throw DimensionException("CompressedVectorSiteContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
-    VectorMappedContainer<Sequence>::clear();
+    sequenceContainer_.clear();
     sequenceNames_ = names;
     if (updateKeys) {
       setSequenceKeys(names);
     }
   }
 
+  std::vector<Comments> getSequenceComments() const override
+  {
+    return sequenceComments_;
+  }
+
   void clear() override
   {
-    VectorPositionedContainer<Site>::clear();
-    VectorMappedContainer<Sequence>::clear();
+    siteContainer_.clear();
+    sequenceContainer_.clear();
     sequenceNames_.clear();
     sequenceComments_.clear();
     index_.clear();
@@ -378,7 +383,7 @@ protected:
    */
   Site& getSite_(size_t sitePosition)
   {
-    return *VectorPositionedContainer<Site>::getObject(index_[sitePosition]);
+    return *siteContainer_.getObject(index_[sitePosition]);
   }
 
   /**

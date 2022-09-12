@@ -360,7 +360,6 @@ public:
     return vs;
   }
 
-
   void setSequenceNames(const std::vector<std::string>& names, bool updateKeys) override
   {
     if (names.size() != getNumberOfSequences())
@@ -372,6 +371,16 @@ public:
     if (updateKeys) {
       sequenceVectorMap_.setObjectNames(names);
     }
+  }
+
+  std::vector<Comments> getSequenceComments() const override
+  {
+    size_t nbSeq = getNumberOfSequences();
+    std::vector<Comments> vs(nbSeq);
+    for (size_t i = 0; i < nbSeq; ++i) {
+      vs[i] = getSequence(i).getComments();
+    }
+    return vs;
   }
 
   /** @} */

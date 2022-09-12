@@ -253,7 +253,11 @@ public:
    */
   virtual void setSequenceNames(const std::vector<std::string>& names, bool updateKeys) = 0;
 
-  /** @} */
+  /**
+   * @return a vector with all sequence comments.
+   */
+  virtual std::vector<Comments> getSequenceComments() const = 0;
+   /** @} */
 
 };
 } // end of namespace bpp.
