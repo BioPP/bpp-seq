@@ -306,7 +306,6 @@ public:
       throw Exception("SiteContainerTools::removeGapSites. Container is empty.");
 
     for (size_t i = sites.getNumberOfSites(); i > 0; --i) {
-      std::cout << i << std::endl;
       std::map<int, double> freq;
       SiteTools::getFrequencies(sites.getSite(i - 1), freq);
       if (freq[-1] > maxFreqGaps) {

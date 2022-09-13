@@ -360,22 +360,28 @@ void CompressedVectorSiteContainer::addSite(std::unique_ptr<Site>& site, bool ch
     throw AlphabetMismatchException("CompressedVectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
   }
 
+  size_t n = site->size();
+  
   size_t siteIndex = getSiteIndex_(*site);
-  size_t siteSize = site->size(); 
   if (siteIndex == getNumberOfUniqueSites())
   {
     // This is a new pattern:
-    siteContainer_.appendObject(move(site));
+    std::shared_ptr<Site> sitePtr(site.release(), SwitchDeleter<Site>());
+    siteContainer_.appendObject(sitePtr);
   }
 
   index_.push_back(siteIndex);
 
-  if (getNumberOfSequences() == 0)
-    for (size_t i = 0; i < siteSize; ++i)
-      sequenceContainer_.appendObject(nullptr, "Seq_" + TextTools::toString(i));
-  else { 
-    // Clean Sequence Container cache
-    sequenceContainer_.clear();
+  // Clean Sequence Container cache
+  if (getNumberOfSequences() == 0) {
+    sequenceNames_.resize(n);
+    sequenceComments_.resize(n);
+    for (size_t i = 0; i < n; ++i) {
+      sequenceNames_[i] = "Seq_" + TextTools::toString(i);
+      sequenceContainer_.appendObject(nullptr, sequenceNames_[i]);
+    }
+  } else {
+    sequenceContainer_.nullify();
   }
 }
 
@@ -395,15 +401,29 @@ void CompressedVectorSiteContainer::addSite(std::unique_ptr<Site>& site, size_t 
   {
     throw AlphabetMismatchException("CompressedVectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
   }
+  
+  size_t n = site->size();
 
   size_t index = getSiteIndex_(*site);
-  if (index == getNumberOfUniqueSites())
-    siteContainer_.appendObject(move(site));
+  if (index == getNumberOfUniqueSites()) {
+    // This is a new pattern:
+    std::shared_ptr<Site> sitePtr(site.release(), SwitchDeleter<Site>());
+    siteContainer_.appendObject(sitePtr);
+  }
 
   index_.insert(index_.begin() + static_cast<ptrdiff_t>(siteIndex), index);
 
   // Clean Sequence Container cache
-  sequenceContainer_.clear();
+  if (getNumberOfSequences() == 0) {
+    sequenceNames_.resize(n);
+    sequenceComments_.resize(n);
+    for (size_t i = 0; i < n; ++i) {
+      sequenceNames_[i] = "Seq_" + TextTools::toString(i);
+      sequenceContainer_.appendObject(nullptr, sequenceNames_[i]);
+    }
+  } else {
+    sequenceContainer_.nullify();
+  }
 }
 
 /******************************************************************************/

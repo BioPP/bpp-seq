@@ -84,9 +84,12 @@ int main() {
   cout << "Compressed sequence" << endl;
   
   cout << "Number of unique sites : " << cvs.getNumberOfUniqueSites() << endl;
-  if (cvs.getNumberOfUniqueSites() != 6)
+  if (cvs.getNumberOfUniqueSites() != 6) {
     throw Exception("Bad compression of sites");
-
+  }
+  if (cvs.getSequenceNames() != sites->getSequenceNames()) {
+    throw Exception("Sequence names got lost when compressing sites!");
+  }
   cout << cvs.getNumberOfSites() << endl;
   cout << cvs.getSequence("seq1").toString() << endl;
   cout << cvs.getSequence("seq2").toString() << endl;

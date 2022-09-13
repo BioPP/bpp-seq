@@ -371,9 +371,14 @@ public:
     std::shared_ptr<SiteType> sitePtr(site.release(), SwitchDeleter<SiteType>());
     siteContainer_.appendObject(sitePtr);
 
+    // Clean Sequence Container cache
     if (getNumberOfSequences() == 0) {
-      for (size_t i = 0; i < sitePtr->size(); ++i) 
-        sequenceContainer_.appendObject(nullptr, "Seq_" + TextTools::toString(i));
+      sequenceNames_.resize(sitePtr->size());
+      sequenceComments_.resize(sitePtr->size());
+      for (size_t i = 0; i < sitePtr->size(); ++i) {
+        sequenceNames_[i] = "Seq_" + TextTools::toString(i);
+        sequenceContainer_.appendObject(nullptr, sequenceNames_[i]);
+      }
     } else {
       sequenceContainer_.nullify();
     }
@@ -406,9 +411,14 @@ public:
     std::shared_ptr<SiteType> sitePtr(site.release(), SwitchDeleter<SiteType>());
     siteContainer_.insertObject(sitePtr, sitePosition);
 
+    // Clean Sequence Container cache
     if (getNumberOfSequences() == 0) {
-      for (size_t i = 0; i < sitePtr->size(); i++)
-        sequenceContainer_.appendObject(nullptr, "Seq_" + TextTools::toString(i));
+      sequenceNames_.resize(sitePtr->size());
+      sequenceComments_.resize(sitePtr->size());
+      for (size_t i = 0; i < sitePtr->size(); ++i) {
+        sequenceNames_[i] = "Seq_" + TextTools::toString(i);
+        sequenceContainer_.appendObject(nullptr, sequenceNames_[i]);
+      }
     } else {
       sequenceContainer_.nullify();
     }

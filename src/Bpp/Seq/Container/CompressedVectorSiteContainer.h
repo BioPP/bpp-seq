@@ -205,21 +205,14 @@ public:
 
   bool hasSequence(const std::string& name) const override
   {
-    // Look for sequence name:
+    // Look for sequence key:
     return sequenceContainer_.hasObject(name);
   }
 
   size_t getSequencePosition(const std::string& sequenceKey) const override
   {
-    try
-    {
-      // Look for sequence name:
-      return sequenceContainer_.getObjectPosition(sequenceKey);
-    }
-    catch (Exception& e)
-    {
-      throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", sequenceKey);
-    }
+    // Look for sequence key:
+    return sequenceContainer_.getObjectPosition(sequenceKey);
   }
 
   std::unique_ptr<Sequence> removeSequence(size_t sequencePosition) override
