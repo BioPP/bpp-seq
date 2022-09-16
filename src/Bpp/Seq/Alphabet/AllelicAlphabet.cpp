@@ -51,7 +51,8 @@ using namespace std;
 
 AllelicAlphabet::AllelicAlphabet(const Alphabet& alph, uint nbAlleles) :
   alph_(alph),
-  nbAlleles_(nbAlleles)
+  nbAlleles_(nbAlleles),
+  nbUnknown_(0)
 {
   if (nbAlleles_<=1)
     throw BadIntException((int)nbAlleles_, "AllelicAlphabet::AllelicAlphabet : wrong number of alleles", this);
@@ -73,7 +74,7 @@ AllelicAlphabet::AllelicAlphabet(const Alphabet& alph, uint nbAlleles) :
   // Monomorphic states are such as "A6-0"
 
   
-  for (int i = 0; i < size; ++i)
+  for (int i = 0; i < (int)size; ++i)
   {
     auto desc= alph_.intToChar(i)+std::to_string(nbAlleles_)+ gapword;
     registerState(new AlphabetState(i, desc, desc));
@@ -81,11 +82,11 @@ AllelicAlphabet::AllelicAlphabet(const Alphabet& alph, uint nbAlleles) :
 
   // Polymorphic states are such as "A4C2"
 
-  for (int i = 0; i < size-1; ++i)
-    for (int j = i+1; j < size; ++j)
+  for (int i = 0; i < (int)size-1; ++i)
+    for (int j = i+1; j < (int)size; ++j)
     {
       auto nbl = (i * (int)size + j) * (int)(nbAlleles_-1) + (int)size;
-      for (int nba=1 ; nba<nbAlleles_; nba++)
+      for (int nba=1 ; nba<(int)nbAlleles_; nba++)
       {
         auto sni=std::string("0",snb-std::to_string((int)nbAlleles_-nba).size()) + std::to_string((int)nbAlleles_-nba);
         auto snj=std::string("0",snb-std::to_string(nba).size()) + std::to_string(nba);
@@ -124,7 +125,7 @@ std::string AllelicAlphabet::getAlphabetType() const
      throw BadIntException(state2, "AllelicAlphabet::isResolvedIn(int, int): Unresolved base.");
 
    auto size=alph_.getSize();
-   return (state1 == size*size*(nbAlleles_-1)) ? (state2 >= 0) : (state1 == state2);
+   return (state1 == (int)(size*size*((int)nbAlleles_-1))) ? (state2 >= 0) : (state1 == state2);
  }
 
 /******************************************************************************/
@@ -256,8 +257,8 @@ void AllelicAlphabet::computeLikelihoods(const Vdouble& counts, Vdouble& likelih
   // Polymorphic states are such as "A4C2"
 
   auto numetat=alphasize;
-  for (int i = 0; i < alphasize-1; ++i)   // A
-    for (int j = i+1; j < alphasize; ++j) // C
+  for (uint i = 0; i < alphasize-1; ++i)   // A
+    for (uint j = i+1; j < alphasize; ++j) // C
     {
       bool todo=true;
       for (size_t ns=0; ns<alphasize; ns++)
