@@ -130,6 +130,12 @@ public:
   virtual ~AbstractTemplateSequenceContainer() {}
 
 public:
+  const Alphabet& alphabet() const override
+  {
+    if (!alphabet_) throw Exception("AbstractSequenceContainer::alphabet() : no associated alphabet."); 
+    return *alphabet_;
+  }
+  
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
  
 };

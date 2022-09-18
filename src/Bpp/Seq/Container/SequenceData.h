@@ -72,9 +72,16 @@ public:
 
 public:
   /**
-   * @brief Get container's alphabet.
+   * @brief Get the container's alphabet.
    *
    * @return The alphabet associated to this container.
+   */
+  virtual const Alphabet& alphabet() const = 0;
+
+  /**
+   * @brief Get a pointer toward the container's alphabet.
+   *
+   * @return A pointer toward the alphabet associated to this container.
    */
   virtual std::shared_ptr<const Alphabet> getAlphabet() const = 0;
 
