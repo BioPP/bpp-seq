@@ -96,7 +96,7 @@ public:
   /*
    * @brief Get the std::map of alignments
    */
-  virtual std::map<size_t, std::unique_ptr<AlignmentDataInterface<std::string> > >
+  virtual std::map<size_t, std::unique_ptr<AlignmentDataInterface> >
   getAlignmentsMap(
     std::shared_ptr<const Alphabet>& alphabet,
     bool changeGapsToUnknownCharacters = true,
@@ -109,7 +109,7 @@ public:
   /*
    * @brief Get the std::map of const alignments
    */
-  virtual std::map<size_t, std::unique_ptr<const AlignmentDataInterface<std::string> > >
+  virtual std::map<size_t, std::unique_ptr<const AlignmentDataInterface> >
   getConstAlignmentsMap(
     std::shared_ptr<const Alphabet>& alphabet,
     bool changeGapsToUnknownCharacters = true,

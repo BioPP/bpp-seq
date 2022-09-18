@@ -58,18 +58,17 @@ namespace bpp
  * This interface is the most general one in the container hierarchy.
  * No assumption is made on the data in the container (no ordering, no
  * alignment, no type).
- *
  */
 template<class HashType = std::string>
-class SequenceDataInterface :
+class TemplateSequenceDataInterface :
   public virtual Clonable,
   public virtual Commentable
 {
 public:
-  SequenceDataInterface() {}
-  virtual ~SequenceDataInterface() {}
+  TemplateSequenceDataInterface() {}
+  virtual ~TemplateSequenceDataInterface() {}
 
-  SequenceDataInterface<HashType>* clone() const override = 0;
+  TemplateSequenceDataInterface<HashType>* clone() const override = 0;
 
 public:
   /**
@@ -149,7 +148,7 @@ public:
    *
    * @return A new empty container, with the same alphabet as this one.
    */
-  virtual SequenceDataInterface<HashType>* createEmptyContainer() const = 0;
+  virtual TemplateSequenceDataInterface<HashType>* createEmptyContainer() const = 0;
 
   /**
    * @brief Check if a certain key is associated to a sequence in the container.
@@ -260,5 +259,8 @@ public:
    /** @} */
 
 };
+
+using SequenceDataInterface = TemplateSequenceDataInterface<std::string>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCEDATA_H

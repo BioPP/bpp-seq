@@ -66,7 +66,7 @@ namespace bpp
  */
 template<class SequenceType, class HashType = std::string>
 class TemplateSequenceContainerInterface :
-  public virtual SequenceDataInterface<HashType>
+  public virtual TemplateSequenceDataInterface<HashType>
 {
 public:
   TemplateSequenceContainerInterface() {}

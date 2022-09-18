@@ -52,7 +52,7 @@ using namespace std;
 AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> alph, uint nbAlleles) :
   alph_(alph),
   nbAlleles_(nbAlleles),
-  nbUnknown_()
+  nbUnknown_(0)
 {
   if (nbAlleles_ <= 1)
     throw BadIntException((int)nbAlleles_, "AllelicAlphabet::AllelicAlphabet : wrong number of alleles", this);
@@ -72,7 +72,6 @@ AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> alph, uint nbAl
 
 
   // Monomorphic states are such as "A6-0"
-
 
   for (int i = 0; i < static_cast<int>(size); ++i)
   {

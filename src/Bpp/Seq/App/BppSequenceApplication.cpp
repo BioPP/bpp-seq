@@ -81,7 +81,7 @@ shared_ptr<GeneticCode> BppSequenceApplication::getGeneticCode(
     return nullptr;
 }
 
-map<size_t, unique_ptr<AlignmentDataInterface<std::string> > >
+map<size_t, unique_ptr<AlignmentDataInterface> >
 BppSequenceApplication::getAlignmentsMap(
   shared_ptr<const Alphabet>& alphabet,
   bool changeGapsToUnknownCharacters,
@@ -108,9 +108,9 @@ BppSequenceApplication::getAlignmentsMap(
         throw Exception("Empty alignment number " + TextTools::toString(sites.first));
     }
 
-    map<size_t, unique_ptr<AlignmentDataInterface<std::string> > > mSites2;
+    map<size_t, unique_ptr<AlignmentDataInterface> > mSites2;
     for (auto& sites : mSites) {
-      mSites2.emplace(sites.first, unique_ptr< AlignmentDataInterface<string> >(sites.second.release()));
+      mSites2.emplace(sites.first, unique_ptr<AlignmentDataInterface>(sites.second.release()));
     }
 
     return mSites2;
@@ -133,16 +133,16 @@ BppSequenceApplication::getAlignmentsMap(
         throw Exception("Empty alignment number " + TextTools::toString(sites.first));
     }
 
-    map<size_t, unique_ptr<AlignmentDataInterface<std::string> > > mSites2;
+    map<size_t, unique_ptr<AlignmentDataInterface> > mSites2;
     for (auto& sites : mSites) {
-      mSites2.emplace(sites.first, unique_ptr< AlignmentDataInterface<string> >(sites.second.release()));
+      mSites2.emplace(sites.first, unique_ptr<AlignmentDataInterface>(sites.second.release()));
     }
 
     return mSites2;
   }
 }
 
-map<size_t, unique_ptr<const AlignmentDataInterface<std::string> > >
+map<size_t, unique_ptr<const AlignmentDataInterface> >
 BppSequenceApplication::getConstAlignmentsMap(
   shared_ptr<const Alphabet>& alphabet,
   bool changeGapsToUnknownCharacters,
@@ -153,7 +153,7 @@ BppSequenceApplication::getConstAlignmentsMap(
 {
   auto mSites = getAlignmentsMap(alphabet, changeGapsToUnknownCharacters, optionalData, prefix, suffix, suffixIsOptional);
 
-  map<size_t, unique_ptr<const AlignmentDataInterface<std::string> > > mSitesConst;
+  map<size_t, unique_ptr<const AlignmentDataInterface> > mSitesConst;
   for (auto& sites : mSites) {
     mSitesConst[sites.first] = std::move(sites.second);
   }

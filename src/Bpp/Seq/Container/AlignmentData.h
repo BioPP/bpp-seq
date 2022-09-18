@@ -56,14 +56,14 @@ namespace bpp
  * with <em>aligned</em> data.
  */
 template<class HashType = std::string>
-class AlignmentDataInterface :
-  public virtual SequenceDataInterface<HashType>
+class TemplateAlignmentDataInterface :
+  public virtual TemplateSequenceDataInterface<HashType>
 {
 public:
-  AlignmentDataInterface() {}
-  virtual ~AlignmentDataInterface() {}
+  TemplateAlignmentDataInterface() {}
+  virtual ~TemplateAlignmentDataInterface() {}
 
-  AlignmentDataInterface* clone() const override = 0;
+  TemplateAlignmentDataInterface* clone() const override = 0;
 
 
   /**
@@ -113,5 +113,8 @@ public:
 
   virtual void setSiteCoordinates(const Vint& coordinates) = 0;
 };
+
+using AlignmentDataInterface = TemplateAlignmentDataInterface<std::string>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_ALIGNEDVALUESCONTAINER_H

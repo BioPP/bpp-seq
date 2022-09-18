@@ -61,7 +61,7 @@ namespace bpp
  */
 template<class SiteType, class SequenceType, class HashType>
 class TemplateSiteContainerInterface :
-  public virtual AlignmentDataInterface<HashType>,
+  public virtual TemplateAlignmentDataInterface<HashType>,
   public virtual TemplateSequenceContainerInterface<SequenceType, HashType>
 {
 public:
