@@ -117,9 +117,9 @@ public:
 private:
   void fillIndex_(const AlphabetIndex1* protAlphIndex_)
   {
-    for (size_t i = 0; i < 64; i++)
+    for (int i = 0; i < 64; i++)
     {
-      vIndex_[i] = gencode_->isStop((int)i) ? 0 : protAlphIndex_->getIndex(gencode_->translate((int)i));
+      vIndex_[getAlphabet()->getStateIndex(i)-1] = gencode_->isStop(i) ? 0 : protAlphIndex_->getIndex(gencode_->translate(i));
     }
   }
 };

@@ -108,13 +108,12 @@ public:
 public:
   double getIndex(int state) const
   {
-    if (state < 0 || state > 19) throw BadIntException(state, "KleinAANetChargeIndex::getIndex(). Invalid state.", getAlphabet());
-    return charge_[static_cast<size_t>(state)];
+    return charge_[getAlphabet()->getStateIndex(state)-1];
   }
 
   double getIndex(const std::string& state) const
   {
-    return charge_[static_cast<size_t>(getAlphabet()->charToInt(state))];
+    return charge_[getAlphabet()->getStateIndex(state)-1];
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(charge_); }

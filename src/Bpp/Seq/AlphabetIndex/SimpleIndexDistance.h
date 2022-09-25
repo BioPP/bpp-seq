@@ -112,7 +112,7 @@ public:
     {
       for (size_t j = 0; j < n; ++j)
       {
-        (*m)(i, j) = getIndex(static_cast<int>(i), static_cast<int>(j));
+        (*m)(i, j) = getIndex(getAlphabet()->getIntCodeAt(i), getAlphabet()->getIntCodeAt(j));
       }
     }
     return m;

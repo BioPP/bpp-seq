@@ -93,17 +93,12 @@ public:
 
   double getIndex(int state1, int state2) const
   {
-    if (state1 < 0 || state1 > 19)
-      throw BadIntException(state1, "AAIndex2Entry::getIndex(). Invalid state1.", getAlphabet());
-    if (state2 < 0 || state2 > 19)
-      throw BadIntException(state2, "AAIndex2Entry::getIndex(). Invalid state2.", getAlphabet());
-    double d = property_(static_cast<size_t>(state1), static_cast<size_t>(state2));
-    return d;
+    return property_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
   }
 
   double getIndex(const std::string& state1, const std::string& state2) const
   {
-    return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
+    return property_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
   }
 
   LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(property_); }

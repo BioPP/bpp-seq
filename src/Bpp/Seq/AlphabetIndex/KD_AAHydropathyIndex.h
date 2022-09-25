@@ -94,13 +94,12 @@ public:
 public:
   double getIndex(int state) const
   {
-    if (state < 0 || state > 19) throw BadIntException(state, "KD_AAHydropathyIndex::getIndex(). Invalid state.", getAlphabet());
-    return hydropathy_[static_cast<size_t>(state)];
+    return hydropathy_[getAlphabet()->getStateIndex(state)-1];
   }
 
   double getIndex(const std::string& state) const
   {
-    return hydropathy_[static_cast<size_t>(getAlphabet()->charToInt(state))];
+    return hydropathy_[getAlphabet()->getStateIndex(state)-1];
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(hydropathy_); }
