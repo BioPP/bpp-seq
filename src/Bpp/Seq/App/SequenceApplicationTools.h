@@ -123,7 +123,9 @@ public:
    * @return A new GeneticCode object
    * @throw Exception in case of bad description.
    */
-  static std::unique_ptr<GeneticCode> getGeneticCode(std::shared_ptr<const NucleicAlphabet>& alphabet, const std::string& description);
+  static std::unique_ptr<GeneticCode> getGeneticCode(
+    std::shared_ptr<const NucleicAlphabet> alphabet,
+    const std::string& description);
 
   /**
    * @brief Build a AlphabetIndex1 object for a given alphabet.
@@ -136,14 +138,14 @@ public:
    * @throw Exception in case of bad description.
    */
   static std::unique_ptr<AlphabetIndex1> getAlphabetIndex1(
-    std::shared_ptr<const Alphabet>& alphabet,
+    std::shared_ptr<const Alphabet> alphabet,
     const std::string& description,
     const std::string& message = "Alphabet measure:",
     bool verbose = true);
 
   static std::unique_ptr<AlphabetIndex1> getAlphabetIndex1(
-    std::shared_ptr<const CodonAlphabet>& alphabet,
-    std::shared_ptr<const GeneticCode>& gencode,
+    std::shared_ptr<const CodonAlphabet> alphabet,
+    std::shared_ptr<const GeneticCode> gencode,
     const std::string& description,
     const std::string& message = "Alphabet measure:",
     bool verbose = true);
@@ -161,14 +163,14 @@ public:
    */
 
   static std::unique_ptr<AlphabetIndex2> getAlphabetIndex2(
-    std::shared_ptr<const Alphabet>& alphabet,
+    std::shared_ptr<const Alphabet> alphabet,
     const std::string& description,
     const std::string& message = "Alphabet distance:",
     bool verbose = true);
 
   static std::unique_ptr<AlphabetIndex2> getAlphabetIndex2(
-    std::shared_ptr<const CodonAlphabet>& alphabet,
-    std::shared_ptr<const GeneticCode>& gencode,
+    std::shared_ptr<const CodonAlphabet> alphabet,
+    std::shared_ptr<const GeneticCode> gencode,
     const std::string& description,
     const std::string& message = "Alphabet distance:",
     bool verbose = true);
@@ -192,7 +194,7 @@ public:
    */
 
   static std::unique_ptr<SequenceContainerInterface> getSequenceContainer(
-    std::shared_ptr<const Alphabet>& alpha,
+    std::shared_ptr<const Alphabet> alpha,
     const std::map<std::string, std::string>& params,
     const std::string& suffix = "",
     bool suffixIsOptional = true,
@@ -216,7 +218,7 @@ public:
    * @return A new VectorSiteContainer object according to the description.
    */
   static std::unique_ptr<VectorSiteContainer> getSiteContainer(
-    std::shared_ptr<const Alphabet>& alpha,
+    std::shared_ptr<const Alphabet> alpha,
     const std::map<std::string, std::string>& params,
     const std::string& suffix = "",
     bool suffixIsOptional = true,
@@ -240,7 +242,7 @@ public:
    * @return A new ProbabilisticVectorSiteContainer object according to the description.
    */
   static std::unique_ptr<ProbabilisticVectorSiteContainer> getProbabilisticSiteContainer(
-    std::shared_ptr<const Alphabet>& alpha,
+    std::shared_ptr<const Alphabet> alpha,
     const std::map<std::string, std::string>& params,
     const std::string& suffix = "",
     bool suffixIsOptional = true,
@@ -265,7 +267,7 @@ public:
    */
   static std::map<size_t, std::unique_ptr<VectorSiteContainer> >
   getSiteContainers(
-    std::shared_ptr<const Alphabet>& alpha,
+    std::shared_ptr<const Alphabet> alpha,
     const std::map<std::string, std::string>& params,
     const std::string& prefix = "input.",
     const std::string& suffix = "",
@@ -291,7 +293,7 @@ public:
    */
   static std::map<size_t, std::unique_ptr<ProbabilisticVectorSiteContainer> >
   getProbabilisticSiteContainers(
-    std::shared_ptr<const Alphabet>& alpha,
+    std::shared_ptr<const Alphabet> alpha,
     const std::map<std::string, std::string>& params,
     const std::string& prefix = "input.",
     const std::string& suffix = "",

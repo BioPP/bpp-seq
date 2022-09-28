@@ -226,8 +226,8 @@ unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
 /******************************************************************************/
 
 std::unique_ptr<GeneticCode> SequenceApplicationTools::getGeneticCode(
-  std::shared_ptr<const NucleicAlphabet>& alphabet,
-  const string& description)
+    std::shared_ptr<const NucleicAlphabet> alphabet,
+    const string& description)
 {
   GeneticCode* geneCode;
   if (description.find("Standard") != string::npos || description.find("1") != string::npos)
@@ -253,25 +253,43 @@ std::unique_ptr<GeneticCode> SequenceApplicationTools::getGeneticCode(
 
 /******************************************************************************/
 
-unique_ptr<AlphabetIndex1> SequenceApplicationTools::getAlphabetIndex1(shared_ptr<const Alphabet>& alphabet, const string& description, const string& message, bool verbose)
+unique_ptr<AlphabetIndex1> SequenceApplicationTools::getAlphabetIndex1(
+    shared_ptr<const Alphabet> alphabet,
+    const string& description,
+    const string& message,
+    bool verbose)
 {
   BppOAlphabetIndex1Format reader(alphabet, message, verbose);
   return reader.read(description);
 }
 
-unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(shared_ptr<const Alphabet>& alphabet, const string& description, const string& message, bool verbose)
+unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(
+    shared_ptr<const Alphabet> alphabet,
+    const string& description,
+    const string& message,
+    bool verbose)
 {
   BppOAlphabetIndex2Format reader(alphabet, message, verbose);
   return reader.read(description);
 }
 
-unique_ptr<AlphabetIndex1> SequenceApplicationTools::getAlphabetIndex1(shared_ptr<const CodonAlphabet>& alphabet, shared_ptr<const GeneticCode>& gencode, const string& description, const string& message, bool verbose)
+unique_ptr<AlphabetIndex1> SequenceApplicationTools::getAlphabetIndex1(
+    shared_ptr<const CodonAlphabet> alphabet,
+    shared_ptr<const GeneticCode> gencode,
+    const string& description,
+    const string& message,
+    bool verbose)
 {
   BppOAlphabetIndex1Format reader(alphabet, gencode, message, verbose);
   return reader.read(description);
 }
 
-unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(shared_ptr<const CodonAlphabet>& alphabet, shared_ptr<const GeneticCode>& gencode, const string& description, const string& message, bool verbose)
+unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(
+    shared_ptr<const CodonAlphabet> alphabet,
+    shared_ptr<const GeneticCode> gencode,
+    const string& description,
+    const string& message,
+    bool verbose)
 {
   BppOAlphabetIndex2Format reader(alphabet, gencode, message, verbose);
   return reader.read(description);
@@ -280,12 +298,12 @@ unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(shared_pt
 /******************************************************************************/
 
 std::unique_ptr<SequenceContainerInterface> SequenceApplicationTools::getSequenceContainer(
-  std::shared_ptr<const Alphabet>& alpha,
-  const map<string, string>& params,
-  const string& suffix,
-  bool suffixIsOptional,
-  bool verbose,
-  int warn)
+    std::shared_ptr<const Alphabet> alpha,
+    const map<string, string>& params,
+    const string& suffix,
+    bool suffixIsOptional,
+    bool verbose,
+    int warn)
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
@@ -309,13 +327,13 @@ std::unique_ptr<SequenceContainerInterface> SequenceApplicationTools::getSequenc
 
 map<size_t, unique_ptr<VectorSiteContainer> >
 SequenceApplicationTools::getSiteContainers(
-  std::shared_ptr<const Alphabet>& alpha,
-  const map<string, string>& params,
-  const string& prefix,
-  const string& suffix,
-  bool suffixIsOptional,
-  bool verbose,
-  int warn)
+    std::shared_ptr<const Alphabet> alpha,
+    const map<string, string>& params,
+    const string& prefix,
+    const string& suffix,
+    bool suffixIsOptional,
+    bool verbose,
+    int warn)
 {
   vector<string> vContName = ApplicationTools::matchingParameters(prefix + "data*", params);
 
@@ -394,13 +412,13 @@ SequenceApplicationTools::getSiteContainers(
 
 map<size_t, unique_ptr<ProbabilisticVectorSiteContainer> >
 SequenceApplicationTools::getProbabilisticSiteContainers(
-  std::shared_ptr<const Alphabet>& alpha,
-  const map<string, string>& params,
-  const string& prefix,
-  const string& suffix,
-  bool suffixIsOptional,
-  bool verbose,
-  int warn)
+    std::shared_ptr<const Alphabet> alpha,
+    const map<string, string>& params,
+    const string& prefix,
+    const string& suffix,
+    bool suffixIsOptional,
+    bool verbose,
+    int warn)
 {
   vector<string> vContName = ApplicationTools::matchingParameters(prefix + "data*", params);
 
@@ -478,12 +496,12 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
 /******************************************************************************/
 
 std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
-  std::shared_ptr<const Alphabet>& alpha,
-  const map<string, string>& params,
-  const string& suffix,
-  bool suffixIsOptional,
-  bool verbose,
-  int warn)
+    std::shared_ptr<const Alphabet> alpha,
+    const map<string, string>& params,
+    const string& suffix,
+    bool suffixIsOptional,
+    bool verbose,
+    int warn)
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
@@ -625,12 +643,12 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
 /******************************************************************************/
 
 unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbabilisticSiteContainer(
-  shared_ptr<const Alphabet>& alpha,
-  const map<string, string>& params,
-  const string& suffix,
-  bool suffixIsOptional,
-  bool verbose,
-  int warn)
+    shared_ptr<const Alphabet> alpha,
+    const map<string, string>& params,
+    const string& suffix,
+    bool suffixIsOptional,
+    bool verbose,
+    int warn)
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
@@ -729,12 +747,12 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
 /******************************************************************************/
 
 void SequenceApplicationTools::restrictSelectedSequencesByName(
-  SequenceContainerInterface& allSequences,
-  const map<std::string, std::string>& params,
-  string suffix,
-  bool suffixIsOptional,
-  bool verbose,
-  int warn)
+    SequenceContainerInterface& allSequences,
+    const map<std::string, std::string>& params,
+    string suffix,
+    bool suffixIsOptional,
+    bool verbose,
+    int warn)
 {
   string optionKeep = ApplicationTools::getStringParameter("input.sequence.keep_names", params, "all", suffix, suffixIsOptional, warn);
   if (optionKeep != "all") {
@@ -771,11 +789,11 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
 /******************************************************************************/
 
 void SequenceApplicationTools::writeSequenceFile(
-  const SequenceContainerInterface& sequences,
-  const map<string, string>& params,
-  const string& suffix,
-  bool verbose,
-  int warn)
+    const SequenceContainerInterface& sequences,
+    const map<string, string>& params,
+    const string& suffix,
+    bool verbose,
+    int warn)
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, "none", warn);
   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
@@ -794,11 +812,11 @@ void SequenceApplicationTools::writeSequenceFile(
 /******************************************************************************/
 
 void SequenceApplicationTools::writeAlignmentFile(
-  const SiteContainerInterface& sites,
-  const map<string, string>& params,
-  const string& suffix,
-  bool verbose,
-  int warn)
+    const SiteContainerInterface& sites,
+    const map<string, string>& params,
+    const string& suffix,
+    bool verbose,
+    int warn)
 {
   string sequenceFilePath = ApplicationTools::getAFilePath("output.sequence.file", params, true, false, suffix, false, "none", warn);
   string sequenceFormat   = ApplicationTools::getStringParameter("output.sequence.format", params, "Fasta", suffix, false, warn);
