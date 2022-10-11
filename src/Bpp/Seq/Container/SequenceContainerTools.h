@@ -324,7 +324,10 @@ public:
    *
    * States are stored as their int code.
    */
-  static void getFrequencies(const SequenceContainerInterface& sc, std::map<int, double>& f, double pseudoCount = 0)
+  static void getFrequencies(
+		  const SequenceContainerInterface& sc,
+		  std::map<int, double>& f,
+		  double pseudoCount = 0)
   {
     double n = 0;
     for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
@@ -386,6 +389,26 @@ public:
   }
 
 
+
+  /**
+   * @brief Compute base frequencies of an object implementing the SequenceDataInterface.
+   *
+   * This method will try to cast the input data and call the corresponding method is any.
+   * An exception will be thrown if the cast failed. 
+   */
+  static void getFrequencies(
+		  const SequenceDataInterface& sc,
+		  std::map<int, double>& f,
+		  double pseudoCount = 0)
+  {
+    try {
+      getFrequencies(dynamic_cast<const SequenceContainerInterface&>(sc), f, pseudoCount);
+    } catch (std::bad_cast&) {}   
+    try {
+      getFrequencies(dynamic_cast<const ProbabilisticSequenceContainerInterface&>(sc), f, pseudoCount);
+    } catch (std::bad_cast&) {} 
+    throw Exception("SequenceContainerTools::getFrequencies : unsupported SequenceDataInterface implementation.");
+  }
 
   /**
    * @brief Append all the sequences of a SequenceContainer to the end of another.
