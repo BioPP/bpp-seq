@@ -38,8 +38,8 @@
  */
 
 
-#include "IntegerAlphabet.h"
 #include "AlphabetState.h"
+#include "IntegerAlphabet.h"
 
 // From Utils:
 #include <Bpp/Text/TextTools.h>
@@ -54,14 +54,12 @@ IntegerAlphabet::IntegerAlphabet(unsigned int max, unsigned int min) : MIN_(min)
   // Alphabet content definition
   registerState(new AlphabetState(-1, "-", "Gap"));
 
-  for (int i = static_cast<int>(MIN_); i <= static_cast<int>(MAX_); i++)
+  for (int i =  static_cast<int>(MIN_); i <= static_cast<int>(MAX_); i++)
   {
     registerState(new AlphabetState(i, TextTools::toString(i), ""));
   }
   registerState(new AlphabetState(MAX_+1, "X", "Unresolved state"));
 }
-
-
 /********************************************************************************/
 std::vector<int> IntegerAlphabet::getAlias(int state) const{
   if (!isIntInAlphabet(state)) throw BadIntException(state, "IntegerAlphabet::getAlias(int): Specified integer unknown.");
@@ -115,4 +113,3 @@ bool IntegerAlphabet::isResolvedIn(int state1, int state2) const{
   }
   return false;
 }
-

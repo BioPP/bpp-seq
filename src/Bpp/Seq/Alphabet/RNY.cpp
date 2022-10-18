@@ -1,41 +1,43 @@
 //
 // File: RNY.cpp
-// Created by: Laurent Gueguen
-// Created on: Tue Jul 31 2007
+// Authors:
+//   Laurent Gueguen
+// Created: 2007-07-31 00:00:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide
+  classes for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided
+  only with a limited warranty and the software's author, the holder of
+  the economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards
+  their requirements in conditions enabling the security of their
+  systems and/or data to be ensured and, more generally, to use and
+  operate it in the same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide
-   classes for sequences analysis.
-
-   This software is governed by the CeCILL license under French law and
-   abiding by the rules of distribution of free software. You can use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and rights to copy,
-   modify and redistribute granted by the license, users are provided
-   only with a limited warranty and the software's author, the holder of
-   the economic rights, and the successive licensors have only limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading, using, modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean that it is complicated to manipulate, and that also
-   therefore means that it is reserved for developers and experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards
-   their requirements in conditions enabling the security of their
-   systems and/or data to be ensured and, more generally, to use and
-   operate it in the same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
 
 #include "RNY.h" // class's header file
 
@@ -52,11 +54,7 @@ using namespace bpp;
 RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 {
   // Initialization:
-  vector<AlphabetState*> states;
-  for (int i = 0; i < 351; ++i)
-  {
-    states.push_back(new AlphabetState(i, TextTools::toString(i), ""));
-  }
+  vector<AlphabetState*> states(350,nullptr);
 
   // Alphabet content definition:
 
@@ -64,16 +62,16 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 
   if (AlphabetTools::isDNAAlphabet(&na))
     s1 = "RCT-";
-  else 
+  else
     s1 = "RCU-";
-  
+
   string s2;
- 
+
   if (AlphabetTools::isDNAAlphabet(&na))
     s2 = "AGCT-";
   else
     s2 = "AGCU-";
-  
+
   string s3 = "AGY-";
   string s = "   ";
 
@@ -90,7 +88,6 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
         s[0] = s1[i];
         s[1] = s2[j];
         s[2] = s3[k];
-        delete states[l];
         states[l] = new AlphabetState(static_cast<int>(l), s, s);
       }
     }
@@ -106,7 +103,6 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[i];
       s[1] = s2[j];
       s[2] = s3[3];
-      delete states[l];
       states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
@@ -121,7 +117,6 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[i];
       s[1] = s2[4];
       s[2] = s3[k];
-      delete states[l];
       states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
@@ -134,7 +129,6 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[i];
     s[1] = s2[4];
     s[2] = s3[3];
-    delete states[l];
     states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
@@ -148,7 +142,6 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
       s[0] = s1[3];
       s[1] = s2[j];
       s[2] = s3[k];
-      delete states[l];
       states[l] = new AlphabetState(static_cast<int>(l), s, s);
     }
   }
@@ -162,7 +155,6 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[3];
     s[1] = s2[j];
     s[2] = s3[3];
-    delete states[l];
     states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
@@ -174,7 +166,6 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
     s[0] = s1[3];
     s[1] = s2[4];
     s[2] = s3[k];
-    delete states[l];
     states[l] = new AlphabetState(static_cast<int>(l), s, s);
   }
 
@@ -184,12 +175,14 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
   s[0] = s1[3];
   s[1] = s2[4];
   s[2] = s3[3];
-  delete states[350];
   states[350] = new AlphabetState(350, s, s);
 
   // Register all states:
   for (size_t i = 0; i < states.size(); ++i)
-    registerState(states[i]);
+  {
+    if (states[i])
+      registerState(states[i]);
+  }
 }
 
 /****************************************************************************************/
@@ -297,21 +290,21 @@ bool RNY::isResolvedIn(int state1, int state2) const
   switch (qs)
   {
   case 0: // NNN
-    return state2==rs;
+    return state2 == rs;
   case 1: // NN-
-    return ((state2 < rs + 3) && (state2 >= rs));
+    return (state2 < rs + 3) && (state2 >= rs);
   case 2: // N-N
-    return ((state2 - rs)%3 == 0 && (state2 >= rs) && (state2 <  rs + 12));
+    return (state2 - rs) % 3 == 0 && (state2 >= rs) && (state2 <  rs + 12);
   case 3: // N--
-    return ((state2 >= rs) && (state2 < rs + 12));
+    return (state2 >= rs) && (state2 < rs + 12);
   case 4: // -NN
-    return ((state2 - rs)%12 == 0 && (state2 >= rs) &&  (state2 < rs + 36));
+    return (state2 - rs) % 12 == 0 && (state2 >= rs) &&  (state2 < rs + 36);
   case 5: // -N-
-    return ((state2 - rs)%12 < 3 && (state2 >= rs) &&  (state2 < rs + 27));
+    return (state2 - rs) % 12 < 3 && (state2 >= rs) &&  (state2 < rs + 27);
   case 6: // --N
-    return ((state2 - rs)%3 == 0 && (state2 >= rs) &&  (state2 < rs + 36));
+    return (state2 - rs) % 3 == 0 && (state2 >= rs) &&  (state2 < rs + 36);
   case 7: // ---
-    return (state2>=0);
+    return state2 >= 0;
   default:
     throw BadIntException(state1, "RNY:isResolvedIn : this sould not happen.");
   }
@@ -367,7 +360,7 @@ string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) c
 /**************************************************************************************/
 int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
 {
-  if (! AlphabetTools::isNucleicAlphabet(&alph))
+  if (!AlphabetTools::isNucleicAlphabet(&alph))
   {
     throw AlphabetException ("RNY::getRNY : Sequence must be Nucleic",
                              &alph);

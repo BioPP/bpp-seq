@@ -1,59 +1,60 @@
 //
 // File: Sequence.cpp
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
-// Created on: Tue Aug 21 2003
+// Authors:
+//   Guillaume Deuchst
+//   Julien Dutheil
+// Created: 2003-08-21 00:00:00
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
-
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use,
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info".
-
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability.
-
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or
-data to be ensured and,  more generally, to use and operate it in the
-same conditions as regards security.
-
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "Sequence.h" // class's header file
+#include <Bpp/Text/TextTools.h>
 
 #include "Alphabet/AlphabetTools.h"
+#include "Sequence.h" // class's header file
 #include "StringSequenceTools.h"
-#include <Bpp/Text/TextTools.h>
 
 using namespace bpp;
 
- // From the STL:
+// From the STL:
 #include <iostream>
 
 using namespace std;
 
 /* Constructors: **************************************************************/
 
-BasicSequence::BasicSequence(const Alphabet* alpha):
+BasicSequence::BasicSequence(const Alphabet* alpha) :
   AbstractCoreSequence(),
   SymbolList<int>(alpha),
   BasicIntSymbolList(alpha)
@@ -63,12 +64,12 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::string& sequence,
   const Alphabet* alpha
-) :
+  ) :
   AbstractCoreSequence(name),
   SymbolList<int>(alpha),
   BasicIntSymbolList(alpha)
 {
-  if (sequence!="")
+  if (sequence != "")
     setContent(sequence);
 }
 
@@ -77,7 +78,7 @@ BasicSequence::BasicSequence(
   const std::string& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) :
+  ) :
   AbstractCoreSequence(name, comments),
   SymbolList<int>(alpha),
   BasicIntSymbolList(alpha)
@@ -90,7 +91,7 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::vector<std::string>& sequence,
   const Alphabet* alpha
-) :
+  ) :
   AbstractCoreSequence(name),
   SymbolList<int>(alpha),
   BasicIntSymbolList(sequence, alpha)
@@ -101,7 +102,7 @@ BasicSequence::BasicSequence(
   const std::vector<std::string>& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) :
+  ) :
   AbstractCoreSequence(name, comments),
   SymbolList<int>(alpha),
   BasicIntSymbolList(sequence, alpha)
@@ -111,7 +112,7 @@ BasicSequence::BasicSequence(
   const std::string& name,
   const std::vector<int>& sequence,
   const Alphabet* alpha
-) :
+  ) :
   AbstractCoreSequence(name),
   SymbolList<int>(sequence, alpha),
   BasicIntSymbolList(sequence, alpha)
@@ -122,7 +123,7 @@ BasicSequence::BasicSequence(
   const std::vector<int>& sequence,
   const Comments& comments,
   const Alphabet* alpha
-) :
+  ) :
   AbstractCoreSequence(name, comments),
   SymbolList<int>(sequence, alpha),
   BasicIntSymbolList(sequence, alpha)
@@ -132,15 +133,14 @@ BasicSequence::BasicSequence(
 
 BasicSequence::BasicSequence(const Sequence& s) :
   AbstractCoreSequence(s),
-  SymbolList<int>(s.getContent(),s.getAlphabet()),
-  BasicIntSymbolList(s.getContent(),s.getAlphabet())
-{
-}
+  SymbolList<int>(s.getContent(), s.getAlphabet()),
+  BasicIntSymbolList(s.getContent(), s.getAlphabet())
+{}
 
 BasicSequence::BasicSequence(const BasicSequence& s) :
   AbstractCoreSequence(s),
-  SymbolList<int>(s.getContent(),s.getAlphabet()),
-  BasicIntSymbolList(s.getContent(),s.getAlphabet())
+  SymbolList<int>(s.getContent(), s.getAlphabet()),
+  BasicIntSymbolList(s.getContent(), s.getAlphabet())
 {
 }
 
@@ -166,7 +166,7 @@ void BasicSequence::setContent(const std::string& sequence)
 {
   // Remove blanks in sequence
   content_ = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet());
-  //Warning, an exception may be thrown here!
+  // Warning, an exception may be thrown here!
 }
 
 /******************************************************************************/
@@ -175,7 +175,8 @@ void BasicSequence::setToSizeR(size_t newSize)
 {
   // Size verification
   size_t seqSize = content_.size();
-  if (newSize == seqSize) return;
+  if (newSize == seqSize)
+    return;
 
   if (newSize < seqSize)
   {
@@ -185,7 +186,8 @@ void BasicSequence::setToSizeR(size_t newSize)
 
   // Add gaps up to specified size
   int gap = getAlphabet()->getGapCharacterCode();
-  while (content_.size() < newSize) content_.push_back(gap);
+  while (content_.size() < newSize)
+    content_.push_back(gap);
 }
 
 /******************************************************************************/
@@ -194,12 +196,13 @@ void BasicSequence::setToSizeL(size_t newSize)
 {
   // Size verification
   size_t seqSize = content_.size();
-  if (newSize == seqSize) return;
+  if (newSize == seqSize)
+    return;
 
   if (newSize < seqSize)
   {
-    //We must truncate sequence from the left.
-    //This is a very unefficient method!
+    // We must truncate sequence from the left.
+    // This is a very unefficient method!
     content_.erase(content_.begin(), content_.begin() + static_cast<ptrdiff_t>(seqSize - newSize));
     return;
   }
@@ -217,30 +220,40 @@ void BasicSequence::append(const Sequence& seq)
     throw AlphabetMismatchException("BasicSequence::append");
   // Check list for incorrect characters
   for (size_t i = 0; i < seq.size(); i++)
+  {
     content_.push_back(seq[i]);
+  }
 }
 
 void BasicSequence::append(const std::vector<int>& content)
 {
   // Check list for incorrect characters
   for (size_t i = 0; i < content.size(); i++)
-    if(!getAlphabet()->isIntInAlphabet(content[i]))
+  {
+    if (!getAlphabet()->isIntInAlphabet(content[i]))
       throw BadIntException(content[i], "BasicSequence::append", getAlphabet());
-  //BasicSequence is valid:
+  }
+  // BasicSequence is valid:
   for (size_t i = 0; i < content.size(); i++)
+  {
     content_.push_back(content[i]);
+  }
 }
 
 void BasicSequence::append(const std::vector<std::string>& content)
 {
   // Check list for incorrect characters
   for (size_t i = 0; i < content.size(); i++)
-    if(!getAlphabet()->isCharInAlphabet(content[i]))
+  {
+    if (!getAlphabet()->isCharInAlphabet(content[i]))
       throw BadCharException(content[i], "BasicSequence::append", getAlphabet());
-  
-  //BasicSequence is valid:
+  }
+
+  // BasicSequence is valid:
   for (size_t i = 0; i < content.size(); i++)
+  {
     content_.push_back(getAlphabet()->charToInt(content[i]));
+  }
 }
 
 void BasicSequence::append(const std::string& content)
@@ -249,4 +262,3 @@ void BasicSequence::append(const std::string& content)
 }
 
 /******************************************************************************/
-

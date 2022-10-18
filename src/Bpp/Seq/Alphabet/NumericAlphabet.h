@@ -1,27 +1,28 @@
 //
 // File: NumericAlphabet.h
-// Created by: Laurent Gueguen
-// Created on: March 2010
+// Authors:
+//   Laurent Gueguen
+// Created: 2010-03-07 00:00:00
 //
 
 /*
   Copyright or Copr. Bio++ Development Team, (November 17, 2004)
-
+  
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
-
+  
   This software is governed by the CeCILL license under French law and
   abiding by the rules of distribution of free software. You can use,
   modify and/ or redistribute the software under the terms of the CeCILL
   license as circulated by CEA, CNRS and INRIA at the following URL
   "http://www.cecill.info".
-
+  
   As a counterpart to the access to the source code and rights to copy,
   modify and redistribute granted by the license, users are provided
   only with a limited warranty and the software's author, the holder of
   the economic rights, and the successive licensors have only limited
   liability.
-
+  
   In this respect, the user's attention is drawn to the risks associated
   with loading, using, modifying and/or developing or reproducing the
   software by the user in light of its specific status of free software,
@@ -32,100 +33,95 @@
   their requirements in conditions enabling the security of their
   systems and/or data to be ensured and, more generally, to use and
   operate it in the same conditions as regards security.
-
+  
   The fact that you are presently reading this means that you have had
   knowledge of the CeCILL license and that you accept its terms.
 */
 
+#ifndef BPP_SEQ_ALPHABET_NUMERICALPHABET_H
+#define BPP_SEQ_ALPHABET_NUMERICALPHABET_H
 
-#ifndef _NUMERICALPHABET_H_
-#define _NUMERICALPHABET_H_
+#include <Bpp/Numeric/Prob/UniformDiscreteDistribution.h>
+#include <string>
 
 #include "AbstractAlphabet.h"
 #include "AlphabetNumericState.h"
 
-#include <Bpp/Numeric/Prob/UniformDiscreteDistribution.h>
-
-#include <string>
-
 /**
  * @brief This alphabet is used to deal NumericAlphabet
- * @author Laurent Guéguen
+ * @author Laurent GuÃ©guen
  */
 
 namespace bpp
 {
-  class NumericAlphabet : public AbstractAlphabet
+class NumericAlphabet : public AbstractAlphabet
+{
+private:
+  const UniformDiscreteDistribution* pdd_;
+
+  std::map<double, size_t> values_;
+
+public:
+  NumericAlphabet(const UniformDiscreteDistribution&);
+
+  virtual ~NumericAlphabet() { delete pdd_;}
+
+  NumericAlphabet(const NumericAlphabet&);
+
+  NumericAlphabet& operator=(const NumericAlphabet&);
+
+  NumericAlphabet* clone() const
   {
-  private:
-    const UniformDiscreteDistribution* pdd_;
+    return new NumericAlphabet(*this);
+  }
 
-    std::map<double, size_t> values_;
-  
-  public:
+public:
+  void setState(size_t pos, AlphabetState* st);
+  void registerState(AlphabetState* st);
 
-    NumericAlphabet(const UniformDiscreteDistribution&);
+  bool containsGap(const std::string& state) const;
 
-    virtual ~NumericAlphabet() { delete pdd_;}
+  unsigned int getSize() const;
+  unsigned int getNumberOfTypes() const;
+  int getUnknownCharacterCode() const { return -1; }
+  bool isGap(int state) const;
+  std::vector<int> getAlias(int state) const;
+  std::vector<std::string> getAlias(const std::string& state) const;
+  bool isUnresolved(int state) const;
+  bool isUnresolved(const std::string& state) const;
 
-    NumericAlphabet(const NumericAlphabet&);
+  std::string getAlphabetType() const { return "Numeric"; }
 
-    NumericAlphabet& operator=(const NumericAlphabet&);
+  AlphabetNumericState& getStateAt(size_t stateIndex);
+  const AlphabetNumericState& getStateAt(size_t stateIndex) const;
 
-    NumericAlphabet* clone() const
-    {
-      return new NumericAlphabet(*this);
-    }
-  
-  public:
-    void setState(size_t pos, AlphabetState* st);
-    void registerState(AlphabetState* st);
-  
-    bool containsGap(const std::string& state) const;
+  /**
+   * @ brief Specific methods
+   *
+   */
 
-    unsigned int getSize() const;
-    unsigned int getNumberOfTypes() const;
-    int getUnknownCharacterCode() const { return -1; }
-    bool isGap(int state) const;
-    std::vector<int> getAlias(int state) const;
-    std::vector<std::string> getAlias(const std::string& state) const;
-    bool isUnresolved(int state) const;
-    bool isUnresolved(const std::string& state) const;
+  /**
+   * @brief Returns the difference between successive values
+   *
+   */
+  double getDelta() const;
 
-    std::string getAlphabetType() const { return "Numeric"; }
+  /**
+   * @brief Returns the value for the character number
+   *
+   */
+  double intToValue(int state) const;
 
-    AlphabetNumericState& getStateAt(size_t stateIndex);
-    const AlphabetNumericState& getStateAt(size_t stateIndex) const;
-    
-    /**
-     * @ brief Specific methods
-     *
-     */
+  /**
+   * @brief Returns the CategoryIndex of the category to which the value belongs.
+   *
+   */
+  size_t getValueIndex(double value) const;
 
-    /**
-     * @brief Returns the difference between successive values
-     *
-     */
-    double getDelta() const;
-
-    /**
-     * @brief Returns the value for the character number 
-     *
-     */
-    double intToValue(int state) const;
-
-    /**
-     * @brief Returns the CategoryIndex of the category to which the value belongs.
-     *
-     */
-    size_t getValueIndex(double value) const;
-
-    /**
-     * @brief Re-update the maps.
-     */
-    void remap();
-  
-  };
+  /**
+   * @brief Re-update the maps.
+   */
+  void remap();
+};
 }
-#endif // _NUMERICALPHABET_H_
-
+#endif // BPP_SEQ_ALPHABET_NUMERICALPHABET_H

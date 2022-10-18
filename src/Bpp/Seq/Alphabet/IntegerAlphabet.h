@@ -37,8 +37,10 @@
    knowledge of the CeCILL license and that you accept its terms.
  */
 
-#ifndef _INTEGERALPHABET_H_
-#define _INTEGERALPHABET_H_
+
+#ifndef BPP_SEQ_ALPHABET_INTEGERALPHABET_H
+#define BPP_SEQ_ALPHABET_INTEGERALPHABET_H
+
 
 #include "AbstractAlphabet.h"
 
@@ -68,6 +70,7 @@ public:
     AbstractAlphabet::operator=(bia);
     MIN_=bia.MIN_;
     MAX_=bia.MAX_;
+
     return *this;
   }
 
@@ -101,7 +104,8 @@ public:
 
   std::vector<std::string> getAlias(const std::string& state) const;
   
+
+
 };
 } // end of namespace bpp.
-
-#endif // _INTEGERALPHABET_H_
+#endif // BPP_SEQ_ALPHABET_INTEGERALPHABET_H

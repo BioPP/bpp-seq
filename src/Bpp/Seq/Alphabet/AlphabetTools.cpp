@@ -1,44 +1,46 @@
 //
 // File: AlphabetTools.cpp
-// Created by: Julien Dutheil
-// Created on: Fri Oct 10 17:27:39 2003
+// Authors:
+//   Julien Dutheil
+// Created: 2003-10-10 17:27:39
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
+#include <Bpp/Text/TextTools.h>
 
 #include "AlphabetTools.h"
-#include <Bpp/Text/TextTools.h>
 
 using namespace bpp;
 
@@ -68,21 +70,21 @@ int AlphabetTools::getType(char state)
   bool p = PROTEIN_ALPHABET.isCharInAlphabet(TextTools::toString(state));
 
   if (!d && !r && !p)
-    return 0;  // Unknown character
+    return 0;                 // Unknown character
   else if (d && !r && !p)
-    return 1;  // DNA specific
+    return 1;                 // DNA specific
   else if (!d && r && !p)
-    return 2;  // RNA specific
+    return 2;                 // RNA specific
   else if (!d && !r && p)
-    return 3;  // Protein specific
+    return 3;                 // Protein specific
   else if (d && r && !p)
-    return 4;  // Nucleotide specific
+    return 4;                 // Nucleotide specific
   else if (d && !r && p)
-    return 5;  // DNA or Protein specific
+    return 5;                 // DNA or Protein specific
   else if (!d && r && p)
-    return 6;  // RNA or Protein specific
+    return 6;                 // RNA or Protein specific
   else
-    return 7;  // Non-specific character
+    return 7;                 // Non-specific character
 }
 
 /**********************************************************************************************/
@@ -90,12 +92,12 @@ int AlphabetTools::getType(char state)
 bool AlphabetTools::checkAlphabetCodingSize(const Alphabet& alphabet)
 {
   if (alphabet.getNumberOfChars() == 0)
-    return true;  // Will this really happen?
+    return true;                    // Will this really happen?
   size_t size = alphabet.intToChar(0).size();
 
-  for (int i = 1; i < static_cast<int>(alphabet.getNumberOfTypes()); ++i)
+  for (size_t i = 1; i < alphabet.getNumberOfTypes(); ++i)
   {
-    if (alphabet.intToChar(i).size() != size)
+    if (alphabet.intToChar(alphabet.getStateAt(i).getNum()).size() != size)
       return false;
   }
   return true;

@@ -1,57 +1,56 @@
 //
 // File: Pasta.h
-// Authors: Murray Patterson
-// Created: Tue Oct 20 2015
+// Authors:
+//   Murray Patterson
+// Created: 2015-10-20 00:00:00
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
-
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
-
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
-
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
-
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _BPP_SEQ_IO_PASTA_H_
-#define _BPP_SEQ_IO_PASTA_H_
-
-#include "../ProbabilisticSequence.h"
-#include "../Container/VectorProbabilisticSiteContainer.h"
-
-#include "AbstractISequence.h"
-#include "AbstractIAlignment.h"
-#include "AbstractOSequence.h"
+#ifndef BPP_SEQ_IO_PASTA_H
+#define BPP_SEQ_IO_PASTA_H
 
 #include <Bpp/Numeric/Table.h>
 
+#include "../Container/VectorProbabilisticSiteContainer.h"
+#include "../ProbabilisticSequence.h"
+#include "AbstractIAlignment.h"
+#include "AbstractISequence.h"
+#include "AbstractOSequence.h"
+
 namespace bpp
 {
-
 /**
  * @brief The Pasta sequence file format.
  *
@@ -62,23 +61,21 @@ namespace bpp
  * form of probability of presence of each character state at each
  * site.  See implementation of methods below for more details
  */
-class Pasta
-  : public AbstractIProbabilisticAlignment,
-    public AbstractOProbabilisticAlignment
+class Pasta :
+  public AbstractIProbabilisticAlignment,
+  public AbstractOProbabilisticAlignment
 {
-
- protected :
-
+protected:
   /**
-   * @breif The maximum number of chars to be written on a line.
+   * @brief The maximum number of chars to be written on a line.
    */
   unsigned int charsByLine_; // Number of chars by line (output only)
+
   bool checkNames_;          // If names must be checked
   bool extended_;            // If using HUPO-PSI extensions
   bool strictNames_;         // If name is between '>' and first space
 
- public :
-
+public:
   typedef Table<double> DataTable;
 
   /**
@@ -89,13 +86,12 @@ class Pasta
    * @param extended Tell if we should read general comments and sequence comments in HUPO-PSI format.
    * @param strictSequenceNames Tells if the sequence names should be restricted to the characters between '>' and the first blank one.
    */
- Pasta(unsigned int charsByLine = 100, bool checkSequenceNames = true, bool extended = false, bool strictSequenceNames = false) : charsByLine_(charsByLine), checkNames_(checkSequenceNames), extended_(extended), strictNames_(strictSequenceNames) {}
+  Pasta(unsigned int charsByLine = 100, bool checkSequenceNames = true, bool extended = false, bool strictSequenceNames = false) : charsByLine_(charsByLine), checkNames_(checkSequenceNames), extended_(extended), strictNames_(strictSequenceNames) {}
 
   // class destructor
   virtual ~Pasta() {}
 
- public :
-
+public:
   /**
    * @brief Get the format name
    *
@@ -112,42 +108,38 @@ class Pasta
    *
    * @{
    */
-  bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, const std::vector<size_t> & permutationMap) const;
+  bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, const std::vector<size_t>& permutationMap) const;
 
   /**
    * @}
    */
 
-  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq) const;
+  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq, bool header=true) const;
 
-  void writeSequence(std::ostream & output, const Sequence & seq) const;
+  void writeSequence(std::ostream& output, const Sequence& seq, bool header=true) const;
 
   /**
    * @name The "IOProbabilisticSequence interface"
    *
    * @{
    */
-  
-  void appendAlignmentFromStream(std::istream& input, ProbabilisticSiteContainer& psc) const {
-    appendSequencesFromStream(input, dynamic_cast<VectorProbabilisticSiteContainer&>(psc)); //This may raise an exception if sequences are not aligned!
+  void appendAlignmentFromStream(std::istream& input, ProbabilisticSiteContainer& psc) const
+  {
+    appendSequencesFromStream(input, dynamic_cast<VectorProbabilisticSiteContainer&>(psc)); // This may raise an exception if sequences are not aligned!
   }
 
   void appendSequencesFromStream(std::istream& input, VectorProbabilisticSiteContainer& container) const;
-  
+
   void writeSequences(std::ostream& output, const ProbabilisticSequenceContainer& psc) const
   {
     writeAlignedValues(output, dynamic_cast<const AlignedValuesContainer&>(psc));
   }
-  
+
   void writeAlignedValues(std::ostream& output, const AlignedValuesContainer& avc) const;
-  
+
   /**
    * @}
    */
-
-
 };
-
 } // end of namespace bpp
-
-#endif // _BPP_SEQ_IO_PASTA_H_
+#endif // BPP_SEQ_IO_PASTA_H

@@ -1,41 +1,42 @@
 //
 // File: VectorSiteContainer.h
-// Created by: Julien Dutheil
-// Created on: Mon Oct  6 11:50:40 2003
+// Authors:
+//   Julien Dutheil
+// Created: 2003-10-06 11:50:40
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
-
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
+  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
 #ifndef _VECTORSITECONTAINER_H_
 #define _VECTORSITECONTAINER_H_
@@ -46,6 +47,7 @@
 #include "AlignedSequenceContainer.h"
 #include "OrderedSequenceContainer.h"
 #include <Bpp/Numeric/VectorTools.h>
+
 // From the STL library:
 #include <string>
 #include <vector>
@@ -60,17 +62,23 @@ namespace bpp
  * Site access is hence in \f$O(1)\f$, and sequence access in \f$O(l)\f$, where
  * \f$l\f$ is the number of sites in the container.
  *
- * See AlignedSequenceContainer for an alternative implementation.
+ * Sequences are built & stored on the fly, with a cache for time
+ * efficiency.
+ *
+ * See VectorSequenceContainer for an alternative implementation.
  *
  * @see Sequence, Site, AlignedSequenceContainer
+ *
  */
+  
 class VectorSiteContainer :
   public AbstractSequenceContainer,
-  // This container implements the SequenceContainer interface
-  // and use the AbstractSequenceContainer adapter.
-  public virtual SiteContainer,        // This container is a SiteContainer.
-  public virtual VectorPositionedContainer<Site>,
-  public virtual VectorMappedContainer<Sequence> 
+// This container implements the SequenceContainer interface
+// and use the AbstractSequenceContainer adapter.
+public virtual SiteContainer,
+// This container is a SiteContainer.
+public virtual VectorPositionedContainer<Site>,
+public virtual VectorMappedContainer<Sequence>
 {
 public:
   /**
@@ -111,7 +119,7 @@ public:
   VectorSiteContainer(const SiteContainer&  sc);
   VectorSiteContainer(const OrderedSequenceContainer& osc);
   VectorSiteContainer(const SequenceContainer&  sc);
-  
+
   VectorSiteContainer(const AlignedValuesContainer& avc);
 
   VectorSiteContainer& operator=(const VectorSiteContainer& vsc);
@@ -135,10 +143,14 @@ public:
    *
    * @{
    */
-
   const Site& getSite(size_t siteIndex) const
   {
     return *VectorPositionedContainer<Site>::getObject(siteIndex);
+  }
+
+  const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const
+  {
+    return getSite(siteIndex);
   }
 
   Site& getSite(size_t siteIndex)
@@ -146,11 +158,21 @@ public:
     return *VectorPositionedContainer<Site>::getObject(siteIndex);
   }
 
+  CruxSymbolListSite& getSymbolListSite(size_t siteIndex)
+  {
+    return getSite(siteIndex);
+  }
+
   void setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
 
-  std::shared_ptr<Site> deleteSite(size_t siteIndex)
+  std::shared_ptr<Site> removeSite(size_t siteIndex)
   {
-    return VectorPositionedContainer<Site>::deleteObject(siteIndex);
+    return VectorPositionedContainer<Site>::removeObject(siteIndex);
+  }
+
+  void deleteSite(size_t siteIndex)
+  {
+    VectorPositionedContainer<Site>::deleteObject(siteIndex);
   }
 
   void        addSite(const Site& site,                                 bool checkPosition = true);
@@ -160,12 +182,11 @@ public:
 
   /** @} */
 
-  /*
+  /**
    * @name From AlignedValuesContainer interface
    *
    * @{
    */
-
   void deleteSites(size_t siteIndex, size_t length)
   {
     VectorPositionedContainer<Site>::deleteObjects(siteIndex, length);
@@ -175,14 +196,14 @@ public:
   {
     return VectorPositionedContainer<Site>::getSize();
   }
-  
+
   void reindexSites();
 
   Vint getSitePositions() const;
 
   void setSitePositions(Vint vPositions);
 
-  
+
   /** @} */
 
   // These methods are implemented for this class:
@@ -192,14 +213,24 @@ public:
    *
    * @{
    */
-  
+
   using OrderedSequenceContainer::setComments;
   void setComments(size_t sequenceIndex, const Comments& comments);
 
-  // Method to get a sequence object from sequence container
+
+  /*
+   * brief  Method to get a sequence object from sequence container.
+   *
+   * If needed, those methods will create Sequences from the
+   * Sites Container, BUT those Sequences are independent from the set
+   * of Sites. Which means that if those are modified, the sites
+   * are not, and information is not consistent any more.
+   *
+   */
+  
   const Sequence& getSequence(size_t sequenceIndex) const;
   const Sequence& getSequence(const std::string& name) const;
-  
+
   bool hasSequence(const std::string& name) const
   {
     // Look for sequence name:
@@ -216,24 +247,25 @@ public:
     return VectorMappedContainer<Sequence>::getObjectPosition(name);
   }
 
-  Sequence* removeSequence(size_t sequenceIndex);
-  Sequence* removeSequence(const std::string& name);
+  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex);
+
+  std::shared_ptr<Sequence> removeSequence(const std::string& name);
 
   size_t getNumberOfSequences() const
   {
     return VectorMappedContainer<Sequence>::getNumberOfObjects();
   }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return VectorMappedContainer<Sequence>::getObjectsNames();
+    return VectorMappedContainer<Sequence>::getObjectNames();
   }
-  
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
+
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true)
   {
-    VectorMappedContainer<Sequence>::setObjectsNames(names);
+    VectorMappedContainer<Sequence>::setObjectNames(names);
   }
-  
+
   void clear();
 
   VectorSiteContainer* createEmptyContainer() const;
@@ -243,13 +275,13 @@ public:
     if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
   }
-  
+
   const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
   {
     if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
   }
-  
+
   int& operator()(const std::string& sequenceName, size_t elementIndex)
   {
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[getSequencePosition(sequenceName)];
@@ -273,7 +305,7 @@ public:
     if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::valueAt(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[sequenceIndex];
   }
-  
+
   int& operator()(size_t sequenceIndex, size_t elementIndex)
   {
     return (*VectorPositionedContainer<Site>::getObject(elementIndex))[sequenceIndex];
@@ -288,16 +320,16 @@ public:
    *
    * @{
    */
-  
   double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
   {
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
-    
-    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex),state)?1.:0.;
+
+    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex), state) ? 1. : 0.;
   }
-  
-  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const{
-    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex),state)?1.:0.;
+
+  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const
+  {
+    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex), state) ? 1. : 0.;
   }
 
   /*
@@ -305,7 +337,7 @@ public:
    * @}
    *
    */
-  
+
   /**
    * @name OrderedValuesContainer methods.
    *
@@ -318,18 +350,17 @@ public:
    * @param sequenceIndex index of the looked value in the site
    * @param state  state in the alphabet
    */
-  
-  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const 
+  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
 
-    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
+    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex), state) ? 1. : 0.;
   }
-  
-  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const 
+
+  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const
   {
-    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex),state)?1.:0.;
+    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex), state) ? 1. : 0.;
   }
 
   /*
@@ -344,6 +375,7 @@ public:
   void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
 
   void setSequence(const std::string& name,    const Sequence& sequence, bool checkName);
+
   void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName);
 
 protected:
@@ -351,6 +383,4 @@ protected:
   void realloc(size_t n);
 };
 } // end of namespace bpp.
-
-#endif  // _VECTORSITECONTAINER_H_
-
+#endif // BPP_SEQ_CONTAINER_VECTORSITECONTAINER_H

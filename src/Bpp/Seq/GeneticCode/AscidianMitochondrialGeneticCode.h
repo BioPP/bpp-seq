@@ -1,125 +1,120 @@
 //
 // File: AscidianMitochondrialGeneticCode.h
-// Created by: Fidel Botero and Julien Dutheil
-// Created on: Thu Jun 13 11:32:00 CET 2013
+// Authors:
+//   Fidel Botero
+//   Julien Dutheil
+// Created: 2013-06-13 11:32:00+02:00
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
-
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
   modify and/ or redistribute the software under the terms of the CeCILL
   license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
-
-  As a counterpart to the access to the source code and  rights to copy,
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
   modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
-
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
   In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
+  with loading, using, modifying and/or developing or reproducing the
   software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
   professionals having in-depth computer knowledge. Users are therefore
   encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
-
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
   The fact that you are presently reading this means that you have had
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ASCIDIANMITOCHONDRIALGENETICCODE_H_
-#define _ASCIDIANMITOCHONDRIALGENETICCODE_H_
+#ifndef BPP_SEQ_GENETICCODE_ASCIDIANMITOCHONDRIALGENETICCODE_H
+#define BPP_SEQ_GENETICCODE_ASCIDIANMITOCHONDRIALGENETICCODE_H
 
-#include "GeneticCode.h"
+
 #include "../Alphabet/NucleicAlphabet.h"
+#include "GeneticCode.h"
 
 namespace bpp
 {
-
 /**
- * @brief This class implements the ascidian mitochondrial genetic code as describe on the NCBI 
+ * @brief This class implements the ascidian mitochondrial genetic code as describe on the NCBI
  *        web site: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=t#SG13
  */
-  class AscidianMitochondrialGeneticCode:
-    public virtual GeneticCode
+class AscidianMitochondrialGeneticCode :
+  public virtual GeneticCode
+{
+public:
+  AscidianMitochondrialGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
+    GeneticCode(alphabet)
   {
-  public:
-    AscidianMitochondrialGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
-      GeneticCode(alphabet) 
-    {
-      init_();
-    }
+    init_();
+  }
 
-    AscidianMitochondrialGeneticCode(const NucleicAlphabet& alphabet) :
-      GeneticCode(alphabet) 
-    {
-      init_();
-    }
+  AscidianMitochondrialGeneticCode(const NucleicAlphabet& alphabet) :
+    GeneticCode(alphabet)
+  {
+    init_();
+  }
 
-    virtual ~AscidianMitochondrialGeneticCode() {}
-	
-    virtual AscidianMitochondrialGeneticCode* clone() const {
-      return new AscidianMitochondrialGeneticCode(*this);
-    }
+  virtual ~AscidianMitochondrialGeneticCode() {}
 
-  public:
-    size_t getNumberOfStopCodons() const { return 2; }
- 
-    std::vector<int> getStopCodonsAsInt() const {
-      std::vector<int> v(4);
-      v[0] = 8;
-      v[1] = 10;
-      v[2] = 48;
-      v[3] = 50;
-      return v;
-    }
+  virtual AscidianMitochondrialGeneticCode* clone() const
+  {
+    return new AscidianMitochondrialGeneticCode(*this);
+  }
 
-    std::vector<std::string> getStopCodonsAsChar() const {
-      std::vector<std::string> v(4);
-      v[0] = "AGA";
-      v[1] = "AGG";
-      v[2] = "TAA";
-      v[4] = "TAG";
-      return v;
-    }
-    
-    bool isStop(int state) const {
-      //Test:
-      codonAlphabet_.intToChar(state); //throw exception if invalid state!
-      return (state == 48 || state == 50);
-    }
-    
-    bool isStop(const std::string& state) const {
-      int i = codonAlphabet_.charToInt(state);
-      return (i == 48 || i == 50);
-    }
- 
-    bool isAltStart(int state) const {
-      //Test:
-      codonAlphabet_.intToChar(state); //throw exception if invalid state!
-      return (state == 12 || state == 46 || state == 62);
-    }
-    
-    bool isAltStart(const std::string& state) const {
-      int i = codonAlphabet_.charToInt(state);
-      return (i == 12 || i == 46 || i == 62);
-    }
+public:
+  size_t getNumberOfStopCodons() const { return 4; }
 
-  private:
-    void init_();
-  };
+  std::vector<int> getStopCodonsAsInt() const
+  {
+    return std::vector<int> ({8, 10, 48, 50});
+  }
 
-} //end of namespace bpp.
+  std::vector<std::string> getStopCodonsAsChar() const
+  {
+    return std::vector<std::string> ({"AGA", "AGG", "TAA", "TAG"});
+  }
 
-#endif	//_ASCIDIANMITOCHONDRIALGENETICCODE_H_
+  bool isStop(int state) const
+  {
+    // Test:
+    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    return state == 8 || state == 10 || state == 48 || state == 50;
+  }
 
+  bool isStop(const std::string& state) const
+  {
+    return isStop(codonAlphabet_.charToInt(state));
+  }
+
+  bool isAltStart(int state) const
+  {
+    // Test:
+    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    return state == 12 || state == 46 || state == 62;
+  }
+
+  bool isAltStart(const std::string& state) const
+  {
+    int i = codonAlphabet_.charToInt(state);
+    return i == 12 || i == 46 || i == 62;
+  }
+
+private:
+  void init_();
+};
+} // end of namespace bpp.
+#endif // BPP_SEQ_GENETICCODE_ASCIDIANMITOCHONDRIALGENETICCODE_H

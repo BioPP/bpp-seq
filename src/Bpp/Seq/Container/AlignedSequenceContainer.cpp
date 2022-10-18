@@ -1,46 +1,47 @@
 //
 // File: AlignedSequenceContainer.cpp
-// Created by: Guillaume Deuchst
-//             Julien Dutheil
-// Created on: Friday August 22 2003
+// Authors:
+//   Guillaume Deuchst
+//   Julien Dutheil
+// Created: 2003-08-22 00:00:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#include "AlignedSequenceContainer.h"
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
 #include <Bpp/Text/TextTools.h>
+
+#include "AlignedSequenceContainer.h"
 
 using namespace bpp;
 
@@ -50,6 +51,25 @@ using namespace bpp;
 using namespace std;
 
 /***************************************************************************/
+
+AlignedSequenceContainer::AlignedSequenceContainer(std::vector<std::shared_ptr<Sequence>> vseq, const Alphabet* alpha):
+  AbstractSequenceContainer(alpha),
+  VectorSequenceContainer(vseq, alpha),
+  VectorPositionedContainer<Site>(),
+  positions_(),
+  length_(0)
+{
+  if (vseq.size()==0)
+    return;
+  
+  length_ = vseq[0]->size();
+  for (size_t ns=1; ns < vseq.size(); ns++)
+    if (!checkSize_(*vseq[ns]))
+      throw BadSizeException("Sequences of different sizes in aligned construction",length_,vseq[ns]->size());
+
+  VectorPositionedContainer<Site>::setSize(length_);
+  reindexSites();
+}
 
 AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContainer& osc) :
   AbstractSequenceContainer(osc.getAlphabet()),
@@ -66,7 +86,7 @@ AlignedSequenceContainer::AlignedSequenceContainer(const OrderedSequenceContaine
   }
 
   if (osc.getNumberOfSequences() > 0)
-    length_ = getSequence(0).size();  // the overloaded
+    length_ = getSequence(0).size();                                        // the overloaded
   else
     length_ = 0;
 
@@ -121,35 +141,39 @@ AlignedSequenceContainer& AlignedSequenceContainer::operator=(const OrderedSeque
 
 const Site& AlignedSequenceContainer::getSite(size_t i) const
 {
+  if (!VectorPositionedContainer<Site>::isAvailablePosition(i))
+    return *VectorPositionedContainer<Site>::getObject(i);
+
   if (i >= length_)
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites());
 
   // Main loop : for all sequences
   size_t n = getNumberOfSequences();
-  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)i));
+  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)(i+1)));
   for (size_t j = 0; j < n; j++)
-  {
     site->addElement(getSequence(j)[i]);
-  }
 
-  VectorPositionedContainer<Site>::addObject_(site,i);
+  VectorPositionedContainer<Site>::addObject_(site, i, true);
   return *VectorPositionedContainer<Site>::getObject(i);
 }
 
 Site& AlignedSequenceContainer::getSite(size_t i)
 {
+  if (!VectorPositionedContainer<Site>::isAvailablePosition(i))
+    return *VectorPositionedContainer<Site>::getObject(i);
+
   if (i >= length_)
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", i, 0, getNumberOfSites());
 
   // Main loop : for all sequences
   size_t n = getNumberOfSequences();
-  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)i));
+  std::shared_ptr<Site> site(new Site(getAlphabet(), (int)(i+1)));
   for (size_t j = 0; j < n; j++)
   {
     site->addElement(getSequence(j)[i]);
   }
 
-  VectorPositionedContainer<Site>::addObject(site,i);
+  VectorPositionedContainer<Site>::addObject(site, i);
   return *VectorPositionedContainer<Site>::getObject(i);
 }
 
@@ -159,7 +183,7 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
 {
   // New site's alphabet and site container's alphabet matching verification
   if (pos >= getNumberOfSites())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::setSite", pos, 0, getNumberOfSites() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::setSite", pos, 0, getNumberOfSites());
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("AlignedSequenceContainer::setSite", getAlphabet(), site.getAlphabet());
 
@@ -168,27 +192,29 @@ void AlignedSequenceContainer::setSite(size_t pos, const Site& site, bool checkP
     throw SiteException("AlignedSequenceContainer::setSite, site does not have the appropriate length", &site);
 
   // Check position:
-  int position = site.getPosition();
-  for (auto poss : positions_)
+  if (checkPositions)
   {
-    if (poss == position)
-      throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
+    int position = site.getPosition();
+    for (auto poss : positions_)
+    {
+      if (poss == position)
+        throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", &site);
+    }
   }
-   
+  
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
     getSequence_(j).setElement(pos, site[j]);
-  }
+
   positions_[pos] = site.getPosition();
 }
 
 /******************************************************************************/
 
-std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos)
+std::shared_ptr<Site> AlignedSequenceContainer::removeSite(size_t pos)
 {
   if (pos >= getNumberOfSites())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::removeSite", pos, 0, getNumberOfSites());
 
   // Get old site
   getSite(pos); // Creates the site!
@@ -204,7 +230,28 @@ std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos)
   length_--;
 
   // Actualizes the 'sites' vector:
-  return VectorPositionedContainer<Site>::deleteObject(pos);
+  return VectorPositionedContainer<Site>::removeObject(pos);
+}
+
+/******************************************************************************/
+
+void AlignedSequenceContainer::deleteSite(size_t pos)
+{
+  if (pos >= getNumberOfSites())
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", pos, 0, getNumberOfSites());
+
+  // For all sequences
+  for (size_t j = 0; j < getNumberOfSequences(); j++)
+  {
+    getSequence_(j).deleteElement(pos);
+  }
+
+  // Delete site's position
+  positions_.erase(positions_.begin() + static_cast<ptrdiff_t>(pos));
+  length_--;
+
+  // Actualizes the 'sites' vector:
+  VectorPositionedContainer<Site>::deleteObject(pos);
 }
 
 /******************************************************************************/
@@ -212,7 +259,7 @@ std::shared_ptr<Site> AlignedSequenceContainer::deleteSite(size_t pos)
 void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length)
 {
   if (siteIndex + length > getNumberOfSites())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSites", siteIndex + length, 0, getNumberOfSites() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSites", siteIndex + length, 0, getNumberOfSites());
 
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
@@ -222,7 +269,7 @@ void AlignedSequenceContainer::deleteSites(size_t siteIndex, size_t length)
 
   // Delete site's siteIndexition
   positions_.erase(positions_.begin() + static_cast<ptrdiff_t>(siteIndex),
-      positions_.begin() + static_cast<ptrdiff_t>(siteIndex + length));
+                   positions_.begin() + static_cast<ptrdiff_t>(siteIndex + length));
   length_ -= length;
 
   // Actualizes the 'sites' vector:
@@ -255,9 +302,7 @@ void AlignedSequenceContainer::addSite(const Site& site, bool checkPositions)
 
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
     getSequence_(j).addElement(site[j]);
-  }
 
   length_++;
   positions_.push_back(position);
@@ -307,7 +352,7 @@ void AlignedSequenceContainer::addSite(const Site& site, int position, bool chec
 void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool checkPositions)
 {
   if (siteIndex >= getNumberOfSites())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::addSite", siteIndex, 0, getNumberOfSites() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::addSite", siteIndex, 0, getNumberOfSites());
 
   // New site's alphabet and site container's alphabet matching verification
   if (site.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
@@ -331,9 +376,7 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, bool 
 
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
     getSequence_(j).addElement(siteIndex, site[j]);
-  }
 
   length_++;
   positions_.insert(positions_.begin() + static_cast<ptrdiff_t>(siteIndex), position);
@@ -370,9 +413,7 @@ void AlignedSequenceContainer::addSite(const Site& site, size_t siteIndex, int p
 
   // For all sequences
   for (size_t j = 0; j < getNumberOfSequences(); j++)
-  {
     getSequence_(j).addElement(siteIndex, site[j]);
-  }
 
   length_++;
   positions_.insert(positions_.begin() + static_cast<ptrdiff_t>(siteIndex), position);
@@ -396,9 +437,11 @@ void AlignedSequenceContainer::setSitePositions(Vint vPositions)
 {
   if (vPositions.size() != getNumberOfSites())
     throw BadSizeException("AlignedSequenceContainer::setSitePositions bad size of positions vector", vPositions.size(), getNumberOfSites());
-  
+
   for (size_t i = 0; i < vPositions.size(); i++)
-    positions_[i] = vPositions[i]; 
+  {
+    positions_[i] = vPositions[i];
+  }
 }
 
 
@@ -407,7 +450,7 @@ void AlignedSequenceContainer::setSitePositions(Vint vPositions)
 void AlignedSequenceContainer::setSequence(size_t i, const Sequence& sequence, bool checkName)
 {
   if (i >= getNumberOfSequences())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::setSequence", i, 0, getNumberOfSequences() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::setSequence", i, 0, getNumberOfSequences());
   // if container has only one sequence
   if (getNumberOfSequences() == 1)
     length_ = sequence.size();
@@ -415,6 +458,9 @@ void AlignedSequenceContainer::setSequence(size_t i, const Sequence& sequence, b
     VectorSequenceContainer::setSequence(i, sequence, checkName);
   else
     throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", &sequence);
+
+  // Detroys all sites (but keep Site Container at same size)
+  VectorPositionedContainer<Site>::nullify();
 }
 
 /******************************************************************************/
@@ -452,13 +498,16 @@ void AlignedSequenceContainer::addSequence(const Sequence& sequence, bool checkN
 void AlignedSequenceContainer::addSequence(const Sequence& sequence, size_t i, bool checkName)
 {
   if (i >= getNumberOfSequences())
-    throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences() - 1);
+    throw IndexOutOfBoundsException("AlignedSequenceContainer::addSequence", i, 0, getNumberOfSequences());
   // if container has only one sequence
   if (length_ == 0)
   {
     length_ = sequence.size();
     VectorPositionedContainer<Site>::setSize(length_);
-  }  
+  }
+  else
+    VectorPositionedContainer<Site>::nullify();
+
   if (checkSize_(sequence))
     VectorSequenceContainer::addSequence(sequence, i, checkName);
   else
@@ -471,6 +520,7 @@ void AlignedSequenceContainer::clear()
 {
   length_ = 0;
   VectorSequenceContainer::clear();
+  VectorPositionedContainer<Site>::clear();
 }
 
 /******************************************************************************/
@@ -483,5 +533,3 @@ AlignedSequenceContainer* AlignedSequenceContainer::createEmptyContainer() const
 }
 
 /******************************************************************************/
-
-

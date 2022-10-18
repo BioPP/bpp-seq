@@ -1,45 +1,47 @@
 //
-// File: WordAlphabet.h
-// Authors: Laurent Gueguen
-//          Sylvain Gaillard
-// Created on: Sun Dec 28 2008
+// File: WordAlphabet.cpp
+// Authors:
+//   Laurent Gueguen
+//   Sylvain Gaillard
+// Created: 2008-12-28 00:00:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
+#include <Bpp/Text/TextTools.h>
 
 #include "WordAlphabet.h"
-#include <Bpp/Text/TextTools.h>
 
 using namespace bpp;
 
@@ -122,8 +124,9 @@ void WordAlphabet::build_()
 
   states[size + 1] = new AlphabetState(static_cast<int>(size), s, "Unresolved");
 
-  //Now register all states once for all:
-  for (size_t i = 0; i < states.size(); ++i) {
+  // Now register all states once for all:
+  for (size_t i = 0; i < states.size(); ++i)
+  {
     registerState(states[i]);
   }
 }
@@ -135,14 +138,14 @@ std::string WordAlphabet::getAlphabetType() const
   string s = "Word(";
   for (unsigned int i = 0; i < vAbsAlph_.size(); i++)
   {
-    if (i!=0)
+    if (i != 0)
       s += ",";
 
-    s += "alphabet"+TextTools::toString(i+1)+"="+vAbsAlph_[i]->getAlphabetType();
+    s += "alphabet" + TextTools::toString(i + 1) + "=" + vAbsAlph_[i]->getAlphabetType();
   }
 
   s += ")";
-  
+
   return s;
 }
 
@@ -217,7 +220,7 @@ bool WordAlphabet::isResolvedIn(int state1, int state2) const
   if (isUnresolved(state2))
     throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Unresolved base.");
 
-  return (state1 == (int)getSize())?(state2 >= 0):(state1==state2);
+  return (state1 == (int)getSize()) ? (state2 >= 0) : (state1 == state2);
 }
 
 /******************************************************************************/
@@ -383,4 +386,3 @@ Sequence* WordAlphabet::reverse(const Sequence& sequence) const
 }
 
 /****************************************************************************************/
-

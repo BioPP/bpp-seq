@@ -1,58 +1,60 @@
 //
 // File: SequenceTools.h
-// Authors: Guillaume Deuchst
-//          Julien Dutheil
-//          Sylvain Gaillard
-// Created on: Tue Aug 21 2003
+// Authors:
+//   Guillaume Deuchst
+//   Julien Dutheil
+//   Sylvain Gaillard
+// Created: 2003-08-21 00:00:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
+#ifndef BPP_SEQ_SEQUENCETOOLS_H
+#define BPP_SEQ_SEQUENCETOOLS_H
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#ifndef _SEQUENCETOOLS_H_
-#define _SEQUENCETOOLS_H_
+#include <Bpp/Exceptions.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
+#include <Bpp/Numeric/Stat/StatTest.h>
 
 #include "Alphabet/Alphabet.h"
 #include "Alphabet/DNA.h"
 #include "Alphabet/RNA.h"
 #include "Alphabet/RNY.h"
 #include "GeneticCode/GeneticCode.h"
+#include "NucleicAcidsReplication.h"
 #include "Sequence.h"
 #include "SymbolListTools.h"
-#include "NucleicAcidsReplication.h"
-#include <Bpp/Exceptions.h>
-#include <Bpp/Numeric/Random/RandomTools.h>
-#include <Bpp/Numeric/Stat/StatTest.h>
 
 // From the STL:
 #include <string>
@@ -125,16 +127,18 @@ public:
    * @param end      The last position of the subsequence (included).
    * @param output   A sequence object to be appended with the given subsequence.
    */
-  static void subseq(const Sequence& sequence, size_t begin, size_t end, Sequence& output) {
+  static void subseq(const Sequence& sequence, size_t begin, size_t end, Sequence& output)
+  {
     if (end < begin || end >= sequence.size())
       throw Exception("SequenceTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
     std::vector<int> content(end - begin + 1);
-    for (size_t i = 0; i <= end - begin; ++i) {
+    for (size_t i = 0; i <= end - begin; ++i)
+    {
       content[i] = sequence[begin + i];
     }
     output.append(content);
   }
- 
+
   /**
    * @brief Get a sub-sequence.
    *
@@ -143,7 +147,8 @@ public:
    * @param end   The last position of the subsequence.
    * @return A new sequence object with the given subsequence.
    */
-  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end) {
+  static Sequence* subseq(const Sequence& sequence, size_t begin, size_t end)
+  {
     Sequence* seq = new BasicSequence(sequence.getAlphabet());
     seq->setName(sequence.getName());
     seq->setComments(sequence.getComments());
@@ -278,7 +283,7 @@ public:
    * The deleteElement method of the Sequence object will be used where appropriate.
    * @param seq The sequence to analyse.
    */
-  
+
   static Sequence* getSequenceWithCompleteSites(const Sequence& seq);
 
   /**
@@ -288,7 +293,7 @@ public:
    *
    * @author Sylvain Gaillard
    */
-  
+
   static size_t getNumberOfUnresolvedSites(const Sequence& seq);
 
 
@@ -422,7 +427,7 @@ public:
    * @param ph The phase to use (1,2 or 3).
    * @throw AlphabetException If the sequence is not a DNA sequence.
    *
-   * @author Laurent Guéguen
+   * @author Laurent GuÃ©guen
    */
   static Sequence* RNYslice(const Sequence& sequence, int ph);
   static Sequence* RNYslice(const Sequence& sequence);
@@ -461,6 +466,4 @@ public:
   static Sequence* getRandomSequence(const Alphabet* alphabet, size_t length);
 };
 } // end of namespace bpp.
-
-#endif // _SEQUENCETOOLS_H_
-
+#endif // BPP_SEQ_SEQUENCETOOLS_H

@@ -5,8 +5,8 @@
 #   Francois Gindraud (2017)
 # Created: 20/08/2009
 
-cmake_minimum_required (VERSION 2.8.11)
-project (bpp-seq CXX)
+cmake_minimum_required (VERSION 2.8.12)
+project (bpp-seq3 CXX)
 
 # Compile options
 set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
@@ -35,9 +35,19 @@ ELSE(NO_DEP_CHECK)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(${PROJECT_NAME}_VERSION_CURRENT "12")
+SET(${PROJECT_NAME}_VERSION_CURRENT "1")
 SET(${PROJECT_NAME}_VERSION_REVISION "0")
 SET(${PROJECT_NAME}_VERSION_AGE "0")
+
+#static linkage?
+IF(NOT BUILD_STATIC)
+	SET(BUILD_STATIC FALSE CACHE BOOL
+	  "Compile and install static libraries."
+      FORCE)
+ENDIF()
+IF(BUILD_STATIC)
+  MESSAGE(STATUS "Static libraries requested.")
+ENDIF()
 
 # Effective version number computation
 MATH(EXPR ${PROJECT_NAME}_VERSION_MAJOR "${${PROJECT_NAME}_VERSION_CURRENT} - ${${PROJECT_NAME}_VERSION_AGE}")
@@ -53,7 +63,7 @@ if (CMAKE_INSTALL_PREFIX)
 endif (CMAKE_INSTALL_PREFIX)
 
 include (GNUInstallDirs)
-find_package (bpp-core 4.0.0 REQUIRED)
+find_package (bpp-core3 1.0.0 REQUIRED)
 
 # CMake package
 set (cmake-package-location ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
@@ -93,12 +103,12 @@ ENDIF (DOXYGEN_FOUND)
 ENDIF(NO_DEP_CHECK)
 
 # Packager
-SET(CPACK_PACKAGE_NAME "libbpp-seq")
+SET(CPACK_PACKAGE_NAME "libbpp-seq3")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
-SET(CPACK_PACKAGE_VERSION "2.4.1")
-SET(CPACK_PACKAGE_VERSION_MAJOR "2")
-SET(CPACK_PACKAGE_VERSION_MINOR "4")
-SET(CPACK_PACKAGE_VERSION_PATCH "1")
+SET(CPACK_PACKAGE_VERSION "3.0.0")
+SET(CPACK_PACKAGE_VERSION_MAJOR "3")
+SET(CPACK_PACKAGE_VERSION_MINOR "0")
+SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Sequence library")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING.txt")
 SET(CPACK_RESOURCE_FILE_AUTHORS "${CMAKE_SOURCE_DIR}/AUTHORS.txt")

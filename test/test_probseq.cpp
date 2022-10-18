@@ -278,11 +278,11 @@ int main() {
 
   cerr << endl << "add binary probabilistic sequence to binary probabilistic container...";
 
-  p_container.addSequence(std::make_shared<BasicProbabilisticSequence>(p_seq));
+  p_container.addSequence(p_seq);
   cerr << "OK." << endl;
 
   cerr << "binary probabilistic container's first element is : " << endl;
-  DataTable::write(p_container.getSequence(0)->getTable(), cerr, false);
+  DataTable::write(p_container.getSequence(0).getTable(), cerr, false);
 
   /*
    * *** Fasta (and Pasta) files ***
@@ -328,7 +328,7 @@ int main() {
 
   cerr << "binary probabilistic container contains : " << endl << endl;
   for(size_t i = 0; i < p_container.getNumberOfSequences(); ++i) {
-    DataTable::write(p_container.getSequence(i)->getContent(), cerr, false);
+    DataTable::write(p_container.getSequence(i).getContent(), cerr, false);
     cerr << endl;
   }
 
@@ -371,9 +371,16 @@ int main() {
   dna_pasta->appendSequencesFromStream(dna_pasta_iss2, dna_p_container);
   cerr << "OK." << endl;
 
+  string dna_pasta_in3 = "T A G\n>a 3rd dna prob. sequence\n0.2023275 0.570924031 0.03822292\n0.2366416 0.004093129 0.64697079";
+  istringstream dna_pasta_iss3(dna_pasta_in3);
+  cerr << "read the following (permuted) sequence into dna prob. container" << endl;
+  cerr << endl << dna_pasta_in3 << endl;
+  dna_pasta->appendSequencesFromStream(dna_pasta_iss3, dna_p_container);
+  cerr << "OK." << endl;
+
   cerr << "dna prob. container contains : " << endl << endl;
   for(size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i) {
-    DataTable::write(dna_p_container.getSequence(i)->getTable(), cerr, false);
+    DataTable::write(dna_p_container.getSequence(i).getTable(), cerr, false);
     cerr << endl;
   }
 

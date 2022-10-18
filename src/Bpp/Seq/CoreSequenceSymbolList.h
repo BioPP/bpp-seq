@@ -1,49 +1,50 @@
 //
 // File: CoreSequenceSymbolList.h
-// Created by: Laurent Guéguen
-// Created on: mardi 11 avril 2017, à 14h 42
+// Authors:
+//   Laurent GuÃ©guen
+// Created: mardi 11 avril 2017, Ã  14h 42
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-
-This software is a computer program whose purpose is to provide classes
-for sequences analysis.
-
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
-
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
-
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
-
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _CORE_SEQUENCE_SYMBOLLIST_H_
-#define _CORE_SEQUENCE_SYMBOLLIST_H_
-
-#include "SymbolList.h"
-#include "CoreSequence.h"
+#ifndef BPP_SEQ_CORESEQUENCESYMBOLLIST_H
+#define BPP_SEQ_CORESEQUENCESYMBOLLIST_H
 
 #include <Bpp/Clonable.h>
+
+#include "CoreSequence.h"
+#include "SymbolList.h"
 
 // From the STL:
 #include <string>
@@ -53,68 +54,60 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp
 {
-
+/**
+ * @brief The CoreSequenceSymbolList interface.
+ *
+ */
+template<class T>
+class CoreSequenceSymbolList :
+  public virtual CoreSymbolList<T>,
+  public virtual CoreSequence
+{
+public:
   /**
-   * @brief The CoreSequenceSymbolList interface.
+   * @name The Clonable interface
    *
+   * @{
    */
-  template<class T>
-  class CoreSequenceSymbolList:
-    public virtual CoreSymbolList<T>,
-    public virtual CoreSequence
-  {
+  CoreSequenceSymbolList* clone() const = 0;
+  /** @} */
 
-  public: 
-    /**
-     * @name The Clonable interface
-     *
-     * @{
-     */
-    CoreSequenceSymbolList* clone() const = 0;
-    /** @} */
+  // Class destructor
+  virtual ~CoreSequenceSymbolList() {}
+};
 
-    // Class destructor
-    virtual ~CoreSequenceSymbolList() {}
-    
-  };
+typedef CoreSymbolList<int> IntCoreSymbolList;
+typedef CoreSymbolList<std::vector<double> > ProbaCoreSymbolList;
 
-  typedef CoreSymbolList<int> IntCoreSymbolList;
-  typedef CoreSymbolList<std::vector<double> > ProbaCoreSymbolList;
-  
-  typedef CoreSequenceSymbolList<int> IntCoreSequenceSymbolList;
-  typedef CoreSequenceSymbolList<std::vector<double> > ProbaCoreSequenceSymbolList;
-  
+typedef CoreSequenceSymbolList<int> IntCoreSequenceSymbolList;
+typedef CoreSequenceSymbolList<std::vector<double> > ProbaCoreSequenceSymbolList;
 
+
+/**
+ * @brief The AbstractSequenceSymbolList virtual class :
+ * SymbolList<T> is built, there.
+ *
+ */
+
+template<class T>
+class AbstractSequenceSymbolList :
+  public virtual SymbolList<T>,
+  public virtual CoreSequenceSymbolList<T>
+{
+public:
   /**
-   * @brief The AbstractSequenceSymbolList virtual class :
-   * SymbolList<T> is built, there.
+   * @name The Clonable interface
    *
+   * @{
    */
-  
-  template<class T>
-  class AbstractSequenceSymbolList:
-    public virtual SymbolList<T>,
-    public virtual CoreSequenceSymbolList<T>
-  {
+  AbstractSequenceSymbolList* clone() const = 0;
+  /** @} */
 
-  public: 
-    /**
-     * @name The Clonable interface
-     *
-     * @{
-     */
-    AbstractSequenceSymbolList* clone() const = 0;
-    /** @} */
+  // Class destructor
+  virtual ~AbstractSequenceSymbolList() {}
+};
 
-    // Class destructor
-    virtual ~AbstractSequenceSymbolList() {}
-    
-  };
-
-  typedef AbstractSequenceSymbolList<int> intAbstractSequenceSymbolList;
-  typedef AbstractSequenceSymbolList<std::vector<double> > probaAbstractSequenceSymbolList;
-
-} //end of namespace bpp.
-
-#endif // _CORE_SEQUENCE_SYMBOLLIST_H_
-
+typedef AbstractSequenceSymbolList<int> intAbstractSequenceSymbolList;
+typedef AbstractSequenceSymbolList<std::vector<double> > probaAbstractSequenceSymbolList;
+} // end of namespace bpp.
+#endif // BPP_SEQ_CORESEQUENCESYMBOLLIST_H

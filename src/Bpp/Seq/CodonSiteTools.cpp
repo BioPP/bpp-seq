@@ -1,52 +1,54 @@
 //
-// File CodonSiteTools.cpp
-// Author : Sylvain Glémin
-// Last modification : October 2004
+// File: CodonSiteTools.cpp
+// Authors:
+//   Sylvain GlÃ©min
+// Last modified: 2004-10-07 00:00:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#include "CodonSiteTools.h"
-#include "Alphabet/CodonAlphabet.h"
-#include "Alphabet/DNA.h"
-#include "Alphabet/AlphabetTools.h"
-#include "SymbolListTools.h"
-#include "GeneticCode/GeneticCode.h"
-#include "GeneticCode/StandardGeneticCode.h"
-#include <Bpp/Utils/MapTools.h>
 #include <Bpp/Numeric/NumTools.h>
 #include <Bpp/Numeric/VectorTools.h>
+#include <Bpp/Utils/MapTools.h>
+
+#include "Alphabet/AlphabetTools.h"
+#include "Alphabet/CodonAlphabet.h"
+#include "Alphabet/DNA.h"
+#include "CodonSiteTools.h"
+#include "GeneticCode/GeneticCode.h"
+#include "GeneticCode/StandardGeneticCode.h"
+#include "SymbolListTools.h"
 
 using namespace bpp;
 
@@ -145,14 +147,17 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode
   SymbolListTools::getCounts(site, counts);
   map<int, size_t> aas;
   size_t cdat = 0;
-  for (auto it = counts.begin(); it != counts.end(); ++it) {
-    if (!site.getAlphabet()->isUnresolved(it->first)) {
+  for (auto it = counts.begin(); it != counts.end(); ++it)
+  {
+    if (!site.getAlphabet()->isUnresolved(it->first))
+    {
       cdat += it->second;
       aas[gCode.translate(it->first)]++;
-      if (aas.size() > 1) return false;
+      if (aas.size() > 1)
+        return false;
     }
   }
-  return (cdat > 1); //If only one sequence is non-missing, then the site is not considered to be polymorphic.
+  return cdat > 1; // If only one sequence is non-missing, then the site is not considered to be polymorphic.
 }
 
 /******************************************************************************/
@@ -235,7 +240,7 @@ size_t CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet& ca
 double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const GeneticCode& gCode, bool minchange)
 {
   const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gCode.getSourceAlphabet());
-  
+
   vector<int> ci = ca->getPositions(i);
   vector<int> cj = ca->getPositions(j);
 
@@ -259,7 +264,7 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
     {
       int trans1 = ca->getCodon(ci[0], cj[1], ci[2]); // transitory codon between NcNiNi et NcNjNj: NcNjNi, Nc = identical site
       int trans2 = ca->getCodon(ci[0], ci[1], cj[2]); // transitory codon between NcNiNi et NcNjNj: NcNiNj, Nc = identical site
-      
+
       if (!gCode.isStop(trans1))
       {
         if (gCode.areSynonymous(i, trans1))
@@ -468,7 +473,7 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
   // General polymorphism checking
   if (SymbolListTools::isConstant(site))
     return 0;
-  
+
   // Computation
   map<int, double> freq;
   SymbolListTools::getFrequencies(site, freq);
@@ -477,7 +482,6 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
   {
     for (map<int, double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++)
     {
-      
       pi += (it1->second) * (it2->second) * (numberOfSynonymousDifferences(it1->first, it2->first, gCode, minchange));
     }
   }
@@ -517,7 +521,7 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
       pi += (it1->second) * (it2->second) * (nbtot - nbsyn);
     }
   }
-  
+
   double n = static_cast<double>(site.size());
   return pi * n / (n - 1);
 }
@@ -586,8 +590,9 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
   for (const auto& it : freqs)
   {
     int state = it.first;
-    if (alphabet->isUnresolved(state) ||
-        alphabet->isGap(state)) {
+    if (!alphabet->isUnresolved(state) &&
+        !alphabet->isGap(state))
+    {
       double freq = it.second;
       total += freq;
       nbSyn += freq * numberOfSynonymousPositions(state, gCode, ratio);
@@ -796,10 +801,13 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
     {
       if (test1)
       {
-        if (ca->getSecondPosition(i) == ca->getSecondPosition(j)) {
-          if (Na > 0) //jdutheil on 19/12/16: added these checks to avoid negative Na/Ns
+        if (ca->getSecondPosition(i) == ca->getSecondPosition(j))
+        {
+          if (Na > 0) // jdutheil on 19/12/16: added these checks to avoid negative Na/Ns
             Na--;
-        } else {
+        }
+        else
+        {
           if (Ns > 0)
             Ns--;
         }
@@ -810,7 +818,7 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
         Ns--;
     }
   }
-  //cout << Na << " " << Ns << endl;
+  // cout << Na << " " << Ns << endl;
   v[0] = Ns;
   v[1] = Na;
   return v;
@@ -848,4 +856,3 @@ bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& 
 }
 
 /******************************************************************************/
-

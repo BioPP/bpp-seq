@@ -10,6 +10,7 @@ SET(CPP_FILES
   Bpp/Seq/Alphabet/AbstractAlphabet.cpp
   Bpp/Seq/Alphabet/AlphabetExceptions.cpp
   Bpp/Seq/Alphabet/AlphabetTools.cpp
+  Bpp/Seq/Alphabet/AllelicAlphabet.cpp
   Bpp/Seq/Alphabet/BinaryAlphabet.cpp
   Bpp/Seq/Alphabet/CaseMaskedAlphabet.cpp
   Bpp/Seq/Alphabet/CodonAlphabet.cpp
@@ -34,15 +35,16 @@ SET(CPP_FILES
   Bpp/Seq/AlphabetIndex/__GranthamMatrixCode
   Bpp/Seq/AlphabetIndex/__MiyataMatrixCode
   Bpp/Seq/App/SequenceApplicationTools.cpp
+  Bpp/Seq/App/BppSequenceApplication.cpp
   Bpp/Seq/CodonSiteTools.cpp
   Bpp/Seq/Container/AlignedSequenceContainer.cpp
   Bpp/Seq/Container/CompressedVectorSiteContainer.cpp
-  Bpp/Seq/Container/MapSequenceContainer.cpp
   Bpp/Seq/Container/SequenceContainerIterator.cpp
   Bpp/Seq/Container/SequenceContainerTools.cpp
   Bpp/Seq/Container/SiteContainerExceptions.cpp
   Bpp/Seq/Container/SiteContainerIterator.cpp
   Bpp/Seq/Container/SiteContainerTools.cpp
+  Bpp/Seq/Container/VectorProbabilisticSequenceContainer.cpp
   Bpp/Seq/Container/VectorProbabilisticSiteContainer.cpp
   Bpp/Seq/Container/VectorSequenceContainer.cpp
   Bpp/Seq/Container/VectorSiteContainer.cpp
@@ -100,20 +102,22 @@ SET(CPP_FILES
   Bpp/Seq/Transliterator.cpp
   )
 
-# Build the static lib
-add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES})
-target_include_directories (${PROJECT_NAME}-static PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
-  )
-set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
-target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC})
+IF(BUILD_STATIC)
+  # Build the static lib
+  add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES})
+  target_include_directories (${PROJECT_NAME}-static PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
+  set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+  target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC})
+ENDIF()
 
 # Build the shared lib
 add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES})
 target_include_directories (${PROJECT_NAME}-shared PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 set_target_properties (${PROJECT_NAME}-shared
   PROPERTIES OUTPUT_NAME ${PROJECT_NAME}
@@ -124,8 +128,18 @@ set_target_properties (${PROJECT_NAME}-shared
 target_link_libraries (${PROJECT_NAME}-shared ${BPP_LIBS_SHARED})
 
 # Install libs and headers
+IF(BUILD_STATIC)
 install (
-  TARGETS ${PROJECT_NAME}-static ${PROJECT_NAME}-shared
+  TARGETS ${PROJECT_NAME}-static
+  EXPORT ${PROJECT_NAME}-targets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
+ENDIF()
+
+install (
+  TARGETS ${PROJECT_NAME}-shared
   EXPORT ${PROJECT_NAME}-targets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -1,52 +1,52 @@
 //
 // File: Fasta.cpp
-// Authors: Guillaume Deuchst
-//          Julien Dutheil
-//          Sylvain Gaillard
-// Created: Tue Aug 21 2003
+// Authors:
+//   Guillaume Deuchst
+//   Julien Dutheil
+//   Sylvain Gaillard
+// Created: 2003-08-21 00:00:00
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
-
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
   modify and/ or redistribute the software under the terms of the CeCILL
   license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
-
-  As a counterpart to the access to the source code and  rights to copy,
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
   modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
-
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
   In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
+  with loading, using, modifying and/or developing or reproducing the
   software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
   professionals having in-depth computer knowledge. Users are therefore
   encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
-
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
   The fact that you are presently reading this means that you have had
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "Fasta.h"
-
+#include <Bpp/Io/FileTools.h>
+#include <Bpp/Text/StringTokenizer.h>
+#include <Bpp/Text/TextTools.h>
 #include <fstream>
 
 #include "../StringSequenceTools.h"
-#include <Bpp/Text/TextTools.h>
-#include <Bpp/Text/StringTokenizer.h>
-#include <Bpp/Io/FileTools.h>
+#include "Fasta.h"
 
 using namespace bpp;
 using namespace std;
@@ -82,27 +82,36 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const
       // Get the sequence name line
       seqname = string(linebuffer.begin() + 1, linebuffer.end());
     }
-    if (c != '>' && !TextTools::isWhiteSpaceCharacter(c)) {
+    if (c != '>' && !TextTools::isWhiteSpaceCharacter(c))
+    {
       // Sequence content
       content += TextTools::toUpper(TextTools::removeWhiteSpaces(linebuffer));
     }
   }
 
+  seqname = TextTools::removeWhiteSpaces(seqname);
+
   bool res = (!input.eof());
   // Sequence name and comments isolation
-  if (strictNames_ || extended_) {
+  if (strictNames_ || extended_)
+  {
     size_t pos = seqname.find_first_of(" \t\n");
     string seqcmt;
-    if (pos != string::npos) {
+    if (pos != string::npos)
+    {
       seqcmt = seqname.substr(pos + 1);
       seqname = seqname.substr(0, pos);
     }
-    if (extended_) {
+    if (extended_)
+    {
       StringTokenizer st(seqcmt, " \\", true, false);
-      while (st.hasMoreToken()) {
+      while (st.hasMoreToken())
+      {
         seqcmts.push_back(st.nextToken());
       }
-    } else {
+    }
+    else
+    {
       seqcmts.push_back(seqcmt);
     }
     seq.setComments(seqcmts);
@@ -123,7 +132,7 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const
   // Sequence comments
   if (extended_)
   {
-    for (unsigned int i = 0 ; i < seq.getComments().size() ; i++)
+    for (unsigned int i = 0; i < seq.getComments().size(); i++)
     {
       output << " \\" << seq.getComments()[i];
     }
@@ -131,7 +140,7 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const
   output << endl;
   // Sequence content
   string buffer; // use a buffer to format sequence with states > 1 char
-  for (size_t i = 0 ; i < seq.size() ; ++i)
+  for (size_t i = 0; i < seq.size(); ++i)
   {
     buffer += seq.getChar(i);
     if (buffer.size() >= charsByLine_)
@@ -195,7 +204,8 @@ void Fasta::appendSequencesFromStream(istream& input, SequenceContainer& vsc) co
       vsc.addSequence(tmpseq, checkNames_);
     }
   }
-  if (extended_ && cmts.size()) {
+  if (extended_ && cmts.size())
+  {
     vsc.setGeneralComments(cmts);
   }
 }
@@ -210,7 +220,7 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const
   if (extended_)
   {
     // Loop for all general comments
-    for (unsigned int i = 0 ; i < sc.getGeneralComments().size() ; i++)
+    for (unsigned int i = 0; i < sc.getGeneralComments().size(); i++)
     {
       output << "#\\" << sc.getGeneralComments()[i] << endl;
     }
@@ -218,7 +228,7 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const
   }
 
   // Main loop : for all sequences in vector container
-  vector<string> names = sc.getSequencesNames();
+  vector<string> names = sc.getSequenceNames();
   for (size_t i = 0; i < names.size(); ++i)
   {
     writeSequence(output, sc.getSequence(names[i]));
@@ -229,7 +239,8 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const
 
 // FileIndex class
 
-void Fasta::FileIndex::build(const std::string& path, const bool strictSequenceNames) {
+void Fasta::FileIndex::build(const std::string& path, const bool strictSequenceNames)
+{
   // open the file
   std::ifstream f_in(path.c_str());
   // get the size of the file
@@ -240,11 +251,14 @@ void Fasta::FileIndex::build(const std::string& path, const bool strictSequenceN
   streampos pos = f_in.tellg();
   char ch;
   std::string seq_id = "";
-  while (f_in.get(ch)) {
-    if (ch == '>') {
+  while (f_in.get(ch))
+  {
+    if (ch == '>')
+    {
       pos = static_cast<int>(f_in.tellg()) - 1;
       std::getline(f_in, seq_id);
-      if (strictSequenceNames) {
+      if (strictSequenceNames)
+      {
         seq_id = seq_id.substr(0, seq_id.find_first_of(" \t\n"));
       }
       index_[seq_id] = pos;
@@ -253,20 +267,25 @@ void Fasta::FileIndex::build(const std::string& path, const bool strictSequenceN
   f_in.close();
 }
 
-streampos Fasta::FileIndex::getSequencePosition(const std::string& id) const {
+streampos Fasta::FileIndex::getSequencePosition(const std::string& id) const
+{
   std::map<std::string, streampos>::const_iterator it = index_.find(id);
-  if (it != index_.end()) {
+  if (it != index_.end())
+  {
     return it->second;
   }
   throw Exception("Sequence not found: " + id);
 }
 
-void Fasta::FileIndex::read(const std::string& path) {
+void Fasta::FileIndex::read(const std::string& path)
+{
   std::ifstream f_in(path.c_str());
   std::string line_buffer = "";
-  while (!f_in.eof()) {
+  while (!f_in.eof())
+  {
     std::getline(f_in, line_buffer);
-    if (bpp::TextTools::isEmpty(bpp::TextTools::removeSurroundingWhiteSpaces(line_buffer))) {
+    if (bpp::TextTools::isEmpty(bpp::TextTools::removeSurroundingWhiteSpaces(line_buffer)))
+    {
       continue;
     }
     bpp::StringTokenizer tk(line_buffer, "\t");
@@ -275,19 +294,23 @@ void Fasta::FileIndex::read(const std::string& path) {
   f_in.close();
 }
 
-void Fasta::FileIndex::write(const std::string& path) {
+void Fasta::FileIndex::write(const std::string& path)
+{
   std::ofstream f_out(path.c_str());
-  for (std::map<std::string, streampos>::const_iterator it = index_.begin() ; it != index_.end() ; ++it) {
+  for (std::map<std::string, streampos>::const_iterator it = index_.begin(); it != index_.end(); ++it)
+  {
     f_out << it->first << "\t" << bpp::TextTools::toString(it->second) << std::endl;
   }
   f_out.close();
 }
 
-void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, const std::string& path) const {
+void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, const std::string& path) const
+{
   getSequence(seqid, seq, path, false);
 }
 
-void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, const std::string& path, const bool strictSequenceNames) const {
+void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, const std::string& path, const bool strictSequenceNames) const
+{
   Fasta fs(60);
   fs.strictNames(strictSequenceNames);
   streampos seq_pos = this->getSequencePosition(seqid);
@@ -298,4 +321,3 @@ void Fasta::FileIndex::getSequence(const std::string& seqid, Sequence& seq, cons
 }
 
 /******************************************************************************/
-

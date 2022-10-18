@@ -1,60 +1,61 @@
 //
 // File: VectorProbabilisticSiteContainer.h
-// Created by: Murray Patterson
-// Created on: Mon Oct 19 2015
+// Authors:
+//   Murray Patterson
+// Created: 2015-10-19 00:00:00
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
-
-   This software is a computer program whose purpose is to provide classes
-   for sequences analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
+  Copyright or Â© or Copr. CNRS, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for sequences analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _VECTORPROBABILISTICSITECONTAINER_H_
-#define _VECTORPROBABILISTICSITECONTAINER_H_
+#ifndef BPP_SEQ_CONTAINER_VECTORPROBABILISTICSITECONTAINER_H
+#define BPP_SEQ_CONTAINER_VECTORPROBABILISTICSITECONTAINER_H
 
-#include "VectorPositionedContainer.h"
-#include "VectorMappedContainer.h"
 
 #include "../ProbabilisticSite.h"
-#include "ProbabilisticSiteContainer.h"
 #include "AbstractProbabilisticSequenceContainer.h"
 #include "AlignedValuesContainer.h"
 #include "OrderedSequenceContainer.h"
+#include "ProbabilisticSiteContainer.h"
+#include "VectorProbabilisticSequenceContainer.h"
+#include "VectorMappedContainer.h"
+#include "VectorPositionedContainer.h"
 
 // From the STL :
 #include <vector>
 
 namespace bpp
 {
-
 /**
  * @brief The VectorProbabilisticSiteContainer class.
  *
@@ -68,21 +69,23 @@ namespace bpp
  *
  * @see ProbabilisticSequence, ProbabilisticSite, VectorSiteContainer
  */
-  
-class VectorProbabilisticSiteContainer :
-    virtual public VectorPositionedContainer<ProbabilisticSite>,
-    virtual public VectorMappedContainer<BasicProbabilisticSequence>,
-    virtual public AbstractProbabilisticSequenceContainer,
-    virtual public ProbabilisticSiteContainer
-{
-public :
 
+class VectorProbabilisticSiteContainer :
+    public AbstractProbabilisticSequenceContainer,
+// This container implements the SequenceContainer interface
+// and use the AbstractSequenceContainer adapter.
+    public virtual ProbabilisticSiteContainer,
+// This container is a SiteContainer.
+    virtual public VectorPositionedContainer<ProbabilisticSite>,
+    virtual public VectorMappedContainer<ProbabilisticSequence>
+{
+public:
   /**
    * @brief Build a new emtpy container.
    *
    */
-  
-  VectorProbabilisticSiteContainer(const Alphabet * alpha);
+
+  VectorProbabilisticSiteContainer(const Alphabet* alpha);
 
   /**
    * @brief Build a new container from a set of sites.
@@ -118,19 +121,18 @@ public :
    */
 
   /**
-   * @bried Copy contructors
+   * @brief Copy contructors
    *
    * Sites are cloned.
    *
    */
-  
+
   VectorProbabilisticSiteContainer(const VectorProbabilisticSiteContainer& vpsc);
 
-  VectorProbabilisticSiteContainer(const OrderedSequenceContainer& osc);
-
+  VectorProbabilisticSiteContainer(const VectorProbabilisticSequenceContainer& osc);
 
   VectorProbabilisticSiteContainer& operator=(const VectorProbabilisticSiteContainer& vpsc);
-  
+
   VectorProbabilisticSiteContainer* clone() const { return new VectorProbabilisticSiteContainer(*this); }
 
   /**
@@ -139,20 +141,18 @@ public :
 
   // class destructor
   virtual ~VectorProbabilisticSiteContainer() {}
-  
- public :
 
-  size_t getNumberOfSequences() const { return VectorMappedContainer<BasicProbabilisticSequence>::getSize(); }
+public:
+  size_t getNumberOfSequences() const { return VectorMappedContainer<ProbabilisticSequence>::getSize(); }
 
   /*
    * @brief get Objects
    *
    * @{
    */
-  
   const std::shared_ptr<ProbabilisticSite> getSite(size_t i) const
   {
-    if(i >= getNumberOfSites())
+    if (i >= getNumberOfSites())
       throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getProbabilisticSite.", i, 0, getNumberOfSites() - 1);
 
     return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
@@ -160,42 +160,53 @@ public :
 
   std::shared_ptr<ProbabilisticSite> getSite(size_t i)
   {
-    if(i >= getNumberOfSites())
+    if (i >= getNumberOfSites())
       throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getProbabilisticSite.", i, 0, getNumberOfSites() - 1);
 
     return VectorPositionedContainer<ProbabilisticSite>::getObject(i);
   }
 
-  const std::shared_ptr<BasicProbabilisticSequence> getSequence(std::size_t i) const;
+  /**
+   * @brief Get Sequence from a position in the container.
+   *
+   * @param i  index of the sequence
+   * @return A read-only reference to the selected sequence.
+   */
+  const ProbabilisticSequence& getSequence(std::size_t i) const;
 
-  const std::shared_ptr<BasicProbabilisticSequence> getSequence(const std::string& name) const;
-
+  /**
+   * @brief Get Sequence from its name in the container.
+   * @param name Name of the sequence
+   * @return A read-only reference to the selected sequence.
+   */
+  const ProbabilisticSequence& getSequence(const std::string& name) const;
+  
   bool hasSequence(const std::string& name) const
   {
     // Look for sequence name:
-    return VectorMappedContainer<BasicProbabilisticSequence>::hasObject(name);
+    return VectorMappedContainer<ProbabilisticSequence>::hasObject(name);
   }
 
   size_t getSequencePosition(const std::string& name) const
   {
     // Look for sequence name:
-    return VectorMappedContainer<BasicProbabilisticSequence>::getObjectPosition(name);
+    return VectorMappedContainer<ProbabilisticSequence>::getObjectPosition(name);
   }
 
-  std::vector<std::string> getSequencesNames() const
+  std::vector<std::string> getSequenceNames() const
   {
-    return VectorMappedContainer<BasicProbabilisticSequence>::getObjectsNames();
+    return VectorMappedContainer<ProbabilisticSequence>::getObjectNames();
   }
-  
-  void setSequencesNames(const std::vector<std::string>& names, bool checkNames = true)
+
+  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true)
   {
-    VectorMappedContainer<BasicProbabilisticSequence>::setObjectsNames(names);
+    VectorMappedContainer<ProbabilisticSequence>::setObjectNames(names);
   }
-  
+
 
   void setComments(size_t sequenceIndex, const Comments& comments)
   {
-    VectorMappedContainer<BasicProbabilisticSequence>::getObject(sequenceIndex)->setComments(comments);
+    VectorMappedContainer<ProbabilisticSequence>::getObject(sequenceIndex)->setComments(comments);
   }
 
 
@@ -204,7 +215,7 @@ public :
    *
    */
 
-  
+
   /**
    * @name SequencedValuesContainer methods.
    *
@@ -217,16 +228,15 @@ public :
    * @param sequenceIndex index of the looked value in the site
    * @param state  state alphabet
    */
-  
-  double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const 
+  double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
   {
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
-    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][(size_t)state];
+    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][getAlphabet()->getStateIndex(state)-1];
   }
-  
-  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const 
+
+  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const
   {
-    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][(size_t)state];
+    return (*getSite(siteIndex))[getSequencePosition(sequenceName)][getAlphabet()->getStateIndex(state)-1];
   }
 
   /*
@@ -246,17 +256,16 @@ public :
    * @param sequenceIndex index of the looked value in the site
    * @param state  state alphabet
    */
-  
-  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const 
+  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
   {
     if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
     if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorProbabilisticSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
-    return (*getSite(siteIndex))[sequenceIndex][(size_t)state];
+    return (*getSite(siteIndex))[sequenceIndex][getAlphabet()->getStateIndex(state)-1];
   }
-  
-  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const 
+
+  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const
   {
-    return (*getSite(siteIndex))[sequenceIndex][(size_t)state];
+    return (*getSite(siteIndex))[sequenceIndex][getAlphabet()->getStateIndex(state)-1];
   }
 
   /*
@@ -265,25 +274,24 @@ public :
    */
 
   /*
-   * @brief Add elements
-   *
-   */
-
-  /*
    * @brief Append a Site. The shared_ptr is shared.
    *
    */
 
-  void appendSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false);
+  void addSite(std::shared_ptr<ProbabilisticSite> site, bool checkPosition = false);
 
   /*
    * @brief Add a Sequence of sites. Sites are copied.
    *
    */
 
-  void addSequence(std::shared_ptr<BasicProbabilisticSequence> sequence, bool checkName = true);
+  void addSequence(const ProbabilisticSequence& sequence, bool checkName = true);
 
   void addSequence(const Sequence& sequence, bool checkName = true);
+
+  void setSequence(const std::string& name, const ProbabilisticSequence& sequence, bool checkName);
+
+  void setSequence(size_t sequenceIndex, const ProbabilisticSequence& sequence, bool checkName);
 
   void clear();
 
@@ -294,7 +302,6 @@ public :
    *
    * @{
    */
-
   void deleteSites(size_t siteIndex, size_t length)
   {
     VectorPositionedContainer<ProbabilisticSite>::deleteObjects(siteIndex, length);
@@ -304,18 +311,18 @@ public :
   {
     return VectorPositionedContainer<ProbabilisticSite>::getSize();
   }
-  
+
   void reindexSites();
 
   Vint getSitePositions() const;
 
   void setSitePositions(Vint vPositions);
 
-  
+protected:
+  // Create n void sites:
+  void realloc(size_t n);
+
   /** @} */
-
 };
-
 } // end of namespace bpp
-
-#endif  // _VECTORPROBABILISTICSITECONTAINER_H_
+#endif // BPP_SEQ_CONTAINER_VECTORPROBABILISTICSITECONTAINER_H

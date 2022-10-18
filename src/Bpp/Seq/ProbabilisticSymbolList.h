@@ -1,49 +1,50 @@
 //
 // File: ProbabilisticSymbolList.h
-// Created by: Murray Patterson
-// Created on: Sun Oct 4 2015
+// Authors:
+//   Murray Patterson
+// Created: 2015-10-04 00:00:00
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-
+  Copyright or Â© or Copr. Bio++ Development Team, (November 17, 2004)
+  
   This software is a computer program whose purpose is to provide classes
   for sequences analysis.
-
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
   modify and/ or redistribute the software under the terms of the CeCILL
   license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
-
-  As a counterpart to the access to the source code and  rights to copy,
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
   modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
-
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
   In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
+  with loading, using, modifying and/or developing or reproducing the
   software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
   professionals having in-depth computer knowledge. Users are therefore
   encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
-
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
   The fact that you are presently reading this means that you have had
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _PROBABILISTICSYMBOLLIST_H_
-#define _PROBABILISTICSYMBOLLIST_H_
+#ifndef BPP_SEQ_PROBABILISTICSYMBOLLIST_H
+#define BPP_SEQ_PROBABILISTICSYMBOLLIST_H
 
-#include "Alphabet/Alphabet.h"
 #include <Bpp/Clonable.h>
 #include <Bpp/Numeric/Table.h>
 
+#include "Alphabet/Alphabet.h"
 #include "CoreSymbolList.h"
 #include "CruxSymbolListSite.h"
 
@@ -53,35 +54,43 @@
 
 namespace bpp
 {
-
-  class ProbabilisticSymbolList:
-    virtual public CoreSymbolList<std::vector<double> >
-  {
-  public:
-
-    ProbabilisticSymbolList() 
-    {
-    }
+  /**
+   * @brief The probabilisticSympbolList interface.
+   *
+   * This container aims at containing an ordered list of
+   * probabilistic sites.
+   * It does not inherit from * SympbolList<std::vector<double>>
+   * because it does not contain a * vector of sites but a Table of
+   * doubles.
+   *
+   **/
   
-    /**
-     * @name The Colonable interface
-     *
-     * @{
-     */
-    ProbabilisticSymbolList * clone() const = 0;
+class ProbabilisticSymbolList :
+    virtual public CoreSymbolList<std::vector<double> >  
+{
+public:
+  ProbabilisticSymbolList()
+  {}
 
-    /**
-     * @}
-     */
+  /**
+   * @name The Colonable interface
+   *
+   * @{
+   */
+  ProbabilisticSymbolList* clone() const = 0;
 
-    // class destructor
-    virtual ~ProbabilisticSymbolList() {}
-  
-  public:
-    typedef Table<double> DataTable;
+  /**
+   * @}
+   */
 
-    virtual const DataTable& getTable() const = 0;
-  };
+  // class destructor
+  virtual ~ProbabilisticSymbolList() {}
+
+public:
+  typedef Table<double> DataTable;
+
+  virtual const DataTable& getTable() const = 0;
+};
 
 /**
  * @brief A basic ProbabilisticSymbolList object.
@@ -97,36 +106,32 @@ namespace bpp
 class BasicProbabilisticSymbolList :
   public virtual ProbabilisticSymbolList
 {
-public :
-
+public:
   typedef Table<double> DataTable;
 
-private :
-
+private:
   /**
    * @brief The Alphabet attribute must be initialized in the constructor and then can never be changed.
    *
    * To apply another alphabet to the list requires creating another
    * list.
    */
-  const Alphabet * alphabet_;
+  const Alphabet* alphabet_;
 
-protected :
-
+protected:
   /**
    * @brief The list content.
    */
   DataTable content_;
 
-public :
-
+public:
   /**
    * @brief Build a new void BasicProbabilisticSymbolList object with the specified alphabet.
    *
    * @param alpha the alphabet to use.
    */
 
-  BasicProbabilisticSymbolList(const Alphabet * alpha);
+  BasicProbabilisticSymbolList(const Alphabet* alpha);
 
   /**
    * @brief Build a new BasicProbabilisticSymbolList object with the specified alphabet.
@@ -135,37 +140,37 @@ public :
    * @param alpha The alphabet to use.
    * @throw If the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
-  BasicProbabilisticSymbolList(const DataTable & list, const Alphabet * alpha);
+  BasicProbabilisticSymbolList(const DataTable& list, const Alphabet* alpha);
 
   /**
    * @brief The generic copy constructor.
    */
-  BasicProbabilisticSymbolList(const ProbabilisticSymbolList & list);
+  BasicProbabilisticSymbolList(const ProbabilisticSymbolList& list);
 
   BasicProbabilisticSymbolList(const CruxSymbolList& list);
 
   /**
    * @brief The copy constructor.
    */
-  BasicProbabilisticSymbolList(const BasicProbabilisticSymbolList & list);
+  BasicProbabilisticSymbolList(const BasicProbabilisticSymbolList& list);
 
   /**
    * @brief The generic assignment operator.
    */
 
-  BasicProbabilisticSymbolList & operator=(const ProbabilisticSymbolList & list);
+  BasicProbabilisticSymbolList& operator=(const ProbabilisticSymbolList& list);
 
   /**
    * @brief The assignement operator.
    */
-  BasicProbabilisticSymbolList & operator=(const BasicProbabilisticSymbolList & list);
+  BasicProbabilisticSymbolList& operator=(const BasicProbabilisticSymbolList& list);
 
   /**
    * @name The Clonable interface
    *
    * @{
    */
-  BasicProbabilisticSymbolList * clone() const { return new BasicProbabilisticSymbolList(* this); }
+  BasicProbabilisticSymbolList* clone() const { return new BasicProbabilisticSymbolList(*this); }
 
   /**
    * @}
@@ -174,12 +179,11 @@ public :
   // class destructor
   virtual ~BasicProbabilisticSymbolList() {}
 
-public :
+public:
+  const Alphabet* getAlphabet() const { return alphabet_; }
 
-  const Alphabet * getAlphabet() const { return alphabet_; }
-  
   size_t size() const { return static_cast<size_t>(content_.getNumberOfColumns()); }
-  
+
   void setContent(const std::vector<std::vector<double> >& list);
 
   void setContent(const DataTable& list);
@@ -192,14 +196,14 @@ public :
    * scientific format, and precision 8.
    *
    */
-  
+
   std::string toString() const;
 
-  void addElement(const std::vector<double> & element);
+  void addElement(const std::vector<double>& element);
 
-  void addElement(size_t pos, const std::vector<double> & element);
+  void addElement(size_t pos, const std::vector<double>& element);
 
-  void setElement(size_t pos, const std::vector<double> & element);
+  void setElement(size_t pos, const std::vector<double>& element);
 
   const std::vector<double>& getElement(size_t pos) const
   {
@@ -208,11 +212,11 @@ public :
 
   virtual void deleteElement(size_t pos) { content_.deleteColumn(pos); }
 
-  virtual void deleteElements(size_t pos, size_t len) 
+  virtual void deleteElements(size_t pos, size_t len)
   {
-    content_.deleteRows(pos,len);
+    content_.deleteRows(pos, len);
   }
-  
+
   const std::vector<std::vector<double> >& getContent() const { return content_.getData(); }
 
   const DataTable& getTable() const { return content_; }
@@ -222,31 +226,31 @@ public :
     return getElement(pos);
   }
 
-  const std::vector<double>& operator[](size_t i) const
+  const std::vector<double>& operator[](size_t pos) const
   {
-    return content_.getColumn(i);
+    return content_.getColumn(pos);
   }
 
-  std::vector<double>& operator[](size_t i)
+  std::vector<double>& operator[](size_t pos)
   {
-    return content_.getColumn(i);
+    return content_.getColumn(pos);
   }
 
   double getStateValueAt(size_t siteIndex, int state) const
   {
     if (siteIndex >= content_.getNumberOfColumns())
       throw IndexOutOfBoundsException("ProbabilisticSymbolList::getStateValueAt.", siteIndex, 0, content_.getNumberOfColumns() - 1);
-    return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state)-1];
+    return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state) - 1];
   }
-    
-  double operator()(size_t siteIndex, int state) const 
+
+  double operator()(size_t siteIndex, int state) const
   {
-    return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state)-1];
+    return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state) - 1];
   }
-  
-  void shuffle(){};
+
+  void shuffle(){
+    throw Exception("ProbabilisticSymbolList::shuffle not implemented, yet.");
+  }
 };
-
 } // end of namespace bpp
-
-#endif // _PROBABILISTICSYMBOLLIST_H
+#endif // BPP_SEQ_PROBABILISTICSYMBOLLIST_H
