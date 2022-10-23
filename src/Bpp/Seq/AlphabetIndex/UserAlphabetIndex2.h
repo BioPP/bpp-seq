@@ -93,12 +93,12 @@ public:
 public:
   double getIndex(int state1, int state2) const
   {
-    return index_(alph_->getStateIndex(state1), alph_->getStateIndex(state2));
+    return index_(alph_->getStateIndex(state1)-1, alph_->getStateIndex(state2)-1);
   }
 
   double getIndex(const std::string& state1, const std::string& state2) const
   {
-    return index_(alph_->getStateIndex(state1), alph_->getStateIndex(state2));
+    return index_(alph_->getStateIndex(state1)-1, alph_->getStateIndex(state2)-1);
   }
 
   void setIndexMatrix(const Matrix<double>& mat)

@@ -106,13 +106,12 @@ public:
 public:
   double getIndex(int state) const
   {
-    if (state < 0 || state > 19) throw BadIntException(state, "GranthamAAPolarityIndex::getIndex(). Invalid state.", getAlphabet());
-    return polarity_[static_cast<size_t>(state)];
+    return polarity_[getAlphabet()->getStateIndex(state)-1];
   }
 
   double getIndex(const std::string& state) const
   {
-    return polarity_[static_cast<size_t>(getAlphabet()->charToInt(state))];
+    return polarity_[getAlphabet()->getStateIndex(state)-1];
   }
 
   std::vector<double>* getIndexVector() const { return new std::vector<double>(polarity_); }

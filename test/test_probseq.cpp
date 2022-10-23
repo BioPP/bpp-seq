@@ -160,7 +160,7 @@ int main() {
   
   // *** the probabilistic version ***
   istringstream iss("0 1\n0.85 0.15\n0.99 0.01");
-  DataTable * data = DataTable::read(iss, false, " ", false);
+  auto data = DataTable::read(iss, false, " ", false);
 
   cerr << endl << "init probabilistic symbol list with : " << endl;
   
@@ -216,7 +216,7 @@ int main() {
 
   // *** the probabilist¡ic version ***
   istringstream isss("0 0 1 0\n0.05 0 0.05 0.9\n0.01 0.97 0 0.02");
-  DataTable * dna_data = DataTable::read(isss, false, " ", false);
+  auto dna_data = DataTable::read(isss, false, " ", false);
 
   cerr << endl << "init probabilistic DNA symbol list with : " << endl;
   DataTable::write(*dna_data, cerr, false);

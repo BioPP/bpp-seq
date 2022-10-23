@@ -68,15 +68,12 @@ GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
 
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
 {
-  if (state1 < 0 || state1 > 19)
-    throw BadIntException(state1, "GranthamAAChemicalDistance::getIndex(). Invalid state1.", getAlphabet());
-  if (state2 < 0 || state2 > 19)
-    throw BadIntException(state2, "GranthamAAChemicalDistance::getIndex(). Invalid state2.", getAlphabet());
-  double d = distanceMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
+  double d = distanceMatrix_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
   if (sign_ == SIGN_NONE)
     return NumTools::abs<double>(d);
   if (sign_ == SIGN_PC1)
-    return signMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2)) * NumTools::abs<double>(d);
+    return signMatrix_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1) * NumTools::abs<double>(d);
+  
   return d;
 }
 
