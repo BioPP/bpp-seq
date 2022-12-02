@@ -43,6 +43,7 @@
 
 
 #include "AbstractAlphabet.h"
+#include <Bpp/Text/TextTools.h>
 
 namespace bpp
 {
@@ -79,17 +80,17 @@ public:
   virtual ~IntegerAlphabet() {}
 
 public:
-  unsigned int getSize() const { return MAX_ + 1; }
+  unsigned int getSize() const { return MAX_; }
 
   unsigned int getNumberOfTypes() const { return MAX_ + 1; }
 
-  std::string getAlphabetType() const { return "Integer"; }
+  std::string getAlphabetType() const { return "Integer(N=" + TextTools::toString(MAX_) + ")"; }
 
   int getUnknownCharacterCode() const { return static_cast<int>(MAX_); }
 
   bool isUnresolved(int state) const { return state == static_cast<int>(MAX_); }
 
-  bool isUnresolved(const std::string& state) const { return false; }
+  bool isUnresolved(const std::string& state) const { return state == "-" or state == "?"; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABET_INTEGERALPHABET_H
