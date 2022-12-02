@@ -148,6 +148,14 @@ Alphabet* SequenceApplicationTools::getAlphabet(
   }
   else if (alphabet == "Binary")
     chars = new BinaryAlphabet();
+  else if (alphabet == "Integer")
+  {
+    if (args.find("N") == args.end())
+      throw Exception("Missing 'N' argument in Integer for size:" + alphabet);
+
+    uint N = TextTools::to<unsigned int>(args["N"]);
+    chars = new IntegerAlphabet(N);
+  }
   else if (alphabet == "Lexicon")
   {
     vector<string> vWord = ApplicationTools::getVectorParameter<string>("words", args, ',', "()");
@@ -674,10 +682,8 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
   VectorSiteContainer* sites(0);
   VectorProbabilisticSiteContainer* psites(0);
 
-  SiteContainer* ialn = iAln->readAlignment(sequenceFilePath, alpha2);
-
   if (iAln)
-    sites=new VectorSiteContainer(*ialn);
+    sites=new VectorSiteContainer(*iAln->readAlignment(sequenceFilePath, alpha2));
   else
     psites=new VectorProbabilisticSiteContainer(*iProbAln->readAlignment(sequenceFilePath, alpha2));
 
