@@ -434,6 +434,35 @@ public:
 
 
   /**
+   * @brief Create a new container with a specified set of sites.
+   *
+   * Sites are specified by their indice, beginning at 0. Sites may be selected multiple times.
+   * This version takes as input a generic AlignmentData object, and will try various casts.
+   *
+   * @param sites       The container from wich sequences are to be taken.
+   * @param selection   The positions of all sites to retrieve.
+   * @return A container of the same type as the input one, with the selected sites. Comments from the original container will be copied.
+   */
+  static std::unique_ptr<AlignmentDataInterface>
+  getSelectedSites(
+      const AlignmentDataInterface& sites,
+      const SiteSelection& selection)
+  {
+    try {
+      auto& sc = dynamic_cast<const SiteContainerInterface&>(sites);
+      return getSelectedSites<Site, Sequence>(sc, selection);
+    } catch (std::bad_cast& e) {}
+   
+    try {
+      auto& psc = dynamic_cast<const ProbabilisticSiteContainerInterface&>(sites);
+      return getSelectedSites<ProbabilisticSite, ProbabilisticSequence>(psc, selection);
+    } catch (std::bad_cast& e) {}
+    
+    throw Exception("SiteContainerTools::getSelectedSites : unsupported container type.");
+  }
+
+
+  /**
    * @brief Extract a specified set of positions.
    *
    * A SiteContainer is filled with the specified positions.
