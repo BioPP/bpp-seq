@@ -174,7 +174,7 @@ public:
       addSequence(sc.getSequence(i), true);
     }
     if (sc.getNumberOfSequences() > 0) {
-      length_ = getSequence(0).size();
+      length_ = sequence(0).size();
     } else {
       length_ = 0;
     }
@@ -241,7 +241,7 @@ public:
    *
    * @{
    */
-  const SiteType& getSite(size_t sitePosition) const override
+  const SiteType& site(size_t sitePosition) const override
   {
     if (siteVector_.hasObjectWithPosition(sitePosition)) {
       return *siteVector_.getObject(sitePosition);
@@ -255,7 +255,7 @@ public:
     auto alphaPtr = getAlphabet();
     auto site = std::make_shared<SiteType>(alphaPtr, static_cast<int>(sitePosition + 1));
     for (size_t j = 0; j < n; j++)
-      site->addElement(getSequence(j)[sitePosition]);
+      site->addElement(sequence(j)[sitePosition]);
 
     siteVector_.addObject_(site, sitePosition, true);
     return *siteVector_.getObject(sitePosition);
@@ -297,7 +297,7 @@ public:
       throw IndexOutOfBoundsException("AlignedSequenceContainer::removeSite", sitePosition, 0, getNumberOfSites());
 
     // Get old site
-    getSite(sitePosition); // Creates the site if it does not exist!
+    site(sitePosition); // Creates the site if it does not exist!
 
     // For all sequences
     for (size_t j = 0; j < getNumberOfSequences(); ++j)
@@ -550,7 +550,7 @@ public:
   
   //Needed because of the template class
   using TemplateVectorSequenceContainer<SequenceType>::getAlphabet;
-  using TemplateVectorSequenceContainer<SequenceType>::getSequence;
+  using TemplateVectorSequenceContainer<SequenceType>::sequence;
   using TemplateVectorSequenceContainer<SequenceType>::getSequence_;
   using TemplateVectorSequenceContainer<SequenceType>::getNumberOfSequences;
   using TemplateVectorSequenceContainer<SequenceType>::getComments;

@@ -158,7 +158,7 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(const SiteContainer
  
   // Now try to add each site:
   for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
-    auto sitePtr = std::unique_ptr<Site>(sc.getSite(i).clone());
+    auto sitePtr = std::unique_ptr<Site>(sc.site(i).clone());
     addSite(sitePtr, false);
   }
 }
@@ -195,7 +195,7 @@ CompressedVectorSiteContainer& CompressedVectorSiteContainer::operator=(const Si
 
   // Now try to add each site:
   for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
-    auto sitePtr = std::unique_ptr<Site>(sc.getSite(i).clone());
+    auto sitePtr = std::unique_ptr<Site>(sc.site(i).clone());
     addSite(sitePtr, false);
   }
 
@@ -464,7 +464,7 @@ Vint CompressedVectorSiteContainer::getSiteCoordinates() const
 
 /******************************************************************************/
 
-const Sequence& CompressedVectorSiteContainer::getSequence(size_t sequencePosition) const
+const Sequence& CompressedVectorSiteContainer::sequence(size_t sequencePosition) const
 {
   if (sequencePosition >= getNumberOfSequences())
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::getSequence.", sequencePosition, 0, getNumberOfSequences() - 1);
@@ -487,7 +487,7 @@ const Sequence& CompressedVectorSiteContainer::getSequence(size_t sequencePositi
 	      sequenceComments_[sequencePosition],
         alphaPtr);
 
-  sequenceContainer_.addObject_(ns, sequencePosition, getSequenceKey(sequencePosition), false);
+  sequenceContainer_.addObject_(ns, sequencePosition, sequenceKey(sequencePosition), false);
 
   return *ns;
 }

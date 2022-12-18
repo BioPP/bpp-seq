@@ -269,7 +269,7 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "binary container's first element is : ";
-  cerr << container.getSequence(0).toString() << endl;
+  cerr << container.sequence(0).toString() << endl;
 
   // *** the probabilistic version ***
   cerr << endl << "Init vector probabilistic site containers with just alphabets...";
@@ -283,7 +283,7 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "binary probabilistic container's first element is : " << endl;
-  DTable::write(p_container.getSequence(0).getTable(), cerr, false);
+  DTable::write(p_container.sequence(0).getTable(), cerr, false);
 
   /*
    * *** Fasta (and Pasta) files ***
@@ -294,94 +294,94 @@ int main() {
   cerr << "***" << endl;
 
   // *** the normal version ***
-  Fasta * fasta = new Fasta();
-  cerr << endl << "created a handler of type : " << fasta->getFormatName() << endl;
+  Fasta fasta;
+  cerr << endl << "created a handler of type : " << fasta.getFormatName() << endl;
 
   string fasta_in = ">another binary sequence\n101\n";
   istringstream fasta_iss(fasta_in);
   cerr << "read the following into binary container..." << endl;
   cerr << endl << fasta_in << endl;
-  fasta->appendSequencesFromStream(fasta_iss, container);
+  fasta.appendSequencesFromStream(fasta_iss, container);
   cerr << "OK." << endl;
   
   cerr << "binary container contains : " << endl << endl;
   for(size_t i = 0; i < container.getNumberOfSequences(); ++i)
-    cerr << container.getSequence(i).toString() << endl;
+    cerr << container.sequence(i).toString() << endl;
   cerr << endl;
 
   // *** the probabilistic version ***
-  Pasta * pasta = new Pasta();
-  cerr << "created a handler of type : " << pasta->getFormatName() << endl;
+  Pasta pasta;
+  cerr << "created a handler of type : " << pasta.getFormatName() << endl;
 
   string pasta_in = "0 1\n>a binary probabilistic sequence\n0.64 0.36\n0 1\n0.3 0.7\n";
   istringstream pasta_iss(pasta_in);
   cerr << "read the following into binary probabilistic container..." << endl;
   cerr << endl << pasta_in << endl;
-  pasta->appendAlignmentFromStream(pasta_iss, p_container);
+  pasta.appendAlignmentFromStream(pasta_iss, p_container);
   cerr << "OK." << endl;
 
   string pasta_in2 = ">another binary probabilistic sequence\n0.8 0.4 0.333\n";
   istringstream pasta_iss2(pasta_in2);
   cerr << "read the following into binary probabilistic container (in fast-track way for binary alphabets)..." << endl;
   cerr << endl << pasta_in2 << endl;
-  pasta->appendAlignmentFromStream(pasta_iss2, p_container);
+  pasta.appendAlignmentFromStream(pasta_iss2, p_container);
   cerr << "OK." << endl;
 
   cerr << "binary probabilistic container contains : " << endl << endl;
-  for(size_t i = 0; i < p_container.getNumberOfSequences(); ++i) {
-    DTable::write(p_container.getSequence(i).getContent(), cerr, false);
+  for( size_t i = 0; i < p_container.getNumberOfSequences(); ++i) {
+    DTable::write(p_container.sequence(i).getContent(), cerr, false);
     cerr << endl;
   }
 
   cerr << "binary probabilistic 1st site contains :" << endl << endl;
-  cerr << p_container.getSite(0).toString();
+  cerr << p_container.site(0).toString();
   cerr << endl << endl;
 
   cerr << "=========================" << endl;
   cerr << "     DNA " << endl;
 
-  Fasta * dna_fasta = new Fasta();
-  cerr << endl << "created a handler of type : " << fasta->getFormatName() << endl;
+  Fasta dna_fasta;
+  cerr << endl << "created a handler of type : " << fasta.getFormatName() << endl;
   string dna_fasta_in = ">a dna sequence\nACG\n";
   istringstream dna_fasta_iss(dna_fasta_in);
   cerr << "read the following into dna container..." << endl;
   cerr << endl << dna_fasta_in << endl;
-  dna_fasta->appendSequencesFromStream(dna_fasta_iss, dna_container);
+  dna_fasta.appendSequencesFromStream(dna_fasta_iss, dna_container);
   cerr << "OK." << endl;
 
   cerr << "DNA container contains : " << endl << endl;
   for(size_t i = 0; i < dna_container.getNumberOfSequences(); ++i)
-    cerr << dna_container.getSequence(i).toString() << endl;
+    cerr << dna_container.sequence(i).toString() << endl;
   cerr << endl;
 
   // DNA...
-  Pasta * dna_pasta = new Pasta();
-  cerr << "created a handler of type : " << pasta->getFormatName() << endl;
+  Pasta dna_pasta;
+  cerr << "created a handler of type : " << pasta.getFormatName() << endl;
 
   string dna_pasta_in = "A C G T\n>a dna prob. sequence\n0.1834088 0.6140376 0.132227880 0.07032571\n0.4960896 0.0523049 0.123549944 0.32805560\n";
   istringstream dna_pasta_iss(dna_pasta_in);
   cerr << "read the following into dna prob. container" << endl;
   cerr << endl << dna_pasta_in << endl;
-  dna_pasta->appendAlignmentFromStream(dna_pasta_iss, dna_p_container);
+  dna_pasta.appendAlignmentFromStream(dna_pasta_iss, dna_p_container);
   cerr << "OK." << endl;
 
   string dna_pasta_in2 = "C T A G\n>another dna prob. sequence\n0.1885256 0.2023275 0.570924031 0.03822292\n0.1122945 0.2366416 0.004093129 0.64697079";
   istringstream dna_pasta_iss2(dna_pasta_in2);
   cerr << "read the following (permuted) sequence into dna prob. container" << endl;
   cerr << endl << dna_pasta_in2 << endl;
-  dna_pasta->appendAlignmentFromStream(dna_pasta_iss2, dna_p_container);
+  dna_pasta.appendAlignmentFromStream(dna_pasta_iss2, dna_p_container);
   cerr << "OK." << endl;
 
   string dna_pasta_in3 = "T A G\n>a 3rd dna prob. sequence\n0.2023275 0.570924031 0.03822292\n0.2366416 0.004093129 0.64697079";
   istringstream dna_pasta_iss3(dna_pasta_in3);
   cerr << "read the following (permuted) sequence into dna prob. container" << endl;
   cerr << endl << dna_pasta_in3 << endl;
-  dna_pasta->appendAlignmentFromStream(dna_pasta_iss3, dna_p_container);
+  dna_pasta.appendAlignmentFromStream(dna_pasta_iss3, dna_p_container);
   cerr << "OK." << endl;
 
   cerr << "dna prob. container contains : " << endl << endl;
   for(size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i) {
-    DTable::write(dna_p_container.getSequence(i).getTable(), cerr, false);
+    DTable::write(dna_p_container.sequence(i).getTable(), cerr, false);
     cerr << endl;
   }
 
@@ -389,20 +389,18 @@ int main() {
 
   cerr << "String of the 1st site:" << endl;
   
-  cerr << dna_p_container.getSite(0).toString() << endl << endl;
+  cerr << dna_p_container.site(0).toString() << endl << endl;
   cerr << "*******************************" << endl << endl;
   
   cerr << "DNA PASTA OUTPUT: " << endl << endl;
   cerr << "Regular container: " << endl << endl;
 
-  dna_pasta->writeAlignment(cerr, dna_container);
+  dna_pasta.writeAlignment(cerr, dna_container);
 
   cerr << endl << "Probabilistic container: " << endl << endl;
 
-  dna_pasta->writeAlignment(cerr, dna_p_container);
+  dna_pasta.writeAlignment(cerr, dna_p_container);
 
   // the end
-
-
   return 0;
 }

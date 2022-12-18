@@ -63,7 +63,7 @@ int main() {
   vector<int> scores = SiteContainerTools::getColumnScores(index1, index1);
   VectorTools::print(scores);
   for (size_t i = 0; i < sites->getNumberOfSites(); ++i) {
-    if (SiteTools::isGapOnly(sites->getSite(i))) {
+    if (SiteTools::isGapOnly(sites->site(i))) {
       if (scores[i] != 0) return 1;
     } else {
       if (scores[i] != 1) return 1;

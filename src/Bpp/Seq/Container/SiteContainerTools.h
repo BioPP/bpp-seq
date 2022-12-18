@@ -93,8 +93,8 @@ public:
     std::shared_ptr<const Alphabet> alphaPtr = sites.getAlphabet();
     auto selectedSites = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
-      if (!SiteTools::hasGap(sites.getSite(i))) { //This calls the method dedicated to basic sites
-        std::unique_ptr<SiteType> sitePtr(sites.getSite(i).clone());
+      if (!SiteTools::hasGap(sites.site(i))) { //This calls the method dedicated to basic sites
+        std::unique_ptr<SiteType> sitePtr(sites.site(i).clone());
         selectedSites->addSite(sitePtr, false);
       }
     }
@@ -121,8 +121,8 @@ public:
     std::shared_ptr<const Alphabet> alphaPtr = sites.getAlphabet();
     auto selectedSites = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
-      if (SiteTools::isComplete(sites.getSite(i))) { //This calls the method dedicated to basic sites
-        std::unique_ptr<SiteType> sitePtr(sites.getSite(i).clone());
+      if (SiteTools::isComplete(sites.site(i))) { //This calls the method dedicated to basic sites
+        std::unique_ptr<SiteType> sitePtr(sites.site(i).clone());
         selectedSites->addSite(sitePtr, false);
       }
     }
@@ -150,7 +150,7 @@ public:
     auto alphaPtr = sites.getAlphabet();
     auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
-      const Site& site = sites.getSite(i);
+      const Site& site = sites.site(i);
       if (!SiteTools::isGapOnly(site)) {
         auto site2 = std::unique_ptr<SiteType>(site.clone());
         newContainer->addSite(site2, false);
@@ -176,12 +176,12 @@ public:
     size_t i = n;
     while (i > 1) {
       ApplicationTools::displayGauge(n - i + 1, n);
-      const SiteType* site = &sites.getSite(i - 1);
+      const SiteType* site = &sites.site(i - 1); //Note (jdutheil 18/12/22: for some reason a ref here does not work, resorting to pointer)
       if (SiteTools::isGapOnly(*site)) {
         size_t end = i;
         while (SiteTools::isGapOnly(*site) && i > 1) {
           --i;
-         site = &sites.getSite(i - 1);
+         site = &sites.site(i - 1);
         }
         sites.deleteSites(i, end - i);
       } else {
@@ -189,8 +189,8 @@ public:
       }
     }
     ApplicationTools::displayGauge(n, n);
-    const Site* site = &sites.getSite(0);
-    if (SiteTools::isGapOnly(*site))
+    const Site& site = sites.site(0);
+    if (SiteTools::isGapOnly(site))
       sites.deleteSite(0);
   }
 
@@ -216,7 +216,7 @@ public:
     auto alphaPtr = sites.getAlphabet();
     auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
-      const Site& site = sites.getSite(i);
+      const Site& site = sites.site(i);
       if (!SiteTools::isGapOrUnresolvedOnly(site)) {
         auto site2 = std::unique_ptr<SiteType>(site.clone());
         newContainer->addSite(site2, false);
@@ -242,7 +242,7 @@ public:
   size_t i = n;
   while (i > 1) {
     ApplicationTools::displayGauge(n - i + 1, n);
-    const SiteType& site = sites.getSite(i - 1);
+    const SiteType& site = sites.site(i - 1);
     if (SiteTools::isGapOnly(site)) {
       size_t end = i;
       while (SiteTools::isGapOrUnresolvedOnly(site) && i > 1) {
@@ -270,8 +270,8 @@ public:
   template<class SiteType, class SequenceType>
   static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
   removeGapSites(
-		  const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites,
-		  double maxFreqGaps)
+      const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites,
+      double maxFreqGaps)
   {
     if (sites.getNumberOfSequences() == 0)
       throw Exception("SiteContainerTools::removeGapSites. Container is empty.");
@@ -308,7 +308,7 @@ public:
 
     for (size_t i = sites.getNumberOfSites(); i > 0; --i) {
       std::map<int, double> freq;
-      SiteTools::getFrequencies(sites.getSite(i - 1), freq);
+      SiteTools::getFrequencies(sites.site(i - 1), freq);
       if (freq[-1] > maxFreqGaps) {
         sites.deleteSite(i - 1);
       }
@@ -341,7 +341,7 @@ public:
     auto alphaP = sites.getAlphabet();
     auto newContainer = std::make_unique<VectorSiteContainer>(sequenceKeys, alphaP);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
-      const Site& site = sites.getSite(i);
+      const Site& site = sites.site(i);
       if (!CodonSiteTools::hasStop(site, gCode)) {
         std::unique_ptr<Site> site2(site.clone());
         newContainer->addSite(site2, false);
@@ -367,7 +367,7 @@ public:
       throw Exception("SiteContainerTools::removeSitesWithStopCodon. Container is empty.");
 
     for (size_t i = sites.getNumberOfSites(); i > 0; --i) {
-      const Site& site = sites.getSite(i - 1);
+      const Site& site = sites.site(i - 1);
       if (CodonSiteTools::hasStop(site, gCode))
         sites.deleteSite(i - 1);
     }
@@ -403,7 +403,7 @@ public:
       TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& outputSites)
   {
     for (auto pos : selection) {
-      auto sitePtr = std::unique_ptr<SiteType>(sites.getSite(pos).clone());
+      auto sitePtr = std::unique_ptr<SiteType>(sites.site(pos).clone());
       outputSites.addSite(sitePtr, false);
     }
   }

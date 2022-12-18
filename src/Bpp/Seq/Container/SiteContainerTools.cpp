@@ -106,7 +106,7 @@ void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainerInterface& s
 {
   int unknownCode = sites.getAlphabet()->getUnknownCharacterCode();
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
-    unique_ptr<Site> site(sites.getSite(i).clone());
+    unique_ptr<Site> site(sites.site(i).clone());
     if (SiteTools::hasGap(*site)) {
       for (size_t j = 0; j < sites.getNumberOfSequences(); ++j) {
         if (sites.getAlphabet()->isGap((*site)[j])) {
@@ -123,7 +123,7 @@ void SiteContainerTools::changeGapsToUnknownCharacters(SiteContainerInterface& s
 void SiteContainerTools::changeGapsToUnknownCharacters(ProbabilisticSiteContainerInterface& sites)
 {
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
-    unique_ptr<ProbabilisticSite> site(sites.getSite(i).clone());
+    unique_ptr<ProbabilisticSite> site(sites.site(i).clone());
     if (SiteTools::hasGap(*site)) {
       for (size_t j = 0; j < sites.getNumberOfSequences(); ++j) {
         vector<double>& element = (*site)[j];
@@ -143,7 +143,7 @@ void SiteContainerTools::changeUnresolvedCharactersToGaps(SiteContainerInterface
   // NB: use iterators for a better algorithm?
   int gapCode = sites.getAlphabet()->getGapCharacterCode();
   for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
-    unique_ptr<Site> site(sites.getSite(i).clone());
+    unique_ptr<Site> site(sites.site(i).clone());
     if (SiteTools::hasUnresolved(*site)) {
       for (size_t j = 0; j < sites.getNumberOfSequences(); ++j) {
         if (sites.getAlphabet()->isUnresolved((*site)[j]))
@@ -171,7 +171,7 @@ unique_ptr<SiteContainerInterface> SiteContainerTools::resolveDottedAlignment(
   const Sequence* refSeq = 0;
   for (size_t i = 0; i < n; ++i) // Test each sequence
   {
-    const Sequence& seq = dottedAln.getSequence(i);
+    const Sequence& seq = dottedAln.sequence(i);
     bool isRef = true;
     for (size_t j = 0; isRef && j < seq.size(); ++j) // For each site in the sequence
     {
@@ -196,7 +196,7 @@ unique_ptr<SiteContainerInterface> SiteContainerTools::resolveDottedAlignment(
   for (size_t i = 0; i < m; ++i)
   {
     string resolved = refSeq->getChar(i);
-    const Site& site = dottedAln.getSite(i);
+    const Site& site = dottedAln.site(i);
     auto resolvedSite = make_unique<Site>(resolvedAlphabet, site.getCoordinate());
     for (size_t j = 0; j < n; ++j)
     {
@@ -326,14 +326,14 @@ std::map<size_t, size_t> SiteContainerTools::translateAlignment(const Sequence& 
 
 std::map<size_t, size_t> SiteContainerTools::translateSequence(const SiteContainerInterface& sequences, size_t i1, size_t i2)
 {
-  const Sequence& seq1 = sequences.getSequence(i1);
-  const Sequence& seq2 = sequences.getSequence(i2);
+  const Sequence& seq1 = sequences.sequence(i1);
+  const Sequence& seq2 = sequences.sequence(i2);
   map<size_t, size_t> tln;
   size_t count1 = 0; // Sequence 1 counter
   size_t count2 = 0; // Sequence 2 counter
   int state1;
   int state2;
-  for (size_t i = 0; i <  sequences.getNumberOfSites(); i++)
+  for (size_t i = 0; i <  sequences.getNumberOfSites(); ++i)
   {
     state1 = seq1[i];
     if (state1 != -1)
@@ -683,10 +683,10 @@ std::unique_ptr<DistanceMatrix> SiteContainerTools::computeSimilarityMatrix(
   for (size_t i = 0; i < n; ++i)
   {
     (*mat)(i, i) = dist ? 0. : 1.;
-    const Sequence& seq1 = sites2->getSequence(i);
+    const Sequence& seq1 = sites2->sequence(i);
     for (size_t j = i + 1; j < n; ++j)
     {
-      const Sequence& seq2 = sites2->getSequence(j);
+      const Sequence& seq2 = sites2->sequence(j);
       (*mat)(i, j) = (*mat)(j, i) = computeSimilarity(seq1, seq2, dist, pairwiseGapOption, unresolvedAsGap);
     }
   }
@@ -703,7 +703,7 @@ void SiteContainerTools::getSequencePositions(
   int gapCode = sites.getAlphabet()->getGapCharacterCode();
   for (size_t i = 0; i < sites.getNumberOfSequences(); ++i)
   {
-    const Sequence& seq = sites.getSequence(i);
+    const Sequence& seq = sites.sequence(i);
     size_t pos = 0;
     for (size_t j = 0; j < sites.getNumberOfSites(); ++j)
     {

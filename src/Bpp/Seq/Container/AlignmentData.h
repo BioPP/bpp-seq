@@ -71,8 +71,7 @@ public:
    *
    * @param siteIndex The position
    */
-
-  virtual const CoreSiteInterface& getSite(size_t siteIndex) const = 0;
+  virtual const CoreSiteInterface& site(size_t siteIndex) const = 0;
 
   /**
    * @brief Remove a continuous range of sites in the container.

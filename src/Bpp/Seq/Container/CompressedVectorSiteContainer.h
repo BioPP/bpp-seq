@@ -149,7 +149,7 @@ public:
    *
    * @{
    */
-  const Site& getSite(size_t sitePosition) const override
+  const Site& site(size_t sitePosition) const override
   {
     return *siteContainer_.getObject(index_[sitePosition]);
   }
@@ -194,13 +194,13 @@ public:
    *
    * @{
    */
-  const Sequence& getSequence(size_t sequenceIndex) const override;
+  const Sequence& sequence(size_t sequenceIndex) const override;
 
-  const Sequence& getSequence(const std::string& sequenceKey) const override
+  const Sequence& sequence(const std::string& sequenceKey) const override
   {
     // Look for sequence name:
     size_t pos = getSequencePosition(sequenceKey);
-    return getSequence(pos);
+    return sequence(pos);
   }
 
   bool hasSequence(const std::string& name) const override
@@ -253,7 +253,7 @@ public:
     sequenceContainer_.setObjectNames(sequenceKeys);
   }
 
-  const std::string& getSequenceKey(size_t sequencePosition) const override
+  const std::string& sequenceKey(size_t sequencePosition) const override
   { 
     return sequenceContainer_.getObjectName(sequencePosition);
   }
@@ -328,14 +328,14 @@ public:
     throw NotImplementedException("CompressedVectorSiteContainer::insertSequence.");
   }
 
-  const int& getValueAt(const std::string& sequenceKey, size_t sitePosition) const override
+  const int& valueAt(const std::string& sequenceKey, size_t sitePosition) const override
   {
-    return getSite(sitePosition).getValue(getSequencePosition(sequenceKey));
+    return site(sitePosition).getValue(getSequencePosition(sequenceKey));
   }
   
-  const int& getValueAt(size_t sequencePosition, size_t sitePosition) const override
+  const int& valueAt(size_t sequencePosition, size_t sitePosition) const override
   {
-    return getSite(sitePosition).getValue(sequencePosition);
+    return site(sitePosition).getValue(sequencePosition);
   }
 	 
   /**
@@ -345,22 +345,22 @@ public:
    */
   double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return getSite(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
+    return site(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
   }
 
   double operator()(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return getSite(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
+    return site(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
   }
 
   double getStateValueAt(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    return getSite(sitePosition).getStateValueAt(sequencePosition, state);
+    return site(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
   double operator()(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    return getSite(sitePosition).getStateValueAt(sequencePosition, state);
+    return site(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
   /** @} */ 

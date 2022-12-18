@@ -98,7 +98,7 @@ public:
    * @param sequenceKey The key to which the sequence is associated.
    * @return A reference toward the Sequence with corresponding name.
    */
-  virtual const SequenceType& getSequence(const HashType& sequenceKey) const override = 0;
+  virtual const SequenceType& sequence(const HashType& sequenceKey) const override = 0;
 
   /**
    * @brief Replace a sequence in the container.
@@ -136,7 +136,7 @@ public:
    * @param sitePosition  index of the site
    * @return The element at the given position.
    */
-  virtual const typename SequenceType::ElementType& getValueAt(const HashType& sequenceKey, size_t sitePosition) const = 0;
+  virtual const typename SequenceType::ElementType& valueAt(const HashType& sequenceKey, size_t sitePosition) const = 0;
   
   /** @} */
 
@@ -153,7 +153,7 @@ public:
    * @param sequencePosition The position of the sequence.
    * @return A reference toward the Sequence object with corresponding name.
    */
-  virtual const SequenceType& getSequence(size_t sequencePosition) const override = 0;
+  virtual const SequenceType& sequence(size_t sequencePosition) const override = 0;
 
   /**
    * @brief Replace a sequence in the container.
@@ -197,7 +197,7 @@ public:
    * @param sitePosition  index of the site
    * @return The element at the given position.
    */
-  virtual const typename SequenceType::ElementType& getValueAt(size_t sequencePosition, size_t sitePosition) const = 0;
+  virtual const typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t sitePosition) const = 0;
  
   /**@} */
 

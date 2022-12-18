@@ -77,7 +77,7 @@ void Stockholm::writeAlignment(ostream& output, const SiteContainerInterface& sc
     maxSize = 255;
   for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
   {
-    output << TextTools::resizeRight(names[i], maxSize) << " " << sc.getSequence(i).toString() << endl;
+    output << TextTools::resizeRight(names[i], maxSize) << " " << sc.sequence(i).toString() << endl;
   }
   output << "//" << endl;
 }

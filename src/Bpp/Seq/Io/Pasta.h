@@ -127,7 +127,7 @@ public:
    void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override
    {
      for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
-       writeSequence(output, sc.getSequence(i), i == 0);
+       writeSequence(output, sc.sequence(i), i == 0);
      }
    }
    
@@ -154,7 +154,7 @@ public:
     bool first = true;
     for (size_t i = 0; i < psc.getNumberOfSequences(); ++i)
     {
-      writeSequence(output, psc.getSequence(i), first);
+      writeSequence(output, psc.sequence(i), first);
       first = false;
     }
   }

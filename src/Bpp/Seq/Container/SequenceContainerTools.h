@@ -303,7 +303,7 @@ public:
   static void getCounts(const SequenceContainerInterface& sc, std::map<int, unsigned int>& f)
   {
     for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
-      const Sequence& seq = sc.getSequence(i);
+      const Sequence& seq = sc.sequence(i);
       for (size_t j = 0; j < seq.size(); ++j) {
         f[seq[j]]++;
       }
@@ -331,7 +331,7 @@ public:
   {
     double n = 0;
     for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
-      const Sequence& seq = sc.getSequence(i);
+      const Sequence& seq = sc.sequence(i);
       SymbolListTools::getCounts(seq, f, true);
       n += static_cast<double>(seq.size());
     }
@@ -370,7 +370,7 @@ public:
   {
     double n = 0;
     for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
-      const ProbabilisticSequence& seq = sc.getSequence(i);
+      const ProbabilisticSequence& seq = sc.sequence(i);
       SymbolListTools::getCounts(seq, f, true);
       n += static_cast<double>(seq.size());
     }

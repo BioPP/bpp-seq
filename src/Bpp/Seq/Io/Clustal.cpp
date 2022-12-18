@@ -137,17 +137,17 @@ void Clustal::writeAlignment(std::ostream& output, const SiteContainerInterface&
   size_t length = 0;
   for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
   {
-    const Sequence& seq = sc.getSequence(i);
+    const Sequence& seq = sc.sequence(i);
     if (seq.getName().size() > length)
       length = seq.getName().size();
-    text.push_back(sc.getSequence(i).toString());
+    text.push_back(sc.sequence(i).toString());
   }
   length += nbSpacesBeforeSeq_;
   for (unsigned int j = 0; j < text[0].size(); j += charsByLine_)
   {
     for (unsigned int i = 0; i < sc.getNumberOfSequences(); ++i)
     {
-      output << TextTools::resizeRight(sc.getSequence(i).getName(), length);
+      output << TextTools::resizeRight(sc.sequence(i).getName(), length);
       output << text[i].substr(j, charsByLine_) << endl;
     }
     output << endl;

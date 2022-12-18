@@ -365,16 +365,20 @@ public:
     try {
       if (resolveUnknowns) {
         getCountsResolveUnknowns(dynamic_cast<const ProbabilisticSymbolListInterface&>(list), counts);
+	return;
       } else {
         getCounts(dynamic_cast<const ProbabilisticSymbolListInterface&>(list), counts);
+	return;
       }
     } catch (std::bad_cast&) {}
     
     try {
       if (resolveUnknowns) {
         getCountsResolveUnknowns(dynamic_cast<const IntSymbolListInterface&>(list), counts);
+	return;
       } else {
 	getCounts<double>(dynamic_cast<const IntSymbolListInterface&>(list), counts);
+	return;
       }
     } catch (std::bad_cast&) {}
 

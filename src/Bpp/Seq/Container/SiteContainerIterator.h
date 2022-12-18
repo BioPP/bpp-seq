@@ -110,7 +110,7 @@ public:
 public:
   const SiteType& nextSite() override
   {
-    const SiteType& s = sites_->getSite(static_cast<size_t>(currentPosition_));
+    const SiteType& s = sites_->site(static_cast<size_t>(currentPosition_));
     currentPosition_++;
     return s;
   }

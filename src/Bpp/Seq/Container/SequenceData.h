@@ -179,7 +179,7 @@ public:
    * @param sequenceKey The key to which the sequence is associated.
    * @return A reference toward the Sequence with corresponding name.
    */
-  virtual const CoreSequenceInterface& getSequence(const HashType& sequenceKey) const = 0;
+  virtual const CoreSequenceInterface& sequence(const HashType& sequenceKey) const = 0;
 
   /**
    * @brief Remove and delete a sequence from the container.
@@ -202,7 +202,7 @@ public:
    * @param sequencePosition The position of the sequence.
    * @return A reference toward the Sequence object with corresponding name.
    */
-  virtual const CoreSequenceInterface& getSequence(size_t sequencePosition) const = 0;
+  virtual const CoreSequenceInterface& sequence(size_t sequencePosition) const = 0;
 
   /**
    * @brief Remove and delete a sequence from the container.
@@ -228,7 +228,7 @@ public:
    * @param sequencePosition The position of the sequence in the container.
    * @return The key to which the sequence is associated.
    */
-  virtual const HashType& getSequenceKey(size_t sequencePosition) const = 0;
+  virtual const HashType& sequenceKey(size_t sequencePosition) const = 0;
 
   /**
    * @brief Get the position of a sequence with a given key in the container.

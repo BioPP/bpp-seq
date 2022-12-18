@@ -193,7 +193,7 @@ void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SequenceCon
       SiteContainerTools::resolveDottedAlignment(*alignment, alphaPtr);
     for (size_t i = 0; i < resolvedAlignment->getNumberOfSequences(); ++i)
     {
-      auto seqPtr = unique_ptr<Sequence>(resolvedAlignment->getSequence(i).clone());
+      auto seqPtr = unique_ptr<Sequence>(resolvedAlignment->sequence(i).clone());
       vsc.addSequence(seqPtr->getName(), seqPtr);
     }
   }
@@ -201,7 +201,7 @@ void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SequenceCon
   {
     for (size_t i = 0; i < alignment->getNumberOfSequences(); ++i)
     {
-      auto seqPtr = unique_ptr<Sequence>(alignment->getSequence(i).clone());
+      auto seqPtr = unique_ptr<Sequence>(alignment->sequence(i).clone());
       vsc.addSequence(seqPtr->getName(), seqPtr);
     }
   }

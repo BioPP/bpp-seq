@@ -189,7 +189,7 @@ public:
     sequenceComments_(vsc.sequenceComments_)
   {
     for (size_t i = 0; i < vsc.getNumberOfSites(); ++i) {
-      auto sitePtr = std::unique_ptr<SiteType>(vsc.getSite(i).clone());
+      auto sitePtr = std::unique_ptr<SiteType>(vsc.site(i).clone());
       addSite(sitePtr, false); // We assume that positions are already correct.
     }
 
@@ -207,7 +207,7 @@ public:
     sequenceComments_(sc.getSequenceComments())
   {
     for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
-      std::unique_ptr<SiteType> sitePtr(sc.getSite(i).clone());
+      std::unique_ptr<SiteType> sitePtr(sc.site(i).clone());
       addSite(sitePtr, false); // We assume that positions are already correct.
     }
 
@@ -297,7 +297,7 @@ public:
    *
    * @{
    */
-  const SiteType& getSite(size_t sitePosition) const override
+  const SiteType& site(size_t sitePosition) const override
   {
     return *siteContainer_.getObject(sitePosition);
   }
@@ -321,7 +321,7 @@ public:
       int coordinate = site->getCoordinate();
       // For all coordinates in vector: throw exception if position already exists
       for (size_t i = 0; i < getNumberOfSites(); ++i) {
-        if (i != sitePosition && getSite(i).getCoordinate() == coordinate) {
+        if (i != sitePosition && this->site(i).getCoordinate() == coordinate) {
           throw SiteException("TemplateVectorSiteContainer::setSite: Site position already exists in container", site.get());
 	}
       }
@@ -363,7 +363,7 @@ public:
       int coordinate = site->getCoordinate();
       // For all positions in vector : throw exception if position already exists
       for (size_t i = 0; i < getNumberOfSites(); ++i) {
-        if (getSite(i).getCoordinate() == coordinate)
+        if (this->site(i).getCoordinate() == coordinate)
           throw SiteException("TemplateVectorSiteContainer::addSite(site, bool): Site position already exists in container", site.get());
       }
     }
@@ -403,7 +403,7 @@ public:
       int coordinate = site->getCoordinate();
       // For all positions in vector : throw exception if position already exists
       for (size_t i = 0; i < getNumberOfSites(); i++) {
-        if (i != sitePosition && getSite(i).getCoordinate() == coordinate)
+        if (i != sitePosition && this->site(i).getCoordinate() == coordinate)
           throw SiteException("TemplateVectorSiteContainer::addSite. Site coordinate already exists in container", site.get());
       }
     }
@@ -446,7 +446,7 @@ public:
   {
     Vint coordinates(getNumberOfSites());
     for (size_t i = 0; i < getNumberOfSites(); ++i) {
-      coordinates[i] = getSite(i).getCoordinate();
+      coordinates[i] = site(i).getCoordinate();
     }
     return coordinates;
   }
@@ -482,13 +482,13 @@ public:
     return sequenceContainer_.getObjectPosition(sequenceKey);
   }
 
-  const SequenceType& getSequence(const std::string& sequenceKey) const override
+  const SequenceType& sequence(const std::string& sequenceKey) const override
   {
     size_t pos = getSequencePosition(sequenceKey);
-    return getSequence(pos);
+    return sequence(pos);
   }
 
-  const SequenceType& getSequence(size_t sequencePosition) const override
+  const SequenceType& sequence(size_t sequencePosition) const override
   {
     if (sequencePosition >= getNumberOfSequences())
       throw IndexOutOfBoundsException("TemplateVectorSiteContainer::getSequence.", sequencePosition, 0, getNumberOfSequences() - 1);
@@ -502,7 +502,7 @@ public:
     size_t n = getNumberOfSites();
     std::vector<typename SequenceType::SymbolType> sequence(n);
     for (size_t j = 0; j < n; ++j)
-      sequence[j] = getSite(j)[sequencePosition];
+      sequence[j] = site(j)[sequencePosition];
     
     auto alphaPtr = getAlphabet();
     auto ns = std::make_shared<SequenceType>(
@@ -511,7 +511,7 @@ public:
           sequenceComments_[sequencePosition],
           alphaPtr);
 
-    sequenceContainer_.addObject_(ns, sequencePosition, getSequenceKey(sequencePosition), false);
+    sequenceContainer_.addObject_(ns, sequencePosition, sequenceKey(sequencePosition), false);
 
     return *ns;
   }
@@ -519,7 +519,7 @@ public:
  
   std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition) override
   {
-    getSequence(sequencePosition); // this creates the sequence if it does not exist.
+    sequence(sequencePosition); // this creates the sequence if it does not exist.
 
     for (size_t i = 0; i < getNumberOfSites(); ++i)
       getSite_(i).deleteElement(sequencePosition);
@@ -577,7 +577,7 @@ public:
     sequenceContainer_.setObjectNames(sequenceKeys);
   }
 
-  const std::string& getSequenceKey(size_t sequencePosition) const override
+  const std::string& sequenceKey(size_t sequencePosition) const override
   { 
     return sequenceContainer_.getObjectName(sequencePosition);
   }
@@ -619,34 +619,34 @@ public:
     return vsc;
   }
 
-  const typename SequenceType::ElementType& getValueAt(const std::string& sequenceKey, size_t sitePosition) const override
+  const typename SequenceType::ElementType& valueAt(const std::string& sequenceKey, size_t sitePosition) const override
   {
-    return getSite(sitePosition).getValue(getSequencePosition(sequenceKey));
+    return site(sitePosition).getValue(getSequencePosition(sequenceKey));
   }
   
-  const typename SequenceType::ElementType& getValueAt(size_t sequencePosition, size_t sitePosition) const override
+  const typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t sitePosition) const override
   {
-    return getSite(sitePosition).getValue(sequencePosition);
+    return site(sitePosition).getValue(sequencePosition);
   }
 	  
   double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return getSite(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
+    return site(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
   }
 
   double operator()(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return getSite(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
+    return site(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
   }
 
   double getStateValueAt(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    return getSite(sitePosition).getStateValueAt(sequencePosition, state);
+    return site(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
   double operator()(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    return getSite(sitePosition).getStateValueAt(sequencePosition, state);
+    return site(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
 

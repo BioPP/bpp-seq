@@ -98,11 +98,11 @@ int main() {
   ProbabilisticVectorSiteContainer sites2(alphaPtr2);
   for (size_t ns=0;ns < sites->getNumberOfSequences(); ns++)
   {
-    auto seq = allelicAlpha->convertFromStateAlphabet(sites->getSequence(ns));
+    auto seq = allelicAlpha->convertFromStateAlphabet(sites->sequence(ns));
     sites2.addSequence(seq->getName(), seq);
   }
 
-  pasta.writeSequence(cerr, sites2.getSequence("D"), true);
+  pasta.writeSequence(cerr, sites2.sequence("D"), true);
 
   
 

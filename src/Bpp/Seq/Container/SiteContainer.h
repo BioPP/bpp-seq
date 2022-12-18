@@ -78,7 +78,7 @@ public:
    * @return A site objet corresponding to site i in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
-  virtual const SiteType& getSite(size_t sitePosition) const override = 0;
+  virtual const SiteType& site(size_t sitePosition) const override = 0;
 
   /**
    * @brief Set a site in the container.

@@ -221,7 +221,7 @@ void Fasta::writeSequences(ostream& output, const SequenceContainerInterface& sc
   if (extended_)
   {
     // Loop for all general comments
-    for (unsigned int i = 0; i < sc.getComments().size(); ++i)
+    for (size_t i = 0; i < sc.getComments().size(); ++i)
     {
       output << "#\\" << sc.getComments()[i] << endl;
     }
@@ -232,7 +232,7 @@ void Fasta::writeSequences(ostream& output, const SequenceContainerInterface& sc
   vector<string> names = sc.getSequenceNames();
   for (size_t i = 0; i < names.size(); ++i)
   {
-    writeSequence(output, sc.getSequence(names[i]));
+    writeSequence(output, sc.sequence(names[i]));
   }
 }
 

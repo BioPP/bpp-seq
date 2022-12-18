@@ -401,7 +401,7 @@ public:
           if (verbose)
             ApplicationTools::displayGauge(nbSites - i, nbSites - 1, '=');
 
-          if (static_cast<double>(SiteTools::numberOfGaps(sitesToAnalyse->getSite(i - 1))) > gapCount)
+          if (static_cast<double>(SiteTools::numberOfGaps(sitesToAnalyse->site(i - 1))) > gapCount)
             sitesToAnalyse->deleteSites(i - 1, 1);
         }
         if (verbose)
@@ -431,7 +431,7 @@ public:
           if (verbose)
             ApplicationTools::displayGauge(nbSites - i, nbSites - 1, '=');
 
-          if (static_cast<double>(SiteTools::numberOfUnresolved(sitesToAnalyse->getSite(i - 1))) > unresCount)
+          if (static_cast<double>(SiteTools::numberOfUnresolved(sitesToAnalyse->site(i - 1))) > unresCount)
             sitesToAnalyse->deleteSites(i - 1, 1);
         }
         if (verbose)

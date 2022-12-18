@@ -153,7 +153,7 @@ void Mase::writeSequences(ostream& output, const SequenceContainerInterface& sc)
   // Main loop : for all sequences
   for (const auto& seqKey: sc.getSequenceKeys())
   {
-    comments = sc.getSequence(seqKey).getComments();
+    comments = sc.sequence(seqKey).getComments();
 
     // Writing all sequence comments in file
     // If no comments are associated with current sequence, an empy commentary line will be writed
@@ -170,10 +170,10 @@ void Mase::writeSequences(ostream& output, const SequenceContainerInterface& sc)
     }
 
     // Sequence name writing
-    output << sc.getSequence(seqKey).getName() << endl;
+    output << sc.sequence(seqKey).getName() << endl;
 
     // Sequence cutting to specified characters number per line
-    seq = sc.getSequence(seqKey).toString();
+    seq = sc.sequence(seqKey).toString();
     while (seq != "")
     {
       if (seq.size() > charsByLine_)

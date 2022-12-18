@@ -56,14 +56,14 @@ int main() {
   sites->addSequence(seq1->getName(), seq1);
   sites->addSequence(seq2->getName(), seq2);
   cout << sites->getNumberOfSites() << endl;
-  cout << sites->getSequence("seq1").toString() << endl;
-  cout << sites->getSequence("seq2").toString() << endl;
+  cout << sites->sequence("seq1").toString() << endl;
+  cout << sites->sequence("seq2").toString() << endl;
   SiteContainerTools::removeGapOnlySites(*sites);
   cout << endl;
   
   cout << sites->getNumberOfSites() << endl;
-  cout << sites->getSequence("seq1").toString() << endl;
-  cout << sites->getSequence("seq2").toString() << endl;
+  cout << sites->sequence("seq1").toString() << endl;
+  cout << sites->sequence("seq2").toString() << endl;
 
   if (sites->getNumberOfSites() != 30)
     throw Exception("Bad removal of gap only sites");
@@ -72,8 +72,8 @@ int main() {
   cout << endl;
   
   cout << sites->getNumberOfSites() << endl;
-  cout << sites->getSequence("seq1").toString() << endl;
-  cout << sites->getSequence("seq2").toString() << endl;
+  cout << sites->sequence("seq1").toString() << endl;
+  cout << sites->sequence("seq2").toString() << endl;
   
   if (sites->getNumberOfSites() != 24)
     throw Exception("Bad removal of gap sites");
@@ -91,8 +91,8 @@ int main() {
     throw Exception("Sequence names got lost when compressing sites!");
   }
   cout << cvs.getNumberOfSites() << endl;
-  cout << cvs.getSequence("seq1").toString() << endl;
-  cout << cvs.getSequence("seq2").toString() << endl;
+  cout << cvs.sequence("seq1").toString() << endl;
+  cout << cvs.sequence("seq2").toString() << endl;
 
   return (sites->getNumberOfSites() == 24 ? 0 : 1);
 }

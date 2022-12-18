@@ -529,8 +529,8 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
     sites = make_unique<VectorSiteContainer>(alpha);
     for (size_t i = 0; i < sites2->getNumberOfSequences(); ++i)
     {
-      auto seqP = SequenceTools::RNYslice(sites2->getSequence(i));
-      sites->addSequence(sites2->getSequenceKey(i), seqP);
+      auto seqP = SequenceTools::RNYslice(sites2->sequence(i));
+      sites->addSequence(sites2->sequenceKey(i), seqP);
     }
   }
   else
