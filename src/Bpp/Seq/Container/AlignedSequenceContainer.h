@@ -96,7 +96,7 @@ public:
    * @param vs       A vector of smart pointers toward sequence objects.
    */
   TemplateAlignedSequenceContainer(
-      const std::shared_ptr<const Alphabet>& alphabet,
+      std::shared_ptr<const Alphabet>& alphabet,
       std::vector< std::unique_ptr<Sequence> > vs):
     TemplateVectorSequenceContainer<SequenceType>(alphabet, vs),
     VectorPositionedContainer<SiteType>(),
