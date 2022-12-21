@@ -84,8 +84,12 @@ public:
 public:
 
   std::shared_ptr<const Alphabet> getSourceAlphabet() const override { return dna_; }
+  
+  const Alphabet& sourceAlphabet() const override { return *dna_; }
 
   std::shared_ptr<const Alphabet> getTargetAlphabet() const override { return rna_; }
+  
+  const Alphabet& targetAlphabet() const override { return *rna_; }
 
   int translate(int state) const override;
 

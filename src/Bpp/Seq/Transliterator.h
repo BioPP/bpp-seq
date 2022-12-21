@@ -60,16 +60,30 @@ public:
   /**
    * @brief Get the source alphabet.
    *
-   * @return The source alphabet.
+   * @return A pointer toward the source alphabet.
    */
   virtual std::shared_ptr<const Alphabet> getSourceAlphabet() const = 0;
 
   /**
+   * @brief Get the source alphabet.
+   *
+   * @return A reference toward the source alphabet.
+   */
+  virtual const Alphabet& sourceAlphabet() const = 0;
+
+  /**
    * @brief Get the target alphabet.
    *
-   * @return The target alphabet.
+   * @return A pointer toward the target alphabet.
    */
   virtual std::shared_ptr<const Alphabet> getTargetAlphabet() const = 0;
+
+  /**
+   * @brief Get the target alphabet.
+   *
+   * @return A reference toward the target alphabet.
+   */
+  virtual const Alphabet& targetAlphabet() const = 0;
 
   /**
    * @brief Translate a given state coded as a int from source alphabet to target alphabet.

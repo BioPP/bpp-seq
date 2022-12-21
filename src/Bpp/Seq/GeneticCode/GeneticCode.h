@@ -108,8 +108,12 @@ public:
    * @{
    */
   std::shared_ptr<const Alphabet> getSourceAlphabet() const override { return codonAlphabet_; }
+  
+  const Alphabet& sourceAlphabet() const override { return *codonAlphabet_; }
 
   std::shared_ptr<const Alphabet> getTargetAlphabet() const override { return proteicAlphabet_; }
+  
+  const Alphabet& targetAlphabet() const override { return *proteicAlphabet_; }
 
   int translate(int state) const override;
 
