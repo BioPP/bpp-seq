@@ -140,11 +140,25 @@ public:
   virtual std::shared_ptr<const CodonAlphabet> getCodonAlphabet() const { return codonAlphabet_; }
 
   /**
+   * @brief Alias for getSourceAlphabet return a pointer toward a CodonAlphabet.
+   *
+   * @return A reference toward the codon alphabet.
+   */
+  virtual const CodonAlphabet& codonAlphabet() const { return *codonAlphabet_; }
+
+  /**
    * @brief Alias for getTargetAlphabet return a pointer toward a ProteicAlphabet.
    *
    * @return A pointer toward the protein alphabet.
    */
   virtual std::shared_ptr<const ProteicAlphabet> getProteicAlphabet() const { return proteicAlphabet_; }
+
+  /**
+   * @brief Alias for getTargetAlphabet return a pointer toward a ProteicAlphabet.
+   *
+   * @return A reference toward the protein alphabet.
+   */
+  virtual const ProteicAlphabet& proteicAlphabet() const { return *proteicAlphabet_; }
 
   /**
    * @return The number of stop codons.
