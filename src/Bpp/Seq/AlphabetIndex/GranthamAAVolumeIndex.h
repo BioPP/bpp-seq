@@ -118,7 +118,7 @@ public:
     return volume_[static_cast<size_t>(getAlphabet()->charToInt(state))];
   }
 
-  const std::vector<double>& getIndexVector() const override { return volume_; }
+  const std::vector<double>& indexVector() const override { return volume_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_GRANTHAMAAVOLUMEINDEX_H

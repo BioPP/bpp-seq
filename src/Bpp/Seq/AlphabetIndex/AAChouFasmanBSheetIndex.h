@@ -102,7 +102,7 @@ public:
     return bSheet_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  const std::vector<double>& getIndexVector() const override { return bSheet_; }
+  const std::vector<double>& indexVector() const override { return bSheet_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHOUFASMANBSHEETINDEX_H

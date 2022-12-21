@@ -117,7 +117,7 @@ public:
     return charge_[static_cast<size_t>(getAlphabet()->charToInt(state))];
   }
 
-  const std::vector<double>& getIndexVector() const override { return charge_; }
+  const std::vector<double>& indexVector() const override { return charge_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_KLEINAANETCHARGEINDEX_H

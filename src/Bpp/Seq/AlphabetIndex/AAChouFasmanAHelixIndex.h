@@ -102,7 +102,7 @@ public:
     return aHelix_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  const std::vector<double>& getIndexVector() const override { return aHelix_; }
+  const std::vector<double>& indexVector() const override { return aHelix_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHOUFASMANAHELIXINDEX_H

@@ -110,7 +110,7 @@ public:
     return alpha_;
   }
 
-  const std::vector<double>& getIndexVector() const override
+  const std::vector<double>& indexVector() const override
   {
     return vIndex_;
   }

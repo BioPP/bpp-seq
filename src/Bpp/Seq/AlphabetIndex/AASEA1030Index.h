@@ -100,7 +100,7 @@ public:
     return sea1030_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  const std::vector<double>& getIndexVector() const override { return sea1030_; }
+  const std::vector<double>& indexVector() const override { return sea1030_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AASEA1030INDEX_H

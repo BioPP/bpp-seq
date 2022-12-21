@@ -101,7 +101,7 @@ public:
     return surface_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  const std::vector<double>& getIndexVector() const override { return surface_; }
+  const std::vector<double>& indexVector() const override { return surface_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AASURFACEINDEX_H

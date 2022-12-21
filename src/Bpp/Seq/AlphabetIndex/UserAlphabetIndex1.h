@@ -52,16 +52,15 @@ namespace bpp
 /**
  * @brief Alphabet index given by user.
  */
-
 class UserAlphabetIndex1 :
   public virtual AlphabetIndex1
 {
 private:
-  const Alphabet* alph_;
+  std::shared_ptr<const Alphabet> alph_;
   std::vector<double> index_;
 
 public:
-  UserAlphabetIndex1(const Alphabet* alph) :
+  UserAlphabetIndex1(std::shared_ptr<const Alphabet> alph) :
     alph_(alph),
     index_(alph->getSize(), 0)
   {}
@@ -80,7 +79,7 @@ public:
 
   virtual ~UserAlphabetIndex1() {}
 
-  UserAlphabetIndex1* clone() const { return new UserAlphabetIndex1(*this); }
+  UserAlphabetIndex1* clone() const override { return new UserAlphabetIndex1(*this); }
 
 public:
   double getIndex(int state) const
@@ -103,9 +102,9 @@ public:
     index_[alph_->getStateIndex(state)] = val;
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(index_); }
+  const std::vector<double>& indexVector() const { return index_; }
 
-  const Alphabet* getAlphabet() const { return alph_; }
+  std::shared_ptr<const Alphabet> getAlphabet() const { return alph_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_USERALPHABETINDEX1_H

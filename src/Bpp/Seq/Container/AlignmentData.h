@@ -87,13 +87,11 @@ public:
    *
    * @return The number of sites in the container.
    */
-
   virtual size_t getNumberOfSites() const = 0;
 
   /**
    * @brief Set all positions attributes.
    */
-
   virtual void reindexSites() = 0;
 
   /**
@@ -101,7 +99,6 @@ public:
    *
    * @return A vector with all site coordinates.
    */
-
   virtual Vint getSiteCoordinates() const = 0;
 
   /**
@@ -109,7 +106,6 @@ public:
    *
    * @param vPositions A vector with all site coordinates.
    */
-
   virtual void setSiteCoordinates(const Vint& coordinates) = 0;
 };
 

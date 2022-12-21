@@ -103,7 +103,7 @@ public:
     return hydropathy_[static_cast<size_t>(getAlphabet()->charToInt(state))];
   }
 
-  const std::vector<double>& getIndexVector() const override { return hydropathy_; }
+  const std::vector<double>& indexVector() const override { return hydropathy_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_KD_AAHYDROPATHYINDEX_H

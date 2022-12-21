@@ -101,7 +101,7 @@ public:
     return volume_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  const std::vector<double>& getIndexVector() const override { return volume_; }
+  const std::vector<double>& indexVector() const override { return volume_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AAVOLUMEINDEX_H

@@ -114,7 +114,7 @@ public:
     return hydrophobicity_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  const std::vector<double>& getIndexVector() const override { return hydrophobicity_; }
+  const std::vector<double>& indexVector() const override { return hydrophobicity_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHENGUHUANGHYDROPHOBICITYINDEX_H

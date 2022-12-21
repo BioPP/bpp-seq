@@ -115,7 +115,7 @@ public:
     return polarity_[static_cast<size_t>(getAlphabet()->charToInt(state))];
   }
 
-  const std::vector<double>& getIndexVector() const override { return polarity_; }
+  const std::vector<double>& indexVector() const override { return polarity_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_GRANTHAMAAPOLARITYINDEX_H

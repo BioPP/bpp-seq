@@ -95,7 +95,7 @@ public:
   /**
    * @return A vector object with all indices.
    */
-  virtual const std::vector<double>& getIndexVector() const = 0;
+  virtual const std::vector<double>& indexVector() const = 0;
 };
 
 /*
