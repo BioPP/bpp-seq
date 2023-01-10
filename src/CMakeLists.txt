@@ -13,6 +13,7 @@ SET(CPP_FILES
   Bpp/Seq/Alphabet/AllelicAlphabet.cpp
   Bpp/Seq/Alphabet/BinaryAlphabet.cpp
   Bpp/Seq/Alphabet/CaseMaskedAlphabet.cpp
+  Bpp/Seq/Alphabet/ChromosomeAlphabet.cpp
   Bpp/Seq/Alphabet/CodonAlphabet.cpp
   Bpp/Seq/Alphabet/DNA.cpp
   Bpp/Seq/Alphabet/DefaultAlphabet.cpp
