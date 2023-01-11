@@ -96,7 +96,7 @@ public:
    */
   TemplateVectorSiteContainer(
       const std::vector<std::unique_ptr<SiteType> >& vs,
-      std::shared_ptr<const Alphabet>& alphabet,
+      std::shared_ptr<const Alphabet> alphabet,
       bool checkPositions = true) :
     AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     siteContainer_(),
@@ -128,7 +128,7 @@ public:
    */
   TemplateVectorSiteContainer(
       size_t size,
-      std::shared_ptr<const Alphabet>& alphabet) :
+      std::shared_ptr<const Alphabet> alphabet) :
     AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     siteContainer_(),
     sequenceContainer_(),
@@ -151,7 +151,7 @@ public:
    */
   TemplateVectorSiteContainer(
       const std::vector<std::string>& sequenceKeys,
-      std::shared_ptr<const Alphabet>& alphabet) :
+      std::shared_ptr<const Alphabet> alphabet) :
     AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     siteContainer_(),
     sequenceContainer_(),
@@ -172,7 +172,7 @@ public:
    *
    * @param alphabet The alphabet for this container.
    */
-  TemplateVectorSiteContainer(std::shared_ptr<const Alphabet>& alphabet) :
+  TemplateVectorSiteContainer(std::shared_ptr<const Alphabet> alphabet) :
     AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     siteContainer_(),
     sequenceContainer_(),

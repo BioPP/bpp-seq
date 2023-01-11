@@ -91,7 +91,6 @@ public:
    * @{
    */
 
-
   /**
    * @brief Retrieve a sequence object from the container.
    *

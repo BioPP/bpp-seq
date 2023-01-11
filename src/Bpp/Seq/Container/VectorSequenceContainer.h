@@ -80,7 +80,7 @@ public:
    * @param vs       A vector of smart pointers toward sequence objects.
    */
   TemplateVectorSequenceContainer(
-      std::shared_ptr<const Alphabet>& alphabet,
+      std::shared_ptr<const Alphabet> alphabet,
       const std::vector< std::unique_ptr<SequenceType> >& vs):
     AbstractTemplateSequenceContainer<SequenceType, std::string>(alphabet),
     sequenceVectorMap_()
@@ -95,7 +95,7 @@ public:
    *
    * @param alphabet The alphabet of the container.
    */
-  TemplateVectorSequenceContainer(std::shared_ptr<const Alphabet>& alphabet) :
+  TemplateVectorSequenceContainer(std::shared_ptr<const Alphabet> alphabet) :
       AbstractTemplateSequenceContainer<SequenceType>(alphabet),
       sequenceVectorMap_()
   {}
