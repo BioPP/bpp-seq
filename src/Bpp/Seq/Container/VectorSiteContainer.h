@@ -95,7 +95,7 @@ public:
    * @throw Exception If sites differ in size or in alphabet.
    */
   TemplateVectorSiteContainer(
-      const std::vector<std::unique_ptr<SiteType> >& vs,
+      std::vector<std::unique_ptr<SiteType> >& vs,
       std::shared_ptr<const Alphabet> alphabet,
       bool checkPositions = true) :
     AbstractTemplateSequenceContainer<SequenceType>(alphabet),

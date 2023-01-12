@@ -81,11 +81,11 @@ public:
    */
   TemplateVectorSequenceContainer(
       std::shared_ptr<const Alphabet> alphabet,
-      const std::vector< std::unique_ptr<SequenceType> >& vs):
+      std::vector<std::unique_ptr<SequenceType>>& vs):
     AbstractTemplateSequenceContainer<SequenceType, std::string>(alphabet),
     sequenceVectorMap_()
   {
-    for (auto seq: vs) {
+    for (auto& seq : vs) {
       addSequence(seq);
     }
   }
