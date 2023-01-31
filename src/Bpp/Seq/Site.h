@@ -167,7 +167,7 @@ public:
    * @throw BadIntException If the content does not match the specified alphabet.
    */
   Site(const std::vector<int>& site, std::shared_ptr<const Alphabet>& alphabet):
-      AbstractTemplateSymbolList(alphabet),
+      AbstractTemplateSymbolList(site, alphabet),
       AbstractCoreSite(),
       IntSymbolList(site, alphabet)
   {}
@@ -182,7 +182,7 @@ public:
    * @throw BadIntException If the content does not match the specified alphabet.
    */
   Site(const std::vector<int>& site, std::shared_ptr<const Alphabet> alphabet, int coordinate) : 
-      AbstractTemplateSymbolList(alphabet),
+      AbstractTemplateSymbolList(site, alphabet),
       AbstractCoreSite(coordinate),
       IntSymbolList(site, alphabet)
   {}

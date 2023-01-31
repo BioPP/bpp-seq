@@ -114,8 +114,8 @@ public:
       sequenceContainer_.appendObject(nullptr, "Seq_" + TextTools::toString(i));
     }
 
-    for (size_t i = 0; i < vs.size(); ++i)
-      addSite(vs[i], checkPositions); // This may throw an exception if position argument already exists or is size is not valid.
+    for (auto& vi : vs)
+      addSite(vi, checkPositions); // This may throw an exception if position argument already exists or is size is not valid.
   }
 
 
@@ -211,7 +211,7 @@ public:
       addSite(sitePtr, false); // We assume that positions are already correct.
     }
 
-    for (auto sequenceKey : sc.getSequenceKeys()) {
+    for (auto& sequenceKey : sc.getSequenceKeys()) {
       sequenceContainer_.appendObject(nullptr, sequenceKey);
     }
   }
@@ -223,8 +223,10 @@ public:
     sequenceNames_(),
     sequenceComments_()
   {
-    for (auto sequenceKey: sc.getSequenceKeys())
-      addSequence(sc.getSequence(sequenceKey), false);
+    for (auto& sequenceKey: sc.getSequenceKeys()) {
+      auto seqPtr = std::make_unique<SequenceType>(sc.sequence(sequenceKey));
+      addSequence(sequenceKey, seqPtr);
+    }
 
     reindexSites();
   }
@@ -238,7 +240,7 @@ public:
     sequenceComments_ = vsc.sequenceComments_;
   
     for (size_t i = 0; i < vsc.getNumberOfSites(); ++i)
-      addSite(vsc.getSite(i), false); // We assume that positions are already correct.
+      addSite(std::make_unique<SiteType>(vsc.site(i)), false); // We assume that positions are already correct.
 
     return *this;
   }
@@ -267,7 +269,7 @@ public:
     AbstractTemplateSequenceContainer<SequenceType>::operator=(sc);
 
     for (auto sequenceKey: sc.getSequenceKeys())
-      addSequence(sc.getSequence(sequenceKey), false);
+      addSequence(sequenceKey, sc.getSequence(sequenceKey));
 
     reindexSites();
 
@@ -529,7 +531,7 @@ public:
     sequenceComments_.erase(std::next(sequenceComments_.begin(), d));
   
     auto seq = sequenceContainer_.removeObject(sequencePosition);
-    std::get_deleter< SwitchDeleter<SequenceType> >(seq)->off();
+    std::get_deleter<SwitchDeleter<SequenceType>>(seq)->off();
     std::unique_ptr<SequenceType> seq2(seq.get());
     return seq2;
   }
@@ -538,8 +540,7 @@ public:
   {
     // Look for sequence key:
     size_t sequencePosition = getSequencePosition(sequenceKey);
-    SequenceType* seq = removeSequence(sequencePosition).release();
-    return std::unique_ptr<SequenceType>(seq);
+    return removeSequence(sequencePosition);
   }
 
   void deleteSequence(size_t sequencePosition) override
@@ -591,7 +592,7 @@ public:
   {
     if (names.size() != getNumberOfSequences())
       throw DimensionException("TemplateVectorSiteContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
-    sequenceContainer_.clear();
+    sequenceContainer_.nullify();
     sequenceNames_ = names;
     if (updateKeys) {
       setSequenceKeys(names);

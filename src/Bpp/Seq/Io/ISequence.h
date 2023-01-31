@@ -100,7 +100,7 @@ public:
    */
   virtual std::unique_ptr<SequenceContainerInterface> readSequences(
        std::istream& input, 
-       std::shared_ptr<const Alphabet>& alpha) const = 0;
+       std::shared_ptr<const Alphabet> alpha) const = 0;
   /**
    * @brief Create a new container from a file.
    *
@@ -111,7 +111,7 @@ public:
    */
   virtual std::unique_ptr<SequenceContainerInterface> readSequences(
       const std::string& path,
-      std::shared_ptr<const Alphabet>& alpha) const = 0;
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 };
 
 /**
@@ -161,7 +161,7 @@ public:
    */
   virtual std::unique_ptr<SiteContainerInterface> readAlignment(
       std::istream& input, 
-      std::shared_ptr<const Alphabet>& alpha) const = 0;
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 
   /**
    * @brief Create a new container from a file.
@@ -173,7 +173,7 @@ public:
    */
   virtual std::unique_ptr<SiteContainerInterface> readAlignment(
       const std::string& path,
-      std::shared_ptr<const Alphabet>& alpha) const = 0;
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 };
 
 /**
@@ -220,7 +220,7 @@ public:
    */
   virtual std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(
       std::istream& input,
-      std::shared_ptr<const Alphabet>& alpha) const = 0;
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 
   /**
    * @brief Create a new container from a file.
@@ -231,7 +231,7 @@ public:
    */
   virtual std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(
       const std::string& path,
-      std::shared_ptr<const Alphabet>& alpha) const = 0;
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 };
 
 /**
@@ -281,7 +281,7 @@ public:
    */
   virtual std::unique_ptr<ProbabilisticSiteContainerInterface> readAlignment(
       std::istream& input,
-      std::shared_ptr<const Alphabet>& alpha) const = 0;
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 
   /**
    * @brief Create a new container from a file.
@@ -292,7 +292,7 @@ public:
    */
   virtual std::unique_ptr<ProbabilisticSiteContainerInterface> readAlignment(
       const std::string& path,
-      std::shared_ptr<const Alphabet>& alpha) const = 0;
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_ISEQUENCE_H

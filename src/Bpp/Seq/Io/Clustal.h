@@ -98,12 +98,12 @@ public:
    *
    * @{
    */
-  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignment(input, alpha);
   }
 
-  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignment(path, alpha);
   }

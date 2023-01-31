@@ -85,8 +85,8 @@ public:
     AbstractTemplateSequenceContainer<SequenceType, std::string>(alphabet),
     sequenceVectorMap_()
   {
-    for (auto& seq : vs) {
-      addSequence(seq);
+    for (auto& seqPtr : vs) {
+      addSequence(seqPtr->getName(), seqPtr);
     }
   }
 

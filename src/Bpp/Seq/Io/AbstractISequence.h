@@ -95,12 +95,12 @@ public:
     appendSequencesFromFile(path, sc);
   }
 
-  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readSequencesFromStream(input, alpha);
   }
 
-  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readSequencesFromFile(path, alpha);
   }
@@ -209,12 +209,12 @@ public:
     appendSequencesFromFile(path, sc);
   }
 
-  std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readSequencesFromStream(input, alpha);
   }
 
-  std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readSequencesFromFile(path, alpha);
   }

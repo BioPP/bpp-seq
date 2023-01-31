@@ -95,12 +95,12 @@ public:
     appendAlignmentFromFile(path, sc);
   }
 
-  std::unique_ptr<SiteContainerInterface> readAlignment(const std::string& path, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<SiteContainerInterface> readAlignment(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignmentFromFile(path, alpha);
   }
 
-  std::unique_ptr<SiteContainerInterface> readAlignment(std::istream& input, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<SiteContainerInterface> readAlignment(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignmentFromStream(input, alpha);
   }
@@ -199,14 +199,14 @@ public:
     appendAlignmentFromFile(path, sc);
   }
 
-  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     auto sic = readAlignment(input, alpha);
     std::unique_ptr<SequenceContainerInterface> sec = std::move(sic);
     return sec;
   }
 
-  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     auto sic = readAlignment(path, alpha);
     std::unique_ptr<SequenceContainerInterface> sec = std::move(sic);
@@ -253,12 +253,12 @@ public:
     appendAlignmentFromFile(path, sc);
   }
 
-  std::unique_ptr<ProbabilisticSiteContainerInterface> readAlignment(const std::string& path, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<ProbabilisticSiteContainerInterface> readAlignment(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignmentFromFile(path, alpha);
   }
 
-  std::unique_ptr<ProbabilisticSiteContainerInterface> readAlignment(std::istream& input, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<ProbabilisticSiteContainerInterface> readAlignment(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignmentFromStream(input, alpha);
   }
@@ -351,14 +351,14 @@ public:
     appendAlignmentFromFile(path, sc);
   }
 
-  std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     auto sic = readAlignment(input, alpha);
     std::unique_ptr<ProbabilisticSequenceContainerInterface> sec = std::move(sic);
     return sec;
   }
 
-  std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet>& alpha) const override
+  std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     auto sic = readAlignment(path, alpha);
     std::unique_ptr<ProbabilisticSequenceContainerInterface> sec = std::move(sic);
