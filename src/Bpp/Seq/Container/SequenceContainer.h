@@ -106,9 +106,9 @@ public:
    * If no sequence with the given key is found, the new sequence will be added to the container.
    *
    * @param sequenceKey The key to which the sequence is associated.
-   * @param sequence    The sequence to set.
+   * @param sequencePtr The sequence to set.
    */
-  virtual void setSequence(const HashType& sequenceKey, std::unique_ptr<SequenceType>& sequence) = 0;
+  virtual void setSequence(const HashType& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) = 0;
 
   /**
    * @brief Add a sequence to the container.
@@ -117,9 +117,9 @@ public:
    * Existing sequences will not be updated, only new ones will be appended.
    *
    * @param sequenceKey The key to which the sequence is associated.
-   * @param sequence  The sequence to add.
+   * @param sequencePtr The sequence to add.
    */
-  virtual void addSequence(const HashType& sequenceKey, std::unique_ptr<SequenceType>& sequence) = 0;
+  virtual void addSequence(const HashType& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) = 0;
 
   /**
    * @brief Remove a sequence from the container.
@@ -159,28 +159,28 @@ public:
    *
    * The original key associated to the sequence will be kept.
    * @param sequencePosition The position of the sequence.
-   * @param sequence         The sequence to add.
+   * @param sequencePtr      The sequence to add.
    */
-  virtual void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence) = 0;
+  virtual void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr) = 0;
 
   /**
    * @brief Replace a sequence in the container.
    *
    * The original key associated to the sequence will be kept.
    * @param sequencePosition The position of the sequence.
-   * @param sequence         The sequence to add.
+   * @param sequencePtr      The sequence to add.
    * @param sequenceKey      The new key of the sequence.
    */
-  virtual void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const HashType& sequenceKey) = 0;
+  virtual void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const HashType& sequenceKey) = 0;
 
   /**
    * @brief Insert a sequence in the container.
    *
    * @param sequencePosition The position of the sequence.
-   * @param sequence         The sequence to add.
+   * @param sequencePtr      The sequence to add.
    * @param sequenceKey      The new key of the sequence.
    */
-  virtual void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const HashType& sequenceKey) = 0;
+  virtual void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const HashType& sequenceKey) = 0;
 
   /**
    * @brief Remove a sequence from the container.

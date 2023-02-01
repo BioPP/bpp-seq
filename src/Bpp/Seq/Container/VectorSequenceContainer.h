@@ -282,18 +282,18 @@ public:
     return *sequenceVectorMap_.getObject(sequenceKey);
   }
 
-  void setSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence) override
+  void setSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) override
   {
-    setSequence(getSequencePosition(sequenceKey), sequence);
+    setSequence(getSequencePosition(sequenceKey), sequencePtr);
   }
 
-  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence) override
+  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) override
   {
-    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets do not match.", getAlphabet(), sequence->getAlphabet());
+    if (sequencePtr->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets do not match.", getAlphabet(), sequencePtr->getAlphabet());
 
-    std::shared_ptr<SequenceType> sequencePtr(sequence.release(), SwitchDeleter<SequenceType>());
-    sequenceVectorMap_.appendObject(sequencePtr, sequenceKey, true);
+    std::shared_ptr<SequenceType> sequencePtr2(sequencePtr.release(), SwitchDeleter<SequenceType>());
+    sequenceVectorMap_.appendObject(sequencePtr2, sequenceKey, true);
   }
  
   std::unique_ptr<SequenceType> removeSequence(const std::string& sequenceKey) override
@@ -318,28 +318,28 @@ public:
     return *sequenceVectorMap_.getObject(sequencePosition);
   }
 
-  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence) override
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr) override
   {
-    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
+    if (sequencePtr->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequencePtr->getAlphabet());
 
-    sequenceVectorMap_.addObject(std::move(sequence), sequencePosition, sequenceKey(sequencePosition), false);
+    sequenceVectorMap_.addObject(std::move(sequencePtr), sequencePosition, sequenceKey(sequencePosition), false);
   }
 
-  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const std::string& sequenceKey) override
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const std::string& sequenceKey) override
   {
-    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
+    if (sequencePtr->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequencePtr->getAlphabet());
 
-    sequenceVectorMap_.addObject(std::move(sequence), sequencePosition, sequenceKey, false);
+    sequenceVectorMap_.addObject(std::move(sequencePtr), sequencePosition, sequenceKey, false);
   }
 
-  void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const std::string& sequenceKey) override
+  void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const std::string& sequenceKey) override
   {
-    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::insertSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
+    if (sequencePtr->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::insertSequence : Alphabets don't match", getAlphabet(), sequencePtr->getAlphabet());
 
-    sequenceVectorMap_.insertObject(std::move(sequence), sequencePosition, sequenceKey);
+    sequenceVectorMap_.insertObject(std::move(sequencePtr), sequencePosition, sequenceKey);
   }
 
   std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition) override
@@ -392,9 +392,9 @@ public:
    *
    * @param sequence  The sequence to add.
    */
-  virtual void addSequence(std::unique_ptr<SequenceType>& sequence)
+  virtual void addSequence(std::unique_ptr<SequenceType>& sequencePtr)
   {
-    addSequence(sequence->getName(), sequence);
+    addSequence(sequencePtr->getName(), sequencePtr);
   }
  
 protected:

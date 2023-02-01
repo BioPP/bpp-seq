@@ -50,9 +50,9 @@ namespace bpp
 /**
  * @brief The core site interface.
  *
- * The core interface for sites manipulation.  It is very similar to
- * the CoreSequence interface (a site is a vertical sequence!).  Sites
- * have a 'position' attribute.
+ * The core interface for sites manipulation. It is very similar to
+ * the CoreSequence interface (a site is a vertical sequence!). Sites
+ * have a 'coordinate' attribute.
  * This attribute stands for an index in an alignment, and may be
  * used as a unique identifier, in the same manner that names identify
  * sequence objects.

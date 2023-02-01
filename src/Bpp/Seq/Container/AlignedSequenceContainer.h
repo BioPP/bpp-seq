@@ -469,78 +469,78 @@ public:
    *
    * @{
    */
-  void setSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence) override
+  void setSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) override
   {
     // if container has only one sequence
     if (getNumberOfSequences() == 1)
-      length_ = sequence->size();
-    if (checkSize_(*sequence))
-      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequenceKey, sequence);
+      length_ = sequencePtr->size();
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequenceKey, sequencePtr);
     else
-      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequence.get());
+      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequencePtr.get());
   }
 
   
-  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequence) override
+  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) override
   {
     // if container has only one sequence
     if (length_ == 0) {
-      length_ = sequence->size();
+      length_ = sequencePtr->size();
       siteVector_.setSize(length_);
       reindexSites();
     }
-    if (checkSize_(*sequence))
-      TemplateVectorSequenceContainer<SequenceType>::addSequence(sequenceKey, sequence);
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::addSequence(sequenceKey, sequencePtr);
     else
-      throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", sequence.get());
+      throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", sequencePtr.get());
   }
 
 
-  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence) override
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr) override
   {
     if (sequencePosition >= getNumberOfSequences())
       throw IndexOutOfBoundsException("AlignedSequenceContainer::setSequence", sequencePosition, 0, getNumberOfSequences());
     // if container has only one sequence
     if (getNumberOfSequences() == 1)
-      length_ = sequence->size();
-    if (checkSize_(*sequence))
-      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequencePosition, sequence);
+      length_ = sequencePtr->size();
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequencePosition, sequencePtr);
     else
-      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequence.get());
+      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequencePtr.get());
 
     // Detroys all sites (but keep Site Container at same size)
     siteVector_.nullify();
   }
 
 
-  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const std::string& sequenceKey) override
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const std::string& sequenceKey) override
   {
     if (sequencePosition >= getNumberOfSequences())
       throw IndexOutOfBoundsException("AlignedSequenceContainer::setSequence", sequencePosition, 0, getNumberOfSequences());
     // if container has only one sequence
     if (getNumberOfSequences() == 1)
-      length_ = sequence->size();
-    if (checkSize_(*sequence))
-      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequencePosition, sequence, sequenceKey);
+      length_ = sequencePtr->size();
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequencePosition, sequencePtr, sequenceKey);
     else
-      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequence.get());
+      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequencePtr.get());
 
     // Detroys all sites (but keep Site Container at same size)
     siteVector_.nullify();
   }
 
 
-  void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const std::string& sequenceKey) override
+  void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const std::string& sequenceKey) override
   {
     if (sequencePosition >= getNumberOfSequences())
       throw IndexOutOfBoundsException("AlignedSequenceContainer::insertSequence", sequencePosition, 0, getNumberOfSequences());
     // if container has only one sequence
     if (getNumberOfSequences() == 1)
-      length_ = sequence->size();
-    if (checkSize_(*sequence))
-      TemplateVectorSequenceContainer<SequenceType>::insertSequence(sequencePosition, sequence, sequenceKey);
+      length_ = sequencePtr->size();
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::insertSequence(sequencePosition, sequencePtr, sequenceKey);
     else
-      throw SequenceNotAlignedException("AlignedSequenceContainer::insertSequence", sequence.get());
+      throw SequenceNotAlignedException("AlignedSequenceContainer::insertSequence", sequencePtr.get());
 
     // Detroys all sites (but keep Site Container at same size)
     siteVector_.nullify();
@@ -563,7 +563,7 @@ protected:
    * @param sequence The sequence to check.
    * @return True if sequence length = number of sites in container.
    */
-  bool checkSize_(const Sequence& sequence) { return sequence.size() == length_; }
+  bool checkSize_(const Sequence& sequenceRef) { return sequenceRef.size() == length_; }
 };
 
 //Aliases:
