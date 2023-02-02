@@ -586,7 +586,11 @@ VectorSiteContainer* SequenceApplicationTools::getSiteContainer(
               throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect null index: " + TextTools::toString(x));
           }
           else
-            throw Exception("SequenceApplicationTools::getSiteContainer(). Too large index: " + TextTools::toString(x));
+          {
+            ApplicationTools::displayResult("Site selection too large index", TextTools::toString(x));
+            ApplicationTools::displayResult("Limit to max length", TextTools::toString(nbSites));
+            vSite.push_back(static_cast<size_t>(nbSites));
+          }
         }
         selectedSites = dynamic_cast<VectorSiteContainer*>(SiteContainerTools::getSelectedSites(*sites, vSite));
         selectedSites->reindexSites();
@@ -788,10 +792,18 @@ AlignedValuesContainer* SequenceApplicationTools::getAlignedContainer(
           if (x > 0)
             vSite.push_back(static_cast<size_t>(x - 1));
           else
-            throw Exception("SequenceApplicationTools::getSiteContainer(). Incorrect null index: " + TextTools::toString(x));
+          {
+            ApplicationTools::displayMessage("SequenceApplicationTools::getSiteContainer(). Incorrect null index");
+            return avc;
+          }
         }
         else
-          throw Exception("SequenceApplicationTools::getSiteContainer(). Too large index: " + TextTools::toString(x));
+        {
+          ApplicationTools::displayMessage("Site selection too large index: " + TextTools::toString(x));
+          ApplicationTools::displayMessage("Limit to max length: " + TextTools::toString(nbSites));
+          vSite.push_back(static_cast<size_t>(nbSites-1));
+          break;
+        }
       }
       selectedSites = SiteContainerTools::getSelectedSites(*avc, vSite);
       selectedSites->reindexSites();
