@@ -68,7 +68,16 @@ GeneticCode* BppSequenceApplication::getGeneticCode(
   const string& suffix,
   bool suffixIsOptional) const
 {
-  const CodonAlphabet* codonAlphabet = dynamic_cast<const CodonAlphabet*>(alphabet);
+  const CodonAlphabet* codonAlphabet;
+
+  codonAlphabet = dynamic_cast<const CodonAlphabet*>(alphabet);
+  if (!codonAlphabet)
+  {
+    const AllelicAlphabet* allAlp = dynamic_cast<const AllelicAlphabet*>(alphabet);
+    if (allAlp)
+      codonAlphabet = dynamic_cast<const CodonAlphabet*>(&allAlp->getStateAlphabet());
+  }
+  
   if (codonAlphabet)
   {
     string codeDesc = ApplicationTools::getStringParameter("genetic_code", params_, "Standard", suffix, suffixIsOptional, warn_);
