@@ -54,7 +54,7 @@ using namespace bpp;
 RNY::RNY(shared_ptr<const NucleicAlphabet> na) : nuclalph_(na)
 {
   // Initialization:
-  vector<AlphabetState*> states(350,nullptr);
+  vector<AlphabetState*> states(351, nullptr);
 
   // Alphabet content definition:
 
