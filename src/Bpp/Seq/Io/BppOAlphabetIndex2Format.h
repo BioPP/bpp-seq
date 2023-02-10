@@ -63,8 +63,8 @@ class BppOAlphabetIndex2Format :
   public virtual IOFormat
 {
 private:
-  const Alphabet* alphabet_;
-  const GeneticCode* gencode_;
+  std::shared_ptr<const Alphabet> alphabet_;
+  std::shared_ptr<const GeneticCode> gencode_;
 
   std::string message_;
   bool verbose_;
@@ -76,11 +76,26 @@ public:
    * @param message Some text describing what the index is intended for.
    * @param verbose Tell if some messages should be printed while parsing.
    */
-  BppOAlphabetIndex2Format(const Alphabet* alphabet, const std::string& message, bool verbose = true) :
-    alphabet_(alphabet), gencode_(0), message_(message), verbose_(verbose) {}
+  BppOAlphabetIndex2Format(
+      std::shared_ptr<const Alphabet>& alphabet,
+      const std::string& message,
+      bool verbose = true) :
+    alphabet_(alphabet),
+    gencode_(0),
+    message_(message),
+    verbose_(verbose)
+  {}
 
-  BppOAlphabetIndex2Format(const CodonAlphabet* alphabet, const GeneticCode* gencode, const std::string& message, bool verbose = true) :
-    alphabet_(alphabet), gencode_(gencode), message_(message), verbose_(verbose) {}
+  BppOAlphabetIndex2Format(
+      std::shared_ptr<const CodonAlphabet>& alphabet,
+      std::shared_ptr<const GeneticCode>& gencode,
+      const std::string& message,
+      bool verbose = true) :
+    alphabet_(alphabet),
+    gencode_(gencode),
+    message_(message),
+    verbose_(verbose)
+  {}
 
   BppOAlphabetIndex2Format(const BppOAlphabetIndex2Format& format) :
     alphabet_(format.alphabet_),
@@ -113,7 +128,7 @@ public:
    * @return A new AlphabetIndex2 object according to options specified.
    * @throw Exception if an error occured.
    */
-  AlphabetIndex2* read(const std::string& description);
+  std::unique_ptr<AlphabetIndex2> read(const std::string& description);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_BPPOALPHABETINDEX2FORMAT_H

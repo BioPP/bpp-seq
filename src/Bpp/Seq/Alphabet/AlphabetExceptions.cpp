@@ -52,12 +52,20 @@ using namespace std;
 ******************************************************************************/
 
 AlphabetException::AlphabetException(const std::string& text, const Alphabet* alpha) :
-  Exception("AlphabetException: " + text + (alpha ? "(" + (alpha->getAlphabetType()) + ")" : string(""))),
+  Exception("AlphabetException: " + text + "(" + (alpha->getAlphabetType()) + ")"),
   alphabet_(alpha) {}
+
+AlphabetException::AlphabetException(const std::string& text, shared_ptr<const Alphabet> alpha) :
+  Exception("AlphabetException: " + text + "(" + (alpha->getAlphabetType()) + ")"),
+  alphabet_(alpha.get()) {}
 
 /******************************************************************************/
 
 BadCharException::BadCharException(const std::string& badChar, const std::string& text, const Alphabet* alpha) :
+  AlphabetException("BadCharException: " + badChar + ". " + text, alpha),
+  c_(badChar) {}
+
+BadCharException::BadCharException(const std::string& badChar, const std::string& text, shared_ptr<const Alphabet> alpha) :
   AlphabetException("BadCharException: " + badChar + ". " + text, alpha),
   c_(badChar) {}
 
@@ -69,26 +77,34 @@ BadIntException::BadIntException(int badInt, const std::string& text, const Alph
   AlphabetException("BadIntException: " + TextTools::toString(badInt) + ". " + text, alpha),
   i_(badInt) {}
 
-int BadIntException::getBadInt() const { return i_; }
+BadIntException::BadIntException(int badInt, const std::string& text, shared_ptr<const Alphabet> alpha) :
+  AlphabetException("BadIntException: " + TextTools::toString(badInt) + ". " + text, alpha),
+  i_(badInt) {}
+
+  int BadIntException::getBadInt() const { return i_; }
 
 /******************************************************************************/
 
 AlphabetMismatchException::AlphabetMismatchException(const std::string& text, const Alphabet* alpha1, const Alphabet* alpha2) :
-  Exception("AlphabetMismatchException: " + text + (alpha1 != 0 && alpha2 != 0 ? "(" + alpha1->getAlphabetType() + ", " + alpha2->getAlphabetType() + ")" : string(""))),
+  Exception("AlphabetMismatchException: " + text + "(" + alpha1->getAlphabetType() + ", " + alpha2->getAlphabetType() + ")"),
   alphabet1_(alpha1),
   alphabet2_(alpha2) {}
 
-vector<const Alphabet*> AlphabetMismatchException::getAlphabets() const
-{
-  vector<const Alphabet*> v(2);
-  v[0] = alphabet1_;
-  v[1] = alphabet2_;
-  return v;
-}
+/******************************************************************************/
+
+AlphabetMismatchException::AlphabetMismatchException(const std::string& text, shared_ptr<const Alphabet> alpha1, shared_ptr<const Alphabet> alpha2) :
+  Exception("AlphabetMismatchException: " + text + "(" + alpha1->getAlphabetType() + ", " + alpha2->getAlphabetType() + ")"),
+  alphabet1_(alpha1.get()),
+  alphabet2_(alpha2.get()) {}
 
 /******************************************************************************/
 
 CharStateNotSupportedException::CharStateNotSupportedException(const string& text, const Alphabet* alpha) :
+  AlphabetException("CharStateNotSupportedException: " + text, alpha) {}
+
+/******************************************************************************/
+  
+CharStateNotSupportedException::CharStateNotSupportedException(const string& text, shared_ptr<const Alphabet> alpha) :
   AlphabetException("CharStateNotSupportedException: " + text, alpha) {}
 
 /******************************************************************************/

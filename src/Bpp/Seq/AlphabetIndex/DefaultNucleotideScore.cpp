@@ -103,7 +103,7 @@ double DefaultNucleotideScore::getIndex(const std::string& state1, const std::st
     alpha_->getStateIndex(state2)-1);
 }
 
-LinearMatrix<double>* DefaultNucleotideScore::getIndexMatrix() const
+const Matrix<double>& DefaultNucleotideScore::getIndexMatrix() const
 {
-  return new LinearMatrix<double>(distanceMatrix_);
+  return distanceMatrix_;
 }

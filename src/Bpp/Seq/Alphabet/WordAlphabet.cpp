@@ -50,14 +50,14 @@ using namespace bpp;
 
 using namespace std;
 
-WordAlphabet::WordAlphabet(const vector<const Alphabet*>& vAlpha) :
+WordAlphabet::WordAlphabet(const vector< std::shared_ptr<const Alphabet> >& vAlpha) :
   AbstractAlphabet(),
   vAbsAlph_(vAlpha)
 {
   build_();
 }
 
-WordAlphabet::WordAlphabet(const Alphabet* pAlpha, size_t num) :
+WordAlphabet::WordAlphabet(std::shared_ptr<const Alphabet> pAlpha, size_t num) :
   AbstractAlphabet(),
   vAbsAlph_(0)
 {
@@ -212,13 +212,13 @@ std::string WordAlphabet::getName(const std::string& state) const
 bool WordAlphabet::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
-    throw BadIntException(state1, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.");
+    throw BadIntException(state1, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.", this);
 
   if (!isIntInAlphabet(state2))
-    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.");
+    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Specified base unknown.", this);
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Unresolved base.");
+    throw BadIntException(state2, "WordAlphabet::isResolvedIn(int, int): Unresolved base.", this);
 
   return (state1 == (int)getSize()) ? (state2 >= 0) : (state1 == state2);
 }
@@ -228,7 +228,7 @@ bool WordAlphabet::isResolvedIn(int state1, int state2) const
 std::vector<int> WordAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.");
+    throw BadIntException(state, "WordAlphabet::getAlias(int): Specified base unknown.", this);
   vector<int> v;
   size_t s = getSize();
 
@@ -253,7 +253,7 @@ std::vector<std::string> WordAlphabet::getAlias(const std::string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
-    throw BadCharException(locstate, "WordAlphabet::getAlias(string): Specified base unknown.");
+    throw BadCharException(locstate, "WordAlphabet::getAlias(string): Specified base unknown.", this);
   vector<string> v;
 
   size_t s = getSize();
@@ -345,11 +345,11 @@ std::string WordAlphabet::getWord(const std::vector<string>& vpos, size_t pos) c
 
 /****************************************************************************************/
 
-Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const
+unique_ptr<SequenceInterface> WordAlphabet::translate(const SequenceInterface& sequence, size_t pos) const
 {
   if ((!hasUniqueAlphabet()) or
       (sequence.getAlphabet()->getAlphabetType() != vAbsAlph_[0]->getAlphabetType()))
-    throw AlphabetMismatchException("No matching alphabets", sequence.getAlphabet(), vAbsAlph_[0]);
+    throw AlphabetMismatchException("No matching alphabets", sequence.getAlphabet().get(), vAbsAlph_[0].get());
 
   vector<int> content;
 
@@ -363,26 +363,28 @@ Sequence* WordAlphabet::translate(const Sequence& sequence, size_t pos) const
     i += l;
   }
 
-  return new BasicSequence(sequence.getName(), content, this);
+  auto alphaPtr =  shared_from_this();
+  return make_unique<Sequence>(sequence.getName(), content, alphaPtr);
 }
 
 /****************************************************************************************/
 
-Sequence* WordAlphabet::reverse(const Sequence& sequence) const
+unique_ptr<SequenceInterface> WordAlphabet::reverse(const SequenceInterface& sequence) const
 {
   if ((!hasUniqueAlphabet()) or
       (sequence.getAlphabet()->getAlphabetType() != getAlphabetType()))
-    throw AlphabetMismatchException("No matching alphabets");
+    throw AlphabetMismatchException("No matching alphabets", sequence.getAlphabet().get(), this);
 
-  Sequence* pseq = new BasicSequence(sequence.getName(), "", getNAlphabet(0));
+  auto alphaPtr = getNAlphabet(0);
+  auto seqPtr = make_unique<Sequence>(sequence.getName(), "", alphaPtr);
 
   size_t s = sequence.size();
   for (size_t i = 0; i < s; i++)
   {
-    pseq->append(getPositions(sequence[i]));
+    seqPtr->append(getPositions(sequence[i]));
   }
 
-  return pseq;
+  return seqPtr;
 }
 
 /****************************************************************************************/

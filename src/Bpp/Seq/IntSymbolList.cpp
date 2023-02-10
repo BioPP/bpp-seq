@@ -46,118 +46,47 @@ using namespace bpp;
 
 using namespace std;
 
-/****************************************************************************************/
-
-BasicIntSymbolList::BasicIntSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
-  SymbolList<int>(alpha)
-{
-  setContent(list);
-}
-
-BasicIntSymbolList::BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
-  SymbolList<int>(alpha)
-{
-  setContent(list);
-}
 
 /****************************************************************************************/
 
-// BasicIntSymbolList::BasicIntSymbolList(const IntSymbolList& list):
-//   alphabet_(list.getAlphabet()), content_(list.size())
-// {
-//   for (size_t i = 0; i < list.size(); ++i)
-//     content_[i] = list[i];
-// }
-
-BasicIntSymbolList::BasicIntSymbolList(const BasicIntSymbolList& list) :
-  SymbolList<int>(list) {}
-
-// BasicIntSymbolList& BasicIntSymbolList::operator=(const IntSymbolList& list)
-// {
-//   content_.resize(list.size());
-//   for (size_t i = 0; i < list.size(); ++i)
-//     content_[i] = list[i];
-//   alphabet_ = list.getAlphabet();
-//   return *this;
-// }
-
-BasicIntSymbolList& BasicIntSymbolList::operator=(const BasicIntSymbolList& list)
-{
-  SymbolList<int>::operator=(list);
-  return *this;
-}
-
-/****************************************************************************************/
-
-void BasicIntSymbolList::setContent(const vector<string>& list)
+void IntSymbolList::setContent(const vector<string>& list)
 {
   // Check list for incorrect characters
   vector<int> coded(list.size());
-  for (size_t i = 0; i < list.size(); i++)
+  for (auto i : list)
   {
-    if (!getAlphabet()->isCharInAlphabet(list[i]))
-      throw BadCharException(list[i], "BasicIntSymbolList::setContent", getAlphabet());
+    if (!getAlphabet()->isCharInAlphabet(i))
+      throw BadCharException(i, "IntSymbolList::setContent", getAlphabet());
   }
 
-  for (size_t i = 0; i < list.size(); i++)
+  size_t j = 0;
+  for (auto i : list)
   {
-    coded[i] = getAlphabet()->charToInt(list[i]);
+    coded[j++] = getAlphabet()->charToInt(i);
   }
 
   // BasicIntSymbolList is valid:
-  SymbolList<int>::setContent(coded);
+  AbstractTemplateSymbolList<int>::setContent(coded);
 }
 
 /****************************************************************************************/
 
-void BasicIntSymbolList::setContent(const vector<int>& list)
+void IntSymbolList::setContent(const vector<int>& list)
 {
   // Check list for incorrect characters
-  for (size_t i = 0; i < list.size(); i++)
+  for (auto i : list)
   {
-    if (!getAlphabet()->isIntInAlphabet(list[i]))
-      throw BadIntException(list[i], "BasicIntSymbolList::setContent", getAlphabet());
+    if (!getAlphabet()->isIntInAlphabet(i))
+      throw BadIntException(i, "IntSymbolList::setContent", getAlphabet());
   }
 
   // Sequence is valid:
-  SymbolList<int>::setContent(list);
+  AbstractTemplateSymbolList<int>::setContent(list);
 }
 
 /****************************************************************************************/
 
-string BasicIntSymbolList::toString() const
-{
-  return StringSequenceTools::decodeSequence(content_, getAlphabet());
-}
-
-/****************************************************************************************/
-
-void BasicIntSymbolList::addElement(const string& c)
-{
-  content_.push_back(getAlphabet()->charToInt(c));
-}
-
-/****************************************************************************************/
-
-void BasicIntSymbolList::addElement(size_t pos, const string& c)
-{
-  if (pos >= content_.size())
-    throw IndexOutOfBoundsException("BasicIntSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-  content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), getAlphabet()->charToInt(c));
-}
-
-/****************************************************************************************/
-
-void BasicIntSymbolList::setElement(size_t pos, const string& c)
-{
-  if (pos >= content_.size())
-    throw IndexOutOfBoundsException("BasicIntSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-  content_[pos] = getAlphabet()->charToInt(c);
-}
-
-/****************************************************************************************/
-
-string BasicIntSymbolList::getChar(size_t pos) const
+string IntSymbolList::getChar(size_t pos) const
 {
   if (pos >= content_.size())
     throw IndexOutOfBoundsException("BasicIntSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
@@ -175,96 +104,74 @@ string BasicIntSymbolList::getChar(size_t pos) const
 
 /****************************************************************************************/
 
-EdIntSymbolList::EdIntSymbolList(const std::vector<string>& list, const Alphabet* alpha) :
-  EdSymbolList<int>(alpha)
-{
-  setContent(list);
-}
-
-EdIntSymbolList::EdIntSymbolList(const std::vector<int>& list, const Alphabet* alpha) :
-  EdSymbolList<int>(list, alpha)
-{}
-
-/****************************************************************************************/
-
-EdIntSymbolList::EdIntSymbolList(const EdIntSymbolList& list) :
-  EdSymbolList<int>(list)
-{}
-
-EdIntSymbolList& EdIntSymbolList::operator=(const EdIntSymbolList& list)
-{
-  EdSymbolList<int>::operator=(list);
-  return *this;
-}
-
-/****************************************************************************************/
-
-void EdIntSymbolList::setContent(const vector<string>& list)
+void EventDrivenIntSymbolList::setContent(const vector<string>& list)
 {
   // Check list for incorrect characters
   vector<int> coded(list.size());
-  for (size_t i = 0; i < list.size(); i++)
+  for (auto i : list)
   {
-    if (!getAlphabet()->isCharInAlphabet(list[i]))
-      throw BadCharException(list[i], "EdIntSymbolList::setContent", getAlphabet());
+    if (!getAlphabet()->isCharInAlphabet(i))
+      throw BadCharException(i, "EventDrivenIntSymbolList::setContent", getAlphabet());
   }
 
-  for (size_t i = 0; i < list.size(); i++)
+  size_t j = 0;
+  for (auto i : list)
   {
-    coded[i] = getAlphabet()->charToInt(list[i]);
+    coded[j++] = getAlphabet()->charToInt(i);
   }
 
-  EdSymbolList<int>::setContent(coded);
+  AbstractTemplateEventDrivenSymbolList<int>::setContent(coded);
 }
 
 /****************************************************************************************/
 
-void EdIntSymbolList::setContent(const vector<int>& list)
+void EventDrivenIntSymbolList::setContent(const vector<int>& list)
 {
   // Check list for incorrect characters
-  for (size_t i = 0; i < list.size(); i++)
+  for (auto i : list)
   {
-    if (!getAlphabet()->isIntInAlphabet(list[i]))
-      throw BadIntException(list[i], "EdIntSymbolList::setContent", getAlphabet());
+    if (!getAlphabet()->isIntInAlphabet(i))
+      throw BadIntException(i, "EventDrivenIntSymbolList::setContent", getAlphabet());
   }
 
-  EdSymbolList<int>::setContent(list);
+  AbstractTemplateEventDrivenSymbolList<int>::setContent(list);
 }
 
 /****************************************************************************************/
 
-string EdIntSymbolList::toString() const
+string EventDrivenIntSymbolList::toString() const
 {
-  return StringSequenceTools::decodeSequence(content_, getAlphabet());
+  auto alphaPtr = getAlphabet();
+  return StringSequenceTools::decodeSequence(content_, alphaPtr);
 }
 
 /****************************************************************************************/
 
-void EdIntSymbolList::addElement(const string& c)
+void EventDrivenIntSymbolList::addElement(const string& c)
 {
-  EdSymbolList<int>::addElement(getAlphabet()->charToInt(c));
+  AbstractTemplateEventDrivenSymbolList<int>::addElement(getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
 
-void EdIntSymbolList::addElement(size_t pos, const string& c)
+void EventDrivenIntSymbolList::addElement(size_t pos, const string& c)
 {
-  EdSymbolList<int>::addElement(pos, getAlphabet()->charToInt(c));
+  AbstractTemplateEventDrivenSymbolList<int>::addElement(pos, getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
 
-void EdIntSymbolList::setElement(size_t pos, const string& c)
+void EventDrivenIntSymbolList::setElement(size_t pos, const string& c)
 {
-  EdSymbolList<int>::setElement(pos, getAlphabet()->charToInt(c));
+ AbstractTemplateEventDrivenSymbolList<int>::setElement(pos, getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
 
-string EdIntSymbolList::getChar(size_t pos) const
+string EventDrivenIntSymbolList::getChar(size_t pos) const
 {
   if (pos >= content_.size())
-    throw IndexOutOfBoundsException("EdIntSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
+    throw IndexOutOfBoundsException("EventDrivenIntSymbolList::getChar. Invalid position.", pos, 0, size() - 1);
   string c = "";
   try
   {
@@ -276,3 +183,4 @@ string EdIntSymbolList::getChar(size_t pos) const
   }
   return c;
 }
+

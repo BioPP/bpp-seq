@@ -84,7 +84,7 @@ public:
     return *this;
   }
 
-  BLOSUM50* clone() const { return new BLOSUM50(); }
+  BLOSUM50* clone() const override { return new BLOSUM50(); }
 
   virtual ~BLOSUM50() {}
 
@@ -94,10 +94,10 @@ public:
    *
    * @{
    */
-  double getIndex(int state1, int state2) const;
-  double getIndex(const std::string& state1, const std::string& state2) const;
-  LinearMatrix<double>* getIndexMatrix() const;
-  bool isSymmetric() const { return true; }
+  double getIndex(int state1, int state2) const override;
+  double getIndex(const std::string& state1, const std::string& state2) const override;
+  const Matrix<double>& getIndexMatrix() const override;
+  bool isSymmetric() const override { return true; }
   /** @} */
 };
 } // end of namespace bpp.

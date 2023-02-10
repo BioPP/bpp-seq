@@ -71,7 +71,7 @@ bool PhredPoly::nextSequence(istream& input, Sequence& seq) const
     name = st.getToken(0);
   }
 
-  const Alphabet* alpha = seq.getAlphabet();
+  auto alphaPtr = seq.getAlphabet();
 
   // Main loop : for all other lines
   while (!input.eof())
@@ -92,7 +92,7 @@ bool PhredPoly::nextSequence(istream& input, Sequence& seq) const
       {
         v.push_back(st.getToken(4)); // Get the uncalled base if relative picks areas are similar
       }
-      sequence += alpha->getGeneric(v);
+      sequence += alphaPtr->getGeneric(v);
     }
   }
   if (name == "")

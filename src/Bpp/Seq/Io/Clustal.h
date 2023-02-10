@@ -57,9 +57,8 @@ namespace bpp
  * An AlignedSequenceContainer object is used instead of a VectorSequenceContainer.
  */
 class Clustal :
-  public AbstractIAlignment,
-  public AbstractOAlignment,
-  public virtual ISequence
+  public AbstractIAlignment2,
+  public AbstractOAlignment
 {
 private:
   bool checkNames_;
@@ -88,7 +87,7 @@ public:
    *
    * @{
    */
-  void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const;
+  void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
   /** @} */
 
   /**
@@ -99,11 +98,12 @@ public:
    *
    * @{
    */
-  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const
+  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignment(input, alpha);
   }
-  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const
+
+  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignment(path, alpha);
   }
@@ -114,8 +114,9 @@ public:
    *
    * @{
    */
-  void writeAlignment(std::ostream& output, const SiteContainer& sc) const;
-  void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const
+  void writeAlignment(std::ostream& output, const SiteContainerInterface& sc) const override;
+
+  void writeAlignment(const std::string& path, const SiteContainerInterface& sc, bool overwrite = true) const override
   {
     AbstractOAlignment::writeAlignment(path, sc, overwrite);
   }
@@ -126,9 +127,9 @@ public:
    *
    * @{
    */
-  const std::string getFormatName() const { return "Clustal"; }
+  const std::string getFormatName() const override { return "Clustal"; }
 
-  const std::string getFormatDescription() const { return "The Clustal alignment tool output format."; }
+  const std::string getFormatDescription() const override { return "The Clustal alignment tool output format."; }
 
   /** @} */
 

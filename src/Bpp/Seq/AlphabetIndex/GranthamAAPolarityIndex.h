@@ -101,20 +101,20 @@ public:
 
   virtual ~GranthamAAPolarityIndex() {}
 
-  GranthamAAPolarityIndex* clone() const { return new GranthamAAPolarityIndex(); }
+  GranthamAAPolarityIndex* clone() const override { return new GranthamAAPolarityIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return polarity_[getAlphabet()->getStateIndex(state)-1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return polarity_[getAlphabet()->getStateIndex(state)-1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(polarity_); }
+  const std::vector<double>& indexVector() const override { return polarity_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_GRANTHAMAAPOLARITYINDEX_H

@@ -38,18 +38,22 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
+#include <memory>
+
+using namespace std;
 
 #include "Transliterator.h"
 
 using namespace bpp;
 
-Sequence* AbstractTransliterator::translate(const Sequence& sequence) const
+unique_ptr<Sequence> AbstractTransliterator::translate(const Sequence& sequence) const
 {
   if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("AbstractTransliterator::translate", getSourceAlphabet(), getTargetAlphabet());
-  Sequence* tSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getTargetAlphabet());
+  auto alphaPtr = getTargetAlphabet();
+  auto tSeq = make_unique<Sequence>(sequence.getName(), "", sequence.getComments(), alphaPtr);
   int gap = sequence.getAlphabet()->getGapCharacterCode();
-  for (unsigned int i = 0; i < sequence.size(); ++i)
+  for (size_t i = 0; i < sequence.size(); ++i)
   {
     int state = sequence.getValue(i);
     if (state == gap)
@@ -60,14 +64,16 @@ Sequence* AbstractTransliterator::translate(const Sequence& sequence) const
   return tSeq;
 }
 
-Sequence* AbstractReverseTransliterator::reverse(const Sequence& sequence) const
+unique_ptr<Sequence> AbstractReverseTransliterator::reverse(const Sequence& sequence) const
 {
   if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("AbstractReverseTransliterator::reverse", getSourceAlphabet(), getTargetAlphabet());
-  Sequence* rSeq = new BasicSequence(sequence.getName(), "", sequence.getComments(), getSourceAlphabet());
-  for (unsigned int i = 0; i < sequence.size(); ++i)
+  auto alphaPtr = getSourceAlphabet();
+  auto rSeq = make_unique<Sequence>(sequence.getName(), "", sequence.getComments(), alphaPtr);
+  for (size_t i = 0; i < sequence.size(); ++i)
   {
     rSeq->addElement(reverse(sequence.getValue(i)));
   }
   return rSeq;
 }
+

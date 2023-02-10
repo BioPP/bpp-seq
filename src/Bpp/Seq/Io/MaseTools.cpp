@@ -149,28 +149,6 @@ SequenceSelection MaseTools::getSequenceSet(const Comments& maseFileHeader, cons
 
 /******************************************************************************/
 
-SiteContainer* MaseTools::getSelectedSites(
-  const SiteContainer& sequences,
-  const string& setName)
-{
-  SiteSelection ss = getSiteSet(sequences.getGeneralComments(), setName);
-  return dynamic_cast<SiteContainer*>(SiteContainerTools::getSelectedPositions(sequences, ss));
-}
-
-/******************************************************************************/
-
-SequenceContainer* MaseTools::getSelectedSequences(
-  const OrderedSequenceContainer& sequences,
-  const std::string& setName)
-{
-  SequenceSelection ss = getSequenceSet(sequences.getGeneralComments(), setName);
-  VectorSequenceContainer* cont = new VectorSequenceContainer(sequences.getAlphabet());
-  SequenceContainerTools::getSelectedSequences(sequences, ss, *cont);
-  return cont;
-}
-
-/******************************************************************************/
-
 map<string, size_t> MaseTools::getAvailableSiteSelections(const Comments& maseHeader)
 {
   map<string, size_t> selections;

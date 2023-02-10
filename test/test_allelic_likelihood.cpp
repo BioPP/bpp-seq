@@ -59,8 +59,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // containers
 #include <Bpp/Seq/Container/VectorSiteContainer.h>
-#include "../src/Bpp/Seq/Container/VectorProbabilisticSequenceContainer.h"
-#include <Bpp/Seq/Container/VectorProbabilisticSiteContainer.h>
 
 // file formats
 #include <Bpp/Seq/Io/Fasta.h>
@@ -87,22 +85,39 @@ const string str(const vector<string> & v) {
  */
 int main() {
 
-
+  // From pasta
   string nameSeq = "counts.pa";
   Pasta pasta;
-  auto alphaall = std::make_shared<AllelicAlphabet>(AlphabetTools::DNA_ALPHABET, 4);
-  
-  auto sites = std::shared_ptr<VectorProbabilisticSiteContainer>(pasta.readAlignment(nameSeq , &alphaall->getStateAlphabet()));
+  auto allelicAlpha = make_shared<const AllelicAlphabet>(AlphabetTools::DNA_ALPHABET, 4);
+ 
+  auto stateAlpha =  allelicAlpha->getStateAlphabet();
+  auto alphaPtr = dynamic_pointer_cast<const Alphabet>(stateAlpha);
+  auto sites = pasta.readAlignment(nameSeq, alphaPtr);
 
-  VectorProbabilisticSiteContainer sites2(alphaall.get());
+  auto alphaPtr2 = dynamic_pointer_cast<const Alphabet>(allelicAlpha);
+  ProbabilisticVectorSiteContainer sites2(alphaPtr2);
   for (size_t ns=0;ns < sites->getNumberOfSequences(); ns++)
   {
-    auto seq=alphaall->convertFromStateAlphabet(sites->getSequence(ns));
-    sites2.addSequence(*seq);
+    auto seq = allelicAlpha->convertFromStateAlphabet(sites->sequence(ns));
+    sites2.addSequence(seq->getName(), seq);
   }
 
+  pasta.writeSequence(cerr, sites2.sequence("D"), true);
 
-  pasta.writeSequence(cerr, sites2.getSequence("D"));
+  // From Fasta
+  nameSeq = "counts.fa";
+  Fasta fasta;
+ 
+  auto sitesf = fasta.readAlignment(nameSeq, alphaPtr);
+
+  ProbabilisticVectorSiteContainer sitesf2(alphaPtr2);
+  for (size_t ns=0;ns < sitesf->getNumberOfSequences(); ns++)
+  {
+    auto seq = allelicAlpha->convertFromStateAlphabet(sitesf->sequence(ns));
+    sitesf2.addSequence(seq->getName(), seq);
+  }
+
+  pasta.writeSequence(cerr, sitesf2.sequence("D"), true);
 
   
 

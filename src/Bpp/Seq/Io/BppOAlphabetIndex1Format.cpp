@@ -66,7 +66,7 @@
 using namespace bpp;
 using namespace std;
 
-AlphabetIndex1* BppOAlphabetIndex1Format::read(const std::string& description)
+unique_ptr<AlphabetIndex1> BppOAlphabetIndex1Format::read(const std::string& description)
 {
   if (description != "None")
   {
@@ -76,88 +76,89 @@ AlphabetIndex1* BppOAlphabetIndex1Format::read(const std::string& description)
     if (verbose_)
       ApplicationTools::displayResult(message_, description);
 
-    if (AlphabetTools::isCodonAlphabet(alphabet_))
+    if (AlphabetTools::isCodonAlphabet(alphabet_.get()))
     {
       if (!gencode_)
         throw Exception("BppOAlphabetIndex2Format::read. Missing genetic code for codon alphabet.");
 
-      BppOAlphabetIndex1Format reader1(gencode_->getTargetAlphabet(), message_, false);
+      auto alphaPtr = gencode_->getTargetAlphabet();
+      BppOAlphabetIndex1Format reader1(alphaPtr, message_, false);
 
       shared_ptr<AlphabetIndex1> ai2(reader1.read(description));
-      if (!AlphabetTools::isProteicAlphabet(ai2->getAlphabet()))
+      if (!AlphabetTools::isProteicAlphabet(ai2->getAlphabet().get()))
         throw Exception("BppOAlphabetIndex2Format::read. Not a Proteic Alphabet for CodonAlphabetIndex1.");
 
-      return new CodonFromProteicAlphabetIndex1(gencode_, ai2.get());
+      return make_unique<CodonFromProteicAlphabetIndex1>(gencode_, ai2);
     }
 
     // Currently, only protein indices are supported:
-    if (!AlphabetTools::isProteicAlphabet(alphabet_))
+    if (!AlphabetTools::isProteicAlphabet(alphabet_.get()))
       throw Exception("BppOAlphabetIndex1Format::read. This index is only supported with a protein alphabet.");
     if (name == "GranthamPolarity")
     {
-      return new GranthamAAPolarityIndex();
+      return make_unique<GranthamAAPolarityIndex>();
     }
     else if (name == "GranthamVolume")
     {
-      return new GranthamAAVolumeIndex();
+      return make_unique<GranthamAAVolumeIndex>();
     }
     else if (name == "KleinCharge")
     {
-      return new KleinAANetChargeIndex();
+      return make_unique<KleinAANetChargeIndex>();
     }
     else if (name == "KDHydropathy")
     {
-      return new KD_AAHydropathyIndex();
+      return make_unique<KD_AAHydropathyIndex>();
     }
     else if (name == "ChouFasmanAHelix")
     {
-      return new AAChouFasmanAHelixIndex();
+      return make_unique<AAChouFasmanAHelixIndex>();
     }
     else if (name == "ChouFasmanBSheet")
     {
-      return new AAChouFasmanBSheetIndex();
+      return make_unique<AAChouFasmanBSheetIndex>();
     }
     else if (name == "ChouFasmanTurn")
     {
-      return new AAChouFasmanTurnIndex();
+      return make_unique<AAChouFasmanTurnIndex>();
     }
     else if (name == "ChenGuHuangHydrophobicity")
     {
-      return new AAChenGuHuangHydrophobicityIndex();
+      return make_unique<AAChenGuHuangHydrophobicityIndex>();
     }
     else if (name == "Surface")
     {
-      return new AASurfaceIndex();
+      return make_unique<AASurfaceIndex>();
     }
     else if (name == "Mass")
     {
-      return new AAMassIndex();
+      return make_unique<AAMassIndex>();
     }
     else if (name == "Volume")
     {
-      return new AAVolumeIndex();
+      return make_unique<AAVolumeIndex>();
     }
     else if (name == "Charge")
     {
-      return new AAChargeIndex();
+      return make_unique<AAChargeIndex>();
     }
     else if (name == "SEAMedium")
     {
-      return new AASEA1030Index();
+      return make_unique<AASEA1030Index>();
     }
     else if (name == "SEAHigh")
     {
-      return new AASEASup30Index();
+      return make_unique<AASEASup30Index>();
     }
     else if (name == "SEALow")
     {
-      return new AASEAInf10Index();
+      return make_unique<AASEAInf10Index>();
     }
     else if (name == "User")
     {
       string aax1FilePath = ApplicationTools::getAFilePath("file", args, true, true, "", false);
       ifstream aax1File(aax1FilePath.c_str(), ios::in);
-      AAIndex1Entry* I = new AAIndex1Entry (aax1File);
+      auto I = make_unique<AAIndex1Entry>(aax1File);
       aax1File.close();
       return I;
     }
@@ -168,6 +169,6 @@ AlphabetIndex1* BppOAlphabetIndex1Format::read(const std::string& description)
   }
   else
   {
-    return 0;
+    return nullptr;
   }
 }

@@ -78,8 +78,8 @@ public:
    *
    * @{
    */
-  void writeAlignment(std::ostream& output, const SiteContainer& sc) const;
-  void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const
+  void writeAlignment(std::ostream& output, const SiteContainerInterface& sc) const override;
+  void writeAlignment(const std::string& path, const SiteContainerInterface& sc, bool overwrite = true) const override
   {
     AbstractOAlignment::writeAlignment(path, sc, overwrite);
   }
@@ -90,8 +90,8 @@ public:
    *
    * @{
    */
-  const std::string getFormatName() const { return "Stockholm file"; }
-  const std::string getFormatDescription() const
+  const std::string getFormatName() const override { return "Stockholm file"; }
+  const std::string getFormatDescription() const override
   {
     return "See http://en.wikipedia.org/wiki/Stockholm_format";
   }

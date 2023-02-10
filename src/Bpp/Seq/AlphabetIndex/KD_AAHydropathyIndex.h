@@ -89,20 +89,20 @@ public:
 
   virtual ~KD_AAHydropathyIndex() {}
 
-  KD_AAHydropathyIndex* clone() const { return new KD_AAHydropathyIndex(); }
+  KD_AAHydropathyIndex* clone() const override { return new KD_AAHydropathyIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return hydropathy_[getAlphabet()->getStateIndex(state)-1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return hydropathy_[getAlphabet()->getStateIndex(state)-1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(hydropathy_); }
+  const std::vector<double>& indexVector() const override { return hydropathy_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_KD_AAHYDROPATHYINDEX_H

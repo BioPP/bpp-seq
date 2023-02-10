@@ -140,7 +140,7 @@ public:
 class Mase :
   public AbstractISequence,
   public AbstractIAlignment,
-  public AbstractOSequence
+  public AbstractOSequence2
 {
 private:
   /**
@@ -167,15 +167,16 @@ public:
    *
    * @{
    */
-  VectorSequenceContainer* readMeta(std::istream& input, const Alphabet* alpha, MaseHeader& header) const
+  std::unique_ptr<SequenceContainerInterface> readMeta(std::istream& input, std::shared_ptr<const Alphabet>& alpha, MaseHeader& header) const
   {
     readHeader_(input, header);
     return AbstractISequence::readSequences(input, alpha);
   }
-  VectorSequenceContainer* readMeta(std::string& path, const Alphabet* alpha, MaseHeader& header) const
+
+  std::unique_ptr<SequenceContainerInterface> readMeta(std::string& path, std::shared_ptr<const Alphabet>& alpha, MaseHeader& header) const
   {
     std::ifstream input(path.c_str(), std::ios::in);
-    VectorSequenceContainer* sc = readMeta(input, alpha, header);
+    auto sc = readMeta(input, alpha, header);
     input.close();
     return sc;
   }
@@ -186,7 +187,7 @@ public:
    *
    * @{
    */
-  void appendSequencesFromStream(std::istream& input, SequenceContainer& sc) const;
+  void appendSequencesFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
   /** @} */
 
   /**
@@ -194,7 +195,7 @@ public:
    *
    * @{
    */
-  void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const
+  void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override
   {
     appendSequencesFromStream(input, sc); // This might cast an exception if sequences are not aligned!
   }
@@ -206,8 +207,9 @@ public:
    *
    * @{
    */
-  void writeSequences(std::ostream& output, const SequenceContainer& sc) const;
-  void writeSequences(const std::string& path, const SequenceContainer& sc, bool overwrite = true) const
+  void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override;
+
+  void writeSequences(const std::string& path, const SequenceContainerInterface& sc, bool overwrite = true) const override
   {
     AbstractOSequence::writeSequences(path, sc, overwrite);
   }
@@ -218,12 +220,12 @@ public:
    *
    * @{
    */
-  void writeMeta(std::ostream& output, const SequenceContainer& sc, const MaseHeader& header) const
+  void writeMeta(std::ostream& output, const SequenceContainerInterface& sc, const MaseHeader& header) const
   {
     writeHeader_(output, header);
     writeSequences(output, sc);
   }
-  void writeMeta(const std::string& path, const SequenceContainer& sc, const MaseHeader& header, bool overwrite = true) const
+  void writeMeta(const std::string& path, const SequenceContainerInterface& sc, const MaseHeader& header, bool overwrite = true) const
   {
     // Open file in specified mode
     std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
@@ -238,9 +240,9 @@ public:
    *
    * @{
    */
-  const std::string getFormatName() const { return "MASE file"; }
+  const std::string getFormatName() const override { return "MASE file"; }
 
-  const std::string getFormatDescription() const
+  const std::string getFormatDescription() const override
   {
     return "Optional file comments (preceeded by ;;), sequence comments (preceeded by ;), sequence name, sequence";
   }

@@ -1,7 +1,7 @@
 //
 // File: Commentable.h
 // Authors:
-//   Laurent GuÃ©guen
+//   Laurent Guéguen
 // Created: lundi 15 mai 2017, Ã  00h 03
 //
 
@@ -59,30 +59,54 @@ typedef std::vector<std::string> Comments;
 
 class Commentable
 {
+public:
+  Commentable() {}
+  virtual ~Commentable() {}
+
+  /**
+   * @brief Get the comments.
+   *
+   * @return The comments.
+   */
+  virtual const Comments& getComments() const = 0;
+
+  /**
+   * @brief Set the comments.
+   *
+   * @param comments The new comments.
+   */
+  virtual void setComments(const Comments& comments) = 0;
+
+  virtual void clearComments() = 0;
+};
+
+class SimpleCommentable:
+  public virtual Commentable
+{
 protected:
   Comments comments_;
 
 public:
-  Commentable() :
+  SimpleCommentable() :
     comments_()
   {}
 
-  Commentable(const Comments& comments) :
+  SimpleCommentable(const Comments& comments) :
     comments_(comments)
   {}
 
-  Commentable(const Commentable& com) :
+  SimpleCommentable(const SimpleCommentable& com) :
     comments_(com.comments_)
   {
   }
 
-  Commentable& operator=(const Commentable& com)
+  SimpleCommentable& operator=(const SimpleCommentable& com)
   {
     comments_ = com.comments_;
     return *this;
   }
 
-  virtual ~Commentable()
+  virtual ~SimpleCommentable()
   {}
 
   /**
@@ -90,16 +114,17 @@ public:
    *
    * @return The comments.
    */
-  const Comments& getComments() const { return comments_; }
+  const Comments& getComments() const override { return comments_; }
 
   /**
    * @brief Set the comments.
    *
    * @param comments The new comments.
    */
-  void setComments(const Comments& comments) { comments_ = comments; }
+  void setComments(const Comments& comments) override { comments_ = comments; }
 
-  void clearComments() { comments_.clear(); }
+  void clearComments() override { comments_.clear(); }
 };
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_COMMENTABLE_H

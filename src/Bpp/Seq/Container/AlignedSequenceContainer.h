@@ -2,7 +2,8 @@
 // File: AlignedSequenceContainer.h
 // Authors:
 //   Guillaume Deuchst
-//   // Julien Dutheil
+//   Julien Dutheil
+//   Laurent Guéguen
 // Last modified: 2003-08-22 00:00:00
 //
 
@@ -45,7 +46,9 @@
 #include <Bpp/Exceptions.h>
 
 #include "../Site.h"
-#include "OrderedSequenceContainer.h"
+#include "../ProbabilisticSite.h"
+#include "../Sequence.h"
+#include "../ProbabilisticSequence.h"
 #include "SiteContainer.h"
 #include "VectorPositionedContainer.h"
 #include "VectorSequenceContainer.h"
@@ -56,7 +59,7 @@
 namespace bpp
 {
 /**
- * @brief Aligned sequences container.
+ * @brief The AlignedSequencesContainer class.
  *
  * This class inherits from the VectorSequenceContainer and add site access.
  * Sequence addition methods are re-defined to check for sequence lengths.
@@ -69,37 +72,60 @@ namespace bpp
  *
  * @see VectorSequenceContainer, Sequence, Site, VectorSiteContainer
  */
-class AlignedSequenceContainer :
-  public VectorSequenceContainer,
-  public virtual SiteContainer,
-  public VectorPositionedContainer<Site>
+template<class SequenceType, class SiteType>
+class TemplateAlignedSequenceContainer :
+  public TemplateVectorSequenceContainer<SequenceType>,
+  public virtual TemplateSiteContainerInterface<SiteType, SequenceType, std::string>
 {
 private:
-  // // Integer std::vector that contains sites's positions
-  std::vector<int> positions_;
+  VectorPositionedContainer<SiteType> siteVector_;
+
+  // std::vector that contains the site coordinates
+  std::vector<int> coordinates_;
 
   size_t length_; // Number of sites for verifications before sequence's insertion in sequence container
 
 public:
+
   /**
-   * @brief Build a container with the specified alphabet, with shared Sequences.
+   * @brief Build a container with pointers to sequence objects.
    *
-   * @param vseq the vector of shared_ptr<Sequence> that will be copied. 
-   * @param alpha The alphabet to use.
+   * The keys of the map are set to the names of the sequences.
+   *
+   * @param alphabet The alphabet of the container.
+   * @param vs       A vector of smart pointers toward sequence objects.
    */
+  TemplateAlignedSequenceContainer(
+      std::shared_ptr<const Alphabet> alphabet,
+      std::vector< std::unique_ptr<Sequence> > vs):
+    TemplateVectorSequenceContainer<SequenceType>(alphabet, vs),
+    VectorPositionedContainer<SiteType>(),
+    coordinates_(),
+    length_(0)
+  {
+    if (vs.size() == 0)
+      return;
   
-  AlignedSequenceContainer(std::vector<std::shared_ptr<Sequence>> vseq, const Alphabet* alpha);
+    length_ = vs[0]->size();
+    for (const auto& seq: vs) {
+      if (!checkSize_(*seq)) {
+        throw BadSizeException("AlignedSequenceContainer: sequences of different sizes in aligned construction", length_, seq->size());
+      }
+    }
+    siteVector_.setSize(length_);
+    reindexSites();
+  }
   
   /**
    * @brief Build a new empty container with the specified alphabet.
    *
-   * @param alpha The alphabet to use.
+   * @param alphabet The alphabet of the container.
    */
-  AlignedSequenceContainer(const Alphabet* alpha) :
-    AbstractSequenceContainer(alpha),
-    VectorSequenceContainer(alpha),
-    VectorPositionedContainer<Site>(),
-    positions_(),
+  TemplateAlignedSequenceContainer(std::shared_ptr<const Alphabet> alphabet) :
+    //AbstractSequenceContainer<SequenceType>(alphabet),
+    TemplateVectorSequenceContainer<SequenceType>(alphabet),
+    siteVector_(),
+    coordinates_(),
     length_(0)
   {
     reindexSites();
@@ -110,11 +136,10 @@ public:
    *
    * @param asc The container to copy.
    */
-  AlignedSequenceContainer(const AlignedSequenceContainer& asc) :
-    AbstractSequenceContainer(asc),
-    VectorSequenceContainer(asc),
-    VectorPositionedContainer<Site>(asc),
-    positions_(asc.getSitePositions()),
+  TemplateAlignedSequenceContainer(const TemplateAlignedSequenceContainer<SequenceType, SiteType>& asc) :
+    TemplateVectorSequenceContainer<SequenceType>(asc),
+    siteVector_(asc.getNumberOfSites()), //Cache is not copied
+    coordinates_(asc.getSiteCoordinates()),
     length_(asc.getNumberOfSites())
   {}
 
@@ -123,30 +148,81 @@ public:
    *
    * @param sc The container to copy.
    */
-
-  AlignedSequenceContainer(const SiteContainer& sc) :
-    AbstractSequenceContainer(sc),
-    VectorSequenceContainer(sc),
-    VectorPositionedContainer<Site>(sc.getNumberOfSites()),
-    positions_(sc.getSitePositions()),
+  TemplateAlignedSequenceContainer(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sc) :
+    TemplateVectorSequenceContainer<SequenceType>(sc),
+    siteVector_(sc.getNumberOfSites()), //Cache is not copied
+    coordinates_(sc.getSiteCoordinates()),
     length_(sc.getNumberOfSites())
   {}
 
   /**
-   * @brief Try to coerce an OrderedSequenceContainer object into an AlignedSequenceContainer object.
+   * @brief Try to coerce a SequenceContainer object into an AlignedSequenceContainer object.
    *
    * Sequences in osc will be considered alligned, and have the same number of sites.
    *
-   * @param osc The ordered container to coerce.
-   * @throw SequenceNotAlignedException If sequences in osc do not have the same length.
+   * @param sc The ordered container to coerce.
+   * @throw SequenceNotAlignedException If sequences in sc do not have the same length.
    */
-  AlignedSequenceContainer(const OrderedSequenceContainer& osc);
+  TemplateAlignedSequenceContainer(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc) :
+    TemplateVectorSequenceContainer<SequenceType>(sc.getAlphabet()),
+    siteVector_(),
+    coordinates_(),
+    length_()
+  {
+    // Initializing
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
+      addSequence(sc.getSequence(i), true);
+    }
+    if (sc.getNumberOfSequences() > 0) {
+      length_ = sequence(0).size();
+    } else {
+      length_ = 0;
+    }
+    reindexSites();
+    siteVector_.setSize(length_);
+    setComments(sc.getComments());
+  }
 
-  AlignedSequenceContainer& operator=(const AlignedSequenceContainer& asc);
-  AlignedSequenceContainer& operator=(const SiteContainer&  sc);
-  AlignedSequenceContainer& operator=(const OrderedSequenceContainer& osc);
+  TemplateAlignedSequenceContainer& operator=(const TemplateAlignedSequenceContainer<SequenceType, SiteType>& asc)
+  {
+    TemplateVectorSequenceContainer<SequenceType>::operator=(asc);
 
-  virtual ~AlignedSequenceContainer() {}
+    // Initializing
+    length_      = asc.getNumberOfSites();
+    coordinates_ = asc.getSiteCoordinates();
+    siteVector_.setSize(length_); // Reset the cache
+    siteVector_.nullify();
+
+    return *this;
+  }
+
+  TemplateAlignedSequenceContainer<SequenceType, SiteType>& operator=(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>&  sc)
+  {
+    TemplateVectorSequenceContainer<SequenceType>::operator=(sc);
+
+    // Initializing
+    length_      = sc.getNumberOfSites();
+    coordinates_ = sc.getSiteCoordinates();
+    siteVector_.setSize(length_); // Reset the cache
+    siteVector_.nullify();
+
+    return *this;
+  }
+
+  TemplateAlignedSequenceContainer& operator=(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc)
+  {
+    TemplateVectorSequenceContainer<SequenceType>::operator=(sc);
+
+    // Initializing
+    length_ = sc.getNumberOfSequences() == 0 ? 0 : sc.getSequence(0).getSize();
+    reindexSites();
+    siteVector_.setSize(length_); // Reset the cache
+    siteVector_.nullify();
+
+    return *this;
+  }
+
+  virtual ~TemplateAlignedSequenceContainer() {}
 
 public:
   /**
@@ -154,7 +230,10 @@ public:
    *
    * @{
    */
-  AlignedSequenceContainer* clone() const { return new AlignedSequenceContainer(*this); }
+  TemplateAlignedSequenceContainer<SequenceType, SiteType>* clone() const override
+  { 
+    return new TemplateAlignedSequenceContainer<SequenceType, SiteType>(*this);
+  }
   /** @} */
 
   /**
@@ -162,55 +241,226 @@ public:
    *
    * @{
    */
+  const SiteType& site(size_t sitePosition) const override
+  {
+    if (siteVector_.hasObjectWithPosition(sitePosition)) {
+      return *siteVector_.getObject(sitePosition);
+    }
 
-  /*
-   * @brief If needed, those methods will create Sites from the
-   * Sequences, BUT are not included in the Sequences. Which means
-   * that if those are modified, the sequences are not, and
-   * information is not consistent any more.
-   *
-   */
+    if (sitePosition >= length_)
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::getSite", sitePosition, 0, getNumberOfSites());
+
+    // Main loop: for all sequences
+    size_t n = getNumberOfSequences();
+    auto alphaPtr = getAlphabet();
+    auto site = std::make_shared<SiteType>(alphaPtr, static_cast<int>(sitePosition + 1));
+    for (size_t j = 0; j < n; j++)
+      site->addElement(sequence(j)[sitePosition]);
+
+    siteVector_.addObject_(site, sitePosition, true);
+    return *siteVector_.getObject(sitePosition);
+  }
+
+  void setSite(size_t sitePosition, std::unique_ptr<SiteType>& site, bool checkCoordinate = true) override
+  {
+    // New site's alphabet and site container's alphabet matching verification
+    if (sitePosition >= getNumberOfSites())
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::setSite", sitePosition, 0, getNumberOfSites());
+    if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("AlignedSequenceContainer::setSite", getAlphabet(), site->getAlphabet());
+
+    // Check size:
+    if (site->size() != getNumberOfSequences())
+      throw SiteException("AlignedSequenceContainer::setSite, site does not have the appropriate length", site.get());
+
+    // Check coordinate:
+    if (checkCoordinate) {
+      int coordinate = site->getCoordinate();
+      // For all coordinates in vector: throw exception if position already exists
+      for (size_t i = 0; i < getNumberOfSites(); ++i) {
+        if (i != sitePosition && coordinates_[i] == coordinate)
+          throw SiteException("AlignedSequenceContainer::setSite: Site position already exists in container", site.get());
+      }
+    }
+
+    // For all sequences
+    for (size_t j = 0; j < getNumberOfSequences(); ++j)
+      getSequence_(j).setElement(sitePosition, (*site)[j]);
+
+    coordinates_[sitePosition] = site->getCoordinate();
+  }
+
+	  
+  std::unique_ptr<SiteType> removeSite(size_t sitePosition) override
+  {
+    if (sitePosition >= getNumberOfSites())
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::removeSite", sitePosition, 0, getNumberOfSites());
+
+    // Get old site
+    site(sitePosition); // Creates the site if it does not exist!
+
+    // For all sequences
+    for (size_t j = 0; j < getNumberOfSequences(); ++j)
+    {
+      getSequence_(j).deleteElement(sitePosition);
+    }
+
+    // Delete site's position
+    coordinates_.erase(coordinates_.begin() + static_cast<ptrdiff_t>(sitePosition));
+    length_--;
+
+    // Actualizes the 'sites' vector:
+    auto sitePtr = siteVector_.removeObject(sitePosition);
+    std::get_deleter< SwitchDeleter<SiteType> >(sitePtr)->off();
+    return std::unique_ptr<SiteType>(sitePtr.get());
+  }
+
+
+  void deleteSite(size_t sitePosition) override
+  {
+    if (sitePosition >= getNumberOfSites())
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSite", sitePosition, 0, getNumberOfSites());
+
+    // For all sequences
+    for (size_t j = 0; j < getNumberOfSequences(); ++j) {
+      getSequence_(j).deleteElement(sitePosition);
+    }
+
+    // Delete site's position
+    coordinates_.erase(coordinates_.begin() + static_cast<ptrdiff_t>(sitePosition));
+    length_--;
+
+    // Actualizes the 'sites' vector:
+    siteVector_.deleteObject(sitePosition);
+  }
+
+
+  void deleteSites(size_t sitePosition, size_t length) override
+  {
+    if (sitePosition + length > getNumberOfSites())
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::deleteSites", sitePosition + length, 0, getNumberOfSites());
+
+    // For all sequences
+    for (size_t j = 0; j < getNumberOfSequences(); ++j) {
+      getSequence_(j).deleteElements(sitePosition, length);
+    }
+
+    // Delete site's sitePositionition
+    coordinates_.erase(coordinates_.begin() + static_cast<ptrdiff_t>(sitePosition),
+                       coordinates_.begin() + static_cast<ptrdiff_t>(sitePosition + length));
+    length_ -= length;
+
+    // Actualizes the 'sites' vector:
+    siteVector_.deleteObjects(sitePosition, length);
+  }
+
+
+  void addSite(std::unique_ptr<SiteType>& site, bool checkCoordinate = true) override
+  {
+    // New site's alphabet and site container's alphabet matching verification
+    if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("AlignedSequenceContainer::addSite", site->getAlphabet(), getAlphabet());
+
+    // Check size:
+    if (site->size() != getNumberOfSequences())
+      throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", site.get());
+
+    // Check position:
+    int coordinate = site->getCoordinate();
+    if (checkCoordinate)
+    {
+      // For all positions in vector : throw exception if position already exists
+      for (size_t i = 0; i < coordinates_.size(); ++i) {
+        if (coordinates_[i] == coordinate)
+          throw SiteException("AlignedSequenceContainer::addSite: Site coordinate already exists in container", site.get());
+      }
+    }
+
+    // For all sequences
+    for (size_t j = 0; j < getNumberOfSequences(); ++j)
+      getSequence_(j).addElement((*site)[j]);
+
+    length_++;
+    coordinates_.push_back(coordinate);
+
+    // Actualizes the 'sites' vector:
+    siteVector_.appendObject(nullptr);
+  }
+	  
+  void addSite(std::unique_ptr<SiteType>& site, size_t sitePosition, bool checkCoordinate = true) override
+  {
+    if (sitePosition >= getNumberOfSites())
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::addSite", sitePosition, 0, getNumberOfSites());
+
+    // New site's alphabet and site container's alphabet matching verification
+    if (site->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("AlignedSequenceContainer::addSite", getAlphabet(), site->getAlphabet());
+
+    // Check size:
+    if (site->size() != getNumberOfSequences())
+      throw SiteException("AlignedSequenceContainer::addSite, site does not have the appropriate length", site.get());
+
+    // Check position:
+    int coordinate = site->getCoordinate();
+    if (checkCoordinate) {
+    // For all positions in vector : throw exception if position already exists
+      for (size_t i = 0; i < coordinates_.size(); ++i) {
+        if (coordinates_[i] == coordinate)
+          throw SiteException("AlignedSequenceContainer::addSite: Site coordinate already exists in container", site.get());
+      }
+    }
+
+    // For all sequences
+    for (size_t j = 0; j < getNumberOfSequences(); ++j)
+      getSequence_(j).addElement(sitePosition, (*site)[j]);
+
+    length_++;
+    coordinates_.insert(coordinates_.begin() + static_cast<ptrdiff_t>(sitePosition), coordinate);
+
+    // Actualizes the 'sites' vector:
+    siteVector_.insertObject(nullptr, sitePosition);
+  }
   
-  virtual const Site& getSite(size_t siteIndex) const;
-  virtual Site& getSite(size_t siteIndex);
-
-  const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const
+  void clear() override
   {
-    return getSite(siteIndex);
+    length_ = 0;
+    TemplateVectorSequenceContainer<SequenceType>::clear();
+    siteVector_.clear();
   }
 
-  CruxSymbolListSite& getSymbolListSite(size_t siteIndex)
+  
+  TemplateAlignedSequenceContainer* createEmptyContainer() const override
   {
-    return getSite(siteIndex);
+    auto alphaPtr = getAlphabet();
+    auto asc = new TemplateAlignedSequenceContainer(alphaPtr);
+    asc->setComments(getComments());
+    return asc;
   }
 
-  virtual void  setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
-  std::shared_ptr<Site> removeSite(size_t siteIndex);
-  void deleteSite(size_t siteIndex);
-  void addSite(const Site& site, bool checkPosition = true);
-  void addSite(const Site& site, int position, bool checkPosition = true);
-  void addSite(const Site& site, size_t siteIndex, bool checkPosition = true);
-  void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = true);
 
-  void clear();
+  size_t getNumberOfSites() const override { return length_; }
 
-  AlignedSequenceContainer* createEmptyContainer() const;
+  Vint getSiteCoordinates() const override { return coordinates_; }
 
-  /** @} */
+  void setSiteCoordinates(const Vint& coordinates) override
+  {
+    if (coordinates.size() != getNumberOfSites())
+      throw BadSizeException("AlignedSequenceContainer::setSiteCoordinates bad size of positions vector", coordinates.size(), getNumberOfSites());
 
-  /**
-   * @name From AlignedValuesContainer interface
-   *
-   * @{
-   */
+    for (size_t i = 0; i < coordinates.size(); ++i) {
+      coordinates_[i] = coordinates[i];
+    }
+  }
 
-  void deleteSites(size_t siteIndex, size_t length);
 
-  size_t getNumberOfSites() const { return length_; }
-  Vint getSitePositions() const { return positions_; }
-  void setSitePositions(Vint vPositions);
 
-  void reindexSites();
+  void reindexSites() override
+  {
+    coordinates_.resize(length_);
+    for (size_t i = 0; i < length_; ++i) {
+      coordinates_[i] = static_cast<int>(i + 1); // starts with 1.
+    }
+  }
 
   /** @} */
 
@@ -219,13 +469,92 @@ public:
    *
    * @{
    */
-  void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true);
-  void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true);
+  void setSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) override
+  {
+    // if container has only one sequence
+    if (getNumberOfSequences() == 1)
+      length_ = sequencePtr->size();
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequenceKey, sequencePtr);
+    else
+      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequencePtr.get());
+  }
 
-  void addSequence(const Sequence& sequence, bool checkName = true);
-  void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true);
+  
+  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) override
+  {
+    // if container has only one sequence
+    if (length_ == 0) {
+      length_ = sequencePtr->size();
+      siteVector_.setSize(length_);
+      reindexSites();
+    }
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::addSequence(sequenceKey, sequencePtr);
+    else
+      throw SequenceNotAlignedException("AlignedSequenceContainer::addSequence", sequencePtr.get());
+  }
+
+
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr) override
+  {
+    if (sequencePosition >= getNumberOfSequences())
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::setSequence", sequencePosition, 0, getNumberOfSequences());
+    // if container has only one sequence
+    if (getNumberOfSequences() == 1)
+      length_ = sequencePtr->size();
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequencePosition, sequencePtr);
+    else
+      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequencePtr.get());
+
+    // Detroys all sites (but keep Site Container at same size)
+    siteVector_.nullify();
+  }
+
+
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const std::string& sequenceKey) override
+  {
+    if (sequencePosition >= getNumberOfSequences())
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::setSequence", sequencePosition, 0, getNumberOfSequences());
+    // if container has only one sequence
+    if (getNumberOfSequences() == 1)
+      length_ = sequencePtr->size();
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::setSequence(sequencePosition, sequencePtr, sequenceKey);
+    else
+      throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequencePtr.get());
+
+    // Detroys all sites (but keep Site Container at same size)
+    siteVector_.nullify();
+  }
+
+
+  void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const std::string& sequenceKey) override
+  {
+    if (sequencePosition >= getNumberOfSequences())
+      throw IndexOutOfBoundsException("AlignedSequenceContainer::insertSequence", sequencePosition, 0, getNumberOfSequences());
+    // if container has only one sequence
+    if (getNumberOfSequences() == 1)
+      length_ = sequencePtr->size();
+    if (checkSize_(*sequencePtr))
+      TemplateVectorSequenceContainer<SequenceType>::insertSequence(sequencePosition, sequencePtr, sequenceKey);
+    else
+      throw SequenceNotAlignedException("AlignedSequenceContainer::insertSequence", sequencePtr.get());
+
+    // Detroys all sites (but keep Site Container at same size)
+    siteVector_.nullify();
+  }
 
 /** @} */
+  
+  //Needed because of the template class
+  using TemplateVectorSequenceContainer<SequenceType>::getAlphabet;
+  using TemplateVectorSequenceContainer<SequenceType>::sequence;
+  using TemplateVectorSequenceContainer<SequenceType>::getSequence_;
+  using TemplateVectorSequenceContainer<SequenceType>::getNumberOfSequences;
+  using TemplateVectorSequenceContainer<SequenceType>::getComments;
+  
 
 protected:
   /**
@@ -234,7 +563,12 @@ protected:
    * @param sequence The sequence to check.
    * @return True if sequence length = number of sites in container.
    */
-  bool checkSize_(const Sequence& sequence) { return sequence.size() == length_; }
+  bool checkSize_(const Sequence& sequenceRef) { return sequenceRef.size() == length_; }
 };
+
+//Aliases:
+using AlignedSequenceContainer = TemplateAlignedSequenceContainer<Sequence, Site>;
+using ProbabilisticAlignedSequenceContainer = TemplateAlignedSequenceContainer<ProbabilisticSequence, ProbabilisticSite>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_ALIGNEDSEQUENCECONTAINER_H

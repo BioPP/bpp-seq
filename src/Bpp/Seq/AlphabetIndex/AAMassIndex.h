@@ -85,20 +85,20 @@ public:
 
   virtual ~AAMassIndex() {}
 
-  AAMassIndex* clone() const { return new AAMassIndex(); }
+  AAMassIndex* clone() const override { return new AAMassIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return mass_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return mass_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(mass_); }
+  const std::vector<double>& indexVector() const override { return mass_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AAMASSINDEX_H

@@ -58,13 +58,13 @@ GranthamAAChemicalDistance::GranthamAAChemicalDistance() :
   ProteicAlphabetIndex2(),
   distanceMatrix_(20, 20),
   signMatrix_(20, 20),
+  indexMatrix_(20, 20),
   sign_(0)
 {
   // Load the matrix:
   #include "__GranthamMatrixCode"
+  computeIndexMatrix_();
 }
-
-GranthamAAChemicalDistance::~GranthamAAChemicalDistance() {}
 
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
 {
@@ -82,16 +82,16 @@ double GranthamAAChemicalDistance::getIndex(const std::string& state1, const std
   return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
 }
 
-Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const
+void GranthamAAChemicalDistance::computeIndexMatrix_()
 {
-  RowMatrix<double>* m = new RowMatrix<double>(distanceMatrix_);
+  indexMatrix_ = distanceMatrix_;
   if (sign_ == SIGN_NONE)
   {
     for (size_t i = 0; i < 20; ++i)
     {
       for (size_t j = 0; j < 20; ++j)
       {
-        (*m)(i, j) = NumTools::abs<double>((*m)(i, j));
+        indexMatrix_(i, j) = NumTools::abs<double>(indexMatrix_(i, j));
       }
     }
   }
@@ -101,9 +101,8 @@ Matrix<double>* GranthamAAChemicalDistance::getIndexMatrix() const
     {
       for (size_t j = 0; j < 20; ++j)
       {
-        (*m)(i, j) = signMatrix_(i, j) * NumTools::abs<double>((*m)(i, j));
+        indexMatrix_(i, j) = signMatrix_(i, j) * NumTools::abs<double>(indexMatrix_(i, j));
       }
     }
   }
-  return m;
 }

@@ -73,14 +73,15 @@ void SequenceMask::afterSequenceDeleted(const IntSymbolListDeletionEvent& event)
 
 /******************************************************************************/
 
-SequenceWithAnnotation* SequenceWithAnnotationTools::createMaskAnnotation(const Sequence& seq)
+unique_ptr<SequenceWithAnnotation> SequenceWithAnnotationTools::createMaskAnnotation(const Sequence& seq)
 {
-  const CaseMaskedAlphabet* cma = dynamic_cast<const CaseMaskedAlphabet*>(seq.getAlphabet());
+  auto cma = dynamic_pointer_cast<const CaseMaskedAlphabet>(seq.getAlphabet());
   if (cma)
   {
-    SequenceWithAnnotation* seqa = new SequenceWithAnnotation(seq.getName(), seq.toString(), seq.getComments(), seq.getAlphabet());
+    auto alphaPtr = seq.getAlphabet();
+    auto seqa = make_unique<SequenceWithAnnotation>(seq.getName(), seq.toString(), seq.getComments(), alphaPtr);
     vector<bool> mask(seq.size());
-    for (unsigned int i = 0; i < seq.size(); ++i)
+    for (size_t i = 0; i < seq.size(); ++i)
     {
       mask[i] = cma->isMasked(seq[i]);
     }

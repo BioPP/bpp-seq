@@ -56,11 +56,13 @@ namespace bpp
  *
  * @author Sylvain Gaillard
  */
-class OSequenceStream : public virtual IOSequenceStream
+template<class SequenceType>
+class TemplateOSequenceStream :
+  public virtual IOSequenceStream
 {
 public:
-  OSequenceStream() {}
-  virtual ~OSequenceStream() {}
+  TemplateOSequenceStream() {}
+  virtual ~TemplateOSequenceStream() {}
 
 public:
   /**
@@ -72,7 +74,12 @@ public:
    * @param seq The sequence to write.
    * @throw Exception IOExecption.
    */
-  virtual void writeSequence(std::ostream& output, const Sequence& seq) const = 0;
+  virtual void writeSequence(std::ostream& output, const SequenceType& seq) const = 0;
 };
+
+using OSequenceStream = TemplateOSequenceStream<Sequence>;
+using OSequenceWithQualityStream = TemplateOSequenceStream<SequenceWithQuality>;
+using OProbabilisticSequenceStream = TemplateOSequenceStream<ProbabilisticSequence>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_OSEQUENCESTREAM_H

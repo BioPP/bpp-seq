@@ -44,12 +44,13 @@
 #ifndef BPP_SEQ_CONTAINER_MAPPEDNAMEDCONTAINER_H
 #define BPP_SEQ_CONTAINER_MAPPEDNAMEDCONTAINER_H
 
-#include <Bpp/Clonable.h>
+#include "NamedContainer.h"
+
+//From the STL:
+
 #include <map>
 #include <memory>
 #include <string>
-
-#include "NamedContainer.h"
 
 namespace bpp
 {
@@ -57,13 +58,10 @@ namespace bpp
  * @brief MappedNamedContainer class
  *
  * Objects are stored using a key std::string, in a map object.
- *
  */
-
 template<class T>
 class MappedNamedContainer :
-  virtual public NamedContainer<T>,
-  virtual public Clonable
+  public virtual NamedContainerInterface<T>
 {
 private:
   std::map<std::string, std::shared_ptr<T> > mObjects_;
@@ -81,32 +79,32 @@ public:
     mObjects_(msc.mObjects_)
   {}
 
+  virtual ~MappedNamedContainer() {}
+
   /**
    * @name The clonable interface
    *
    * @{
    */
-  MappedNamedContainer* clone() const { return new MappedNamedContainer(*this); }
+  MappedNamedContainer* clone() const override { return new MappedNamedContainer(*this); }
   /**
    * @}
    */
+
   MappedNamedContainer& operator=(const MappedNamedContainer& msc)
   {
     mObjects_ = msc.mObjects_;
     return *this;
   }
 
-  virtual ~MappedNamedContainer()
-  {}
-
-protected:
+public:
   /**
    * @brief Get a object.
    *
    * @param name The key of the object to retrieve.
    * @return The object associated to the given key.
    */
-  const std::shared_ptr<T> getObject(const std::string& name) const
+  const std::shared_ptr<T> getObject(const std::string& name) const override
   {
     const auto it = mObjects_.find(name);
     if (it == mObjects_.end())
@@ -115,7 +113,7 @@ protected:
     return it->second;
   }
 
-  std::shared_ptr<T> getObject(const std::string& name)
+  std::shared_ptr<T> getObject(const std::string& name) override
   {
     auto it = mObjects_.find(name);
     if (it == mObjects_.end())
@@ -124,7 +122,7 @@ protected:
     return it->second;
   }
 
-  bool hasObject(const std::string& name) const
+  bool hasObject(const std::string& name) const override
   {
     return mObjects_.find(name) != mObjects_.end();
   }
@@ -150,7 +148,7 @@ protected:
    *
    * @param name The key of the object.
    */
-  void deleteObject(const std::string& name)
+  void deleteObject(const std::string& name) override
   {
     if (!hasObject(name))
       throw Exception("MappedNamedContainer::deleteObject : Object's name does not exist in container : " + name);
@@ -164,7 +162,7 @@ protected:
    * @param name The key of the object.
    * @return The object previously associated to the given key.
    */
-  std::shared_ptr<T> removeObject(const std::string& name)
+  std::shared_ptr<T> removeObject(const std::string& name) override
   {
     if (!hasObject(name))
       throw Exception("MappedNamedContainer::removeObject : Object's name does not exist in container : " + name);
@@ -177,7 +175,7 @@ protected:
   /**
    * @return All objects keys.
    */
-  virtual std::vector<std::string> getObjectNames() const
+  virtual std::vector<std::string> getObjectNames() const override
   {
     std::vector<std::string> vNames;
 
@@ -189,7 +187,6 @@ protected:
     return vNames;
   }
 
-public:
   /**
    * @brief change the key of an object.
    *
@@ -212,15 +209,15 @@ public:
     mObjects_[nkey] = obj;
   }
 
-  size_t getSize() const { return mObjects_.size(); }
+  size_t getSize() const override { return mObjects_.size(); }
 
-  void clear()
+  void clear() override
   {
     mObjects_.clear();
   }
 
   /**
-   * @brief Return if the name is in the map keys and the mapped
+   * @return whether the name is in the map keys and the mapped
    * object is nullptr or empty.
    *
    */
@@ -230,7 +227,6 @@ public:
     return hasObject(objectName) && (getObject(objectName) == nullptr || getObject(objectName)->size()==0);
   }
 
-protected:
   void addObject_(std::shared_ptr<T> object, const std::string& name, bool checkName = false) const
   {
     if (checkName && hasObject(name))
@@ -240,5 +236,6 @@ protected:
     const_cast<std::map<std::string, std::shared_ptr<T> >& >(mObjects_)[nn] = object;
   }
 };
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_MAPPEDNAMEDCONTAINER_H

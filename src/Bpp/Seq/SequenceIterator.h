@@ -42,65 +42,22 @@
 #define BPP_SEQ_SEQUENCEITERATOR_H
 
 
-#include "CoreSequenceSymbolList.h"
-#include "SequenceWithQuality.h"
-
 namespace bpp
 {
 /**
  * @brief Generic sequence iterator interface, allowing to loop over sequences.
  */
-class SequenceIterator
+template<class SequenceType>
+class TemplateSequenceIteratorInterface
 {
 public:
-  SequenceIterator() {}
-  virtual ~SequenceIterator() {}
+  TemplateSequenceIteratorInterface() {}
+  virtual ~TemplateSequenceIteratorInterface() {}
 
 public:
-  virtual IntCoreSequenceSymbolList* nextSequence() = 0;
+  virtual std::unique_ptr<SequenceType> nextSequence() = 0;
   virtual bool hasMoreSequences() const = 0;
 };
 
-/**
- * @brief Generic const sequence iterator interface, allowing to loop over const sequences.
- */
-class ConstSequenceIterator
-{
-public:
-  ConstSequenceIterator() {}
-  virtual ~ConstSequenceIterator() {}
-
-public:
-  virtual const IntCoreSequenceSymbolList* nextSequence() = 0;
-  virtual bool hasMoreSequences() const = 0;
-};
-
-/**
- * @brief Generic sequence iterator interface, allowing to loop over sequences with quality scores.
- */
-class SequenceWithQualityIterator :
-  public virtual SequenceIterator
-{
-public:
-  SequenceWithQualityIterator() {}
-  virtual ~SequenceWithQualityIterator() {}
-
-public:
-  virtual SequenceWithQuality* nextSequence() = 0;
-};
-
-/**
- * @brief Generic const sequence iterator interface, allowing to loop over const sequences with quality scores.
- */
-class ConstSequenceWithQualityIterator :
-  public virtual ConstSequenceIterator
-{
-public:
-  ConstSequenceWithQualityIterator() {}
-  virtual ~ConstSequenceWithQualityIterator() {}
-
-public:
-  virtual const SequenceWithQuality* nextSequence() = 0;
-};
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCEITERATOR_H

@@ -108,13 +108,13 @@ string ProteicAlphabet::getAbbr(int aa) const
 bool ProteicAlphabet::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
-    throw BadIntException(state1, "DNA::isResolvedIn(int, int): Specified base unknown.");
+    throw BadIntException(state1, "DNA::isResolvedIn(int, int): Specified base unknown.", this);
 
   if (!isIntInAlphabet(state2))
-    throw BadIntException(state2, "DNA::isResolvedIn(int, int): Specified base unknown.");
+    throw BadIntException(state2, "DNA::isResolvedIn(int, int): Specified base unknown.", this);
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "DNA::isResolvedIn(int, int): Unresolved base.");
+    throw BadIntException(state2, "DNA::isResolvedIn(int, int): Unresolved base.", this);
 
   if (state1 == 20)
     return state2 == 2 || state2 == 3;
@@ -134,7 +134,7 @@ bool ProteicAlphabet::isResolvedIn(int state1, int state2) const
 vector<int> ProteicAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "ProteicAlphabet::getAlias(int): Specified base unknown.");
+    throw BadIntException(state, "ProteicAlphabet::getAlias(int): Specified base unknown.", this);
   vector<int> v;
   if (state == 20)  // N or D
   {
@@ -169,7 +169,7 @@ vector<string> ProteicAlphabet::getAlias(const string& state) const
 {
   string locstate = TextTools::toUpper(state);
   if (!isCharInAlphabet(locstate))
-    throw BadCharException(locstate, "ProteicAlphabet::getAlias(int): Specified base unknown.");
+    throw BadCharException(locstate, "ProteicAlphabet::getAlias(int): Specified base unknown.", this);
   vector<string> v;
   if (locstate == "B")  // N or D
   {
@@ -220,7 +220,7 @@ int ProteicAlphabet::getGeneric(const vector<int>& states) const
   for (size_t i = 0; i < ve.size(); ++i)
   {
     if (!isIntInAlphabet(ve[i]))
-      throw BadIntException(ve[i], "ProteicAlphabet::getGeneric(const vector<int>): Specified base unknown.");
+      throw BadIntException(ve[i], "ProteicAlphabet::getGeneric(const vector<int>): Specified base unknown.", this);
     key += "_" + TextTools::toString(ve[i]);
   }
   map<string, int> g;
@@ -263,7 +263,7 @@ string ProteicAlphabet::getGeneric(const vector<string>& states) const
   for (size_t i = 0; i < ve.size(); ++i)
   {
     if (!isCharInAlphabet(ve[i]))
-      throw BadCharException(ve[i], "ProteicAlphabet::getAlias(const vector<string>): Specified base unknown.");
+      throw BadCharException(ve[i], "ProteicAlphabet::getAlias(const vector<string>): Specified base unknown.", this);
     key += TextTools::toString(ve[i]);
   }
   map<string, string> g;

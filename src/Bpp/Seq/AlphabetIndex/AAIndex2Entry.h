@@ -89,21 +89,21 @@ public:
   virtual ~AAIndex2Entry() {}
 
 public:
-  AAIndex2Entry* clone() const { return new AAIndex2Entry(*this); }
+  AAIndex2Entry* clone() const override { return new AAIndex2Entry(*this); }
 
-  double getIndex(int state1, int state2) const
+  double getIndex(int state1, int state2) const override
   {
     return property_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
   }
 
-  double getIndex(const std::string& state1, const std::string& state2) const
+  double getIndex(const std::string& state1, const std::string& state2) const override
   {
     return property_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
   }
 
-  LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(property_); }
+  const Matrix<double>& getIndexMatrix() const override { return property_; }
 
-  bool isSymmetric() const { return sym_; }
+  bool isSymmetric() const override { return sym_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AAINDEX2ENTRY_H

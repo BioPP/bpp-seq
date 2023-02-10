@@ -128,20 +128,20 @@ public:
 
   virtual ~AAChargeIndex() {}
 
-  AAChargeIndex* clone() const { return new AAChargeIndex(); }
+  AAChargeIndex* clone() const override { return new AAChargeIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return charge_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return charge_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(charge_); }
+  const std::vector<double>& indexVector() const override { return charge_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHARGEINDEX_H

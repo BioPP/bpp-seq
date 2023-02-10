@@ -52,126 +52,19 @@ using namespace bpp;
 
 using namespace std;
 
-/* Constructors: **************************************************************/
-
-BasicSequence::BasicSequence(const Alphabet* alpha) :
-  AbstractCoreSequence(),
-  SymbolList<int>(alpha),
-  BasicIntSymbolList(alpha)
-{}
-
-BasicSequence::BasicSequence(
-  const std::string& name,
-  const std::string& sequence,
-  const Alphabet* alpha
-  ) :
-  AbstractCoreSequence(name),
-  SymbolList<int>(alpha),
-  BasicIntSymbolList(alpha)
-{
-  if (sequence != "")
-    setContent(sequence);
-}
-
-BasicSequence::BasicSequence(
-  const std::string& name,
-  const std::string& sequence,
-  const Comments& comments,
-  const Alphabet* alpha
-  ) :
-  AbstractCoreSequence(name, comments),
-  SymbolList<int>(alpha),
-  BasicIntSymbolList(alpha)
-{
-  if (sequence != "")
-    setContent(sequence);
-}
-
-BasicSequence::BasicSequence(
-  const std::string& name,
-  const std::vector<std::string>& sequence,
-  const Alphabet* alpha
-  ) :
-  AbstractCoreSequence(name),
-  SymbolList<int>(alpha),
-  BasicIntSymbolList(sequence, alpha)
-{}
-
-BasicSequence::BasicSequence(
-  const std::string& name,
-  const std::vector<std::string>& sequence,
-  const Comments& comments,
-  const Alphabet* alpha
-  ) :
-  AbstractCoreSequence(name, comments),
-  SymbolList<int>(alpha),
-  BasicIntSymbolList(sequence, alpha)
-{}
-
-BasicSequence::BasicSequence(
-  const std::string& name,
-  const std::vector<int>& sequence,
-  const Alphabet* alpha
-  ) :
-  AbstractCoreSequence(name),
-  SymbolList<int>(sequence, alpha),
-  BasicIntSymbolList(sequence, alpha)
-{}
-
-BasicSequence::BasicSequence(
-  const std::string& name,
-  const std::vector<int>& sequence,
-  const Comments& comments,
-  const Alphabet* alpha
-  ) :
-  AbstractCoreSequence(name, comments),
-  SymbolList<int>(sequence, alpha),
-  BasicIntSymbolList(sequence, alpha)
-{}
-
-/* Copy constructors: *********************************************************/
-
-BasicSequence::BasicSequence(const Sequence& s) :
-  AbstractCoreSequence(s),
-  SymbolList<int>(s.getContent(), s.getAlphabet()),
-  BasicIntSymbolList(s.getContent(), s.getAlphabet())
-{}
-
-BasicSequence::BasicSequence(const BasicSequence& s) :
-  AbstractCoreSequence(s),
-  SymbolList<int>(s.getContent(), s.getAlphabet()),
-  BasicIntSymbolList(s.getContent(), s.getAlphabet())
-{
-}
-
-/* Assignation operator: ******************************************************/
-
-BasicSequence& BasicSequence::operator=(const Sequence& s)
-{
-  AbstractCoreSequence::operator=(s);
-  setContent(s.getContent());
-  return *this;
-}
-
-BasicSequence& BasicSequence::operator=(const BasicSequence& s)
-{
-  AbstractCoreSequence::operator=(s);
-  BasicIntSymbolList::operator=(s);
-  return *this;
-}
-
 /******************************************************************************/
 
-void BasicSequence::setContent(const std::string& sequence)
+void Sequence::setContent(const std::string& sequence)
 {
   // Remove blanks in sequence
-  content_ = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet());
+  auto alphaPtr = getAlphabet();
+  content_ = StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), alphaPtr);
   // Warning, an exception may be thrown here!
 }
 
 /******************************************************************************/
 
-void BasicSequence::setToSizeR(size_t newSize)
+void Sequence::setToSizeR(size_t newSize)
 {
   // Size verification
   size_t seqSize = content_.size();
@@ -192,7 +85,7 @@ void BasicSequence::setToSizeR(size_t newSize)
 
 /******************************************************************************/
 
-void BasicSequence::setToSizeL(size_t newSize)
+void Sequence::setToSizeL(size_t newSize)
 {
   // Size verification
   size_t seqSize = content_.size();
@@ -214,51 +107,52 @@ void BasicSequence::setToSizeL(size_t newSize)
 
 /******************************************************************************/
 
-void BasicSequence::append(const Sequence& seq)
+void Sequence::append(const SequenceInterface& seq)
 {
   if (seq.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-    throw AlphabetMismatchException("BasicSequence::append");
+    throw AlphabetMismatchException("Sequence::append", getAlphabet(), seq.getAlphabet());
   // Check list for incorrect characters
-  for (size_t i = 0; i < seq.size(); i++)
+  for (auto i : seq.getContent())
   {
-    content_.push_back(seq[i]);
+    content_.push_back(i);
   }
 }
 
-void BasicSequence::append(const std::vector<int>& content)
+void Sequence::append(const std::vector<int>& content)
 {
   // Check list for incorrect characters
-  for (size_t i = 0; i < content.size(); i++)
+  for (auto i : content)
   {
-    if (!getAlphabet()->isIntInAlphabet(content[i]))
-      throw BadIntException(content[i], "BasicSequence::append", getAlphabet());
+    if (!getAlphabet()->isIntInAlphabet(i))
+      throw BadIntException(i, "Sequence::append", getAlphabet());
   }
+  // Sequence is valid:
+  for (auto i : content)
+  {
+    content_.push_back(i);
+  }
+}
+
+void Sequence::append(const std::vector<std::string>& content)
+{
+  // Check list for incorrect characters
+  for (auto i : content)
+  {
+    if (!getAlphabet()->isCharInAlphabet(i))
+      throw BadCharException(i, "Sequence::append", getAlphabet());
+  }
+
   // BasicSequence is valid:
-  for (size_t i = 0; i < content.size(); i++)
+  for (auto i : content)
   {
-    content_.push_back(content[i]);
+    content_.push_back(getAlphabet()->charToInt(i));
   }
 }
 
-void BasicSequence::append(const std::vector<std::string>& content)
+void Sequence::append(const std::string& content)
 {
-  // Check list for incorrect characters
-  for (size_t i = 0; i < content.size(); i++)
-  {
-    if (!getAlphabet()->isCharInAlphabet(content[i]))
-      throw BadCharException(content[i], "BasicSequence::append", getAlphabet());
-  }
-
-  // BasicSequence is valid:
-  for (size_t i = 0; i < content.size(); i++)
-  {
-    content_.push_back(getAlphabet()->charToInt(content[i]));
-  }
-}
-
-void BasicSequence::append(const std::string& content)
-{
-  append(StringSequenceTools::codeSequence(content, getAlphabet()));
+  auto alphaPtr = getAlphabet();
+  append(StringSequenceTools::codeSequence(content, alphaPtr));
 }
 
 /******************************************************************************/

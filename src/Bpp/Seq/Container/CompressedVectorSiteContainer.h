@@ -46,7 +46,6 @@
 #include "../Site.h"
 #include "AbstractSequenceContainer.h"
 #include "AlignedSequenceContainer.h"
-#include "OrderedSequenceContainer.h"
 #include "SiteContainer.h"
 
 // From the STL library:
@@ -60,7 +59,7 @@ namespace bpp
  * @brief A low memory, yet restricted, version of the VectorSiteContainer class.
  *
  * This implementation is very similar to VectorSiteContainer, but identical sites
- * are stored only once, which significantly reduce memory usage in the case of
+ * are stored only once, which significantly reduces memory usage in the case of
  * containers where the number of sites is large compared to the number of sequences.
  * site access is as fast as in the standard VectorSiteContainer class, but site
  * addition takes more time, as the new site must be first compared to the existing set.
@@ -71,21 +70,19 @@ namespace bpp
  * major pratical consequence is that the 'position' attribute of sites will be lost.
  * Instead, the position will correspond to the position in the compressed container.
  * In addition, this container may lead to unexpected behavior if used with derived
- * classes of Site. Use with care then...
+ * classes of Site.
  *
  * @see Sequence, Site, VectorSiteContainer
  */
 class CompressedVectorSiteContainer :
-  public AbstractSequenceContainer,
-// This container implements the SequenceContainer interface
-// and use the AbstractSequenceContainer adapter.
-public virtual SiteContainer,
-// This container is a
-// SiteContainer.
-public virtual VectorPositionedContainer<Site>,
-public virtual VectorMappedContainer<Sequence>
+  public AbstractTemplateSequenceContainer<Sequence, std::string>,
+  public virtual TemplateSiteContainerInterface<Site, Sequence, std::string>
 {
 protected:
+  VectorPositionedContainer<Site> siteContainer_;
+  VectorMappedContainer<Sequence> sequenceContainer_;
+  std::vector<std::string> sequenceNames_;
+  std::vector<Comments> sequenceComments_;
   std::vector<size_t> index_; // For all sites, give the actual position in the set.
 
 public:
@@ -93,37 +90,45 @@ public:
    * @brief Build a new container from a set of sites.
    *
    * @param vs A std::vector of sites.
-   * @param alpha The common alphabet for all sites.
+   * @param alphabet The common alphabet for all sites.
    * @throw Exception If sites differ in size or in alphabet.
    */
-  CompressedVectorSiteContainer(const std::vector<const Site*>& vs, const Alphabet* alpha);
+  CompressedVectorSiteContainer(
+      std::vector< std::unique_ptr<Site> >& vs,
+      std::shared_ptr<const Alphabet>& alphabet);
+
   /**
    * @brief Build a new empty container with specified size.
    *
    * @param size Number of sequences in the container.
-   * @param alpha The alphabet for this container.
+   * @param alphabet The alphabet for this container.
    */
-  CompressedVectorSiteContainer(size_t size, const Alphabet* alpha);
+  CompressedVectorSiteContainer(
+    size_t size,
+    std::shared_ptr<const Alphabet>& alphabet);
+
   /**
    * @brief Build a new empty container with specified sequence names.
    *
    * @param names Sequence names. This will set the number of sequences in the container.
-   * @param alpha The alphabet for this container.
+   * @param alphabet The alphabet for this container.
    */
-  CompressedVectorSiteContainer(const std::vector<std::string>& names, const Alphabet* alpha);
+  CompressedVectorSiteContainer(
+    const std::vector<std::string>& names,
+    std::shared_ptr<const Alphabet>& alphabet);
 
   /**
    * @brief Build a new empty container.
    *
-   * @param alpha The alphabet for this container.
+   * @param alphabet The alphabet for this container.
    */
-  CompressedVectorSiteContainer(const Alphabet* alpha);
+  CompressedVectorSiteContainer(std::shared_ptr<const Alphabet>& alphabet);
 
   CompressedVectorSiteContainer(const CompressedVectorSiteContainer& vsc);
-  CompressedVectorSiteContainer(const SiteContainer& sc);
+  CompressedVectorSiteContainer(const SiteContainerInterface& sc);
 
   CompressedVectorSiteContainer& operator=(const CompressedVectorSiteContainer& vsc);
-  CompressedVectorSiteContainer& operator=(const SiteContainer& sc);
+  CompressedVectorSiteContainer& operator=(const SiteContainerInterface& sc);
 
   virtual ~CompressedVectorSiteContainer() { clear(); }
 
@@ -133,7 +138,10 @@ public:
    *
    * @{
    */
-  CompressedVectorSiteContainer* clone() const { return new CompressedVectorSiteContainer(*this); }
+  CompressedVectorSiteContainer* clone() const override
+  {
+    return new CompressedVectorSiteContainer(*this);
+  }
   /** @} */
 
   /**
@@ -141,59 +149,30 @@ public:
    *
    * @{
    */
-  const Site& getSite(size_t siteIndex) const
+  const Site& site(size_t sitePosition) const override
   {
-    return *VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
+    return *siteContainer_.getObject(index_[sitePosition]);
   }
 
-  const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const
-  {
-     return getSite(siteIndex);
-  }
+  void setSite(size_t sitePosition, std::unique_ptr<Site>& site, bool checkCoordinate = true) override;
+
+  std::unique_ptr<Site> removeSite(size_t sitePosition) override;
   
-  Site& getSite(size_t siteIndex)
-  {
-    return *VectorPositionedContainer<Site>::getObject(index_[siteIndex]);
-  }
+  void deleteSite(size_t sitePosition) override;
 
-  CruxSymbolListSite& getSymbolListSite(size_t siteIndex)
-  {
-    return getSite(siteIndex);
-  }
-  
-  void setSite(size_t siteIndex, const Site& site, bool checkPosition = true);
+  void addSite(std::unique_ptr<Site>& site, bool checkCoordinate = false) override;
 
-  std::shared_ptr<Site> removeSite(size_t siteIndex);
-  
-  void deleteSite(size_t siteIndex);
+  void addSite(std::unique_ptr<Site>& site, size_t sitePosition, bool checkCoordinate = false) override;
 
+  void deleteSites(size_t sitePosition, size_t length) override;
 
-  void addSite(const Site& site, bool checkPosition = false);
-  void addSite(const Site& site, int position, bool checkPosition = false)
-  {
-    addSite(site, checkPosition);
-  }
-  void addSite(const Site& site, size_t siteIndex, bool checkPosition = false);
-  void addSite(const Site& site, size_t siteIndex, int position, bool checkPosition = false)
-  {
-    addSite(site, siteIndex, checkPosition);
-  }
+  size_t getNumberOfSites() const override { return index_.size(); }
 
-  /*
-   * @name From AlignedValuesContainer interface
-   *
-   * @{
-   */
+  void reindexSites() override ;
 
-  void deleteSites(size_t siteIndex, size_t length);
+  Vint getSiteCoordinates() const override;
 
-  size_t getNumberOfSites() const { return index_.size(); }
-
-  void reindexSites();
-
-  Vint getSitePositions() const;
-
-  void setSitePositions(Vint vPositions);
+  void setSiteCoordinates(const Vint& vCoordinates) override;
 
 
   /** @} */
@@ -204,7 +183,7 @@ public:
    **/
   size_t getNumberOfUniqueSites() const
   {
-    return VectorPositionedContainer<Site>::getSize();
+    return siteContainer_.getSize();
   }
 
 
@@ -215,195 +194,191 @@ public:
    *
    * @{
    */
-  using OrderedSequenceContainer::setComments;
-  void setComments(size_t sequenceIndex, const Comments& comments);
+  const Sequence& sequence(size_t sequenceIndex) const override;
 
-  /*
-   * @brief If needed, those methods will create Sequences from the
-   * Sites Container, BUT those Sequences are independent from the set
-   * of Sites. Which means that if those are modified, the sites
-   * are not, and information is not consistent any more.
-   *
-   */
-  
-  const Sequence& getSequence(size_t sequenceIndex) const;
-  const Sequence& getSequence(const std::string& name) const;
-  bool hasSequence(const std::string& name) const
+  const Sequence& sequence(const std::string& sequenceKey) const override
   {
     // Look for sequence name:
-    return VectorMappedContainer<Sequence>::hasObject(name);
+    size_t pos = getSequencePosition(sequenceKey);
+    return sequence(pos);
   }
 
-  /**
-   *
-   * @brief Method to get position of a sequence in sequence
-   * container from its key. This method is used by delete and
-   * remove methods
-   *
-   */
-  
-  size_t getSequencePosition(const std::string& key) const
+  bool hasSequence(const std::string& name) const override
   {
-    try
-    {
-      // Look for sequence name:
-      return VectorMappedContainer<Sequence>::getObjectPosition(key);
-    }
-    catch (Exception& e)
-    {
-      throw SequenceNotFoundException("VectorMappedContainer::getSequencePosition", key);
-    }
+    // Look for sequence key:
+    return sequenceContainer_.hasObject(name);
   }
 
-  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex)
+  size_t getSequencePosition(const std::string& sequenceKey) const override
+  {
+    // Look for sequence key:
+    return sequenceContainer_.getObjectPosition(sequenceKey);
+  }
+
+  std::unique_ptr<Sequence> removeSequence(size_t sequencePosition) override
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::removeSequence.");
   }
 
-  std::shared_ptr<Sequence> removeSequence(const std::string& name)
+  std::unique_ptr<Sequence> removeSequence(const std::string& sequenceKey) override
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::removeSequence.");
   }
 
-  size_t getNumberOfSequences() const { return VectorMappedContainer<Sequence>::getNumberOfObjects(); }
-
-  std::vector<std::string> getSequenceNames() const
+  void deleteSequence(size_t sequencePosition) override
   {
-    return VectorMappedContainer<Sequence>::getObjectNames();
+    // Implementing this function would involve (partially) decompressing the data...
+    throw NotImplementedException("CompressedVectorSiteContainer::deleteSequence.");
   }
 
-  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true)
+  void deleteSequence(const std::string& sequenceKey) override
   {
-    VectorMappedContainer<Sequence>::setObjectNames(names);
+    // Implementing this function would involve (partially) decompressing the data...
+    throw NotImplementedException("CompressedVectorSiteContainer::deleteSequence.");
   }
 
-  void clear();
-
-  CompressedVectorSiteContainer* createEmptyContainer() const;
-
-  int& valueAt(const std::string& sequenceName, size_t elementIndex)
-  {
-    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
-    return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[getSequencePosition(sequenceName)];
+  size_t getNumberOfSequences() const override {
+    return sequenceContainer_.getNumberOfObjects();
   }
 
-  const int& valueAt(const std::string& sequenceName, size_t elementIndex) const
+  std::vector<std::string> getSequenceKeys() const override
   {
-    if (elementIndex >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(std::string, size_t).", elementIndex, 0, getNumberOfSites() - 1);
-    return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[getSequencePosition(sequenceName)];
+    return sequenceContainer_.getObjectNames();
   }
 
-  int& operator()(const std::string& sequenceName, size_t elementIndex)
+  void setSequenceKeys(const std::vector<std::string>& sequenceKeys) override
   {
-    return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[getSequencePosition(sequenceName)];
+    sequenceContainer_.setObjectNames(sequenceKeys);
   }
 
-  const int& operator()(const std::string& sequenceName, size_t elementIndex) const
-  {
-    return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[getSequencePosition(sequenceName)];
+  const std::string& sequenceKey(size_t sequencePosition) const override
+  { 
+    return sequenceContainer_.getObjectName(sequencePosition);
   }
 
-  int& valueAt(size_t sequenceIndex, size_t elementIndex)
+  std::vector<std::string> getSequenceNames() const override
   {
-    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
-    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
-    return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[sequenceIndex];
+    return sequenceNames_;
   }
 
-  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
+  void setSequenceNames(const std::vector<std::string>& names, bool updateKeys) override
   {
-    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", sequenceIndex, 0, getNumberOfSequences() - 1);
-    if (elementIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::operator(size_t, size_t).", elementIndex, 0, getNumberOfSites() - 1);
-    return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[sequenceIndex];
+    if (names.size() != getNumberOfSequences())
+      throw DimensionException("CompressedVectorSiteContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
+    sequenceContainer_.clear();
+    sequenceNames_ = names;
+    if (updateKeys) {
+      setSequenceKeys(names);
+    }
   }
 
-  int& operator()(size_t sequenceIndex, size_t elementIndex)
+  std::vector<Comments> getSequenceComments() const override
   {
-    return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[sequenceIndex];
+    return sequenceComments_;
   }
 
-  const int& operator()(size_t sequenceIndex, size_t elementIndex) const
+  void clear() override
   {
-    return (*VectorPositionedContainer<Site>::getObject(index_[elementIndex]))[sequenceIndex];
+    siteContainer_.clear();
+    sequenceContainer_.clear();
+    sequenceNames_.clear();
+    sequenceComments_.clear();
+    index_.clear();
+  }
+
+  CompressedVectorSiteContainer* createEmptyContainer() const override
+  {
+    auto alphaP = getAlphabet();
+    CompressedVectorSiteContainer* vsc = new CompressedVectorSiteContainer(alphaP);
+    vsc->setComments(getComments());
+    return vsc;
   }
 
   /** @} */
 
-  void addSequence(const Sequence& sequence, bool checkName = true)
-  {
-    // Implementing this function would involve (partially) decompressing the data...
-    throw NotImplementedException("CompressedVectorSiteContainer::addSequence.");
-  }
-
-  void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true)
-  {
-    // Implementing this function would involve (partially) decompressing the data...
-    throw NotImplementedException("CompressedVectorSiteContainer::addSequence.");
-  }
-
-  void setSequence(const std::string& name, const Sequence& sequence, bool checkName)
+  void setSequence(size_t sequencePosition, std::unique_ptr<Sequence>& sequence, const std::string& sequenceKey) override
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::setSequence.");
   }
 
-  void setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName)
+  void setSequence(size_t sequencePosition, std::unique_ptr<Sequence>& sequence) override
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::setSequence.");
   }
 
+  void setSequence(const std::string& sequenceKey, std::unique_ptr<Sequence>& sequence) override
+  {
+    // Implementing this function would involve (partially) decompressing the data...
+    throw NotImplementedException("CompressedVectorSiteContainer::setSequence.");
+  }
+
+  void addSequence(const std::string& sequenceKey, std::unique_ptr<Sequence>& sequence) override
+  {
+    // Implementing this function would involve (partially) decompressing the data...
+    throw NotImplementedException("CompressedVectorSiteContainer::addSequence.");
+  }
+
+  void insertSequence(size_t sequencePosition, std::unique_ptr<Sequence>& sequence, const std::string& sequenceKey) override
+  {
+    // Implementing this function would involve (partially) decompressing the data...
+    throw NotImplementedException("CompressedVectorSiteContainer::insertSequence.");
+  }
+
+  const int& valueAt(const std::string& sequenceKey, size_t sitePosition) const override
+  {
+    return site(sitePosition).getValue(getSequencePosition(sequenceKey));
+  }
+  
+  const int& valueAt(size_t sequencePosition, size_t sitePosition) const override
+  {
+    return site(sitePosition).getValue(sequencePosition);
+  }
+	 
   /**
-   * @name SequencedValuesContainer methods.
+   * @name SequenceData methods.
    *
    * @{
    */
-  double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
+  double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
-
-    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex), state) ? 1. : 0.;
+    return site(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
   }
 
-  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const
+  double operator()(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return getAlphabet()->isResolvedIn(valueAt(sequenceName, siteIndex), state) ? 1. : 0.;
+    return site(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
   }
 
-  /*
-   *
-   * @}
-   *
-   */
-
-  /**
-   * @name OrderedValuesContainer methods.
-   *
-   * @{
-   */
-  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
+  double getStateValueAt(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("CompressedVectorSequenceContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
-
-    if (siteIndex  >= getNumberOfSites()) throw IndexOutOfBoundsException("VectorSiteContainer::getStateValueAt.", siteIndex, 0, getNumberOfSites() - 1);
-
-    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex), state) ? 1. : 0.;
+    return site(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
-  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const
+  double operator()(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    return getAlphabet()->isResolvedIn(valueAt(sequenceIndex, siteIndex), state) ? 1. : 0.;
+    return site(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
-  /*
-   *
-   * @}
-   *
-   */
+  /** @} */ 
+
 
 protected:
+  /**
+   * Get a non-const reference to a site in the container. 
+   * It is a convenient short-cut for use within the class only, as this can potentially mess up the data.
+   *
+   * @param sitePosition the index of the site to retrieve.
+   * @return A reference to the selected site.
+   */
+  Site& getSite_(size_t sitePosition)
+  {
+    return *siteContainer_.getObject(index_[sitePosition]);
+  }
+
   /**
    * @return The position of the site in the compressed set. If the site is not found,
    * this will return the number of sites in the compressed set.

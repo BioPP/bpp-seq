@@ -104,20 +104,20 @@ public:
 
   virtual ~GranthamAAVolumeIndex() {}
 
-  GranthamAAVolumeIndex* clone() const { return new GranthamAAVolumeIndex(); }
+  GranthamAAVolumeIndex* clone() const override { return new GranthamAAVolumeIndex(); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return volume_[getAlphabet()->getStateIndex(state)-1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return volume_[getAlphabet()->getStateIndex(state)-1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(volume_); }
+  const std::vector<double>& indexVector() const override { return volume_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_GRANTHAMAAVOLUMEINDEX_H

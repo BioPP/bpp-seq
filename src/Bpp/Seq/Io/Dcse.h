@@ -59,8 +59,7 @@ namespace bpp
  * http://www.psb.ugent.be/rRNA/help/formats/aliformat.html
  */
 class DCSE :
-  public AbstractIAlignment,
-  public virtual ISequence
+  public AbstractIAlignment2
 {
 public:
   DCSE() {}
@@ -72,7 +71,7 @@ public:
    *
    * @{
    */
-  void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const;
+  void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
   /** @} */
 
   /**
@@ -83,11 +82,12 @@ public:
    *
    * @{
    */
-  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const
+  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignment(input, alpha);
   }
-  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const
+
+  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignment(path, alpha);
   }
@@ -99,8 +99,9 @@ public:
    *
    * @{
    */
-  const std::string getFormatName() const;
-  const std::string getFormatDescription() const;
+  const std::string getFormatName() const override;
+  
+  const std::string getFormatDescription() const override;
   /** @} */
 };
 } // end of namespace bpp.

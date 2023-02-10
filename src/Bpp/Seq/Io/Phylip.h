@@ -57,15 +57,13 @@ namespace bpp
 /**
  * @brief The Phylip & co format.
  *
- * An AlignedSequenceContainer is used instead of a VectorSequenceContainer.
- *
+ * Sequences must be aligned.
  * This format is described on the Phylip package documentation website:
  * http://evolution.genetics.washington.edu/phylip/doc/sequence.html
  */
 class Phylip :
-  public AbstractIAlignment,
-  public AbstractOAlignment,
-  public virtual ISequence
+  public AbstractIAlignment2,
+  public AbstractOAlignment
 {
 private:
   /* this class allows two kinds of Phylip format:
@@ -82,8 +80,6 @@ private:
    */
   unsigned int charsByLine_;
 
-  bool checkNames_;
-
   std::string namesSplit_;
 
 public:
@@ -93,36 +89,35 @@ public:
    * @param extended If true, sequences with names longer than 10 characters are allowed.
    * @param sequential If false, sequences are supposed to be interlaved.
    * @param charsByLine The number of base to display in a row.
-   * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
    * @param split The string to use to split sequence name from content (only for 'extended' format). This will typically be "  " (two spaces) or "\t" (a tabulation).
    */
-  Phylip(bool extended = true, bool sequential = true, unsigned int charsByLine = 100, bool checkSequenceNames = true, const std::string& split = "  ") :
-    extended_(extended), sequential_(sequential), charsByLine_(charsByLine), checkNames_(checkSequenceNames), namesSplit_(split) {}
+  Phylip(bool extended = true, bool sequential = true, unsigned int charsByLine = 100, const std::string& split = "  ") :
+    extended_(extended), sequential_(sequential), charsByLine_(charsByLine), namesSplit_(split) {}
 
   virtual ~Phylip() {}
 
 public:
   /**
-   * @name The AbstractIAlignment interface.
+   * @name The AbstractIAlignment2 interface.
    *
    * @{
    */
-  void appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const;
+  void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
   /** @} */
 
   /**
-   * @name The ISequence interface.
+   * @name The AbstractISequence interface.
    *
    * As a SiteContainer is a subclass of SequenceContainer, we hereby implement the ISequence
    * interface by downcasting the interface.
    *
    * @{
    */
-  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const
+  virtual std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignment(input, alpha);
   }
-  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const
+  virtual std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
   {
     return readAlignment(path, alpha);
   }
@@ -137,12 +132,12 @@ public:
   unsigned int getNumberOfSequences(const std::string& path) const;
 
   /**
-   * @name The OSequence interface.
+   * @name The AbstractOSequence interface.
    *
    * @{
    */
-  void writeAlignment(std::ostream& output, const SiteContainer& sc) const;
-  void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite) const
+  void writeAlignment(std::ostream& output, const SiteContainerInterface& sc) const override;
+  void writeAlignment(const std::string& path, const SiteContainerInterface& sc, bool overwrite) const override
   {
     AbstractOAlignment::writeAlignment(path, sc, overwrite);
   }
@@ -154,21 +149,9 @@ public:
    *
    * @{
    */
-  const std::string getFormatName() const;
-  const std::string getFormatDescription() const;
+  const std::string getFormatName() const override;
+  const std::string getFormatDescription() const override;
   /** @} */
-
-  /**
-   * @return true if the names are to be checked when reading sequences from files.
-   */
-  bool checkNames() const { return checkNames_; }
-
-  /**
-   * @brief Tell whether the sequence names should be checked when reading from files.
-   *
-   * @param yn whether the sequence names should be checked when reading from files.
-   */
-  void checkNames(bool yn) { checkNames_ = yn; }
 
   /**
    * @return The string used to split sequence name from content.
@@ -183,12 +166,12 @@ public:
 protected:
   // Reading tools:
   const std::vector<std::string> splitNameAndSequence(const std::string& s) const;
-  void readSequential (std::istream& in, SiteContainer & asc) const;
-  void readInterleaved(std::istream& in, SiteContainer & asc) const;
+  void readSequential (std::istream& in, SequenceContainerInterface & asc) const;
+  void readInterleaved(std::istream& in, SequenceContainerInterface & asc) const;
   // Writing tools:
   std::vector<std::string> getSizedNames(const std::vector<std::string>& names) const;
-  void writeSequential(std::ostream& out, const SequenceContainer& sc) const;
-  void writeInterleaved(std::ostream& out, const SequenceContainer& sc) const;
+  void writeSequential(std::ostream& out, const SiteContainerInterface& sc) const;
+  void writeInterleaved(std::ostream& out, const SiteContainerInterface& sc) const;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_PHYLIP_H

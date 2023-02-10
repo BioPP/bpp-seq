@@ -52,16 +52,16 @@ using namespace std;
 
 /******************************************************************************/
 
-void Stockholm::writeAlignment(ostream& output, const SiteContainer& sc) const
+void Stockholm::writeAlignment(ostream& output, const SiteContainerInterface& sc) const
 {
   if (!output)
     throw IOException("Stockholm::writeAlignment: can't write to ostream output");
 
   output << "# STOCKHOLM 1.0" << endl;
   // Loop for all general comments
-  for (size_t i = 0; i < sc.getGeneralComments().size(); ++i)
+  for (size_t i = 0; i < sc.getComments().size(); ++i)
   {
-    output << "#=GF CC " << sc.getGeneralComments()[i] << endl;
+    output << "#=GF CC " << sc.getComments()[i] << endl;
   }
 
   // Main loop : for all sequences in vector container
@@ -77,7 +77,7 @@ void Stockholm::writeAlignment(ostream& output, const SiteContainer& sc) const
     maxSize = 255;
   for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
   {
-    output << TextTools::resizeRight(names[i], maxSize) << " " << sc.getSequence(i).toString() << endl;
+    output << TextTools::resizeRight(names[i], maxSize) << " " << sc.sequence(i).toString() << endl;
   }
   output << "//" << endl;
 }

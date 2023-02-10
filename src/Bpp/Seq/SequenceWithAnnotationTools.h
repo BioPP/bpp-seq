@@ -105,34 +105,34 @@ public:
    * @name The Clonable interface
    * @{
    */
-  SequenceMask* clone() const { return new SequenceMask(*this); }
+  SequenceMask* clone() const override { return new SequenceMask(*this); }
   /** @} */
 
 public:
-  void init(const Sequence& seq)
+  void init(const Sequence& seq) override
   {
     mask_.resize(seq.size());
     std::fill(mask_.begin(), mask_.end(), false);
   }
 
-  const std::string& getType() const { return MASK; }
+  const std::string& getType() const override { return MASK; }
 
-  bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const
+  bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const override
   {
     if (throwException && mask_.size() != sequence.size()) throw Exception("SequenceMask. The mask size must match the sequence size.");
     return mask_.size() == sequence.size();
   }
 
-  bool isRemovable() const { return removable_; }
-  bool isShared() const { return false; }
-  void beforeSequenceChanged(const IntSymbolListEditionEvent& event) {}
-  void afterSequenceChanged(const IntSymbolListEditionEvent& event);
-  void beforeSequenceInserted(const IntSymbolListInsertionEvent& event) {}
-  void afterSequenceInserted(const IntSymbolListInsertionEvent& event);
-  void beforeSequenceDeleted(const IntSymbolListDeletionEvent& event) {}
-  void afterSequenceDeleted(const IntSymbolListDeletionEvent& event);
-  void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
-  void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
+  bool isRemovable() const override { return removable_; }
+  bool isShared() const override { return false; }
+  void beforeSequenceChanged(const IntSymbolListEditionEvent& event) override {}
+  void afterSequenceChanged(const IntSymbolListEditionEvent& event) override;
+  void beforeSequenceInserted(const IntSymbolListInsertionEvent& event) override {}
+  void afterSequenceInserted(const IntSymbolListInsertionEvent& event) override;
+  void beforeSequenceDeleted(const IntSymbolListDeletionEvent& event) override {}
+  void afterSequenceDeleted(const IntSymbolListDeletionEvent& event) override;
+  void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) override {}
+  void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) override {}
 
   size_t getSize() const { return mask_.size(); }
 
@@ -164,7 +164,7 @@ public:
     std::copy(mask.begin(), mask.end(), mask_.begin() + static_cast<ptrdiff_t>(pos));
   }
 
-  bool merge(const SequenceAnnotation& anno)
+  bool merge(const SequenceAnnotation& anno) override
   {
     try
     {
@@ -178,9 +178,9 @@ public:
     }
   }
 
-  SequenceAnnotation* getPartAnnotation(size_t pos, size_t len) const
+  std::unique_ptr<SequenceAnnotation> getPartAnnotation(size_t pos, size_t len) const override
   {
-    return new SequenceMask(std::vector<bool>(mask_.begin() + static_cast<ptrdiff_t>(pos), mask_.begin() + static_cast<ptrdiff_t>(pos + len)), removable_);
+    return std::unique_ptr<SequenceAnnotation>(new SequenceMask(std::vector<bool>(mask_.begin() + static_cast<ptrdiff_t>(pos), mask_.begin() + static_cast<ptrdiff_t>(pos + len)), removable_));
   }
 };
 
@@ -202,7 +202,7 @@ public:
    * @return A new SequenceWithAnnotation object.
    * @throw AlphabetException if the input sequence does not have a CaseMaskedAlphabet.
    */
-  SequenceWithAnnotation* createMaskAnnotation(const Sequence& seq);
+  std::unique_ptr<SequenceWithAnnotation> createMaskAnnotation(const Sequence& seq);
 };
 }
 #endif // BPP_SEQ_SEQUENCEWITHANNOTATIONTOOLS_H

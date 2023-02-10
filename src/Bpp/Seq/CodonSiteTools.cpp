@@ -62,7 +62,7 @@ using namespace std;
 bool CodonSiteTools::hasGapOrStop(const Site& site, const GeneticCode& gCode)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::hasGapOrStop: alphabet is not CodonAlphabet", site.getAlphabet());
   for (size_t i = 0; i < site.size(); i++)
   {
@@ -77,7 +77,7 @@ bool CodonSiteTools::hasGapOrStop(const Site& site, const GeneticCode& gCode)
 bool CodonSiteTools::hasStop(const Site& site, const GeneticCode& gCode)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::hasStop: alphabet is not CodonAlphabet", site.getAlphabet());
   for (size_t i = 0; i < site.size(); i++)
   {
@@ -92,7 +92,7 @@ bool CodonSiteTools::hasStop(const Site& site, const GeneticCode& gCode)
 bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::isMonoSitePolymorphic: alphabet is not CodonAlphabet", site.getAlphabet());
   // Empty site checking
   if (site.size() == 0)
@@ -103,14 +103,14 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
     return false;
   // initialisation of the 3 sub-sites ot the codon
   vector<int> pos1, pos2, pos3;
-  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+  auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
   for (size_t i = 0; i < site.size(); i++)
   {
     pos1.push_back(ca->getFirstPosition(site[i]));
     pos2.push_back(ca->getSecondPosition(site[i]));
     pos3.push_back(ca->getThirdPosition(site[i]));
   }
-  const NucleicAlphabet* na = ca->getNucleicAlphabet();
+  shared_ptr<const Alphabet> na = ca->getNucleicAlphabet();
   Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
   // polymorphism checking for each sub-sites
   size_t nbpol = 0;
@@ -130,7 +130,7 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
 bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode& gCode)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::isSynonymousPolymorphic: alphabet is not CodonAlphabet", site.getAlphabet());
   if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
     throw AlphabetMismatchException("CodonSiteTools::isSynonymousPolymorphic: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
@@ -162,10 +162,10 @@ bool CodonSiteTools::isSynonymousPolymorphic(const Site& site, const GeneticCode
 
 /******************************************************************************/
 
-Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, const GeneticCode& gCode, double freqmin)
+unique_ptr<Site> CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, const GeneticCode& gCode, double freqmin)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::generateCodonSiteWithoutRareVariant: alphabet is not CodonAlphabet", site.getAlphabet());
   // Empty site checking
   if (site.size() == 0)
@@ -173,7 +173,7 @@ Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, cons
 
   if (SymbolListTools::isConstant(site))
   {
-    Site* noRareVariant = new Site(site);
+    auto noRareVariant = make_unique<Site>(site);
     return noRareVariant;
   }
   else
@@ -181,8 +181,8 @@ Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, cons
     // Computation
     map<int, double> freqcodon;
     SymbolListTools::getFrequencies(site, freqcodon);
-    const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
-    const NucleicAlphabet* na = ca->getNucleicAlphabet();
+    auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
+    shared_ptr<const Alphabet> na = ca->getNucleicAlphabet();
     int newcodon = -1;
     for (map<int, double>::iterator it = freqcodon.begin(); it != freqcodon.end(); it++)
     {
@@ -216,7 +216,8 @@ Site* CodonSiteTools::generateCodonSiteWithoutRareVariant(const Site& site, cons
       else
         codon.push_back(newcodon);
     }
-    Site* noRareVariant = new Site(codon, ca);
+    auto alphaPtr = dynamic_pointer_cast<const Alphabet>(ca);
+    auto noRareVariant = make_unique<Site>(codon, alphaPtr);
     return noRareVariant;
   }
 }
@@ -239,7 +240,7 @@ size_t CodonSiteTools::numberOfDifferences(int i, int j, const CodonAlphabet& ca
 
 double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const GeneticCode& gCode, bool minchange)
 {
-  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gCode.getSourceAlphabet());
+  auto ca = gCode.getCodonAlphabet();
 
   vector<int> ci = ca->getPositions(i);
   vector<int> cj = ca->getPositions(j);
@@ -462,10 +463,10 @@ double CodonSiteTools::numberOfSynonymousDifferences(int i, int j, const Genetic
 double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, bool minchange)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::piSynonymous: alphabet is not CodonAlphabet", site.getAlphabet());
   if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
-    throw AlphabetMismatchException("CodonSiteTools::piSynonymous: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
+    throw AlphabetMismatchException("CodonSiteTools::piSynonymous: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getCodonAlphabet());
   // Empty site checking
   if (site.size() == 0)
     throw EmptySiteException("CodonSiteTools::piSynonymous: Incorrect specified site", &site);
@@ -494,10 +495,10 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
 double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCode, bool minchange)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::piNonSynonymous: alphabet is not CodonAlphabet", site.getAlphabet());
   if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
-    throw AlphabetMismatchException("CodonSiteTools::piNonSynonymous: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
+    throw AlphabetMismatchException("CodonSiteTools::piNonSynonymous: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getCodonAlphabet());
   // Empty site checking
   if (site.size() == 0)
     throw EmptySiteException("CodonSiteTools::piSynonymous: Incorrect specified site", &site);
@@ -510,7 +511,7 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
   // Computation
   map<int, double> freq;
   SymbolListTools::getFrequencies(site, freq);
-  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+  auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
   double pi = 0;
   for (map<int, double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++)
   {
@@ -530,7 +531,7 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
 
 double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCode, double ratio)
 {
-  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gCode.getSourceAlphabet());
+  auto ca = gCode.getCodonAlphabet();
   if (gCode.isStop(i))
     return 0;
   if (ca->isUnresolved(i))
@@ -572,11 +573,11 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCo
 double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const GeneticCode& gCode, double ratio)
 {
   // Alphabet checking
-  const Alphabet* alphabet = site.getAlphabet();
-  if (!AlphabetTools::isCodonAlphabet(alphabet))
+  auto alphabet = site.getAlphabet();
+  if (!AlphabetTools::isCodonAlphabet(alphabet.get()))
     throw AlphabetException("CodonSiteTools::meanNumberOfSynonymousPositions: alphabet is not CodonAlphabet", alphabet);
   if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
-    throw AlphabetMismatchException("CodonSiteTools::meanNumberOfSynonymousPositions: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
+    throw AlphabetMismatchException("CodonSiteTools::meanNumberOfSynonymousPositions: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getCodonAlphabet());
   // Empty site checking
   if (site.size() == 0)
     throw EmptySiteException("CodonSiteTools::meanNumberOfSynonymousPositions: Incorrect specified site", &site);
@@ -606,7 +607,7 @@ double CodonSiteTools::meanNumberOfSynonymousPositions(const Site& site, const G
 size_t CodonSiteTools::numberOfSubstitutions(const Site& site, const GeneticCode& gCode, double freqmin)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::numberOfSubstitutions: alphabet is not CodonAlphabet", site.getAlphabet());
   // Empty site checking
   if (site.size() == 0)
@@ -614,17 +615,17 @@ size_t CodonSiteTools::numberOfSubstitutions(const Site& site, const GeneticCode
 
   if (SymbolListTools::isConstant(site))
     return 0;
-  Site* newsite;
+  unique_ptr<Site> newsite;
   if (freqmin > 1. / static_cast<double>(site.size()))
     newsite = CodonSiteTools::generateCodonSiteWithoutRareVariant(site, gCode, freqmin);
   else
-    newsite = new Site(site);
+    newsite = make_unique<Site>(site);
   // Computation
   if (SymbolListTools::hasGap(*newsite))
     return 0;
   vector<int> pos1, pos2, pos3;
 
-  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+  auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
 
   for (size_t i = 0; i < newsite->size(); i++)
   {
@@ -633,12 +634,11 @@ size_t CodonSiteTools::numberOfSubstitutions(const Site& site, const GeneticCode
     pos3.push_back(ca->getThirdPosition(newsite->getValue(i)));
   }
 
-  const NucleicAlphabet* na = ca->getNucleicAlphabet();
+  shared_ptr<const Alphabet> na = ca->getNucleicAlphabet();
 
   Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
   size_t Scodon = SymbolListTools::getNumberOfDistinctCharacters(*newsite) - 1;
   size_t Sbase = SymbolListTools::getNumberOfDistinctCharacters(s1) + SymbolListTools::getNumberOfDistinctCharacters(s2) + SymbolListTools::getNumberOfDistinctCharacters(s3) - 3;
-  delete newsite;
   if (Scodon >= Sbase)
     return Scodon;
   else
@@ -650,21 +650,21 @@ size_t CodonSiteTools::numberOfSubstitutions(const Site& site, const GeneticCode
 size_t CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, const GeneticCode& gCode, double freqmin)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(site.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::numberOfNonSynonymousSubstitutions: alphabet is not CodonAlphabet", site.getAlphabet());
   if (!site.getAlphabet()->equals(*gCode.getSourceAlphabet()))
-    throw AlphabetMismatchException("CodonSiteTools::numberOfNonSynonymousSubstitutions: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getSourceAlphabet());
+    throw AlphabetMismatchException("CodonSiteTools::numberOfNonSynonymousSubstitutions: site and genetic code have not the same codon alphabet.", site.getAlphabet(), gCode.getCodonAlphabet());
   // Empty site checking
   if (site.size() == 0)
     throw EmptySiteException("CodonSiteTools::numberOfNonSynonymousSubstitutions: Incorrect specified site", &site);
 
   if (SymbolListTools::isConstant(site))
     return 0;
-  Site* newsite;
+  unique_ptr<Site> newsite;
   if (freqmin > 1. / static_cast<double>(site.size()))
     newsite = generateCodonSiteWithoutRareVariant(site, gCode, freqmin);
   else
-    newsite = new Site(site);
+    newsite = make_unique<Site>(site);
   if (SymbolListTools::hasGap(*newsite))
     return 0;
   // computation
@@ -673,7 +673,7 @@ size_t CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, cons
   size_t NaSup = 0;
   size_t Nminmin = 10;
 
-  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(site.getAlphabet());
+  auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
 
   for (map<int, size_t>::iterator it1 = count.begin(); it1 != count.end(); it1++)
   {
@@ -689,7 +689,6 @@ size_t CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, cons
     if (Nmin < Nminmin)
       Nminmin = Nmin;
   }
-  delete newsite;
   return NaSup - Nminmin;
 }
 
@@ -698,21 +697,21 @@ size_t CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, cons
 vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& siteOut, int i, int j, const GeneticCode& gCode)
 {
   // Alphabet checking
-  if (!AlphabetTools::isCodonAlphabet(siteIn.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(siteIn.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::fixedDifferences: alphabet is not CodonAlphabet (siteIn)", siteIn.getAlphabet());
-  if (!AlphabetTools::isCodonAlphabet(siteOut.getAlphabet()))
+  if (!AlphabetTools::isCodonAlphabet(siteOut.getAlphabet().get()))
     throw AlphabetException("CodonSiteTools::fixedDifferences: alphabet is not CodonAlphabet (siteOut)", siteOut.getAlphabet());
   if (!siteIn.getAlphabet()->equals(*gCode.getSourceAlphabet()))
-    throw AlphabetMismatchException("CodonSiteTools::fixedDifferences: siteIn and genetic code have not the same codon alphabet.", siteIn.getAlphabet(), gCode.getSourceAlphabet());
+    throw AlphabetMismatchException("CodonSiteTools::fixedDifferences: siteIn and genetic code have not the same codon alphabet.", siteIn.getAlphabet(), gCode.getCodonAlphabet());
   if (!siteOut.getAlphabet()->equals(*gCode.getSourceAlphabet()))
-    throw AlphabetMismatchException("CodonSiteTools::fixedDifferences: siteOut and genetic code have not the same codon alphabet.", siteOut.getAlphabet(), gCode.getSourceAlphabet());
+    throw AlphabetMismatchException("CodonSiteTools::fixedDifferences: siteOut and genetic code have not the same codon alphabet.", siteOut.getAlphabet(), gCode.getCodonAlphabet());
   // Empty site checking
   if (siteIn.size() == 0)
     throw EmptySiteException("CodonSiteTools::getFixedDifferences Incorrect specified site", &siteIn);
   if (siteOut.size() == 0)
     throw EmptySiteException("CodonSiteTools::getFixedDifferences Incorrect specified site", &siteOut);
 
-  const CodonAlphabet* ca = dynamic_cast<const CodonAlphabet*>(gCode.getSourceAlphabet());
+  auto ca = gCode.getCodonAlphabet();
 
   size_t Ntot = numberOfDifferences(i, j, *ca);
   size_t Ns = static_cast<size_t>(numberOfSynonymousDifferences(i, j, gCode, true));
@@ -729,7 +728,7 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
     pos2out.push_back(ca->getSecondPosition(siteOut[k]));
     pos3out.push_back(ca->getThirdPosition(siteOut[k]));
   }
-  const NucleicAlphabet* na = ca->getNucleicAlphabet();
+  shared_ptr<const Alphabet> na = ca->getNucleicAlphabet();
 
   Site s1in(pos1in, na), s2in(pos2in, na), s3in(pos3in, na);
   Site s1out(pos1out, na), s2out(pos2out, na), s3out(pos3out, na);

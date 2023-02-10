@@ -68,8 +68,9 @@ public:
    *
    * @{
    */
-  void writeAlignment(std::ostream& output, const SiteContainer& sc) const = 0;
-  void writeAlignment(const std::string& path, const SiteContainer& sc, bool overwrite = true) const
+  void writeAlignment(std::ostream& output, const SiteContainerInterface& sc) const override = 0;
+
+  void writeAlignment(const std::string& path, const SiteContainerInterface& sc, bool overwrite = true) const override
   {
     // Open file in specified mode
     std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
@@ -78,5 +79,35 @@ public:
   }
   /** @} */
 };
+
+/**
+ * @brief Partial implementation of the OProbabilisticAlignment interface.
+ */
+class AbstractOProbabilisticAlignment :
+  public virtual OProbabilisticAlignment
+{
+public:
+  AbstractOProbabilisticAlignment() {}
+  virtual ~AbstractOProbabilisticAlignment() {}
+
+public:
+  /**
+   * @name OProbabilisticAlignment methods:
+   *
+   * @{
+   */
+  void writeAlignment(std::ostream& output, const ProbabilisticSiteContainerInterface& psc) const override = 0;
+
+  void writeAlignment(const std::string& path, const ProbabilisticSiteContainerInterface& psc, bool overwrite = true) const override
+  {
+    // Open file in specified mode
+    std::ofstream output(path.c_str(), overwrite ? (std::ios::out) : (std::ios::out | std::ios::app));
+    writeAlignment(output, psc);
+    output.close();
+  }
+
+  /** @} */
+};
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_ABSTRACTOALIGNMENT_H

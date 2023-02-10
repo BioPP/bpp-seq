@@ -51,7 +51,7 @@ using namespace bpp;
 #include <iomanip>
 using namespace std;
 
-void Clustal::appendAlignmentFromStream(std::istream& input, SiteContainer& sc) const
+void Clustal::appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const
 {
   // Checking the existence of specified file
   if (!input)
@@ -59,8 +59,8 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SiteContainer& sc) 
     throw IOException ("Clustal::read : fail to open file");
   }
 
-  const Alphabet* alpha = sc.getAlphabet();
-  vector<BasicSequence> sequences;
+  auto alphaPtr = sc.getAlphabet();
+  vector< unique_ptr<Sequence> > sequences;
 
   string lineRead("");
 
@@ -95,7 +95,7 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SiteContainer& sc) 
   bool test = true;
   do
   {
-    sequences.push_back(BasicSequence(TextTools::removeSurroundingWhiteSpaces(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_)), lineRead.substr(beginSeq), alpha));
+    sequences.push_back(make_unique<Sequence>(TextTools::removeSurroundingWhiteSpaces(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_)), lineRead.substr(beginSeq), alphaPtr));
     getline(input, lineRead, '\n');
     countSequences++;
     test = !TextTools::isEmpty(lineRead) && !TextTools::isEmpty(lineRead.substr(0, beginSeq - nbSpacesBeforeSeq_));
@@ -112,7 +112,7 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SiteContainer& sc) 
       // Complete sequences
       if (TextTools::isEmpty(lineRead))
         throw IOException("Clustal::read. Bad intput file.");
-      sequences[i].append(lineRead.substr(beginSeq));
+      sequences[i]->append(lineRead.substr(beginSeq));
       getline(input, lineRead, '\n');
     }
     // At this point, lineRead is the first line after the current block.
@@ -121,12 +121,12 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SiteContainer& sc) 
 
   for (unsigned int i = 0; i < countSequences; ++i)
   {
-    sc.addSequence(sequences[i], checkNames_);
+    sc.addSequence(sequences[i]->getName(), sequences[i]);
   }
-  sc.setGeneralComments(comments);
+  sc.setComments(comments);
 }
 
-void Clustal::writeAlignment(std::ostream& output, const SiteContainer& sc) const
+void Clustal::writeAlignment(std::ostream& output, const SiteContainerInterface& sc) const
 {
   output << "CLUSTAL W (1.81) multiple sequence alignment" << endl;
   output << endl;
@@ -137,17 +137,17 @@ void Clustal::writeAlignment(std::ostream& output, const SiteContainer& sc) cons
   size_t length = 0;
   for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
   {
-    const Sequence& seq = sc.getSequence(i);
+    const Sequence& seq = sc.sequence(i);
     if (seq.getName().size() > length)
       length = seq.getName().size();
-    text.push_back(sc.getSequence(i).toString());
+    text.push_back(sc.sequence(i).toString());
   }
   length += nbSpacesBeforeSeq_;
   for (unsigned int j = 0; j < text[0].size(); j += charsByLine_)
   {
     for (unsigned int i = 0; i < sc.getNumberOfSequences(); ++i)
     {
-      output << TextTools::resizeRight(sc.getSequence(i).getName(), length);
+      output << TextTools::resizeRight(sc.sequence(i).getName(), length);
       output << text[i].substr(j, charsByLine_) << endl;
     }
     output << endl;

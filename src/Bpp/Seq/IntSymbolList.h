@@ -45,6 +45,7 @@
 
 #include "Alphabet/Alphabet.h"
 #include "SymbolList.h"
+#include "StringSequenceTools.h"
 
 // From the STL:
 #include <string>
@@ -59,17 +60,17 @@ namespace bpp
  *
  * @see Alphabet
  */
-class IntSymbolList :
-  virtual public SymbolList<int>
+class IntSymbolListInterface :
+  public virtual IntCoreSymbolListInterface
 {
 public:
-  IntSymbolList() :
-    SymbolList<int>(0)
-  {}
-
+  typedef int SymbolType;
+  
+public:
+  IntSymbolListInterface() {}
 
   // Class destructor
-  virtual ~IntSymbolList() {}
+  virtual ~IntSymbolListInterface() {}
 
 public:
   /**
@@ -77,15 +78,14 @@ public:
    *
    */
 
+  using IntCoreSymbolListInterface::setContent;
+
   /**
    * @brief Set the whole content of the list.
    *
    * @param list The new content of the list.
    * @see The list constructor for information about the way lists are internaly stored.
    */
-
-  using SymbolList<int>::setContent;
-
   virtual void setContent(const std::vector<std::string>& list) = 0;
 
   /**
@@ -94,14 +94,14 @@ public:
    * @{
    */
 
+  using IntCoreSymbolListInterface::addElement;
+  using IntCoreSymbolListInterface::setElement;
+
   /**
    * @brief Add a character to the end of the list.
    *
    * @param c The character to add, given as a string.
    */
-
-  using SymbolList<int>::addElement;
-
   virtual void addElement(const std::string& c) = 0;
 
   /**
@@ -118,9 +118,6 @@ public:
    * @param pos The position of the character to set.
    * @param c   The value of the element, given as a string.
    */
-
-  using SymbolList<int>::setElement;
-
   virtual void setElement(size_t pos, const std::string& c) = 0;
 
   /**
@@ -146,75 +143,108 @@ public:
  *
  * @see Alphabet
  */
-
-class BasicIntSymbolList :
-  public virtual IntSymbolList
+class IntSymbolList :
+  public virtual IntSymbolListInterface,
+  public virtual AbstractTemplateSymbolList<int> //This needs to be virtual because of diamond inheritence
 {
 public:
-  BasicIntSymbolList(const Alphabet* alpha) : SymbolList<int>(alpha)
+  IntSymbolList(std::shared_ptr<const Alphabet> alpha) : 
+    AbstractTemplateSymbolList<int>(alpha)
   {}
 
-
   /**
-   * @brief Build a new BasicIntSymbolList object with the specified alphabet.
+   * @brief Build a new IntSymbolList object with the specified alphabet.
    * The content of the site is initialized from a vector of characters.
    *
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  BasicIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
+  IntSymbolList(const std::vector<std::string>& list, std::shared_ptr<const Alphabet> alpha) :
+    AbstractTemplateSymbolList<int>(alpha)
+  {
+    setContent(list);
+  }
 
   /**
-   * @brief Build a new BasicIntSymbolList object with the specified alphabet.
+   * @brief Build a new IntSymbolList object with the specified alphabet.
    * The content of the site is initialized from a vector of integers.
    *
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  BasicIntSymbolList(const std::vector<int>& list, const Alphabet* alpha);
+  IntSymbolList(const std::vector<int>& list, std::shared_ptr<const Alphabet> alpha) :
+    AbstractTemplateSymbolList<int>(list, alpha)
+  {}
 
   /**
    * @brief The copy constructor.
    */
-  BasicIntSymbolList(const BasicIntSymbolList& list);
-
+  IntSymbolList(const IntSymbolList& list):
+      AbstractTemplateSymbolList<int>(list)
+  {}
+	
   /**
    * @brief The generic assignment operator.
    */
-  BasicIntSymbolList& operator=(const IntSymbolList& list);
+  IntSymbolList& operator=(const IntSymbolListInterface& list);
 
   /**
    * @brief The assignment operator.
    */
-  BasicIntSymbolList& operator=(const BasicIntSymbolList& list);
+  IntSymbolList& operator=(const IntSymbolList& list)
+  {
+    AbstractTemplateSymbolList<int>::operator=(list);
+    return *this;
+  }
 
   /**
    * @name The Clonable interface
    *
    * @{
    */
-  BasicIntSymbolList* clone() const { return new BasicIntSymbolList(*this); }
+  IntSymbolList* clone() const override { return new IntSymbolList(*this); }
   /** @} */
 
   // Class destructor
-  virtual ~BasicIntSymbolList() {}
+  virtual ~IntSymbolList() {}
 
 public:
-  void setContent(const std::vector<int>& list);
+  void setContent(const std::vector<int>& list) override;
 
-  void setContent(const std::vector<std::string>& list);
+  void setContent(const std::vector<std::string>& list) override;
 
-  std::string toString() const;
+  std::string toString() const override
+  {
+    auto alphaPtr = getAlphabet();
+    return StringSequenceTools::decodeSequence(content_, alphaPtr);
+  }
 
-  virtual void addElement(const std::string& c);
+  void addElement(const std::string& c) override
+  {
+    content_.push_back(getAlphabet()->charToInt(c));
+  }
 
-  virtual void addElement(size_t pos, const std::string& c);
+  using AbstractTemplateSymbolList::addElement;
 
-  virtual void setElement(size_t pos, const std::string& c);
+  void addElement(size_t pos, const std::string& c) override
+  {
+    if (pos >= content_.size())
+      throw IndexOutOfBoundsException("IntSymbolList::addElement. Invalid position.", pos, 0, size() - 1);
+    content_.insert(content_.begin() + static_cast<ptrdiff_t>(pos), getAlphabet()->charToInt(c));
+  }
 
-  virtual std::string getChar(size_t pos) const;
+  using AbstractTemplateSymbolList::setElement;
+  
+  void setElement(size_t pos, const std::string& c) override
+  {
+    if (pos >= content_.size())
+      throw IndexOutOfBoundsException("IntSymbolList::setElement. Invalid position.", pos, 0, size() - 1);
+    content_[pos] = getAlphabet()->charToInt(c);
+  }
 
-  virtual double getStateValueAt(size_t siteIndex, int state) const
+  std::string getChar(size_t pos) const override;
+
+  double getStateValueAt(size_t siteIndex, int state) const override
   {
     if (siteIndex >= content_.size())
       throw IndexOutOfBoundsException("IntSymbolList::getStateValueAt.", siteIndex, 0, content_.size() - 1);
@@ -222,7 +252,7 @@ public:
     return getAlphabet()->isResolvedIn(content_[siteIndex], state) ? 1. : 0.;
   }
 
-  virtual double operator()(size_t siteIndex, int state) const
+  double operator()(size_t siteIndex, int state) const override
   {
     return getAlphabet()->isResolvedIn(content_[siteIndex], state) ? 1. : 0.;
   }
@@ -251,65 +281,107 @@ typedef CoreSymbolListSubstitutionEvent<int> IntSymbolListSubstitutionEvent;
  * @see Alphabet
  */
 
-class EdIntSymbolList :
-  virtual public EdSymbolList<int>
+class EventDrivenIntSymbolList :
+  public IntSymbolList,
+  public AbstractTemplateEventDrivenSymbolList<int>
 {
 public:
   /**
-   * @brief Build a new void EdIntSymbolList object with the specified alphabet.
+   * @brief Build a new void EventDrivenIntSymbolList object with the specified alphabet.
    *
    * @param alpha The alphabet to use.
    */
-  EdIntSymbolList(const Alphabet* alpha) : EdSymbolList<int>(alpha) {}
-
+  EventDrivenIntSymbolList(std::shared_ptr<const Alphabet> alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
+    IntSymbolList(alpha),
+    AbstractTemplateEventDrivenSymbolList<int>(alpha)
+  {}
 
   /**
-   * @brief Build a new EdIntSymbolList object with the specified alphabet.
+   * @brief Build a new EventDrivenIntSymbolList object with the specified alphabet.
    * The content of the site is initialized from a vector of characters.
    *
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  EdIntSymbolList(const std::vector<std::string>& list, const Alphabet* alpha);
+  EventDrivenIntSymbolList(
+      const std::vector<std::string>& list,
+      std::shared_ptr<const Alphabet> alpha):
+    AbstractTemplateSymbolList<int>(alpha),
+    IntSymbolList(alpha),
+    AbstractTemplateEventDrivenSymbolList<int>(alpha)
+  {
+    setContent(list);
+  }
+
 
   /**
-   * @brief Build a new EdIntSymbolList object with the specified alphabet.
+   * @brief Build a new EventDrivenIntSymbolList object with the specified alphabet.
    * The content of the site is initialized from a vector of integers.
    *
    * @param list     The content of the site.
    * @param alpha    The alphabet to use.
    */
-  EdIntSymbolList(const std::vector<int>& list, const Alphabet* alpha);
+  EventDrivenIntSymbolList(
+      const std::vector<int>& list,
+      std::shared_ptr<const Alphabet> alpha):
+    AbstractTemplateSymbolList<int>(list, alpha),
+    IntSymbolList(list, alpha),
+    AbstractTemplateEventDrivenSymbolList<int>(list, alpha)
+  {}
+
 
   /**
    * @brief The generic copy constructor.
    */
-  EdIntSymbolList(const IntSymbolList& list);
+  EventDrivenIntSymbolList(const IntSymbolList& list) :
+    AbstractTemplateSymbolList<int>(list),
+    IntSymbolList(list),
+    AbstractTemplateEventDrivenSymbolList<int>(list)
+  {}
 
   /**
    * @brief The copy constructor.
    */
-  EdIntSymbolList(const EdIntSymbolList& list);
+  EventDrivenIntSymbolList(const EventDrivenIntSymbolList& list) :
+    AbstractTemplateSymbolList<int>(list),
+    IntSymbolList(list),
+    AbstractTemplateEventDrivenSymbolList<int>(list)
+  {}
+
 
   /**
    * @brief The generic assignment operator.
    */
-  EdIntSymbolList& operator=(const IntSymbolList& list);
+  EventDrivenIntSymbolList& operator=(const IntSymbolList& list)
+  {
+    AbstractTemplateSymbolList<int>::operator=(list);
+    IntSymbolList::operator=(list);
+    AbstractTemplateEventDrivenSymbolList<int>::operator=(list);
+    return *this;
+  }
+
 
   /**
    * @brief The assignment operator.
    */
-  EdIntSymbolList& operator=(const EdIntSymbolList& list);
+  EventDrivenIntSymbolList& operator=(const EventDrivenIntSymbolList& list)
+  {
+    AbstractTemplateSymbolList<int>::operator=(list);
+    IntSymbolList::operator=(list);
+    AbstractTemplateEventDrivenSymbolList<int>::operator=(list);
+    return *this;
+  }
 
   /**
    * @name The Clonable interface
    *
    * @{
    */
-  EdIntSymbolList* clone() const { return new EdIntSymbolList(*this); }
+  EventDrivenIntSymbolList* clone() const { return new EventDrivenIntSymbolList(*this); }
   /** @} */
 
-  ~EdIntSymbolList() {}
+  ~EventDrivenIntSymbolList() {}
 
 public:
   virtual void setContent(const std::vector<std::string>& list);
@@ -318,13 +390,13 @@ public:
 
   virtual std::string toString() const;
 
-  using EdSymbolList<int>::addElement;
+  using AbstractTemplateEventDrivenSymbolList<int>::addElement;
 
   virtual void addElement(const std::string& c);
 
   virtual void addElement(size_t pos, const std::string& c);
 
-  using EdSymbolList<int>::setElement;
+  using AbstractTemplateEventDrivenSymbolList<int>::setElement;
 
   virtual void setElement(size_t pos, const std::string& c);
 

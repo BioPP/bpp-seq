@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/App/ApplicationTools.h>
-#include <Bpp/Seq/Alphabet/RNA.h>
+#include <Bpp/Seq/Alphabet/AlphabetTools.h>
 #include <Bpp/Seq/Sequence.h>
 #include <Bpp/Seq/SequenceWalker.h>
 #include <Bpp/Numeric/Random/RandomTools.h>
@@ -87,11 +87,11 @@ bool testAln(SequenceWalker& walker, unsigned int pos, unsigned int truth) {
 }
 
 int main() {
-  RNA* alpha = new RNA();
-  BasicSequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
+  shared_ptr<const Alphabet> alpha = AlphabetTools::RNA_ALPHABET;
+  Sequence seq1("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
   SequenceWalker walker(seq1);
 
-  for (unsigned int i = 0; i < 27; ++i) {
+  for (size_t i = 0; i < 27; ++i) {
     size_t j = walker.getAlignmentPosition(i);
     cout << i << "\t" << seq1.getChar(j) << "\t" << j << endl;
   }
@@ -104,7 +104,7 @@ int main() {
 
   cout << "_________________________________________________" << endl;
 
-  for (unsigned int i = 0; i < seq1.size(); ++i) {
+  for (size_t i = 0; i < seq1.size(); ++i) {
     cout << i << "\t" << seq1.getChar(i) << "\t" << walker.getSequencePosition(i) << endl;
   }
 

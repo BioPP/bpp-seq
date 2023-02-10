@@ -123,34 +123,34 @@ public:
    * @name The Clonable interface
    * @{
    */
-  SequenceQuality* clone() const { return new SequenceQuality(*this); }
+  SequenceQuality* clone() const override { return new SequenceQuality(*this); }
   /** @} */
 
 public:
-  void init(const Sequence& seq)
+  void init(const Sequence& seq) override
   {
     qualScores_.resize(seq.size());
     std::fill(qualScores_.begin(), qualScores_.end(), DEFAULT_QUALITY_VALUE);
   }
 
-  const std::string& getType() const { return QUALITY_SCORE; }
+  const std::string& getType() const override { return QUALITY_SCORE; }
 
-  bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const
+  bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const override
   {
     if (throwException && qualScores_.size() != sequence.size()) throw Exception("SequenceQuality. Quality scores must match the sequence size.");
     return qualScores_.size() == sequence.size();
   }
 
-  bool isRemovable() const { return removable_; }
-  bool isShared() const { return false; }
-  void beforeSequenceChanged(const IntSymbolListEditionEvent& event) {}
-  void afterSequenceChanged(const IntSymbolListEditionEvent& event);
-  void beforeSequenceInserted(const IntSymbolListInsertionEvent& event) {}
-  void afterSequenceInserted(const IntSymbolListInsertionEvent& event);
-  void beforeSequenceDeleted(const IntSymbolListDeletionEvent& event) {}
-  void afterSequenceDeleted(const IntSymbolListDeletionEvent& event);
-  void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
-  void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
+  bool isRemovable() const override { return removable_; }
+  bool isShared() const override { return false; }
+  void beforeSequenceChanged(const IntSymbolListEditionEvent& event) override {}
+  void afterSequenceChanged(const IntSymbolListEditionEvent& event) override;
+  void beforeSequenceInserted(const IntSymbolListInsertionEvent& event) override {}
+  void afterSequenceInserted(const IntSymbolListInsertionEvent& event) override;
+  void beforeSequenceDeleted(const IntSymbolListDeletionEvent& event) override {}
+  void afterSequenceDeleted(const IntSymbolListDeletionEvent& event) override;
+  void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) override {}
+  void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) override {}
 
   size_t getSize() const { return qualScores_.size(); }
 
@@ -183,7 +183,7 @@ public:
     std::copy(scores.begin(), scores.end(), qualScores_.begin() + static_cast<ptrdiff_t>(pos));
   }
 
-  bool merge(const SequenceAnnotation& anno)
+  bool merge(const SequenceAnnotation& anno) override
   {
     try
     {
@@ -197,13 +197,13 @@ public:
     }
   }
 
-  SequenceQuality* getPartAnnotation(size_t pos, size_t len) const
+  std::unique_ptr<SequenceAnnotation> getPartAnnotation(size_t pos, size_t len) const override
   {
-    return new SequenceQuality(
+    return std::unique_ptr<SequenceAnnotation>(new SequenceQuality(
       std::vector<int>(
         qualScores_.begin() + static_cast<ptrdiff_t>(pos),
         qualScores_.begin() + static_cast<ptrdiff_t>(pos + len)),
-      removable_);
+      removable_));
   }
 };
 
@@ -236,9 +236,8 @@ public:
    * @throw BadCharException if a state is not alowed by the Alphabet
    */
   SequenceWithQuality(
-    const Alphabet* alpha
-    ) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(alpha),
     qualScores_(new SequenceQuality(0, false))
   {
@@ -260,8 +259,8 @@ public:
   SequenceWithQuality(
     const std::string& name,
     const std::string& sequence,
-    const Alphabet* alpha) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
   {
@@ -287,8 +286,8 @@ public:
     const std::string& name,
     const std::string& sequence,
     const Comments& comments,
-    const Alphabet* alpha) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
   {
@@ -314,8 +313,8 @@ public:
     const std::string& name,
     const std::string& sequence,
     const std::vector<int>& quality,
-    const Alphabet* alpha) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(quality, false))
   {
@@ -345,8 +344,8 @@ public:
     const std::string& sequence,
     const std::vector<int>& quality,
     const Comments& comments,
-    const Alphabet* alpha) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(quality, false))
   {
@@ -368,8 +367,8 @@ public:
   SequenceWithQuality(
     const std::string& name,
     const std::vector<int>& sequence,
-    const Alphabet* alpha) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
   {
@@ -395,8 +394,8 @@ public:
     const std::string& name,
     const std::vector<int>& sequence,
     const Comments& comments,
-    const Alphabet* alpha) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
   {
@@ -422,8 +421,8 @@ public:
     const std::string& name,
     const std::vector<int>& sequence,
     const std::vector<int>& quality,
-    const Alphabet* alpha) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(quality, false))
   {
@@ -453,8 +452,8 @@ public:
     const std::vector<int>& sequence,
     const std::vector<int>& quality,
     const Comments& comments,
-    const Alphabet* alpha) :
-    EdSymbolList<int>(alpha),
+    std::shared_ptr<const Alphabet>& alpha) :
+    AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(quality, false))
   {
@@ -470,7 +469,7 @@ public:
    * @param s The Sequence object
    */
   SequenceWithQuality(const Sequence& s) :
-    EdSymbolList<int>(s.getAlphabet()),
+    AbstractTemplateSymbolList<int>(s.getAlphabet()),
     SequenceWithAnnotation(s), qualScores_(new SequenceQuality(s.size(), false))
   {
     addAnnotation(qualScores_);
@@ -491,7 +490,7 @@ public:
   SequenceWithQuality(
     const Sequence& s,
     const std::vector<int>& sc) :
-    EdSymbolList<int>(sc, s.getAlphabet()),
+    AbstractTemplateSymbolList<int>(sc, s.getAlphabet()),
     SequenceWithAnnotation(s),
     qualScores_(new SequenceQuality(sc, false))
   {
@@ -508,7 +507,7 @@ public:
   /** @} */
 
   SequenceWithQuality(const SequenceWithQuality& sequence) :
-    EdSymbolList<int>(sequence.getAlphabet()),
+    AbstractTemplateSymbolList<int>(sequence.getAlphabet()),
     SequenceWithAnnotation(sequence), qualScores_(0)
   {
     qualScores_ = dynamic_cast<SequenceQuality*>(&getAnnotation(SequenceQuality::QUALITY_SCORE));
@@ -525,7 +524,7 @@ public:
    * @name The Clonable interface
    * @{
    */
-  SequenceWithQuality* clone() const { return new SequenceWithQuality(*this); }
+  SequenceWithQuality* clone() const override { return new SequenceWithQuality(*this); }
   /** @} */
 
   /**
@@ -672,8 +671,7 @@ public:
    * @throw BadCharException if one of the character of the string is not in
    * the Alphabet
    */
-
-  using CoreSymbolList<int>::addElement;
+  using IntCoreSymbolListInterface::addElement;
   void addElement(const std::string& c, int q)
   {
     SequenceWithAnnotation::addElement(c);
@@ -699,7 +697,7 @@ public:
     qualScores_->setScore(pos, q);
   }
 
-  using EdSymbolList<int>::addElement;
+  using EventDrivenIntSymbolList::addElement;
 
   /**
    * @brief Add a character to the end of the list with quality
@@ -711,7 +709,7 @@ public:
    */
   void addElement(int v, int q)
   {
-    EdSymbolList<int>::addElement(v);
+    EventDrivenIntSymbolList::addElement(v);
     qualScores_->setScore(size() - 1, q);
   }
 
@@ -728,17 +726,17 @@ public:
    */
   void addElement(size_t pos, int v, int q)
   {
-    EdSymbolList<int>::addElement(pos, v);
+    IntSymbolList::addElement(pos, v);
     qualScores_->setScore(pos, q);
   }
 
   /** @} */
 
-  const Comments& getComments() const { return Commentable::getComments(); }
+  //const Comments& getComments() const { return Commentable::getComments(); }
 
-  void setComments(const Comments& comments) { Commentable::setComments(comments); }
+  //void setComments(const Comments& comments) { Commentable::setComments(comments); }
 
-  void clearComments() { Commentable::clearComments(); }
+  //void clearComments() { Commentable::clearComments(); }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCEWITHQUALITY_H

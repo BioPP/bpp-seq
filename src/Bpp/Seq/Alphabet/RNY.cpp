@@ -51,23 +51,23 @@ using namespace bpp;
 
 /****************************************************************************************/
 
-RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
+RNY::RNY(shared_ptr<const NucleicAlphabet> na) : nuclalph_(na)
 {
   // Initialization:
-  vector<AlphabetState*> states(350,nullptr);
+  vector<AlphabetState*> states(351, nullptr);
 
   // Alphabet content definition:
 
   string s1;
 
-  if (AlphabetTools::isDNAAlphabet(&na))
+  if (AlphabetTools::isDNAAlphabet(na.get()))
     s1 = "RCT-";
   else
     s1 = "RCU-";
 
   string s2;
 
-  if (AlphabetTools::isDNAAlphabet(&na))
+  if (AlphabetTools::isRNAAlphabet(na.get()))
     s2 = "AGCT-";
   else
     s2 = "AGCU-";
@@ -190,7 +190,7 @@ RNY::RNY(const NucleicAlphabet& na) : nuclalph_(na)
 vector<int> RNY::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "RNY::getAlias(int): Specified base unknown.");
+    throw BadIntException(state, "RNY::getAlias(int): Specified base unknown.", this);
   vector<int> v;
 
   int qs = state / 50;
@@ -276,13 +276,13 @@ vector<int> RNY::getAlias(int state) const
 bool RNY::isResolvedIn(int state1, int state2) const
 {
   if (!isIntInAlphabet(state1))
-    throw BadIntException(state1, "RNY::isResolvedIn(int, int): Specified base unknown.");
+    throw BadIntException(state1, "RNY::isResolvedIn(int, int): Specified base unknown.", this);
 
   if (!isIntInAlphabet(state2))
-    throw BadIntException(state2, "RNY::isResolvedIn(int, int): Specified base unknown.");
+    throw BadIntException(state2, "RNY::isResolvedIn(int, int): Specified base unknown.", this);
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "RNY::isResolvedIn(int, int): Unresolved base.");
+    throw BadIntException(state2, "RNY::isResolvedIn(int, int): Unresolved base.", this);
 
   int qs = state1 / 50;
   int rs = state1 % 50;
@@ -306,13 +306,8 @@ bool RNY::isResolvedIn(int state1, int state2) const
   case 7: // ---
     return state2 >= 0;
   default:
-    throw BadIntException(state1, "RNY:isResolvedIn : this sould not happen.");
+    throw BadIntException(state1, "RNY:isResolvedIn : this sould not happen.", this);
   }
-}
-
-const NucleicAlphabet& RNY::getLetterAlphabet() const
-{
-  return nuclalph_;
 }
 
 /****************************************************************************************/
@@ -320,7 +315,7 @@ const NucleicAlphabet& RNY::getLetterAlphabet() const
 vector<string> RNY::getAlias(const string& state) const
 {
   if (!isCharInAlphabet(state))
-    throw BadCharException(state, "RNY::getAlias(int): Specified base unknown.");
+    throw BadCharException(state, "RNY::getAlias(int): Specified base unknown.", this);
 
   vector<int> v = getAlias(charToInt(state));
   vector<string> s;
@@ -358,12 +353,12 @@ string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) c
 }
 
 /**************************************************************************************/
+
 int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
 {
   if (!AlphabetTools::isNucleicAlphabet(&alph))
   {
-    throw AlphabetException ("RNY::getRNY : Sequence must be Nucleic",
-                             &alph);
+    throw AlphabetException("RNY::getRNY : Sequence must be Nucleic", &alph);
   }
 
   char li = alph.intToChar(i)[0];
@@ -391,7 +386,7 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
     s += 1;
     break;
   default:
-    throw BadCharException(&li, "RNY::getRNY(int,int;int,alph): Specified base unknown.");
+    throw BadCharException(&li, "RNY::getRNY(int,int;int,alph): Specified base unknown.", this);
   }
 
   r *= 4;
@@ -417,7 +412,7 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
     s += 1;
     break;
   default:
-    throw BadCharException(&lj, "RNY::getRNY(int,int;int,alph): Specified base unknown.");
+    throw BadCharException(&lj, "RNY::getRNY(int,int;int,alph): Specified base unknown.", this);
   }
 
   r *= 3;
@@ -441,7 +436,7 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
     s += 1;
     break;
   default:
-    throw BadCharException(&lk, "RNY::getRNY(int,int;int,alph): Specified base unknown.");
+    throw BadCharException(&lk, "RNY::getRNY(int,int;int,alph): Specified base unknown.", this);
   }
 
   return 50 * s + r;

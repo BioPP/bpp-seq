@@ -45,47 +45,60 @@
 
 #include "../Alphabet/Alphabet.h"
 #include "../Sequence.h"
+#include "../ProbabilisticSequence.h"
 #include "AbstractSequenceContainer.h"
 #include "VectorMappedContainer.h"
 
 // From the STL:
 #include <algorithm>
 #include <vector>
+#include <memory>
 
 namespace bpp
 {
 /**
  * @brief The VectorSequenceContainer class.
  *
- * This is the simplest implementation of the OrderedSequenceContainer interface.
+ * This is the simplest implementation of the SequenceContainer interface.
  * std::shared_ptr<Sequence> are stored in a std::vector, as well as in a std::map.
- *
- * 
- * 
  */
-
-class VectorSequenceContainer :
-  virtual public AbstractSequenceContainer,
-  virtual public VectorMappedContainer<Sequence>
+template<class SequenceType>
+class TemplateVectorSequenceContainer :
+  public AbstractTemplateSequenceContainer<SequenceType, std::string>
 {
+protected:
+  VectorMappedContainer<SequenceType> sequenceVectorMap_;
+
 public:
 
   /**
-   * @brief Build a container with shared Sequences.
+   * @brief Build a container with pointers to sequence objects.
    *
-   * The keys of the map are the names of the Sequences
+   * The keys of the map are set to the names of the sequences.
    *
+   * @param alphabet The alphabet of the container.
+   * @param vs       A vector of smart pointers toward sequence objects.
    */
-  
-  VectorSequenceContainer(
-    const std::vector<std::shared_ptr<Sequence>>& vs, const Alphabet* alpha);
+  TemplateVectorSequenceContainer(
+      std::shared_ptr<const Alphabet> alphabet,
+      std::vector<std::unique_ptr<SequenceType>>& vs):
+    AbstractTemplateSequenceContainer<SequenceType, std::string>(alphabet),
+    sequenceVectorMap_()
+  {
+    for (auto& seqPtr : vs) {
+      addSequence(seqPtr->getName(), seqPtr);
+    }
+  }
 
   /**
    * @brief Build an empty container that will contain sequences of a particular alphabet.
    *
-   * @param alpha The alphabet of the container.
+   * @param alphabet The alphabet of the container.
    */
-  VectorSequenceContainer(const Alphabet* alpha) : AbstractSequenceContainer(alpha), VectorMappedContainer<Sequence>() {}
+  TemplateVectorSequenceContainer(std::shared_ptr<const Alphabet> alphabet) :
+      AbstractTemplateSequenceContainer<SequenceType>(alphabet),
+      sequenceVectorMap_()
+  {}
 
   /**
    * @name Copy contructors:
@@ -97,32 +110,40 @@ public:
    * @brief Copy from a VectorSequenceContainer.
    *
    * @param vsc The VectorSequenceContainer to copy into this container.
-   *
    */
-  
-  VectorSequenceContainer(const VectorSequenceContainer& vsc);
+  TemplateVectorSequenceContainer(
+      const TemplateVectorSequenceContainer<SequenceType>& vsc):
+    AbstractTemplateSequenceContainer<SequenceType, std::string>(vsc),
+    sequenceVectorMap_()
+  {
+    size_t max = vsc.getNumberOfSequences();
+    for (size_t i = 0; i < max; ++i)
+    {
+      auto seqPtr = std::unique_ptr<SequenceType>(vsc.sequence(i).clone());
+      addSequence(vsc.sequenceKey(i), seqPtr);
+    }
+  }
 
-  /**
-   * @brief Copy from an OrderedSequenceContainer.
-   *
-   * @param osc The OrderedSequenceContainer to copy into this container.
-   *
-   * The keys of the map are the names of the Sequences
-   *
-   */
 
-  VectorSequenceContainer(const OrderedSequenceContainer& osc);
 
   /**
    * @brief Copy from a SequenceContainer.
    *
-   * @param osc The SequenceContainer to copy into this container.
-   *
-   * The keys of the map are the names of the Sequences
-   *
+   * @param sc The SequenceContainer to copy into this container.
    */
+  TemplateVectorSequenceContainer(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc):
+    AbstractTemplateSequenceContainer<SequenceType>(sc.getAlphabet()),
+    sequenceVectorMap_()
+  {
+    size_t max = sc.getNumberOfSequences();
+    for (size_t i = 0; i < max; ++i)
+    {
+      auto seqPtr = std::unique_ptr<SequenceType>(sc.sequence(i).clone());
+      addSequence(sc.sequenceKey(i), seqPtr);
+    }
+    setComments(sc.getComments());
+  }
 
-  VectorSequenceContainer(const SequenceContainer& osc);
 
   /** @} */
 
@@ -131,33 +152,41 @@ public:
    *
    * @param vsc The VectorSequenceContainer to copy into this container.
    */
-  VectorSequenceContainer& operator=(const VectorSequenceContainer& vsc);
-
-  /**
-   * @brief Copy from an OrderedSequenceContainer.
-   *
-   * @param osc The OrderedSequenceContainer to copy into this container.
-   *
-   * The keys of the map are the names of the Sequences
-   *
-   */
-  
-  VectorSequenceContainer& operator=(const OrderedSequenceContainer& osc);
+  TemplateVectorSequenceContainer& operator=(const TemplateVectorSequenceContainer& vsc)
+  {
+    clear();
+    AbstractTemplateSequenceContainer<SequenceType>::operator=(vsc);
+    size_t max = vsc.getNumberOfSequences();
+    for (size_t i = 0; i < max; i++)
+    {
+      addSequence(vsc.getSequenceKey(i), vsc.getSequence(i));
+    }
+    return *this;
+  }
 
   /**
    * @brief Copy from a SequenceContainer.
    *
-   * @param osc The SequenceContainer to copy into this container.
-   *
-   * The keys of the map are the names of the Sequences
-   *
+   * @param sc The SequenceContainer to copy into this container.
    */
-  
-  VectorSequenceContainer& operator=(const SequenceContainer& osc);
-
-  void clear()
+  TemplateVectorSequenceContainer& operator=(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc)
   {
-    VectorMappedContainer<Sequence>::clear();
+    clear();
+    AbstractTemplateSequenceContainer<SequenceType>::operator=(sc);
+    size_t max = sc.getNumberOfSequences();
+    for (size_t i = 0; i < max; i++)
+    {
+      addSequence(sc.getSequenceKey(i), sc.getSequence(i));
+    }
+    setComments(sc.getComments());
+    return *this;
+  }
+
+  virtual ~TemplateVectorSequenceContainer() {}
+  
+  void clear() override
+  {
+    sequenceVectorMap_.clear();
   }
 
 public:
@@ -166,382 +195,213 @@ public:
    *
    * @{
    */
-  VectorSequenceContainer* clone() const { return new VectorSequenceContainer(*this); }
+  TemplateVectorSequenceContainer<SequenceType>* clone() const override { return new TemplateVectorSequenceContainer<SequenceType>(*this); }
   /** @} */
+
+
 
   /**
    * @name The SequenceContainer interface.
    *
    * @{
    */
+  using AbstractTemplateSequenceContainer<SequenceType, std::string>::getAlphabet;
+  using AbstractTemplateSequenceContainer<SequenceType, std::string>::getComments;
+  using AbstractTemplateSequenceContainer<SequenceType, std::string>::setComments;
 
-  /**
-   * @brief check if there is a Sequence with this name in the map
-   * (same as hasSequenceByKey).
-   *
-   */
-  
-  bool hasSequence(const std::string& name) const
+  TemplateVectorSequenceContainer<SequenceType>* createEmptyContainer() const override 
   {
-    return hasSequenceByKey(name);
+    auto alphaPtr = getAlphabet();
+    TemplateVectorSequenceContainer<SequenceType>* vsc = new TemplateVectorSequenceContainer<SequenceType>(alphaPtr);
+    vsc->setComments(getComments());
+    return vsc;
+  }
+ 
+  double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const override
+  {
+    return sequence(sequenceKey).getStateValueAt(sitePosition, state);
   }
 
-  bool hasSequenceByName(const std::string& name) const;
-
-  /**
-   * @brief check if there is a Sequence with this key in the map.
-   *
-   */
-  
-  bool hasSequenceByKey(const std::string& name) const
+  double operator()(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
-    return hasObject(name);
+    return sequence(sequenceKey)(sitePosition, state);
   }
 
-  /**
-   * @brief get the Sequence with this name in the map (same as
-   * getSequenceByKey).
-   *
-   */
-
-  const Sequence& getSequence(const std::string& name) const
+  double getStateValueAt(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    return getSequenceByKey(name);
+    return sequence(sequencePosition).getStateValueAt(sitePosition, state);
   }
 
-  const Sequence& getSequenceByName(const std::string& name) const;
-
-  /**
-   * @brief check if there is a Sequence with this key in the map.
-   *
-   */
-  
-  const Sequence& getSequenceByKey(const std::string& name) const
+  double operator()(size_t sitePosition, size_t sequencePosition, int state) const override
   {
-    return *getObject(name);
+    return sequence(sequencePosition)(sitePosition, state);
+  }
+ 
+  size_t getNumberOfSequences() const override
+  { 
+    return sequenceVectorMap_.getSize();
+  }
+ 
+  std::vector<std::string> getSequenceKeys() const override
+  { 
+    return sequenceVectorMap_.getObjectNames();
   }
 
-  /**
-   * @brief Copy a Sequence to the given key in the map.
-   *
-   */
-  
-  void setSequence(const std::string& name, const Sequence& sequence, bool checkName = true)
+  void setSequenceKeys(const std::vector<std::string>& sequenceKeys) override
   {
-    setSequence(getSequencePosition(name), sequence, checkName);
+    sequenceVectorMap_.setObjectNames(sequenceKeys);
   }
 
-  /**
-   * @brief get the Sequence with this name in the map (same as
-   * removeSequenceByKey).
-   *
-   */
-
-  std::shared_ptr<Sequence> removeSequence(const std::string& name)
-  {
-    return removeSequenceByKey(name);
+  const std::string& sequenceKey(size_t sequencePosition) const override
+  { 
+    return sequenceVectorMap_.getObjectName(sequencePosition);
   }
 
-  /**
-   * @brief remove & return a Sequence with this key from the map.
-   *
-   */
-  
-  std::shared_ptr<Sequence> removeSequenceByKey(const std::string& name)
+  size_t getSequencePosition(const std::string& sequenceKey) const override
   {
-    return removeSequence(getSequencePosition(name));
+    return sequenceVectorMap_.getObjectPosition(sequenceKey);
   }
 
-  /**
-   * @brief remove & return a Sequence with this name.
-   *
-   */
-  
-  std::shared_ptr<Sequence> removeSequenceByName(const std::string& name);
-
-  /**
-   * @brief delete the Sequence with this name in the map (same as
-   * deleteSequenceByKey).
-   *
-   */
-
-  void deleteSequence(const std::string& name)
+  const typename SequenceType::ElementType& valueAt(const std::string& sequenceKey, size_t elementPosition) const override
   {
-    deleteSequenceByKey(name);
+    return sequence(sequenceKey)[elementPosition];
   }
 
-  void deleteSequence(size_t pos)
+  const typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t elementPosition) const override
   {
-    deleteObject(pos);
+    return sequence(sequencePosition)[elementPosition];
   }
 
-  /**
-   * @brief remove & return a Sequence with this key from the map.
-   *
-   */
-  
-  void deleteSequenceByKey(const std::string& name)
+  bool hasSequence(const std::string& sequenceKey) const override
   {
-    deleteSequence(getSequencePosition(name));
+    return sequenceVectorMap_.hasObject(sequenceKey);
   }
 
-  /**
-   * @brief remove & return a Sequence with this name.
-   *
-   */
-  void deleteSequenceByName(const std::string& name);
-
-  /**
-   * @return The list of key used to index the sequences.
-   */
-  std::vector<std::string> getKeys() const { return getObjectNames(); }
-
-  size_t getNumberOfSequences() const { return getSize(); }
-
-  
-  /**
-   * @brief get Sequences proper names (may be different from the keys
-   * used to store them in the map), in the order of the vector.
-   *
-   */
-  
-  std::vector<std::string> getSequenceNames() const;
-
-  /**
-   * @brief get Sequences keys (ie the strings used to store them in
-   * the map, may be different from their proper names), in the order of the vector.
-   *
-   */
-  
-  std::vector<std::string> getSequenceKeys() const
+  const SequenceType& sequence(const std::string& sequenceKey) const override
   {
-    return getObjectNames();
+    return *sequenceVectorMap_.getObject(sequenceKey);
   }
 
-  /**
-   * @brief set the proper names of the Sequences, in the order of the
-   * vector.
-   *
-   */
-  
-  void setSequenceNames(const std::vector<std::string>& names, bool checkNames = true);
-
-  VectorSequenceContainer* createEmptyContainer() const;
-
-  /**
-   * @brief Get the value of an element, given sequenceName in the map
-   * and the elementIndex position.
-   *
-   */
-  
-  int& valueAt(const std::string& sequenceName, size_t elementIndex)
+  void setSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) override
   {
-    return getSequence_(sequenceName)[elementIndex];
+    setSequence(getSequencePosition(sequenceKey), sequencePtr);
   }
 
-  /**
-   * @brief Get the value at a Position in a Sequence with given
-   * sequenceName in the map (may be not the actual name of the
-   * Sequence..
-   *
-   */
-  
-  const int& valueAt(const std::string& key, size_t elementIndex) const
+  void addSequence(const std::string& sequenceKey, std::unique_ptr<SequenceType>& sequencePtr) override
   {
-    return getSequenceByKey(key)[elementIndex];
+    if (sequencePtr->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets do not match.", getAlphabet(), sequencePtr->getAlphabet());
+
+    std::shared_ptr<SequenceType> sequencePtr2(sequencePtr.release(), SwitchDeleter<SequenceType>());
+    sequenceVectorMap_.appendObject(sequencePtr2, sequenceKey, true);
+  }
+ 
+  std::unique_ptr<SequenceType> removeSequence(const std::string& sequenceKey) override
+  {
+    std::shared_ptr<SequenceType> ptr = sequenceVectorMap_.removeObject(sequenceKey);
+    std::get_deleter<SwitchDeleter<SequenceType>, SequenceType>(ptr)->off();
+    return(std::unique_ptr<SequenceType>(ptr.get())); //Not elegant but safe because of the complete encapsulation.
   }
 
-  int& operator()(const std::string& sequenceName, size_t elementIndex)
+  void deleteSequence(const std::string& sequenceKey) override
   {
-    return getSequence_(sequenceName)[elementIndex];
+    sequenceVectorMap_.deleteObject(sequenceKey);
   }
 
-  const int& operator()(const std::string& sequenceName, size_t elementIndex) const
+  void deleteSequence(size_t sequencePosition) override
   {
-    return getSequence(sequenceName)[elementIndex];
+    sequenceVectorMap_.deleteObject(sequencePosition);
   }
 
-  int& valueAt(size_t sequenceIndex, size_t elementIndex)
+  const SequenceType& sequence(size_t sequencePosition) const override
   {
-    return getSequence_(sequenceIndex)[elementIndex];
+    return *sequenceVectorMap_.getObject(sequencePosition);
   }
 
-  const int& valueAt(size_t sequenceIndex, size_t elementIndex) const
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr) override
   {
-    return getSequence(sequenceIndex)[elementIndex];
+    if (sequencePtr->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequencePtr->getAlphabet());
+
+    sequenceVectorMap_.addObject(std::move(sequencePtr), sequencePosition, sequenceKey(sequencePosition), false);
   }
 
-  int& operator()(size_t sequenceIndex, size_t elementIndex)
+  void setSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const std::string& sequenceKey) override
   {
-    return getSequence_(sequenceIndex)[elementIndex];
-  }
-  const int& operator()(size_t sequenceIndex, size_t elementIndex) const
-  {
-    return getSequence(sequenceIndex)[elementIndex];
-  }
-  /** @} */
+    if (sequencePtr->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequencePtr->getAlphabet());
 
-
-  /**
-   * @name The OrderedSequenceContainer interface.
-   *
-   * @{
-   */
-
-  
-  size_t getSequencePosition(const std::string& name) const
-  {
-    return getObjectPosition(name);
+    sequenceVectorMap_.addObject(std::move(sequencePtr), sequencePosition, sequenceKey, false);
   }
 
-  const Sequence& getSequence(size_t sequenceIndex) const
+  void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequencePtr, const std::string& sequenceKey) override
   {
-    return *getObject(sequenceIndex);
+    if (sequencePtr->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+      throw AlphabetMismatchException("VectorSequenceContainer::insertSequence : Alphabets don't match", getAlphabet(), sequencePtr->getAlphabet());
+
+    sequenceVectorMap_.insertObject(std::move(sequencePtr), sequencePosition, sequenceKey);
   }
 
-  void  setSequence(size_t sequenceIndex, const Sequence& sequence, bool checkName = true)
+  std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition) override
   {
-    if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::setSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
-
-    addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
+    std::shared_ptr<SequenceType> ptr = sequenceVectorMap_.removeObject(sequencePosition);
+    std::get_deleter<SwitchDeleter<SequenceType>, SequenceType>(ptr)->off();
+    return(std::unique_ptr<SequenceType>(ptr.get())); //Not elegant but safe because of the complete encapsulation.
   }
 
-  std::shared_ptr<Sequence> removeSequence(size_t sequenceIndex)
+ 
+  std::vector<std::string> getSequenceNames() const override
   {
-    return removeObject(sequenceIndex);
+    size_t nbSeq = getNumberOfSequences();
+    std::vector<std::string> vs(nbSeq);
+    for (size_t i = 0; i < nbSeq; ++i) {
+      vs[i] = sequence(i).getName();
+    }
+    return vs;
   }
 
-  void setComments(size_t sequenceIndex, const Comments& comments)
+  void setSequenceNames(const std::vector<std::string>& names, bool updateKeys) override
   {
-    getSequence_(sequenceIndex).setComments(comments);
+    if (names.size() != getNumberOfSequences())
+      throw DimensionException("VectorSequenceContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
+    for (size_t i = 0; i < names.size(); ++i)
+    {
+      getSequence_(i).setName(names[i]);
+    }
+    if (updateKeys) {
+      sequenceVectorMap_.setObjectNames(names);
+    }
+  }
+
+  std::vector<Comments> getSequenceComments() const override
+  {
+    size_t nbSeq = getNumberOfSequences();
+    std::vector<Comments> vs(nbSeq);
+    for (size_t i = 0; i < nbSeq; ++i) {
+      vs[i] = sequence(i).getComments();
+    }
+    return vs;
   }
 
   /** @} */
 
+
+
   /**
-   * @name Add sequence to this container.
+   * @brief Add a sequence to the container, using its name as a key.
    *
-   * @{
+   * @param sequence  The sequence to add.
    */
-
-  /**
-   * @brief Add a sequence at the end of the container.
-   *
-   * The sequence is copied into the container.
-   * If checkNames is set to true, the method check if the name of the
-   * sequence is already used in the container, and sends an exception if it
-   * is the case. Otherwise, do not check the name: the method is hence faster,
-   * but use it at your own risks!
-   *
-   * @param sequence The sequence to add.
-   * @param checkName Tell if the method must check the name of the sequence
-   * before adding it.
-   */
-
-  virtual void addSequence(const Sequence& sequence, bool checkName = true)
+  virtual void addSequence(std::unique_ptr<SequenceType>& sequencePtr)
   {
-    if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
-
-    appendObject(std::shared_ptr<Sequence>(sequence.clone()), sequence.getName(), checkName);
+    addSequence(sequencePtr->getName(), sequencePtr);
   }
-
-  /**
-   * @brief Add a sequence with a given key at the end of the container.
-   *
-   * The sequence is copied into the container.
-   * If checkNames is set to true, the method check if the name of the
-   * sequence is already used in the container, and sends an exception if it
-   * is the case. Otherwise, do not check the name: the method is hence faster,
-   * but use it at your own risks!
-   *
-   * @param sequence The sequence to add.
-   * @param key the key in the map
-   */
-
-  virtual void addSequence(const Sequence& sequence, const std::string& key)
-  {
-    if (sequence.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence.getAlphabet());
-
-    appendObject(std::shared_ptr<Sequence>(sequence.clone()), key, false);
-  }
-
-  /**
-  * @brief Add a sequence at the end of the container.
-  *
-  * The sequence is shared with the container.
-  * If checkNames is set to true, the method check if the name of the
-  * sequence is already used in the container, and sends an exception if it
-  * is the case. Otherwise, do not check the name: the method is hence faster,
-  * but use it at your own risks!
-  *
-  * @param sequence The sequence to add.
-  * @param checkName Tell if the method must check the name of the sequence
-  * before adding it.
-  * @throw Exception If the sequence couldn't be added to the container.
-  */
-
-  virtual void addSequence(const std::shared_ptr<Sequence> sequence, bool checkName = true)
-  {
-    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("VectorSequenceContainer::addSequence : Alphabets don't match", getAlphabet(), sequence->getAlphabet());
-
-    appendObject(sequence, sequence->getName(), checkName);
-  }
-
-  /**
-   * @brief Add a sequence to the container at a particular position.
-   *
-   * The sequence is copied into the container.
-   * If checkName is set to true, the method check if the name of the
-   * sequence is already used in the container, and sends an exception if it
-   * is the case. Otherwise, do not check the name: the method is hence faster,
-   * but use it at your own risks!
-   *
-   * @param sequence The sequence to add.
-   * @param sequenceIndex The position where to insert the new sequence.
-   * All the following sequences will be pushed.
-   * @param checkName Tell if the method must check the name of the sequence
-   * before adding it.
-   * @throw Exception If the sequence couldn't be added to the container.
-   */
-  virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, bool checkName = true)
-  {
-    addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, sequence.getName(), checkName);
-  }
-
-  /**
-   * @brief Add a sequence to the container at a particular position with a given key
-   *
-   * The sequence is copied into the container.
-   * If checkName is set to true, the method check if the name of the
-   * sequence is already used in the container, and sends an exception if it
-   * is the case. Otherwise, do not check the name: the method is hence faster,
-   * but use it at your own risks!
-   *
-   * @param sequence The sequence to add.
-   * @param key the key in the map
-   * @param sequenceIndex The position where to insert the new sequence.
-   * All the following sequences will be pushed.
-   * @throw Exception If the sequence couldn't be added to the container.
-   */
-  
-  virtual void addSequence(const Sequence& sequence, size_t sequenceIndex, const std::string& key)
-  {
-    addObject(std::shared_ptr<Sequence>(sequence.clone()), sequenceIndex, key);
-  }
-
+ 
 protected:
-  /**
-   * @name AbstractSequenceContainer methods.
-   *
-   * @{
-   */
-  Sequence& getSequence_(size_t i)
+
+  virtual SequenceType& getSequence_(size_t sequencePosition)
   {
-    return *getObject(i);
+    return *sequenceVectorMap_.getObject(sequencePosition);
   }
 
 
@@ -550,66 +410,18 @@ protected:
    *
    */
   
-  Sequence& getSequence_(const std::string& key)
+  virtual SequenceType& getSequence_(const std::string& sequenceKey)
   {
-    return *getObject(key);
+    return *sequenceVectorMap_.getObject(sequenceKey);
   }
 
   /** @} */
 
-  /**
-   * @name SequencedValuesContainer methods.
-   *
-   * @{
-   */
-
-  /**
-   * @brief get Value at given state with given key in the Sequence Map
-   *
-   */
-  
-  double getStateValueAt(size_t siteIndex, const std::string& sequenceName, int state) const
-  {
-    return getSequence(sequenceName).getStateValueAt(siteIndex, state);
-  }
-
-  double operator()(size_t siteIndex, const std::string& sequenceName, int state) const
-  {
-    return getSequence(sequenceName)(siteIndex, state);
-  }
-
-  /*
-   *
-   * @}
-   *
-   */
-
-  /**
-   * @name OrderedValuesContainer methods.
-   *
-   * @{
-   */
-  double getStateValueAt(size_t siteIndex, size_t sequenceIndex, int state) const
-  {
-    if (sequenceIndex >= getNumberOfSequences()) throw IndexOutOfBoundsException("VectorSequenceContainer::getStateValueAt.", sequenceIndex, 0, getNumberOfSequences() - 1);
-    const Sequence& seq = getSequence(sequenceIndex);
-
-    if (siteIndex >= seq.size())
-      throw IndexOutOfBoundsException("VectorSequenceContainer::getStateValueAt.", siteIndex, 0, seq.size() - 1);
-
-    return getAlphabet()->isResolvedIn(seq[siteIndex], state) ? 1. : 0.;
-  }
-
-  double operator()(size_t siteIndex, size_t sequenceIndex, int state) const
-  {
-    return getAlphabet()->isResolvedIn(getSequence(sequenceIndex)[siteIndex], state) ? 1. : 0.;
-  }
-
-  /*
-   *
-   * @}
-   *
-   */
 };
+
+//Aliases:
+using VectorSequenceContainer = TemplateVectorSequenceContainer<Sequence>;
+using ProbabilisticVectorSequenceContainer = TemplateVectorSequenceContainer<ProbabilisticSequence>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORSEQUENCECONTAINER_H

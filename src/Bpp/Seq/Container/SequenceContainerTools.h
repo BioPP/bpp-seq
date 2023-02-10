@@ -50,8 +50,11 @@
 #include <map>
 #include <memory>
 
+#include <Bpp/Numeric/VectorTools.h>
+#include "../SymbolListTools.h"
 #include "SequenceContainer.h"
-#include "OrderedSequenceContainer.h"
+#include "VectorSequenceContainer.h"
+#include "../Alphabet/CodonAlphabet.h"
 
 namespace bpp
 {
@@ -67,6 +70,35 @@ public:
   virtual ~SequenceContainerTools() {}
 
 public:
+
+  /**
+   * @name Work with sequence names
+   *
+   * Note that in case the container is indexed by sequence names, methods working directly on sequence keys will be more efficient!
+   *
+   * @{
+   */
+
+  /**
+   * @brief Tells whether a sequence with the given name is present in the container.
+   *
+   * @param sc The sequence container to check.
+   * @param name The query sequence name.
+   */
+  template<class SequenceType, class HashType>
+  static bool hasSequenceWithName(const TemplateSequenceContainerInterface<SequenceType, HashType>& sc, const std::string& name)
+  {
+    size_t nbSeq = sc.getNumberOfSequences();
+    for (size_t i = 0; i < nbSeq; ++i) {
+      if (sc.getSequence(i).getName() == name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** @} */
+  
   /**
    * @brief Create a container with @f$n@f$ void sequences.
    *
@@ -78,7 +110,18 @@ public:
    * @param size     The number of sequences in the container.
    * @return A pointer toward a newly created container.
    */
-  static SequenceContainer* createContainerOfSpecifiedSize(const Alphabet* alphabet, size_t size);
+  template<class SequenceType, class HashType>
+  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType, HashType> > createContainerOfSpecifiedSize(std::shared_ptr<const Alphabet>& alphabet, size_t size)
+  {
+    auto vsc = std::make_unique< TemplateVectorSequenceContainer<SequenceType> >(alphabet);
+    for (size_t i = 0; i < size; ++i)
+    {
+      vsc->addSequence(SequenceType(TextTools::toString(i), "", alphabet), false);
+    }
+    return vsc;
+  }
+
+
 
   /**
    * @brief Create a container with specified names.
@@ -92,9 +135,16 @@ public:
    * @return A pointer toward a newly created container.
    * @throw Exception If two sequence names are not unique.
    */
-  static SequenceContainer* createContainerWithSequenceNames(
-    const Alphabet* alphabet,
-    const std::vector<std::string>& seqNames);
+  template<class SequenceType, class HashType>
+  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType, HashType> > createContainerWithSequenceNames(
+    std::shared_ptr<const Alphabet>& alphabet,
+    const std::vector<std::string>& seqNames)
+  {
+    auto sc = createContainerOfSpecifiedSize<SequenceType, HashType>(alphabet, seqNames.size());
+    sc->setSequenceNames(seqNames, true);
+    return sc;
+  }
+
 
   /**
    * @brief Generic function which creates a new container from another one,
@@ -108,15 +158,15 @@ public:
    * @param input The container to copy.
    * @param output The container where new sequences will be appended.
    */
-  template<class ContFrom, class ContTo, class Seq>
+  template<class ContFrom, class ContTo, class SequenceType>
   static void convertContainer(const ContFrom& input, ContTo& output)
   {
     for (size_t i = 0; i < input.getNumberOfSequences(); ++i)
     {
-      std::unique_ptr<Seq> seq(new Seq(input.getSequence(i)));
-      output.addSequence(*seq, false); // We do not check sequence name here.
-                                       // If names were duplicated in the original container,
-                                       // they will also be in the converted one.
+      std::unique_ptr<SequenceType> seq(new SequenceType(input.getSequence(i)));
+      output.addSequence(seq, false); // We do not check sequence name here.
+                                      // If names were duplicated in the original container,
+                                      // they will also be in the converted one.
     }
   }
 
@@ -135,7 +185,18 @@ public:
    * @param outputCont A container where the selection should be added.
    * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
    */
-  static void getSelectedSequences(const OrderedSequenceContainer& sequences, const SequenceSelection& selection, SequenceContainer& outputCont);
+  template<class SequenceType, class HashType>
+  static void getSelectedSequences(
+		  const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
+		  const SequenceSelection& selection,
+		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
+  {
+    bool checkNames = outputCont.getNumberOfSequences() > 0;
+    for (size_t position : selection) {
+      outputCont.addSequence(sequences.getSequence(position), checkNames);
+    }
+  }
+
 
   /**
    * @brief Add a specified set of sequences from a container to another.
@@ -154,7 +215,24 @@ public:
    * will raise an exception. If no, only available sequence will be added.
    * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
    */
-  static void getSelectedSequences(const SequenceContainer& sequences, const std::vector<std::string>& selection, SequenceContainer& outputCont, bool strict = true);
+  template<class SequenceType, class HashType>
+  static void getSelectedSequences(
+		  const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
+		  const std::vector<std::string>& selection,
+		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont,
+		  bool strict = true)
+  {
+    bool checkNames = outputCont.getNumberOfSequences() > 0;
+    for (const std::string& key : selection) {
+      if (strict) {
+        outputCont.addSequence(sequences.getSequence(key), checkNames);
+      } else {
+        if (sequences.hasSequence(key))
+          outputCont.addSequence(sequences.getSequence(key), checkNames);
+      }
+    }
+  }
+
 
   /**
    * @brief Remove all sequences that are not in a given selection from a given container.
@@ -168,33 +246,74 @@ public:
    * @param selection The positions of all sequences to retrieve.
    * @return A new container with all selected sequences.
    */
-  static void keepOnlySelectedSequences(OrderedSequenceContainer& sequences, const SequenceSelection& selection);
+  template<class SequenceType, class HashType>
+  static void keepOnlySelectedSequences(
+		  TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
+		  const SequenceSelection& selection)
+  {
+    std::vector<std::string> keys = sequences.getSequenceKeys();
+    std::vector<std::string> selectedKeys = VectorTools::extract<std::string>(keys, selection);
+    std::vector<std::string> keysToRemove;
+    VectorTools::diff(keys, selectedKeys, keysToRemove);
+    for (const std::string& key : keysToRemove)
+    {
+      // We need to do this because after removal the indices will not be the same!
+      // another solution would be to sort decreasingly the indices...
+      sequences.removeSequence(key);
+    }
+  }
+
+
 
   /**
    * @brief Check if all sequences in a SequenceContainer have the same length.
    *
-   * @param sequences The container to check.
+   * @param sc The container to check.
    * @return True is all sequence have the same length.
    */
-  static bool sequencesHaveTheSameLength(const SequenceContainer& sequences);
+  template<class SequenceType, class HashType>
+  static bool sequencesHaveTheSameLength(const TemplateSequenceContainerInterface<SequenceType, HashType>& sc)
+  {
+    size_t ns = sc.getNumberOfSequences();
+    if (ns <= 1)
+      return true;
+    size_t length = sc.getSequence(0).size();
+    for (size_t i = 1; i < ns; ++i)
+    {
+      if (sc.getSequence(i).size() != length)
+        return false;
+    }
+    return true;
+  }
+
+
 
   /**
    * @brief Compute base counts
    *
    * Example of usage: getting the GC count from a sequence container.
    * <code>
-   *   map<int, int> counts;
+   *   map<int, unsigned int> counts;
    *  SequenceContainerTools::getCounts(myContainer, counts); //My container is previously defined.
    *   int GCcontent = counts[1] + counts[2] ;
    * </code>
    *
    * States are stored as their int code.
    */
+  static void getCounts(const SequenceContainerInterface& sc, std::map<int, unsigned int>& f)
+  {
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
+      const Sequence& seq = sc.sequence(i);
+      for (size_t j = 0; j < seq.size(); ++j) {
+        f[seq[j]]++;
+      }
+    }
+  }
 
-  static void getCounts(const SequenceContainer& sequences, std::map<int, int>&);
+
 
   /**
-   * @brief Compute base frequencies.
+   * @brief Compute base frequencies of a BasicSequenceContainer.
    *
    * Example of usage: getting the GC content from a sequence container.
    * <code>
@@ -205,80 +324,156 @@ public:
    *
    * States are stored as their int code.
    */
+  static void getFrequencies(
+		  const SequenceContainerInterface& sc,
+		  std::map<int, double>& f,
+		  double pseudoCount = 0)
+  {
+    double n = 0;
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
+      const Sequence& seq = sc.sequence(i);
+      SymbolListTools::getCounts(seq, f, true);
+      n += static_cast<double>(seq.size());
+    }
 
-  static void  getFrequencies(const SequencedValuesContainer& sequences, std::map<int, double>& f, double pseudoCount = 0);
+    if (pseudoCount != 0) {
+      std::shared_ptr<const Alphabet> pA = sc.getAlphabet();
+      for (int i = 0; i < static_cast<int>(pA->getSize()); ++i) {
+        f[i] += pseudoCount;
+      }
+      n += pseudoCount * static_cast<double>(pA->getSize());
+    }
+
+    for (auto& i : f) {
+      i.second = i.second / n;
+    }
+  }
+
+
+
+  /**
+   * @brief Compute base frequencies of a ProbabilisticSequenceContainer.
+   *
+   * Example of usage: getting the GC content from a sequence container.
+   * <code>
+   *  map<int, double> freqs;
+   *  SequenceContainerTools::getFrequencies(myContainer, freqs); //My container is previously defined.
+   *   double GCcontent = (freqs[1] + freqs[2]) / (freqs[0] + freqs[1] + freqs[2] + freqs[3]);
+   * </code>
+   *
+   * States are stored as their int code.
+   */
+  static void getFrequencies(
+		  const ProbabilisticSequenceContainerInterface& sc,
+		  std::map<int, double>& f,
+		  double pseudoCount = 0)
+  {
+    double n = 0;
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
+      const ProbabilisticSequence& seq = sc.sequence(i);
+      SymbolListTools::getCounts(seq, f, true);
+      n += static_cast<double>(seq.size());
+    }
+
+    if (pseudoCount != 0) {
+      std::shared_ptr<const Alphabet> pA = sc.getAlphabet();
+      for (int i = 0; i < static_cast<int>(pA->getSize()); ++i) {
+        f[i] += pseudoCount;
+      }
+      n += pseudoCount * static_cast<double>(pA->getSize());
+    }
+
+    for (auto& i : f) {
+      i.second = i.second / n;
+    }
+  }
+
+
+
+  /**
+   * @brief Compute base frequencies of an object implementing the SequenceDataInterface.
+   *
+   * This method will try to cast the input data and call the corresponding method is any.
+   * An exception will be thrown if the cast failed. 
+   */
+  static void getFrequencies(
+		  const SequenceDataInterface& sc,
+		  std::map<int, double>& f,
+		  double pseudoCount = 0)
+  {
+    try {
+      getFrequencies(dynamic_cast<const SequenceContainerInterface&>(sc), f, pseudoCount);
+    } catch (std::bad_cast&) {}   
+    try {
+      getFrequencies(dynamic_cast<const ProbabilisticSequenceContainerInterface&>(sc), f, pseudoCount);
+    } catch (std::bad_cast&) {} 
+    throw Exception("SequenceContainerTools::getFrequencies : unsupported SequenceDataInterface implementation.");
+  }
 
   /**
    * @brief Append all the sequences of a SequenceContainer to the end of another.
    *
    * @param seqCont1 The SequenceContainer in which the sequences will be added.
    * @param seqCont2 The SequenceContainer from which the sequences are taken.
-   * @param checkNames Tell if the sequence names should be check for unicity.
    */
-  static void append(SequenceContainer& seqCont1, const SequenceContainer& seqCont2, bool checkNames = true)
+  template<class SequenceType, class HashType>
+  static void append(
+		  TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont1, 
+		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont2)
   {
-    for (const auto& name: seqCont2.getSequenceNames())
-    {
-      seqCont1.addSequence(seqCont2.getSequence(name), checkNames);
+    for (size_t i = 0; i < seqCont2.getNumberOfSequences(); ++i) {
+      seqCont1.addSequence(std::unique_ptr<SequenceType>(seqCont2.getSequence(i).clone()));
     }
   }
-  /**
-   * @brief Append all the sequences of a SequenceContainer to the end of another, OrderedSequenceContainer implementation.
-   *
-   * @param seqCont1 The SequenceContainer in which the sequences will be added.
-   * @param seqCont2 The SequenceContainer from which the sequences are taken.
-   * @param checkNames Tell if the sequence names should be check for unicity.
-   */
-  static void append(SequenceContainer& seqCont1, const OrderedSequenceContainer& seqCont2, bool checkNames = true)
-  {
-    for (size_t i = 0; i < seqCont2.getNumberOfSequences(); i++)
-    {
-      seqCont1.addSequence(seqCont2.getSequence(i), checkNames);
-    }
-  }
+  
+
 
   /**
    * @brief Concatenate the sequences from two containers.
    *
-   * This method will not check the original sequence names for unicity. If sequences do not have a unique name,
-   * then the resulting merged container will contain the first sequence with the given duplicated name.
    *
    * @author Julien Dutheil
    *
    * @param seqCont1 First container.
-   * @param seqCont2 Second container. This container must contain sequences with the same names as in seqcont1.
+   * @param seqCont2 Second container. This container must contain sequences with the same keys as in seqcont1.
    * Additional sequences will be ignored.
    * @param outputCont Output sequence container to which concatenated sequences will be added.
    * @throw AlphabetMismatchException If the alphabet in the 3 containers do not match.
    */
-  static void merge(const SequenceContainer& seqCont1, const SequenceContainer& seqCont2, SequenceContainer& outputCont)
+  template<class SequenceType, class HashType>
+  static void mergeByKey(
+		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont1,
+		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont2,
+		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
   {
     if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
-      throw AlphabetMismatchException("SequenceContainerTools::merge.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
+      throw AlphabetMismatchException("SequenceContainerTools::mergeByKey.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
 
-    for (const auto& name: seqCont1.getSequenceNames())
+    for (const auto& key: seqCont1.getSequenceKeys())
     {
-      BasicSequence tmp = seqCont1.getSequence(name);
-      tmp.append(seqCont2.getSequence(name));
-      outputCont.addSequence(tmp, false);
+      auto tmp = std::unique_ptr<SequenceType>(seqCont1.getSequence(key).clone());
+      tmp->append(seqCont2.getSequence(key));
+      outputCont.addSequence(key, tmp);
     }
   }
 
   /**
-   * @brief Convert a SequenceContainer with a new alphabet.
+   * @brief Convert a SequenceContainer to a new alphabet.
    *
-   * This method assume that the original container has proper sequence names.
-   * Names will be checked only if the output container is not empty.
    * @param seqCont The container to convert.
    * @param outputCont A container (most likely empty) with an alphabet into which the container will be converted.
    */
-  static void convertAlphabet(const SequenceContainer& seqCont, SequenceContainer& outputCont)
+  template<class SequenceType, class HashType>
+  static void
+  convertAlphabet(
+		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont,
+		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
   {
-    bool checkNames = outputCont.getNumberOfSequences() > 0;
-    for (const auto& name: seqCont.getSequenceNames())
-    {
-      BasicSequence seq(name, seqCont.toString(name), outputCont.getAlphabet());
-      outputCont.addSequence(seq, checkNames);
+    for (size_t i = 0; i < seqCont.getNumerOfSequence(); ++i) {
+      std::string seqName = seqCont.getSequenceName(i);
+      std::string seqKey = seqCont.getSequenceKey(i);
+      auto seq = std::unique_ptr<SequenceType>(new SequenceType(seqName, seqCont.toString(i), outputCont.getAlphabet()));
+      outputCont.addSequence(seqKey, seq);
     }
   }
 
@@ -290,7 +485,29 @@ public:
    * @return          A SequenceContainer with a nucleotide alphabet.
    * @throw AlphabetException If input sequences are not registered with a codon alphabet.
    */
-  static SequenceContainer* getCodonPosition(const SequenceContainer& sequences, size_t pos);
+  template<class SequenceType>
+  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType> >
+  getCodonPosition(
+		  const TemplateSequenceContainerInterface<SequenceType, std::string>& sequences,
+		  size_t pos)
+  {
+    auto calpha = std::dynamic_pointer_cast<const CodonAlphabet>(sequences.getAlphabet());
+    if (!calpha)
+      throw AlphabetException("SequenceContainerTools::getCodonPosition. Input sequences should be of type codon.", sequences.getAlphabet());
+    auto newcont = std::make_unique< TemplateVectorSequenceContainer<SequenceType> >(calpha->getNucleicAlphabet());
+    for (size_t i = 0; i < sequences.getNumerOfSequences(); ++i) {
+      const SequenceType& seq = sequences.getSequence(i);
+      std::vector<int> newseq(seq.size());
+      for (size_t j = 0; j < seq.size(); ++j) {
+        newseq[i] = calpha->getNPosition(seq[i], pos);
+      }
+      auto s = std::make_unique<SequenceType>(seq.getName(), newseq, sequences.getComments(i), calpha->getNucleicAlphabet());
+      newcont->addSequence(sequences.getSequenceKey(i), s);
+    }
+    return newcont;
+  }
+
+
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCECONTAINERTOOLS_H

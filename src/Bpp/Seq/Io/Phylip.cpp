@@ -75,8 +75,9 @@ const std::vector<std::string> Phylip::splitNameAndSequence(const std::string& s
 
 /******************************************************************************/
 
-void Phylip::readSequential(std::istream& in, SiteContainer& asc) const
+void Phylip::readSequential(std::istream& in, SequenceContainerInterface& sc) const
 {
+  auto alphaPtr = sc.getAlphabet();
   string temp;
 
   // Ignore first line:
@@ -104,7 +105,8 @@ void Phylip::readSequential(std::istream& in, SiteContainer& asc) const
       if (!TextTools::isEmpty(name)) // If this is not the first sequence!
       {
         // Add the previous sequence to the container:
-        asc.addSequence(BasicSequence(name, seq, asc.getAlphabet()), checkNames_);
+	auto seqPtr = make_unique<Sequence>(name, seq, alphaPtr);
+        sc.addSequence(name, seqPtr);
       }
       name = v[0];
       seq  = v[1];
@@ -126,13 +128,15 @@ void Phylip::readSequential(std::istream& in, SiteContainer& asc) const
     temp = TextTools::removeSurroundingWhiteSpaces(FileTools::getNextLine(in));
   }
   // Add last sequence:
-  asc.addSequence(BasicSequence(name, seq, asc.getAlphabet()), checkNames_);
+  auto seqPtr = make_unique<Sequence>(name, seq, alphaPtr);
+  sc.addSequence(name, seqPtr);
 }
 
 /******************************************************************************/
 
-void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const
+void Phylip::readInterleaved(std::istream& in, SequenceContainerInterface& sc) const
 {
+  auto alphaPtr = sc.getAlphabet();
   string temp;
 
   // Read first line:
@@ -144,7 +148,7 @@ void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const
 
   vector<string> names, seqs;
   // Read first block:
-  for (unsigned int i = 0; i < nbSequences && !in.eof() && !TextTools::isEmpty(temp); i++)
+  for (size_t i = 0; i < nbSequences && !in.eof() && !TextTools::isEmpty(temp); ++i)
   {
     vector<string> v = splitNameAndSequence(temp);
     names.push_back(v[0]);
@@ -156,7 +160,7 @@ void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const
   temp = FileTools::getNextLine(in);
   while (!in.eof())
   {
-    for (unsigned int i = 0; i < names.size(); i++)
+    for (size_t i = 0; i < names.size(); ++i)
     {
       if (TextTools::isEmpty(temp))
         throw IOException("Phylip::readInterleaved. Bad file,there are not the same number of sequence in each block.");
@@ -165,15 +169,16 @@ void Phylip::readInterleaved(std::istream& in, SiteContainer& asc) const
     }
     temp = FileTools::getNextLine(in);
   }
-  for (unsigned int i = 0; i < names.size(); i++)
+  for (size_t i = 0; i < names.size(); ++i)
   {
-    asc.addSequence(BasicSequence(names[i], seqs[i], asc.getAlphabet()), checkNames_);
+    auto seqPtr = make_unique<Sequence>(names[i], seqs[i], alphaPtr);
+    sc.addSequence(names[i], seqPtr);
   }
 }
 
 /******************************************************************************/
 
-void Phylip::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) const
+void Phylip::appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const
 {
   // Checking the existence of specified file
   if (!input)
@@ -182,9 +187,9 @@ void Phylip::appendAlignmentFromStream(std::istream& input, SiteContainer& vsc) 
   }
 
   if (sequential_)
-    readSequential (input, vsc);
+    readSequential (input, sc);
   else
-    readInterleaved(input, vsc);
+    readInterleaved(input, sc);
 }
 
 /******************************************************************************/
@@ -241,17 +246,17 @@ std::vector<std::string> Phylip::getSizedNames(const std::vector<std::string>& n
 
 /******************************************************************************/
 
-void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc) const
+void Phylip::writeSequential(std::ostream& out, const SiteContainerInterface& sc) const
 {
   // cout << "Write sequential" << endl;
-  size_t numberOfSites = sc.getSequence(sc.getSequenceNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
+  size_t numberOfSites = sc.sequence(sc.getSequenceNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
   out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
 
   vector<string> seqNames = sc.getSequenceNames();
   vector<string> names = getSizedNames(seqNames);
-  for (size_t i = 0; i < seqNames.size(); ++i)
+  for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
   {
-    vector<string> seq = TextTools::split(sc.toString(seqNames[i]), charsByLine_);
+    vector<string> seq = TextTools::split(sc.sequence(i).toString(), charsByLine_);
     out << names[i] << seq[0] << endl;
     for (size_t j = 1; j < seq.size(); ++j)
     {
@@ -261,19 +266,19 @@ void Phylip::writeSequential(std::ostream& out, const SequenceContainer& sc) con
   }
 }
 
-void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc) const
+void Phylip::writeInterleaved(std::ostream& out, const SiteContainerInterface& sc) const
 {
   // cout << "Write interleaved;" << endl;
-  size_t numberOfSites = sc.getSequence(sc.getSequenceNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
+  size_t numberOfSites = sc.sequence(sc.getSequenceNames()[0]).size() * sc.getAlphabet()->getStateCodingSize();
   out << sc.getNumberOfSequences() << " " << numberOfSites << endl;
 
   vector<string> seqNames = sc.getSequenceNames();
   vector<string> names = getSizedNames(seqNames);
   // Split sequences:
   vector< vector<string> > seqs(sc.getNumberOfSequences());
-  for (size_t i = 0; i < seqNames.size(); ++i)
+  for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
   {
-    seqs[i] = TextTools::split(sc.toString(seqNames[i]), charsByLine_);
+    seqs[i] = TextTools::split(sc.sequence(i).toString(), charsByLine_);
   }
   // Write first block:
   for (size_t i = 0; i < names.size(); ++i)
@@ -294,7 +299,7 @@ void Phylip::writeInterleaved(std::ostream& out, const SequenceContainer& sc) co
 
 /******************************************************************************/
 
-void Phylip::writeAlignment(std::ostream& output, const SiteContainer& sc) const
+void Phylip::writeAlignment(std::ostream& output, const SiteContainerInterface& sc) const
 {
   // First must check if all sequences are aligned:
   if (sc.getNumberOfSequences() == 0)

@@ -43,7 +43,7 @@
 #ifndef BPP_SEQ_CONTAINER_NAMEDCONTAINER_H
 #define BPP_SEQ_CONTAINER_NAMEDCONTAINER_H
 
-
+#include <Bpp/Clonable.h>
 
 // From the STL:
 #include <string>
@@ -55,15 +55,15 @@ namespace bpp
  * through names.
  *
  * The objects are all stored as shared pointers.
- *
  */
-
 template<class T>
-class NamedContainer
+class NamedContainerInterface:
+    public virtual Clonable
 {
+
 public:
-  NamedContainer() {}
-  virtual ~NamedContainer() {}
+  NamedContainerInterface() {}
+  virtual ~NamedContainerInterface() {}
 
 protected:
   /**
@@ -85,7 +85,6 @@ protected:
    * @return True if a object with the given name is present in the
    * container.
    */
-
   virtual bool hasObject(const std::string& name) const = 0;
 
   /**

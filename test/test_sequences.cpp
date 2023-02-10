@@ -46,14 +46,15 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  BasicSequence seq1("test DNA", "ATTTCG---TCGTT-AAAGCWCATGCATCGATC", &AlphabetTools::DNA_ALPHABET);
-  BasicSequence motif1("motif", "ATTT", &AlphabetTools::DNA_ALPHABET);
-  BasicSequence motif2("motif", "TCG", &AlphabetTools::DNA_ALPHABET);
-  BasicSequence motif3("motif", "GATC", &AlphabetTools::DNA_ALPHABET);
-  BasicSequence motif4("motif", "CGTC", &AlphabetTools::DNA_ALPHABET);
-  BasicSequence motif5("motif", "CWCAT", &AlphabetTools::DNA_ALPHABET);
-  BasicSequence motif6("motif", "CTCAT", &AlphabetTools::DNA_ALPHABET);
-  BasicSequence motif7("motif", "AAGCA", &AlphabetTools::DNA_ALPHABET);
+  shared_ptr<const Alphabet> alpha = AlphabetTools::DNA_ALPHABET;
+  Sequence seq1("test DNA", "ATTTCG---TCGTT-AAAGCWCATGCATCGATC", alpha);
+  Sequence motif1("motif", "ATTT", alpha);
+  Sequence motif2("motif", "TCG", alpha);
+  Sequence motif3("motif", "GATC", alpha);
+  Sequence motif4("motif", "CGTC", alpha);
+  Sequence motif5("motif", "CWCAT", alpha);
+  Sequence motif6("motif", "CTCAT", alpha);
+  Sequence motif7("motif", "AAGCA", alpha);
   size_t pos;
 
   cout << "--- Strict match ---" << endl;

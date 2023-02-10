@@ -44,6 +44,7 @@
 #include <Bpp/Utils/MapTools.h>
 
 #include "AbstractAlphabet.h"
+#include "AlphabetExceptions.h"
 
 using namespace bpp;
 
@@ -224,13 +225,13 @@ bool AbstractAlphabet::isCharInAlphabet(const std::string& state) const
 bool AbstractAlphabet::isResolvedIn(int state1, int state2) const
 {
   if (state1 < 0 || !isIntInAlphabet(state1))
-    throw BadIntException(state1, "AbstractAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.");
+    throw BadIntException(state1, "AbstractAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.", this);
 
   if (state2 < 0 || !isIntInAlphabet(state2))
-    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.");
+    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.", this);
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2));
+    throw BadIntException(state2, "AbstractAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2), this);
 
   return state1 == state2;
 }
@@ -240,7 +241,7 @@ bool AbstractAlphabet::isResolvedIn(int state1, int state2) const
 std::vector<int> AbstractAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.");
+    throw BadIntException(state, "AbstractAlphabet::getAlias(int): Specified base unknown.", this);
   vector<int> v(1);
   v[0] = state;
   return v;
@@ -251,7 +252,7 @@ std::vector<int> AbstractAlphabet::getAlias(int state) const
 std::vector<std::string> AbstractAlphabet::getAlias(const std::string& state) const
 {
   if (!isCharInAlphabet(state))
-    throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.");
+    throw BadCharException(state, "AbstractAlphabet::getAlias(char): Specified base unknown.", this);
   vector<string> v(1);
   v[0] = state;
   return v;
@@ -262,10 +263,10 @@ std::vector<std::string> AbstractAlphabet::getAlias(const std::string& state) co
 int AbstractAlphabet::getGeneric(const std::vector<int>& states) const
 {
   map<int, int> m;
-  for (unsigned int i = 0; i < states.size(); ++i)
+  for (size_t i = 0; i < states.size(); ++i)
   {
     vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
-    for (unsigned int j = 0; j < tmp_s.size(); ++j)
+    for (size_t j = 0; j < tmp_s.size(); ++j)
     {
       m[tmp_s[j]]++;// add each state to the list
     }
@@ -273,10 +274,10 @@ int AbstractAlphabet::getGeneric(const std::vector<int>& states) const
   vector<int> ve = MapTools::getKeys(m);
 
   string key;
-  for (unsigned int i = 0; i < ve.size(); ++i)
+  for (size_t i = 0; i < ve.size(); ++i)
   {
     if (!isIntInAlphabet(ve[i]))
-      throw BadIntException(ve[i], "AbstractAlphabet::getGeneric(const vector<int>): Specified base unknown.");
+      throw BadIntException(ve[i], "AbstractAlphabet::getGeneric(const vector<int>): Specified base unknown.", this);
     key += "_" + TextTools::toString(ve[i]);
   }
   int v;
@@ -296,10 +297,10 @@ int AbstractAlphabet::getGeneric(const std::vector<int>& states) const
 std::string AbstractAlphabet::getGeneric(const std::vector<std::string>& states) const
 {
   map<string, int> m;
-  for (unsigned int i = 0; i < states.size(); ++i)
+  for (size_t i = 0; i < states.size(); ++i)
   {
     vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
-    for (unsigned int j = 0; j < tmp_s.size(); ++j)
+    for (size_t j = 0; j < tmp_s.size(); ++j)
     {
       m[tmp_s[j]]++;// add each state to the list
     }
@@ -307,10 +308,10 @@ std::string AbstractAlphabet::getGeneric(const std::vector<std::string>& states)
   vector<string> ve = MapTools::getKeys(m);
 
   string key;
-  for (unsigned int i = 0; i < ve.size(); ++i)
+  for (size_t i = 0; i < ve.size(); ++i)
   {
     if (!isCharInAlphabet(ve[i]))
-      throw BadCharException(ve[i], "AbstractAlphabet::getAlias(const vector<string>): Specified base unknown.");
+      throw BadCharException(ve[i], "AbstractAlphabet::getAlias(const vector<string>): Specified base unknown.", this);
     key += TextTools::toString(ve[i]);
   }
   string v;
@@ -320,7 +321,7 @@ std::string AbstractAlphabet::getGeneric(const std::vector<std::string>& states)
   }
   else
   {
-    throw CharStateNotSupportedException("AbstractAlphabet::getAlias(const vector<string>): No generic char state.");
+    throw CharStateNotSupportedException("AbstractAlphabet::getAlias(const vector<string>): No generic char state.", this);
   }
   return v;
 }

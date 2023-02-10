@@ -108,7 +108,7 @@ public:
    * @param gCode The genetic code according to which stop codons are specified.
    * @param freqmin a double, allele in frequency stricly lower than freqmin are replaced
    */
-  static Site* generateCodonSiteWithoutRareVariant(const Site& site, const GeneticCode& gCode, double freqmin);
+  static std::unique_ptr<Site> generateCodonSiteWithoutRareVariant(const Site& site, const GeneticCode& gCode, double freqmin);
 
   /**
    * @brief Compute the number of differences between two codons

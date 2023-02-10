@@ -78,20 +78,20 @@ public:
 
   virtual ~AAIndex1Entry() {}
 
-  AAIndex1Entry* clone() const { return new AAIndex1Entry(*this); }
+  AAIndex1Entry* clone() const override { return new AAIndex1Entry(*this); }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return property_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return property_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(property_); }
+  const std::vector<double>& indexVector() const override { return property_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AAINDEX1ENTRY_H

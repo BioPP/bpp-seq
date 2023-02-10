@@ -55,7 +55,7 @@ using namespace bpp;
 
 /******************************************************************************/
 
-Alphabet* BppSequenceApplication::getAlphabet(
+shared_ptr<Alphabet> BppSequenceApplication::getAlphabet(
   const string& suffix,
   bool suffixIsOptional,
   bool allowGeneric) const
@@ -63,75 +63,109 @@ Alphabet* BppSequenceApplication::getAlphabet(
   return SequenceApplicationTools::getAlphabet(params_, suffix, suffixIsOptional, verbose_, allowGeneric, warn_);
 }
 
-GeneticCode* BppSequenceApplication::getGeneticCode(
-  const Alphabet* alphabet,
+shared_ptr<GeneticCode> BppSequenceApplication::getGeneticCode(
+  shared_ptr<const Alphabet>& alphabet,
   const string& suffix,
   bool suffixIsOptional) const
 {
-  const CodonAlphabet* codonAlphabet;
+  shared_ptr<const CodonAlphabet> codonAlphabet = dynamic_pointer_cast<const CodonAlphabet>(alphabet);
 
-  codonAlphabet = dynamic_cast<const CodonAlphabet*>(alphabet);
   if (!codonAlphabet)
   {
-    const AllelicAlphabet* allAlp = dynamic_cast<const AllelicAlphabet*>(alphabet);
+    auto allAlp = dynamic_pointer_cast<const AllelicAlphabet>(alphabet);
     if (allAlp)
-      codonAlphabet = dynamic_cast<const CodonAlphabet*>(&allAlp->getStateAlphabet());
+      codonAlphabet = dynamic_pointer_cast<const CodonAlphabet>(allAlp->getStateAlphabet());
   }
-  
+
   if (codonAlphabet)
   {
     string codeDesc = ApplicationTools::getStringParameter("genetic_code", params_, "Standard", suffix, suffixIsOptional, warn_);
     if (verbose_)
       ApplicationTools::displayResult("Genetic Code", codeDesc);
-    return SequenceApplicationTools::getGeneticCode(codonAlphabet->shareNucleicAlphabet(), codeDesc);
+    auto alphaPtr = codonAlphabet->getNucleicAlphabet();
+    return SequenceApplicationTools::getGeneticCode(alphaPtr, codeDesc);
   }
   else
     return nullptr;
 }
 
-map<size_t, AlignedValuesContainer*> BppSequenceApplication::getAlignmentsMap(
-  const Alphabet* alphabet,
+map<size_t, unique_ptr<AlignmentDataInterface> >
+BppSequenceApplication::getAlignmentsMap(
+  shared_ptr<const Alphabet>& alphabet,
   bool changeGapsToUnknownCharacters,
   bool optionalData,
   const std::string& prefix,
   const std::string& suffix,
   bool suffixIsOptional) const
 {
-  auto mSites = SequenceApplicationTools::getAlignedContainers(alphabet, params_, prefix, suffix, suffixIsOptional, verbose_, warn_);
+  try
+  {
+    auto mSites = SequenceApplicationTools::getProbabilisticSiteContainers(alphabet, params_, prefix, suffix, suffixIsOptional, verbose_, warn_);
 
-  if (!optionalData && mSites.size() == 0)
-    throw Exception("Missing data input.sequence.file option");
+    if (!optionalData && mSites.size() == 0)
+      throw Exception("Missing data input.sequence.file option");
 
-  if (changeGapsToUnknownCharacters)
-    for (auto itc : mSites)
-    {
-      SiteContainerTools::changeGapsToUnknownCharacters(*itc.second);
+    if (changeGapsToUnknownCharacters) {
+      for (auto& sites : mSites) {
+        SiteContainerTools::changeGapsToUnknownCharacters(*sites.second);
+      }
     }
 
-  for (auto& sites:mSites)
-  {
-    if (sites.second->getNumberOfSites() == 0)
-      throw Exception("Empty alignment number " + TextTools::toString(sites.first));
-  }
+    for (auto& sites : mSites) {
+      if (sites.second->getNumberOfSites() == 0)
+        throw Exception("Empty alignment number " + TextTools::toString(sites.first));
+    }
 
-  return mSites;
+    map<size_t, unique_ptr<AlignmentDataInterface> > mSites2;
+    for (auto& sites : mSites) {
+      mSites2.emplace(sites.first, unique_ptr<AlignmentDataInterface>(sites.second.release()));
+    }
+
+    return mSites2;
+  }
+  catch(Exception& e)
+  {
+    auto mSites = SequenceApplicationTools::getSiteContainers(alphabet, params_, prefix, suffix, suffixIsOptional, verbose_, warn_);
+
+    if (!optionalData && mSites.size() == 0)
+      throw Exception("Missing data input.sequence.file option");
+
+    if (changeGapsToUnknownCharacters) {
+      for (auto& itc : mSites) {
+        SiteContainerTools::changeGapsToUnknownCharacters(*itc.second);
+      }
+    }
+
+    for (auto& sites:mSites) {
+      if (sites.second->getNumberOfSites() == 0)
+        throw Exception("Empty alignment number " + TextTools::toString(sites.first));
+    }
+
+    map<size_t, unique_ptr<AlignmentDataInterface> > mSites2;
+    for (auto& sites : mSites) {
+      mSites2.emplace(sites.first, unique_ptr<AlignmentDataInterface>(sites.second.release()));
+    }
+
+    return mSites2;
+  }
 }
 
-map<size_t, const AlignedValuesContainer*> BppSequenceApplication::getConstAlignmentsMap(
-  const Alphabet* alphabet,
+map<size_t, unique_ptr<const AlignmentDataInterface> >
+BppSequenceApplication::getConstAlignmentsMap(
+  shared_ptr<const Alphabet>& alphabet,
   bool changeGapsToUnknownCharacters,
   bool optionalData,
   const std::string& prefix,
   const std::string& suffix,
   bool suffixIsOptional) const
 {
-  map<size_t, AlignedValuesContainer*>  mSites;
-  
-  mSites = getAlignmentsMap(alphabet, changeGapsToUnknownCharacters, optionalData, prefix, suffix, suffixIsOptional);
+  auto mSites = getAlignmentsMap(alphabet, changeGapsToUnknownCharacters, optionalData, prefix, suffix, suffixIsOptional);
 
-  map<size_t, const AlignedValuesContainer*> mSitesconst;
-  for (auto it:mSites)
-    mSitesconst[it.first]=it.second;
+  map<size_t, unique_ptr<const AlignmentDataInterface> > mSitesConst;
+  for (auto& sites : mSites) {
+    mSitesConst[sites.first] = std::move(sites.second);
+  }
 
-  return mSitesconst;
+  return mSitesConst;
 }
+

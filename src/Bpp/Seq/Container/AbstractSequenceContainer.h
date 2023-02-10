@@ -41,40 +41,66 @@
 #ifndef BPP_SEQ_CONTAINER_ABSTRACTSEQUENCECONTAINER_H
 #define BPP_SEQ_CONTAINER_ABSTRACTSEQUENCECONTAINER_H
 
+#include <Bpp/Exceptions.h>
 
+#include "../Alphabet/Alphabet.h"
 #include "../Sequence.h"
-#include "AbstractValuesContainer.h"
-#include "OrderedSequenceContainer.h"
+#include "../Commentable.h"
+#include "SequenceContainer.h"
 
 namespace bpp
 {
 /**
- * @brief Partial implementation of the OrderedSequenceContainer interface.
+ * @brief Partial implementation of the SequenceContainer interface.
  *
  * This abstract class provides an alphabet and comments, with associated methods.
  */
-class AbstractSequenceContainer :
-  public virtual OrderedSequenceContainer,
-  public AbstractValuesContainer
+template<class SequenceType, class HashType = std::string>
+class AbstractTemplateSequenceContainer :
+  public virtual TemplateSequenceContainerInterface<SequenceType, HashType>,
+  public SimpleCommentable
 {
+
+protected:
+  /**
+   * @brief The container's alphabet.
+   */
+  std::shared_ptr<const Alphabet> alphabet_;
+
+
 public:
   /**
-   * @brief This constructor initialize the alphabet pointer.
+   * @brief This constructor initializes the alphabet pointer.
    *
    * This constructor is to be called by constructors of derived classes.
    *
-   * @param alpha The alphabet to be associated to this container.
+   * @param alphabet The alphabet to be associated to this container.
    */
-  AbstractSequenceContainer(const Alphabet* alpha) :
-    AbstractValuesContainer(alpha) {}
-
-  AbstractSequenceContainer(const AbstractSequenceContainer& sc) :
-    AbstractValuesContainer(sc)
+  AbstractTemplateSequenceContainer(std::shared_ptr<const Alphabet> alphabet) :
+    SimpleCommentable(), alphabet_(alphabet)
   {}
 
-  AbstractSequenceContainer& operator=(const AbstractSequenceContainer& sc)
+  /**
+   * @brief This constructor initializes the alphabet pointer and the comments field.
+   *
+   * This constructor is to be called by constructors of derived classes.
+   *
+   * @param alphabet The alphabet to be associated to this container.
+   * @param comments General comments to be associated to this container.
+   */
+  AbstractTemplateSequenceContainer(std::shared_ptr<const Alphabet> alphabet, const Comments& comments) :
+    SimpleCommentable(comments),
+    alphabet_(alphabet)
+  {}
+
+  AbstractTemplateSequenceContainer(const AbstractTemplateSequenceContainer<SequenceType, HashType>& sc) :
+    SimpleCommentable(sc), alphabet_(sc.alphabet_)
+  {}
+
+  AbstractTemplateSequenceContainer& operator=(const AbstractTemplateSequenceContainer<SequenceType, HashType>& sc)
   {
-    AbstractValuesContainer::operator=(sc);
+    SimpleCommentable::operator=(sc);
+    alphabet_ = sc.alphabet_;
     return *this;
   }
 
@@ -83,8 +109,9 @@ public:
    *
    * @param sc Another sequence container.
    */
-  AbstractSequenceContainer(const SequenceContainer& sc) :
-    AbstractValuesContainer(sc.getGeneralComments(), sc.getAlphabet())
+  AbstractTemplateSequenceContainer(const TemplateSequenceContainerInterface<SequenceType, HashType>& sc) :
+    SimpleCommentable(sc.getComments()),
+    alphabet_(sc.getAlphabet())
   {}
 
   /**
@@ -92,55 +119,25 @@ public:
    *
    * @param sc Another sequence container.
    */
-  AbstractSequenceContainer& operator=(const SequenceContainer& sc)
+  AbstractTemplateSequenceContainer& operator=(const TemplateSequenceContainerInterface<SequenceType, HashType>& sc)
   {
     alphabet_ = sc.getAlphabet();
-    setGeneralComments(sc.getGeneralComments());
+    setComments(sc.getComments());
 
     return *this;
   }
 
-  virtual ~AbstractSequenceContainer() {}
+  virtual ~AbstractTemplateSequenceContainer() {}
 
 public:
-  std::string toString(const std::string& name) const
+  const Alphabet& alphabet() const override
   {
-    return getSequence(name).toString();
+    if (!alphabet_) throw Exception("AbstractSequenceContainer::alphabet() : no associated alphabet."); 
+    return *alphabet_;
   }
-
-  const Comments& getComments(const std::string& name) const
-  {
-    return getSequence(name).getComments();
-  }
-
-  void setComments(const std::string& name, const Comments& comments)
-  {
-    size_t pos = getSequencePosition(name);
-    setComments(pos, comments);
-  }
-
-  /**
-   * @name From the OrderedSequenceContainer interface
-   *
-   * @{
-   */
-  virtual const std::string& getName(size_t sequenceIndex) const
-  {
-    return getSequence(sequenceIndex).getName();
-  }
-
-  virtual std::string toString(size_t sequenceIndex) const
-  {
-    return getSequence(sequenceIndex).toString();
-  }
-
-  virtual const Comments& getComments(size_t sequenceIndex) const
-  {
-    return getSequence(sequenceIndex).getComments();
-  }
-
-  virtual void setComments(size_t sequenceIndex, const Comments& comments) = 0;
-  /** @} */
+  
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
+ 
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_ABSTRACTSEQUENCECONTAINER_H

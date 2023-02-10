@@ -42,8 +42,8 @@
 #define BPP_SEQ_CONTAINER_SITECONTAINERITERATOR_H
 
 
-#include "../Site.h"
 #include "../SiteIterator.h"
+#include "../SiteTools.h"
 #include "SiteContainer.h"
 
 namespace bpp
@@ -51,75 +51,183 @@ namespace bpp
 /**
  * @brief Partial implementation of the SiteIterator interface, allowing to loop over a site container.
  */
-class AbstractSiteContainerIterator :
-  public virtual ConstSiteIterator
+template<class SiteType, class SequenceType, class HashType>
+class AbstractTemplateSiteContainerIterator :
+  public virtual TemplateSiteIteratorInterface<const SiteType>
 {
 protected:
-  const SiteContainer* sites_;
-  int currentPosition_;
+  const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>* sites_;
+  long int currentPosition_;
 
 public:
-  AbstractSiteContainerIterator(const SiteContainer& sites);
+  AbstractTemplateSiteContainerIterator(
+      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) :
+    sites_(&sites),
+    currentPosition_(0)
+  {}
 
-  AbstractSiteContainerIterator(const AbstractSiteContainerIterator& asi) :
-    sites_(asi.sites_),
-    currentPosition_(asi.currentPosition_) {}
 
-  AbstractSiteContainerIterator& operator=(const AbstractSiteContainerIterator& asi)
+  AbstractTemplateSiteContainerIterator(
+      const AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>& atsi) :
+    sites_(atsi.sites_),
+    currentPosition_(atsi.currentPosition_)
+  {}
+
+  AbstractTemplateSiteContainerIterator& operator=(
+      const AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>& atsi)
   {
-    sites_ = asi.sites_;
-    currentPosition_ = asi.currentPosition_;
+    sites_ = atsi.sites_;
+    currentPosition_ = atsi.currentPosition_;
     return *this;
   }
 
-  virtual ~AbstractSiteContainerIterator() {}
+  virtual ~AbstractTemplateSiteContainerIterator() {}
 };
+
+
+
+
 
 /**
  * @brief Loop over all sites in a SiteContainer.
  */
-class SimpleSiteContainerIterator : public AbstractSiteContainerIterator
+template<class SiteType, class SequenceType, class HashType>
+class SimpleTemplateSiteContainerIterator : 
+  public AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>
 {
-public:
-  SimpleSiteContainerIterator(const SiteContainer& sites);
-  virtual ~SimpleSiteContainerIterator() {}
+protected:
+  using AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>::sites_;
+  using AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>::currentPosition_;
 
 public:
-  const Site* nextSite();
-  bool hasMoreSites() const;
+  SimpleTemplateSiteContainerIterator(
+      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) :
+    AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>(sites)
+  {}
+	  
+  virtual ~SimpleTemplateSiteContainerIterator() {}
+
+public:
+  const SiteType& nextSite() override
+  {
+    const SiteType& s = sites_->site(static_cast<size_t>(currentPosition_));
+    currentPosition_++;
+    return s;
+  }
+
+  bool hasMoreSites() const override
+  {
+    return static_cast<unsigned int>(currentPosition_) < sites_->getNumberOfSites();
+  }
+
 };
+
+using SimpleSiteContainerIterator = SimpleTemplateSiteContainerIterator<Site, Sequence, std::string>;
+using SimpleProbabilisticSiteContainerIterator = SimpleTemplateSiteContainerIterator<ProbabilisticSite, ProbabilisticSequence, std::string>;
 
 /**
  * @brief Loop over all sites without gaps in a SiteContainer.
  */
-class NoGapSiteContainerIterator : public AbstractSiteContainerIterator
+template<class SiteType, class SequenceType, class HashType>
+class NoGapTemplateSiteContainerIterator : 
+  public AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>
 {
-public:
-  NoGapSiteContainerIterator(const SiteContainer& sites);
-  virtual ~NoGapSiteContainerIterator() {}
+protected:
+  using AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>::sites_;
+  using AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>::currentPosition_;
 
 public:
-  const Site* nextSite();
-  bool hasMoreSites() const;
-  int nextSiteWithoutGapPosition(int current) const;
-  int previousSiteWithoutGapPosition(int current) const;
+  NoGapTemplateSiteContainerIterator(
+      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) : 
+    AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>(sites)
+  {
+    currentPosition_ = nextSiteWithoutGapPosition(-1);
+  }
+
+  virtual ~NoGapTemplateSiteContainerIterator() {}
+
+public:
+  const SiteType& nextSite() override
+  {
+    const SiteType& s = sites_->getSite(static_cast<size_t>(currentPosition_));
+    currentPosition_ = nextSiteWithoutGapPosition(currentPosition_);
+    return s;
+  }
+  
+  bool hasMoreSites() const override
+  {
+    return currentPosition_ < static_cast<long int>(sites_->getNumberOfSites());
+  }
+
+  long int nextSiteWithoutGapPosition(int current) const
+  {
+    size_t position = static_cast<size_t>(current + 1);
+    while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->getSite(position)))
+      position++;
+    return static_cast<int>(position);
+  }
+
+  long int previousSiteWithoutGapPosition(int current) const
+  {
+    long int position = current - 1;
+    while (position >= 0 && SymbolListTools::hasGap(sites_->getSite(static_cast<size_t>(position))))
+      position--;
+    return position;
+  }
+
 };
 
 /**
  * @brief Loop over all complete sites in a SiteContainer
  * (i.e. sites without gap and unresolved characters).
  */
-class CompleteSiteContainerIterator : public AbstractSiteContainerIterator
+template<class SiteType, class SequenceType, class HashType>
+class CompleteTemplateSiteContainerIterator : 
+  public AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>
 {
-public:
-  CompleteSiteContainerIterator(const SiteContainer& sites);
-  virtual ~CompleteSiteContainerIterator() {}
+protected:
+  using AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>::sites_;
+  using AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>::currentPosition_;
 
 public:
-  const Site* nextSite();
-  bool hasMoreSites() const;
-  int nextCompleteSitePosition(int current) const;
-  int previousCompleteSitePosition(int current) const;
+  CompleteTemplateSiteContainerIterator(
+      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) : 
+    AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>(sites)
+  {
+    currentPosition_ = nextCompleteSitePosition(-1);
+  }
+
+  virtual ~CompleteTemplateSiteContainerIterator() {}
+
+public:
+  const SiteType& nextSite() override
+  {
+    const Site& s = sites_->getSite(static_cast<size_t>(currentPosition_));
+    currentPosition_ = nextCompleteSitePosition(currentPosition_);
+    return s;
+  }
+
+  bool hasMoreSites() const override
+  {
+    return currentPosition_ < static_cast<int>(sites_->getNumberOfSites());
+  }
+
+  long int nextCompleteSitePosition(long int current) const
+  {
+    size_t position = static_cast<size_t>(current + 1);
+    while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->getSite(position)))
+      position++;
+    return static_cast<int>(position);
+  }
+
+  long int previousCompleteSitePosition(long int current) const
+  {
+    long int position = current - 1;
+    while (position >= 0 && !SymbolListTools::isComplete(sites_->getSite(static_cast<size_t>(position))))
+      position--;
+    return position;
+  }
+
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINERITERATOR_H

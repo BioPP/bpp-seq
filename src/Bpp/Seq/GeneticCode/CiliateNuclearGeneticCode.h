@@ -56,13 +56,7 @@ class CiliateNuclearGeneticCode :
   public virtual GeneticCode
 {
 public:
-  CiliateNuclearGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
-    GeneticCode(alphabet)
-  {
-    init_();
-  }
-
-  CiliateNuclearGeneticCode(const NucleicAlphabet& alphabet) :
+  CiliateNuclearGeneticCode(std::shared_ptr<const NucleicAlphabet> alphabet) :
     GeneticCode(alphabet)
   {
     init_();
@@ -91,25 +85,25 @@ public:
   bool isStop(int state) const
   {
     // Test:
-    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    codonAlphabet_->intToChar(state); // throw exception if invalid state!
     return state == 56;
   }
 
   bool isStop(const std::string& state) const
   {
-    return codonAlphabet_.charToInt(state) == 56;
+    return codonAlphabet_->charToInt(state) == 56;
   }
 
   bool isAltStart(int state) const
   {
     // Test:
-    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    codonAlphabet_->intToChar(state); // throw exception if invalid state!
     return state == 62 || state == 30;
   }
 
   bool isAltStart(const std::string& state) const
   {
-    int i = codonAlphabet_.charToInt(state);
+    int i = codonAlphabet_->charToInt(state);
     return i == 62 || i == 30;
   }
 

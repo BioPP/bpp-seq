@@ -50,6 +50,7 @@
 
 // From Seq
 #include "AbstractAlphabet.h"
+#include "AlphabetExceptions.h"
 
 namespace bpp
 {

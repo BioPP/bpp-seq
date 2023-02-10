@@ -45,8 +45,8 @@
 #include <Bpp/Clonable.h>
 #include <string>
 #include <vector>
+#include <memory>
 
-#include "AlphabetExceptions.h"
 #include "AlphabetState.h"
 
 /**
@@ -63,7 +63,7 @@
  * The bpp::SequenceTools static class provides simple analysis tools, like base frequencies measures,
  * concatenation, etc.
  *
- * @par SeqLib also provides tools to perform <i>in silico</i>
+ * @par bpp-seq  also provides tools to perform <i>in silico</i>
  * molecular biology, like complementation, transcription,
  * translation, etc. All these methods are particular cases of
  * alphabet translation, and are implemented via the interface
@@ -129,11 +129,12 @@ namespace bpp
  * @see AlphabetException, BadCharException, BadIntException
  */
 class Alphabet :
-  public virtual Clonable
+  public virtual Clonable,
+  public std::enable_shared_from_this<Alphabet>
 {
 public:
   Alphabet() {}
-  virtual ~Alphabet() {}
+  virtual ~Alphabet() = default;
 
   /**
    * @name The Clonable interface

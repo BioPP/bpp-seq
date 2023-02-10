@@ -51,88 +51,6 @@ using namespace bpp;
 
 using namespace std;
 
-/* Constructors: **************************************************************/
-
-SequenceWithAnnotation::SequenceWithAnnotation(const Alphabet* alpha) :
-  EdSymbolList<int>(alpha),
-  AbstractCoreSequence(""),
-  EdIntSymbolList(alpha)
-{}
-
-SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Alphabet* alpha) :
-  EdSymbolList<int>(alpha),
-  AbstractCoreSequence(name),
-  EdIntSymbolList(alpha)
-{
-  if (sequence != "")
-    setContent(sequence);
-}
-
-SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::string& sequence, const Comments& comments, const Alphabet* alpha) :
-  EdSymbolList<int>(alpha),
-  AbstractCoreSequence(name, comments),
-  EdIntSymbolList(alpha)
-{
-  if (sequence != "")
-    setContent(sequence);
-}
-
-SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Alphabet* alpha) :
-  EdSymbolList<int>(alpha),
-  AbstractCoreSequence(name),
-  EdIntSymbolList(sequence, alpha)
-{}
-
-SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<std::string>& sequence, const Comments& comments, const Alphabet* alpha) :
-  EdSymbolList<int>(alpha),
-  AbstractCoreSequence(name, comments),
-  EdIntSymbolList(sequence, alpha)
-{}
-
-SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Alphabet* alpha) :
-  EdSymbolList<int>(sequence, alpha),
-  AbstractCoreSequence(name),
-  EdIntSymbolList(sequence, alpha)
-{}
-
-SequenceWithAnnotation::SequenceWithAnnotation(const std::string& name, const std::vector<int>& sequence, const Comments& comments, const Alphabet* alpha) :
-  EdSymbolList<int>(sequence, alpha),
-  AbstractCoreSequence(name, comments),
-  EdIntSymbolList(sequence, alpha)
-{}
-
-/* Copy constructors: *********************************************************/
-
-SequenceWithAnnotation::SequenceWithAnnotation(const Sequence& s) :
-  EdSymbolList<int>(s.getContent(), s.getAlphabet()),
-  AbstractCoreSequence(s.getName(), s.getComments()),
-  EdIntSymbolList(s.getContent(), s.getAlphabet())
-{}
-
-SequenceWithAnnotation::SequenceWithAnnotation(const SequenceWithAnnotation& s) :
-  EdSymbolList<int>(s.getContent(), s.getAlphabet()),
-  AbstractCoreSequence(s.getName(), s.getComments()),
-  EdIntSymbolList(s.getContent(), s.getAlphabet())
-{}
-
-/* Assignation operator: ******************************************************/
-
-SequenceWithAnnotation& SequenceWithAnnotation::operator=(const Sequence& s)
-{
-  setContent(s.getContent());
-
-  setName(s.getName());
-  setComments(s.getComments());
-  return *this;
-}
-
-SequenceWithAnnotation& SequenceWithAnnotation::operator=(const SequenceWithAnnotation& s)
-{
-  AbstractCoreSequence::operator=(s);
-  EdIntSymbolList::operator=(s);
-  return *this;
-}
-
 /******************************************************************************/
 
 void SequenceWithAnnotation::setContent(const std::string& sequence)
@@ -140,7 +58,8 @@ void SequenceWithAnnotation::setContent(const std::string& sequence)
   IntSymbolListEditionEvent event(this);
   fireBeforeSequenceChanged(event);
   // Remove blanks in sequence
-  setContent(StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), getAlphabet()));
+  auto alphaPtr =  getAlphabet();
+  setContent(StringSequenceTools::codeSequence(TextTools::removeWhiteSpaces(sequence), alphaPtr));
   // Warning, an exception may be thrown here!
   fireAfterSequenceChanged(event);
 }
@@ -201,13 +120,13 @@ void SequenceWithAnnotation::setToSizeL(size_t newSize)
 
 /******************************************************************************/
 
-void SequenceWithAnnotation::append(const Sequence& seq)
+void SequenceWithAnnotation::append(const SequenceInterface& seq)
 {
   if (seq.getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
-    throw AlphabetMismatchException("SequenceWithAnnotation::append");
+    throw AlphabetMismatchException("SequenceWithAnnotation::append", getAlphabet(), seq.getAlphabet());
   IntSymbolListInsertionEvent event(this, content_.size(), seq.size());
   fireBeforeSequenceInserted(event);
-  for (size_t i = 0; i < seq.size(); i++)
+  for (size_t i = 0; i < seq.size(); ++i)
   {
     content_.push_back(seq[i]);
   }
@@ -220,15 +139,15 @@ void SequenceWithAnnotation::append(const std::vector<int>& content)
   IntSymbolListInsertionEvent event(this, content_.size(), content.size());
   fireBeforeSequenceInserted(event);
   // Check list for incorrect characters
-  for (size_t i = 0; i < content.size(); i++)
+  for (auto i : content)
   {
-    if (!getAlphabet()->isIntInAlphabet(content[i]))
-      throw BadIntException(content[i], "SequenceWithAnnotation::append", getAlphabet());
+    if (!getAlphabet()->isIntInAlphabet(i))
+      throw BadIntException(i, "SequenceWithAnnotation::append", getAlphabet());
   }
   // SequenceWithAnnotation is valid:
-  for (size_t i = 0; i < content.size(); i++)
+  for (auto i : content)
   {
-    content_.push_back(content[i]);
+    content_.push_back(i);
   }
 
   fireAfterSequenceInserted(event);
@@ -239,16 +158,16 @@ void SequenceWithAnnotation::append(const std::vector<std::string>& content)
   IntSymbolListInsertionEvent event(this, content_.size(), content.size());
   fireBeforeSequenceInserted(event);
   // Check list for incorrect characters
-  for (size_t i = 0; i < content.size(); i++)
+  for (auto i : content)
   {
-    if (!getAlphabet()->isCharInAlphabet(content[i]))
-      throw BadCharException(content[i], "SequenceWithAnnotation::append", getAlphabet());
+    if (!getAlphabet()->isCharInAlphabet(i))
+      throw BadCharException(i, "SequenceWithAnnotation::append", getAlphabet());
   }
 
   // SequenceWithAnnotation is valid:
-  for (size_t i = 0; i < content.size(); i++)
+  for (auto i : content)
   {
-    content_.push_back(getAlphabet()->charToInt(content[i]));
+    content_.push_back(getAlphabet()->charToInt(i));
   }
 
   fireAfterSequenceInserted(event);
@@ -256,7 +175,8 @@ void SequenceWithAnnotation::append(const std::vector<std::string>& content)
 
 void SequenceWithAnnotation::append(const std::string& content)
 {
-  append(StringSequenceTools::codeSequence(content, getAlphabet()));
+  auto alphaPtr = getAlphabet();
+  append(StringSequenceTools::codeSequence(content, alphaPtr));
 }
 
 /******************************************************************************/

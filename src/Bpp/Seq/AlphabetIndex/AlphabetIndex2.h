@@ -90,12 +90,12 @@ public:
    *
    * @return Alphabet The alphabet associated to this index.
    */
-  virtual const Alphabet* getAlphabet() const = 0;
+  virtual std::shared_ptr<const Alphabet> getAlphabet() const = 0;
 
   /**
    * @return A matrix object with all indices.
    */
-  virtual Matrix<double>* getIndexMatrix() const = 0;
+  virtual const Matrix<double>& getIndexMatrix() const = 0;
 
   /**
    * @return True if the index is symatric (that is, index(i,j) == index(j, i)).
@@ -103,22 +103,20 @@ public:
   virtual bool isSymmetric() const = 0;
 };
 
-/*
+/**
  * @brief Virtual AlphabetIndex2 for proteic alphabet
- *
  */
-
 class ProteicAlphabetIndex2 :
   virtual public AlphabetIndex2
 {
 private:
-  const ProteicAlphabet* alpha_;
+  std::shared_ptr<const ProteicAlphabet> alpha_;
 
 public:
-  ProteicAlphabetIndex2() : alpha_(&AlphabetTools::PROTEIN_ALPHABET) {}
+  ProteicAlphabetIndex2() : alpha_(AlphabetTools::PROTEIN_ALPHABET) {}
   virtual ~ProteicAlphabetIndex2() {}
 
-  virtual ProteicAlphabetIndex2* clone() const = 0;
+  virtual ProteicAlphabetIndex2* clone() const override = 0;
 
   ProteicAlphabetIndex2(const ProteicAlphabetIndex2& pt) :
     alpha_(pt.alpha_)
@@ -130,7 +128,7 @@ public:
     return *this;
   }
 
-  const Alphabet* getAlphabet() const { return alpha_; }
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return alpha_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_ALPHABETINDEX2_H

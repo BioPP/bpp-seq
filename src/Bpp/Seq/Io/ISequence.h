@@ -44,8 +44,6 @@
 
 #include <Bpp/Exceptions.h>
 
-#include "../Container/ProbabilisticSequenceContainer.h"
-#include "../Container/ProbabilisticSiteContainer.h"
 #include "../Container/SequenceContainer.h"
 #include "../Container/SiteContainer.h"
 #include "../Sequence.h"
@@ -54,6 +52,7 @@
 // From the STL:
 #include <iostream>
 #include <string>
+#include <memory>
 
 namespace bpp
 {
@@ -61,7 +60,6 @@ namespace bpp
  * @brief The ISequence interface.
  *
  * This interface defines the basic methods for reading sequences from a file.
- * NB: This interface is effective only if the VIRTUAL_COV option is enabled (default behavior).
  */
 class ISequence :
   public virtual IOSequence
@@ -74,12 +72,35 @@ public:
   /**
    * @brief Create a new container from a stream.
    *
+   * @param input     The input stream to read.
+   * @param container The container where to add data.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readSequences(
+      std::istream& input, 
+      SequenceContainerInterface& container) const = 0;
+  /**
+   * @brief Create a new container from a file.
+   *
+   * @param path      The path to the file to read.
+   * @param container The container where to add data.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readSequences(
+      const std::string& path,
+      SequenceContainerInterface& container) const = 0;
+
+  /**
+   * @brief Create a new container from a stream.
+   *
    * @param input  The input stream to read.
    * @param alpha The alphabet to be associated to the container.
    * @return A new SequenceContainer object.
    * @throw Exception If the file is not in the specified format.
    */
-  virtual SequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) const = 0;
+  virtual std::unique_ptr<SequenceContainerInterface> readSequences(
+       std::istream& input, 
+       std::shared_ptr<const Alphabet> alpha) const = 0;
   /**
    * @brief Create a new container from a file.
    *
@@ -88,7 +109,9 @@ public:
    * @return A new SequenceContainer object.
    * @throw Exception If the file is not in the specified format.
    */
-  virtual SequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) const = 0;
+  virtual std::unique_ptr<SequenceContainerInterface> readSequences(
+      const std::string& path,
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 };
 
 /**
@@ -105,6 +128,30 @@ public:
 
 public:
   /**
+   * @brief Add the content of a stream to a new container.
+   *
+   * @param input     The input stream to read.
+   * @param container The container where to add data.
+   *                  Needs not be a SiteContainer, as aligned sequences can be stored in a simple SequenceContainer.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readAlignment(
+      std::istream& input, 
+      SequenceContainerInterface& container) const = 0;
+
+  /**
+   * @brief Create a new container from a file.
+   *
+   * @param path      The path to the file to read.
+   * @param container The container where to add data.
+   *                  Needs not be a SiteContainer, as aligned sequences can be stored in a simple SequenceContainer.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readAlignment(
+      const std::string& path,
+      SequenceContainerInterface& container) const = 0;
+
+  /**
    * @brief Create a new container from a stream.
    *
    * @param input  The input stream to read.
@@ -112,7 +159,10 @@ public:
    * @return A new SiteContainer object.
    * @throw Exception If the file is not in the specified format.
    */
-  virtual SiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const = 0;
+  virtual std::unique_ptr<SiteContainerInterface> readAlignment(
+      std::istream& input, 
+      std::shared_ptr<const Alphabet> alpha) const = 0;
+
   /**
    * @brief Create a new container from a file.
    *
@@ -121,7 +171,9 @@ public:
    * @return A new SiteContainer object.
    * @throw Exception If the file is not in the specified format.
    */
-  virtual SiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const = 0;
+  virtual std::unique_ptr<SiteContainerInterface> readAlignment(
+      const std::string& path,
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 };
 
 /**
@@ -141,12 +193,34 @@ public:
   /**
    * @brief Create a new container from a stream.
    *
+   * @param input     The input stream to read.
+   * @param container The container where to add data.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readSequences(
+      std::istream& input, 
+      ProbabilisticSequenceContainerInterface& container) const = 0;
+  /**
+   * @brief Create a new container from a file.
+   *
+   * @param path      The path to the file to read.
+   * @param container The container where to add data.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readSequences(
+      const std::string& path,
+      ProbabilisticSequenceContainerInterface& container) const = 0;
+
+  /**
+   * @brief Create a new container from a stream.
+   *
    * @param input  The input stream to read.
    * @param alpha The alphabet to be associated to the container.
    * @return A new ProbabilisticSequenceContainer object.
    */
-
-  virtual ProbabilisticSequenceContainer* readSequences(std::istream& input, const Alphabet* alpha) = 0;
+  virtual std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(
+      std::istream& input,
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 
   /**
    * @brief Create a new container from a file.
@@ -155,8 +229,9 @@ public:
    * @param alpha The alphabet to be associated to the container.
    * @return A new ProbabilisticSequenceContainer object.
    */
-
-  virtual ProbabilisticSequenceContainer* readSequences(const std::string& path, const Alphabet* alpha) = 0;
+  virtual std::unique_ptr<ProbabilisticSequenceContainerInterface> readSequences(
+      const std::string& path,
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 };
 
 /**
@@ -174,14 +249,39 @@ public:
 
 public:
   /**
+   * @brief Add the content of a stream to a new container.
+   *
+   * @param input     The input stream to read.
+   * @param container The container where to add data.
+   *                  Needs not be a SiteContainer, as aligned sequences can be stored in a simple SequenceContainer.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readAlignment(
+      std::istream& input, 
+      ProbabilisticSequenceContainerInterface& container) const = 0;
+
+  /**
+   * @brief Create a new container from a file.
+   *
+   * @param path      The path to the file to read.
+   * @param container The container where to add data.
+   *                  Needs not be a SiteContainer, as aligned sequences can be stored in a simple SequenceContainer.
+   * @throw Exception If the file is not in the specified format.
+   */
+  virtual void readAlignment(
+      const std::string& path,
+      ProbabilisticSequenceContainerInterface& container) const = 0;
+
+  /**
    * @brief Create a new container from a stream.
    *
    * @param input  The input stream to read.
    * @param alpha The alphabet to be associated to the container.
    * @return A new ProbabilisticSiteContainer object.
    */
-
-  virtual ProbabilisticSiteContainer* readAlignment(std::istream& input, const Alphabet* alpha) const = 0;
+  virtual std::unique_ptr<ProbabilisticSiteContainerInterface> readAlignment(
+      std::istream& input,
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 
   /**
    * @brief Create a new container from a file.
@@ -190,8 +290,9 @@ public:
    * @param alpha The alphabet to be associated to the container.
    * @return A new ProbabilisticSiteContainer object.
    */
-
-  virtual ProbabilisticSiteContainer* readAlignment(const std::string& path, const Alphabet* alpha) const = 0;
+  virtual std::unique_ptr<ProbabilisticSiteContainerInterface> readAlignment(
+      const std::string& path,
+      std::shared_ptr<const Alphabet> alpha) const = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_ISEQUENCE_H

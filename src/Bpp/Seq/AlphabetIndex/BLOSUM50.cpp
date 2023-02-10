@@ -65,7 +65,7 @@ double BLOSUM50::getIndex(const std::string& state1, const std::string& state2) 
   return distanceMatrix_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
 }
 
-LinearMatrix<double>* BLOSUM50::getIndexMatrix() const
+const Matrix<double>& BLOSUM50::getIndexMatrix() const
 {
-  return new LinearMatrix<double>(distanceMatrix_);
+  return distanceMatrix_;
 }

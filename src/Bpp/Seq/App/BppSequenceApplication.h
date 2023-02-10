@@ -55,8 +55,9 @@ using namespace std;
 
 #include "../Alphabet/Alphabet.h"
 #include "../Alphabet/CodonAlphabet.h"
+#include "../Container/AlignmentData.h"
+#include "../Container/SiteContainer.h"
 #include "SequenceApplicationTools.h"
-#include "../Container/AlignedValuesContainer.h"
 
 namespace bpp
 {
@@ -79,7 +80,7 @@ public:
   /*
    * @brief get the Alphabet
    */
-  virtual Alphabet* getAlphabet(
+  virtual std::shared_ptr<Alphabet> getAlphabet(
     const string& suffix = "",
     bool suffixIsOptional = true,
     bool allowGeneric = false) const;
@@ -87,16 +88,17 @@ public:
   /*
    * @brief get the GeneticCode
    */
-  virtual GeneticCode* getGeneticCode(
-    const Alphabet* alphabet,
+  virtual std::shared_ptr<GeneticCode> getGeneticCode(
+    std::shared_ptr<const Alphabet>& alphabet,
     const string& suffix = "",
     bool suffixIsOptional = true) const;
 
   /*
    * @brief Get the std::map of alignments
    */
-  virtual std::map<size_t, AlignedValuesContainer*> getAlignmentsMap(
-    const Alphabet* alphabet,
+  virtual std::map<size_t, std::unique_ptr<AlignmentDataInterface> >
+  getAlignmentsMap(
+    std::shared_ptr<const Alphabet>& alphabet,
     bool changeGapsToUnknownCharacters = true,
     bool optionalData = false,
     const std::string& prefix = "input.",
@@ -107,9 +109,9 @@ public:
   /*
    * @brief Get the std::map of const alignments
    */
-  
-  virtual std::map<size_t, const AlignedValuesContainer*> getConstAlignmentsMap(
-    const Alphabet* alphabet,
+  virtual std::map<size_t, std::unique_ptr<const AlignmentDataInterface> >
+  getConstAlignmentsMap(
+    std::shared_ptr<const Alphabet>& alphabet,
     bool changeGapsToUnknownCharacters = true,
     bool optionalData = false,
     const std::string& prefix = "input.",

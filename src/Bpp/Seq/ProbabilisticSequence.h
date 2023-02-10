@@ -42,7 +42,7 @@
 #define BPP_SEQ_PROBABILISTICSEQUENCE_H
 
 
-#include "CoreSequenceSymbolList.h"
+#include "CoreSequence.h"
 #include "ProbabilisticSymbolList.h"
 #include <Bpp/Numeric/Table.h>
 
@@ -51,46 +51,38 @@
 
 namespace bpp
 {
-/**
- * @brief The probabilistic sequence interface.
- *
- * This is a general purpose container, containing an ordered list of
- * elements.  The states represented by the elements is defined by an
- * alphabet object.
- *
- * ProbabilisticSequence objects also contain a name attribute and
- * potentially several comment lines.
- *
- * @see Alphabet
- */
-
-  class ProbabilisticSequence:
-    public virtual ProbaCoreSequenceSymbolList
+  /**
+   * @brief The probabilistic sequence interface.
+   *
+   * This is a general purpose container, containing an ordered list of
+   * elements.  The states represented by the elements is defined by an
+   * alphabet object.
+   *
+   * ProbabilisticSequence objects also contain a name attribute and
+   * potentially several comment lines.
+   *
+   * @see Alphabet
+   */
+  class ProbabilisticSequenceInterface:
+    public virtual CoreSequenceInterface,
+    public virtual ProbabilisticSymbolListInterface
   {
   public:
-    virtual ~ProbabilisticSequence() {}
+    typedef std::vector<double> ElementType;
 
   public:
-    virtual ProbabilisticSequence* clone() const = 0;
+    virtual ~ProbabilisticSequenceInterface() {}
+
+  public:
+    virtual ProbabilisticSequenceInterface* clone() const = 0;
     
-    // virtual void setContent(const Table<double>& content)  = 0;
-
-    virtual const std::vector<std::vector<double> >& getContent() const = 0;
-
-    /**
-     * @brief Get contents with alphabet states as column names.
-     *
-     */
-     
-    virtual const Table<double>& getTable() const = 0;
-
   };
     
 /**
  * @brief A basic implementation of the ProbabilisticSequence interface.
  *
  * This is a general purpose container, containing an ordered list of
- * elmements.  The states represented by the elements is defined by an
+ * elements.  The states represented by the elements is defined by an
  * alphabet object, which is passed to the contructor by a pointer.
  *
  * ProbabilisticSequence objects also contain a name attribute and
@@ -98,12 +90,11 @@ namespace bpp
  *
  * @see Alphabet
  */
-
-  class BasicProbabilisticSequence :
-    public virtual ProbabilisticSequence,
-    public virtual AbstractCoreSequence,
-    public virtual BasicProbabilisticSymbolList
-  {
+class ProbabilisticSequence :
+  public virtual ProbabilisticSequenceInterface,
+  public AbstractCoreSequence,
+  public virtual ProbabilisticSymbolList //Diamond inheritence
+{
   public:
     /**
      * @brief Empty constructor : build a void ProbabilisticSequence with just an Alphabet
@@ -112,22 +103,26 @@ namespace bpp
      * an empty ProbabilisticSequence, i.e., without name nor sequence
      * data.
      *
-     * @param alpha A pointer to the Alphabet to be used with this ProbabilisticSequence.
+     * @param alphabet A pointer to the Alphabet to be used with this ProbabilisticSequence.
      */
-    BasicProbabilisticSequence(const Alphabet* alpha);
+    ProbabilisticSequence(std::shared_ptr<const Alphabet>& alphabet):
+      ProbabilisticSymbolList(alphabet), AbstractCoreSequence()
+    {}
 
     /**
-     * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
-     *
-     * One can use it safely for RNA, DNA and protein sequences.
+     * @brief Direct constructor : build a ProbabilisticSequence object from a vector.
      *
      * @param name The sequence name.
-     * @param sequence The entire sequence to parsed as a Table<double>.
-     * @param alpha A pointer to the alphabet associated with this sequence.
+     * @param sequence The entire sequence to parsed as a vector.
+     * @param alphabet A pointer to the alphabet associated with this sequence.
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
-
-    BasicProbabilisticSequence(const std::string& name, const Table<double>& sequence, const Alphabet* alpha);
+    ProbabilisticSequence(
+        const std::string& name,
+	const std::vector<ProbabilisticSequence::SymbolType>& sequence,
+	std::shared_ptr<const Alphabet>& alphabet):
+      ProbabilisticSymbolList(sequence, alphabet), AbstractCoreSequence(name)
+    {}
 
     /**
      * @brief Direct constructor : build a ProbabilisticSequence object from Table<double>.
@@ -136,58 +131,104 @@ namespace bpp
      *
      * @param name The sequence name.
      * @param sequence The entire sequence to parsed as a Table<double>.
+     * @param alphabet A pointer to the alphabet associated with this sequence.
+     * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
+     */
+    ProbabilisticSequence(
+        const std::string& name,
+	const DTable& sequence,
+	std::shared_ptr<const Alphabet>& alphabet):
+      ProbabilisticSymbolList(sequence, alphabet),
+      AbstractCoreSequence(name)
+    {}
+
+    /**
+     * @brief Direct constructor : build a ProbabilisticSequence object from a vector.
+     *
+     * @param name The sequence name.
+     * @param sequence The entire sequence to parsed as a vector.
      * @param comments Comments to add to the sequence.
-     * @param alpha A pointer to the alphabet associated with this sequence.
+     * @param alphabet A pointer to the alphabet associated with this sequence.
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
-    BasicProbabilisticSequence(const std::string& name, const Table<double>& sequence, const Comments& comments, const Alphabet* alpha);
+    ProbabilisticSequence(
+	const std::string& name,
+	const std::vector<ProbabilisticSequence::SymbolType>& sequence,
+	const Comments& comments,
+	std::shared_ptr<const Alphabet>& alphabet):
+      ProbabilisticSymbolList(sequence, alphabet),
+      AbstractCoreSequence(name, comments) 
+    {}
 
     /**
-     * @brief The copy constructor.  This does not perform a hard copy of the alphabet object.
-     */
-    BasicProbabilisticSequence(const BasicProbabilisticSequence& s);
-
-    /**
-     * @brief The assignment operator.  This does not perform a hard cop of the alphabet object.
+     * @brief Direct constructor : build a ProbabilisticSequence object from a DTable.
      *
-     * @return A reference to the assigned BasicProbabilisticSequence.
+     * One can use it safely for RNA, DNA and protein sequences.
+     *
+     * @param name The sequence name.
+     * @param sequence The entire sequence to parsed as a DTable.
+     * @param comments Comments to add to the sequence.
+     * @param alphabet A pointer to the alphabet associated with this sequence.
+     * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
-    BasicProbabilisticSequence& operator=(const BasicProbabilisticSequence& s);
+    ProbabilisticSequence(
+	const std::string& name,
+ 	 const DTable& sequence,
+	const Comments& comments,
+	std::shared_ptr<const Alphabet>& alphabet):
+      ProbabilisticSymbolList(sequence, alphabet),
+      AbstractCoreSequence(name, comments) 
+    {}
+
+    /**
+     * @brief The copy constructor.
+     */
+    ProbabilisticSequence(const ProbabilisticSequence& sequence) :
+      ProbabilisticSymbolList(sequence),
+      AbstractCoreSequence(sequence)
+    {}
+
+
+    /**
+     * @brief The assignment operator.
+     *
+     * @return A reference to the assigned ProbabilisticSequence.
+     */
+    ProbabilisticSequence& operator=(const ProbabilisticSequence& sequence)
+    {
+      ProbabilisticSymbolList::operator=(sequence);
+      AbstractCoreSequence::operator=(sequence);
+      return *this;
+    }
+
 
     /**
      * @name The Clonable interface
      *
      * @{
      */
-    BasicProbabilisticSequence* clone() const { return new BasicProbabilisticSequence(*this); }
+    ProbabilisticSequence* clone() const override
+    { 
+      return new ProbabilisticSequence(*this);
+    }
 
     /**
      * @}
      */
 
     // class destructor
-    virtual ~BasicProbabilisticSequence() {}
+    virtual ~ProbabilisticSequence() {}
 
   public:
-    using ProbabilisticSequence::setContent;
-    void setContent(const Table<double>& content) { BasicProbabilisticSymbolList::setContent(content); }
+    void setToSizeR(size_t newSize) override {} // leave empty for now
 
-    const std::vector<std::vector<double> >& getContent() const
+    void setToSizeL(size_t newSize) override {}
+
+    double getStateValueAt(size_t sitePosition, int state) const override
     {
-      return BasicProbabilisticSymbolList::getContent();
+      if (sitePosition  >= size()) throw IndexOutOfBoundsException("ProbabilisticSequence::getStateValueAt.", sitePosition, 0, size() - 1);
+      return (*this)[sitePosition][static_cast<size_t>(state)];
     }
-
-    const DataTable& getTable() const
-    {
-      return BasicProbabilisticSymbolList::getTable();
-    }
-
-    void setToSizeR(size_t newSize) {} // leave empty for now
-
-    void setToSizeL(size_t newSize) {}
-
-    void clearComments() { Commentable::clearComments(); } // Must be here, do not know why
-
   };
 } // end of namespace bpp
 #endif // BPP_SEQ_PROBABILISTICSEQUENCE_H

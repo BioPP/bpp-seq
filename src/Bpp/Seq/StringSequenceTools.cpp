@@ -270,15 +270,15 @@ double StringSequenceTools::getGCcontent(const string& sequence, size_t pos, siz
 
 /****************************************************************************************/
 
-vector<int> StringSequenceTools::codeSequence(const string& sequence, const Alphabet* alphabet)
+vector<int> StringSequenceTools::codeSequence(const string& sequence, std::shared_ptr<const Alphabet>& alphabet)
 {
-  unsigned int size = AlphabetTools::getAlphabetCodingSize(alphabet); // Warning,
-                                                                      // an
-                                                                      // exception
-                                                                      // may
-                                                                      // be
-                                                                      // casted
-                                                                      // here!
+  unsigned int size = AlphabetTools::getAlphabetCodingSize(*alphabet); // Warning,
+                                                                       // an
+                                                                       // exception
+                                                                       // may
+                                                                       // be
+                                                                       // casted
+                                                                       // here!
   vector<int> code(static_cast<size_t>(floor(static_cast<double>(sequence.size()) / static_cast<double>(size))));
   size_t pos = 0;
   size_t count = 0;
@@ -293,24 +293,24 @@ vector<int> StringSequenceTools::codeSequence(const string& sequence, const Alph
 
 /****************************************************************************************/
 
-string StringSequenceTools::decodeSequence(const vector<int>& sequence, const Alphabet* alphabet)
+string StringSequenceTools::decodeSequence(const vector<int>& sequence, std::shared_ptr<const Alphabet>& alphabet)
 {
   string result = "";
-  for (unsigned int i = 0; i < sequence.size(); i++)
+  for (auto i : sequence)
   {
-    result += alphabet->intToChar(sequence[i]);
+    result += alphabet->intToChar(i);
   }
   return result;
 }
 
 /****************************************************************************************/
 
-Alphabet* StringSequenceTools::getAlphabetFromSequence(const std::string& sequence)
+std::shared_ptr<const Alphabet> StringSequenceTools::getAlphabetFromSequence(const std::string& sequence)
 {
   // empty sequence test
   if (sequence.size() == 0)
   {
-    throw EmptySequenceException("Sequence::getAlphabetFromSequence : Empty sequence string");
+    throw Exception("Sequence::getAlphabetFromSequence : Empty sequence string");
   }
 
   // initialisation
@@ -320,10 +320,10 @@ Alphabet* StringSequenceTools::getAlphabetFromSequence(const std::string& sequen
   bool pd = false; // Protein or DNA (T)
 
   // Main loop : for all character in sequence
-  for (unsigned int i = 0; i < sequence.size(); i++)
+  for (auto i : sequence)
   {
     // Character analyse
-    switch (AlphabetTools::getType(sequence[i]))
+    switch (AlphabetTools::getType(i))
     {
     case 0: u = true; break;
     case 3: p = true; break;
@@ -333,16 +333,16 @@ Alphabet* StringSequenceTools::getAlphabetFromSequence(const std::string& sequen
   }
 
   if (u)
-    throw AlphabetException ("Sequence::getAlphabetFromSequence : Unknow character detected in specified sequence");
+    throw Exception("Sequence::getAlphabetFromSequence : Unknow character detected in specified sequence");
   if (r && pd)
-    throw SequenceException ("Sequence::getAlphabetFromSequence : Both 'T' and 'U' in the same sequence!");
+    throw Exception("Sequence::getAlphabetFromSequence : Both 'T' and 'U' in the same sequence!");
   if (r && p)
-    throw SequenceException ("Sequence::getAlphabetFromSequence : Protein character and 'U' in the same sequence!");
+    throw Exception("Sequence::getAlphabetFromSequence : Protein character and 'U' in the same sequence!");
   if (p)
-    return new ProteicAlphabet();
+    return AlphabetTools::PROTEIN_ALPHABET;
   if (r)
-    return new RNA();
-  return new DNA();
+    return AlphabetTools::RNA_ALPHABET;
+  return AlphabetTools::DNA_ALPHABET;
 }
 
 /****************************************************************************************/

@@ -45,15 +45,15 @@
 using namespace bpp;
 using namespace std;
 
-DNA SequenceWithQualityTools::DNA_;
-RNA SequenceWithQualityTools::RNA_;
-NucleicAcidsReplication SequenceWithQualityTools::DNARep_(&DNA_, &DNA_);
-NucleicAcidsReplication SequenceWithQualityTools::RNARep_(&RNA_, &RNA_);
-NucleicAcidsReplication SequenceWithQualityTools::transc_(&DNA_, &RNA_);
+NucleicAcidsReplication SequenceWithQualityTools::DNARep_(AlphabetTools::DNA_ALPHABET, AlphabetTools::DNA_ALPHABET);
+NucleicAcidsReplication SequenceWithQualityTools::RNARep_(AlphabetTools::RNA_ALPHABET, AlphabetTools::RNA_ALPHABET);
+NucleicAcidsReplication SequenceWithQualityTools::transc_(AlphabetTools::DNA_ALPHABET, AlphabetTools::RNA_ALPHABET);
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::concatenate(const SequenceWithQuality& seqwq1, const SequenceWithQuality& seqwq2)
+unique_ptr<SequenceWithQuality> SequenceWithQualityTools::concatenate(
+    const SequenceWithQuality& seqwq1,
+    const SequenceWithQuality& seqwq2)
 {
   // Sequence's alphabets matching verification
   if ((seqwq1.getAlphabet()->getAlphabetType()) != (seqwq2.getAlphabet()->getAlphabetType()))
@@ -71,12 +71,14 @@ SequenceWithQuality* SequenceWithQualityTools::concatenate(const SequenceWithQua
 
   sequence.insert(sequence.end(), sequence2.begin(), sequence2.end());
   qualities.insert(qualities.end(), qualities2.begin(), qualities2.end());
-  return new SequenceWithQuality(seqwq1.getName(), sequence, qualities, seqwq1.getComments(), seqwq1.getAlphabet());
+  auto alphaPtr = seqwq1.getAlphabet();
+  return make_unique<SequenceWithQuality>(seqwq1.getName(), sequence, qualities, seqwq1.getComments(), alphaPtr);
 }
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::complement(const SequenceWithQuality& sequence)
+unique_ptr<SequenceWithQuality> SequenceWithQualityTools::complement(
+    const SequenceWithQuality& sequence)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
@@ -92,30 +94,30 @@ SequenceWithQuality* SequenceWithQualityTools::complement(const SequenceWithQual
   {
     throw AlphabetException ("SequenceTools::complement : Sequence must be nucleic.", sequence.getAlphabet());
   }
-  Sequence* seq = NAR->translate(sequence);
-  SequenceWithQuality* seqwq = new SequenceWithQuality(*seq, sequence.getQualities());
-  delete seq;
+  auto seq = NAR->translate(sequence);
+  auto seqwq = make_unique<SequenceWithQuality>(*seq, sequence.getQualities());
   return seqwq;
 }
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::transcript(const SequenceWithQuality& sequence)
+unique_ptr<SequenceWithQuality> SequenceWithQualityTools::transcript(
+    const SequenceWithQuality& sequence)
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "DNA alphabet")
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
   }
-  Sequence* seq = transc_.translate(sequence);
-  SequenceWithQuality* seqwq = new SequenceWithQuality(*seq, sequence.getQualities());
-  delete seq;
+  auto seq = transc_.translate(sequence);
+  auto seqwq = make_unique<SequenceWithQuality>(*seq, sequence.getQualities());
   return seqwq;
 }
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::reverseTranscript(const SequenceWithQuality& sequence)
+unique_ptr<SequenceWithQuality> SequenceWithQualityTools::reverseTranscript(
+    const SequenceWithQuality& sequence)
 {
   // Alphabet type checking
   if (sequence.getAlphabet()->getAlphabetType() != "RNA alphabet")
@@ -123,21 +125,21 @@ SequenceWithQuality* SequenceWithQualityTools::reverseTranscript(const SequenceW
     throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
   }
 
-  Sequence* seq = transc_.reverse(sequence);
+  auto seq = transc_.reverse(sequence);
   // Here we must also reverse the scores:
   vector<int> scores(sequence.getQualities().rbegin(), sequence.getQualities().rend());
-  SequenceWithQuality* seqwq = new SequenceWithQuality(*seq, scores);
-  delete seq;
+  auto seqwq = make_unique<SequenceWithQuality>(*seq, scores);
   return seqwq;
 }
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::invert(const SequenceWithQuality& sequence)
+unique_ptr<SequenceWithQuality> SequenceWithQualityTools::invert(
+    const SequenceWithQuality& sequence)
 {
   vector<int> iContent(sequence.getContent().rbegin(), sequence.getContent().rend());
   vector<int> iQualities(sequence.getQualities().rbegin(), sequence.getQualities().rend());
-  SequenceWithQuality* iSeq = sequence.clone();
+  auto iSeq = unique_ptr<SequenceWithQuality>(sequence.clone());
   iSeq->setContent(iContent);
   iSeq->setQualities(iQualities);
 
@@ -146,12 +148,12 @@ SequenceWithQuality* SequenceWithQualityTools::invert(const SequenceWithQuality&
 
 /******************************************************************************/
 
-SequenceWithQuality* SequenceWithQualityTools::removeGaps(const SequenceWithQuality& seq)
+unique_ptr<SequenceWithQuality> SequenceWithQualityTools::removeGaps(const SequenceWithQuality& seq)
 {
   vector<int> content;
   vector<int> qualities;
-  const Alphabet* alpha = seq.getAlphabet();
-  for (unsigned int i = 0; i < seq.size(); i++)
+  auto alpha = seq.getAlphabet();
+  for (size_t i = 0; i < seq.size(); ++i)
   {
     if (!alpha->isGap(seq[i]))
     {
@@ -159,7 +161,7 @@ SequenceWithQuality* SequenceWithQualityTools::removeGaps(const SequenceWithQual
       qualities.push_back(seq.getQualities()[i]);
     }
   }
-  SequenceWithQuality* newSeq = dynamic_cast<SequenceWithQuality*>(seq.clone());
+  auto newSeq = unique_ptr<SequenceWithQuality>(seq.clone());
   newSeq->setContent(content);
   newSeq->setQualities(qualities);
   return newSeq;
@@ -167,10 +169,3 @@ SequenceWithQuality* SequenceWithQualityTools::removeGaps(const SequenceWithQual
 
 /******************************************************************************/
 
-SequenceWithQuality& SequenceWithQualityTools::trimLeft(SequenceWithQuality& seq)
-{
-  bool badqual = false;
-  while (badqual)
-  {}
-  return seq;
-}

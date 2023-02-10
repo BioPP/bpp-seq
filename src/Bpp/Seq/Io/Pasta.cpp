@@ -44,6 +44,7 @@
 #include <fstream>
 
 #include "../StringSequenceTools.h"
+#include "../Container/SequenceContainer.h"
 #include "Pasta.h"
 
 using namespace bpp;
@@ -188,10 +189,10 @@ bool Pasta::nextSequence(istream& input, ProbabilisticSequence& seq, bool hasLab
 
 /********************************************************************************/
 
-void Pasta::appendSequencesFromStream(istream& input, VectorProbabilisticSiteContainer& container) const
+void Pasta::appendAlignmentFromStream(istream& input, ProbabilisticSequenceContainerInterface& container) const
 {
   if (!input)
-    throw IOException("Pasta::appendFromStream: can't read from istream input");
+    throw IOException("Pasta::appendAlignmentFromStream: can't read from istream input");
 
   char c = '\n';
   char last_c;
@@ -199,6 +200,7 @@ void Pasta::appendSequencesFromStream(istream& input, VectorProbabilisticSiteCon
   bool hasSeq = true;
   string line = "";
   Comments cmts;
+  auto alphaPtr = container.getAlphabet();
 
   // labels for the states
   bool hasLabels = false;
@@ -294,14 +296,14 @@ void Pasta::appendSequencesFromStream(istream& input, VectorProbabilisticSiteCon
     {
       input.putback(c);
       c = last_c;
-      shared_ptr<BasicProbabilisticSequence> tmpseq(new BasicProbabilisticSequence(container.getAlphabet())); // add probabilistic sequences instead
+      auto tmpseq = make_unique<ProbabilisticSequence>(alphaPtr); // add probabilistic sequences instead
       hasSeq = nextSequence(input, *tmpseq, hasLabels, permutationMap);
-      container.addSequence(*tmpseq, checkNames_);
+      container.addSequence(tmpseq->getName(), tmpseq);
     }
   }
   if (extended_ && cmts.size())
   {
-    container.setGeneralComments(cmts);
+    container.setComments(cmts);
   }
 }
 
@@ -313,8 +315,7 @@ void Pasta::writeSequence(ostream& output, const ProbabilisticSequence& seq, boo
   if (!output)
     throw IOException("Pasta::writeSequence : can't write to ostream output");
 
-  // The alphabet
-
+  // The alphabet 
   if (header)
   {
     vector<string> resolved_chars = seq.getAlphabet()->getResolvedChars();
@@ -324,14 +325,14 @@ void Pasta::writeSequence(ostream& output, const ProbabilisticSequence& seq, boo
     }
     output << endl;
   }
-
+  
   // sequence name
   output << ">" << seq.getName();
 
   // sequence comments
   if (extended_)
   {
-    for (unsigned int i = 0; i < seq.getComments().size(); ++i)
+    for (size_t i = 0; i < seq.getComments().size(); ++i)
     {
       output << " \\" << seq.getComments()[i];
     }
@@ -356,8 +357,7 @@ void Pasta::writeSequence(ostream& output, const Sequence& seq, bool header) con
   if (!output)
     throw IOException("Pasta::writeSequence : can't write to ostream output");
 
-  // The alphabet
-
+  // The alphabet 
   if (header)
   {
     vector<string> resolved_chars = seq.getAlphabet()->getResolvedChars();
@@ -374,7 +374,7 @@ void Pasta::writeSequence(ostream& output, const Sequence& seq, bool header) con
   // sequence comments
   if (extended_)
   {
-    for (unsigned int i = 0; i < seq.getComments().size(); ++i)
+    for (size_t i = 0; i < seq.getComments().size(); ++i)
     {
       output << " \\" << seq.getComments()[i];
     }
@@ -385,9 +385,9 @@ void Pasta::writeSequence(ostream& output, const Sequence& seq, bool header) con
 
   int nbc = (int)seq.getAlphabet()->getResolvedChars().size();
 
-  for (size_t i = 0; i < seq.size(); i++)
+  for (size_t i = 0; i < seq.size(); ++i)
   {
-    for (int s = 0; s < nbc; s++)
+    for (int s = 0; s < nbc; ++s)
     {
       output << seq.getStateValueAt(i, (int)s);
       output << "\t";
@@ -396,36 +396,3 @@ void Pasta::writeSequence(ostream& output, const Sequence& seq, bool header) con
   }
 }
 
-void Pasta::writeAlignedValues(ostream& output, const AlignedValuesContainer& avc) const
-{
-  if (!output)
-    throw IOException("Pasta::write: can't write to ostream output");
-
-  // Main loop : for all sequences in vector container
-
-  const AbstractProbabilisticSequenceContainer* vpsc = dynamic_cast<const AbstractProbabilisticSequenceContainer*>(&avc);
-
-  if (vpsc)
-  {
-    bool first=true;
-    for (const auto& name : vpsc->getSequenceNames())
-    {
-      writeSequence(output, vpsc->getSequence(name), first);
-      first=false;
-    }
-  }
-  else
-  {
-    const SequenceContainer* sc = dynamic_cast<const SiteContainer*>(&avc);
-
-    if (sc)
-    {
-      bool first=true;
-      for (const auto& name : sc->getSequenceNames())
-      {
-        writeSequence(output, sc->getSequence(name), first);
-        first=false;
-      }
-    }
-  }
-}

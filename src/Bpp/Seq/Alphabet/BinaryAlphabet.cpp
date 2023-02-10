@@ -41,6 +41,7 @@
 
 #include "AlphabetState.h"
 #include "BinaryAlphabet.h"
+#include "AlphabetExceptions.h"
 
 // From Utils:
 #include <Bpp/Text/TextTools.h>
@@ -63,13 +64,13 @@ BinaryAlphabet::BinaryAlphabet()
 bool BinaryAlphabet::isResolvedIn(int state1, int state2) const
 {
   if (state1 < 0 || !isIntInAlphabet(state1))
-    throw BadIntException(state1, "BinaryAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.");
+    throw BadIntException(state1, "BinaryAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state1) + " is unknown.", this);
 
   if (state2 < 0 || !isIntInAlphabet(state2))
-    throw BadIntException(state2, "BinaryAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.");
+    throw BadIntException(state2, "BinaryAlphabet::isResolvedIn(int, int): Specified base " + intToChar(state2) + " is unknown.", this);
 
   if (isUnresolved(state2))
-    throw BadIntException(state2, "BinaryAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2));
+    throw BadIntException(state2, "BinaryAlphabet::isResolvedIn(int, int): Unresolved base " + intToChar(state2), this);
 
   return (state1 == 2) || (state1 == state2);
 }
@@ -79,7 +80,7 @@ bool BinaryAlphabet::isResolvedIn(int state1, int state2) const
 std::vector<int> BinaryAlphabet::getAlias(int state) const
 {
   if (!isIntInAlphabet(state))
-    throw BadIntException(state, "BinaryAlphabet::getAlias(int): Specified base unknown.");
+    throw BadIntException(state, "BinaryAlphabet::getAlias(int): Specified base unknown.", this);
   std::vector<int> v;
   switch (state)
   {
@@ -106,7 +107,7 @@ std::vector<int> BinaryAlphabet::getAlias(int state) const
 std::vector<std::string> BinaryAlphabet::getAlias(const std::string& state) const
 {
   if (!isCharInAlphabet(state))
-    throw BadCharException(state, "BinaryAlphabet::getAlias(char): Specified base unknown.");
+    throw BadCharException(state, "BinaryAlphabet::getAlias(char): Specified base unknown.", this);
 
   std::vector<std::string> v(1);
   if (state == "?")

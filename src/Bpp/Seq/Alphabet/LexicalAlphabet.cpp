@@ -42,6 +42,7 @@
 #include <Bpp/Text/TextTools.h>
 
 #include "LexicalAlphabet.h"
+#include "AlphabetExceptions.h"
 
 using namespace bpp;
 

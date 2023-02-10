@@ -48,7 +48,7 @@ using namespace std;
 
 /****************************************************************************************/
 
-void Mase::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc) const
+void Mase::appendSequencesFromStream(std::istream& input, SequenceContainerInterface& vsc) const
 {
   if (!input)
   {
@@ -61,7 +61,7 @@ void Mase::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc
   bool comments = false;
 
   // Get current general comments is VectorSequenceContainer
-  fileComments = vsc.getGeneralComments();
+  fileComments = vsc.getComments();
 
   // Main loop : for all file lines
   while (!input.eof())
@@ -85,7 +85,9 @@ void Mase::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc
         if ((name != "") && (sequence != ""))
         {
           // New sequence creation, and addition in existing VectorSequenceContainer
-          vsc.addSequence(BasicSequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
+	  auto alphaPtr = vsc.getAlphabet();
+          auto seqPtr = make_unique<Sequence>(name, sequence, seqComments, alphaPtr);
+          vsc.addSequence(seqPtr->getName(), seqPtr);
           name = "";
           sequence = "";
           seqComments.clear();
@@ -115,16 +117,18 @@ void Mase::appendSequencesFromStream(std::istream& input, SequenceContainer& vsc
   // Addition of the last sequence in file
   if ((name != "") && (sequence != ""))
   {
-    vsc.addSequence(BasicSequence(name, sequence, seqComments, vsc.getAlphabet()), checkNames_);
+    auto alphaPtr = vsc.getAlphabet();
+    auto seqPtr = make_unique<Sequence>(name, sequence, seqComments, alphaPtr);
+    vsc.addSequence(seqPtr->getName(), seqPtr);
   }
 
   // Set new general comments in VectorSequenceContainer (old + new comments)
-  vsc.setGeneralComments(fileComments);
+  vsc.setComments(fileComments);
 }
 
 /****************************************************************************************/
 
-void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const
+void Mase::writeSequences(ostream& output, const SequenceContainerInterface& sc) const
 {
   // Checking the existence of specified file, and possibility to open it in write mode
   if (!output)
@@ -132,7 +136,7 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const
     throw IOException ("Mase::write : failed to open file");
   }
 
-  Comments comments = sc.getGeneralComments();
+  Comments comments = sc.getComments();
 
   // Writing all general comments in file
   if (comments.size() == 0)
@@ -147,9 +151,9 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const
   string seq, temp = "";  // Initialization
 
   // Main loop : for all sequences
-  for (const auto& name: sc.getSequenceNames())
+  for (const auto& seqKey: sc.getSequenceKeys())
   {
-    comments = sc.getComments(name);
+    comments = sc.sequence(seqKey).getComments();
 
     // Writing all sequence comments in file
     // If no comments are associated with current sequence, an empy commentary line will be writed
@@ -166,10 +170,10 @@ void Mase::writeSequences(ostream& output, const SequenceContainer& sc) const
     }
 
     // Sequence name writing
-    output << name << endl;
+    output << sc.sequence(seqKey).getName() << endl;
 
     // Sequence cutting to specified characters number per line
-    seq = sc.toString(name);
+    seq = sc.sequence(seqKey).toString();
     while (seq != "")
     {
       if (seq.size() > charsByLine_)

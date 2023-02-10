@@ -154,7 +154,7 @@ void Fasta::writeSequence(ostream& output, const Sequence& seq) const
 
 /******************************************************************************/
 
-void Fasta::appendSequencesFromStream(istream& input, SequenceContainer& vsc) const
+void Fasta::appendSequencesFromStream(istream& input, SequenceContainerInterface& vsc) const
 {
   if (!input)
     throw IOException("Fasta::appendFromStream: can't read from istream input");
@@ -199,20 +199,21 @@ void Fasta::appendSequencesFromStream(istream& input, SequenceContainer& vsc) co
     {
       input.putback(c);
       c = last_c;
-      BasicSequence tmpseq("", "", vsc.getAlphabet());
-      hasSeq = nextSequence(input, tmpseq);
-      vsc.addSequence(tmpseq, checkNames_);
+      auto alphaPtr = vsc.getAlphabet();
+      auto tmpseq = make_unique<Sequence>("", "", alphaPtr);
+      hasSeq = nextSequence(input, *tmpseq);
+      vsc.addSequence(tmpseq->getName(), tmpseq);
     }
   }
   if (extended_ && cmts.size())
   {
-    vsc.setGeneralComments(cmts);
+    vsc.setComments(cmts);
   }
 }
 
 /******************************************************************************/
 
-void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const
+void Fasta::writeSequences(ostream& output, const SequenceContainerInterface& sc) const
 {
   if (!output)
     throw IOException("Fasta::write: can't write to ostream output");
@@ -220,9 +221,9 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const
   if (extended_)
   {
     // Loop for all general comments
-    for (unsigned int i = 0; i < sc.getGeneralComments().size(); i++)
+    for (size_t i = 0; i < sc.getComments().size(); ++i)
     {
-      output << "#\\" << sc.getGeneralComments()[i] << endl;
+      output << "#\\" << sc.getComments()[i] << endl;
     }
     output << endl;
   }
@@ -231,7 +232,7 @@ void Fasta::writeSequences(ostream& output, const SequenceContainer& sc) const
   vector<string> names = sc.getSequenceNames();
   for (size_t i = 0; i < names.size(); ++i)
   {
-    writeSequence(output, sc.getSequence(names[i]));
+    writeSequence(output, sc.sequence(names[i]));
   }
 }
 

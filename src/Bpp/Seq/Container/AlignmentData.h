@@ -1,7 +1,7 @@
 //
-// File: AlignedValuesContainer.h
+// File: AlignmentData.h
 // Authors:
-//   Laurent GuÃ©guen
+//   Laurent Guéguen
 //
 
 /*
@@ -37,19 +37,16 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef BPP_SEQ_CONTAINER_ALIGNEDVALUESCONTAINER_H
-#define BPP_SEQ_CONTAINER_ALIGNEDVALUESCONTAINER_H
+#ifndef BPP_SEQ_CONTAINER_ALIGNMENTDATA_H
+#define BPP_SEQ_CONTAINER_ALIGNMENTDATA_H
 
 #include <Bpp/Exceptions.h>
 #include <Bpp/Numeric/VectorTools.h>
-
-#include "../CruxSymbolListSite.h"
-#include "../Sequence.h"
-#include "OrderedValuesContainer.h"
+#include "SequenceData.h"
+#include "../CoreSite.h"
 
 // From the STL:
 #include <string>
-
 namespace bpp
 {
 /**
@@ -58,26 +55,23 @@ namespace bpp
  * Container implementing the AlignedValuesContainer interface deal
  * with <em>aligned</em> data.
  */
-
-class AlignedValuesContainer :
-  virtual public OrderedValuesContainer
+template<class HashType = std::string>
+class TemplateAlignmentDataInterface :
+  public virtual TemplateSequenceDataInterface<HashType>
 {
 public:
-  AlignedValuesContainer() {}
-  virtual ~AlignedValuesContainer() {}
+  TemplateAlignmentDataInterface() {}
+  virtual ~TemplateAlignmentDataInterface() {}
 
-  AlignedValuesContainer* clone() const = 0;
+  TemplateAlignmentDataInterface* clone() const override = 0;
 
 
   /**
-   * @brief Get a CruxSymbolListSite from a given position.
+   * @brief Get a site from a given position.
    *
    * @param siteIndex The position
    */
-
-  virtual const CruxSymbolListSite& getSymbolListSite(size_t siteIndex) const = 0;
-
-  virtual CruxSymbolListSite& getSymbolListSite(size_t siteIndex) = 0;
+  virtual const CoreSiteInterface& site(size_t siteIndex) const = 0;
 
   /**
    * @brief Remove a continuous range of sites in the container.
@@ -93,30 +87,29 @@ public:
    *
    * @return The number of sites in the container.
    */
-
   virtual size_t getNumberOfSites() const = 0;
 
   /**
    * @brief Set all positions attributes.
    */
-
   virtual void reindexSites() = 0;
 
   /**
-   * @brief Get all position attributes of sites.
+   * @brief Get all coordinates of sites.
    *
-   * @return A vector with all site positions.
+   * @return A vector with all site coordinates.
    */
-
-  virtual Vint getSitePositions() const = 0;
+  virtual Vint getSiteCoordinates() const = 0;
 
   /**
-   * @brief Set all position attributes of sites.
+   * @brief Set all coordinates of sites.
    *
-   * @param vPositions A vector with all site positions.
+   * @param vPositions A vector with all site coordinates.
    */
-
-  virtual void setSitePositions(Vint vPositions) = 0;
+  virtual void setSiteCoordinates(const Vint& coordinates) = 0;
 };
+
+using AlignmentDataInterface = TemplateAlignmentDataInterface<std::string>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_ALIGNEDVALUESCONTAINER_H

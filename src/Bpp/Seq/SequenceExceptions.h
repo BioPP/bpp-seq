@@ -44,10 +44,13 @@
 #include <Bpp/Exceptions.h>
 
 #include "Alphabet/Alphabet.h"
+#include "CoreSequence.h"
+
+#include<string>
+#include<memory>
 
 namespace bpp
 {
-class Sequence;
 
 /**
  * @brief The sequence exception base class.
@@ -61,18 +64,25 @@ private:
   /**
    * @brief A pointer toward a sequence object.
    */
-  const Sequence* sequence_;
+  const CoreSequenceInterface* sequence_;
 
 public:
   /**
    * @brief Build a new SequenceException object.
    *
    * @param text A message to be passed to the exception hierarchy.
-   * @param seq A const pointer toward the sequence that threw the exception.
+   * @param seq A const pointer toward the sequence that threw the exception. The exception object is not managing the pointer.
    */
-  SequenceException(const std::string& text, const Sequence* seq = 0);
+  SequenceException(const std::string& text, const CoreSequenceInterface* seq):
+      Exception("SequenceException: " + text + (seq ? "(" + seq->getName() + ")" : std::string(""))),
+  sequence_(seq)
+  {}
+  
+  SequenceException(const SequenceException& se) :
+      Exception(se),
+      sequence_(se.sequence_)
+  {}
 
-  SequenceException(const SequenceException& se) : Exception(se), sequence_(se.sequence_) {}
   SequenceException& operator=(const SequenceException& se)
   {
     Exception::operator=(se);
@@ -88,7 +98,7 @@ public:
    *
    * @return A const pointer toward the sequence.
    */
-  virtual const Sequence* getSequence() const { return sequence_; }
+  virtual const CoreSequenceInterface* getSequence() const { return sequence_; }
 };
 
 /**
@@ -104,7 +114,9 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param seq A const pointer toward the sequence that threw the exception.
    */
-  EmptySequenceException(const std::string& text, const Sequence* seq = 0);
+  EmptySequenceException(const std::string& text, const CoreSequenceInterface* seq) :
+      SequenceException("EmptySequenceException: " + text, seq)
+  {}
 
   virtual ~EmptySequenceException() {}
 };
@@ -122,7 +134,9 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param seq A const pointer toward the sequence that threw the exception.
    */
-  SequenceWithGapException(const std::string& text, const Sequence* seq = 0);
+  SequenceWithGapException(const std::string& text, const CoreSequenceInterface* seq) :
+      SequenceException("SequenceWithGapException: " + text, seq)
+  {}
 
   virtual ~SequenceWithGapException() {}
 };
@@ -142,7 +156,9 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param seq  A const pointer toward the sequence that threw the exception.
    */
-  SequenceNotAlignedException(const std::string& text, const Sequence* seq);
+  SequenceNotAlignedException(const std::string& text, const CoreSequenceInterface* seq) :
+      SequenceException("SequenceNotAlignedException: " + text, seq)
+  {}
 
   virtual ~SequenceNotAlignedException() {}
 };

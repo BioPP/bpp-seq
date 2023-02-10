@@ -54,6 +54,7 @@ using namespace bpp;
 MiyataAAChemicalDistance::MiyataAAChemicalDistance() :
   ProteicAlphabetIndex2(),
   distanceMatrix_(20, 20),
+  indexMatrix_(20, 20),
   sym_(true)
 {
   #include "__MiyataMatrixCode"
@@ -70,18 +71,17 @@ double MiyataAAChemicalDistance::getIndex(const string& state1, const string& st
   return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
 }
 
-Matrix<double>* MiyataAAChemicalDistance::getIndexMatrix() const
+void MiyataAAChemicalDistance::computeIndexMatrix_()
 {
-  RowMatrix<double>* m = new RowMatrix<double>(distanceMatrix_);
+  indexMatrix_ = distanceMatrix_;
   if (sym_)
   {
     for (unsigned int i = 0; i < 20; i++)
     {
       for (unsigned int j = 0; j < 20; j++)
       {
-        (*m)(i, j) = NumTools::abs<double>((*m)(i, j));
+        indexMatrix_(i, j) = NumTools::abs<double>(indexMatrix_(i, j));
       }
     }
   }
-  return m;
 }

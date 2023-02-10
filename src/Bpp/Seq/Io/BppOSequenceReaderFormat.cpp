@@ -54,7 +54,7 @@
 using namespace bpp;
 using namespace std;
 
-ISequence* BppOSequenceReaderFormat::read(const std::string& description)
+unique_ptr<ISequence> BppOSequenceReaderFormat::read(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";
@@ -93,7 +93,7 @@ ISequence* BppOSequenceReaderFormat::read(const std::string& description)
     else
       throw Exception("BppOAlignmentReaderFormat::read. Invalid argument 'type' for phylip format: " + type);
 
-    iSeq.reset(new Phylip(extended, sequential, 100, true, split));
+    iSeq.reset(new Phylip(extended, sequential, 100, split));
   }
   else if (format == "Fasta")
   {
@@ -123,5 +123,5 @@ ISequence* BppOSequenceReaderFormat::read(const std::string& description)
     throw Exception("Sequence format '" + format + "' unknown.");
   }
 
-  return iSeq.release();
+  return iSeq;
 }

@@ -45,6 +45,8 @@
 
 #include "../Alphabet/Alphabet.h"
 #include "../Sequence.h"
+#include "../SequenceWithQuality.h"
+#include "../ProbabilisticSequence.h"
 #include "IoSequenceStream.h"
 
 namespace bpp
@@ -56,11 +58,12 @@ namespace bpp
  *
  * @author Sylvain Gaillard
  */
-class ISequenceStream : public virtual IOSequenceStream
+template<class SequenceType>
+class TemplateISequenceStream : public virtual IOSequenceStream
 {
 public:
-  ISequenceStream() {}
-  virtual ~ISequenceStream() {}
+  TemplateISequenceStream() {}
+  virtual ~TemplateISequenceStream() {}
 
 public:
   /**
@@ -73,7 +76,12 @@ public:
    * @return true if a sequence was read or false if not.
    * @throw Exception IOExecption and Sequence related Exceptions.
    */
-  virtual bool nextSequence(std::istream& input, Sequence& seq) const = 0;
+  virtual bool nextSequence(std::istream& input, SequenceType& seq) const = 0;
 };
+
+using ISequenceStream = TemplateISequenceStream<Sequence>;
+using ISequenceWithQualityStream = TemplateISequenceStream<SequenceWithQuality>;
+using IProbabilisticSequenceStream = TemplateISequenceStream<ProbabilisticSequence>;
+
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_ISEQUENCESTREAM_H

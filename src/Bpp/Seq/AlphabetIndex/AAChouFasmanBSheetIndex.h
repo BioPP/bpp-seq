@@ -87,20 +87,22 @@ public:
 
   virtual ~AAChouFasmanBSheetIndex() {}
 
-  AAChouFasmanBSheetIndex* clone() const { return new AAChouFasmanBSheetIndex(); }
+  AAChouFasmanBSheetIndex* clone() const override {
+    return new AAChouFasmanBSheetIndex();
+  }
 
 public:
-  double getIndex(int state) const
+  double getIndex(int state) const override
   {
     return bSheet_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double getIndex(const std::string& state) const
+  double getIndex(const std::string& state) const override
   {
     return bSheet_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  std::vector<double>* getIndexVector() const { return new std::vector<double>(bSheet_); }
+  const std::vector<double>& indexVector() const override { return bSheet_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHOUFASMANBSHEETINDEX_H

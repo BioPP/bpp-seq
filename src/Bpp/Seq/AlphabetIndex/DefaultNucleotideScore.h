@@ -62,7 +62,7 @@ class DefaultNucleotideScore :
 {
 private:
   LinearMatrix<double> distanceMatrix_;
-  const NucleicAlphabet* alpha_;
+  std::shared_ptr<const NucleicAlphabet> alpha_;
 
 public:
   /**
@@ -98,12 +98,12 @@ public:
    * and divides it by the number of different states.
    * @author Sylvain Gaillard
    */
-  double getIndex(int state1, int state2) const;
-  double getIndex(const std::string& state1, const std::string& state2) const;
-  const Alphabet* getAlphabet() const { return alpha_; }
-  DefaultNucleotideScore* clone() const { return new DefaultNucleotideScore(*this); }
-  LinearMatrix<double>* getIndexMatrix() const;
-  bool isSymmetric() const { return true; }
+  double getIndex(int state1, int state2) const override;
+  double getIndex(const std::string& state1, const std::string& state2) const override;
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return alpha_; }
+  DefaultNucleotideScore* clone() const override { return new DefaultNucleotideScore(*this); }
+  const Matrix<double>& getIndexMatrix() const override;
+  bool isSymmetric() const override { return true; }
   /** @} */
 };
 } // end of namespace bpp.

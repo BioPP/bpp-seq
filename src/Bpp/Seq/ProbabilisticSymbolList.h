@@ -46,7 +46,6 @@
 
 #include "Alphabet/Alphabet.h"
 #include "CoreSymbolList.h"
-#include "CruxSymbolListSite.h"
 
 // From the STL :
 #include <string>
@@ -54,30 +53,121 @@
 
 namespace bpp
 {
-  /**
-   * @brief The probabilisticSympbolList interface.
-   *
-   * This container aims at containing an ordered list of
-   * probabilistic sites.
-   * It does not inherit from * SympbolList<std::vector<double>>
-   * because it does not contain a * vector of sites but a Table of
-   * doubles.
-   *
-   **/
-  
-class ProbabilisticSymbolList :
-    virtual public CoreSymbolList<std::vector<double> >  
+/**
+ * @brief The ProbabilisticSymbolList interface.
+ *
+ * This container aims at containing an ordered list of
+ * probabilistic sites.
+ * It does not inherit from * SympbolList<std::vector<double>>
+ * because it does not contain a * vector of sites but a Table of
+ * doubles.
+ *
+ */
+class ProbabilisticSymbolListInterface :
+  public virtual ProbabilisticCoreSymbolListInterface  
 {
 public:
-  ProbabilisticSymbolList()
-  {}
+  typedef std::vector<double> SymbolType;
+  typedef Table<double> DTable;
+  
+public:
+  ProbabilisticSymbolListInterface() {}
+
+  // class destructor
+  virtual ~ProbabilisticSymbolListInterface() {}
+
+public:
+
+  virtual const DTable& getTable() const = 0;
+  
+  using ProbabilisticCoreSymbolListInterface::setContent;
+  
+  virtual void setContent(const DTable& list) = 0;
+};
+
+/**
+ * @brief ProbabilisticSymbolList object.
+ *
+ * This is a general purpose container, containing an ordered list of
+ * elements.  The states represented by the elements are defined by an
+ * alphabet object, which is passed to the list constructor by a
+ * pointer.
+ *
+ * @see Alphabet
+ */
+class ProbabilisticSymbolList :
+  public virtual ProbabilisticSymbolListInterface
+{
+
+private:
+  /**
+   * @brief The Alphabet attribute must be initialized in the constructor and then can never be changed.
+   *
+   * To apply another alphabet to the list requires creating another
+   * list.
+   */
+  std::shared_ptr<const Alphabet> alphabet_;
+
+protected:
+  /**
+   * @brief The list content.
+   */
+  DTable content_;
+
+public:
+  /**
+   * @brief Build a new void ProbabilisticSymbolList object with the specified alphabet.
+   *
+   * @param alpha the alphabet to use.
+   */
+  ProbabilisticSymbolList(std::shared_ptr<const Alphabet>& alpha);
 
   /**
-   * @name The Colonable interface
+   * @brief Build a new ProbabilisticSymbolList object with the specified alphabet and contant as a DataTable.
+   *
+   * @param list The content of the site.
+   * @param alpha The alphabet to use.
+   * @throw If the content is internally inconsistent, or is inconsistent with the specified alphabet.
+   */
+  ProbabilisticSymbolList(const DTable& list, std::shared_ptr<const Alphabet>& alpha);
+
+  /**
+   * @brief Build a new ProbabilisticSymbolList object with the specified alphabet and contant as a VVdouble.
+   *
+   * @param list The content of the site.
+   * @param alpha The alphabet to use.
+   * @throw If the content is internally inconsistent, or is inconsistent with the specified alphabet.
+   */
+  ProbabilisticSymbolList(const std::vector< std::vector<double> >& list, std::shared_ptr<const Alphabet>& alpha);
+
+  /**
+   * @brief The generic copy constructor.
+   */
+  ProbabilisticSymbolList(const ProbabilisticSymbolListInterface& list);
+
+  ProbabilisticSymbolList(const CruxSymbolListInterface& list);
+
+  /**
+   * @brief The copy constructor.
+   */
+  ProbabilisticSymbolList(const ProbabilisticSymbolList& list);
+
+  /**
+   * @brief The generic assignment operator.
+   */
+  ProbabilisticSymbolList& operator=(const ProbabilisticSymbolListInterface& list);
+
+  /**
+   * @brief The assignement operator.
+   */
+  ProbabilisticSymbolList& operator=(const ProbabilisticSymbolList& list);
+
+  /**
+   * @name The Clonable interface
    *
    * @{
    */
-  ProbabilisticSymbolList* clone() const = 0;
+  ProbabilisticSymbolList* clone() const override { return new ProbabilisticSymbolList(*this); }
 
   /**
    * @}
@@ -87,106 +177,13 @@ public:
   virtual ~ProbabilisticSymbolList() {}
 
 public:
-  typedef Table<double> DataTable;
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
 
-  virtual const DataTable& getTable() const = 0;
-};
+  size_t size() const override { return static_cast<size_t>(content_.getNumberOfColumns()); }
 
-/**
- * @brief A basic ProbabilisticSymbolList object.
- *
- * This is a general purpose container, containing an ordered list of
- * elements.  The states represented by the elements are defined by an
- * alphabet object, which is passed to the list constructor by a
- * pointer.
- *
- * @see Alphabet
- */
+  void setContent(const std::vector<std::vector<double> >& list) override;
 
-class BasicProbabilisticSymbolList :
-  public virtual ProbabilisticSymbolList
-{
-public:
-  typedef Table<double> DataTable;
-
-private:
-  /**
-   * @brief The Alphabet attribute must be initialized in the constructor and then can never be changed.
-   *
-   * To apply another alphabet to the list requires creating another
-   * list.
-   */
-  const Alphabet* alphabet_;
-
-protected:
-  /**
-   * @brief The list content.
-   */
-  DataTable content_;
-
-public:
-  /**
-   * @brief Build a new void BasicProbabilisticSymbolList object with the specified alphabet.
-   *
-   * @param alpha the alphabet to use.
-   */
-
-  BasicProbabilisticSymbolList(const Alphabet* alpha);
-
-  /**
-   * @brief Build a new BasicProbabilisticSymbolList object with the specified alphabet.
-   *
-   * @param list The content of the site.
-   * @param alpha The alphabet to use.
-   * @throw If the content is internally inconsistent, or is inconsistent with the specified alphabet.
-   */
-  BasicProbabilisticSymbolList(const DataTable& list, const Alphabet* alpha);
-
-  /**
-   * @brief The generic copy constructor.
-   */
-  BasicProbabilisticSymbolList(const ProbabilisticSymbolList& list);
-
-  BasicProbabilisticSymbolList(const CruxSymbolList& list);
-
-  /**
-   * @brief The copy constructor.
-   */
-  BasicProbabilisticSymbolList(const BasicProbabilisticSymbolList& list);
-
-  /**
-   * @brief The generic assignment operator.
-   */
-
-  BasicProbabilisticSymbolList& operator=(const ProbabilisticSymbolList& list);
-
-  /**
-   * @brief The assignement operator.
-   */
-  BasicProbabilisticSymbolList& operator=(const BasicProbabilisticSymbolList& list);
-
-  /**
-   * @name The Clonable interface
-   *
-   * @{
-   */
-  BasicProbabilisticSymbolList* clone() const { return new BasicProbabilisticSymbolList(*this); }
-
-  /**
-   * @}
-   */
-
-  // class destructor
-  virtual ~BasicProbabilisticSymbolList() {}
-
-public:
-  const Alphabet* getAlphabet() const { return alphabet_; }
-
-  size_t size() const { return static_cast<size_t>(content_.getNumberOfColumns()); }
-
-  void setContent(const std::vector<std::vector<double> >& list);
-
-  void setContent(const DataTable& list);
+  void setContent(const DTable& list) override;
 
   /*
    * @brief String output, as a concatenate of:
@@ -194,61 +191,66 @@ public:
    *
    * with letters ordered alphabetically. Value is written with
    * scientific format, and precision 8.
-   *
    */
+  std::string toString() const override;
 
-  std::string toString() const;
+  void addElement(const std::vector<double>& element) override;
 
-  void addElement(const std::vector<double>& element);
+  void addElement(size_t pos, const std::vector<double>& element) override;
 
-  void addElement(size_t pos, const std::vector<double>& element);
+  void setElement(size_t pos, const std::vector<double>& element) override;
 
-  void setElement(size_t pos, const std::vector<double>& element);
-
-  const std::vector<double>& getElement(size_t pos) const
+  const std::vector<double>& getElement(size_t pos) const override
   {
     return content_.getColumn(pos);
   }
 
-  virtual void deleteElement(size_t pos) { content_.deleteColumn(pos); }
+  virtual void deleteElement(size_t pos) override { content_.deleteColumn(pos); }
 
-  virtual void deleteElements(size_t pos, size_t len)
+  virtual void deleteElements(size_t pos, size_t len) override
   {
     content_.deleteRows(pos, len);
   }
 
-  const std::vector<std::vector<double> >& getContent() const { return content_.getData(); }
+  const std::vector<std::vector<double> >& getContent() const override
+  {
+    return content_.getData();
+  }
 
-  const DataTable& getTable() const { return content_; }
+  const DTable& getTable() const override
+  {
+    return content_;
+  }
 
-  const std::vector<double>& getValue(size_t pos) const
+  const std::vector<double>& getValue(size_t pos) const override
   {
     return getElement(pos);
   }
 
-  const std::vector<double>& operator[](size_t pos) const
+  const std::vector<double>& operator[](size_t pos) const override
   {
     return content_.getColumn(pos);
   }
 
-  std::vector<double>& operator[](size_t pos)
+  std::vector<double>& operator[](size_t pos) override
   {
     return content_.getColumn(pos);
   }
 
-  double getStateValueAt(size_t siteIndex, int state) const
+  double getStateValueAt(size_t siteIndex, int state) const override
   {
     if (siteIndex >= content_.getNumberOfColumns())
       throw IndexOutOfBoundsException("ProbabilisticSymbolList::getStateValueAt.", siteIndex, 0, content_.getNumberOfColumns() - 1);
     return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  double operator()(size_t siteIndex, int state) const
+  double operator()(size_t siteIndex, int state) const override
   {
     return content_.getColumn(siteIndex)[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  void shuffle(){
+  void shuffle() override
+  {
     throw Exception("ProbabilisticSymbolList::shuffle not implemented, yet.");
   }
 };

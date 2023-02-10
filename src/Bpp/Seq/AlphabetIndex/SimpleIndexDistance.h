@@ -64,23 +64,33 @@ class SimpleIndexDistance :
   public virtual AlphabetIndex2
 {
 private:
-  std::unique_ptr<AlphabetIndex1> index_;
+  std::shared_ptr<AlphabetIndex1> index_;
+  size_t size_;
+  RowMatrix<double> indexMatrix_;
   bool sym_;
 
 public:
-  SimpleIndexDistance(AlphabetIndex1* index) :
+  SimpleIndexDistance(std::shared_ptr<AlphabetIndex1> index) :
     index_(index),
+    size_(index->getAlphabet()->getSize()),
+    indexMatrix_(index->getAlphabet()->getSize(), index->getAlphabet()->getSize()),
     sym_(false)
-  {}
+  {
+    computeIndexMatrix_();
+  }
 
   SimpleIndexDistance(const SimpleIndexDistance& sid) :
-    index_(dynamic_cast<AlphabetIndex1*>(sid.index_->clone())),
+    index_(sid.index_),
+    size_(sid.size_),
+    indexMatrix_(sid.indexMatrix_),
     sym_(sid.sym_)
   {}
 
   SimpleIndexDistance& operator=(const SimpleIndexDistance& sid)
   {
-    index_.reset(dynamic_cast<AlphabetIndex1*>(sid.index_->clone()));
+    index_ = sid.index_;
+    size_ = sid.size_;
+    indexMatrix_ = sid.indexMatrix_;
     sym_ = sid.sym_;
     return *this;
   }
@@ -88,47 +98,49 @@ public:
   virtual ~SimpleIndexDistance() {}
 
 public:
-  double getIndex(int state1, int state2) const
+  double getIndex(int state1, int state2) const override
   {
-    double d = index_->getIndex(state2) - index_->getIndex(state1);
-    return sym_ ? NumTools::abs<double>(d) : d;
+    if (state1 < 0 || static_cast<unsigned int>(state1) >= size_)
+      throw BadIntException(state1, "SimpleIndexDistance::getIndex(). Invalid state1.", getAlphabet().get());
+    if (state2 < 0 || static_cast<unsigned int>(state2) >= size_)
+      throw BadIntException(state2, "SimpleIndexDistance::getIndex(). Invalid state2.", getAlphabet().get());
+    return indexMatrix_(static_cast<size_t>(state1), static_cast<size_t>(state2));
   }
 
-  double getIndex(const std::string& state1, const std::string& state2) const
+  double getIndex(const std::string& state1, const std::string& state2) const override
   {
-    double d = index_->getIndex(state2) - index_->getIndex(state1);
-    return sym_ ? NumTools::abs<double>(d) : d;
+    return getIndex(getAlphabet()->charToInt(state1), getAlphabet()->charToInt(state2));
   }
 
-  const Alphabet* getAlphabet() const { return index_->getAlphabet(); }
+  std::shared_ptr<const Alphabet> getAlphabet() const override { return index_->getAlphabet(); }
 
-  SimpleIndexDistance* clone() const { return new SimpleIndexDistance(*this); }
+  SimpleIndexDistance* clone() const override { return new SimpleIndexDistance(*this); }
 
-  Matrix<double>* getIndexMatrix() const
+  const Matrix<double>& getIndexMatrix() const override { return indexMatrix_; }
+  
+protected:
+  void computeIndexMatrix_()
   {
-    size_t n = index_->getAlphabet()->getSize(); // We should change to "supported ints" there...
-    RowMatrix<double>* m = new RowMatrix<double>(n, n);
-    for (size_t i = 0; i < n; ++i)
+    for (size_t i = 0; i < size_; ++i)
     {
-      for (size_t j = 0; j < n; ++j)
+      for (size_t j = 0; j < size_; ++j)
       {
-        (*m)(i, j) = getIndex(getAlphabet()->getIntCodeAt(i), getAlphabet()->getIntCodeAt(j));
+        indexMatrix_(i, j) = getIndex(getAlphabet()->getIntCodeAt(i), getAlphabet()->getIntCodeAt(j));
       }
     }
-    return m;
   }
 
 public:
-  void setSymmetric(bool yn) { sym_ = yn; }
-  bool isSymmetric() const { return sym_; }
+  void setSymmetric(bool yn) { 
+    sym_ = yn;
+    computeIndexMatrix_();
+  }
+  bool isSymmetric() const override { return sym_; }
+
   /**
    * @return The AlphabetIndex1 object associated to this object.
    */
-  const AlphabetIndex1& getAlphabetIndex1() const { return *index_; }
-  /**
-   * @return The AlphabetIndex1 object associated to this object.
-   */
-  AlphabetIndex1& getAlphabetIndex1() { return *index_; }
+  std::shared_ptr<const AlphabetIndex1> getAlphabetIndex1() const { return index_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_SIMPLEINDEXDISTANCE_H

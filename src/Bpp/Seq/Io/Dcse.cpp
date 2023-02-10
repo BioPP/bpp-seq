@@ -51,7 +51,7 @@
 using namespace bpp;
 using namespace std;
 
-void DCSE::appendAlignmentFromStream(istream& input, SiteContainer& sc) const
+void DCSE::appendAlignmentFromStream(istream& input, SequenceContainerInterface& sc) const
 {
   // Checking the existence of specified file
   if (!input)
@@ -60,7 +60,7 @@ void DCSE::appendAlignmentFromStream(istream& input, SiteContainer& sc) const
   }
 
   // Initialization
-  const Alphabet* alpha = sc.getAlphabet();
+  auto alphaPtr = sc.getAlphabet();
   string line, name, sequence = "";
 
   line = FileTools::getNextLine(input); // Copy current line in temporary string
@@ -93,8 +93,10 @@ void DCSE::appendAlignmentFromStream(istream& input, SiteContainer& sc) const
     name     = string(line.begin() + static_cast<ptrdiff_t>(endOfSeq + 1), line.end()),
     name     = TextTools::removeFirstWhiteSpaces(name);
     if (name.find("Helix numbering") == name.npos
-        && name.find("mask") == name.npos)
-      sc.addSequence(BasicSequence(name, sequence, alpha), true);
+        && name.find("mask") == name.npos) {
+      auto seqPtr = make_unique<Sequence>(name, sequence, alphaPtr);
+      sc.addSequence(name, seqPtr);
+    }
   }
 }
 

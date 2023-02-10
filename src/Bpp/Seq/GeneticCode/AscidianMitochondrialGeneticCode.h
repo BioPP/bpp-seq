@@ -56,13 +56,7 @@ class AscidianMitochondrialGeneticCode :
   public virtual GeneticCode
 {
 public:
-  AscidianMitochondrialGeneticCode(std::shared_ptr<NucleicAlphabet> alphabet) :
-    GeneticCode(alphabet)
-  {
-    init_();
-  }
-
-  AscidianMitochondrialGeneticCode(const NucleicAlphabet& alphabet) :
+  AscidianMitochondrialGeneticCode(std::shared_ptr<const NucleicAlphabet> alphabet) :
     GeneticCode(alphabet)
   {
     init_();
@@ -91,25 +85,25 @@ public:
   bool isStop(int state) const
   {
     // Test:
-    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    codonAlphabet_->intToChar(state); // throw exception if invalid state!
     return state == 8 || state == 10 || state == 48 || state == 50;
   }
 
   bool isStop(const std::string& state) const
   {
-    return isStop(codonAlphabet_.charToInt(state));
+    return isStop(codonAlphabet_->charToInt(state));
   }
 
   bool isAltStart(int state) const
   {
     // Test:
-    codonAlphabet_.intToChar(state); // throw exception if invalid state!
+    codonAlphabet_->intToChar(state); // throw exception if invalid state!
     return state == 12 || state == 46 || state == 62;
   }
 
   bool isAltStart(const std::string& state) const
   {
-    int i = codonAlphabet_.charToInt(state);
+    int i = codonAlphabet_->charToInt(state);
     return i == 12 || i == 46 || i == 62;
   }
 

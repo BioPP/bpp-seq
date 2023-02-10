@@ -1,7 +1,7 @@
 //
 // File: PositionedContainer.h
 // Authors:
-//   Laurent GuÃ©guen
+//   Laurent Guéguen
 // Last modified: mardi 21 mars 2017, Ã  15h 02
 //
 
@@ -41,8 +41,11 @@
 #ifndef BPP_SEQ_CONTAINER_POSITIONEDCONTAINER_H
 #define BPP_SEQ_CONTAINER_POSITIONEDCONTAINER_H
 
-#include <memory>
+#include <Bpp/Clonable.h>
 
+//From the STL:
+
+#include <memory>
 
 namespace bpp
 {
@@ -55,40 +58,39 @@ namespace bpp
  *
  * All Objects must have a position, accessible through getPosition
  * and setPosition methods (see Site class).
- *
  */
-
 template<class T>
-class PositionedContainer
+class PositionedContainerInterface:
+    public virtual Clonable
 {
 public:
-  PositionedContainer() {}
-  virtual ~PositionedContainer() {}
+  PositionedContainerInterface() {}
+  virtual ~PositionedContainerInterface() {}
 
 public:
   /**
    * @brief the size
-   *
-   **/
-
+   */
   virtual size_t getSize() const = 0;
 
   virtual void setSize(size_t size) {}
 
   virtual void clear() = 0;
 
-protected:
   /**
-   * @brief Retrieve an object from the container. Set as protected
-   * since they will be public under T specific names.
-   * 
+   * @brief Retrieve an object from the container.
    *
    * @param objectIndex The position of the object.
    * @return A reference toward the Object object with corresponding name.
    */
-
   virtual const std::shared_ptr<T> getObject(size_t objectIndex) const = 0;
 
+  /**
+   * @brief Retrieve an object from the container.
+   *
+   * @param objectIndex The position of the object.
+   * @return A reference toward the Object object with corresponding name.
+   */
   virtual std::shared_ptr<T> getObject(size_t objectIndex) = 0;
 
   /**

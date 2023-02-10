@@ -43,22 +43,22 @@
 #define BPP_SEQ_CORESITE_H
 
 #include <Bpp/Clonable.h>
-
+#include "CoreSymbolList.h"
 
 namespace bpp
 {
 /**
  * @brief The core site interface.
  *
- * The core interface for sites manipulation.  It is very similar to
- * the CoreSequence interface (a site is a vertical sequence!).  Sites
- * have a 'position' attribute.
+ * The core interface for sites manipulation. It is very similar to
+ * the CoreSequence interface (a site is a vertical sequence!). Sites
+ * have a 'coordinate' attribute.
  * This attribute stands for an index in an alignment, and may be
  * used as a unique identifier, in the same manner that names identify
  * sequence objects.
  */
-class CoreSite :
-  public virtual Clonable
+class CoreSiteInterface :
+  public virtual CruxSymbolListInterface
 {
 public:
   /**
@@ -66,14 +66,14 @@ public:
    *
    * @{
    */
-  CoreSite* clone() const = 0;
+  CoreSiteInterface* clone() const override = 0;
 
   /**
    * @}
    */
 
   // class destructor
-  virtual ~CoreSite() {}
+  virtual ~CoreSiteInterface() {}
 
   /**
    * @name Setting/getting the position of the site.
@@ -82,63 +82,73 @@ public:
    */
 
   /**
-   * @brief Get the position of this site.
+   * @brief Get the coordinate associated to this site.
    *
-   * @return The position of this site.
+   * @return The coordinate of this site.
    */
-  virtual int getPosition() const = 0;
+  virtual int getCoordinate() const = 0;
 
   /**
    * @brief Set the position of this site.
    *
    * @param position The new position of the site.
    */
-  virtual void setPosition(int position) = 0;
+  virtual void setCoordinate(int coordinate) = 0;
 
   /**
    * @}
    */
+
+  /**
+   * @brief get value of a state at a position
+   *
+   * @param sequencePosition index of the looked value in the site
+   * @param state            state in the alphabet
+   * @return                 The state value at the given position.
+   */
+  virtual double getStateValueAt(size_t sequencePosition, int state) const override = 0;
+
 };
 
 /**
- * @brief An implementation of the CoreSite interface.
+ * @brief A partial implementation of the CoreSite interface.
  */
 class AbstractCoreSite :
-  public virtual CoreSite
+  public virtual CoreSiteInterface
 {
 private:
   /**
    * @brief The position associated with this site.
    */
-  int position_;
+  int coordinate_;
 
 public:
   /**
    * @brief Constructor of the AbstractCoreSite object.
    *
-   * Construct an 'empty' object, i.e., with no position assocated.
+   * Construct an 'empty' object, with a coordinate set to 0.
    */
   AbstractCoreSite() :
-    position_(0) {}
+    coordinate_(0) {}
 
   /**
    * @brief Constructor of the AbstractCoreSite object.
    *
-   * @param position The position of the site.
+   * @param coordinate The coordinate of the site.
    */
-  AbstractCoreSite(int position) :
-    position_(position) {}
+  AbstractCoreSite(int coordinate) :
+    coordinate_(coordinate) {}
 
   /**
    * @name The copy constructors.
    *
    * @{
    */
-  AbstractCoreSite(const CoreSite& site) :
-    position_(site.getPosition()) {}
+  AbstractCoreSite(const CoreSiteInterface& site) :
+    coordinate_(site.getCoordinate()) {}
 
   AbstractCoreSite(const AbstractCoreSite& site) :
-    position_(site.position_) {}
+    coordinate_(site.coordinate_) {}
 
   /**
    * @}
@@ -149,28 +159,17 @@ public:
    *
    * @{
    */
-  AbstractCoreSite& operator=(const CoreSite& site)
+  AbstractCoreSite& operator=(const CoreSiteInterface& site)
   {
-    position_ = site.getPosition();
+    coordinate_ = site.getCoordinate();
     return *this;
   }
 
   AbstractCoreSite& operator=(const AbstractCoreSite& site)
   {
-    position_ = site.position_;
+    coordinate_ = site.coordinate_;
     return *this;
   }
-
-  /**
-   * @}
-   */
-
-  /**
-   * @name The Clonable interface
-   *
-   * @{
-   */
-  AbstractCoreSite* clone() const { return new AbstractCoreSite(*this);}
 
   /**
    * @}
@@ -180,9 +179,9 @@ public:
   virtual ~AbstractCoreSite() {}
 
 public:
-  virtual int getPosition() const { return position_; }
+  int getCoordinate() const override { return coordinate_; }
 
-  virtual void setPosition(int position) { position_ = position; }
+  void setCoordinate(int coordinate) override { coordinate_ = coordinate; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CORESITE_H
