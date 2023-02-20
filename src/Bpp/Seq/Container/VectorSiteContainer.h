@@ -148,10 +148,12 @@ public:
    *
    * @param sequenceKeys Sequence keys. This will set the number of sequences in the container.
    * @param alphabet The alphabet for this container.
+   * @param useKeysAsNames If yes, the sequence keys will also be used as sequence names (default). Otherwise, sequence names will be set to Seq_1, Seq_2, etc.
    */
   TemplateVectorSiteContainer(
       const std::vector<std::string>& sequenceKeys,
-      std::shared_ptr<const Alphabet> alphabet) :
+      std::shared_ptr<const Alphabet> alphabet,
+      bool useKeysAsNames = true) :
     AbstractTemplateSequenceContainer<SequenceType>(alphabet),
     siteContainer_(),
     sequenceContainer_(),
@@ -159,10 +161,18 @@ public:
     sequenceComments_(sequenceKeys.size())
   {
     unsigned int i = 0;
-    for (auto key : sequenceKeys) {
-      ++i;
-      sequenceNames_.push_back("Seq_" + TextTools::toString(i));
-      sequenceContainer_.appendObject(nullptr, key);
+    if (useKeysAsNames) {
+      for (auto key : sequenceKeys) {
+        ++i;
+        sequenceNames_.push_back(key);
+        sequenceContainer_.appendObject(nullptr, key);
+      }
+    } else {
+      for (auto key : sequenceKeys) {
+        ++i;
+        sequenceNames_.push_back("Seq_" + TextTools::toString(i));
+        sequenceContainer_.appendObject(nullptr, key);
+      }
     }
   }  
 
