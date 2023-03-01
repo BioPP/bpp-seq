@@ -63,7 +63,6 @@ namespace bpp
  * \f$O(log(n))\f$ through names.
  *
  */
-
 template<class T>
 class VectorMappedContainer :
   public virtual PositionedNamedContainerInterface<T>,
@@ -71,18 +70,14 @@ class VectorMappedContainer :
   public VectorPositionedContainer<T>
 {
 private:
-  /*
+  /**
    * @brief vector of the names, in same order as objects
-   *
    */
-
   std::vector<std::string> vNames_;
 
-  /*
+  /**
    * @brief map <string, size_t> for the positions of the names
-   *
    */
-
   std::map<std::string, size_t> mNames_;
 
 public:
@@ -93,14 +88,12 @@ public:
     mNames_()
   {}
 
-
   VectorMappedContainer(const VectorMappedContainer& vsc) :
     MappedNamedContainer<T>(vsc),
     VectorPositionedContainer<T>(vsc),
     vNames_(vsc.vNames_),
     mNames_(vsc.mNames_)
   {}
-
 
   VectorMappedContainer<T>& operator=(const VectorMappedContainer& vsc)
   {

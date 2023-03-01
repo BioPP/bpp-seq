@@ -245,7 +245,6 @@ public:
   {
     clear();
     AbstractTemplateSequenceContainer<SequenceType>::operator=(vsc);
-    VectorMappedContainer<SequenceType>::operator=(vsc);
     sequenceNames_ = vsc.sequenceNames_;
     sequenceComments_ = vsc.sequenceComments_;
   
