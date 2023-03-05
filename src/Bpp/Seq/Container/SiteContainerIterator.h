@@ -149,7 +149,7 @@ public:
 public:
   const SiteType& nextSite() override
   {
-    const SiteType& s = sites_->getSite(static_cast<size_t>(currentPosition_));
+    const SiteType& s = sites_->site(static_cast<size_t>(currentPosition_));
     currentPosition_ = nextSiteWithoutGapPosition(currentPosition_);
     return s;
   }
@@ -162,7 +162,7 @@ public:
   long int nextSiteWithoutGapPosition(int current) const
   {
     size_t position = static_cast<size_t>(current + 1);
-    while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->getSite(position)))
+    while (position < sites_->getNumberOfSites() && SiteTools::hasGap(sites_->site(position)))
       position++;
     return static_cast<int>(position);
   }
@@ -170,7 +170,7 @@ public:
   long int previousSiteWithoutGapPosition(int current) const
   {
     long int position = current - 1;
-    while (position >= 0 && SymbolListTools::hasGap(sites_->getSite(static_cast<size_t>(position))))
+    while (position >= 0 && SymbolListTools::hasGap(sites_->site(static_cast<size_t>(position))))
       position--;
     return position;
   }
@@ -202,7 +202,7 @@ public:
 public:
   const SiteType& nextSite() override
   {
-    const Site& s = sites_->getSite(static_cast<size_t>(currentPosition_));
+    const Site& s = sites_->site(static_cast<size_t>(currentPosition_));
     currentPosition_ = nextCompleteSitePosition(currentPosition_);
     return s;
   }
@@ -215,7 +215,7 @@ public:
   long int nextCompleteSitePosition(long int current) const
   {
     size_t position = static_cast<size_t>(current + 1);
-    while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->getSite(position)))
+    while (position < sites_->getNumberOfSites() && !SiteTools::isComplete(sites_->site(position)))
       position++;
     return static_cast<int>(position);
   }
@@ -223,7 +223,7 @@ public:
   long int previousCompleteSitePosition(long int current) const
   {
     long int position = current - 1;
-    while (position >= 0 && !SymbolListTools::isComplete(sites_->getSite(static_cast<size_t>(position))))
+    while (position >= 0 && !SymbolListTools::isComplete(sites_->site(static_cast<size_t>(position))))
       position--;
     return position;
   }
