@@ -155,6 +155,8 @@ public:
 
 public:
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
+  
+  const Alphabet& alphabet() const override { return *alphabet_; }
 
   size_t size() const override { return content_.size(); }
 

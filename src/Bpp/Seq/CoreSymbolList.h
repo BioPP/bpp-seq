@@ -85,6 +85,14 @@ public:
   virtual std::shared_ptr<const Alphabet> getAlphabet() const = 0;
 
   /**
+   * @brief Get the alphabet associated to the list.
+   *
+   * @return A const reference to the alphabet.
+   * @see Alphabet class.
+   */
+  virtual const Alphabet& alphabet() const = 0;
+
+  /**
    * @brief Get the number of elements in the list.
    *
    * @return The number of sites in the list.
@@ -176,7 +184,7 @@ public:
    *
    * @{
    */
-  TemplateCoreSymbolListInterface* clone() const = 0;
+  TemplateCoreSymbolListInterface* clone() const override = 0;
   /** @} */
 
   // Class destructor

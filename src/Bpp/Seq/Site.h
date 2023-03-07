@@ -62,7 +62,7 @@ class SiteInterface :
     virtual ~SiteInterface() {}
 
   public:
-    SiteInterface* clone() const = 0;
+    SiteInterface* clone() const override = 0;
 
     virtual bool operator==(const SiteInterface& site)
     {
