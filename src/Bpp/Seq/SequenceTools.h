@@ -244,20 +244,7 @@ public:
    * @param seq The sequence to inverse.
    * @author Sylvain Gaillard
    */
-  template<class SequenceType>
-  static void invert(SequenceType& seq)
-  {
-    size_t seq_size = seq.size(); // store seq size for efficiency
-    int tmp_state = 0; // to store one state when swapping positions
-    size_t j = seq_size; // symetric position iterator from sequence end
-    for (size_t i = 0; i < seq_size / 2; ++i)
-    {
-      j = seq_size - 1 - i;
-      tmp_state = seq.getValue(i);
-      seq.setElement(i, seq.getValue(j));
-      seq.setElement(j, tmp_state);
-    }
-  }
+  static void invert(SequenceInterface& seq);
 
   /**
    * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
@@ -266,10 +253,10 @@ public:
    * inhibited).
    *
    * @param sequence The sequence to inverse.
-   * @return A new sequence object containing the inverted sequence.
+   * @return A new sequence object containing the inverted sequence, of the same type as the input sequence (via the clone method).
    * @author Sylvain Gaillard
    */
-  static std::unique_ptr<Sequence> getInvert(const Sequence& sequence);
+  static std::unique_ptr<SequenceInterface> getInvert(const SequenceInterface& sequence);
 
   /**
    * @brief Inverse and complement a sequence.
@@ -280,7 +267,7 @@ public:
    * @param seq The sequence to inverse and complement.
    * @author Sylvain Gaillard
    */
-  static void invertComplement(Sequence& seq);
+  static void invertComplement(SequenceInterface& seq);
 
   /**
    * @return The identity percent of 2 sequence.
@@ -291,21 +278,21 @@ public:
    * @throw AlphabetMismatchException If the two sequences do not have the same alphabet.
    * @throw SequenceNotAlignedException If the two sequences do not have the same length.
    */
-  static double getPercentIdentity(const Sequence& seq1, const Sequence& seq2, bool ignoreGaps = false);
+  static double getPercentIdentity(const SequenceInterface& seq1, const SequenceInterface& seq2, bool ignoreGaps = false);
 
   /**
    * @return The number of sites in the sequences, <i>i.e.</i> all positions without gaps.
    *
    * @param seq The sequence to analyse.
    */
-  static size_t getNumberOfSites(const Sequence& seq);
+  static size_t getNumberOfSites(const SequenceInterface& seq);
 
   /**
    * @return The number of complete sites in the sequences, <i>i.e.</i> all positions without gaps and unresolved states (generic characters).
    *
    * @param seq The sequence to analyse.
    */
-  static size_t getNumberOfCompleteSites(const Sequence& seq);
+  static size_t getNumberOfCompleteSites(const SequenceInterface& seq);
 
   /**
    * @brief keep only complete sites in a sequence.
@@ -313,8 +300,7 @@ public:
    * The deleteElement method of the Sequence object will be used where appropriate.
    * @param seq The sequence to analyse.
    */
-
-  static std::unique_ptr<Sequence> getSequenceWithCompleteSites(const Sequence& seq);
+  static std::unique_ptr<SequenceInterface> getSequenceWithCompleteSites(const SequenceInterface& seq);
 
   /**
    * @return The number of unresolved sites in the sequence.
@@ -323,8 +309,7 @@ public:
    *
    * @author Sylvain Gaillard
    */
-
-  static size_t getNumberOfUnresolvedSites(const Sequence& seq);
+  static size_t getNumberOfUnresolvedSites(const SequenceInterface& seq);
 
 
   /**
@@ -333,7 +318,7 @@ public:
    * The deleteElement method of the Sequence object will be used where appropriate.
    * @param seq The sequence to analyse.
    */
-  static void removeGaps(Sequence& seq);
+  static void removeGaps(SequenceInterface& seq);
 
   /**
    * @brief Get a copy of the sequence without gaps.
@@ -344,7 +329,7 @@ public:
    * @param seq The sequence to analyse.
    * @return A new sequence object without gaps.
    */
-  static std::unique_ptr<Sequence> getSequenceWithoutGaps(const Sequence& seq);
+  static std::unique_ptr<SequenceInterface> getSequenceWithoutGaps(const SequenceInterface& seq);
 
   /**
    * @brief Remove stops from a codon sequence.
@@ -354,7 +339,7 @@ public:
    * @param gCode The genetic code according to which stop codons are specified.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static void removeStops(Sequence& seq, const GeneticCode& gCode);
+  static void removeStops(SequenceInterface& seq, const GeneticCode& gCode);
 
   /**
    * @brief Get a copy of the codon sequence without stops.
@@ -367,7 +352,7 @@ public:
    * @return A new sequence object without stops.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static std::unique_ptr<Sequence> getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode);
+  static std::unique_ptr<SequenceInterface> getSequenceWithoutStops(const SequenceInterface& seq, const GeneticCode& gCode);
 
   /**
    * @brief Replace stop codons by gaps.
@@ -377,7 +362,7 @@ public:
    * @param gCode The genetic code according to which stop codons are specified.
    * @throw Exception if the input sequence does not have a codon alphabet.
    */
-  static void replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode);
+  static void replaceStopsWithGaps(SequenceInterface& seq, const GeneticCode& gCode);
 
   /**
    * @brief Bowker's test for homogeneity.
@@ -394,7 +379,7 @@ public:
    * @return A BowkerTest object with the computed statistic and p-value (computed from a chi square distribution).
    * @throw SequenceNotAlignedException If the two sequences do not have the same length.
    */
-  static std::unique_ptr<BowkerTest> bowkerTest(const Sequence& seq1, const Sequence& seq2);
+  static std::unique_ptr<BowkerTest> bowkerTest(const SequenceInterface& seq1, const SequenceInterface& seq2);
 
   /**
    * @brief Get all putatives haplotypes from an heterozygous sequence.
@@ -408,14 +393,19 @@ public:
    *
    * @author Sylvain Gaillard
    */
-  static void getPutativeHaplotypes(const Sequence& seq, std::vector< std::unique_ptr<Sequence> >& hap, unsigned int level = 2);
+  static void getPutativeHaplotypes(
+      const SequenceInterface& seq,
+      std::vector<std::unique_ptr<SequenceInterface>>& hap,
+      unsigned int level = 2);
 
   /**
    * @brief Combine two sequences.
    *
    * @author Sylvain Gaillard
    */
-  static std::unique_ptr<Sequence> combineSequences(const Sequence& s1, const Sequence& s2);
+  static std::unique_ptr<Sequence> combineSequences(
+      const SequenceInterface& s1,
+      const SequenceInterface& s2);
 
   /**
    * @brief Subtract haplotype from an heterozygous sequence.
@@ -442,7 +432,11 @@ public:
    *
    * @author Sylvain Gaillard
    */
-  static std::unique_ptr<Sequence> subtractHaplotype(const Sequence& s, const Sequence& h, std::string name = "", unsigned int level = 1);
+  static std::unique_ptr<Sequence> subtractHaplotype(
+      const SequenceInterface& s,
+      const SequenceInterface& h,
+      std::string name = "",
+      unsigned int level = 1);
 
   /**
    * @brief Get the RNY decomposition of a DNA sequence
@@ -457,7 +451,7 @@ public:
    *
    * @author Laurent Guéguen
    */
-  static std::unique_ptr<Sequence> RNYslice(const Sequence& sequence, int ph);
+  static std::unique_ptr<Sequence> RNYslice(const SequenceInterface& sequence, int ph);
 
   /**
    * @brief Get the RNY decomposition of a DNA sequence
@@ -471,7 +465,7 @@ public:
    *
    * @author Laurent Guéguen
    */
-  static std::unique_ptr<Sequence> RNYslice(const Sequence& sequence);
+  static std::unique_ptr<Sequence> RNYslice(const SequenceInterface& sequence);
 
   /**
    * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.
@@ -483,7 +477,7 @@ public:
    * @param includeInit Tell if initiator codon should be kept or removed. No effect if checkInit is false.
    * @param includeStop Tell if stop codon should be kept or removed. No effect if checkStop is false.
    */
-  static void getCDS(Sequence& sequence, const GeneticCode& gCode, bool checkInit, bool checkStop, bool includeInit = true, bool includeStop = true);
+  static void getCDS(SequenceInterface& sequence, const GeneticCode& gCode, bool checkInit, bool checkStop, bool includeInit = true, bool includeStop = true);
 
   /**
    * @brief Find the position of a motif in a sequence
@@ -495,7 +489,7 @@ public:
    * @return The position of the first occurence of the motif or the seq
    * length.
    */
-  static size_t findFirstOf(const Sequence& seq, const Sequence& motif, bool strict = true);
+  static size_t findFirstOf(const SequenceInterface& seq, const SequenceInterface& motif, bool strict = true);
 
   /**
    * @brief Get a random sequence of given size and alphabet, with all state with equal probability.

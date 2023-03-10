@@ -155,26 +155,41 @@ unique_ptr<Sequence> SequenceTools::reverseTranscript(const Sequence& sequence)
 }
 
 /******************************************************************************/
-
-
-unique_ptr<Sequence> SequenceTools::getInvert(const Sequence& sequence)
+  
+void SequenceTools::invert(SequenceInterface& seq)
 {
-  auto iSeq = unique_ptr<Sequence>(sequence.clone());
+  size_t seq_size = seq.size(); // store seq size for efficiency
+  int tmp_state = 0; // to store one state when swapping positions
+  size_t j = seq_size; // symetric position iterator from sequence end
+  for (size_t i = 0; i < seq_size / 2; ++i)
+  {
+    j = seq_size - 1 - i;
+    tmp_state = seq.getValue(i);
+    seq.setElement(i, seq.getValue(j));
+    seq.setElement(j, tmp_state);
+  }
+}
+
+/******************************************************************************/
+
+unique_ptr<SequenceInterface> SequenceTools::getInvert(const SequenceInterface& sequence)
+{
+  auto iSeq = unique_ptr<SequenceInterface>(sequence.clone());
   invert(*iSeq);
   return iSeq;
 }
 
 /******************************************************************************/
 
-void SequenceTools::invertComplement(Sequence& seq)
+void SequenceTools::invertComplement(SequenceInterface& seq)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (AlphabetTools::isDNAAlphabet(seq.getAlphabet().get()))
+  if (AlphabetTools::isDNAAlphabet(&seq.alphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (AlphabetTools::isRNAAlphabet(seq.getAlphabet().get()))
+  else if (AlphabetTools::isRNAAlphabet(&seq.alphabet()))
   {
     NAR = &RNARep_;
   }
@@ -203,16 +218,19 @@ void SequenceTools::invertComplement(Sequence& seq)
 
 /******************************************************************************/
 
-double SequenceTools::getPercentIdentity(const Sequence& seq1, const Sequence& seq2, bool ignoreGaps)
+double SequenceTools::getPercentIdentity(
+    const SequenceInterface& seq1,
+    const SequenceInterface& seq2,
+    bool ignoreGaps)
 {
-  if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
+  if (seq1.alphabet().getAlphabetType() != seq2.alphabet().getAlphabetType())
     throw AlphabetMismatchException("SequenceTools::getPercentIdentity", seq1.getAlphabet(), seq2.getAlphabet());
   if (seq1.size() != seq2.size())
     throw SequenceNotAlignedException("SequenceTools::getPercentIdentity", &seq2);
-  int gap = seq1.getAlphabet()->getGapCharacterCode();
+  int gap = seq1.alphabet().getGapCharacterCode();
   size_t id = 0;
   size_t tot = 0;
-  for (size_t i = 0; i < seq1.size(); i++)
+  for (size_t i = 0; i < seq1.size(); ++i)
   {
     int x = seq1.getValue(i);
     int y = seq2.getValue(i);
@@ -237,13 +255,13 @@ double SequenceTools::getPercentIdentity(const Sequence& seq1, const Sequence& s
 
 /******************************************************************************/
 
-size_t SequenceTools::getNumberOfSites(const Sequence& seq)
+size_t SequenceTools::getNumberOfSites(const SequenceInterface& seq)
 {
   size_t count = 0;
-  auto alphaPtr = seq.getAlphabet();
+  auto& alpha = seq.alphabet();
   for (size_t i = 0; i < seq.size(); ++i)
   {
-    if (!alphaPtr->isGap(seq[i]))
+    if (!alpha.isGap(seq[i]))
       count++;
   }
   return count;
@@ -251,13 +269,13 @@ size_t SequenceTools::getNumberOfSites(const Sequence& seq)
 
 /******************************************************************************/
 
-size_t SequenceTools::getNumberOfCompleteSites(const Sequence& seq)
+size_t SequenceTools::getNumberOfCompleteSites(const SequenceInterface& seq)
 {
   size_t count = 0;
-  auto alphaPtr = seq.getAlphabet();
+  auto& alpha = seq.alphabet();
   for (size_t i = 0; i < seq.size(); ++i)
   {
-    if (!alphaPtr->isGap(seq[i]) && !alphaPtr->isUnresolved(seq[i]))
+    if (!alpha.isGap(seq[i]) && !alpha.isUnresolved(seq[i]))
       count++;
   }
   return count;
@@ -265,23 +283,23 @@ size_t SequenceTools::getNumberOfCompleteSites(const Sequence& seq)
 
 /******************************************************************************/
 
-unique_ptr<Sequence> SequenceTools::getSequenceWithCompleteSites(const Sequence& seq)
+unique_ptr<SequenceInterface> SequenceTools::getSequenceWithCompleteSites(const SequenceInterface& seq)
 {
-  auto alphaPtr = seq.getAlphabet();
+  auto& alpha = seq.alphabet();
   vector<int> content;
   for (size_t i = 0; i < seq.size(); ++i)
   {
-    if (!(alphaPtr->isGap(seq[i]) || alphaPtr->isUnresolved(seq[i])))
+    if (!(alpha.isGap(seq[i]) || alpha.isUnresolved(seq[i])))
       content.push_back(seq[i]);
   }
-  auto newSeq = unique_ptr<Sequence>(seq.clone());
+  auto newSeq = unique_ptr<SequenceInterface>(seq.clone());
   newSeq->setContent(content);
   return newSeq;
 }
 
 /******************************************************************************/
 
-size_t SequenceTools::getNumberOfUnresolvedSites(const Sequence& seq)
+size_t SequenceTools::getNumberOfUnresolvedSites(const SequenceInterface& seq)
 {
   size_t count = 0;
   auto alphaPtr = seq.getAlphabet();
@@ -295,7 +313,7 @@ size_t SequenceTools::getNumberOfUnresolvedSites(const Sequence& seq)
 
 /******************************************************************************/
 
-unique_ptr<Sequence> SequenceTools::getSequenceWithoutGaps(const Sequence& seq)
+unique_ptr<SequenceInterface> SequenceTools::getSequenceWithoutGaps(const SequenceInterface& seq)
 {
   auto alphaPtr = seq.getAlphabet();
   vector<int> content;
@@ -304,14 +322,14 @@ unique_ptr<Sequence> SequenceTools::getSequenceWithoutGaps(const Sequence& seq)
     if (!alphaPtr->isGap(seq[i]))
       content.push_back(seq[i]);
   }
-  auto newSeq = unique_ptr<Sequence>(seq.clone());
+  auto newSeq = unique_ptr<SequenceInterface>(seq.clone());
   newSeq->setContent(content);
   return newSeq;
 }
 
 /******************************************************************************/
 
-void SequenceTools::removeGaps(Sequence& seq)
+void SequenceTools::removeGaps(SequenceInterface& seq)
 {
   auto alphaPtr = seq.getAlphabet();
   for (size_t i = seq.size(); i > 0; --i)
@@ -323,7 +341,7 @@ void SequenceTools::removeGaps(Sequence& seq)
 
 /******************************************************************************/
 
-unique_ptr<Sequence> SequenceTools::getSequenceWithoutStops(const Sequence& seq, const GeneticCode& gCode)
+unique_ptr<SequenceInterface> SequenceTools::getSequenceWithoutStops(const SequenceInterface& seq, const GeneticCode& gCode)
 {
   auto calpha = dynamic_pointer_cast<const CodonAlphabet>(seq.getAlphabet());
   if (!calpha)
@@ -334,14 +352,14 @@ unique_ptr<Sequence> SequenceTools::getSequenceWithoutStops(const Sequence& seq,
     if (!gCode.isStop(seq[i]))
       content.push_back(seq[i]);
   }
-  auto newSeq = unique_ptr<Sequence>(seq.clone());
+  auto newSeq = unique_ptr<SequenceInterface>(seq.clone());
   newSeq->setContent(content);
   return newSeq;
 }
 
 /******************************************************************************/
 
-void SequenceTools::removeStops(Sequence& seq, const GeneticCode& gCode)
+void SequenceTools::removeStops(SequenceInterface& seq, const GeneticCode& gCode)
 {
   auto calpha = dynamic_pointer_cast<const CodonAlphabet>(seq.getAlphabet());
   if (!calpha)
@@ -355,7 +373,7 @@ void SequenceTools::removeStops(Sequence& seq, const GeneticCode& gCode)
 
 /******************************************************************************/
 
-void SequenceTools::replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode)
+void SequenceTools::replaceStopsWithGaps(SequenceInterface& seq, const GeneticCode& gCode)
 {
   auto calpha = dynamic_pointer_cast<const CodonAlphabet>(seq.getAlphabet());
   if (!calpha)
@@ -370,7 +388,9 @@ void SequenceTools::replaceStopsWithGaps(Sequence& seq, const GeneticCode& gCode
 
 /******************************************************************************/
 
-unique_ptr<BowkerTest> SequenceTools::bowkerTest(const Sequence& seq1, const Sequence& seq2)
+unique_ptr<BowkerTest> SequenceTools::bowkerTest(
+    const SequenceInterface& seq1,
+    const SequenceInterface& seq2)
 {
   if (seq1.size() != seq2.size())
     throw SequenceNotAlignedException("SequenceTools::bowkerTest.", &seq2);
@@ -381,7 +401,7 @@ unique_ptr<BowkerTest> SequenceTools::bowkerTest(const Sequence& seq1, const Seq
   // Compute contingency table:
   RowMatrix<double> array(r, r);
   int x, y;
-  for (size_t i = 0; i < n; i++)
+  for (size_t i = 0; i < n; ++i)
   {
     x = seq1[i];
     y = seq2[i];
@@ -420,7 +440,10 @@ unique_ptr<BowkerTest> SequenceTools::bowkerTest(const Sequence& seq1, const Seq
 
 /******************************************************************************/
 
-void SequenceTools::getPutativeHaplotypes(const Sequence& seq, std::vector< unique_ptr<Sequence> >& hap, unsigned int level)
+void SequenceTools::getPutativeHaplotypes(
+    const SequenceInterface& seq,
+    std::vector<unique_ptr<SequenceInterface>>& hap,
+    unsigned int level)
 {
   vector< vector< int > > states(seq.size());
   list< unique_ptr<Sequence> > t_hap;
@@ -474,9 +497,11 @@ void SequenceTools::getPutativeHaplotypes(const Sequence& seq, std::vector< uniq
 
 /******************************************************************************/
 
-unique_ptr<Sequence> SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2)
+unique_ptr<Sequence> SequenceTools::combineSequences(
+    const SequenceInterface& s1, 
+    const SequenceInterface& s2)
 {
-  if (s1.getAlphabet()->getAlphabetType() != s2.getAlphabet()->getAlphabetType())
+  if (s1.alphabet().getAlphabetType() != s2.alphabet().getAlphabetType())
   {
     throw AlphabetMismatchException("SequenceTools::combineSequences(const Sequence& s1, const Sequence& s2): s1 and s2 don't have same Alphabet.", s1.getAlphabet(), s2.getAlphabet());
   }
@@ -499,7 +524,11 @@ unique_ptr<Sequence> SequenceTools::combineSequences(const Sequence& s1, const S
 
 /******************************************************************************/
 
-unique_ptr<Sequence> SequenceTools::subtractHaplotype(const Sequence& s, const Sequence& h, string name, unsigned int level)
+unique_ptr<Sequence> SequenceTools::subtractHaplotype(
+    const SequenceInterface& s,
+    const SequenceInterface& h,
+    string name,
+    unsigned int level)
 {
   auto alphaPtr = s.getAlphabet();
   if (name.size() == 0)
@@ -533,10 +562,10 @@ unique_ptr<Sequence> SequenceTools::subtractHaplotype(const Sequence& s, const S
 
 /******************************************************************************/
 
-unique_ptr<Sequence> SequenceTools::RNYslice(const Sequence& seq, int ph)
+unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq, int ph)
 {
   // Alphabet type checking
-  if (AlphabetTools::isDNAAlphabet(seq.getAlphabet().get()))
+  if (AlphabetTools::isDNAAlphabet(&seq.alphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
   }
@@ -575,7 +604,7 @@ unique_ptr<Sequence> SequenceTools::RNYslice(const Sequence& seq, int ph)
   return seqPtr;
 }
 
-unique_ptr<Sequence> SequenceTools::RNYslice(const Sequence& seq)
+unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq)
 {
   // Alphabet type checking
   if (AlphabetTools::isDNAAlphabet(seq.getAlphabet().get()))
@@ -613,7 +642,13 @@ unique_ptr<Sequence> SequenceTools::RNYslice(const Sequence& seq)
 /******************************************************************************/
 
 
-void SequenceTools::getCDS(Sequence& sequence, const GeneticCode& gCode, bool checkInit, bool checkStop, bool includeInit, bool includeStop)
+void SequenceTools::getCDS(
+    SequenceInterface& sequence,
+    const GeneticCode& gCode,
+    bool checkInit,
+    bool checkStop,
+    bool includeInit,
+    bool includeStop)
 {
   auto alphabet = dynamic_pointer_cast<const CodonAlphabet>(sequence.getAlphabet());
   if (!alphabet)
@@ -642,7 +677,10 @@ void SequenceTools::getCDS(Sequence& sequence, const GeneticCode& gCode, bool ch
 
 /******************************************************************************/
 
-size_t SequenceTools::findFirstOf(const Sequence& seq, const Sequence& motif, bool strict)
+size_t SequenceTools::findFirstOf(
+    const SequenceInterface& seq,
+    const SequenceInterface& motif,
+    bool strict)
 {
   if (motif.size() > seq.size())
     return seq.size();
