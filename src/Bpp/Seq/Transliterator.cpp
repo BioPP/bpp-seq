@@ -46,9 +46,9 @@ using namespace std;
 
 using namespace bpp;
 
-unique_ptr<Sequence> AbstractTransliterator::translate(const Sequence& sequence) const
+unique_ptr<Sequence> AbstractTransliterator::translate(const SequenceInterface& sequence) const
 {
-  if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
+  if (sequence.alphabet().getAlphabetType() != sourceAlphabet().getAlphabetType())
     throw AlphabetMismatchException("AbstractTransliterator::translate", getSourceAlphabet(), getTargetAlphabet());
   auto alphaPtr = getTargetAlphabet();
   auto tSeq = make_unique<Sequence>(sequence.getName(), "", sequence.getComments(), alphaPtr);
@@ -64,9 +64,9 @@ unique_ptr<Sequence> AbstractTransliterator::translate(const Sequence& sequence)
   return tSeq;
 }
 
-unique_ptr<Sequence> AbstractReverseTransliterator::reverse(const Sequence& sequence) const
+unique_ptr<Sequence> AbstractReverseTransliterator::reverse(const SequenceInterface& sequence) const
 {
-  if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
+  if (sequence.alphabet().getAlphabetType() != targetAlphabet().getAlphabetType())
     throw AlphabetMismatchException("AbstractReverseTransliterator::reverse", getSourceAlphabet(), getTargetAlphabet());
   auto alphaPtr = getSourceAlphabet();
   auto rSeq = make_unique<Sequence>(sequence.getName(), "", sequence.getComments(), alphaPtr);

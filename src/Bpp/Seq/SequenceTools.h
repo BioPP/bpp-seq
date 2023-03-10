@@ -116,7 +116,7 @@ public:
    * @param seq2 The second sequence.
    * @return True if the two sequences have the same content (and, of course, alphabet).
    */
-  static bool areSequencesIdentical(const Sequence& seq1, const Sequence& seq2);
+  static bool areSequencesIdentical(const SequenceInterface& seq1, const SequenceInterface& seq2);
 
   /**
    * @brief Get a sub-sequence.
@@ -126,7 +126,7 @@ public:
    * @param end      The last position of the subsequence (included).
    * @param output   A sequence object to be appended with the given subsequence.
    */
-  static void subseq(const Sequence& sequence, size_t begin, size_t end, Sequence& output)
+  static void subseq(const SequenceInterface& sequence, size_t begin, size_t end, SequenceInterface& output)
   {
     if (end < begin || end >= sequence.size())
       throw Exception("SequenceTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
@@ -146,10 +146,11 @@ public:
    * @param end   The last position of the subsequence.
    * @return A new sequence object with the given subsequence.
    */
-  static std::unique_ptr<Sequence> subseq(const Sequence& sequence, size_t begin, size_t end)
+  template<class SequenceTypeOut>
+  static std::unique_ptr<SequenceTypeOut> subseq(const SequenceInterface& sequence, size_t begin, size_t end)
   {
     auto alphaPtr = sequence.getAlphabet();
-    auto seq = std::make_unique<Sequence>(alphaPtr);
+    auto seq = std::make_unique<SequenceTypeOut>(alphaPtr);
     seq->setName(sequence.getName());
     seq->setComments(sequence.getComments());
     subseq(sequence, begin, end, *seq);
@@ -170,7 +171,26 @@ public:
    * @throw AlphabetMismatchException If the two alphabets do not match.
    * @throw Exception If the sequence names do not match.
    */
-  static Sequence* concatenate(const Sequence& seq1, const Sequence& seq2);
+  template<class SequenceTypeOut>
+  static std::unique_ptr<SequenceTypeOut> concatenate(const SequenceInterface& seq1, const SequenceInterface& seq2)
+  {
+    // Sequence's alphabets matching verification
+    if ((seq1.alphabet().getAlphabetType()) != (seq2.alphabet().getAlphabetType()))
+      throw AlphabetMismatchException("SequenceTools::concatenate : Sequence's alphabets don't match ", seq1.getAlphabet(), seq2.getAlphabet());
+
+    // Sequence's names matching verification
+    if (seq1.getName() != seq2.getName())
+      throw Exception ("SequenceTools::concatenate : Sequence's names don't match");
+
+    // Concatenate sequences and send result
+    auto concat = std::make_unique<SequenceTypeOut>(seq1);
+    concat->setToSizeR(seq1.size() + seq2.size());
+    for (size_t i = 0; i < seq2.size(); ++i)
+    {
+      (*concat)[seq1.size() + i] = seq2[i];
+    }
+    return concat;
+  }
 
   /**
    * @brief Complement the nucleotide sequence itself
@@ -179,7 +199,7 @@ public:
    * @throw AlphabetException if the sequence is not a nucleotide sequence.
    * @author Sylvain Gaillard
    */
-  static void complement(Sequence& seq);
+  static void complement(SequenceInterface& seq);
 
   /**
    * @brief Get the complementary sequence of a nucleotide sequence.
@@ -189,8 +209,8 @@ public:
    * @param sequence The sequence to complement.
    * @throw AlphabetException If the sequence is not a nucleotide sequence.
    */
-  static std::unique_ptr<Sequence> getComplement(const Sequence& sequence);
-
+  static std::unique_ptr<Sequence> getComplement(const SequenceInterface& sequence);
+ 
   /**
    * @brief Get the transcription sequence of a DNA sequence.
    *
@@ -224,7 +244,20 @@ public:
    * @param seq The sequence to inverse.
    * @author Sylvain Gaillard
    */
-  static void invert(Sequence& seq);
+  template<class SequenceType>
+  static void invert(SequenceType& seq)
+  {
+    size_t seq_size = seq.size(); // store seq size for efficiency
+    int tmp_state = 0; // to store one state when swapping positions
+    size_t j = seq_size; // symetric position iterator from sequence end
+    for (size_t i = 0; i < seq_size / 2; ++i)
+    {
+      j = seq_size - 1 - i;
+      tmp_state = seq.getValue(i);
+      seq.setElement(i, seq.getValue(j));
+      seq.setElement(j, tmp_state);
+    }
+  }
 
   /**
    * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.

@@ -64,7 +64,7 @@ NucleicAcidsReplication SequenceTools::transc_(AlphabetTools::DNA_ALPHABET, Alph
 
 /******************************************************************************/
 
-bool SequenceTools::areSequencesIdentical(const Sequence& seq1, const Sequence& seq2)
+bool SequenceTools::areSequencesIdentical(const SequenceInterface& seq1, const SequenceInterface& seq2)
 {
   // Site's size and content checking
   if (seq1.getAlphabet()->getAlphabetType() != seq2.getAlphabet()->getAlphabetType())
@@ -84,37 +84,15 @@ bool SequenceTools::areSequencesIdentical(const Sequence& seq1, const Sequence& 
 
 /******************************************************************************/
 
-Sequence* SequenceTools::concatenate(const Sequence& seq1, const Sequence& seq2)
-{
-  // Sequence's alphabets matching verification
-  if ((seq1.getAlphabet()->getAlphabetType()) != (seq2.getAlphabet()->getAlphabetType()))
-    throw AlphabetMismatchException("SequenceTools::concatenate : Sequence's alphabets don't match ", seq1.getAlphabet(), seq2.getAlphabet());
-
-  // Sequence's names matching verification
-  if (seq1.getName() != seq2.getName())
-    throw Exception ("SequenceTools::concatenate : Sequence's names don't match");
-
-  // Concatenate sequences and send result
-  Sequence* concat = seq1.clone();
-  concat->setToSizeR(seq1.size() + seq2.size());
-  for (size_t i = 0; i < seq2.size(); ++i)
-  {
-    (*concat)[seq1.size() + i] = seq2[i];
-  }
-  return concat;
-}
-
-/******************************************************************************/
-
-void SequenceTools::complement(Sequence& seq)
+void SequenceTools::complement(SequenceInterface& seq)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (AlphabetTools::isDNAAlphabet(seq.getAlphabet().get()))
+  if (AlphabetTools::isDNAAlphabet(&seq.alphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (AlphabetTools::isRNAAlphabet(seq.getAlphabet().get()))
+  else if (AlphabetTools::isRNAAlphabet(&seq.alphabet()))
   {
     NAR = &RNARep_;
   }
@@ -130,15 +108,15 @@ void SequenceTools::complement(Sequence& seq)
 
 /******************************************************************************/
 
-unique_ptr<Sequence> SequenceTools::getComplement(const Sequence& sequence)
+unique_ptr<Sequence> SequenceTools::getComplement(const SequenceInterface& sequence)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (AlphabetTools::isDNAAlphabet(sequence.getAlphabet().get()))
+  if (AlphabetTools::isDNAAlphabet(&sequence.alphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (AlphabetTools::isRNAAlphabet(sequence.getAlphabet().get()))
+  else if (AlphabetTools::isRNAAlphabet(&sequence.alphabet()))
   {
     NAR = &RNARep_;
   }
@@ -155,7 +133,7 @@ unique_ptr<Sequence> SequenceTools::getComplement(const Sequence& sequence)
 unique_ptr<Sequence> SequenceTools::transcript(const Sequence& sequence)
 {
   // Alphabet type checking
-  if (!AlphabetTools::isDNAAlphabet(sequence.getAlphabet().get()))
+  if (!AlphabetTools::isDNAAlphabet(&sequence.alphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
   }
@@ -168,7 +146,7 @@ unique_ptr<Sequence> SequenceTools::transcript(const Sequence& sequence)
 unique_ptr<Sequence> SequenceTools::reverseTranscript(const Sequence& sequence)
 {
   // Alphabet type checking
-  if (!AlphabetTools::isRNAAlphabet(sequence.getAlphabet().get()))
+  if (!AlphabetTools::isRNAAlphabet(&sequence.alphabet()))
   {
     throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
   }
@@ -178,21 +156,6 @@ unique_ptr<Sequence> SequenceTools::reverseTranscript(const Sequence& sequence)
 
 /******************************************************************************/
 
-void SequenceTools::invert(Sequence& seq)
-{
-  size_t seq_size = seq.size(); // store seq size for efficiency
-  int tmp_state = 0; // to store one state when swapping positions
-  size_t j = seq_size; // symetric position iterator from sequence end
-  for (size_t i = 0; i < seq_size / 2; ++i)
-  {
-    j = seq_size - 1 - i;
-    tmp_state = seq.getValue(i);
-    seq.setElement(i, seq.getValue(j));
-    seq.setElement(j, tmp_state);
-  }
-}
-
-/******************************************************************************/
 
 unique_ptr<Sequence> SequenceTools::getInvert(const Sequence& sequence)
 {

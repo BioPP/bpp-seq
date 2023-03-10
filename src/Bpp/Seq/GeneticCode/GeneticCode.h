@@ -119,7 +119,7 @@ public:
 
   std::string translate(const std::string& state) const override;
 
-  std::unique_ptr<Sequence> translate(const Sequence& sequence) const override
+  std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override
   {
     return AbstractTransliterator::translate(sequence);
   }
@@ -284,7 +284,7 @@ public:
    * @param includeInitCodon (if lookForInitCodon is true) tell if the init codon must be included in the subsequence.
    * @return A nucleotide/codon subsequence.
    */
-  std::unique_ptr<Sequence> getCodingSequence(const Sequence& sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const;
+  std::unique_ptr<Sequence> getCodingSequence(const SequenceInterface& sequence, bool lookForInitCodon = false, bool includeInitCodon = false) const;
   /** @} */
 };
 } // end of namespace bpp.

@@ -95,7 +95,7 @@ public:
 
   std::string translate(const std::string& state) const override;
 
-  std::unique_ptr<Sequence> translate(const Sequence& sequence) const override
+  std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override
   {
     return AbstractReverseTransliterator::translate(sequence);
   }
@@ -104,7 +104,7 @@ public:
 
   std::string reverse(const std::string& state) const override;
 
-  std::unique_ptr<Sequence> reverse(const Sequence& sequence) const override
+  std::unique_ptr<Sequence> reverse(const SequenceInterface& sequence) const override
   {
     return AbstractReverseTransliterator::reverse(sequence);
   }

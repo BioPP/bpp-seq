@@ -225,7 +225,7 @@ public:
       return state;
     }
 
-    std::unique_ptr<Sequence> translate(const Sequence& sequence) const override
+    std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override
     {
       return AbstractTransliterator::translate(sequence);
     }

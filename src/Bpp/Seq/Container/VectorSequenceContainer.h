@@ -157,9 +157,10 @@ public:
     clear();
     AbstractTemplateSequenceContainer<SequenceType>::operator=(vsc);
     size_t max = vsc.getNumberOfSequences();
-    for (size_t i = 0; i < max; i++)
+    for (size_t i = 0; i < max; ++i)
     {
-      addSequence(vsc.getSequenceKey(i), vsc.getSequence(i));
+      auto seqPtr = std::unique_ptr<SequenceType>(vsc.sequence(i).clone());
+      addSequence(vsc.sequenceKey(i), seqPtr);
     }
     return *this;
   }
@@ -174,9 +175,10 @@ public:
     clear();
     AbstractTemplateSequenceContainer<SequenceType>::operator=(sc);
     size_t max = sc.getNumberOfSequences();
-    for (size_t i = 0; i < max; i++)
+    for (size_t i = 0; i < max; ++i)
     {
-      addSequence(sc.getSequenceKey(i), sc.getSequence(i));
+      auto seqPtr = std::unique_ptr<SequenceType>(sc.sequence(i).clone());
+      addSequence(sc.sequenceKey(i), seqPtr);
     }
     setComments(sc.getComments());
     return *this;

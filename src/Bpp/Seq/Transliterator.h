@@ -50,11 +50,11 @@ namespace bpp
 /**
  * @brief This interface is used when translating a sequence from an alphabet to another: it gives the translation rules, eg: RNA -> DNA.
  */
-class Transliterator
+class TransliteratorInterface
 {
 public:
-  Transliterator() {}
-  virtual ~Transliterator() {}
+  TransliteratorInterface() {}
+  virtual ~TransliteratorInterface() {}
 
 public:
   /**
@@ -107,18 +107,18 @@ public:
    * @param sequence A sequence in source alphabet.
    * @return The corresponding sequence in target alphabet.
    */
-  virtual std::unique_ptr<Sequence> translate(const Sequence& sequence) const = 0;
+  virtual std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const = 0;
 };
 
 /**
  * @brief The same as previous, but can perform the reverse translation, eg: RNA -> DNA and DNA -> RNA;
  */
-class ReverseTransliterator :
-  public virtual Transliterator
+class ReverseTransliteratorInterface :
+  public virtual TransliteratorInterface
 {
 public:
-  ReverseTransliterator() {}
-  virtual ~ReverseTransliterator() {}
+  ReverseTransliteratorInterface() {}
+  virtual ~ReverseTransliteratorInterface() {}
 
 public:
   /**
@@ -143,14 +143,14 @@ public:
    * @param sequence A sequence in target alphabet.
    * @return The corresponding sequence in source alphabet.
    */
-  virtual std::unique_ptr<Sequence> reverse(const Sequence& sequence) const = 0;
+  virtual std::unique_ptr<Sequence> reverse(const SequenceInterface& sequence) const = 0;
 };
 
 /**
  * @brief Partial implementation of the Transliterator interface.
  */
 class AbstractTransliterator :
-  public virtual Transliterator
+  public virtual TransliteratorInterface
 {
 public:
   AbstractTransliterator() {}
@@ -159,14 +159,16 @@ public:
 public:
   int translate(int state) const override = 0;
   std::string translate(const std::string& state) const override = 0;
-  std::unique_ptr<Sequence> translate(const Sequence& sequence) const override;
+
+  std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override;
+
 };
 
 /**
  * @brief Partial implementation of the ReverseTransliterator interface.
  */
 class AbstractReverseTransliterator :
-  public virtual ReverseTransliterator,
+  public virtual ReverseTransliteratorInterface,
   public AbstractTransliterator
 {
 public:
@@ -176,7 +178,9 @@ public:
 public:
   int reverse(int state) const override = 0;
   std::string reverse(const std::string& state) const override = 0;
-  std::unique_ptr<Sequence> reverse(const Sequence& sequence) const override;
+  
+  std::unique_ptr<Sequence> reverse(const SequenceInterface& sequence) const override;
+	  
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_TRANSLITERATOR_H

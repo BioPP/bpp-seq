@@ -83,7 +83,7 @@ std::string NucleicAcidsReplication::translate(const std::string& state) const
   return nuc2_->intToChar(trans_[i]);
 }
 
-unique_ptr<Sequence> NucleicAcidsReplication::translate(const Sequence& sequence) const
+unique_ptr<Sequence> NucleicAcidsReplication::translate(const SequenceInterface& sequence) const
 {
   if (sequence.getAlphabet()->getAlphabetType() != getSourceAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("NucleicAcidsReplication::translate", getSourceAlphabet(), getTargetAlphabet());
@@ -109,7 +109,7 @@ std::string NucleicAcidsReplication::reverse(const std::string& state) const
   return nuc1_->intToChar(trans_[i]);
 }
 
-unique_ptr<Sequence> NucleicAcidsReplication::reverse(const Sequence& sequence) const
+unique_ptr<Sequence> NucleicAcidsReplication::reverse(const SequenceInterface& sequence) const
 {
   if (sequence.getAlphabet()->getAlphabetType() != getTargetAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("NucleicAcidsReplication::reverse", getSourceAlphabet(), getTargetAlphabet());

@@ -65,7 +65,7 @@ namespace bpp
  * using the translate and reverse methods.
  */
 class NucleicAcidsReplication :
-  public ReverseTransliterator
+  public ReverseTransliteratorInterface
 {
 private:
   std::shared_ptr<const NucleicAlphabet> nuc1_, nuc2_;
@@ -77,13 +77,13 @@ public:
       std::shared_ptr<const NucleicAlphabet> nuc2);
 
   NucleicAcidsReplication(const NucleicAcidsReplication& nar) :
-    ReverseTransliterator(nar),
+    ReverseTransliteratorInterface(nar),
     nuc1_(nar.nuc1_), nuc2_(nar.nuc2_), trans_(nar.trans_)
   {}
 
   NucleicAcidsReplication& operator=(const NucleicAcidsReplication& nar)
   {
-    ReverseTransliterator::operator=(nar);
+    ReverseTransliteratorInterface::operator=(nar);
     nuc1_ = nar.nuc1_;
     nuc2_ = nar.nuc2_;
     trans_ = nar.trans_;
@@ -105,13 +105,13 @@ public:
 
   std::string translate(const std::string& state) const override;
 
-  std::unique_ptr<Sequence> translate(const Sequence& sequence) const override;
+  std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override;
 
   int reverse(int state) const override;
 
   std::string reverse(const std::string& state) const override;
 
-  std::unique_ptr<Sequence> reverse(const Sequence& sequence) const override;
+  std::unique_ptr<Sequence> reverse(const SequenceInterface& sequence) const override;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_NUCLEICACIDSREPLICATION_H

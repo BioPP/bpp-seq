@@ -148,7 +148,10 @@ bool GeneticCode::isFourFoldDegenerated(int val) const
 
 /**********************************************************************************************/
 
-unique_ptr<Sequence> GeneticCode::getCodingSequence(const Sequence& sequence, bool lookForInitCodon, bool includeInitCodon) const
+unique_ptr<Sequence> GeneticCode::getCodingSequence(
+    const SequenceInterface& sequence,
+    bool lookForInitCodon,
+    bool includeInitCodon) const
 {
   size_t initPos = 0;
   size_t stopPos = sequence.size();
@@ -177,7 +180,7 @@ unique_ptr<Sequence> GeneticCode::getCodingSequence(const Sequence& sequence, bo
       }
     }
   }
-  else if (AlphabetTools::isNucleicAlphabet(sequence.getAlphabet().get()))
+  else if (AlphabetTools::isNucleicAlphabet(&sequence.alphabet()))
   {
     // Look for AUG(or ATG) codon:
     if (lookForInitCodon)
@@ -206,9 +209,9 @@ unique_ptr<Sequence> GeneticCode::getCodingSequence(const Sequence& sequence, bo
     }
   }
   else
-    throw AlphabetMismatchException("Sequence must have alphabet of type nucleic or codon in GeneticCode::getCodingSequence.", 0, sequence.getAlphabet().get());
+    throw AlphabetMismatchException("Sequence must have alphabet of type nucleic or codon in GeneticCode::getCodingSequence.", 0, &sequence.alphabet());
 
-  return SequenceTools::subseq(sequence, initPos, stopPos - 1);
+  return SequenceTools::subseq<Sequence>(sequence, initPos, stopPos - 1);
 }
 
 /**********************************************************************************************/
