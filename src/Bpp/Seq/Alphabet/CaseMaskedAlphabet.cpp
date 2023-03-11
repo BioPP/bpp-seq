@@ -50,7 +50,7 @@ using namespace bpp;
 
 using namespace std;
 
-CaseMaskedAlphabet::CaseMaskedAlphabet(const LetterAlphabet* nocaseAlphabet) :
+CaseMaskedAlphabet::CaseMaskedAlphabet(std::shared_ptr<const LetterAlphabet> nocaseAlphabet) :
   LetterAlphabet(true),
   nocaseAlphabet_(nocaseAlphabet)
 {

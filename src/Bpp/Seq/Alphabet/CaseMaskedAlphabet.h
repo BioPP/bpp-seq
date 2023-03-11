@@ -61,10 +61,10 @@ class CaseMaskedAlphabet :
   public LetterAlphabet
 {
 public:
-  const LetterAlphabet* nocaseAlphabet_;
+  std::shared_ptr<const LetterAlphabet> nocaseAlphabet_;
 
 public:
-  CaseMaskedAlphabet(const LetterAlphabet* nocaseAlphabet);
+  CaseMaskedAlphabet(std::shared_ptr<const LetterAlphabet> nocaseAlphabet);
 
   CaseMaskedAlphabet(const CaseMaskedAlphabet& cma) :
     LetterAlphabet(cma), nocaseAlphabet_(cma.nocaseAlphabet_) {}
@@ -76,20 +76,20 @@ public:
     return *this;
   }
 
-  CaseMaskedAlphabet* clone() const
+  CaseMaskedAlphabet* clone() const override
   {
     return new CaseMaskedAlphabet(*this);
   }
 
 public:
-  unsigned int getSize() const { return nocaseAlphabet_->getSize(); }
-  unsigned int getNumberOfTypes() const { return nocaseAlphabet_->getNumberOfTypes(); }
-  std::string getAlphabetType() const { return "CaseMasked"; }
-  int getUnknownCharacterCode() const { return nocaseAlphabet_->getUnknownCharacterCode(); }
-  bool isUnresolved(int state) const { return nocaseAlphabet_->isUnresolved(state); }
-  bool isUnresolved(const std::string& state) const { return nocaseAlphabet_->isUnresolved(state); }
+  unsigned int getSize() const override { return nocaseAlphabet_->getSize(); }
+  unsigned int getNumberOfTypes() const override { return nocaseAlphabet_->getNumberOfTypes(); }
+  std::string getAlphabetType() const override { return "CaseMasked"; }
+  int getUnknownCharacterCode() const override { return nocaseAlphabet_->getUnknownCharacterCode(); }
+  bool isUnresolved(int state) const override { return nocaseAlphabet_->isUnresolved(state); }
+  bool isUnresolved(const std::string& state) const override { return nocaseAlphabet_->isUnresolved(state); }
 
-  const Alphabet* getUnmaskedAlphabet() const { return nocaseAlphabet_; }
+  std::shared_ptr<const Alphabet> getUnmaskedAlphabet() const { return nocaseAlphabet_; }
 
   bool isMasked(int state) const { return state >= 100; }
   bool isMasked(const std::string& state) const
