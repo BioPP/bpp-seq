@@ -382,7 +382,7 @@ public:
    * @throw Exception If the annotation is not valid for this sequence.
    * @see SequenceWithAnnotation::isValidWith
    */
-  virtual void addAnnotation(SequenceAnnotation* anno)
+  virtual void addAnnotation(std::shared_ptr<SequenceAnnotation> anno)
   {
     anno->isValidWith(*this);
     addIntSymbolListListener(anno);
@@ -392,32 +392,38 @@ public:
   {
     for (size_t i = 0; i < getNumberOfListeners(); ++i)
     {
-      const IntSymbolListListener* listener = &getListener(i);
-      const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(listener);
-      if (anno && anno->getType() == type) return true;
+      const auto& lstn = listener(i);
+      try {
+        const SequenceAnnotation& anno = dynamic_cast<const SequenceAnnotation&>(lstn);
+        if (anno.getType() == type) return true;
+      } catch (std::bad_cast&) {}
     }
     return false;
   }
 
 
-  virtual const SequenceAnnotation& getAnnotation(const std::string& type) const
+  virtual const SequenceAnnotation& annotation(const std::string& type) const
   {
     for (size_t i = 0; i < getNumberOfListeners(); ++i)
     {
-      const IntSymbolListListener* listener = &getListener(i);
-      const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(listener);
-      if (anno && anno->getType() == type) return *anno;
+      const auto& lstn = listener(i);
+      try {
+        const SequenceAnnotation& anno = dynamic_cast<const SequenceAnnotation&>(lstn);
+        if (anno.getType() == type) return anno;
+      } catch (std::bad_cast&) {}
     }
     throw Exception("SequenceWithAnnotation::getAnnotation. No annotation found with type '" + type + "'.");
   }
 
-  virtual SequenceAnnotation& getAnnotation(const std::string& type)
+  virtual SequenceAnnotation& annotation(const std::string& type)
   {
     for (size_t i = 0; i < getNumberOfListeners(); ++i)
     {
-      IntSymbolListListener* listener = &getListener(i);
-      SequenceAnnotation* anno = dynamic_cast<SequenceAnnotation*>(listener);
-      if (anno && anno->getType() == type) return *anno;
+      auto& lstn = listener(i);
+      try {
+        SequenceAnnotation& anno = dynamic_cast<SequenceAnnotation&>(lstn);
+        if (anno.getType() == type) return anno;
+      } catch (std::bad_cast&) {}
     }
     throw Exception("SequenceWithAnnotation::getAnnotation. No annotation found with type '" + type + "'.");
   }

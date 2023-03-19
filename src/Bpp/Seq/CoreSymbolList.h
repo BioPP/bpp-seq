@@ -412,7 +412,7 @@ public:
    *
    * @{
    */
-  virtual TemplateEventDrivenCoreSymbolListInterface* clone() const = 0;
+  virtual TemplateEventDrivenCoreSymbolListInterface* clone() const override = 0;
   /** @} */
 
   // Class destructor
@@ -425,16 +425,19 @@ public:
    *
    * @{
    */
-
   virtual size_t getNumberOfListeners() const = 0;
 
-  virtual const CoreSymbolListListener<T>& getListener(size_t i) const = 0;
+  virtual const CoreSymbolListListener<T>& listener(size_t i) const = 0;
+  
+  virtual std::shared_ptr<const CoreSymbolListListener<T>> getListener(size_t i) const = 0;
 
-  virtual CoreSymbolListListener<T>& getListener(size_t i) = 0;
+  virtual CoreSymbolListListener<T>& listener(size_t i) = 0;
+  
+  virtual std::shared_ptr<CoreSymbolListListener<T>> getListener(size_t i) = 0;
 
-  virtual void addCoreSymbolListListener(CoreSymbolListListener<T>* listener)  = 0;
+  virtual void addCoreSymbolListListener(std::shared_ptr<CoreSymbolListListener<T>> listener)  = 0;
 
-  virtual void removeCoreSymbolListListener(CoreSymbolListListener<T>* listener) = 0;
+  virtual void removeCoreSymbolListListener(std::shared_ptr<CoreSymbolListListener<T>> listener) = 0;
 
 protected:
   virtual void beforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) = 0;

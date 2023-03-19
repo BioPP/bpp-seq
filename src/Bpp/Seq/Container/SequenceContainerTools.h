@@ -163,10 +163,8 @@ public:
   {
     for (size_t i = 0; i < input.getNumberOfSequences(); ++i)
     {
-      std::unique_ptr<SequenceType> seq(new SequenceType(input.getSequence(i)));
-      output.addSequence(seq, false); // We do not check sequence name here.
-                                      // If names were duplicated in the original container,
-                                      // they will also be in the converted one.
+      auto seq = std::make_unique<SequenceType>(input.sequence(i));
+      output.addSequence(seq->getName(), seq);
     }
   }
 
@@ -187,13 +185,14 @@ public:
    */
   template<class SequenceType, class HashType>
   static void getSelectedSequences(
-		  const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
-		  const SequenceSelection& selection,
-		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
+    const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
+    const SequenceSelection& selection,
+    TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
   {
-    bool checkNames = outputCont.getNumberOfSequences() > 0;
-    for (size_t position : selection) {
-      outputCont.addSequence(sequences.getSequence(position), checkNames);
+    for (size_t position : selection)
+    {
+      auto seq = std::make_unique<SequenceType>(sequences.sequence(position));
+      outputCont.addSequence(seq->getName(), seq);
     }
   }
 
@@ -217,18 +216,20 @@ public:
    */
   template<class SequenceType, class HashType>
   static void getSelectedSequences(
-		  const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
-		  const std::vector<std::string>& selection,
-		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont,
-		  bool strict = true)
+      const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
+      const std::vector<std::string>& selection,
+      TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont,
+      bool strict = true)
   {
-    bool checkNames = outputCont.getNumberOfSequences() > 0;
     for (const std::string& key : selection) {
       if (strict) {
-        outputCont.addSequence(sequences.getSequence(key), checkNames);
+        auto seq = std::make_unique<SequenceType>(sequences.sequence(key));
+        outputCont.addSequence(seq->getName(), seq);
       } else {
-        if (sequences.hasSequence(key))
-          outputCont.addSequence(sequences.getSequence(key), checkNames);
+        if (sequences.hasSequence(key)) {
+          auto seq = std::make_unique<SequenceType>(sequences.sequence(key));
+          outputCont.addSequence(seq->getName(), seq);
+	}
       }
     }
   }
@@ -248,8 +249,8 @@ public:
    */
   template<class SequenceType, class HashType>
   static void keepOnlySelectedSequences(
-		  TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
-		  const SequenceSelection& selection)
+      TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
+      const SequenceSelection& selection)
   {
     std::vector<std::string> keys = sequences.getSequenceKeys();
     std::vector<std::string> selectedKeys = VectorTools::extract<std::string>(keys, selection);
@@ -272,7 +273,9 @@ public:
    * @return True is all sequence have the same length.
    */
   template<class SequenceType, class HashType>
-  static bool sequencesHaveTheSameLength(const TemplateSequenceContainerInterface<SequenceType, HashType>& sc)
+  static bool sequencesHaveTheSameLength(
+      const TemplateSequenceContainerInterface<SequenceType,
+      HashType>& sc)
   {
     size_t ns = sc.getNumberOfSequences();
     if (ns <= 1)

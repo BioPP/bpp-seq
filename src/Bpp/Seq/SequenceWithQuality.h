@@ -220,7 +220,7 @@ class SequenceWithQuality :
   public SequenceWithAnnotation
 {
 private:
-  SequenceQuality* qualScores_;
+   std::shared_ptr<SequenceQuality> qualScores_;
 
 public:
   /**
@@ -508,15 +508,15 @@ public:
 
   SequenceWithQuality(const SequenceWithQuality& sequence) :
     AbstractTemplateSymbolList<int>(sequence.getAlphabet()),
-    SequenceWithAnnotation(sequence), qualScores_(0)
+    SequenceWithAnnotation(sequence), qualScores_(nullptr)
   {
-    qualScores_ = dynamic_cast<SequenceQuality*>(&getAnnotation(SequenceQuality::QUALITY_SCORE));
+    qualScores_.reset(dynamic_cast<SequenceQuality*>(&annotation(SequenceQuality::QUALITY_SCORE)));
   }
 
   SequenceWithQuality& operator=(const SequenceWithQuality& sequence)
   {
     SequenceWithAnnotation::operator=(sequence);
-    qualScores_ = dynamic_cast<SequenceQuality*>(&getAnnotation(SequenceQuality::QUALITY_SCORE));
+    qualScores_.reset(dynamic_cast<SequenceQuality*>(&annotation(SequenceQuality::QUALITY_SCORE)));
     return *this;
   }
 

@@ -85,7 +85,7 @@ unique_ptr<SequenceWithAnnotation> SequenceWithAnnotationTools::createMaskAnnota
     {
       mask[i] = cma->isMasked(seq[i]);
     }
-    seqa->addAnnotation(new SequenceMask(mask));
+    seqa->addAnnotation(make_shared<SequenceMask>(mask));
     return seqa;
   }
   else

@@ -86,7 +86,7 @@ public:
    * @return A pointer toward a new SiteContainer with only sites with no gaps.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr<TemplateVectorSiteContainer<SiteType, SequenceType>>
   getSitesWithoutGaps(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
@@ -114,7 +114,7 @@ public:
    * @return A pointer toward a new SiteContainer with only complete sites.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr<TemplateVectorSiteContainer<SiteType, SequenceType>>
   getCompleteSites(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
@@ -141,7 +141,7 @@ public:
    * @return A pointer toward a new SiteContainer.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< TemplateSiteContainerInterface<SiteType, SequenceType, std::string> >
+  static std::unique_ptr<TemplateSiteContainerInterface<SiteType, SequenceType, std::string>>
   removeGapOnlySites(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
     if (sites.getNumberOfSequences() == 0)
@@ -206,7 +206,7 @@ public:
    * @return A pointer toward a new SiteContainer.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr<TemplateVectorSiteContainer<SiteType, SequenceType>>
   removeGapOrUnresolvedOnlySites(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sites)
   {
     if (sites.getNumberOfSequences() == 0)
@@ -214,7 +214,7 @@ public:
 
     std::vector<std::string> sequenceKeys = sites.getSequenceKeys();
     auto alphaPtr = sites.getAlphabet();
-    auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, alphaPtr);
+    auto newContainer = std::make_unique<TemplateVectorSiteContainer<SiteType, SequenceType>>(sequenceKeys, alphaPtr);
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       const Site& site = sites.site(i);
       if (!SiteTools::isGapOrUnresolvedOnly(site)) {

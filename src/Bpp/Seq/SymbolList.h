@@ -256,7 +256,7 @@ protected:
   /**
    * @brief Contains the listeners.
    */
-  std::vector<CoreSymbolListListener<T>* > listeners_;
+  std::vector<std::shared_ptr<CoreSymbolListListener<T>>> listeners_;
 
   /**
    * @brief Build a new void EventDrivenSymbolList object with the specified alphabet.
@@ -294,14 +294,14 @@ protected:
   AbstractTemplateEventDrivenSymbolList(const AbstractTemplateEventDrivenSymbolList<T>& list) :
     AbstractTemplateSymbolList<T>(list),
     propagateEvents_(list.propagateEvents_),
-    listeners_(list.listeners_)
+    listeners_(list.listeners_.size())
   {
-    for (size_t i = 0; i < listeners_.size(); ++i)
+    for (size_t i = 0; i < list.listeners_.size(); ++i)
     {
       if (list.listeners_[i]->isShared()) {
         listeners_[i] = list.listeners_[i];
       } else {
-        listeners_[i] = (dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone()));
+        listeners_[i] = std::shared_ptr<CoreSymbolListListener<T>>(list.listeners_[i]->clone());
       }
     }
   }
@@ -313,11 +313,6 @@ protected:
   {
     AbstractTemplateSymbolList<T>::operator=(list);
     propagateEvents_ = true;
-    for (size_t i = 0; i < listeners_.size(); ++i)
-    {
-      if (!listeners_[i]->isShared())
-        delete listeners_[i];
-    }
     listeners_.clear();
     return *this;
   }
@@ -330,38 +325,23 @@ protected:
   {
     AbstractTemplateSymbolList<T>::operator=(list);
     propagateEvents_ = list.propagateEvents_;
-    listeners_ = list.listeners_;
-    for (size_t i = 0; i < listeners_.size(); ++i)
-    {
-      delete listeners_[i];
-    }
-
+    listeners_.resize(list.listeners_.size());
     for (size_t i = 0; i < listeners_.size(); ++i)
     {
       if (list.listeners_[i]->isShared()) {
         listeners_[i] = list.listeners_[i];
       } else {
-        listeners_[i] = dynamic_cast<CoreSymbolListListener<T>*>(list.listeners_[i]->clone());
+        listeners_[i] = std::shared_ptr<CoreSymbolListListener<T>>(list.listeners_[i]->clone());
       }
     }
-
     return *this;
   }
 
   // Class destructor
-  virtual ~AbstractTemplateEventDrivenSymbolList()
-  {
-    for (size_t i = 0; i < listeners_.size(); ++i)
-    {
-      if (listeners_[i] && !listeners_[i]->isShared())
-      {
-        delete listeners_[i];
-      }
-    }
-  }
+  virtual ~AbstractTemplateEventDrivenSymbolList() = default;
 
 public:
-  virtual void setContent(const std::vector<T>& list)
+  virtual void setContent(const std::vector<T>& list) override
   {
     CoreSymbolListEditionEvent<T> event(this);
     fireBeforeSequenceChanged(event);
@@ -371,7 +351,7 @@ public:
     fireAfterSequenceChanged(event);
   }
 
-  void deleteElement(size_t pos)
+  void deleteElement(size_t pos) override
   {
     CoreSymbolListDeletionEvent<T> event(this, pos, 1);
     fireBeforeSequenceDeleted(event);
@@ -380,7 +360,7 @@ public:
   }
 
 
-  void deleteElements(size_t pos, size_t len)
+  void deleteElements(size_t pos, size_t len) override
   {
     CoreSymbolListDeletionEvent<T> event(this, pos, len);
     fireBeforeSequenceDeleted(event);
@@ -388,7 +368,7 @@ public:
     fireAfterSequenceDeleted(event);
   }
 
-  virtual void addElement(const T& v)
+  virtual void addElement(const T& v) override
   {
     CoreSymbolListInsertionEvent<T> event(this, AbstractTemplateSymbolList<T>::size(), 1);
     fireBeforeSequenceInserted(event);
@@ -396,7 +376,7 @@ public:
     fireAfterSequenceInserted(event);
   }
 
-  virtual void addElement(size_t pos, const T& v)
+  virtual void addElement(size_t pos, const T& v) override
   {
     CoreSymbolListInsertionEvent<T> event(this, pos, 1);
     fireBeforeSequenceInserted(event);
@@ -404,7 +384,7 @@ public:
     fireAfterSequenceInserted(event);
   }
 
-  virtual void setElement(size_t pos, const T& v)
+  virtual void setElement(size_t pos, const T& v) override
   {
     CoreSymbolListSubstitutionEvent<T> event(this, pos, pos);
     fireBeforeSequenceSubstituted(event);
@@ -417,28 +397,38 @@ public:
    *
    * @{
    */
-  virtual size_t getNumberOfListeners() const { return listeners_.size(); }
+  virtual size_t getNumberOfListeners() const override { return listeners_.size(); }
 
-  virtual const CoreSymbolListListener<T>& getListener(size_t i) const
+  virtual const CoreSymbolListListener<T>& listener(size_t i) const override
   {
-    if (listeners_[i] == 0)
-      std::cout << "EventDrivenSymbolList::getListener: aie!!!" << std::endl;
+    if (!listeners_[i])
+      throw Exception("EventDrivenSymbolList::listener. The specified listener is missing.");
     return *listeners_[i];
   }
 
-  virtual CoreSymbolListListener<T>& getListener(size_t i)
+  virtual std::shared_ptr<const CoreSymbolListListener<T>> getListener(size_t i) const override
   {
-    if (listeners_[i] == 0)
-      std::cout << "EventDrivenSymbolList::getListener: aie!!!" << std::endl;
+    return listeners_[i];
+  }
+
+  virtual CoreSymbolListListener<T>& listener(size_t i) override
+  {
+    if (!listeners_[i])
+      throw Exception("EventDrivenSymbolList::listener. The specified listener is missing.");
     return *listeners_[i];
   }
 
-  virtual void addCoreSymbolListListener(CoreSymbolListListener<T>* listener)
+  virtual std::shared_ptr<CoreSymbolListListener<T>> getListener(size_t i) override
+  {
+    return listeners_[i];
+  }
+
+  virtual void addCoreSymbolListListener(std::shared_ptr<CoreSymbolListListener<T>> listener) override
   {
     listeners_.push_back(listener);
   }
 
-  virtual void removeCoreSymbolListListener(CoreSymbolListListener<T>* listener)
+  virtual void removeCoreSymbolListListener(std::shared_ptr<CoreSymbolListListener<T>> listener) override
   {
     if (listener->isRemovable())
       listeners_.erase(remove(listeners_.begin(), listeners_.end(), listener), listeners_.end());
@@ -447,16 +437,16 @@ public:
   }
 
 protected:
-  virtual void beforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {}
-  virtual void afterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) {}
-  virtual void beforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {}
-  virtual void afterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) {}
-  virtual void beforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {}
-  virtual void afterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) {}
-  virtual void beforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {}
-  virtual void afterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) {}
+  virtual void beforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) override {}
+  virtual void afterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) override {}
+  virtual void beforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) override {}
+  virtual void afterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) override {}
+  virtual void beforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) override {}
+  virtual void afterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) override {}
+  virtual void beforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) override {}
+  virtual void afterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) override {}
 
-  void fireBeforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event)
+  void fireBeforeSequenceChanged(const CoreSymbolListEditionEvent<T>& event) override
   {
     beforeSequenceChanged(event);
     if (propagateEvents_)
@@ -466,7 +456,7 @@ protected:
       }
   }
 
-  void fireAfterSequenceChanged(const CoreSymbolListEditionEvent<T>& event)
+  void fireAfterSequenceChanged(const CoreSymbolListEditionEvent<T>& event) override
   {
     afterSequenceChanged(event);
     if (propagateEvents_)
@@ -476,7 +466,7 @@ protected:
       }
   }
 
-  void fireBeforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event)
+  void fireBeforeSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) override
   {
     beforeSequenceInserted(event);
     if (propagateEvents_)
@@ -486,7 +476,7 @@ protected:
       }
   }
 
-  void fireAfterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event)
+  void fireAfterSequenceInserted(const CoreSymbolListInsertionEvent<T>& event) override
   {
     afterSequenceInserted(event);
     if (propagateEvents_)
@@ -496,7 +486,7 @@ protected:
       }
   }
 
-  void fireBeforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event)
+  void fireBeforeSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) override
   {
     beforeSequenceDeleted(event);
     if (propagateEvents_)
@@ -506,7 +496,7 @@ protected:
       }
   }
 
-  void fireAfterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event)
+  void fireAfterSequenceDeleted(const CoreSymbolListDeletionEvent<T>& event) override
   {
     afterSequenceDeleted(event);
     if (propagateEvents_)
@@ -516,7 +506,7 @@ protected:
       }
   }
 
-  void fireBeforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event)
+  void fireBeforeSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) override
   {
     beforeSequenceSubstituted(event);
     if (propagateEvents_)
@@ -526,7 +516,7 @@ protected:
       }
   }
 
-  void fireAfterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event)
+  void fireAfterSequenceSubstituted(const CoreSymbolListSubstitutionEvent<T>& event) override
   {
     afterSequenceSubstituted(event);
     if (propagateEvents_)
@@ -538,8 +528,8 @@ protected:
   /** @} */
 
 protected:
-  void propagateEvents(bool yn) { propagateEvents_ = yn; }
-  bool propagateEvents() const { return propagateEvents_; }
+  void propagateEvents(bool yn) override { propagateEvents_ = yn; }
+  bool propagateEvents() const override { return propagateEvents_; }
 };
 
 } // end of namespace bpp.

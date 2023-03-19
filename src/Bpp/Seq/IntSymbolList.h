@@ -378,44 +378,44 @@ public:
    *
    * @{
    */
-  EventDrivenIntSymbolList* clone() const { return new EventDrivenIntSymbolList(*this); }
+  EventDrivenIntSymbolList* clone() const override { return new EventDrivenIntSymbolList(*this); }
   /** @} */
 
-  ~EventDrivenIntSymbolList() {}
+  virtual ~EventDrivenIntSymbolList() {}
 
 public:
-  virtual void setContent(const std::vector<std::string>& list);
+  virtual void setContent(const std::vector<std::string>& list) override;
 
-  void setContent(const std::vector<int>& list);
+  void setContent(const std::vector<int>& list) override;
 
-  virtual std::string toString() const;
+  virtual std::string toString() const override;
 
   using AbstractTemplateEventDrivenSymbolList<int>::addElement;
 
-  virtual void addElement(const std::string& c);
+  virtual void addElement(const std::string& c) override;
 
-  virtual void addElement(size_t pos, const std::string& c);
+  virtual void addElement(size_t pos, const std::string& c) override;
 
   using AbstractTemplateEventDrivenSymbolList<int>::setElement;
 
-  virtual void setElement(size_t pos, const std::string& c);
+  virtual void setElement(size_t pos, const std::string& c) override;
 
-  virtual std::string getChar(size_t pos) const;
+  virtual std::string getChar(size_t pos) const override;
 
-  void addIntSymbolListListener(IntSymbolListListener* listener)
+  void addIntSymbolListListener(std::shared_ptr<IntSymbolListListener> listener)
   {
-    addCoreSymbolListListener(listener);
+    addCoreSymbolListListener(move(listener));
   }
 
 protected:
-  virtual void beforeSequenceChanged(const IntSymbolListEditionEvent& event) {}
-  virtual void afterSequenceChanged(const IntSymbolListEditionEvent& event) {}
-  virtual void beforeSequenceInserted(const IntSymbolListInsertionEvent& event) {}
-  virtual void afterSequenceInserted(const IntSymbolListInsertionEvent& event) {}
-  virtual void beforeSequenceDeleted(const IntSymbolListDeletionEvent& event) {}
-  virtual void afterSequenceDeleted(const IntSymbolListDeletionEvent& event) {}
-  virtual void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
-  virtual void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) {}
+  virtual void beforeSequenceChanged(const IntSymbolListEditionEvent& event) override {}
+  virtual void afterSequenceChanged(const IntSymbolListEditionEvent& event) override {}
+  virtual void beforeSequenceInserted(const IntSymbolListInsertionEvent& event) override {}
+  virtual void afterSequenceInserted(const IntSymbolListInsertionEvent& event) override {}
+  virtual void beforeSequenceDeleted(const IntSymbolListDeletionEvent& event) override {}
+  virtual void afterSequenceDeleted(const IntSymbolListDeletionEvent& event) override {}
+  virtual void beforeSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) override {}
+  virtual void afterSequenceSubstituted(const IntSymbolListSubstitutionEvent& event) override {}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_INTSYMBOLLIST_H

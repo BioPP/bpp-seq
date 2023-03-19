@@ -186,9 +186,10 @@ vector<string> SequenceWithAnnotation::getAnnotationTypes() const
   vector<string> types;
   for (unsigned int i = 0; i < getNumberOfListeners(); ++i)
   {
-    const SequenceAnnotation* anno = dynamic_cast<const SequenceAnnotation*>(&getListener(i));
-    if (anno)
-      types.push_back(anno->getType());
+    try {
+      const SequenceAnnotation& anno = dynamic_cast<const SequenceAnnotation&>(listener(i));
+      types.push_back(anno.getType());
+    } catch (bad_cast&) {}
   }
   return types;
 }
@@ -220,25 +221,25 @@ void SequenceWithAnnotation::merge(const SequenceWithAnnotation& swa)
     if (it != newTypes.end())
     {
       // Merge annotations:
-      getAnnotation(types[i]).merge(swa.getAnnotation(types[i]));
+      annotation(types[i]).merge(swa.annotation(types[i]));
       // Remove annotation from the list:
       newTypes.erase(it);
     }
     else
     {
       // Extend annotation to the right:
-      unique_ptr<SequenceAnnotation> anno(getAnnotation(types[i]).clone());
+      unique_ptr<SequenceAnnotation> anno(annotation(types[i]).clone());
       anno->init(swa);
-      getAnnotation(types[i]).merge(*anno);
+      annotation(types[i]).merge(*anno);
     }
   }
   // Now look for annotations in the input sequence:
   for (unsigned int i = 0; i < newTypes.size(); ++i)
   {
     // Extend annotation from the left:
-    SequenceAnnotation* anno = swa.getAnnotation(newTypes[i]).clone();
+    shared_ptr<SequenceAnnotation> anno(swa.annotation(newTypes[i]).clone());
     anno->init(*this);
-    anno->merge(swa.getAnnotation(newTypes[i]));
+    anno->merge(swa.annotation(newTypes[i]));
     addAnnotation(anno);
   }
 }
