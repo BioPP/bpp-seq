@@ -95,7 +95,7 @@
  * bpp::Site and bpp::SiteContainer objects. I/O is provided for several formats, including Clustal (bpp::Clustal) and Phylip (bpp::Phylip).
  *
  * @par
- * Bio++ SeqLib also contains support for sequence properties, like amino-acids biochemical properties.
+ * Bio++ sequence library also contains support for sequence properties, like amino-acids biochemical properties.
  * The interfaces bpp::AlphabetIndex1 and bpp::AlphabetIndex2 provides methods to deal with indices in 1 and 2 dimensions
  * respectively. Several basic properties are provided, together with input from the AAIndex databases.
  */

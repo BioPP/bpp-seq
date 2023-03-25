@@ -55,12 +55,12 @@ namespace bpp
 class SequenceWalker
 {
 private:
-  const Sequence* seq_;
+  const SequenceInterface* seq_;
   size_t seqPos_, alnPos_;
   int gap_;
 
 public:
-  SequenceWalker(const Sequence& seq) :
+  SequenceWalker(const SequenceInterface& seq) :
     seq_(&seq), seqPos_(0), alnPos_(0), gap_(seq.getAlphabet()->getGapCharacterCode())
   {
     if (seq_->size() > 0)
