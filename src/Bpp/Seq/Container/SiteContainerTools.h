@@ -850,8 +850,8 @@ public:
    * @throw Exception If an invalid gapOption is passed.
    */
   static double computeSimilarity(
-		  const Sequence& seq1,
-		  const Sequence& seq2,
+		  const SequenceInterface& seq1,
+		  const SequenceInterface& seq2,
 		  bool dist = false,
 		  const std::string& gapOption = SIMILARITY_NODOUBLEGAP,
 		  bool unresolvedAsGap = true);

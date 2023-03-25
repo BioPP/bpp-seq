@@ -596,7 +596,12 @@ const string SiteContainerTools::SIMILARITY_NOGAP       = "no gap";
 
 /******************************************************************************/
 
-double SiteContainerTools::computeSimilarity(const Sequence& seq1, const Sequence& seq2, bool dist, const std::string& gapOption, bool unresolvedAsGap)
+double SiteContainerTools::computeSimilarity(
+    const SequenceInterface& seq1,
+    const SequenceInterface& seq2,
+    bool dist,
+    const std::string& gapOption,
+    bool unresolvedAsGap)
 {
   if (seq1.size() != seq2.size())
     throw SequenceNotAlignedException("SiteContainerTools::computeSimilarity.", &seq2);

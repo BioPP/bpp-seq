@@ -48,7 +48,7 @@
 using namespace bpp;
 using namespace std;
 
-ISequenceStream* BppOSequenceStreamReaderFormat::read(const std::string& description)
+unique_ptr<ISequenceStream> BppOSequenceStreamReaderFormat::read(const std::string& description)
 {
   unparsedArguments_.clear();
   string format = "";
@@ -58,12 +58,12 @@ ISequenceStream* BppOSequenceStreamReaderFormat::read(const std::string& descrip
   {
     bool strictNames = ApplicationTools::getBooleanParameter("strict_names", unparsedArguments_, false, "", true, false);
     bool extended    = ApplicationTools::getBooleanParameter("extended", unparsedArguments_, false, "", true, false);
-    iSeq.reset(new Fasta(100, true, extended, strictNames));
+    iSeq = make_unique<Fasta>(100, true, extended, strictNames);
   }
   else
   {
     throw Exception("Sequence format '" + format + "' unknown.");
   }
 
-  return iSeq.release();
+  return iSeq;
 }
