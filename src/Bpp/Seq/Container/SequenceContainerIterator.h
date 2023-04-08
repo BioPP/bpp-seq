@@ -97,7 +97,7 @@ public:
 public:
   const SequenceType& nextSequence() override
   {	  {
-    const Sequence& seq = sequences_->getSequence(currentPosition_);
+    const Sequence& seq = sequences_->sequence(currentPosition_);
     currentPosition_++;
     return s;
   }

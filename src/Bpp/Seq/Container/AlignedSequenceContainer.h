@@ -214,7 +214,7 @@ public:
     TemplateVectorSequenceContainer<SequenceType>::operator=(sc);
 
     // Initializing
-    length_ = sc.getNumberOfSequences() == 0 ? 0 : sc.getSequence(0).getSize();
+    length_ = sc.getNumberOfSequences() == 0 ? 0 : sc.sequence(0).getSize();
     reindexSites();
     siteVector_.setSize(length_); // Reset the cache
     siteVector_.nullify();

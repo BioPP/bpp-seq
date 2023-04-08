@@ -247,7 +247,7 @@ public:
       size_t end = i;
       while (SiteTools::isGapOrUnresolvedOnly(site) && i > 1) {
         --i;
-        site = &sites.getSite(i - 1);
+        site = &sites.site(i - 1);
       }
       sites.deleteSites(i, end - i);
     } else {
@@ -255,7 +255,7 @@ public:
     }
   }
   ApplicationTools::displayGauge(n, n);
-  const SiteType& site = sites.getSite(0);
+  const SiteType& site = sites.site(0);
   if (SiteTools::isGapOrUnresolvedOnly(site))
     sites.deleteSite(0);
 }
@@ -280,7 +280,7 @@ public:
     auto newContainer = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(sequenceKeys, sites.getAlphabet());
     for (size_t i = 0; i < sites.getNumberOfSites(); ++i) {
       std::map<int, double> freq;
-      const Site& site = sites.getSite(i);
+      const Site& site = sites.site(i);
       SiteTools::getFrequencies(site, freq);
       if (freq[-1] <= maxFreqGaps) {
         auto site2 = std::make_unique<SiteType>(site.clone());
@@ -742,14 +742,15 @@ public:
    */
   template<class SiteType, class SequenceType, class HashType>
   static void sampleSites(
-		  const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites,
-		  size_t nbSites,
-		  TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& outSites,
-		  std::shared_ptr< std::vector<size_t> > index = nullptr)
+    const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites,
+    size_t nbSites,
+    TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& outSites,
+    std::shared_ptr< std::vector<size_t> > index = nullptr)
   {
     for (size_t i = 0; i < nbSites; ++i) {
       size_t pos = static_cast<size_t>(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(static_cast<int>(sites.getNumberOfSites())));
-      outSites.addSite(std::unique_ptr<SiteType>(sites.getSite(pos).clone()), false);
+      auto s = std::unique_ptr<SiteType>(sites.site(pos).clone());
+      outSites.addSite(s, false);
 
       if (index)
         index->push_back(pos);
@@ -801,7 +802,7 @@ public:
 		  const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites,
 		  TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& outputSites)
   {
-    sampleSites(sites, sites.getNumberOfSites(), nullptr, outputSites);
+    sampleSites(sites, sites.getNumberOfSites(), outputSites, nullptr);
   }
 
 
@@ -934,12 +935,12 @@ public:
 
     if (leavePositionAsIs) {
       for (size_t i = 0; i < seqCont2bis->getNumberOfSites(); ++i) {
-        seqCont1.addSite(seqCont2bis->getSite(i), false);
+        seqCont1.addSite(seqCont2bis->site(i), false);
       }
     } else {
       int offset = static_cast<int>(seqCont1.getNumberOfSites());
       for (size_t i = 0; i < seqCont2bis->getNumberOfSites(); ++i) {
-        seqCont1.addSite(seqCont2bis->getSite(i), offset + seqCont2bis->getSite(i).getPosition(), false);
+        seqCont1.addSite(seqCont2bis->site(i), offset + seqCont2bis->site(i).getPosition(), false);
       }
     }
 

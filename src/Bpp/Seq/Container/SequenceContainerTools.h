@@ -90,7 +90,7 @@ public:
   {
     size_t nbSeq = sc.getNumberOfSequences();
     for (size_t i = 0; i < nbSeq; ++i) {
-      if (sc.getSequence(i).getName() == name) {
+      if (sc.sequence(i).getName() == name) {
         return true;
       }
     }
@@ -280,10 +280,10 @@ public:
     size_t ns = sc.getNumberOfSequences();
     if (ns <= 1)
       return true;
-    size_t length = sc.getSequence(0).size();
+    size_t length = sc.sequence(0).size();
     for (size_t i = 1; i < ns; ++i)
     {
-      if (sc.getSequence(i).size() != length)
+      if (sc.sequence(i).size() != length)
         return false;
     }
     return true;
@@ -424,8 +424,10 @@ public:
 		  TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont1, 
 		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont2)
   {
+    const auto& keys = seqCont2.getSequenceKeys();
     for (size_t i = 0; i < seqCont2.getNumberOfSequences(); ++i) {
-      seqCont1.addSequence(std::unique_ptr<SequenceType>(seqCont2.getSequence(i).clone()));
+      auto tm=std::unique_ptr<SequenceType>(seqCont2.sequence(i).clone());
+      seqCont1.addSequence(keys[i],tm);
     }
   }
   
@@ -454,8 +456,8 @@ public:
 
     for (const auto& key: seqCont1.getSequenceKeys())
     {
-      auto tmp = std::unique_ptr<SequenceType>(seqCont1.getSequence(key).clone());
-      tmp->append(seqCont2.getSequence(key));
+      auto tmp = std::unique_ptr<SequenceType>(seqCont1.sequence(key).clone());
+      tmp->append(seqCont2.sequence(key));
       outputCont.addSequence(key, tmp);
     }
   }
@@ -498,14 +500,15 @@ public:
     if (!calpha)
       throw AlphabetException("SequenceContainerTools::getCodonPosition. Input sequences should be of type codon.", sequences.getAlphabet());
     auto newcont = std::make_unique< TemplateVectorSequenceContainer<SequenceType> >(calpha->getNucleicAlphabet());
-    for (size_t i = 0; i < sequences.getNumerOfSequences(); ++i) {
-      const SequenceType& seq = sequences.getSequence(i);
+    for (size_t i = 0; i < sequences.getNumberOfSequences(); ++i) {
+      const SequenceType& seq = sequences.sequence(i);
       std::vector<int> newseq(seq.size());
       for (size_t j = 0; j < seq.size(); ++j) {
         newseq[i] = calpha->getNPosition(seq[i], pos);
       }
-      auto s = std::make_unique<SequenceType>(seq.getName(), newseq, sequences.getComments(i), calpha->getNucleicAlphabet());
-      newcont->addSequence(sequences.getSequenceKey(i), s);
+      std::shared_ptr<const bpp::Alphabet> na = calpha->getNucleicAlphabet();
+      auto s = std::make_unique<SequenceType>(seq.getName(), newseq, seq.getComments(), na);
+      newcont->addSequence(sequences.getSequenceKeys()[i], s);
     }
     return newcont;
   }
