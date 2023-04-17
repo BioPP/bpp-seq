@@ -254,7 +254,7 @@ public:
     // Main loop: for all sequences
     size_t n = getNumberOfSequences();
     auto alphaPtr = getAlphabet();
-    auto site = std::make_shared<SiteType>(alphaPtr, static_cast<int>(sitePosition + 1));
+    auto site = std::make_shared<SiteType>(alphaPtr, coordinates_[sitePosition]);
     for (size_t j = 0; j < n; j++)
       site->addElement(sequence(j)[sitePosition]);
 
