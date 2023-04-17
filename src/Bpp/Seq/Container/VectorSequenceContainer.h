@@ -368,7 +368,7 @@ public:
       throw DimensionException("VectorSequenceContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
     for (size_t i = 0; i < names.size(); ++i)
     {
-      getSequence_(i).setName(names[i]);
+      sequence_(i).setName(names[i]);
     }
     if (updateKeys) {
       sequenceVectorMap_.setObjectNames(names);
@@ -401,9 +401,9 @@ public:
  
 protected:
 
-  virtual SequenceType& getSequence_(size_t sequencePosition)
+  virtual SequenceType& sequence_(size_t sequencePosition)
   {
-    return *sequenceVectorMap_.getObject(sequencePosition);
+    return sequenceVectorMap_.object(sequencePosition);
   }
 
 
@@ -412,9 +412,9 @@ protected:
    *
    */
   
-  virtual SequenceType& getSequence_(const std::string& sequenceKey)
+  virtual SequenceType& sequence_(const std::string& sequenceKey)
   {
-    return *sequenceVectorMap_.getObject(sequenceKey);
+    return sequenceVectorMap_.object(sequenceKey);
   }
 
   /** @} */

@@ -81,7 +81,7 @@ public:
    * @brief Retrieve an object from the container.
    *
    * @param objectIndex The position of the object.
-   * @return A reference toward the Object object with corresponding name.
+   * @return A shared pointer toward the Object object with corresponding name.
    */
   virtual const std::shared_ptr<T> getObject(size_t objectIndex) const = 0;
 
@@ -89,9 +89,25 @@ public:
    * @brief Retrieve an object from the container.
    *
    * @param objectIndex The position of the object.
-   * @return A reference toward the Object object with corresponding name.
+   * @return A shared pointer toward the Object object with corresponding name.
    */
   virtual std::shared_ptr<T> getObject(size_t objectIndex) = 0;
+
+  /**
+   * @brief Get a reference toward an object from the container.
+   *
+   * @param objectIndex The position of the object.
+   * @return A reference toward the Object object with corresponding name.
+   */
+  virtual const T& object(size_t objectIndex) const = 0;
+
+  /**
+   * @brief Get a reference toward an object from the container.
+   *
+   * @param objectIndex The position of the object.
+   * @return A reference toward the Object object with corresponding name.
+   */
+  virtual T& object(size_t objectIndex) = 0;
 
   /**
    * @brief Extract and remove a object from the container.

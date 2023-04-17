@@ -46,6 +46,7 @@
 #include <Bpp/Exceptions.h>
 
 #include "../Site.h"
+#include "../SiteTools.h"
 #include "../ProbabilisticSite.h"
 #include "../Sequence.h"
 #include "../ProbabilisticSequence.h"
@@ -284,8 +285,12 @@ public:
     }
 
     // For all sequences
-    for (size_t j = 0; j < getNumberOfSequences(); ++j)
-      getSequence_(j).setElement(sitePosition, (*site)[j]);
+    for (size_t j = 0; j < getNumberOfSequences(); ++j) {
+      sequence_(j).setElement(sitePosition, (*site)[j]);
+    }
+    
+    // Reset site buffer for this position:
+    siteVector_.addObject(nullptr, sitePosition);
 
     coordinates_[sitePosition] = site->getCoordinate();
   }
@@ -302,7 +307,7 @@ public:
     // For all sequences
     for (size_t j = 0; j < getNumberOfSequences(); ++j)
     {
-      getSequence_(j).deleteElement(sitePosition);
+      sequence_(j).deleteElement(sitePosition);
     }
 
     // Delete site's position
@@ -323,7 +328,7 @@ public:
 
     // For all sequences
     for (size_t j = 0; j < getNumberOfSequences(); ++j) {
-      getSequence_(j).deleteElement(sitePosition);
+      sequence_(j).deleteElement(sitePosition);
     }
 
     // Delete site's position
@@ -342,7 +347,7 @@ public:
 
     // For all sequences
     for (size_t j = 0; j < getNumberOfSequences(); ++j) {
-      getSequence_(j).deleteElements(sitePosition, length);
+      sequence_(j).deleteElements(sitePosition, length);
     }
 
     // Delete site's sitePositionition
@@ -378,7 +383,7 @@ public:
 
     // For all sequences
     for (size_t j = 0; j < getNumberOfSequences(); ++j)
-      getSequence_(j).addElement((*site)[j]);
+      sequence_(j).addElement((*site)[j]);
 
     length_++;
     coordinates_.push_back(coordinate);
@@ -412,7 +417,7 @@ public:
 
     // For all sequences
     for (size_t j = 0; j < getNumberOfSequences(); ++j)
-      getSequence_(j).addElement(sitePosition, (*site)[j]);
+      sequence_(j).addElement(sitePosition, (*site)[j]);
 
     length_++;
     coordinates_.insert(coordinates_.begin() + static_cast<ptrdiff_t>(sitePosition), coordinate);
@@ -551,7 +556,7 @@ public:
   //Needed because of the template class
   using TemplateVectorSequenceContainer<SequenceType>::getAlphabet;
   using TemplateVectorSequenceContainer<SequenceType>::sequence;
-  using TemplateVectorSequenceContainer<SequenceType>::getSequence_;
+  using TemplateVectorSequenceContainer<SequenceType>::sequence_;
   using TemplateVectorSequenceContainer<SequenceType>::getNumberOfSequences;
   using TemplateVectorSequenceContainer<SequenceType>::getComments;
   

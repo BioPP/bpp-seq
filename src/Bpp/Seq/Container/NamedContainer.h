@@ -3,7 +3,7 @@
 // Authors:
 //   Guillaume Deuchst
 //   Julien Dutheil
-//   Laurent GuÃ©guen
+//   Laurent Guéguen
 // Created: Fri Jul 25 2003 (template in mardi 21 mars 2017, Ã  15h 04)
 //
 
@@ -72,10 +72,13 @@ protected:
    * @param name The name of the object.
    * @return A reference toward the Object with corresponding name.
    */
-
   virtual const std::shared_ptr<T> getObject(const std::string& name) const = 0;
 
   virtual std::shared_ptr<T> getObject(const std::string& name) = 0;
+
+  virtual const T& object(const std::string& name) const = 0;
+
+  virtual T& object(const std::string& name) = 0;
 
   /**
    * @brief Check if a object with a given name is present in the

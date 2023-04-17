@@ -93,7 +93,6 @@ public:
    *
    * @{
    */
-
   using IntCoreSymbolListInterface::addElement;
   using IntCoreSymbolListInterface::setElement;
 
