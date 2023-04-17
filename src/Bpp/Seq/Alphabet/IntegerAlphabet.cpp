@@ -1,7 +1,7 @@
 //
 // File: IntegerAlphabet.cpp
 // Authors:
-//   Laurent Gueguen
+//   Laurent Guéguen
 // Created: vendredi 20 septembre 2013, à 23h 10
 //
 
@@ -57,5 +57,5 @@ IntegerAlphabet::IntegerAlphabet(unsigned int max) : MAX_(max)
     registerState(new AlphabetState(i, TextTools::toString(i), TextTools::toString(i)));
   }
 
-  registerState(new AlphabetState(MAX_, "?", "?"));
+  registerState(new AlphabetState(static_cast<int>(MAX_), "?", "?"));
 }
