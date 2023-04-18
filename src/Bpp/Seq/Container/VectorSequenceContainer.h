@@ -269,9 +269,19 @@ public:
     return sequence(sequenceKey)[elementPosition];
   }
 
+  typename SequenceType::ElementType& valueAt(const std::string& sequenceKey, size_t elementPosition) override
+  {
+    return sequence_(sequenceKey)[elementPosition];
+  }
+
   const typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t elementPosition) const override
   {
     return sequence(sequencePosition)[elementPosition];
+  }
+
+  typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t elementPosition) override
+  {
+    return sequence_(sequencePosition)[elementPosition];
   }
 
   bool hasSequence(const std::string& sequenceKey) const override

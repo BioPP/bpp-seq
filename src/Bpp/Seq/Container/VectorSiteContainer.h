@@ -453,7 +453,7 @@ public:
   void reindexSites() override
   {
     for (size_t i = 0; i < getNumberOfSites(); ++i) {
-      getSite_(i).setCoordinate(static_cast<int>(i) + 1);
+      site_(i).setCoordinate(static_cast<int>(i) + 1);
     }
   }
 
@@ -472,7 +472,7 @@ public:
       throw BadSizeException("TemplateVectorSiteContainer::setSiteCoordinates bad size of coordinates vector", vCoordinates.size(), getNumberOfSites());
 
     for (size_t i = 0; i < getNumberOfSites(); ++i) {
-      getSite_(i).setCoordinate(vCoordinates[i]);
+      site_(i).setCoordinate(vCoordinates[i]);
     }
   }
 
@@ -537,7 +537,7 @@ public:
     sequence(sequencePosition); // this creates the sequence if it does not exist.
 
     for (size_t i = 0; i < getNumberOfSites(); ++i)
-      getSite_(i).deleteElement(sequencePosition);
+      site_(i).deleteElement(sequencePosition);
 
     auto d = static_cast<std::vector<std::string>::difference_type>(sequencePosition);
     sequenceNames_.erase(std::next(sequenceNames_.begin(), d));
@@ -559,7 +559,7 @@ public:
   void deleteSequence(size_t sequencePosition) override
   {
     for (size_t i = 0; i < getNumberOfSites(); ++i)
-      getSite_(i).deleteElement(sequencePosition);
+      site_(i).deleteElement(sequencePosition);
 
     auto posN = static_cast<std::vector<std::string>::difference_type>(sequencePosition);
     sequenceNames_.erase(sequenceNames_.begin() + posN);
@@ -635,14 +635,29 @@ public:
 
   const typename SequenceType::ElementType& valueAt(const std::string& sequenceKey, size_t sitePosition) const override
   {
-    return site(sitePosition).getValue(getSequencePosition(sequenceKey));
+    return site(sitePosition)[getSequencePosition(sequenceKey)];
   }
   
+  typename SequenceType::ElementType& valueAt(const std::string& sequenceKey, size_t sitePosition) override
+  {
+    size_t sequencePosition = getSequencePosition(sequenceKey);
+    // Reset sequence buffer for this position:
+    sequenceContainer_.addObject(nullptr, sequencePosition, sequenceContainer_.getObjectName(sequencePosition));
+    return this->site_(sitePosition)[sequencePosition];
+  }
+
   const typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t sitePosition) const override
   {
-    return site(sitePosition).getValue(sequencePosition);
+    return site(sitePosition)[sequencePosition];
   }
 	  
+  typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t sitePosition) override
+  {
+    // Reset sequence buffer for this position:
+    sequenceContainer_.addObject(nullptr, sequencePosition, sequenceContainer_.getObjectName(sequencePosition));
+    return site_(sitePosition)[sequencePosition];
+  }
+
   double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
     return site(sitePosition).getStateValueAt(getSequencePosition(sequenceKey), state);
@@ -691,7 +706,7 @@ public:
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); i++)
-      getSite_(i).addElement(sequencePosition, sequence->getValue(i));
+      site_(i).addElement(sequencePosition, sequence->getValue(i));
 
     sequenceContainer_.addObject(std::move(sequence), sequencePosition, sequenceKey);
   }
@@ -715,7 +730,7 @@ public:
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); ++i)
-      getSite_(i).addElement(sequence->getValue(i));
+      site_(i).addElement(sequence->getValue(i));
 
     // Add name and comments:
     sequenceNames_.push_back(sequence->getName());
@@ -741,7 +756,7 @@ public:
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); ++i)
-      getSite_(i).addElement(sequencePosition, sequence->getValue(i));
+      site_(i).addElement(sequencePosition, sequence->getValue(i));
 
     // Update name and comments:
     sequenceNames_[sequencePosition] = sequence->getName();
@@ -764,7 +779,7 @@ protected:
    * @param sitePosition the index of the site to retrieve.
    * @return A reference to the selected site.
    */
-  SiteType& getSite_(size_t sitePosition)
+  SiteType& site_(size_t sitePosition)
   {
     return *siteContainer_.getObject(sitePosition);
   }

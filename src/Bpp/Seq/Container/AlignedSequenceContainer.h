@@ -557,9 +557,24 @@ public:
   using TemplateVectorSequenceContainer<SequenceType>::getAlphabet;
   using TemplateVectorSequenceContainer<SequenceType>::sequence;
   using TemplateVectorSequenceContainer<SequenceType>::sequence_;
+  using TemplateVectorSequenceContainer<SequenceType>::valueAt;
   using TemplateVectorSequenceContainer<SequenceType>::getNumberOfSequences;
   using TemplateVectorSequenceContainer<SequenceType>::getComments;
   
+
+  typename SequenceType::ElementType& valueAt(const std::string& sequenceKey, size_t sitePosition) override
+  {
+    // Reset site buffer for this position:
+    siteVector_.addObject(nullptr, sitePosition);
+    return sequence_(sequenceKey)[sitePosition];
+  }
+
+  typename SequenceType::ElementType& valueAt(const size_t sequencePosition, size_t sitePosition) override
+  {
+    // Reset site buffer for this position:
+    siteVector_.addObject(nullptr, sitePosition);
+    return sequence_(sequencePosition)[sitePosition];
+  }
 
 protected:
   /**
