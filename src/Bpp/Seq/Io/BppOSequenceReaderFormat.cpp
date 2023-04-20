@@ -120,7 +120,7 @@ unique_ptr<ISequence> BppOSequenceReaderFormat::read(const std::string& descript
   }
   else
   {
-    throw Exception("Sequence format '" + format + "' unknown.");
+    throw IOException("Sequence format '" + format + "' unknown.");
   }
 
   return iSeq;

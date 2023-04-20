@@ -108,7 +108,7 @@ unique_ptr<OAlignment> BppOAlignmentWriterFormat::read(const std::string& descri
   }
   else
   {
-    throw Exception("Sequence format '" + format + "' unknown.");
+    throw IOException("Sequence format '" + format + "' unknown.");
   }
 
   return oAln;

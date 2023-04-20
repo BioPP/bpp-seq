@@ -123,7 +123,7 @@ BppSequenceApplication::getAlignmentsMap(
 
     return mSites2;
   }
-  catch(Exception& e)
+  catch(IOException& e)
   {
     auto mSites = SequenceApplicationTools::getSiteContainers(alphabet, params_, prefix, suffix, suffixIsOptional, verbose_, warn_);
 

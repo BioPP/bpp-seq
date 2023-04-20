@@ -66,7 +66,7 @@ unique_ptr<OSequence> BppOSequenceWriterFormat::read(const std::string& descript
   }
   else
   {
-    throw Exception("Sequence format '" + format + "' unknown.");
+    throw IOException("Sequence format '" + format + "' unknown.");
   }
 
   return oSeq;

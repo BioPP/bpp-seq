@@ -488,6 +488,7 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
 
       auto vsC = getProbabilisticSiteContainer(alpha, args2, "", true, verbose, warn);
+
       vsC = getSitesToAnalyse(*vsC, args2, "", true, false);
 
       if (mCont.find(num) != mCont.end())
@@ -514,8 +515,10 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
   BppOAlignmentReaderFormat bppoReader(warn);
+  
   unique_ptr<IAlignment> iAln(bppoReader.read(sequenceFormat));
   map<string, string> args(bppoReader.getUnparsedArguments());
+
   if (verbose)
   {
     ApplicationTools::displayResult("Sequence file " + suffix, sequenceFilePath);
@@ -705,7 +708,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     sites.reset(dynamic_cast<VectorSiteContainer*>(iAln->readAlignment(sequenceFilePath, alpha2).release()));
   else
     psites.reset(dynamic_cast<ProbabilisticVectorSiteContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2).release()));
-  
+
   if (sites)
   {
     /// Look for RNY translation
@@ -865,12 +868,15 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     if (verbose)
       ApplicationTools::displayResult("Selected sites", TextTools::toString(siteSet));
 
-    unique_ptr<ProbabilisticVectorSiteContainer> selectedSites;;
+    auto selectedSites = make_unique<ProbabilisticVectorSiteContainer>(alpha); 
+
     SiteContainerTools::getSelectedSites(*psites, vSite, *selectedSites);
+    
     if (selectedSites && (selectedSites->getNumberOfSites() == 0))
     {
       throw Exception("Site set '" + siteSet + "' is empty.");
     }
+
     // if (replace)
     //   selectedSites->reindexSites();
     psites = move(selectedSites);

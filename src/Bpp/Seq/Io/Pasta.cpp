@@ -285,7 +285,6 @@ void Pasta::appendAlignmentFromStream(istream& input, ProbabilisticSequenceConta
             states += " " + i2;
           }
           states += " >";
-
           throw Exception("Pasta::appendSequencesFromStream. Label " + i + " is not found in alphabet " + states + ".");
         }
       }

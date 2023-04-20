@@ -116,7 +116,7 @@ unique_ptr<IAlignment> BppOAlignmentReaderFormat::read(const std::string& descri
   }
   else
   {
-    throw Exception("Sequence format '" + format + "' unknown.");
+    throw IOException("Sequence format '" + format + "' unknown.");
   }
 
   return iAln;
@@ -138,7 +138,7 @@ unique_ptr<IProbabilisticAlignment> BppOAlignmentReaderFormat::readProbabilistic
   }
   else
   {
-    throw Exception("Probabilistic Sequence format '" + format + "' unknown.");
+    throw IOException("Probabilistic Sequence format '" + format + "' unknown.");
   }
 
   return iAln;

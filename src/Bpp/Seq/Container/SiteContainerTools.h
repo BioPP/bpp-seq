@@ -98,6 +98,7 @@ public:
         selectedSites->addSite(sitePtr, false);
       }
     }
+    selectedSites->setSequenceNames(sites.getSequenceNames(),false);
     return selectedSites;
   }
 
@@ -126,6 +127,7 @@ public:
         selectedSites->addSite(sitePtr, false);
       }
     }
+    selectedSites->setSequenceNames(sites.getSequenceNames(),false);
     return selectedSites;
   }
 
@@ -287,6 +289,7 @@ public:
         newContainer->addSite(site2, false);
       }
     }
+    newContainer->setSequenceNames(sites.getSequenceNames(),false);
     return newContainer;
   }
 
@@ -347,6 +350,7 @@ public:
         newContainer->addSite(site2, false);
       }
     }
+    newContainer->setSequenceNames(sites.getSequenceNames(),false);
     return newContainer;
   }
 
@@ -406,6 +410,7 @@ public:
       auto sitePtr = std::unique_ptr<SiteType>(sites.site(pos).clone());
       outputSites.addSite(sitePtr, false);
     }
+    outputSites.setSequenceNames(sites.getSequenceNames(),true);
   }
 
 

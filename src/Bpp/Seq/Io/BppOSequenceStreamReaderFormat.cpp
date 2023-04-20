@@ -62,7 +62,7 @@ unique_ptr<ISequenceStream> BppOSequenceStreamReaderFormat::read(const std::stri
   }
   else
   {
-    throw Exception("Sequence format '" + format + "' unknown.");
+    throw IOException("Sequence format '" + format + "' unknown.");
   }
 
   return iSeq;
