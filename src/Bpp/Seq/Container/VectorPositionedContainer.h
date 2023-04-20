@@ -151,9 +151,7 @@ public:
 
   /**
    * @brief Destroys  the vector
-   *
    */
-  
   void clear() override
   {
     positions_.clear();
@@ -162,9 +160,7 @@ public:
   
   /**
    * @brief Nullify all elements
-   *
    */
-  
   void nullify()
   {
     std::fill(positions_.begin(), positions_.end(), nullptr);
@@ -184,6 +180,20 @@ public:
     return positions_[objectIndex];
   }
 
+  const T& object(size_t objectIndex) const override
+  {
+    if (objectIndex >= getSize())
+      throw IndexOutOfBoundsException("VectorPositionedContainer::object.", objectIndex, 0, getSize());
+    return *positions_[objectIndex];
+  }
+
+  T& object(size_t objectIndex) override
+  {
+    if (objectIndex >= getSize())
+      throw IndexOutOfBoundsException("VectorPositionedContainer::object.", objectIndex, 0, getSize());
+    return *positions_[objectIndex];
+  }
+
   /**
    * @brief Add an object
    *
@@ -191,7 +201,6 @@ public:
    * @param objectIndex The new position of the object
    * @param checkPosition Look if the position is empty.
    */
-
   void addObject(std::shared_ptr<T> object, size_t objectIndex, bool checkPosition = false)
   {
     if (objectIndex >= getSize())

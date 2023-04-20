@@ -1,7 +1,7 @@
 //
 // File: VectorMappedContainer.h
 // Authors:
-//   Laurent GuÃ©guen (for template feature)
+//   Laurent Guéguen (for template feature)
 // Created: mardi 28 mars 2017, Ã  15h 09
 //
 
@@ -156,37 +156,15 @@ public:
     return vNames_[objectIndex];
   }
 
+  using VectorPositionedContainer<T>::getObject;
   
-  const std::shared_ptr<T> getObject(size_t objectIndex) const override
-  {
-    return VectorPositionedContainer<T>::getObject(objectIndex);
-  }
+  using VectorPositionedContainer<T>::object;
+  
+  using MappedNamedContainer<T>::getObject;
+  
+  using MappedNamedContainer<T>::object;
 
-  std::shared_ptr<T> getObject(size_t objectIndex) override
-  {
-    return VectorPositionedContainer<T>::getObject(objectIndex);
-  }
-
-  /**
-   * @brief Get a object.
-   *
-   * @param name The key of the object to retrieve.
-   * @return The object associated to the given key.
-   */
-  const std::shared_ptr<T> getObject(const std::string& name) const override
-  {
-    return MappedNamedContainer<T>::getObject(name);
-  }
-
-  std::shared_ptr<T> getObject(const std::string& name) override
-  {
-    return MappedNamedContainer<T>::getObject(name);
-  }
-
-  bool hasObject(const std::string& name) const override
-  {
-    return MappedNamedContainer<T>::hasObject(name);
-  }
+  using MappedNamedContainer<T>::hasObject;
 
   std::vector<std::string> getObjectNames() const override
   {
@@ -216,20 +194,20 @@ public:
     vNames_[pos] = name;
   }
 
-  void addObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) override
+  void addObject(std::shared_ptr<T> newObject, size_t objectIndex, const std::string& name, bool check = false) override
   {
-    VectorPositionedContainer<T>::addObject(object, objectIndex, check);
-    MappedNamedContainer<T>::addObject(object, name, check);
+    VectorPositionedContainer<T>::addObject(newObject, objectIndex, check);
+    MappedNamedContainer<T>::addObject(newObject, name, check);
     vNames_[objectIndex] = name;
     mNames_[name] = objectIndex;
   }
 
   using VectorPositionedContainer<T>::insertObject;
 
-  void insertObject(std::shared_ptr<T> object, size_t objectIndex, const std::string& name) override
+  void insertObject(std::shared_ptr<T> newObject, size_t objectIndex, const std::string& name) override
   {
-    MappedNamedContainer<T>::addObject(object, name, true);
-    VectorPositionedContainer<T>::insertObject(object, objectIndex);
+    MappedNamedContainer<T>::addObject(newObject, name, true);
+    VectorPositionedContainer<T>::insertObject(newObject, objectIndex);
     vNames_.insert(vNames_.begin() + static_cast<std::ptrdiff_t>(objectIndex), name);
     for (auto it : mNames_)
     {
@@ -240,10 +218,10 @@ public:
     mNames_[name] = objectIndex;
   }
 
-  virtual void appendObject(std::shared_ptr<T> object, const std::string& name, bool checkNames = true)
+  virtual void appendObject(std::shared_ptr<T> newObject, const std::string& name, bool checkNames = true)
   {
-    MappedNamedContainer<T>::addObject(object, name, checkNames);
-    VectorPositionedContainer<T>::appendObject(object);
+    MappedNamedContainer<T>::addObject(newObject, name, checkNames);
+    VectorPositionedContainer<T>::appendObject(newObject);
 
     vNames_.push_back(name);
     mNames_[name] = vNames_.size() - 1;
@@ -288,10 +266,10 @@ public:
     deleteObject(mNames_[name]);
   }
 
-  void addObject_(std::shared_ptr<T> object, size_t objectIndex, const std::string& name, bool check = false) const
+  void addObject_(std::shared_ptr<T> newObject, size_t objectIndex, const std::string& name, bool check = false) const
   {
-    VectorPositionedContainer<T>::addObject_(object, objectIndex, check);
-    MappedNamedContainer<T>::addObject_(object, name, check);
+    VectorPositionedContainer<T>::addObject_(newObject, objectIndex, check);
+    MappedNamedContainer<T>::addObject_(newObject, name, check);
     const_cast<std::vector<std::string>& >(vNames_)[objectIndex] = name;
     const_cast<std::map<std::string, size_t>&>(mNames_)[name] = objectIndex;
   }

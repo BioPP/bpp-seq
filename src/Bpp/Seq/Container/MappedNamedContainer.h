@@ -1,10 +1,8 @@
 //
 // File: MappedNamedContainer.h
 // Authors:
-//   Guillaume Deuchst
 //   Julien Dutheil
-//   Sylvain Gaillard
-//   Laurent GuÃ©guen (for template feature)
+//   Laurent Guéguen (for template feature)
 // Last modified: lundi 27 mars 2017, Ã  10h 15
 //
 
@@ -64,14 +62,14 @@ class MappedNamedContainer :
   public virtual NamedContainerInterface<T>
 {
 private:
-  std::map<std::string, std::shared_ptr<T> > mObjects_;
+  std::map<std::string, std::shared_ptr<T>> mObjects_;
 
 public:
   MappedNamedContainer() :
     mObjects_()
   {}
 
-  MappedNamedContainer(const std::map<std::string, std::shared_ptr<T> >& ms) :
+  MappedNamedContainer(const std::map<std::string, std::shared_ptr<T>>& ms) :
     mObjects_(ms)
   {}
 
@@ -98,12 +96,7 @@ public:
   }
 
 public:
-  /**
-   * @brief Get a object.
-   *
-   * @param name The key of the object to retrieve.
-   * @return The object associated to the given key.
-   */
+  
   const std::shared_ptr<T> getObject(const std::string& name) const override
   {
     const auto it = mObjects_.find(name);
@@ -122,6 +115,24 @@ public:
     return it->second;
   }
 
+  const T& object(const std::string& name) const override
+  {
+    const auto it = mObjects_.find(name);
+    if (it == mObjects_.end())
+      throw Exception("MappedNamedContainer::object : unknown name " + name);
+
+    return *(it->second);
+  }
+
+  T& object(const std::string& name) override
+  {
+    auto it = mObjects_.find(name);
+    if (it == mObjects_.end())
+      throw Exception("MappedNamedContainer::object : unknown name " + name);
+
+    return *(it->second);
+  }
+  
   bool hasObject(const std::string& name) const override
   {
     return mObjects_.find(name) != mObjects_.end();
@@ -129,22 +140,22 @@ public:
 
 
   /**
-   * @brief Set a object.
+   * @brief Set an object.
    *
    * @param name The key of the object.
-   * @param object The new object that will be associated to the key.
+   * @param newObject The new object that will be associated to the key.
    * @param checkName Tell is the object name must be checked.
    */
-  void addObject(std::shared_ptr<T> object, const std::string& name, bool checkName = false)
+  void addObject(std::shared_ptr<T> newObject, const std::string& name, bool checkName = false)
   {
     if (checkName && hasObject(name))
       throw Exception("MappedNamedContainer::addObject : Object's name already exists in container : " + name);
     std::string nn = name;
-    mObjects_[nn] = object;
+    mObjects_[nn] = newObject;
   }
 
   /**
-   * @brief Remove a object.
+   * @brief Remove an object.
    *
    * @param name The key of the object.
    */
@@ -157,7 +168,7 @@ public:
   }
 
   /**
-   * @brief Remove and returns a object.
+   * @brief Remove and returns an object.
    *
    * @param name The key of the object.
    * @return The object previously associated to the given key.
@@ -219,21 +230,19 @@ public:
   /**
    * @return whether the name is in the map keys and the mapped
    * object is nullptr or empty.
-   *
    */
-  
   bool isAvailableName(std::string objectName) const
   {
     return hasObject(objectName) && (getObject(objectName) == nullptr || getObject(objectName)->size()==0);
   }
 
-  void addObject_(std::shared_ptr<T> object, const std::string& name, bool checkName = false) const
+  void addObject_(std::shared_ptr<T> newObject, const std::string& name, bool checkName = false) const
   {
     if (checkName && hasObject(name))
-      throw Exception("MappedNamedContainer::setObject : Object's name already exists in container : " + name);
+      throw Exception("MappedNamedContainer::addObject : Object's name already exists in container : " + name);
 
     std::string nn = name;
-    const_cast<std::map<std::string, std::shared_ptr<T> >& >(mObjects_)[nn] = object;
+    const_cast<std::map<std::string, std::shared_ptr<T>>&>(mObjects_)[nn] = newObject;
   }
 };
 

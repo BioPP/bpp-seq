@@ -330,14 +330,26 @@ public:
 
   const int& valueAt(const std::string& sequenceKey, size_t sitePosition) const override
   {
-    return site(sitePosition).getValue(getSequencePosition(sequenceKey));
+    return site(sitePosition)[getSequencePosition(sequenceKey)];
+  }
+  
+  int& valueAt(const std::string& sequenceKey, size_t sitePosition) override
+  {
+    // Implementing this function would involve (partially) decompressing the data...
+    throw NotImplementedException("CompressedVectorSiteContainer::valueAt (non const).");
   }
   
   const int& valueAt(size_t sequencePosition, size_t sitePosition) const override
   {
-    return site(sitePosition).getValue(sequencePosition);
+    return site(sitePosition)[sequencePosition];
   }
 	 
+  int& valueAt(size_t sequencePosition, size_t sitePosition) override
+  {
+    // Implementing this function would involve (partially) decompressing the data...
+    throw NotImplementedException("CompressedVectorSiteContainer::valueAt (non const).");
+  }
+	
   /**
    * @name SequenceData methods.
    *
