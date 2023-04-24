@@ -406,6 +406,7 @@ public:
   {
     try {
       getFrequencies(dynamic_cast<const SequenceContainerInterface&>(sc), f, pseudoCount);
+      return;
     } catch (std::bad_cast&) {}   
     try {
       getFrequencies(dynamic_cast<const ProbabilisticSequenceContainerInterface&>(sc), f, pseudoCount);

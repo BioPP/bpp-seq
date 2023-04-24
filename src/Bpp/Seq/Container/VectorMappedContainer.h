@@ -222,7 +222,6 @@ public:
   {
     MappedNamedContainer<T>::addObject(newObject, name, checkNames);
     VectorPositionedContainer<T>::appendObject(newObject);
-
     vNames_.push_back(name);
     mNames_[name] = vNames_.size() - 1;
   }

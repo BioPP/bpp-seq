@@ -399,10 +399,11 @@ SequenceApplicationTools::getSiteContainers(
 
       args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (AlphabetTools::isCodonAlphabet(alpha.get()) ? 0 : 1));
 
+      auto vsC = getSiteContainer(alpha, args2, "", true, verbose, warn);
+
       ApplicationTools::displayMessage("");
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
 
-      auto vsC = getSiteContainer(alpha, args2, "", true, verbose, warn);
       vsC = getSitesToAnalyse(*vsC, args2, "", true, false);
 
       if (mCont.find(num) != mCont.end())
@@ -484,10 +485,10 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
 
       args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (AlphabetTools::isCodonAlphabet(alpha.get()) ? 0 : 1));
 
+      auto vsC = getProbabilisticSiteContainer(alpha, args2, "", true, verbose, warn);
+
       ApplicationTools::displayMessage("");
       ApplicationTools::displayMessage("Data " + TextTools::toString(num));
-
-      auto vsC = getProbabilisticSiteContainer(alpha, args2, "", true, verbose, warn);
 
       vsC = getSitesToAnalyse(*vsC, args2, "", true, false);
 
@@ -683,6 +684,12 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     iProbAln.reset(bppoReader.readProbabilistic(sequenceFormat).release());
   }
 
+  // Probabilistic from Sequence format only possible for Allelic alphabet
+  if (iAln && !AlphabetTools::isAllelicAlphabet(alpha.get()))
+    throw IOException("Bad format");
+
+
+  
   map<string, string> args(bppoReader.getUnparsedArguments());
   if (verbose)
   {
@@ -705,9 +712,9 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
   unique_ptr<ProbabilisticVectorSiteContainer> psites;
 
   if (iAln)
-    sites.reset(dynamic_cast<VectorSiteContainer*>(iAln->readAlignment(sequenceFilePath, alpha2).release()));
+    sites = make_unique<VectorSiteContainer>(*(iAln->readAlignment(sequenceFilePath, alpha2)));
   else
-    psites.reset(dynamic_cast<ProbabilisticVectorSiteContainer*>(iProbAln->readAlignment(sequenceFilePath, alpha2).release()));
+    psites = make_unique<ProbabilisticVectorSiteContainer>(*iProbAln->readAlignment(sequenceFilePath, alpha2));
 
   if (sites)
   {

@@ -198,13 +198,13 @@ public:
     sequenceNames_(vsc.sequenceNames_),
     sequenceComments_(vsc.sequenceComments_)
   {
+    for (auto sequenceKey : vsc.getSequenceKeys()) {
+      sequenceContainer_.appendObject(nullptr, sequenceKey);
+    }
+
     for (size_t i = 0; i < vsc.getNumberOfSites(); ++i) {
       auto sitePtr = std::unique_ptr<SiteType>(vsc.site(i).clone());
       addSite(sitePtr, false); // We assume that positions are already correct.
-    }
-
-    for (auto sequenceKey : vsc.getSequenceKeys()) {
-      sequenceContainer_.appendObject(nullptr, sequenceKey);
     }
   } 
 
@@ -215,14 +215,14 @@ public:
     sequenceContainer_(),
     sequenceNames_(sc.getSequenceNames()),
     sequenceComments_(sc.getSequenceComments())
-  {
+  { 
+    for (auto& sequenceKey : sc.getSequenceKeys()) {
+      sequenceContainer_.appendObject(nullptr, sequenceKey);
+    }
+
     for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
       std::unique_ptr<SiteType> sitePtr(sc.site(i).clone());
       addSite(sitePtr, false); // We assume that positions are already correct.
-    }
-
-    for (auto& sequenceKey : sc.getSequenceKeys()) {
-      sequenceContainer_.appendObject(nullptr, sequenceKey);
     }
   }
 
@@ -264,14 +264,14 @@ public:
     sequenceNames_ = sc.sequenceNames_;
     sequenceComments_ = sc.sequenceComments_;
   
+    for (auto sequenceKey : sc.getSequenceKeys())
+      sequenceContainer_.appendObject(nullptr, sequenceKey);
+  
     for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
       auto sitePtr = std::make_unique<SiteType>(sc.site(i));
       addSite(sitePtr, false); // We assume that positions are already correct.
     }
 
-    for (auto sequenceKey : sc.getSequenceKeys())
-      sequenceContainer_.appendObject(nullptr, sequenceKey);
-  
     return *this;
   }
 
