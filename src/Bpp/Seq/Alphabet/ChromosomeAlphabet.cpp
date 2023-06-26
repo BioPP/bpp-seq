@@ -103,7 +103,32 @@ std::vector<std::string> ChromosomeAlphabet::getAlias(const std::string& state) 
   return v;
 }
 /*******************************************************************/
+std::string ChromosomeAlphabet::extractChromosomeNumber(std::string &seqEntry) const{
+  if (seqEntry.find("=") == std::string::npos){
+    return seqEntry;
+  }
+  double epsilon = 1.0e-4;
+  // test the following scenarioL num=1.0 (e.g., 13=1.0)
+  StringTokenizer splittedPair(seqEntry, "=", false, false);
+  std::vector <std::string> v_state_prob;
+  while(splittedPair.hasMoreToken()){
+    v_state_prob.push_back(splittedPair.nextToken());
+  }
+  if (v_state_prob.size() != 2){
+    return seqEntry;
+  }
+  if (isInteger(v_state_prob[0]) && isProbability(v_state_prob[1])){
+    double prob = atof(v_state_prob[1].c_str());
+    if ((prob > 1.0-epsilon) && (prob < 1.0+epsilon)){
+      return v_state_prob[0];
+    }
+  }
+  return seqEntry;
+
+}
+/*******************************************************************/
 bool ChromosomeAlphabet::isComposite(const std::string& state) const{
+  double epsilon = 1.0e-4;
   if (state.find("_") == std::string::npos){
     return false;
   }
@@ -142,11 +167,11 @@ bool ChromosomeAlphabet::isComposite(const std::string& state) const{
         return false;
       }
       sumOfProbabilities += atof(v_state_prob[1].c_str());
-      if (sumOfProbabilities > 1){
+      if (sumOfProbabilities > (1+epsilon)){
         return false;
       }     
     }
-    if (sumOfProbabilities < 1){
+    if (sumOfProbabilities < (1-epsilon)){
       return false;
     }
   }
@@ -167,24 +192,24 @@ bool ChromosomeAlphabet::isInteger(const std::string& str) const{
 }
 /*****************************************************************/
 bool ChromosomeAlphabet::isProbability(const std::string& str) const{
-  for (size_t i = 0; i < str.length(); i++){
-    // There is no point for the user to give a list of possible states if one of 
-    // them is 1 or 0
-    if ((i == 0) && (str[0] != '0')){
-      return false;
-    }
-    if (i == 1){
-      if (str[i] != '.'){
-        return false;
-      } 
-    }
-    if (i > 1){
-      if (!isdigit(str[i])){
-        return false;
-      }
+  bool isProb = false;
+  bool isDouble = true;
+  try{
+    // Convert string to double
+    double d = std::stod(str);
+  }
+  catch (const invalid_argument& e){
+    // handle the exceptiop invalid_argument
+    isDouble = false;
+  }
+  if (isDouble){
+    double d = std::stod(str);
+    if ((d >= 0) && (d <= 1)){
+      isProb = true;
     }
   }
-  return true;
+  return (isDouble && isProb);
+  
 }
 /******************************************************************************/
 void ChromosomeAlphabet::setCompositeState(std::string& state){

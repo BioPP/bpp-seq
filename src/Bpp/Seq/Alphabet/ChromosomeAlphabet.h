@@ -118,6 +118,7 @@ public:
 
   std::vector<std::string> getAlias(const std::string& state) const;
   bool isComposite(const std::string& state) const;
+  std::string extractChromosomeNumber(std::string &seqEntry) const;
   bool isInteger(const std::string& str) const;
   bool isProbability(const std::string& str) const;
   void setCompositeState(std::string& state);
