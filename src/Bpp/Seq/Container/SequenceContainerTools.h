@@ -58,8 +58,9 @@
 
 namespace bpp
 {
-typedef std::vector<size_t> SequenceSelection;
-typedef std::vector<size_t> SiteSelection;
+using SequenceSelection = std::vector<size_t>;
+using SiteSelection = std::vector<size_t>;
+
 /**
  * @brief Utilitary methods dealing with sequence containers.
  */

@@ -64,7 +64,7 @@
 
 namespace bpp
 {
-typedef std::vector<size_t> SiteSelection;
+using SiteSelection = std::vector<size_t>;
 
 /**
  * @brief Some utililitary methods to deal with site containers.
