@@ -402,7 +402,7 @@ public:
   /**
    * @brief Add a sequence to the container, using its name as a key.
    *
-   * @param sequence  The sequence to add.
+   * @param sequencePtr  A unique_ptr to the sequence to add.
    */
   virtual void addSequence(std::unique_ptr<SequenceType>& sequencePtr)
   {
@@ -426,8 +426,6 @@ protected:
   {
     return sequenceVectorMap_.object(sequenceKey);
   }
-
-  /** @} */
 
 };
 

@@ -49,7 +49,7 @@ using namespace bpp;
 
 using namespace std;
 
-AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> alph, uint nbAlleles) :
+AllelicAlphabet::AllelicAlphabet(std::shared_ptr<const Alphabet> alph, unsigned int nbAlleles) :
   alph_(alph),
   nbAlleles_(nbAlleles),
   nbUnknown_(0)

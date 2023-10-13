@@ -259,6 +259,7 @@ public:
    *
    * @param alpha   The alphabet to use in the container.
    * @param params  The attribute map where options may be found.
+   * @param prefix  A prefix to be applied to each attribute name.
    * @param suffix  A suffix to be applied to each attribute name.
    * @param suffixIsOptional Tell if the suffix is absolutely required.
    * @param verbose Print some info to the 'message' output stream.
@@ -285,6 +286,7 @@ public:
    *
    * @param alpha   The alphabet to use in the container.
    * @param params  The attribute map where options may be found.
+   * @param prefix  A prefix to be applied to each attribute name.
    * @param suffix  A suffix to be applied to each attribute name.
    * @param suffixIsOptional Tell if the suffix is absolutely required.
    * @param verbose Print some info to the 'message' output stream.

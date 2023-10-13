@@ -70,10 +70,11 @@ public:
   /**
    * @brief Get the index associated to a pair of states.
    *
-   * @param state1 First state to consider, as a int value.
-   * @param state2 Second state to consider, as a int value.
+   * @param state1 First state to consider, as a int value in the Alphabet
+   * @param state2 Second state to consider, as a int value in the Alphabet
    * @return The index associated to the pair of states.
    */
+  
   virtual double getIndex(int state1, int state2) const = 0;
 
   /**
@@ -83,6 +84,7 @@ public:
    * @param state2 Second state to consider, as a string value.
    * @return The index associated to the pair of states.
    */
+  
   virtual double getIndex(const std::string& state1, const std::string& state2) const = 0;
 
   /**
