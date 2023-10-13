@@ -128,10 +128,10 @@ SequenceSelection MaseTools::getSequenceSet(const Comments& maseFileHeader, cons
           StringTokenizer st2(current, ",");
           while (st2.hasMoreToken())
           {
-            int seqIndex = TextTools::toInt(st2.nextToken());
+            size_t seqIndex = TextTools::to<size_t>(st2.nextToken());
             // WARNING!!! In the mase+ format, sequences are numbered from 1 to nbSequences,
             // Whereas in SequenceContainer the index begins at 0.
-            selection.push_back(static_cast<size_t>(seqIndex - 1)); // bounds included.
+            selection.push_back(seqIndex - 1); // bounds included.
             counter++;
             if (counter == numberOfSequences)
               return selection;
