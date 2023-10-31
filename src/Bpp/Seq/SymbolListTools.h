@@ -77,7 +77,7 @@ public:
     try {
       return hasGap(dynamic_cast<const IntSymbolListInterface&>(site));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::hasGap : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::hasGap : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -101,7 +101,7 @@ public:
     try {
       return isGapOnly(dynamic_cast<const IntSymbolListInterface&>(site));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::numberOfGaps : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::numberOfGaps : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -119,7 +119,7 @@ public:
     try {
       return numberOfGaps(dynamic_cast<const IntSymbolListInterface&>(site));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::numberOfGaps : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::numberOfGaps : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -137,7 +137,7 @@ public:
     try {
       return isGapOrUnresolvedOnly(dynamic_cast<const IntSymbolListInterface&>(site));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::isGapOrUnresolvedOnly : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::isGapOrUnresolvedOnly : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -155,7 +155,7 @@ public:
     try {
       return numberOfUnresolved(dynamic_cast<const IntSymbolListInterface&>(site));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::numberOfUnresolved : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::numberOfUnresolved : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -173,7 +173,7 @@ public:
     try {
       return hasUnknown(dynamic_cast<const IntSymbolListInterface&>(site));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::hasUnknown : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::hasUnknown : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -191,7 +191,7 @@ public:
     try {
       return isComplete(dynamic_cast<const IntSymbolListInterface&>(site));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::isComplete : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::isComplete : unsupported CruxSymbolListInterface implementation.");
   }
 
 
@@ -224,7 +224,7 @@ public:
     try {
       return isConstant(dynamic_cast<const IntSymbolListInterface&>(site), ignoreUnknown, unresolvedRaisesException);
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::isConstant : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::isConstant : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
@@ -250,7 +250,7 @@ public:
     try {
       return areSymbolListsIdentical(dynamic_cast<const IntSymbolListInterface&>(l1), dynamic_cast<const IntSymbolListInterface&>(l2));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::areSymbolListsIdentical : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::areSymbolListsIdentical : unsupported CruxSymbolListInterface implementation.");
   }
 
 
@@ -382,7 +382,7 @@ public:
       }
     } catch (std::bad_cast&) {}
 
-    throw Exception("SymbolListTools::getCounts : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::getCounts : unsupported CruxSymbolListInterface implementation (" + std::string(typeid(list).name()) + ").");
   }
 
 
@@ -510,20 +510,24 @@ public:
     try {
       if (resolveUnknowns) {
         getCountsResolveUnknowns(dynamic_cast<const ProbabilisticSymbolListInterface&>(list1), dynamic_cast<const ProbabilisticSymbolListInterface&>(list2), counts);
+	return;
       } else {
         getCounts(dynamic_cast<const ProbabilisticSymbolListInterface&>(list1), dynamic_cast<const ProbabilisticSymbolListInterface&>(list2), counts);
+	return;
       }
     } catch (std::bad_cast&) {}
 
     try {
       if (resolveUnknowns) {
         getCountsResolveUnknowns(dynamic_cast<const IntSymbolListInterface&>(list1), dynamic_cast<const IntSymbolListInterface&>(list2), counts);
+	return;
       } else {
         getCounts<double>(dynamic_cast<const IntSymbolListInterface&>(list1), dynamic_cast<const IntSymbolListInterface&>(list2), counts);
+	return;
       }
     } catch(std::bad_cast&) {}
     
-    throw Exception("SymbolListTools::getCounts : unsupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::getCounts : unsupported CruxSymbolListInterface implementation (" + std::string(typeid(list1).name()) + ", " + std::string(typeid(list2).name()) + ").");
   }
 
 
@@ -594,7 +598,7 @@ public:
     try {
       return getGCContent(dynamic_cast<const IntSymbolListInterface&>(list));
     } catch(std::bad_cast&) {}
-    throw Exception("SymbolListTools::getGCContent : usupported CruxSymbolListInterface implementation.");
+    throw Exception("SymbolListTools::getGCContent : unsupported CruxSymbolListInterface implementation.");
   }
 
   /**
