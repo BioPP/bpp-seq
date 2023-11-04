@@ -280,6 +280,12 @@ public:
     vNames_.clear();
     mNames_.clear();
   }
+
+  void nullify() override
+  {
+    MappedNamedContainer<T>::nullify();
+    VectorPositionedContainer<T>::nullify();
+  }
 };
 } // end of namespace bpp.
 

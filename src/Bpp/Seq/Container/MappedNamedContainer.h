@@ -233,7 +233,7 @@ public:
    */
   bool isAvailableName(std::string objectName) const
   {
-    return hasObject(objectName) && (getObject(objectName) == nullptr || getObject(objectName)->size()==0);
+    return hasObject(objectName) && (getObject(objectName) == nullptr || getObject(objectName)->size() == 0);
   }
 
   void addObject_(std::shared_ptr<T> newObject, const std::string& name, bool checkName = false) const
@@ -244,6 +244,16 @@ public:
     std::string nn = name;
     const_cast<std::map<std::string, std::shared_ptr<T>>&>(mObjects_)[nn] = newObject;
   }
+ 
+  /**
+   * @brief Nullify all elements
+   */
+  virtual void nullify()
+  {
+    for (auto& it : mObjects_)
+      it.second = nullptr;
+  }
+
 };
 
 } // end of namespace bpp.

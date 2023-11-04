@@ -44,6 +44,7 @@
 
 #include <Bpp/Clonable.h>
 #include <Bpp/Exceptions.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
 
 #include "Alphabet/Alphabet.h"
 #include "CoreSymbolList.h"
@@ -227,9 +228,7 @@ public:
 
   void shuffle() override
   {
-    std::random_device rng;
-    std::mt19937 urng(rng());
-    std::shuffle(content_.begin(), content_.end(), urng);
+    std::shuffle(content_.begin(), content_.end(), RandomTools::DEFAULT_GENERATOR);
   }
 };
 

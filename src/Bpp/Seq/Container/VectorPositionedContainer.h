@@ -2,7 +2,7 @@
 // File: VectorPositionedContainer.h
 // Authors:
 //   Julien Dutheil
-//   Laurent GuÃ©guen (for template feature)
+//   Laurent Guéguen (for template feature)
 // Created: 2003-10-06 11:50:40
 //
 
@@ -61,9 +61,7 @@ namespace bpp
  *
  * Objects are stored in a std::vector of shared pointers.
  * Object access is hence in \f$O(1)\f$.
- *
  */
-
 template<class T>
 class VectorPositionedContainer :
   public virtual PositionedContainerInterface<T>,
@@ -73,12 +71,12 @@ protected:
   std::vector< std::shared_ptr<T> > positions_;
 
 public:
+  
   /**
    * @brief Build a new container from a set of positions.
    *
    * @param vs A std::vector of objects.
    */
-
   VectorPositionedContainer(const std::vector<std::shared_ptr<T> >& vs) :
     positions_(vs)
   {}
@@ -88,7 +86,6 @@ public:
    *
    * @param size Number of sequences in the container.
    */
-
   VectorPositionedContainer(size_t size = 0) :
     positions_(size)
   {}
@@ -100,7 +97,6 @@ public:
 
   /**
    * @brief copy where shared_ptr elements are shared
-   *
    */
   VectorPositionedContainer<T>& operator=(const VectorPositionedContainer<T>& vsc)
   {
@@ -161,7 +157,7 @@ public:
   /**
    * @brief Nullify all elements
    */
-  void nullify()
+  virtual void nullify()
   {
     std::fill(positions_.begin(), positions_.end(), nullptr);
   }

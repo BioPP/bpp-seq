@@ -351,6 +351,9 @@ public:
 
   std::unique_ptr<SiteType> removeSite(size_t sitePosition) override
   {
+    // Clean Sequence Container cache
+    sequenceContainer_.nullify();
+    
     auto sitePtr = siteContainer_.removeObject(sitePosition);
     std::get_deleter< SwitchDeleter<SiteType> >(sitePtr)->off();
     return std::unique_ptr<SiteType>(sitePtr.get());
@@ -359,6 +362,8 @@ public:
   void deleteSite(size_t sitePosition) override
   {
     siteContainer_.deleteObject(sitePosition);
+    // Clean Sequence Container cache
+    sequenceContainer_.nullify();
   }
 
 
@@ -511,7 +516,9 @@ public:
     // If Sequence already exsits
     auto name = sequenceContainer_.getObjectName(sequencePosition);
     if (!sequenceContainer_.isAvailableName(name))
+    {
       return *sequenceContainer_.getObject(sequencePosition);
+    }
 
     // Main loop : for all sites
     size_t n = getNumberOfSites();
