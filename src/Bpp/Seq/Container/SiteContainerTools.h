@@ -932,7 +932,7 @@ public:
       seqCont2bis = &seqCont2;
     } else {
       // We shall reorder sequences first:
-      TemplateSiteContainerInterface<SiteType, SequenceType, HashType>* seqCont2ter = seqCont2.createEmptyContainer();
+      auto seqCont2ter = seqCont2.createEmptyContainer();
       SequenceContainerTools::getSelectedSequences(seqCont2, seqKeys1, *seqCont2ter);
       seqCont2bis = seqCont2ter;
       del = true;
@@ -940,12 +940,15 @@ public:
 
     if (leavePositionAsIs) {
       for (size_t i = 0; i < seqCont2bis->getNumberOfSites(); ++i) {
-        seqCont1.addSite(seqCont2bis->site(i), false);
+	std::unique_ptr<Site> site(seqCont2bis->site(i).clone());
+        seqCont1.addSite(site, false);
       }
     } else {
       int offset = static_cast<int>(seqCont1.getNumberOfSites());
       for (size_t i = 0; i < seqCont2bis->getNumberOfSites(); ++i) {
-        seqCont1.addSite(seqCont2bis->site(i), offset + seqCont2bis->site(i).getPosition(), false);
+	std::unique_ptr<Site> site(seqCont2bis->site(i).clone());
+        site->setCoordinate(offset + site->getCoordinate());
+	seqCont1.addSite(site, false);
       }
     }
 

@@ -70,6 +70,8 @@ public:
 
   TemplateSiteContainerInterface<SiteType, SequenceType, HashType>* clone() const override = 0;
 
+  TemplateSiteContainerInterface<SiteType, SequenceType, HashType>* createEmptyContainer() const override = 0;
+
 public:
   /**
    * @brief Get a site from the container.
