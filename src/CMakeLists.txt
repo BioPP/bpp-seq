@@ -74,6 +74,7 @@ SET(CPP_FILES
   Bpp/Seq/Io/Stockholm.cpp
   Bpp/Seq/NucleicAcidsReplication.cpp
   Bpp/Seq/ProbabilisticSymbolList.cpp
+  Bpp/Seq/ProbabilisticSequence.cpp
   Bpp/Seq/Sequence.cpp
   Bpp/Seq/SequencePositionIterators.cpp
   Bpp/Seq/SequenceTools.cpp

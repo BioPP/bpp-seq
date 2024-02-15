@@ -90,11 +90,11 @@ namespace bpp
  *
  * @see Alphabet
  */
-class ProbabilisticSequence :
-  public virtual ProbabilisticSequenceInterface,
-  public AbstractCoreSequence,
-  public virtual ProbabilisticSymbolList //Diamond inheritence
-{
+  class ProbabilisticSequence :
+    public virtual ProbabilisticSequenceInterface,
+    public AbstractCoreSequence,
+    public virtual ProbabilisticSymbolList //Diamond inheritence
+  {
   public:
     /**
      * @brief Empty constructor : build a void ProbabilisticSequence with just an Alphabet
@@ -118,9 +118,9 @@ class ProbabilisticSequence :
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
     ProbabilisticSequence(
-        const std::string& name,
-	const std::vector<ProbabilisticSequence::SymbolType>& sequence,
-	std::shared_ptr<const Alphabet>& alphabet):
+      const std::string& name,
+      const std::vector<ProbabilisticSequence::SymbolType>& sequence,
+      std::shared_ptr<const Alphabet>& alphabet):
       ProbabilisticSymbolList(sequence, alphabet), AbstractCoreSequence(name)
     {}
 
@@ -135,9 +135,9 @@ class ProbabilisticSequence :
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
     ProbabilisticSequence(
-        const std::string& name,
-	const DTable& sequence,
-	std::shared_ptr<const Alphabet>& alphabet):
+      const std::string& name,
+      const DTable& sequence,
+      std::shared_ptr<const Alphabet>& alphabet):
       ProbabilisticSymbolList(sequence, alphabet),
       AbstractCoreSequence(name)
     {}
@@ -152,10 +152,10 @@ class ProbabilisticSequence :
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
     ProbabilisticSequence(
-	const std::string& name,
-	const std::vector<ProbabilisticSequence::SymbolType>& sequence,
-	const Comments& comments,
-	std::shared_ptr<const Alphabet>& alphabet):
+      const std::string& name,
+      const std::vector<ProbabilisticSequence::SymbolType>& sequence,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alphabet):
       ProbabilisticSymbolList(sequence, alphabet),
       AbstractCoreSequence(name, comments) 
     {}
@@ -172,10 +172,10 @@ class ProbabilisticSequence :
      * @throws Exception if the content is internally inconsistent, or is inconsistent with the specified alphabet.
      */
     ProbabilisticSequence(
-	const std::string& name,
- 	 const DTable& sequence,
-	const Comments& comments,
-	std::shared_ptr<const Alphabet>& alphabet):
+      const std::string& name,
+      const DTable& sequence,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alphabet):
       ProbabilisticSymbolList(sequence, alphabet),
       AbstractCoreSequence(name, comments) 
     {}
@@ -220,9 +220,23 @@ class ProbabilisticSequence :
     virtual ~ProbabilisticSequence() {}
 
   public:
-    void setToSizeR(size_t newSize) override {} // leave empty for now
+    /*
+     * @brief append or remove lines at the bottom (ie end of the
+     * sequence) to fit newSize.
+     *
+     * Additional characters are gaps, ie vectors of 0
+     */
+    
+    void setToSizeR(size_t newSize) override;
 
-    void setToSizeL(size_t newSize) override {}
+    /*
+     * @brief append or remove lines at the top (ie start of the
+     * sequence) to fit newSize.
+     *
+     * Additional characters are gaps, ie vectors of 0
+     */
+    
+    void setToSizeL(size_t newSize) override;
 
     double getStateValueAt(size_t sitePosition, int state) const override
     {

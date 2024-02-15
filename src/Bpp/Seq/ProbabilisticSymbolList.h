@@ -207,11 +207,14 @@ public:
     return content_.getColumn(pos);
   }
 
-  virtual void deleteElement(size_t pos) override { content_.deleteColumn(pos); }
+  virtual void deleteElement(size_t pos) override
+  {
+    content_.deleteColumn(pos);
+  }
 
   virtual void deleteElements(size_t pos, size_t len) override
   {
-    content_.deleteRows(pos, len);
+    content_.deleteColumns(pos, len);
   }
 
   const std::vector<std::vector<double> >& getContent() const override
