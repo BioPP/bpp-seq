@@ -542,7 +542,7 @@ unique_ptr<Sequence> SequenceTools::subtractHaplotype(
     vector<int> nucs = alphaPtr->getAlias(s.getValue(i));
     if (nucs.size() > 1)
     {
-      remove(nucs.begin(), nucs.end(), h.getValue(i));
+      std::ignore = remove(nucs.begin(), nucs.end(), h.getValue(i));
       nucs = vector<int>(nucs.begin(), nucs.end() - 1);
     }
     else

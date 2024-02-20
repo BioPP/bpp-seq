@@ -270,12 +270,12 @@ void CompressedVectorSiteContainer::setSite(size_t sitePosition, unique_ptr<Site
     if (test)
     {
       // we relace the site
-      siteContainer_.addObject(move(site), current, false);
+      siteContainer_.addObject(std::move(site), current, false);
     }
     else
     {
       // We add the site at the end:
-      siteContainer_.appendObject(move(site));
+      siteContainer_.appendObject(std::move(site));
       index_[sitePosition] = siteIndex;
     }
   }

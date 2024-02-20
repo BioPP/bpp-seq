@@ -403,7 +403,7 @@ public:
 
   void addIntSymbolListListener(std::shared_ptr<IntSymbolListListener> listener)
   {
-    addCoreSymbolListListener(move(listener));
+    addCoreSymbolListListener(std::move(listener));
   }
 
 protected:

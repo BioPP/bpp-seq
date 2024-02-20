@@ -457,13 +457,13 @@ public:
     try {
       auto& sc = dynamic_cast<const SiteContainerInterface&>(sites);
       auto sel = getSelectedSites<Site, Sequence>(sc, selection);
-      return move(sel);
+      return std::move(sel);
     } catch (std::bad_cast& e) {}
    
     try {
       auto& psc = dynamic_cast<const ProbabilisticSiteContainerInterface&>(sites);
       auto sel = getSelectedSites<ProbabilisticSite, ProbabilisticSequence>(psc, selection);
-      return move(sel);
+      return std::move(sel);
     } catch (std::bad_cast& e) {}
     
     throw Exception("SiteContainerTools::getSelectedSites : unsupported container type.");

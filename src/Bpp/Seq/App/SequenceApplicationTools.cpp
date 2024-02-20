@@ -496,7 +496,7 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
       {
         ApplicationTools::displayWarning("Alignment " + TextTools::toString(num) + " already assigned, replaced by new one.");
       }
-      mCont.emplace(num, move(vsC));
+      mCont.emplace(num, std::move(vsC));
     }
   }
   
@@ -547,7 +547,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
     }
   }
   else
-    sites = move(sites2);
+    sites = std::move(sites2);
 
   // Look for site selection:
   if (iAln->getFormatName() == "MASE file")
@@ -560,7 +560,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
       try
       {
         auto sel = MaseTools::getSelectedSites(*sites, siteSet);
-        selectedSites = move(sel);
+        selectedSites = std::move(sel);
         if (verbose)
           ApplicationTools::displayResult("Set found", TextTools::toString(siteSet) + " sites.");
       }
@@ -572,7 +572,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
       {
         throw Exception("Site set '" + siteSet + "' is empty.");
       }
-      sites = move(selectedSites);
+      sites = std::move(selectedSites);
     }
   }
 
@@ -610,7 +610,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
         }
       }
       auto sel = SiteContainerTools::getSelectedSites(*sites, vSite);
-      selectedSites = move(sel);
+      selectedSites = std::move(sel);
       selectedSites->reindexSites();
     }
     catch (Exception& e)
@@ -633,7 +633,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
         RandomTools::getSample(vPos, vSite, replace);
         
         auto sel = SiteContainerTools::getSelectedSites(*sites, vSite);
-        selectedSites = move(sel);
+        selectedSites = std::move(sel);
         if (replace)
           selectedSites->reindexSites();
       }
@@ -648,7 +648,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
     {
       throw Exception("Site set '" + siteSet + "' is empty.");
     }
-    sites = move(selectedSites);
+    sites = std::move(selectedSites);
   
   }
   
@@ -729,7 +729,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
         auto sl = ST.RNYslice(sites->sequence(name));
         tmpsites->addSequence(name, sl);
       }
-      sites = move(tmpsites);
+      sites = std::move(tmpsites);
     }    
     
     // Look for site selection:
@@ -755,7 +755,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
         {
           throw Exception("Site set '" + siteSet + "' is empty.");
         }
-        sites = move(selectedSites);
+        sites = std::move(selectedSites);
       }
     }
 
@@ -807,7 +807,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
       pallsites->addSequence(name, seq);
     }
     
-    psites = move(pallsites);
+    psites = std::move(pallsites);
   }
 
   // getting selection site set:
@@ -886,7 +886,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
 
     // if (replace)
     //   selectedSites->reindexSites();
-    psites = move(selectedSites);
+    psites = std::move(selectedSites);
   }
 
   // Apply sequence selection:
