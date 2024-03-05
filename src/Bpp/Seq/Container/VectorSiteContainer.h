@@ -338,7 +338,7 @@ public:
       for (size_t i = 0; i < getNumberOfSites(); ++i) {
         if (i != sitePosition && this->site(i).getCoordinate() == coordinate) {
           throw SiteException("TemplateVectorSiteContainer::setSite: Site position already exists in container", site.get());
-	}
+	      }
       }
     }
 
