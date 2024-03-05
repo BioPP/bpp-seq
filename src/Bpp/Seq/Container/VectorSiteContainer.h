@@ -527,11 +527,13 @@ public:
       sequence[j] = site(j)[sequencePosition];
     
     auto alphaPtr = getAlphabet();
-    auto ns = std::make_shared<SequenceType>(
-          sequenceNames_[sequencePosition],
-          sequence,
-          sequenceComments_[sequencePosition],
-          alphaPtr);
+    auto ns = std::shared_ptr<SequenceType>(
+          new SequenceType(
+		  sequenceNames_[sequencePosition],
+                  sequence,
+                  sequenceComments_[sequencePosition],
+                  alphaPtr),
+          SwitchDeleter<SequenceType>());
 
     sequenceContainer_.addObject_(ns, sequencePosition, sequenceKey(sequencePosition), false);
 
