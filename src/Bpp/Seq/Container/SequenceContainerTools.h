@@ -477,7 +477,7 @@ public:
 		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont,
 		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
   {
-    for (size_t i = 0; i < seqCont.getNumerOfSequence(); ++i) {
+    for (size_t i = 0; i < seqCont.getNumerOfSequences(); ++i) {
       std::string seqName = seqCont.getSequenceName(i);
       std::string seqKey = seqCont.getSequenceKey(i);
       auto seq = std::unique_ptr<SequenceType>(new SequenceType(seqName, seqCont.toString(i), outputCont.getAlphabet()));
