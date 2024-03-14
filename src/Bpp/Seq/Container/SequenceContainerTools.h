@@ -480,7 +480,8 @@ public:
     for (size_t i = 0; i < seqCont.getNumerOfSequences(); ++i) {
       std::string seqName = seqCont.getSequenceName(i);
       std::string seqKey = seqCont.getSequenceKey(i);
-      auto seq = std::unique_ptr<SequenceType>(new SequenceType(seqName, seqCont.toString(i), outputCont.getAlphabet()));
+      auto alpha = outputCont.getAlphabet();
+      auto seq = std::unique_ptr<SequenceType>(new SequenceType(seqName, seqCont.toString(i), alpha));
       outputCont.addSequence(seqKey, seq);
     }
   }
