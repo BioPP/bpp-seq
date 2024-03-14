@@ -474,14 +474,15 @@ public:
   template<class SequenceType, class HashType>
   static void
   convertAlphabet(
-		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont,
-		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
+      const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont,
+      TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
   {
-    for (size_t i = 0; i < seqCont.getNumerOfSequences(); ++i) {
-      std::string seqName = seqCont.getSequenceName(i);
-      std::string seqKey = seqCont.getSequenceKey(i);
+    std::vector<std::string> sequenceKeys = seqCont.getSequenceKeys();
+    for (size_t i = 0; i < seqCont.getNumberOfSequences(); ++i) {
+      std::string seqName = seqCont.sequence(i).getName();
+      std::string seqKey = sequenceKeys[i];
       auto alpha = outputCont.getAlphabet();
-      auto seq = std::unique_ptr<SequenceType>(new SequenceType(seqName, seqCont.toString(i), alpha));
+      auto seq = std::unique_ptr<SequenceType>(new SequenceType(seqName, seqCont.sequence(i).toString(), alpha));
       outputCont.addSequence(seqKey, seq);
     }
   }
