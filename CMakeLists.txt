@@ -2,13 +2,6 @@
 #
 # SPDX-License-Identifier: CECILL-2.1
 
-# CMake script for Bio++ Sequence library
-# Authors:
-#   Sylvain Gaillard
-#   Julien Dutheil
-#   Francois Gindraud (2017)
-# Created: 20/08/2009
-
 cmake_minimum_required (VERSION 3.5)
 project (bpp-seq3 CXX)
 

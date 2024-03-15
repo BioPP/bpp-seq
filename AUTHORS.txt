@@ -1,12 +1,13 @@
-lJulien Dutheil <julien.dutheil@univ-montp2.fr>
-Sylvain Gaillard <sylvain.gaillard@angers.inra.fr>
-Khalid Belkhir <belkhir@univ-montp2.fr>
+Julien Dutheil <dutheil@evolbio.mpg.de>
 Laurent Gueguen <gueguen@biomserv.univ-lyon1.fr>
-Sylvain Glémin <glemin@univ-montp2.fr>
-Guillaume Deuchst
 Eric Bazin
+Khalid Belkhir
 Vincent Cahais
-François Gindraud  <francois.gindraud@gmail.com>
+Guillaume Deuchst
+Sylvain Gaillard
+Sylvain Glémin
+François Gindraud
+Benoit Nabholz
 
 Contributed code to Bio++ was enabled thanks to the following institutions and resources:
 
