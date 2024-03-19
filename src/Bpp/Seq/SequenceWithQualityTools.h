@@ -88,8 +88,8 @@ public:
    * @throw Exception If the sequence names do not match.
    */
   static std::unique_ptr<SequenceWithQuality> concatenate(
-    const SequenceWithQuality& seqwq1,
-    const SequenceWithQuality& seqwq2);
+      const SequenceWithQuality& seqwq1,
+      const SequenceWithQuality& seqwq2);
 
   /**
    * @brief Get the complementary sequence of a nucleotide sequence.
@@ -101,7 +101,7 @@ public:
    * @throw AlphabetException If the sequence is not a nucleotide sequence.
    */
   static std::unique_ptr<SequenceWithQuality> complement(
-    const SequenceWithQuality& sequence);
+      const SequenceWithQuality& sequence);
 
   /**
    * @brief Get the transcription sequence of a DNA sequence.
@@ -113,7 +113,7 @@ public:
    * @throw AlphabetException If the sequence is not a DNA sequence.
    */
   static std::unique_ptr<SequenceWithQuality> transcript(
-    const SequenceWithQuality& sequence);
+      const SequenceWithQuality& sequence);
 
   /**
    * @brief Get the reverse-transcription sequence of a RNA sequence.
@@ -125,7 +125,7 @@ public:
    * @throw AlphabetException If the sequence is not a RNA sequence.
    */
   static std::unique_ptr<SequenceWithQuality> reverseTranscript(
-    const SequenceWithQuality& sequence);
+      const SequenceWithQuality& sequence);
 
   /**
    * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
@@ -138,7 +138,7 @@ public:
    * @param sequence The SequenceWithQuality to inverse.
    */
   static std::unique_ptr<SequenceWithQuality> invert(
-    const SequenceWithQuality& sequence);
+      const SequenceWithQuality& sequence);
 
   /**
    * @brief Remove gaps from a SequenceWithQuality.

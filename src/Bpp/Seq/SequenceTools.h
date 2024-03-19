@@ -356,9 +356,9 @@ public:
    * @author Sylvain Gaillard
    */
   static void getPutativeHaplotypes(
-    const SequenceInterface& seq,
-    std::vector<std::unique_ptr<SequenceInterface>>& hap,
-    unsigned int level = 2);
+      const SequenceInterface& seq,
+      std::vector<std::unique_ptr<SequenceInterface>>& hap,
+      unsigned int level = 2);
 
   /**
    * @brief Combine two sequences.
@@ -366,8 +366,8 @@ public:
    * @author Sylvain Gaillard
    */
   static std::unique_ptr<Sequence> combineSequences(
-    const SequenceInterface& s1,
-    const SequenceInterface& s2);
+      const SequenceInterface& s1,
+      const SequenceInterface& s2);
 
   /**
    * @brief Subtract haplotype from an heterozygous sequence.
@@ -395,10 +395,10 @@ public:
    * @author Sylvain Gaillard
    */
   static std::unique_ptr<Sequence> subtractHaplotype(
-    const SequenceInterface& s,
-    const SequenceInterface& h,
-    std::string name = "",
-    unsigned int level = 1);
+      const SequenceInterface& s,
+      const SequenceInterface& h,
+      std::string name = "",
+      unsigned int level = 1);
 
   /**
    * @brief Get the RNY decomposition of a DNA sequence

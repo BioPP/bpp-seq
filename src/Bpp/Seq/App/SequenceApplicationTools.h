@@ -66,12 +66,12 @@ public:
    * @return A new Alphabet object according to options specified.
    */
   static std::unique_ptr<Alphabet> getAlphabet(
-    const std::map<std::string, std::string>& params,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool verbose = true,
-    bool allowGeneric = false,
-    int warn = 1);
+      const std::map<std::string, std::string>& params,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      bool allowGeneric = false,
+      int warn = 1);
 
   /**
    * @brief Build a GeneticCode object according to options.
@@ -88,8 +88,8 @@ public:
    * @throw Exception in case of bad description.
    */
   static std::unique_ptr<GeneticCode> getGeneticCode(
-    std::shared_ptr<const NucleicAlphabet> alphabet,
-    const std::string& description);
+      std::shared_ptr<const NucleicAlphabet> alphabet,
+      const std::string& description);
 
   /**
    * @brief Build a AlphabetIndex1 object for a given alphabet.
@@ -102,17 +102,17 @@ public:
    * @throw Exception in case of bad description.
    */
   static std::unique_ptr<AlphabetIndex1> getAlphabetIndex1(
-    std::shared_ptr<const Alphabet> alphabet,
-    const std::string& description,
-    const std::string& message = "Alphabet measure:",
-    bool verbose = true);
+      std::shared_ptr<const Alphabet> alphabet,
+      const std::string& description,
+      const std::string& message = "Alphabet measure:",
+      bool verbose = true);
 
   static std::unique_ptr<AlphabetIndex1> getAlphabetIndex1(
-    std::shared_ptr<const CodonAlphabet> alphabet,
-    std::shared_ptr<const GeneticCode> gencode,
-    const std::string& description,
-    const std::string& message = "Alphabet measure:",
-    bool verbose = true);
+      std::shared_ptr<const CodonAlphabet> alphabet,
+      std::shared_ptr<const GeneticCode> gencode,
+      const std::string& description,
+      const std::string& message = "Alphabet measure:",
+      bool verbose = true);
 
 
   /**
@@ -127,17 +127,17 @@ public:
    */
 
   static std::unique_ptr<AlphabetIndex2> getAlphabetIndex2(
-    std::shared_ptr<const Alphabet> alphabet,
-    const std::string& description,
-    const std::string& message = "Alphabet distance:",
-    bool verbose = true);
+      std::shared_ptr<const Alphabet> alphabet,
+      const std::string& description,
+      const std::string& message = "Alphabet distance:",
+      bool verbose = true);
 
   static std::unique_ptr<AlphabetIndex2> getAlphabetIndex2(
-    std::shared_ptr<const CodonAlphabet> alphabet,
-    std::shared_ptr<const GeneticCode> gencode,
-    const std::string& description,
-    const std::string& message = "Alphabet distance:",
-    bool verbose = true);
+      std::shared_ptr<const CodonAlphabet> alphabet,
+      std::shared_ptr<const GeneticCode> gencode,
+      const std::string& description,
+      const std::string& message = "Alphabet distance:",
+      bool verbose = true);
 
   /**
    * @brief Build a SequenceContainer object according to options.
@@ -158,12 +158,12 @@ public:
    */
 
   static std::unique_ptr<SequenceContainerInterface> getSequenceContainer(
-    std::shared_ptr<const Alphabet> alpha,
-    const std::map<std::string, std::string>& params,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool verbose = true,
-    int warn = 1);
+      std::shared_ptr<const Alphabet> alpha,
+      const std::map<std::string, std::string>& params,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
 
   /**
    * @brief Build a SiteContainer object according to the BppO syntax.
@@ -182,12 +182,12 @@ public:
    * @return A new VectorSiteContainer object according to the description.
    */
   static std::unique_ptr<VectorSiteContainer> getSiteContainer(
-    std::shared_ptr<const Alphabet> alpha,
-    const std::map<std::string, std::string>& params,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool verbose = true,
-    int warn = 1);
+      std::shared_ptr<const Alphabet> alpha,
+      const std::map<std::string, std::string>& params,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
 
   /**
    * @brief Build a ProbabilisticSiteContainer object according to the BppO syntax.
@@ -206,12 +206,12 @@ public:
    * @return A new ProbabilisticVectorSiteContainer object according to the description.
    */
   static std::unique_ptr<ProbabilisticVectorSiteContainer> getProbabilisticSiteContainer(
-    std::shared_ptr<const Alphabet> alpha,
-    const std::map<std::string, std::string>& params,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool verbose = true,
-    int warn = 1);
+      std::shared_ptr<const Alphabet> alpha,
+      const std::map<std::string, std::string>& params,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
 
   /**
    * @brief Build multiple SiteContainer objects according to the BppO syntax.
@@ -232,13 +232,13 @@ public:
    */
   static std::map<size_t, std::unique_ptr<VectorSiteContainer>>
   getSiteContainers(
-    std::shared_ptr<const Alphabet> alpha,
-    const std::map<std::string, std::string>& params,
-    const std::string& prefix = "input.",
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool verbose = true,
-    int warn = 1);
+      std::shared_ptr<const Alphabet> alpha,
+      const std::map<std::string, std::string>& params,
+      const std::string& prefix = "input.",
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
 
   /**
    * @brief Build multiple ProbabilisticSiteContainer objects according to the BppO syntax.
@@ -259,13 +259,13 @@ public:
    */
   static std::map<size_t, std::unique_ptr<ProbabilisticVectorSiteContainer>>
   getProbabilisticSiteContainers(
-    std::shared_ptr<const Alphabet> alpha,
-    const std::map<std::string, std::string>& params,
-    const std::string& prefix = "input.",
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool verbose = true,
-    int warn = 1);
+      std::shared_ptr<const Alphabet> alpha,
+      const std::map<std::string, std::string>& params,
+      const std::string& prefix = "input.",
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
 
 
   /**
@@ -285,12 +285,12 @@ public:
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    */
   static void restrictSelectedSequencesByName(
-    SequenceContainerInterface& allSequences,
-    const std::map<std::string, std::string>& params,
-    std::string suffix = "",
-    bool suffixIsOptional = true,
-    bool verbose = true,
-    int warn = 1);
+      SequenceContainerInterface& allSequences,
+      const std::map<std::string, std::string>& params,
+      std::string suffix = "",
+      bool suffixIsOptional = true,
+      bool verbose = true,
+      int warn = 1);
 
 
   /**
@@ -462,11 +462,11 @@ public:
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    */
   static void writeSequenceFile(
-    const SequenceContainerInterface& sequences,
-    const std::map<std::string, std::string>& params,
-    const std::string& suffix = "",
-    bool verbose = true,
-    int warn = 1);
+      const SequenceContainerInterface& sequences,
+      const std::map<std::string, std::string>& params,
+      const std::string& suffix = "",
+      bool verbose = true,
+      int warn = 1);
 
   /**
    * @brief Write a sequence alignment file according to options.
@@ -482,11 +482,11 @@ public:
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    */
   static void writeAlignmentFile(
-    const SiteContainerInterface& sequences,
-    const std::map<std::string, std::string>& params,
-    const std::string& suffix = "",
-    bool verbose = true,
-    int warn = 1);
+      const SiteContainerInterface& sequences,
+      const std::map<std::string, std::string>& params,
+      const std::string& suffix = "",
+      bool verbose = true,
+      int warn = 1);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_APP_SEQUENCEAPPLICATIONTOOLS_H

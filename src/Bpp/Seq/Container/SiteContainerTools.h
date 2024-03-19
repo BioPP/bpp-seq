@@ -537,10 +537,10 @@ public:
    * @return A new Sequence object with the consensus sequence.
    */
   static std::unique_ptr<Sequence> getConsensus(
-    const SiteContainerInterface& sc,
-    const std::string& name = "consensus",
-    bool ignoreGap = true,
-    bool resolveUnknown = false);
+      const SiteContainerInterface& sc,
+      const std::string& name = "consensus",
+      bool ignoreGap = true,
+      bool resolveUnknown = false);
 
   /**
    * @brief Change all gaps to unknown state in a SiteContainer, according to its alphabet.
@@ -598,8 +598,8 @@ public:
    * @throw Exception If no reference sequence was found, or if the input alignment contains no sequence.
    */
   static std::unique_ptr<SiteContainerInterface> resolveDottedAlignment(
-    const SiteContainerInterface& dottedAln,
-    std::shared_ptr<const Alphabet>& resolvedAlphabet);
+      const SiteContainerInterface& dottedAln,
+      std::shared_ptr<const Alphabet>& resolvedAlphabet);
 
   /**
    * @name Sequences coordinates.
@@ -640,8 +640,8 @@ public:
    * @author Julien Dutheil
    */
   static void getSequencePositions(
-    const SiteContainerInterface& sites,
-    Matrix<size_t>& positions);
+      const SiteContainerInterface& sites,
+      Matrix<size_t>& positions);
   /** @} */
 
   /**
@@ -658,8 +658,8 @@ public:
    * @throw Exception If the sequence do not match.
    */
   static std::map<size_t, size_t> translateAlignment(
-    const Sequence& seq1,
-    const Sequence& seq2);
+      const Sequence& seq1,
+      const Sequence& seq2);
 
   /**
    * @brief Translate sequence positions from a sequence to another in the same alignment.
@@ -673,9 +673,9 @@ public:
    * @return A map with original sequence positions as keys, and translated positions as values.
    */
   static std::map<size_t, size_t> translateSequence(
-    const SiteContainerInterface& sequences,
-    size_t i1,
-    size_t i2);
+      const SiteContainerInterface& sequences,
+      size_t i1,
+      size_t i2);
 
   /**
    * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -692,10 +692,10 @@ public:
    * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
    */
   static std::unique_ptr<AlignedSequenceContainer> alignNW(
-    const Sequence& seq1,
-    const Sequence& seq2,
-    const AlphabetIndex2& s,
-    double gap);
+      const Sequence& seq1,
+      const Sequence& seq2,
+      const AlphabetIndex2& s,
+      double gap);
 
   /**
    * @brief Align two sequences using the Needleman-Wunsch dynamic algorithm.
@@ -713,11 +713,11 @@ public:
    * @throw AlphabetMismatchException If the sequences and the score matrix do not share the same alphabet.
    */
   static std::unique_ptr<AlignedSequenceContainer> alignNW(
-    const Sequence& seq1,
-    const Sequence& seq2,
-    const AlphabetIndex2& s,
-    double opening,
-    double extending);
+      const Sequence& seq1,
+      const Sequence& seq2,
+      const AlphabetIndex2& s,
+      double opening,
+      double extending);
 
   /**
    * @brief Sample sites in an alignment.
@@ -840,11 +840,11 @@ public:
    * @throw Exception If an invalid gapOption is passed.
    */
   static double computeSimilarity(
-    const SequenceInterface& seq1,
-    const SequenceInterface& seq2,
-    bool dist = false,
-    const std::string& gapOption = SIMILARITY_NODOUBLEGAP,
-    bool unresolvedAsGap = true);
+      const SequenceInterface& seq1,
+      const SequenceInterface& seq2,
+      bool dist = false,
+      const std::string& gapOption = SIMILARITY_NODOUBLEGAP,
+      bool unresolvedAsGap = true);
 
   /**
    * @brief Compute the similarity matrix of an alignment.
@@ -869,10 +869,10 @@ public:
    * @return All pairwise similarity measures.
    */
   static std::unique_ptr<DistanceMatrix> computeSimilarityMatrix(
-    const SiteContainerInterface& sites,
-    bool dist = false,
-    const std::string& gapOption = SIMILARITY_NOFULLGAP,
-    bool unresolvedAsGap = true);
+      const SiteContainerInterface& sites,
+      bool dist = false,
+      const std::string& gapOption = SIMILARITY_NOFULLGAP,
+      bool unresolvedAsGap = true);
 
   static const std::string SIMILARITY_ALL;
   static const std::string SIMILARITY_NOFULLGAP;

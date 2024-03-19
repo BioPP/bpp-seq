@@ -58,9 +58,9 @@ public:
    * @{
    */
   bool nextSequence(
-    std::istream& input,
-    Sequence& seq
-    ) const;
+      std::istream& input,
+      Sequence& seq
+      ) const;
   /** @} */
 
   /**
@@ -76,10 +76,10 @@ public:
    * @throw Exception IOException and Sequence related exceptions.
    */
   bool nextSequence(
-    std::istream& input,
-    Sequence& seq,
-    std::vector<size_t>& pos
-    ) const;
+      std::istream& input,
+      Sequence& seq,
+      std::vector<size_t>& pos
+      ) const;
 
   /**
    * @name The IOFormat interface.

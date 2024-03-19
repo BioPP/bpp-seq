@@ -197,13 +197,13 @@ public:
    * @return True if the site is made of only one state.
    */
   static bool isConstant(
-    const IntSymbolListInterface& site,
-    bool ignoreUnknown = false,
-    bool unresolvedRaisesException = true);
+      const IntSymbolListInterface& site,
+      bool ignoreUnknown = false,
+      bool unresolvedRaisesException = true);
 
   static bool isConstant(
-    const ProbabilisticSymbolListInterface& site,
-    bool unresolvedRaisesException = true);
+      const ProbabilisticSymbolListInterface& site,
+      bool unresolvedRaisesException = true);
 
   static bool isConstant(
       const CruxSymbolListInterface& site,
@@ -229,12 +229,12 @@ public:
    * @return True if the two sites have the same content (and, of course, alphabet).
    */
   static bool areSymbolListsIdentical(
-    const IntSymbolListInterface& list1,
-    const IntSymbolListInterface& list2);
+      const IntSymbolListInterface& list1,
+      const IntSymbolListInterface& list2);
 
   static bool areSymbolListsIdentical(
-    const ProbabilisticSymbolListInterface& list1,
-    const ProbabilisticSymbolListInterface& list2);
+      const ProbabilisticSymbolListInterface& list1,
+      const ProbabilisticSymbolListInterface& list2);
 
   static bool areSymbolListsIdentical(
       const CruxSymbolListInterface& l1,
@@ -470,9 +470,9 @@ public:
    * @return A map with all states and corresponding counts.
    */
   static void getCountsResolveUnknowns(
-    const IntSymbolListInterface& list1,
-    const IntSymbolListInterface& list2,
-    std::map< int, std::map<int, double>>& counts);
+      const IntSymbolListInterface& list1,
+      const IntSymbolListInterface& list2,
+      std::map< int, std::map<int, double>>& counts);
 
   /**
    * @brief Count all pairs of states for two lists of the same size resolving unknown characters.
@@ -490,9 +490,9 @@ public:
    * @return A map with all states and corresponding counts.
    */
   static void getCountsResolveUnknowns(
-    const ProbabilisticSymbolListInterface& list1,
-    const ProbabilisticSymbolListInterface& list2,
-    std::map< int, std::map<int, double>>& counts);
+      const ProbabilisticSymbolListInterface& list1,
+      const ProbabilisticSymbolListInterface& list2,
+      std::map< int, std::map<int, double>>& counts);
 
   /**
    * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
@@ -561,9 +561,9 @@ public:
    * @param frequencies The output map with all states and corresponding frequencies. Existing frequencies will be erased if any.
    */
   static void getFrequencies(
-    const CruxSymbolListInterface& list,
-    std::map<int, double>& frequencies,
-    bool resolveUnknowns = false);
+      const CruxSymbolListInterface& list,
+      std::map<int, double>& frequencies,
+      bool resolveUnknowns = false);
 
   /**
    * @brief Get all state pairs frequencies for two lists of the same size.
@@ -579,10 +579,10 @@ public:
    */
 
   static void getFrequencies(
-    const CruxSymbolListInterface& list1,
-    const CruxSymbolListInterface& list2,
-    std::map<int, std::map<int, double>>& frequencies,
-    bool resolveUnknowns = false);
+      const CruxSymbolListInterface& list1,
+      const CruxSymbolListInterface& list2,
+      std::map<int, std::map<int, double>>& frequencies,
+      bool resolveUnknowns = false);
 
   /**
    * @brief Get the GC content of a symbol list.
@@ -597,14 +597,14 @@ public:
    * @throw AlphabetException If the list is not made of nucleotide states.
    */
   static double getGCContent(
-    const IntSymbolListInterface& list,
-    bool ignoreUnresolved = true,
-    bool ignoreGap = true);
+      const IntSymbolListInterface& list,
+      bool ignoreUnresolved = true,
+      bool ignoreGap = true);
 
   static double getGCContent(
-    const ProbabilisticSymbolListInterface& list,
-    bool ignoreUnresolved = true,
-    bool ignoreGap = true);
+      const ProbabilisticSymbolListInterface& list,
+      bool ignoreUnresolved = true,
+      bool ignoreGap = true);
 
   static double getGCContent(
       const CruxSymbolListInterface& list,
@@ -636,12 +636,12 @@ public:
    */
 
   static size_t getNumberOfDistinctPositions(
-    const IntSymbolListInterface& l1,
-    const IntSymbolListInterface& l2);
+      const IntSymbolListInterface& l1,
+      const IntSymbolListInterface& l2);
 
   static size_t getNumberOfDistinctPositions(
-    const ProbabilisticSymbolListInterface& l1,
-    const ProbabilisticSymbolListInterface& l2);
+      const ProbabilisticSymbolListInterface& l1,
+      const ProbabilisticSymbolListInterface& l2);
 
   static size_t getNumberOfDistinctPositions(
       const CruxSymbolListInterface& l1,
@@ -672,12 +672,12 @@ public:
    * @throw AlphabetMismatchException if the two lists have not the same alphabet type.
    */
   static size_t getNumberOfPositionsWithoutGap(
-    const IntSymbolListInterface& l1,
-    const IntSymbolListInterface& l2);
+      const IntSymbolListInterface& l1,
+      const IntSymbolListInterface& l2);
 
   static size_t getNumberOfPositionsWithoutGap(
-    const ProbabilisticSymbolListInterface& l1,
-    const ProbabilisticSymbolListInterface& l2);
+      const ProbabilisticSymbolListInterface& l1,
+      const ProbabilisticSymbolListInterface& l2);
 
   static size_t getNumberOfPositionsWithoutGap(
       const CruxSymbolListInterface& l1,
@@ -764,8 +764,8 @@ public:
    * @return The Shannon entropy index of this list.
    */
   static double variabilityShannon(
-    const CruxSymbolListInterface& list,
-    bool resolveUnknowns);
+      const CruxSymbolListInterface& list,
+      bool resolveUnknowns);
 
   /**
    * @brief Compute the factorial diversity index of a site.
@@ -797,9 +797,9 @@ public:
    * @return The mutual information for the pair of lists.
    */
   static double mutualInformation(
-    const CruxSymbolListInterface& list1,
-    const CruxSymbolListInterface& list2,
-    bool resolveUnknowns);
+      const CruxSymbolListInterface& list1,
+      const CruxSymbolListInterface& list2,
+      bool resolveUnknowns);
 
   /**
    * @brief Compute the entropy of a site. This is an alias of method variabilityShannon.
@@ -834,9 +834,9 @@ public:
    * @return The mutual information for the pair of lists.
    */
   static double jointEntropy(
-    const CruxSymbolListInterface& list1,
-    const CruxSymbolListInterface& list2,
-    bool resolveUnknowns);
+      const CruxSymbolListInterface& list1,
+      const CruxSymbolListInterface& list2,
+      bool resolveUnknowns);
 
   /**
    * @brief Compute the heterozygosity index of a list.
