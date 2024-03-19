@@ -130,4 +130,3 @@ unique_ptr<SequenceWithQuality> SequenceWithQualityTools::removeGaps(const Seque
 }
 
 /******************************************************************************/
-

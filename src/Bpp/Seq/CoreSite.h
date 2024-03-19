@@ -70,7 +70,6 @@ public:
    * @return                 The state value at the given position.
    */
   virtual double getStateValueAt(size_t sequencePosition, int state) const override = 0;
-
 };
 
 /**

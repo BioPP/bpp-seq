@@ -6,7 +6,6 @@
 #define BPP_SEQ_IO_NEXUSTOOLS_H
 
 
-
 // From the STL:
 #include <iostream>
 #include <Bpp/Exceptions.h>

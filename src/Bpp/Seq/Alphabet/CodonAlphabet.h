@@ -160,8 +160,8 @@ public:
   int getCodon(int pos1, int pos2, int pos3) const
   {
     return (nAlph_->isUnresolved(pos1)
-            || nAlph_->isUnresolved(pos2)
-            || nAlph_->isUnresolved(pos3)) ? getUnknownCharacterCode()
+           || nAlph_->isUnresolved(pos2)
+           || nAlph_->isUnresolved(pos3)) ? getUnknownCharacterCode()
         : pos3 + 4 * pos2 + 16 * pos1;
   }
 

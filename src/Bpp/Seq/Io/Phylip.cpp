@@ -69,7 +69,7 @@ void Phylip::readSequential(std::istream& in, SequenceContainerInterface& sc) co
       if (!TextTools::isEmpty(name)) // If this is not the first sequence!
       {
         // Add the previous sequence to the container:
-	auto seqPtr = make_unique<Sequence>(name, seq, alphaPtr);
+        auto seqPtr = make_unique<Sequence>(name, seq, alphaPtr);
         sc.addSequence(name, seqPtr);
       }
       name = v[0];
@@ -239,7 +239,7 @@ void Phylip::writeInterleaved(std::ostream& out, const SiteContainerInterface& s
   vector<string> seqNames = sc.getSequenceNames();
   vector<string> names = getSizedNames(seqNames);
   // Split sequences:
-  vector< vector<string> > seqs(sc.getNumberOfSequences());
+  vector< vector<string>> seqs(sc.getNumberOfSequences());
   for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
   {
     seqs[i] = TextTools::split(sc.sequence(i).toString(), charsByLine_);

@@ -150,7 +150,7 @@ class WordAlphabet :
   public AbstractAlphabet
 {
 protected:
-  std::vector< std::shared_ptr<const Alphabet> > vAbsAlph_;
+  std::vector< std::shared_ptr<const Alphabet>> vAbsAlph_;
 
 public:
   // Constructor and destructor.
@@ -162,7 +162,7 @@ public:
    *
    * @param vAlpha The vector of Alphabets to be used.
    */
-  WordAlphabet(const std::vector< std::shared_ptr<const Alphabet> >& vAlpha);
+  WordAlphabet(const std::vector< std::shared_ptr<const Alphabet>>& vAlpha);
 
   /**
    * @brief Builds a new word alphabet from a pointer to number of
@@ -438,7 +438,8 @@ public:
    * @name Overloaded AbstractAlphabet methods.
    * @{
    */
-  unsigned int getStateCodingSize() const override {
+  unsigned int getStateCodingSize() const override
+  {
     return static_cast<unsigned int>(vAbsAlph_.size());
   }
   /** @} */

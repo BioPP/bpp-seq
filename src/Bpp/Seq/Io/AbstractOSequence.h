@@ -28,7 +28,6 @@ public:
   virtual ~AbstractOSequence() {}
 
 public:
-
   /**
    * @name OSequence methods:
    *
@@ -44,7 +43,6 @@ public:
     output.close();
   }
   /** @} */
-
 };
 
 /**
@@ -54,7 +52,8 @@ public:
  * Alignment sequences are written as simple sequences with gaps.
  */
 class AbstractOSequence2 :
-  public virtual AbstractOSequence, //in case for Diamond inheritence
+  public virtual AbstractOSequence,
+  // in case for Diamond inheritence
   public virtual OAlignment
 {
 public:
@@ -62,7 +61,6 @@ public:
   virtual ~AbstractOSequence2() {}
 
 public:
-
   /**
    * @name OAlignment methods:
    *
@@ -115,7 +113,7 @@ public:
 
 /**
  * @brief Partial implementation of the OProbabilisticAlignment interface.
- * 
+ *
  * This implementation is for formats that can store both aligned and non-aligned sequences.
  * Alignment sequences are written as simple sequences with gaps.
  */

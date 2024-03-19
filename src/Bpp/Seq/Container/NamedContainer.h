@@ -19,10 +19,9 @@ namespace bpp
  * The objects are all stored as shared pointers.
  */
 template<class T>
-class NamedContainerInterface:
-    public virtual Clonable
+class NamedContainerInterface :
+  public virtual Clonable
 {
-
 public:
   NamedContainerInterface() {}
   virtual ~NamedContainerInterface() {}
@@ -65,7 +64,7 @@ protected:
    *
    * @param name The name of the object.
    */
-  
+
   virtual void deleteObject(const std::string& name) = 0;
 
   /**

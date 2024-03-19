@@ -7,7 +7,7 @@
 
 #include "NamedContainer.h"
 
-//From the STL:
+// From the STL:
 
 #include <map>
 #include <memory>
@@ -51,7 +51,6 @@ public:
   /**
    * @}
    */
-
   MappedNamedContainer& operator=(const MappedNamedContainer& msc)
   {
     mObjects_ = msc.mObjects_;
@@ -59,7 +58,6 @@ public:
   }
 
 public:
-  
   const std::shared_ptr<T> getObject(const std::string& name) const override
   {
     const auto it = mObjects_.find(name);
@@ -95,7 +93,7 @@ public:
 
     return *(it->second);
   }
-  
+
   bool hasObject(const std::string& name) const override
   {
     return mObjects_.find(name) != mObjects_.end();
@@ -207,17 +205,17 @@ public:
     std::string nn = name;
     const_cast<std::map<std::string, std::shared_ptr<T>>&>(mObjects_)[nn] = newObject;
   }
- 
+
   /**
    * @brief Nullify all elements
    */
   virtual void nullify()
   {
     for (auto& it : mObjects_)
+    {
       it.second = nullptr;
+    }
   }
-
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_MAPPEDNAMEDCONTAINER_H

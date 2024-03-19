@@ -22,34 +22,36 @@ class SiteInterface :
   public virtual CoreSiteInterface,
   public virtual IntSymbolListInterface
 {
-  public:
-    virtual ~SiteInterface() {}
+public:
+  virtual ~SiteInterface() {}
 
-  public:
-    SiteInterface* clone() const override = 0;
+public:
+  SiteInterface* clone() const override = 0;
 
-    virtual bool operator==(const SiteInterface& site)
+  virtual bool operator==(const SiteInterface& site)
+  {
+    // Verify that site's size, position and content are equals
+    if (site.size() != size())
+      return false;
+    if (site.getCoordinate() != getCoordinate())
     {
-      // Verify that site's size, position and content are equals
-      if (site.size() != size())
-        return false;
-      if (site.getCoordinate() != getCoordinate()) {
-        return false;
-      } else {
-        for (size_t i = 0; i < site.size(); ++i)
-        {
-          if (site[i] != operator[](i))
-            return false;
-        }
-        return true;
+      return false;
+    }
+    else
+    {
+      for (size_t i = 0; i < site.size(); ++i)
+      {
+        if (site[i] != operator[](i))
+          return false;
       }
+      return true;
     }
+  }
 
-    virtual bool operator<(const SiteInterface& site)
-    {
-      return site.getCoordinate() < getCoordinate();
-    }
-
+  virtual bool operator<(const SiteInterface& site)
+  {
+    return site.getCoordinate() < getCoordinate();
+  }
 };
 
 /**
@@ -75,10 +77,10 @@ public:
    *
    * @param alphabet The alphabet to use.
    */
-  Site(std::shared_ptr<const Alphabet>& alphabet):
-      AbstractTemplateSymbolList(alphabet),
-      AbstractCoreSite(),
-      IntSymbolList(alphabet)
+  Site(std::shared_ptr<const Alphabet>& alphabet) :
+    AbstractTemplateSymbolList(alphabet),
+    AbstractCoreSite(),
+    IntSymbolList(alphabet)
   {}
 
   /**
@@ -88,9 +90,9 @@ public:
    * @param coordinate The coordinate attribute of this site.
    */
   Site(std::shared_ptr<const Alphabet>& alphabet, int coordinate) :
-      AbstractTemplateSymbolList(alphabet),
-      AbstractCoreSite(coordinate),
-      IntSymbolList(alphabet)
+    AbstractTemplateSymbolList(alphabet),
+    AbstractCoreSite(coordinate),
+    IntSymbolList(alphabet)
   {}
 
   /**
@@ -101,10 +103,10 @@ public:
    * @param alphabet The alphabet to use.
    * @throw BadCharException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<std::string>& site, std::shared_ptr<const Alphabet>& alphabet):
-      AbstractTemplateSymbolList(alphabet),
-      AbstractCoreSite(),
-      IntSymbolList(site, alphabet)
+  Site(const std::vector<std::string>& site, std::shared_ptr<const Alphabet>& alphabet) :
+    AbstractTemplateSymbolList(alphabet),
+    AbstractCoreSite(),
+    IntSymbolList(site, alphabet)
   {}
 
   /**
@@ -116,10 +118,10 @@ public:
    * @param coordinate The coordinate attribute of this site.
    * @throw BadCharException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<std::string>& site, std::shared_ptr<const Alphabet>& alphabet, int coordinate):
-      AbstractTemplateSymbolList(alphabet),
-      AbstractCoreSite(coordinate),
-      IntSymbolList(site, alphabet)
+  Site(const std::vector<std::string>& site, std::shared_ptr<const Alphabet>& alphabet, int coordinate) :
+    AbstractTemplateSymbolList(alphabet),
+    AbstractCoreSite(coordinate),
+    IntSymbolList(site, alphabet)
   {}
 
   /**
@@ -130,10 +132,10 @@ public:
    * @param alphabet The alphabet to use.
    * @throw BadIntException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<int>& site, std::shared_ptr<const Alphabet>& alphabet):
-      AbstractTemplateSymbolList(site, alphabet),
-      AbstractCoreSite(),
-      IntSymbolList(site, alphabet)
+  Site(const std::vector<int>& site, std::shared_ptr<const Alphabet>& alphabet) :
+    AbstractTemplateSymbolList(site, alphabet),
+    AbstractCoreSite(),
+    IntSymbolList(site, alphabet)
   {}
 
   /**
@@ -145,19 +147,19 @@ public:
    * @param coordinate The coordinate attribute of this site.
    * @throw BadIntException If the content does not match the specified alphabet.
    */
-  Site(const std::vector<int>& site, std::shared_ptr<const Alphabet> alphabet, int coordinate) : 
-      AbstractTemplateSymbolList(site, alphabet),
-      AbstractCoreSite(coordinate),
-      IntSymbolList(site, alphabet)
+  Site(const std::vector<int>& site, std::shared_ptr<const Alphabet> alphabet, int coordinate) :
+    AbstractTemplateSymbolList(site, alphabet),
+    AbstractCoreSite(coordinate),
+    IntSymbolList(site, alphabet)
   {}
 
   /**
    * @brief The copy constructor.
    */
-  Site(const Site& site):
-      AbstractTemplateSymbolList(site),
-      AbstractCoreSite(site.getCoordinate()),
-      IntSymbolList(site)
+  Site(const Site& site) :
+    AbstractTemplateSymbolList(site),
+    AbstractCoreSite(site.getCoordinate()),
+    IntSymbolList(site)
   {}
 
   /**
@@ -182,14 +184,12 @@ public:
   Site* clone() const { return new Site(*this); }
   /** @} */
 
-   double getStateValueAt(size_t sequencePosition, int state) const
-   {
-     if (sequencePosition  >= size()) throw IndexOutOfBoundsException("Site::getStateValueAt.", sequencePosition, 0, size() - 1);
-     return getAlphabet()->isResolvedIn((*this)[sequencePosition], state) ? 1. : 0.;
-   }
-
+  double getStateValueAt(size_t sequencePosition, int state) const
+  {
+    if (sequencePosition  >= size()) throw IndexOutOfBoundsException("Site::getStateValueAt.", sequencePosition, 0, size() - 1);
+    return getAlphabet()->isResolvedIn((*this)[sequencePosition], state) ? 1. : 0.;
+  }
 };
-
 } // end of namespace bpp.
 
 #endif // BPP_SEQ_SITE_H

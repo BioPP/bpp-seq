@@ -129,8 +129,6 @@ protected:
 };
 
 
-
-
 /**
  * @brief Partial implementation of the IProbabilisticSequence interface.
  */
@@ -241,6 +239,5 @@ protected:
     return vsc;
   }
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_ABSTRACTISEQUENCE_H

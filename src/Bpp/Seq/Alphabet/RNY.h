@@ -26,7 +26,6 @@
 
 namespace bpp
 {
-
 class RNY : public AbstractAlphabet
 {
 private:
@@ -72,8 +71,6 @@ public:
   {
     return nuclalph_;
   }
-
-
 
 public:
   /**

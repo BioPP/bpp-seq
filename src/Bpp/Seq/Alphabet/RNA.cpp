@@ -146,4 +146,3 @@ std::string RNA::getGeneric(const std::vector<std::string>& states) const
 }
 
 /******************************************************************************/
-

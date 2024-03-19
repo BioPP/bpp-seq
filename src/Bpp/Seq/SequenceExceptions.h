@@ -10,12 +10,11 @@
 #include "Alphabet/Alphabet.h"
 #include "CoreSequence.h"
 
-#include<string>
-#include<memory>
+#include <string>
+#include <memory>
 
 namespace bpp
 {
-
 /**
  * @brief The sequence exception base class.
  *
@@ -37,14 +36,14 @@ public:
    * @param text A message to be passed to the exception hierarchy.
    * @param seq A const pointer toward the sequence that threw the exception. The exception object is not managing the pointer.
    */
-  SequenceException(const std::string& text, const CoreSequenceInterface* seq):
-      Exception("SequenceException: " + text + (seq ? "(" + seq->getName() + ")" : std::string(""))),
-  sequence_(seq)
+  SequenceException(const std::string& text, const CoreSequenceInterface* seq) :
+    Exception("SequenceException: " + text + (seq ? "(" + seq->getName() + ")" : std::string(""))),
+    sequence_(seq)
   {}
-  
+
   SequenceException(const SequenceException& se) :
-      Exception(se),
-      sequence_(se.sequence_)
+    Exception(se),
+    sequence_(se.sequence_)
   {}
 
   SequenceException& operator=(const SequenceException& se)
@@ -79,7 +78,7 @@ public:
    * @param seq A const pointer toward the sequence that threw the exception.
    */
   EmptySequenceException(const std::string& text, const CoreSequenceInterface* seq) :
-      SequenceException("EmptySequenceException: " + text, seq)
+    SequenceException("EmptySequenceException: " + text, seq)
   {}
 
   virtual ~EmptySequenceException() {}
@@ -99,7 +98,7 @@ public:
    * @param seq A const pointer toward the sequence that threw the exception.
    */
   SequenceWithGapException(const std::string& text, const CoreSequenceInterface* seq) :
-      SequenceException("SequenceWithGapException: " + text, seq)
+    SequenceException("SequenceWithGapException: " + text, seq)
   {}
 
   virtual ~SequenceWithGapException() {}
@@ -121,7 +120,7 @@ public:
    * @param seq  A const pointer toward the sequence that threw the exception.
    */
   SequenceNotAlignedException(const std::string& text, const CoreSequenceInterface* seq) :
-      SequenceException("SequenceNotAlignedException: " + text, seq)
+    SequenceException("SequenceNotAlignedException: " + text, seq)
   {}
 
   virtual ~SequenceNotAlignedException() {}

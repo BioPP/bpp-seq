@@ -230,7 +230,7 @@ int AbstractAlphabet::getGeneric(const std::vector<int>& states) const
     vector<int> tmp_s = this->getAlias(states[i]); // get the states for generic characters
     for (size_t j = 0; j < tmp_s.size(); ++j)
     {
-      m[tmp_s[j]]++;// add each state to the list
+      m[tmp_s[j]]++; // add each state to the list
     }
   }
   vector<int> ve = MapTools::getKeys(m);
@@ -264,7 +264,7 @@ std::string AbstractAlphabet::getGeneric(const std::vector<std::string>& states)
     vector<string> tmp_s = this->getAlias(states[i]); // get the states for generic characters
     for (size_t j = 0; j < tmp_s.size(); ++j)
     {
-      m[tmp_s[j]]++;// add each state to the list
+      m[tmp_s[j]]++; // add each state to the list
     }
   }
   vector<string> ve = MapTools::getKeys(m);

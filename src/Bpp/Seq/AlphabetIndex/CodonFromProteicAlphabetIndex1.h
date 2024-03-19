@@ -54,7 +54,8 @@ public:
 
   virtual ~CodonFromProteicAlphabetIndex1() {}
 
-  CodonFromProteicAlphabetIndex1* clone() const override {
+  CodonFromProteicAlphabetIndex1* clone() const override
+  {
     return new CodonFromProteicAlphabetIndex1(*this);
   }
 
@@ -84,7 +85,7 @@ private:
   {
     for (int i = 0; i < 64; i++)
     {
-      vIndex_[getAlphabet()->getStateIndex(i)-1] = gencode_->isStop(i) ? 0 : protAlphIndex_->getIndex(gencode_->translate(i));
+      vIndex_[getAlphabet()->getStateIndex(i) - 1] = gencode_->isStop(i) ? 0 : protAlphIndex_->getIndex(gencode_->translate(i));
     }
   }
 };

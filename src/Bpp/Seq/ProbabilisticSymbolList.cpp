@@ -25,7 +25,7 @@ ProbabilisticSymbolList::ProbabilisticSymbolList(const DTable& list, shared_ptr<
   setContent(list);
 }
 
-ProbabilisticSymbolList::ProbabilisticSymbolList(const vector< vector<double> >& list, shared_ptr<const Alphabet>& alpha) :
+ProbabilisticSymbolList::ProbabilisticSymbolList(const vector< vector<double>>& list, shared_ptr<const Alphabet>& alpha) :
   alphabet_(alpha), content_(alpha->getResolvedChars().size(), 0)
 {
   content_.setRowNames(alpha->getResolvedChars());
@@ -88,7 +88,7 @@ void ProbabilisticSymbolList::setContent(const DTable& list)
         throw Exception("ProbabilisticSymbolList::setContent. Row names / resolved characters of alphabet mismatch at " + TextTools::toString(column_names[i]) + " and " + TextTools::toString(resolved_chars[i]) + ".");
     }
   }
-  else// DTable has no row names
+  else // DTable has no row names
 
   {
     if (list.getNumberOfRows() != alphabet_->getResolvedChars().size())
@@ -129,7 +129,7 @@ string ProbabilisticSymbolList::toString() const
 
 /****************************************************************************************/
 
-void ProbabilisticSymbolList::setContent(const std::vector<std::vector<double> >& list)
+void ProbabilisticSymbolList::setContent(const std::vector<std::vector<double>>& list)
 {
   if (list.size() == 0)
     return;
@@ -160,8 +160,8 @@ void ProbabilisticSymbolList::addElement(const std::vector<double>& element)
     if (element.size() > content_.getNumberOfRows())
     {
       throw BadSizeException("ProbabilisticSymbolList::addElement: too long element: ",
-		             element.size(),
-                             content_.getNumberOfRows());
+            element.size(),
+            content_.getNumberOfRows());
     }
     else
       content_.addColumn(element);
@@ -199,4 +199,3 @@ void ProbabilisticSymbolList::setElement(size_t pos, const std::vector<double>& 
     content_.setColumn(element, pos);
   }
 }
-

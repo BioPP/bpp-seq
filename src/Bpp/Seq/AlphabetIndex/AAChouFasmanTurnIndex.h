@@ -51,7 +51,8 @@ public:
 
   virtual ~AAChouFasmanTurnIndex() {}
 
-  AAChouFasmanTurnIndex* clone() const override {
+  AAChouFasmanTurnIndex* clone() const override
+  {
     return new AAChouFasmanTurnIndex();
   }
 
@@ -66,7 +67,8 @@ public:
     return turn_[getAlphabet()->getStateIndex(state) - 1];
   }
 
-  const std::vector<double>& indexVector() const override {
+  const std::vector<double>& indexVector() const override
+  {
     return turn_;
   }
 };

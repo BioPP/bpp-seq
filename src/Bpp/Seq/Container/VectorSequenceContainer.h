@@ -34,7 +34,6 @@ protected:
   VectorMappedContainer<SequenceType> sequenceVectorMap_;
 
 public:
-
   /**
    * @brief Build a container with pointers to sequence objects.
    *
@@ -45,11 +44,12 @@ public:
    */
   TemplateVectorSequenceContainer(
       std::shared_ptr<const Alphabet> alphabet,
-      std::vector<std::unique_ptr<SequenceType>>& vs):
+      std::vector<std::unique_ptr<SequenceType>>& vs) :
     AbstractTemplateSequenceContainer<SequenceType, std::string>(alphabet),
     sequenceVectorMap_()
   {
-    for (auto& seqPtr : vs) {
+    for (auto& seqPtr : vs)
+    {
       addSequence(seqPtr->getName(), seqPtr);
     }
   }
@@ -60,8 +60,8 @@ public:
    * @param alphabet The alphabet of the container.
    */
   TemplateVectorSequenceContainer(std::shared_ptr<const Alphabet> alphabet) :
-      AbstractTemplateSequenceContainer<SequenceType>(alphabet),
-      sequenceVectorMap_()
+    AbstractTemplateSequenceContainer<SequenceType>(alphabet),
+    sequenceVectorMap_()
   {}
 
   /**
@@ -76,7 +76,7 @@ public:
    * @param vsc The VectorSequenceContainer to copy into this container.
    */
   TemplateVectorSequenceContainer(
-      const TemplateVectorSequenceContainer<SequenceType>& vsc):
+      const TemplateVectorSequenceContainer<SequenceType>& vsc) :
     AbstractTemplateSequenceContainer<SequenceType, std::string>(vsc),
     sequenceVectorMap_()
   {
@@ -89,13 +89,12 @@ public:
   }
 
 
-
   /**
    * @brief Copy from a SequenceContainer.
    *
    * @param sc The SequenceContainer to copy into this container.
    */
-  TemplateVectorSequenceContainer(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc):
+  TemplateVectorSequenceContainer(const TemplateSequenceContainerInterface<SequenceType, std::string>& sc) :
     AbstractTemplateSequenceContainer<SequenceType>(sc.getAlphabet()),
     sequenceVectorMap_()
   {
@@ -149,7 +148,7 @@ public:
   }
 
   virtual ~TemplateVectorSequenceContainer() {}
-  
+
   void clear() override
   {
     sequenceVectorMap_.clear();
@@ -165,7 +164,6 @@ public:
   /** @} */
 
 
-
   /**
    * @name The SequenceContainer interface.
    *
@@ -175,14 +173,14 @@ public:
   using AbstractTemplateSequenceContainer<SequenceType, std::string>::getComments;
   using AbstractTemplateSequenceContainer<SequenceType, std::string>::setComments;
 
-  TemplateVectorSequenceContainer<SequenceType>* createEmptyContainer() const override 
+  TemplateVectorSequenceContainer<SequenceType>* createEmptyContainer() const override
   {
     auto alphaPtr = getAlphabet();
     TemplateVectorSequenceContainer<SequenceType>* vsc = new TemplateVectorSequenceContainer<SequenceType>(alphaPtr);
     vsc->setComments(getComments());
     return vsc;
   }
- 
+
   double getStateValueAt(size_t sitePosition, const std::string& sequenceKey, int state) const override
   {
     return sequence(sequenceKey).getStateValueAt(sitePosition, state);
@@ -202,14 +200,14 @@ public:
   {
     return sequence(sequencePosition)(sitePosition, state);
   }
- 
+
   size_t getNumberOfSequences() const override
-  { 
+  {
     return sequenceVectorMap_.getSize();
   }
- 
+
   std::vector<std::string> getSequenceKeys() const override
-  { 
+  {
     return sequenceVectorMap_.getObjectNames();
   }
 
@@ -219,7 +217,7 @@ public:
   }
 
   const std::string& sequenceKey(size_t sequencePosition) const override
-  { 
+  {
     return sequenceVectorMap_.getObjectName(sequencePosition);
   }
 
@@ -271,12 +269,12 @@ public:
     std::shared_ptr<SequenceType> sequencePtr2(sequencePtr.release(), SwitchDeleter<SequenceType>());
     sequenceVectorMap_.appendObject(sequencePtr2, sequenceKey, true);
   }
- 
+
   std::unique_ptr<SequenceType> removeSequence(const std::string& sequenceKey) override
   {
     std::shared_ptr<SequenceType> ptr = sequenceVectorMap_.removeObject(sequenceKey);
     std::get_deleter<SwitchDeleter<SequenceType>, SequenceType>(ptr)->off();
-    return(std::unique_ptr<SequenceType>(ptr.get())); //Not elegant but safe because of the complete encapsulation.
+    return std::unique_ptr<SequenceType>(ptr.get()); // Not elegant but safe because of the complete encapsulation.
   }
 
   void deleteSequence(const std::string& sequenceKey) override
@@ -322,15 +320,16 @@ public:
   {
     std::shared_ptr<SequenceType> ptr = sequenceVectorMap_.removeObject(sequencePosition);
     std::get_deleter<SwitchDeleter<SequenceType>, SequenceType>(ptr)->off();
-    return(std::unique_ptr<SequenceType>(ptr.get())); //Not elegant but safe because of the complete encapsulation.
+    return std::unique_ptr<SequenceType>(ptr.get()); // Not elegant but safe because of the complete encapsulation.
   }
 
- 
+
   std::vector<std::string> getSequenceNames() const override
   {
     size_t nbSeq = getNumberOfSequences();
     std::vector<std::string> vs(nbSeq);
-    for (size_t i = 0; i < nbSeq; ++i) {
+    for (size_t i = 0; i < nbSeq; ++i)
+    {
       vs[i] = sequence(i).getName();
     }
     return vs;
@@ -344,7 +343,8 @@ public:
     {
       sequence_(i).setName(names[i]);
     }
-    if (updateKeys) {
+    if (updateKeys)
+    {
       sequenceVectorMap_.setObjectNames(names);
     }
   }
@@ -353,14 +353,14 @@ public:
   {
     size_t nbSeq = getNumberOfSequences();
     std::vector<Comments> vs(nbSeq);
-    for (size_t i = 0; i < nbSeq; ++i) {
+    for (size_t i = 0; i < nbSeq; ++i)
+    {
       vs[i] = sequence(i).getComments();
     }
     return vs;
   }
 
   /** @} */
-
 
 
   /**
@@ -372,9 +372,8 @@ public:
   {
     addSequence(sequencePtr->getName(), sequencePtr);
   }
- 
-protected:
 
+protected:
   virtual SequenceType& sequence_(size_t sequencePosition)
   {
     return sequenceVectorMap_.object(sequencePosition);
@@ -385,17 +384,14 @@ protected:
    * @brief getSequence with given key
    *
    */
-  
   virtual SequenceType& sequence_(const std::string& sequenceKey)
   {
     return sequenceVectorMap_.object(sequenceKey);
   }
-
 };
 
-//Aliases:
+// Aliases:
 using VectorSequenceContainer = TemplateVectorSequenceContainer<Sequence>;
 using ProbabilisticVectorSequenceContainer = TemplateVectorSequenceContainer<ProbabilisticSequence>;
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORSEQUENCECONTAINER_H

@@ -29,7 +29,7 @@ class IntSymbolListInterface :
 {
 public:
   typedef int SymbolType;
-  
+
 public:
   IntSymbolListInterface() {}
 
@@ -108,10 +108,10 @@ public:
  */
 class IntSymbolList :
   public virtual IntSymbolListInterface,
-  public virtual AbstractTemplateSymbolList<int> //This needs to be virtual because of diamond inheritence
+  public virtual AbstractTemplateSymbolList<int> // This needs to be virtual because of diamond inheritence
 {
 public:
-  IntSymbolList(std::shared_ptr<const Alphabet> alpha) : 
+  IntSymbolList(std::shared_ptr<const Alphabet> alpha) :
     AbstractTemplateSymbolList<int>(alpha)
   {}
 
@@ -142,10 +142,10 @@ public:
   /**
    * @brief The copy constructor.
    */
-  IntSymbolList(const IntSymbolList& list):
-      AbstractTemplateSymbolList<int>(list)
+  IntSymbolList(const IntSymbolList& list) :
+    AbstractTemplateSymbolList<int>(list)
   {}
-	
+
   /**
    * @brief The generic assignment operator.
    */
@@ -197,7 +197,7 @@ public:
   }
 
   using AbstractTemplateSymbolList::setElement;
-  
+
   void setElement(size_t pos, const std::string& c) override
   {
     if (pos >= content_.size())
@@ -269,7 +269,7 @@ public:
    */
   EventDrivenIntSymbolList(
       const std::vector<std::string>& list,
-      std::shared_ptr<const Alphabet> alpha):
+      std::shared_ptr<const Alphabet> alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     IntSymbolList(alpha),
     AbstractTemplateEventDrivenSymbolList<int>(alpha)
@@ -287,7 +287,7 @@ public:
    */
   EventDrivenIntSymbolList(
       const std::vector<int>& list,
-      std::shared_ptr<const Alphabet> alpha):
+      std::shared_ptr<const Alphabet> alpha) :
     AbstractTemplateSymbolList<int>(list, alpha),
     IntSymbolList(list, alpha),
     AbstractTemplateEventDrivenSymbolList<int>(list, alpha)

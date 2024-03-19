@@ -126,7 +126,7 @@ void EventDrivenIntSymbolList::addElement(size_t pos, const string& c)
 
 void EventDrivenIntSymbolList::setElement(size_t pos, const string& c)
 {
- AbstractTemplateEventDrivenSymbolList<int>::setElement(pos, getAlphabet()->charToInt(c));
+  AbstractTemplateEventDrivenSymbolList<int>::setElement(pos, getAlphabet()->charToInt(c));
 }
 
 /****************************************************************************************/
@@ -146,4 +146,3 @@ string EventDrivenIntSymbolList::getChar(size_t pos) const
   }
   return c;
 }
-

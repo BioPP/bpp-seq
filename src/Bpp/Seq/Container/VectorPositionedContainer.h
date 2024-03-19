@@ -31,16 +31,15 @@ class VectorPositionedContainer :
   public virtual Clonable
 {
 protected:
-  std::vector< std::shared_ptr<T> > positions_;
+  std::vector< std::shared_ptr<T>> positions_;
 
 public:
-  
   /**
    * @brief Build a new container from a set of positions.
    *
    * @param vs A std::vector of objects.
    */
-  VectorPositionedContainer(const std::vector<std::shared_ptr<T> >& vs) :
+  VectorPositionedContainer(const std::vector<std::shared_ptr<T>>& vs) :
     positions_(vs)
   {}
 
@@ -92,7 +91,7 @@ public:
 
   bool isAvailablePosition(size_t objectIndex) const
   {
-    return objectIndex < getSize() && (positions_[objectIndex] == nullptr || positions_[objectIndex]->size() == 0); 
+    return objectIndex < getSize() && (positions_[objectIndex] == nullptr || positions_[objectIndex]->size() == 0);
   }
 
   bool hasObjectWithPosition(size_t objectIndex) const
@@ -116,7 +115,7 @@ public:
     positions_.clear();
   }
 
-  
+
   /**
    * @brief Nullify all elements
    */
@@ -192,7 +191,7 @@ public:
       throw IndexOutOfBoundsException("VectorPositionedContainer::removeObject.", objectIndex, 0, getSize());
 
     std::shared_ptr<T> ret = positions_[objectIndex];
-    
+
     positions_.erase(positions_.begin() + static_cast<std::ptrdiff_t>(objectIndex));
 
     return ret;
@@ -234,7 +233,7 @@ public:
     if (checkPosition && positions_[objectIndex] != nullptr)
       throw BadIntegerException("VectorPositionedContainer::setObject: object position already occupied in container ", (int)objectIndex);
 
-    const_cast<std::vector<std::shared_ptr<T> >& >(positions_)[objectIndex] = object;
+    const_cast<std::vector<std::shared_ptr<T>>& >(positions_)[objectIndex] = object;
   }
 };
 } // end of namespace bpp.

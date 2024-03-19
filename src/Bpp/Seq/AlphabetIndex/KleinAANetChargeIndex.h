@@ -72,12 +72,12 @@ public:
 public:
   double getIndex(int state) const override
   {
-    return charge_[getAlphabet()->getStateIndex(state)-1];
+    return charge_[getAlphabet()->getStateIndex(state) - 1];
   }
 
   double getIndex(const std::string& state) const override
   {
-    return charge_[getAlphabet()->getStateIndex(state)-1];
+    return charge_[getAlphabet()->getStateIndex(state) - 1];
   }
 
   const std::vector<double>& indexVector() const override { return charge_; }

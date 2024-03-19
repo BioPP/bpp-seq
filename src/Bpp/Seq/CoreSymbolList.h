@@ -130,7 +130,7 @@ public:
    * @param state     state in the alphabet
    * @return          The state value at the given position.
    */
- virtual double operator()(size_t position, int state) const = 0;
+  virtual double operator()(size_t position, int state) const = 0;
 };
 
 
@@ -249,7 +249,7 @@ public:
 };
 
 using IntCoreSymbolListInterface = TemplateCoreSymbolListInterface<int>;
-using ProbabilisticCoreSymbolListInterface = TemplateCoreSymbolListInterface< std::vector<double> >;
+using ProbabilisticCoreSymbolListInterface = TemplateCoreSymbolListInterface< std::vector<double>>;
 
 
 template<class T>
@@ -383,7 +383,6 @@ public:
   virtual ~TemplateEventDrivenCoreSymbolListInterface(){}
 
 public:
-
   /**
    * @name Events handling
    *
@@ -392,11 +391,11 @@ public:
   virtual size_t getNumberOfListeners() const = 0;
 
   virtual const CoreSymbolListListener<T>& listener(size_t i) const = 0;
-  
+
   virtual std::shared_ptr<const CoreSymbolListListener<T>> getListener(size_t i) const = 0;
 
   virtual CoreSymbolListListener<T>& listener(size_t i) = 0;
-  
+
   virtual std::shared_ptr<CoreSymbolListListener<T>> getListener(size_t i) = 0;
 
   virtual void addCoreSymbolListListener(std::shared_ptr<CoreSymbolListListener<T>> listener)  = 0;
@@ -441,8 +440,6 @@ protected:
 };
 
 using IntEventDrivenCoreSymbolListInterface = TemplateEventDrivenCoreSymbolListInterface<int>;
-using ProbabilisticEventDrivenCoreSymbolListInterface = TemplateEventDrivenCoreSymbolListInterface< std::vector<double> >;
-
-
+using ProbabilisticEventDrivenCoreSymbolListInterface = TemplateEventDrivenCoreSymbolListInterface< std::vector<double>>;
 } // end of namespace bpp.
 #endif // BPP_SEQ_CORESYMBOLLIST_H

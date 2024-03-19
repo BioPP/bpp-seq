@@ -162,10 +162,10 @@ public:
   std::unique_ptr<SequenceAnnotation> getPartAnnotation(size_t pos, size_t len) const override
   {
     return std::unique_ptr<SequenceAnnotation>(new SequenceQuality(
-      std::vector<int>(
-        qualScores_.begin() + static_cast<ptrdiff_t>(pos),
-        qualScores_.begin() + static_cast<ptrdiff_t>(pos + len)),
-      removable_));
+          std::vector<int>(
+          qualScores_.begin() + static_cast<ptrdiff_t>(pos),
+          qualScores_.begin() + static_cast<ptrdiff_t>(pos + len)),
+          removable_));
   }
 };
 
@@ -182,7 +182,7 @@ class SequenceWithQuality :
   public SequenceWithAnnotation
 {
 private:
-   std::shared_ptr<SequenceQuality> qualScores_;
+  std::shared_ptr<SequenceQuality> qualScores_;
 
 public:
   /**
@@ -198,7 +198,7 @@ public:
    * @throw BadCharException if a state is not alowed by the Alphabet
    */
   SequenceWithQuality(
-    std::shared_ptr<const Alphabet>& alpha) :
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(alpha),
     qualScores_(new SequenceQuality(0, false))
@@ -219,9 +219,9 @@ public:
    * @throw BadCharException if a state is not alowed by the Alphabet
    */
   SequenceWithQuality(
-    const std::string& name,
-    const std::string& sequence,
-    std::shared_ptr<const Alphabet>& alpha) :
+      const std::string& name,
+      const std::string& sequence,
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
@@ -245,10 +245,10 @@ public:
    * @author Vincent Cahais
    */
   SequenceWithQuality(
-    const std::string& name,
-    const std::string& sequence,
-    const Comments& comments,
-    std::shared_ptr<const Alphabet>& alpha) :
+      const std::string& name,
+      const std::string& sequence,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
@@ -272,10 +272,10 @@ public:
    * to the number of sequence states
    */
   SequenceWithQuality(
-    const std::string& name,
-    const std::string& sequence,
-    const std::vector<int>& quality,
-    std::shared_ptr<const Alphabet>& alpha) :
+      const std::string& name,
+      const std::string& sequence,
+      const std::vector<int>& quality,
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(quality, false))
@@ -302,11 +302,11 @@ public:
    * @author Vincent Cahais
    */
   SequenceWithQuality(
-    const std::string& name,
-    const std::string& sequence,
-    const std::vector<int>& quality,
-    const Comments& comments,
-    std::shared_ptr<const Alphabet>& alpha) :
+      const std::string& name,
+      const std::string& sequence,
+      const std::vector<int>& quality,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(quality, false))
@@ -327,9 +327,9 @@ public:
    * @throw BadIntException if a state is not alowed by the Alphabet
    */
   SequenceWithQuality(
-    const std::string& name,
-    const std::vector<int>& sequence,
-    std::shared_ptr<const Alphabet>& alpha) :
+      const std::string& name,
+      const std::vector<int>& sequence,
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
@@ -353,10 +353,10 @@ public:
    * @author Vincent Cahais
    */
   SequenceWithQuality(
-    const std::string& name,
-    const std::vector<int>& sequence,
-    const Comments& comments,
-    std::shared_ptr<const Alphabet>& alpha) :
+      const std::string& name,
+      const std::vector<int>& sequence,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(sequence.size(), false))
@@ -380,10 +380,10 @@ public:
    * to the number of sequence states
    */
   SequenceWithQuality(
-    const std::string& name,
-    const std::vector<int>& sequence,
-    const std::vector<int>& quality,
-    std::shared_ptr<const Alphabet>& alpha) :
+      const std::string& name,
+      const std::vector<int>& sequence,
+      const std::vector<int>& quality,
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, alpha),
     qualScores_(new SequenceQuality(quality, false))
@@ -410,11 +410,11 @@ public:
    * @author Vincent Cahais
    */
   SequenceWithQuality(
-    const std::string& name,
-    const std::vector<int>& sequence,
-    const std::vector<int>& quality,
-    const Comments& comments,
-    std::shared_ptr<const Alphabet>& alpha) :
+      const std::string& name,
+      const std::vector<int>& sequence,
+      const std::vector<int>& quality,
+      const Comments& comments,
+      std::shared_ptr<const Alphabet>& alpha) :
     AbstractTemplateSymbolList<int>(alpha),
     SequenceWithAnnotation(name, sequence, comments, alpha),
     qualScores_(new SequenceQuality(quality, false))
@@ -450,8 +450,8 @@ public:
    * to the number of sequence states
    */
   SequenceWithQuality(
-    const Sequence& s,
-    const std::vector<int>& sc) :
+      const Sequence& s,
+      const std::vector<int>& sc) :
     AbstractTemplateSymbolList<int>(sc, s.getAlphabet()),
     SequenceWithAnnotation(s),
     qualScores_(new SequenceQuality(sc, false))
@@ -564,8 +564,8 @@ public:
    * content
    */
   virtual void append(
-    const std::vector<int>& content,
-    const std::vector<int>& qualities)
+      const std::vector<int>& content,
+      const std::vector<int>& qualities)
   {
     if (content.size() != qualities.size())
       throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
@@ -587,8 +587,8 @@ public:
    * content
    */
   virtual void append(
-    const std::vector<std::string>& content,
-    const std::vector<int>& qualities)
+      const std::vector<std::string>& content,
+      const std::vector<int>& qualities)
   {
     if (content.size() != qualities.size())
       throw DimensionException("SequenceWithQuality::append: qualities must fit content size", qualities.size(), content.size());
@@ -610,8 +610,8 @@ public:
    * content
    */
   virtual void append(
-    const std::string& content,
-    const std::vector<int>& qualities)
+      const std::string& content,
+      const std::vector<int>& qualities)
   {
     if (content.size() / this->getAlphabet()->getStateCodingSize()
         != qualities.size())
@@ -653,7 +653,7 @@ public:
    * size
    */
   void addElement(
-    size_t pos, const std::string& c, int q)
+      size_t pos, const std::string& c, int q)
   {
     SequenceWithAnnotation::addElement(pos, c);
     qualScores_->setScore(pos, q);
@@ -694,11 +694,11 @@ public:
 
   /** @} */
 
-  //const Comments& getComments() const { return Commentable::getComments(); }
+  // const Comments& getComments() const { return Commentable::getComments(); }
 
-  //void setComments(const Comments& comments) { Commentable::setComments(comments); }
+  // void setComments(const Comments& comments) { Commentable::setComments(comments); }
 
-  //void clearComments() { Commentable::clearComments(); }
+  // void clearComments() { Commentable::clearComments(); }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCEWITHQUALITY_H

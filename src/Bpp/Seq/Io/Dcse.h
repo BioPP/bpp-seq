@@ -64,7 +64,7 @@ public:
    * @{
    */
   const std::string getFormatName() const override;
-  
+
   const std::string getFormatDescription() const override;
   /** @} */
 };

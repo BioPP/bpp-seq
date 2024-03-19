@@ -150,10 +150,13 @@ vector<string> SequenceWithAnnotation::getAnnotationTypes() const
   vector<string> types;
   for (unsigned int i = 0; i < getNumberOfListeners(); ++i)
   {
-    try {
+    try
+    {
       const SequenceAnnotation& anno = dynamic_cast<const SequenceAnnotation&>(listener(i));
       types.push_back(anno.getType());
-    } catch (bad_cast&) {}
+    }
+    catch (bad_cast&)
+    {}
   }
   return types;
 }

@@ -65,7 +65,7 @@ public:
    * @brief Reset all sequence keys.
    */
   virtual void setSequenceKeys(const std::vector<HashType>& sequenceKeys) = 0;
- 
+
   /**
    * @brief Get the value of a state at a given position
    *
@@ -79,7 +79,7 @@ public:
    * @brief Get the value of a state at a given position
    *
    * Same as getValueAt.
-   * 
+   *
    * @param sitePosition  index of the site
    * @param sequenceKey key of the sequence in the container
    * @param state state in the alphabet
@@ -99,7 +99,7 @@ public:
    * @brief Get the value of a state at a given position
    *
    * Same as getValueAt.
-   * 
+   *
    * @param sitePosition  index of the site
    * @param sequencePosition index of the sequence in the container
    * @param state state in the alphabet
@@ -153,7 +153,7 @@ public:
   virtual void deleteSequence(const HashType& sequenceKey) = 0;
 
   /** @} */
-  
+
   /**
    * @name Access by position
    *
@@ -174,10 +174,10 @@ public:
    * @param sequencePosition The position of the sequence.
    */
   virtual void deleteSequence(size_t sequencePosition) = 0;
-  
+
   /** @} */
 
-  
+
   /**
    * @name Index management
    *
@@ -214,7 +214,7 @@ public:
    * @return a vector with all sequence names.
    */
   virtual std::vector<std::string> getSequenceNames() const = 0;
-  
+
   /**
    * @brief Batch-set all sequence names.
    *
@@ -227,11 +227,9 @@ public:
    * @return a vector with all sequence comments.
    */
   virtual std::vector<Comments> getSequenceComments() const = 0;
-   /** @} */
-
+  /** @} */
 };
 
 using SequenceDataInterface = TemplateSequenceDataInterface<std::string>;
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCEDATA_H

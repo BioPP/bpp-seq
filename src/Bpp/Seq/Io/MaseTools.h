@@ -58,7 +58,7 @@ public:
    * @throw IOException If the specified set is not found.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType>>
   getSelectedSites(
       const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& sequences,
       const std::string& setName)
@@ -66,7 +66,6 @@ public:
     SiteSelection ss = getSiteSet(sequences.getComments(), setName);
     return SiteContainerTools::getSelectedPositions<SiteType, SequenceType>(sequences, ss);
   }
-
 
 
   /**
@@ -82,7 +81,7 @@ public:
    * @throw IOException If the specified set is not found.
    */
   template<class SequenceType, class HashType>
-  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType, HashType> > 
+  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType, HashType>>
   getSelectedSequences(
       const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
       const std::string& setName)

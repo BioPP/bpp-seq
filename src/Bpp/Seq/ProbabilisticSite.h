@@ -25,18 +25,17 @@ class ProbabilisticSiteInterface :
   public virtual CoreSiteInterface,
   public virtual ProbabilisticSymbolListInterface
 {
-  public:
-    virtual ~ProbabilisticSiteInterface() {}
+public:
+  virtual ~ProbabilisticSiteInterface() {}
 
-  public:
-    virtual ProbabilisticSiteInterface* clone() const = 0;
-	
+public:
+  virtual ProbabilisticSiteInterface* clone() const = 0;
 };
 
 class ProbabilisticSite :
   public virtual ProbabilisticSiteInterface,
   public AbstractCoreSite,
-  public virtual ProbabilisticSymbolList //Diamond inheritence
+  public virtual ProbabilisticSymbolList // Diamond inheritence
 {
 public:
   /**
@@ -116,13 +115,13 @@ public:
     return *this;
   }
 
-   ProbabilisticSite& operator=(const ProbabilisticSiteInterface& site)
+  ProbabilisticSite& operator=(const ProbabilisticSiteInterface& site)
   {
     ProbabilisticSymbolList::operator=(site);
     AbstractCoreSite::operator=(site);
     return *this;
   }
- 
+
   /**
    * @name The Clonable interface
    *
@@ -142,7 +141,6 @@ public:
     if (sequencePosition  >= size()) throw IndexOutOfBoundsException("ProbabilisticSites::getStateValueAt.", sequencePosition, 0, size() - 1);
     return (*this)[sequencePosition][static_cast<size_t>(state)];
   }
-
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_PROBABILISTICSITE_H

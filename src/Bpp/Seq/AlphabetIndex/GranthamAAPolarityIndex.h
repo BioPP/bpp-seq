@@ -70,12 +70,12 @@ public:
 public:
   double getIndex(int state) const override
   {
-    return polarity_[getAlphabet()->getStateIndex(state)-1];
+    return polarity_[getAlphabet()->getStateIndex(state) - 1];
   }
 
   double getIndex(const std::string& state) const override
   {
-    return polarity_[getAlphabet()->getStateIndex(state)-1];
+    return polarity_[getAlphabet()->getStateIndex(state) - 1];
   }
 
   const std::vector<double>& indexVector() const override { return polarity_; }

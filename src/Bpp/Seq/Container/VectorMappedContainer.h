@@ -121,11 +121,11 @@ public:
   }
 
   using VectorPositionedContainer<T>::getObject;
-  
+
   using VectorPositionedContainer<T>::object;
-  
+
   using MappedNamedContainer<T>::getObject;
-  
+
   using MappedNamedContainer<T>::object;
 
   using MappedNamedContainer<T>::hasObject;

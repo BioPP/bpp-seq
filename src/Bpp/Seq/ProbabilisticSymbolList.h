@@ -28,12 +28,12 @@ namespace bpp
  *
  */
 class ProbabilisticSymbolListInterface :
-  public virtual ProbabilisticCoreSymbolListInterface  
+  public virtual ProbabilisticCoreSymbolListInterface
 {
 public:
   typedef std::vector<double> SymbolType;
   typedef Table<double> DTable;
-  
+
 public:
   ProbabilisticSymbolListInterface() {}
 
@@ -41,11 +41,10 @@ public:
   virtual ~ProbabilisticSymbolListInterface() {}
 
 public:
-
   virtual const DTable& getTable() const = 0;
-  
+
   using ProbabilisticCoreSymbolListInterface::setContent;
-  
+
   virtual void setContent(const DTable& list) = 0;
 };
 
@@ -62,7 +61,6 @@ public:
 class ProbabilisticSymbolList :
   public virtual ProbabilisticSymbolListInterface
 {
-
 private:
   /**
    * @brief The Alphabet attribute must be initialized in the constructor and then can never be changed.
@@ -102,7 +100,7 @@ public:
    * @param alpha The alphabet to use.
    * @throw If the content is internally inconsistent, or is inconsistent with the specified alphabet.
    */
-  ProbabilisticSymbolList(const std::vector< std::vector<double> >& list, std::shared_ptr<const Alphabet>& alpha);
+  ProbabilisticSymbolList(const std::vector< std::vector<double>>& list, std::shared_ptr<const Alphabet>& alpha);
 
   /**
    * @brief The generic copy constructor.
@@ -142,12 +140,12 @@ public:
 
 public:
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
-  
+
   const Alphabet& alphabet() const override { return *alphabet_; }
 
   size_t size() const override { return static_cast<size_t>(content_.getNumberOfColumns()); }
 
-  void setContent(const std::vector<std::vector<double> >& list) override;
+  void setContent(const std::vector<std::vector<double>>& list) override;
 
   void setContent(const DTable& list) override;
 
@@ -181,7 +179,7 @@ public:
     content_.deleteColumns(pos, len);
   }
 
-  const std::vector<std::vector<double> >& getContent() const override
+  const std::vector<std::vector<double>>& getContent() const override
   {
     return content_.getData();
   }

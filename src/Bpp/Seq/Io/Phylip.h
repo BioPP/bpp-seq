@@ -130,8 +130,8 @@ public:
 protected:
   // Reading tools:
   const std::vector<std::string> splitNameAndSequence(const std::string& s) const;
-  void readSequential (std::istream& in, SequenceContainerInterface & asc) const;
-  void readInterleaved(std::istream& in, SequenceContainerInterface & asc) const;
+  void readSequential (std::istream& in, SequenceContainerInterface& asc) const;
+  void readInterleaved(std::istream& in, SequenceContainerInterface& asc) const;
   // Writing tools:
   std::vector<std::string> getSizedNames(const std::vector<std::string>& names) const;
   void writeSequential(std::ostream& out, const SiteContainerInterface& sc) const;

@@ -6,7 +6,6 @@
 #define BPP_SEQ_SEQUENCEPOSITIONITERATORS_H
 
 
-
 // from STL
 #include <string>
 

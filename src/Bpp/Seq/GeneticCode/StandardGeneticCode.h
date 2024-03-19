@@ -37,12 +37,12 @@ public:
 
   std::vector<int> getStopCodonsAsInt() const
   {
-    return std::vector<int> ({48,50,56});
+    return std::vector<int>({48, 50, 56});
   }
 
   std::vector<std::string> getStopCodonsAsChar() const
   {
-    return std::vector<std::string> ({"TAA","TAG","TGA"});
+    return std::vector<std::string>({"TAA", "TAG", "TGA"});
   }
 
   bool isStop(int state) const

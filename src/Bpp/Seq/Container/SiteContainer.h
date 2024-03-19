@@ -116,12 +116,10 @@ public:
    * @brief Set all coordinate attributes.
    */
   virtual void reindexSites() override = 0;
-
 };
 
-//Aliases:
+// Aliases:
 using SiteContainerInterface = TemplateSiteContainerInterface<Site, Sequence, std::string>;
 using ProbabilisticSiteContainerInterface = TemplateSiteContainerInterface<ProbabilisticSite, ProbabilisticSequence, std::string>;
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINER_H

@@ -6,7 +6,6 @@
 #define BPP_SEQ_ALPHABETINDEX_MIYATAAACHEMICALDISTANCE_H
 
 
-
 // from the STL:
 #include <string>
 
@@ -78,7 +77,8 @@ protected:
   void computeIndexMatrix_();
 
 public:
-  void setSymmetric(bool yn) {
+  void setSymmetric(bool yn)
+  {
     sym_ = yn;
     computeIndexMatrix_();
   }

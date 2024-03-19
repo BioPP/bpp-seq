@@ -51,7 +51,8 @@ public:
 
   virtual ~AAChouFasmanBSheetIndex() {}
 
-  AAChouFasmanBSheetIndex* clone() const override {
+  AAChouFasmanBSheetIndex* clone() const override
+  {
     return new AAChouFasmanBSheetIndex();
   }
 

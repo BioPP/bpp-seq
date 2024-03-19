@@ -22,6 +22,5 @@ public:
   virtual SiteType& nextSite() = 0;
   virtual bool hasMoreSites() const = 0;
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_SITEITERATOR_H

@@ -66,7 +66,7 @@
 namespace bpp
 {
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor" //Disable warning coming from the STL because of std::enable_shared_from_this
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor" // Disable warning coming from the STL because of std::enable_shared_from_this
 /**
  * @brief The Alphabet interface.
  *
@@ -110,6 +110,7 @@ public:
   /** @} */
 
 #pragma GCC diagnostic pop
+
 public:
   /**
    * @brief Get the complete name of a state given its int description.

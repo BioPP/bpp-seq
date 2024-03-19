@@ -24,7 +24,7 @@ MiyataAAChemicalDistance::MiyataAAChemicalDistance() :
 
 double MiyataAAChemicalDistance::getIndex(int state1, int state2) const
 {
-  double d = distanceMatrix_(getAlphabet()->getStateIndex(state1)-1,getAlphabet()->getStateIndex(state2)-1);
+  double d = distanceMatrix_(getAlphabet()->getStateIndex(state1) - 1, getAlphabet()->getStateIndex(state2) - 1);
   return sym_ ? NumTools::abs<double>(d) : d;
 }
 

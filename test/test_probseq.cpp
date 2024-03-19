@@ -38,31 +38,36 @@ using namespace bpp;
 using DTable = ProbabilisticSymbolListInterface::DTable;
 
 // convert a vector of string to a string
-const string str(const vector<string> & v) {
-
+const string str(const vector<string>& v)
+{
   string s = "[";
   for (vector<string>::const_iterator i = v.begin(); i != v.end(); ++i)
+  {
     s += " " + *i;
+  }
   s += " ]";
 
   return s;
 }
 
 // basic info about an alphabet
-void alphabetInfo(shared_ptr<const Alphabet> a) {
-
+void alphabetInfo(shared_ptr<const Alphabet> a)
+{
   cerr << "alphabet is of size : " << a->getSize() << endl;
   cerr << "supported chars : " << str(a->getSupportedChars()) << endl;
   cerr << "resolved chars : " << str(a->getResolvedChars()) << endl;
 }
 
 // initialize empty (Probabilistic-) SymbolLists just to see
-void initEmptyLists(shared_ptr<const Alphabet> a) {
+void initEmptyLists(shared_ptr<const Alphabet> a)
+{
   IntSymbolList list(a);
   ProbabilisticSymbolList p_list(a);
 }
-void initEmptyLists(const vector< shared_ptr<const Alphabet> > as) { // for several
-  for (auto a : as) {
+void initEmptyLists(const vector< shared_ptr<const Alphabet>> as)   // for several
+{
+  for (auto a : as)
+  {
     initEmptyLists(a);
   }
 }
@@ -70,10 +75,10 @@ void initEmptyLists(const vector< shared_ptr<const Alphabet> > as) { // for seve
 /*
  * MAIN
  */
-int main() {
-
+int main()
+{
   cerr << "========================================================" << endl;
-      
+
   // initialize alphabets
   cerr << "init binary alphabet...";
   shared_ptr<const Alphabet> a = make_shared<const BinaryAlphabet>();
@@ -95,7 +100,7 @@ int main() {
   cerr << "========================================================" << endl;
   cerr << " LISTS " << endl;
   cerr << "========================================================" << endl;
-  
+
   /*
    * *** lists with binary content ***
    */
@@ -103,8 +108,8 @@ int main() {
   cerr << "***" << endl;
 
   // *** the normal version ***
-  string c[] = {"1","0","0"};
-  vector<string> content(c, c+sizeof(c)/sizeof(c[0]));
+  string c[] = {"1", "0", "0"};
+  vector<string> content(c, c + sizeof(c) / sizeof(c[0]));
 
   cerr << endl << "init binary symbol list with : " << str(content) << " ...";
   IntSymbolList list(content, a);
@@ -123,13 +128,13 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "site has coordinate : " << site->getCoordinate() << endl;
-  
+
   // *** the probabilistic version ***
   istringstream iss("0 1\n0.85 0.15\n0.99 0.01");
   auto data = DTable::read(iss, false, " ", false);
 
   cerr << endl << "init probabilistic symbol list with : " << endl;
-  
+
   DTable::write(*data, cerr, false);
   cerr << "...";
   ProbabilisticSymbolList p_list(*data, a);
@@ -149,7 +154,7 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "site has position : " << p_site->getCoordinate() << endl;
-  
+
   /*
    * *** lists with DNA content ***
    */
@@ -160,22 +165,22 @@ int main() {
 
   // *** the normal version ***
   string cc[] = {"G", "T", "C"};
-  vector<string> dna_content(cc,cc+sizeof(cc)/sizeof(cc[0]));
+  vector<string> dna_content(cc, cc + sizeof(cc) / sizeof(cc[0]));
 
   cerr << endl << "init DNA symbol list with : " << str(dna_content) << " ...";
-  IntSymbolList dna_list(dna_content,dna);
+  IntSymbolList dna_list(dna_content, dna);
   cerr << "OK." << endl;
 
   cerr << "list contains : " << dna_list.toString() << endl;
 
   // sequence
   cerr << endl << "init DNA sequence with : " << str(dna_content) << " ...";
-  Sequence dna_seq("basic DNA sequence", dna_content,dna);
+  Sequence dna_seq("basic DNA sequence", dna_content, dna);
   cerr << "OK." << endl;
 
   // site
   cerr << endl << "init DNA site with : " << str(dna_content) << " and position 23...";
-  Site dna_site(dna_content,dna,23);
+  Site dna_site(dna_content, dna, 23);
   cerr << "OK." << endl;
 
   cerr << "site has position : " << dna_site.getCoordinate() << endl;
@@ -191,7 +196,7 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "probabilistic list contains : " << endl;
-  
+
   DTable::write(dna_p_list.getTable(), cerr, false);
 
 
@@ -202,12 +207,12 @@ int main() {
 
   // site
   cerr << endl << "init DNA probabilistic site with its content...";
-  ProbabilisticSite dna_p_site(*dna_data,dna,5);
+  ProbabilisticSite dna_p_site(*dna_data, dna, 5);
   cerr << "OK." << endl;
 
   cerr << "site has position : " << dna_p_site.getCoordinate() << endl;
 
-  
+
   cerr << "========================================================" << endl;
   cerr << "     CONTAINERS      " << endl;
   cerr << "========================================================" << endl;
@@ -228,7 +233,7 @@ int main() {
 
   cerr << "=========================" << endl;
   cerr << "     BINARY " << endl;
-  
+
   cerr << endl << "add binary sequence " << seq->toString() << " to binary container...";
   container.addSequence(seq->getName(), seq);
   cerr << "OK." << endl;
@@ -268,10 +273,12 @@ int main() {
   cerr << endl << fasta_in << endl;
   fasta.appendSequencesFromStream(fasta_iss, container);
   cerr << "OK." << endl;
-  
+
   cerr << "binary container contains : " << endl << endl;
-  for(size_t i = 0; i < container.getNumberOfSequences(); ++i)
+  for (size_t i = 0; i < container.getNumberOfSequences(); ++i)
+  {
     cerr << container.sequence(i).toString() << endl;
+  }
   cerr << endl;
 
   // *** the probabilistic version ***
@@ -293,7 +300,8 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "binary probabilistic container contains : " << endl << endl;
-  for( size_t i = 0; i < p_container.getNumberOfSequences(); ++i) {
+  for ( size_t i = 0; i < p_container.getNumberOfSequences(); ++i)
+  {
     DTable::write(p_container.sequence(i).getContent(), cerr, false);
     cerr << endl;
   }
@@ -315,8 +323,10 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "DNA container contains : " << endl << endl;
-  for(size_t i = 0; i < dna_container.getNumberOfSequences(); ++i)
+  for (size_t i = 0; i < dna_container.getNumberOfSequences(); ++i)
+  {
     cerr << dna_container.sequence(i).toString() << endl;
+  }
   cerr << endl;
 
   // DNA...
@@ -345,18 +355,18 @@ int main() {
   cerr << "OK." << endl;
 
   cerr << "dna prob. container contains : " << endl << endl;
-  for(size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i) {
+  for (size_t i = 0; i < dna_p_container.getNumberOfSequences(); ++i)
+  {
     DTable::write(dna_p_container.sequence(i).getTable(), cerr, false);
     cerr << endl;
   }
 
-  
 
   cerr << "String of the 1st site:" << endl;
-  
+
   cerr << dna_p_container.site(0).toString() << endl << endl;
   cerr << "*******************************" << endl << endl;
-  
+
   cerr << "DNA PASTA OUTPUT: " << endl << endl;
   cerr << "Regular container: " << endl << endl;
 

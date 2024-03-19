@@ -152,7 +152,6 @@ public:
    */
 
   virtual SequencedValuesContainer* createEmptyContainer() const = 0;
-
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCEDVALUESCONTAINER_H

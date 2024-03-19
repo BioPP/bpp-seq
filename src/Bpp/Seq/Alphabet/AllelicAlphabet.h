@@ -133,7 +133,7 @@ public:
   {
     return *alph_;
   }
-  
+
   std::string getAlphabetType() const override;
 
   int getUnknownCharacterCode() const override
@@ -166,7 +166,7 @@ private:
 
 public:
     AllelicTransliterator(std::shared_ptr<const AllelicAlphabet> alph) :
-	AbstractTransliterator(), alph_(alph)
+      AbstractTransliterator(), alph_(alph)
     {}
 
     std::shared_ptr<const Alphabet> getSourceAlphabet() const override
@@ -239,4 +239,4 @@ private:
 };
 } // end of namespace bpp.
 
-#endif// BPP_SEQ_ALPHABET_ALLELICALPHABET_H
+#endif // BPP_SEQ_ALPHABET_ALLELICALPHABET_H

@@ -72,6 +72,5 @@ public:
 
   /** @} */
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_ABSTRACTOALIGNMENT_H

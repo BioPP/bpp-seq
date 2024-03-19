@@ -22,7 +22,7 @@ namespace bpp
  * Sequence objects are stored internally and indexed.
  * The interface implements two access methods:
  * - Per key,
- * - Per position in the container. 
+ * - Per position in the container.
  *
  * @see Sequence
  */
@@ -35,7 +35,6 @@ public:
   virtual ~TemplateSequenceContainerInterface() {}
 
 public:
-
   /**
    * @brief Return a copy of this container, but with no data inside.
    *
@@ -98,7 +97,7 @@ public:
    * @return The element at the given position.
    */
   virtual const typename SequenceType::ElementType& valueAt(const HashType& sequenceKey, size_t sitePosition) const = 0;
-  
+
   /**
    * @brief Get the content of the dataset at a specific position (sequence key, site postion).
    *
@@ -116,7 +115,7 @@ public:
    *
    * @{
    */
-  
+
   /**
    * @brief Retrieve a sequence object from the container.
    *
@@ -168,7 +167,7 @@ public:
    * @return The element at the given position.
    */
   virtual const typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t sitePosition) const = 0;
- 
+
   /**
    * @brief Get the content of the dataset at a specific position (sequence position, site postion).
    *
@@ -178,10 +177,9 @@ public:
    */
   virtual typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t sitePosition) = 0;
   /**@} */
-
 };
 
-//Aliases:
+// Aliases:
 using SequenceContainerInterface = TemplateSequenceContainerInterface<Sequence>;
 using ProbabilisticSequenceContainerInterface = TemplateSequenceContainerInterface<ProbabilisticSequence>;
 
@@ -192,10 +190,11 @@ private:
   bool doDelete_;
 
 public:
-  SwitchDeleter(): doDelete_(true) {}
+  SwitchDeleter() : doDelete_(true) {}
 
 public:
-  void operator()(T* ptr) const {
+  void operator()(T* ptr) const
+  {
     if (doDelete_) delete ptr;
   }
 
@@ -204,8 +203,5 @@ public:
 
   bool isOn() const { return doDelete_; }
 };
-
-
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCECONTAINER_H

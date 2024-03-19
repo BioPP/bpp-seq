@@ -22,6 +22,5 @@ public:
   virtual std::unique_ptr<SequenceType> nextSequence() = 0;
   virtual bool hasMoreSequences() const = 0;
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCEITERATOR_H

@@ -29,8 +29,8 @@ void SequenceQuality::afterSequenceChanged(const IntSymbolListEditionEvent& even
 void SequenceQuality::afterSequenceInserted(const IntSymbolListInsertionEvent& event)
 {
   qualScores_.insert(
-    qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
-    event.getLength(), DEFAULT_QUALITY_VALUE);
+      qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
+      event.getLength(), DEFAULT_QUALITY_VALUE);
 }
 
 /******************************************************************************/
@@ -38,8 +38,8 @@ void SequenceQuality::afterSequenceInserted(const IntSymbolListInsertionEvent& e
 void SequenceQuality::afterSequenceDeleted(const IntSymbolListDeletionEvent& event)
 {
   qualScores_.erase(
-    qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
-    qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition() + event.getLength()));
+      qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition()),
+      qualScores_.begin() + static_cast<ptrdiff_t>(event.getPosition() + event.getLength()));
 }
 
 /******************************************************************************/

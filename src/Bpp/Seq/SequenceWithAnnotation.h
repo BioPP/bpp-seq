@@ -357,10 +357,12 @@ public:
     for (size_t i = 0; i < getNumberOfListeners(); ++i)
     {
       const auto& lstn = listener(i);
-      try {
+      try
+      {
         const SequenceAnnotation& anno = dynamic_cast<const SequenceAnnotation&>(lstn);
         if (anno.getType() == type) return true;
-      } catch (std::bad_cast&) {}
+      }
+      catch (std::bad_cast&) {}
     }
     return false;
   }
@@ -371,10 +373,12 @@ public:
     for (size_t i = 0; i < getNumberOfListeners(); ++i)
     {
       const auto& lstn = listener(i);
-      try {
+      try
+      {
         const SequenceAnnotation& anno = dynamic_cast<const SequenceAnnotation&>(lstn);
         if (anno.getType() == type) return anno;
-      } catch (std::bad_cast&) {}
+      }
+      catch (std::bad_cast&) {}
     }
     throw Exception("SequenceWithAnnotation::getAnnotation. No annotation found with type '" + type + "'.");
   }
@@ -384,10 +388,12 @@ public:
     for (size_t i = 0; i < getNumberOfListeners(); ++i)
     {
       auto& lstn = listener(i);
-      try {
+      try
+      {
         SequenceAnnotation& anno = dynamic_cast<SequenceAnnotation&>(lstn);
         if (anno.getType() == type) return anno;
-      } catch (std::bad_cast&) {}
+      }
+      catch (std::bad_cast&) {}
     }
     throw Exception("SequenceWithAnnotation::getAnnotation. No annotation found with type '" + type + "'.");
   }
@@ -410,7 +416,6 @@ public:
    * @throw Exception If the sequence names do not match.
    */
   virtual void merge(const SequenceWithAnnotation& swa);
-
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCEWITHANNOTATION_H

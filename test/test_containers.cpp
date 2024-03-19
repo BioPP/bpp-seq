@@ -11,8 +11,9 @@
 using namespace bpp;
 using namespace std;
 
-int main() {
-  //ProteicAlphabet* alpha = new ProteicAlphabet;
+int main()
+{
+  // ProteicAlphabet* alpha = new ProteicAlphabet;
   shared_ptr<const Alphabet> alpha = AlphabetTools::RNA_ALPHABET;
   auto sites = make_unique<VectorSiteContainer>(alpha);
 
@@ -25,7 +26,7 @@ int main() {
   cout << sites->sequence("seq2").toString() << endl;
   SiteContainerTools::removeGapOnlySites(*sites);
   cout << endl;
-  
+
   cout << sites->getNumberOfSites() << endl;
   cout << sites->sequence("seq1").toString() << endl;
   cout << sites->sequence("seq2").toString() << endl;
@@ -35,11 +36,11 @@ int main() {
 
   SiteContainerTools::removeGapSites(*sites, 0.);
   cout << endl;
-  
+
   cout << sites->getNumberOfSites() << endl;
   cout << sites->sequence("seq1").toString() << endl;
   cout << sites->sequence("seq2").toString() << endl;
-  
+
   if (sites->getNumberOfSites() != 24)
     throw Exception("Bad removal of gap sites");
 
@@ -47,17 +48,19 @@ int main() {
   CompressedVectorSiteContainer cvs(*sites);
 
   cout << "Compressed sequence" << endl;
-  
+
   cout << "Number of unique sites : " << cvs.getNumberOfUniqueSites() << endl;
-  if (cvs.getNumberOfUniqueSites() != 6) {
+  if (cvs.getNumberOfUniqueSites() != 6)
+  {
     throw Exception("Bad compression of sites");
   }
-  if (cvs.getSequenceNames() != sites->getSequenceNames()) {
+  if (cvs.getSequenceNames() != sites->getSequenceNames())
+  {
     throw Exception("Sequence names got lost when compressing sites!");
   }
   cout << cvs.getNumberOfSites() << endl;
   cout << cvs.sequence("seq1").toString() << endl;
   cout << cvs.sequence("seq2").toString() << endl;
 
-  return (sites->getNumberOfSites() == 24 ? 0 : 1);
+  return sites->getNumberOfSites() == 24 ? 0 : 1;
 }

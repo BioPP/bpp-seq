@@ -11,7 +11,8 @@
 using namespace bpp;
 using namespace std;
 
-int main() {
+int main()
+{
   shared_ptr<const Alphabet> alpha = AlphabetTools::RNA_ALPHABET;
   auto sites = make_unique<VectorSiteContainer>(alpha);
   auto seq1 = make_unique<Sequence>("seq1", "----AUGCCG---GCGU----UUU----G--G-CCGACGUGUUUU--", alpha);
@@ -21,17 +22,23 @@ int main() {
   sites->addSequence(seq2->getName(), seq2);
   sites->addSequence(seq3->getName(), seq3);
 
-  //Create alignment indexes:
+  // Create alignment indexes:
   RowMatrix<size_t> index1;
   SiteContainerTools::getSequencePositions(*sites, index1);
 
   vector<int> scores = SiteContainerTools::getColumnScores(index1, index1);
   VectorTools::print(scores);
-  for (size_t i = 0; i < sites->getNumberOfSites(); ++i) {
-    if (SiteTools::isGapOnly(sites->site(i))) {
-      if (scores[i] != 0) return 1;
-    } else {
-      if (scores[i] != 1) return 1;
+  for (size_t i = 0; i < sites->getNumberOfSites(); ++i)
+  {
+    if (SiteTools::isGapOnly(sites->site(i)))
+    {
+      if (scores[i] != 0)
+        return 1;
+    }
+    else
+    {
+      if (scores[i] != 1)
+        return 1;
     }
   }
 
@@ -49,14 +56,16 @@ int main() {
   vector<int> scores12 = SiteContainerTools::getColumnScores(index1, index2);
   VectorTools::print(scores12);
 
-  //Just a simple test, please check output by eye for better evaluation!
-  if (scores12.size() != index1.getNumberOfColumns()) return 1;
+  // Just a simple test, please check output by eye for better evaluation!
+  if (scores12.size() != index1.getNumberOfColumns())
+    return 1;
 
   vector<int> scores21 = SiteContainerTools::getColumnScores(index2, index1);
   VectorTools::print(scores21);
 
-  if (scores21.size() != index2.getNumberOfColumns()) return 1;
-  
+  if (scores21.size() != index2.getNumberOfColumns())
+    return 1;
+
   vector<double> sp12 = SiteContainerTools::getSumOfPairsScores(index1, index2);
   VectorTools::print(sp12);
 

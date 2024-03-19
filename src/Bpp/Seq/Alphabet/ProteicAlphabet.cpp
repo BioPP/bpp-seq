@@ -146,9 +146,9 @@ vector<string> ProteicAlphabet::getAlias(const string& state) const
     v.resize(2); v[0] = "I"; v[1] = "L";
   }
   else if (locstate == "X"
-           || locstate == "O"
-           || locstate == "0"
-           || locstate == "?")  // all!
+      || locstate == "O"
+      || locstate == "0"
+      || locstate == "?")  // all!
   {
     v.resize(20);
     for (int i = 0; i < 20; i++)

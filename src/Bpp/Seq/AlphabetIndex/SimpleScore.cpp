@@ -39,4 +39,3 @@ double SimpleScore::getIndex(const std::string& state1, const std::string& state
   size_t stateIndex2 = alphabet_->getStateIndex(state2) - 1;
   return distanceMatrix_(stateIndex1, stateIndex2);
 }
-

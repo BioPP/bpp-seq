@@ -278,7 +278,7 @@ void Pasta::writeSequence(ostream& output, const ProbabilisticSequence& seq, boo
   if (!output)
     throw IOException("Pasta::writeSequence : can't write to ostream output");
 
-  // The alphabet 
+  // The alphabet
   if (header)
   {
     vector<string> resolved_chars = seq.getAlphabet()->getResolvedChars();
@@ -288,7 +288,7 @@ void Pasta::writeSequence(ostream& output, const ProbabilisticSequence& seq, boo
     }
     output << endl;
   }
-  
+
   // sequence name
   output << ">" << seq.getName();
 
@@ -305,7 +305,7 @@ void Pasta::writeSequence(ostream& output, const ProbabilisticSequence& seq, boo
   StlOutputStreamWrapper outs(&output);
 
   // sequence content
-  const vector<vector<double> >& data = seq.getContent();
+  const vector<vector<double>>& data = seq.getContent();
 
   for (auto i : data)
   {
@@ -320,7 +320,7 @@ void Pasta::writeSequence(ostream& output, const Sequence& seq, bool header) con
   if (!output)
     throw IOException("Pasta::writeSequence : can't write to ostream output");
 
-  // The alphabet 
+  // The alphabet
   if (header)
   {
     vector<string> resolved_chars = seq.getAlphabet()->getResolvedChars();
@@ -330,7 +330,7 @@ void Pasta::writeSequence(ostream& output, const Sequence& seq, bool header) con
     }
     output << endl;
   }
-  
+
   // sequence name
   output << ">" << seq.getName();
 
@@ -358,4 +358,3 @@ void Pasta::writeSequence(ostream& output, const Sequence& seq, bool header) con
     output << endl;
   }
 }
-

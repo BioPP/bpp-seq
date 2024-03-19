@@ -117,7 +117,7 @@ unique_ptr<Sequence> SequenceTools::reverseTranscript(const Sequence& sequence)
 }
 
 /******************************************************************************/
-  
+
 void SequenceTools::invert(SequenceInterface& seq)
 {
   size_t seq_size = seq.size(); // store seq size for efficiency
@@ -407,8 +407,8 @@ void SequenceTools::getPutativeHaplotypes(
     std::vector<unique_ptr<SequenceInterface>>& hap,
     unsigned int level)
 {
-  vector< vector< int > > states(seq.size());
-  list< unique_ptr<Sequence> > t_hap;
+  vector< vector< int >> states(seq.size());
+  list< unique_ptr<Sequence>> t_hap;
   auto alphaPtr = seq.getAlphabet();
   unsigned int hap_count = 1;
   // Vector of available states at each position
@@ -460,7 +460,7 @@ void SequenceTools::getPutativeHaplotypes(
 /******************************************************************************/
 
 unique_ptr<Sequence> SequenceTools::combineSequences(
-    const SequenceInterface& s1, 
+    const SequenceInterface& s1,
     const SequenceInterface& s2)
 {
   if (s1.alphabet().getAlphabetType() != s2.alphabet().getAlphabetType())
@@ -587,7 +587,7 @@ unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq)
     for (unsigned int i = 1; i < n - 1; i++)
     {
       content[i] = RNY_->getRNY(seq[i - 1], seq[i], seq[i + 1],
-                               *seq.getAlphabet());
+            *seq.getAlphabet());
     }
 
     content[n - 1] = RNY_->getRNY(seq[n - 2], seq[n - 1], tir, *seq.getAlphabet());

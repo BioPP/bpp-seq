@@ -24,7 +24,7 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SequenceContainerIn
   }
 
   auto alphaPtr = sc.getAlphabet();
-  vector< unique_ptr<Sequence> > sequences;
+  vector< unique_ptr<Sequence>> sequences;
 
   string lineRead("");
 

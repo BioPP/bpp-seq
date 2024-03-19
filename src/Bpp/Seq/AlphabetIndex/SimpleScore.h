@@ -6,7 +6,6 @@
 #define BPP_SEQ_ALPHABETINDEX_SIMPLESCORE_H
 
 
-
 // from the STL:
 #include <string>
 

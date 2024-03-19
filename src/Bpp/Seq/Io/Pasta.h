@@ -88,20 +88,21 @@ public:
    *
    * @{
    */
-   void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override
-   {
-     for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
-       writeSequence(output, sc.sequence(i), i == 0);
-     }
-   }
-   
-   using AbstractOSequence::writeSequences;
+  void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override
+  {
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
+    {
+      writeSequence(output, sc.sequence(i), i == 0);
+    }
+  }
+
+  using AbstractOSequence::writeSequences;
 
   /**
    * @}
    */
 
-   /**
+  /**
    * @name The "I/OProbabilisticSequence interface"
    *
    * @{
@@ -112,9 +113,9 @@ public:
   {
     if (!output)
       throw IOException("Pasta::write: can't write to ostream output");
-  
+
     // Main loop : for all sequences in vector container
-  
+
     bool first = true;
     for (size_t i = 0; i < psc.getNumberOfSequences(); ++i)
     {
@@ -126,9 +127,8 @@ public:
    * @}
    */
   using AbstractOSequence2::writeAlignment;
-  
-  const std::string getDataType() const override { return "(Probabilistic) sequence container"; }
 
+  const std::string getDataType() const override { return "(Probabilistic) sequence container"; }
 };
 } // end of namespace bpp
 #endif // BPP_SEQ_IO_PASTA_H

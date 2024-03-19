@@ -6,7 +6,6 @@
 #define BPP_SEQ_APP_BPPSEQUENCEAPPLICATION_H
 
 
-
 // From the STL:
 #include <iostream>
 #include <iomanip>
@@ -60,7 +59,7 @@ public:
   /*
    * @brief Get the std::map of alignments
    */
-  virtual std::map<size_t, std::unique_ptr<AlignmentDataInterface> >
+  virtual std::map<size_t, std::unique_ptr<AlignmentDataInterface>>
   getAlignmentsMap(
     std::shared_ptr<const Alphabet>& alphabet,
     bool changeGapsToUnknownCharacters = true,
@@ -73,7 +72,7 @@ public:
   /*
    * @brief Get the std::map of const alignments
    */
-  virtual std::map<size_t, std::unique_ptr<const AlignmentDataInterface> >
+  virtual std::map<size_t, std::unique_ptr<const AlignmentDataInterface>>
   getConstAlignmentsMap(
     std::shared_ptr<const Alphabet>& alphabet,
     bool changeGapsToUnknownCharacters = true,
@@ -82,6 +81,5 @@ public:
     const std::string& suffix = "",
     bool suffixIsOptional = true) const;
 };
-  
 } // end of namespace bpp;
 #endif // BPP_SEQ_APP_BPPSEQUENCEAPPLICATION_H

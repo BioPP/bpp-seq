@@ -53,6 +53,5 @@ public:
    */
   virtual const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_BPPOALIGNMENTREADERFORMAT_H

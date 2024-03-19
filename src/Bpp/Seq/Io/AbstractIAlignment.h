@@ -137,7 +137,8 @@ protected:
  * This implementation adds the ISequence interface, assuming that aligned sequences are no less than sequence themselves and can be read as such;
  */
 class AbstractIAlignment2 :
-  public virtual AbstractIAlignment, //In case of diamond inheritence
+  public virtual AbstractIAlignment,
+  // In case of diamond inheritence
   public virtual ISequence
 {
 public:
@@ -178,7 +179,6 @@ public:
   }
   /** @} */
 };
-
 
 
 class AbstractIProbabilisticAlignment :
@@ -286,10 +286,9 @@ protected:
 };
 
 
-
-
 class AbstractIProbabilisticAlignment2 :
-  public virtual AbstractIProbabilisticAlignment, //In case of diamond inheritence
+  public virtual AbstractIProbabilisticAlignment,
+  // In case of diamond inheritence
   public virtual IProbabilisticSequence
 {
 public:
@@ -329,8 +328,6 @@ public:
     return sec;
   }
   /** @} */
-
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_ABSTRACTIALIGNMENT_H

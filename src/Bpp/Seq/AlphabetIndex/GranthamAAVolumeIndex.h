@@ -73,12 +73,12 @@ public:
 public:
   double getIndex(int state) const override
   {
-    return volume_[getAlphabet()->getStateIndex(state)-1];
+    return volume_[getAlphabet()->getStateIndex(state) - 1];
   }
 
   double getIndex(const std::string& state) const override
   {
-    return volume_[getAlphabet()->getStateIndex(state)-1];
+    return volume_[getAlphabet()->getStateIndex(state) - 1];
   }
 
   const std::vector<double>& indexVector() const override { return volume_; }

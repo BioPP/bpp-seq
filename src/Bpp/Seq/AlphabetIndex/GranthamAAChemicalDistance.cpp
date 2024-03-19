@@ -30,12 +30,12 @@ GranthamAAChemicalDistance::GranthamAAChemicalDistance() :
 
 double GranthamAAChemicalDistance::getIndex(int state1, int state2) const
 {
-  double d = distanceMatrix_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
+  double d = distanceMatrix_(getAlphabet()->getStateIndex(state1) - 1, getAlphabet()->getStateIndex(state2) - 1);
   if (sign_ == SIGN_NONE)
     return NumTools::abs<double>(d);
   if (sign_ == SIGN_PC1)
-    return signMatrix_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1) * NumTools::abs<double>(d);
-  
+    return signMatrix_(getAlphabet()->getStateIndex(state1) - 1, getAlphabet()->getStateIndex(state2) - 1) * NumTools::abs<double>(d);
+
   return d;
 }
 

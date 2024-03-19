@@ -147,7 +147,6 @@ public:
    * @return A new SequenceWithQuality object without gaps.
    */
   static std::unique_ptr<SequenceWithQuality> removeGaps(const SequenceWithQuality& seq);
-
 };
 }
 #endif // BPP_SEQ_SEQUENCEWITHQUALITYTOOLS_H

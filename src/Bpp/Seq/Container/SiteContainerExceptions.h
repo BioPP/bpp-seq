@@ -6,7 +6,6 @@
 #define BPP_SEQ_CONTAINER_SITECONTAINEREXCEPTIONS_H
 
 
-
 // From STL
 #include <string>
 #include <Bpp/Exceptions.h>

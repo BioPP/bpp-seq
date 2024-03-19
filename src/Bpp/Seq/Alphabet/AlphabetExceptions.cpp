@@ -45,7 +45,7 @@ BadIntException::BadIntException(int badInt, const std::string& text, shared_ptr
   AlphabetException("BadIntException: " + TextTools::toString(badInt) + ". " + text, alpha),
   i_(badInt) {}
 
-  int BadIntException::getBadInt() const { return i_; }
+int BadIntException::getBadInt() const { return i_; }
 
 /******************************************************************************/
 
@@ -67,7 +67,7 @@ CharStateNotSupportedException::CharStateNotSupportedException(const string& tex
   AlphabetException("CharStateNotSupportedException: " + text, alpha) {}
 
 /******************************************************************************/
-  
+
 CharStateNotSupportedException::CharStateNotSupportedException(const string& text, shared_ptr<const Alphabet> alpha) :
   AlphabetException("CharStateNotSupportedException: " + text, alpha) {}
 

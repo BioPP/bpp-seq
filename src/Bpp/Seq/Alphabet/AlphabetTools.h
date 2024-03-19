@@ -157,7 +157,7 @@ public:
    * @param alphabet The alphabet to check.
    */
   static bool isIntegerAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<IntegerAlphabet>(alphabet); }
-  
+
   /**
    * @return True if the alphabet is an instanciation of the DefaultAlphabet class.
    * @param alphabet The alphabet to check.
@@ -169,7 +169,7 @@ public:
    * @param alphabet The alphabet to check.
    */
   static bool isAllelicAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<AllelicAlphabet>(alphabet); }
-  
+
   /**
    * @brief Tell if two characters match according to a given alphabet.
    *

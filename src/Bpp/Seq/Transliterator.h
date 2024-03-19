@@ -125,7 +125,6 @@ public:
   std::string translate(const std::string& state) const override = 0;
 
   std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override;
-
 };
 
 /**
@@ -142,9 +141,8 @@ public:
 public:
   int reverse(int state) const override = 0;
   std::string reverse(const std::string& state) const override = 0;
-  
+
   std::unique_ptr<Sequence> reverse(const SequenceInterface& sequence) const override;
-	  
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_TRANSLITERATOR_H

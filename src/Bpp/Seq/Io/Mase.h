@@ -26,8 +26,8 @@ class MaseHeader
 {
 private:
   mutable std::map<std::string, std::string> trees_;
-  mutable std::map<std::string, MultiRange<size_t> > siteSelections_;
-  mutable std::map<std::string, std::vector<size_t> > sequenceSelections_;
+  mutable std::map<std::string, MultiRange<size_t>> siteSelections_;
+  mutable std::map<std::string, std::vector<size_t>> sequenceSelections_;
 
 public:
   MaseHeader() : trees_(), siteSelections_(), sequenceSelections_() {}

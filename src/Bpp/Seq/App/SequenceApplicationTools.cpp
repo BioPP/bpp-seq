@@ -41,12 +41,12 @@ using namespace std;
 /******************************************************************************/
 
 unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
-  const map<string, string>& params,
-  const string& suffix,
-  bool suffixIsOptional,
-  bool verbose,
-  bool allowGeneric,
-  int warn)
+    const map<string, string>& params,
+    const string& suffix,
+    bool suffixIsOptional,
+    bool verbose,
+    bool allowGeneric,
+    int warn)
 {
   unique_ptr<Alphabet> chars = nullptr;
 
@@ -75,7 +75,7 @@ unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
     else
     {
       size_t indAlph = 1;
-      vector< shared_ptr<const Alphabet> > vAlph;
+      vector< shared_ptr<const Alphabet>> vAlph;
 
       while (args.find("alphabet" + TextTools::toString(indAlph)) != args.end())
       {
@@ -103,7 +103,7 @@ unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
 
     if (AlphabetTools::isNucleicAlphabet(inAlphabet.get()))
     {
-      shared_ptr<Alphabet> charsTmp = std::move(chars); //unique -> shared
+      shared_ptr<Alphabet> charsTmp = std::move(chars); // unique -> shared
       chars = make_unique<RNY>(dynamic_pointer_cast<NucleicAlphabet>(charsTmp));
       alphabet = "RNY(" + alphabet + ")";
     }
@@ -297,7 +297,7 @@ std::unique_ptr<SequenceContainerInterface> SequenceApplicationTools::getSequenc
 
 /******************************************************************************/
 
-map<size_t, unique_ptr<VectorSiteContainer> >
+map<size_t, unique_ptr<VectorSiteContainer>>
 SequenceApplicationTools::getSiteContainers(
     std::shared_ptr<const Alphabet> alpha,
     const map<string, string>& params,
@@ -309,7 +309,7 @@ SequenceApplicationTools::getSiteContainers(
 {
   vector<string> vContName = ApplicationTools::matchingParameters(prefix + "data*", params);
 
-  map<size_t, unique_ptr<VectorSiteContainer> > mCont;
+  map<size_t, unique_ptr<VectorSiteContainer>> mCont;
 
   for (size_t nT = 0; nT < vContName.size(); nT++)
   {
@@ -383,7 +383,7 @@ SequenceApplicationTools::getSiteContainers(
 
 /******************************************************************************/
 
-map<size_t, unique_ptr<ProbabilisticVectorSiteContainer> >
+map<size_t, unique_ptr<ProbabilisticVectorSiteContainer>>
 SequenceApplicationTools::getProbabilisticSiteContainers(
     std::shared_ptr<const Alphabet> alpha,
     const map<string, string>& params,
@@ -395,7 +395,7 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
 {
   vector<string> vContName = ApplicationTools::matchingParameters(prefix + "data*", params);
 
-  map<size_t, unique_ptr<ProbabilisticVectorSiteContainer> > mCont;
+  map<size_t, unique_ptr<ProbabilisticVectorSiteContainer>> mCont;
 
   for (size_t nT = 0; nT < vContName.size(); nT++)
   {
@@ -463,7 +463,7 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
       mCont.emplace(num, std::move(vsC));
     }
   }
-  
+
   return mCont;
 }
 
@@ -480,7 +480,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
   string sequenceFilePath = ApplicationTools::getAFilePath("input.sequence.file", params, true, true, suffix, suffixIsOptional, "none", warn);
   string sequenceFormat = ApplicationTools::getStringParameter("input.sequence.format", params, "Fasta()", suffix, suffixIsOptional, warn);
   BppOAlignmentReaderFormat bppoReader(warn);
-  
+
   unique_ptr<IAlignment> iAln(bppoReader.read(sequenceFormat));
   map<string, string> args(bppoReader.getUnparsedArguments());
 
@@ -496,7 +496,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
   else
     alpha2 = alpha;
 
-  auto sites2 = make_unique<VectorSiteContainer>(*(iAln->readAlignment(sequenceFilePath, alpha2))); //We copy into a VectorSiteContainer, as most readers will generate an AlignedSequenceContainer)
+  auto sites2 = make_unique<VectorSiteContainer>(*(iAln->readAlignment(sequenceFilePath, alpha2))); // We copy into a VectorSiteContainer, as most readers will generate an AlignedSequenceContainer)
 
   auto sites = unique_ptr<VectorSiteContainer>();
 
@@ -520,7 +520,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
     string siteSet = ApplicationTools::getStringParameter("siteSelection", args, "none", suffix, suffixIsOptional, warn + 1);
     if (siteSet != "none")
     {
-      unique_ptr<VectorSiteContainer> selectedSites;;
+      unique_ptr<VectorSiteContainer> selectedSites;
       try
       {
         auto sel = MaseTools::getSelectedSites(*sites, siteSet);
@@ -545,12 +545,12 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
 
   string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
 
-  unique_ptr<VectorSiteContainer> selectedSites;;
+  unique_ptr<VectorSiteContainer> selectedSites;
   if (siteSet != "none")
   {
     if (siteSet[0] == '(')
       siteSet = siteSet.substr(1, siteSet.size() - 2);
-    
+
     vector<size_t> vSite;
     try
     {
@@ -586,16 +586,16 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
       {
         size_t n = ApplicationTools::getParameter<size_t>("n", selArgs, nbSites, "", true, warn + 1);
         bool replace = ApplicationTools::getBooleanParameter("replace", selArgs, false, "", true, warn + 1);
-        
+
         vSite.resize(n);
         vector<size_t> vPos;
         for (size_t p = 0; p < nbSites; ++p)
         {
           vPos.push_back(p);
         }
-        
+
         RandomTools::getSample(vPos, vSite, replace);
-        
+
         auto sel = SiteContainerTools::getSelectedSites(*sites, vSite);
         selectedSites = std::move(sel);
         if (replace)
@@ -607,15 +607,14 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
 
     if (verbose)
       ApplicationTools::displayResult("Selected sites", TextTools::toString(siteSet));
-    
+
     if (selectedSites && (selectedSites->getNumberOfSites() == 0))
     {
       throw Exception("Site set '" + siteSet + "' is empty.");
     }
     sites = std::move(selectedSites);
-  
   }
-  
+
   // Apply sequence selection:
   restrictSelectedSequencesByName(*sites, params, suffix, suffixIsOptional, verbose, warn);
 
@@ -653,7 +652,6 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     throw IOException("Bad format");
 
 
-  
   map<string, string> args(bppoReader.getUnparsedArguments());
   if (verbose)
   {
@@ -667,11 +665,11 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
   else
   {
     if (AlphabetTools::isAllelicAlphabet(alpha.get()))
-      alpha2= dynamic_pointer_cast<const AllelicAlphabet>(alpha)->getStateAlphabet();
+      alpha2 = dynamic_pointer_cast<const AllelicAlphabet>(alpha)->getStateAlphabet();
     else
       alpha2 = alpha;
   }
-  
+
   unique_ptr<VectorSiteContainer> sites;
   unique_ptr<ProbabilisticVectorSiteContainer> psites;
 
@@ -694,8 +692,8 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
         tmpsites->addSequence(name, sl);
       }
       sites = std::move(tmpsites);
-    }    
-    
+    }
+
     // Look for site selection:
 
     if (iAln->getFormatName() == "MASE file")
@@ -724,11 +722,11 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     }
 
     // Then convert VectorSiteContainer in ProbabilisticVectorSiteContainer
-    
+
     psites.reset(new ProbabilisticVectorSiteContainer(alpha2));
 
-    auto names=psites->getSequenceNames();
-    
+    auto names = psites->getSequenceNames();
+
     auto chars = alpha2->getResolvedChars();
 
     Table<double> dtable(chars.size(), sites->getNumberOfSites());
@@ -738,21 +736,21 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     {
       const auto& sequence = psites->sequence(name);
       vector<double> vval(chars.size());
-      
-      for (size_t pos=0;pos<sequence.size();pos++)
+
+      for (size_t pos = 0; pos < sequence.size(); pos++)
       {
-        size_t i=0;
+        size_t i = 0;
         for (auto c:chars)
         {
-          vval[i]=sequence.getStateValueAt(pos,alpha2->charToInt(c));
+          vval[i] = sequence.getStateValueAt(pos, alpha2->charToInt(c));
           i++;
         }
-            
-        dtable.setColumn(vval,pos);
+
+        dtable.setColumn(vval, pos);
       }
-      
+
       unique_ptr<ProbabilisticSequence> seq(new ProbabilisticSequence(name, dtable, sequence.getComments(), alpha2));
-      
+
       psites->addSequence(name, seq);
     }
   }
@@ -762,21 +760,21 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
   {
     auto pallsites = unique_ptr<ProbabilisticVectorSiteContainer>(new ProbabilisticVectorSiteContainer(alpha));
 
-    auto names=psites->getSequenceNames();
-    
+    auto names = psites->getSequenceNames();
+
     for (const auto& name : names)
     {
       unique_ptr<ProbabilisticSequence> seq(dynamic_pointer_cast<const AllelicAlphabet>(alpha)->convertFromStateAlphabet(psites->sequence(name)));
 
       pallsites->addSequence(name, seq);
     }
-    
+
     psites = std::move(pallsites);
   }
 
   // getting selection site set:
-  
-  size_t nbSites = sites?sites->getNumberOfSites():psites->getNumberOfSites();
+
+  size_t nbSites = sites ? sites->getNumberOfSites() : psites->getNumberOfSites();
 
   string siteSet = ApplicationTools::getStringParameter("input.site.selection", params, "none", suffix, suffixIsOptional, warn + 1);
 
@@ -807,10 +805,10 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
         {
           ApplicationTools::displayMessage("Site selection too large index: " + TextTools::toString(x));
           ApplicationTools::displayMessage("Limit to max length: " + TextTools::toString(nbSites));
-          vSite.push_back(static_cast<size_t>(nbSites-1));
+          vSite.push_back(static_cast<size_t>(nbSites - 1));
           break;
         }
-      }      
+      }
     }
     catch (Exception& e)
     {
@@ -839,10 +837,10 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     if (verbose)
       ApplicationTools::displayResult("Selected sites", TextTools::toString(siteSet));
 
-    auto selectedSites = make_unique<ProbabilisticVectorSiteContainer>(alpha); 
+    auto selectedSites = make_unique<ProbabilisticVectorSiteContainer>(alpha);
 
     SiteContainerTools::getSelectedSites(*psites, vSite, *selectedSites);
-    
+
     if (selectedSites && (selectedSites->getNumberOfSites() == 0))
     {
       throw Exception("Site set '" + siteSet + "' is empty.");
@@ -870,31 +868,40 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
     int warn)
 {
   string optionKeep = ApplicationTools::getStringParameter("input.sequence.keep_names", params, "all", suffix, suffixIsOptional, warn);
-  if (optionKeep != "all") {
+  if (optionKeep != "all")
+  {
     vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.keep_names", params, ',', optionKeep, suffix, suffixIsOptional, warn);
     sort(selection.begin(), selection.end());
-    for (const auto& name: allSequences.getSequenceNames()) {
-      if (! binary_search(selection.begin(), selection.end(), name)) {
+    for (const auto& name: allSequences.getSequenceNames())
+    {
+      if (!binary_search(selection.begin(), selection.end(), name))
+      {
         allSequences.removeSequence(name);
-        if (verbose) {
+        if (verbose)
+        {
           ApplicationTools::displayResult("Discard sequence", name);
         }
       }
     }
   }
   string optionRemove = ApplicationTools::getStringParameter("input.sequence.remove_names", params, "none", suffix, suffixIsOptional, warn);
-  if (optionRemove != "none") {
+  if (optionRemove != "none")
+  {
     vector<string> selection = ApplicationTools::getVectorParameter<string>("input.sequence.remove_names", params, ',', optionRemove, suffix, suffixIsOptional, warn);
     vector<string> seqNames = allSequences.getSequenceNames();
     sort(seqNames.begin(), seqNames.end());
-    for (const auto& name: selection) {
-      if (binary_search(seqNames.begin(), seqNames.end(), name)) {
+    for (const auto& name: selection)
+    {
+      if (binary_search(seqNames.begin(), seqNames.end(), name))
+      {
         allSequences.removeSequence(name);
-        if (verbose) {
+        if (verbose)
+        {
           ApplicationTools::displayResult("Discard sequence", name);
         }
-      } 
-      else {
+      }
+      else
+      {
         throw SequenceNotFoundException("No sequence with the specified name was found.", name);
       }
     }

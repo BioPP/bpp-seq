@@ -13,7 +13,7 @@ using namespace bpp;
 
 using namespace std;
 
-WordAlphabet::WordAlphabet(const vector< std::shared_ptr<const Alphabet> >& vAlpha) :
+WordAlphabet::WordAlphabet(const vector< std::shared_ptr<const Alphabet>>& vAlpha) :
   AbstractAlphabet(),
   vAbsAlph_(vAlpha)
 {

@@ -57,12 +57,12 @@ public:
 
   double getIndex(int state1, int state2) const override
   {
-    return property_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
+    return property_(getAlphabet()->getStateIndex(state1) - 1, getAlphabet()->getStateIndex(state2) - 1);
   }
 
   double getIndex(const std::string& state1, const std::string& state2) const override
   {
-    return property_(getAlphabet()->getStateIndex(state1)-1, getAlphabet()->getStateIndex(state2)-1);
+    return property_(getAlphabet()->getStateIndex(state1) - 1, getAlphabet()->getStateIndex(state2) - 1);
   }
 
   const Matrix<double>& getIndexMatrix() const override { return property_; }

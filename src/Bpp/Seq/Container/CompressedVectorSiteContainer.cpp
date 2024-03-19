@@ -14,7 +14,7 @@ using namespace bpp;
 /** Class constructors: *******************************************************/
 
 CompressedVectorSiteContainer::CompressedVectorSiteContainer(
-    std::vector< unique_ptr<Site> >& vs,
+    std::vector< unique_ptr<Site>>& vs,
     shared_ptr<const Alphabet>& alphabet) :
   AbstractTemplateSequenceContainer<Sequence>(alphabet),
   siteContainer_(),
@@ -27,14 +27,17 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(
     throw Exception("CompressedVectorSiteContainer::CompressedVectorSiteContainer. Empty site set.");
   // Seq names and comments:
   size_t nbSeq = vs[0]->size();
-  for (size_t i = 0; i < nbSeq; ++i) {
+  for (size_t i = 0; i < nbSeq; ++i)
+  {
     sequenceNames_.push_back("Seq_" + TextTools::toString(i));
     sequenceContainer_.appendObject(nullptr, "Seq_" + TextTools::toString(i));
   }
 
   // Now try to add each site:
   for (auto& site : vs)
+  {
     addSite(site);
+  }
 }
 
 /******************************************************************************/
@@ -50,7 +53,8 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(
   index_(0)
 {
   // Seq names and comments:
-  for (size_t i = 0; i < size; ++i) {
+  for (size_t i = 0; i < size; ++i)
+  {
     sequenceNames_.push_back("Seq_" + TextTools::toString(i));
     sequenceContainer_.appendObject(nullptr, "Seq_" + TextTools::toString(i));
   }
@@ -59,7 +63,7 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(
 /******************************************************************************/
 
 CompressedVectorSiteContainer::CompressedVectorSiteContainer(
-    const std::vector<std::string>& sequenceKeys, 
+    const std::vector<std::string>& sequenceKeys,
     shared_ptr<const Alphabet>& alphabet) :
   AbstractTemplateSequenceContainer(alphabet),
   siteContainer_(),
@@ -69,7 +73,8 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(
   index_(0)
 {
   unsigned int i = 0;
-  for (auto key : sequenceKeys) {
+  for (auto key : sequenceKeys)
+  {
     ++i;
     sequenceNames_.push_back("Seq_" + TextTools::toString(i));
     sequenceContainer_.appendObject(nullptr, key);
@@ -98,10 +103,13 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(const CompressedVec
   index_(vsc.index_)
 {
   for (const auto& name: vsc.sequenceNames_)
-    sequenceContainer_.appendObject(nullptr, name); 
-  
-  //Copy the compressed data:
-  for (size_t i = 0; i < vsc.siteContainer_.getSize(); ++i) {
+  {
+    sequenceContainer_.appendObject(nullptr, name);
+  }
+
+  // Copy the compressed data:
+  for (size_t i = 0; i < vsc.siteContainer_.getSize(); ++i)
+  {
     auto sitePtr = std::shared_ptr<Site>(vsc.siteContainer_.getObject(i)->clone());
     siteContainer_.appendObject(sitePtr);
   }
@@ -118,10 +126,13 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(const SiteContainer
   index_(0)
 {
   for (const auto& name: sc.getSequenceNames())
+  {
     sequenceContainer_.appendObject(nullptr, name);
- 
+  }
+
   // Now try to add each site:
-  for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
+  for (size_t i = 0; i < sc.getNumberOfSites(); ++i)
+  {
     auto sitePtr = std::unique_ptr<Site>(sc.site(i).clone());
     addSite(sitePtr, false);
   }
@@ -135,18 +146,21 @@ CompressedVectorSiteContainer& CompressedVectorSiteContainer::operator=(const Co
   AbstractTemplateSequenceContainer<Sequence>::operator=(vsc);
 
   for (const auto& name: vsc.getSequenceNames())
+  {
     sequenceContainer_.appendObject(nullptr, name);
+  }
 
-  //Copy the compressed data:
+  // Copy the compressed data:
   index_ = vsc.index_;
-  for (size_t i = 0; i < vsc.siteContainer_.getSize(); ++i) {
+  for (size_t i = 0; i < vsc.siteContainer_.getSize(); ++i)
+  {
     auto sitePtr = std::shared_ptr<Site>(vsc.siteContainer_.getObject(i)->clone());
     siteContainer_.appendObject(sitePtr);
   }
 
   sequenceNames_ = vsc.sequenceNames_;
   sequenceComments_ = vsc.sequenceComments_;
-  
+
   return *this;
 }
 
@@ -158,7 +172,8 @@ CompressedVectorSiteContainer& CompressedVectorSiteContainer::operator=(const Si
   AbstractTemplateSequenceContainer<Sequence>::operator=(sc);
 
   // Now try to add each site:
-  for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
+  for (size_t i = 0; i < sc.getNumberOfSites(); ++i)
+  {
     auto sitePtr = std::unique_ptr<Site>(sc.site(i).clone());
     addSite(sitePtr, false);
   }
@@ -257,7 +272,7 @@ std::unique_ptr<Site> CompressedVectorSiteContainer::removeSite(size_t siteIndex
   // Here we need to check whether the pattern corresponding to this site is unique:
 
   auto sitePtr = siteContainer_.getObject(index_[siteIndex]);
-  std::get_deleter< SwitchDeleter<Site> >(sitePtr)->off();
+  std::get_deleter< SwitchDeleter<Site>>(sitePtr)->off();
 
   size_t current = index_[siteIndex];
   bool test = true;
@@ -297,7 +312,7 @@ void CompressedVectorSiteContainer::deleteSite(size_t siteIndex)
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::deleteSite.", siteIndex, 0, getNumberOfSites() - 1);
   // Here we need to check whether the pattern corresponding to this site is unique:
 
-  removeSite(siteIndex); //This effectively delete the object as the unique_ptr is not forwarded and will be destroyed.
+  removeSite(siteIndex); // This effectively delete the object as the unique_ptr is not forwarded and will be destroyed.
 }
 
 /******************************************************************************/
@@ -306,8 +321,9 @@ void CompressedVectorSiteContainer::deleteSites(size_t siteIndex, size_t length)
 {
   // This may be optimized later:
   for (size_t i = 0; i < length; ++i)
+  {
     deleteSite(siteIndex + i);
-
+  }
 }
 
 /***************************************************************************/
@@ -325,7 +341,7 @@ void CompressedVectorSiteContainer::addSite(std::unique_ptr<Site>& site, bool ch
   }
 
   size_t n = site->size();
-  
+
   size_t siteIndex = getSiteIndex_(*site);
   if (siteIndex == getNumberOfUniqueSites())
   {
@@ -337,14 +353,18 @@ void CompressedVectorSiteContainer::addSite(std::unique_ptr<Site>& site, bool ch
   index_.push_back(siteIndex);
 
   // Clean Sequence Container cache
-  if (getNumberOfSequences() == 0) {
+  if (getNumberOfSequences() == 0)
+  {
     sequenceNames_.resize(n);
     sequenceComments_.resize(n);
-    for (size_t i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i)
+    {
       sequenceNames_[i] = "Seq_" + TextTools::toString(i);
       sequenceContainer_.appendObject(nullptr, sequenceNames_[i]);
     }
-  } else {
+  }
+  else
+  {
     sequenceContainer_.nullify();
   }
 }
@@ -365,11 +385,12 @@ void CompressedVectorSiteContainer::addSite(std::unique_ptr<Site>& site, size_t 
   {
     throw AlphabetMismatchException("CompressedVectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
   }
-  
+
   size_t n = site->size();
 
   size_t index = getSiteIndex_(*site);
-  if (index == getNumberOfUniqueSites()) {
+  if (index == getNumberOfUniqueSites())
+  {
     // This is a new pattern:
     std::shared_ptr<Site> sitePtr(site.release(), SwitchDeleter<Site>());
     siteContainer_.appendObject(sitePtr);
@@ -378,14 +399,18 @@ void CompressedVectorSiteContainer::addSite(std::unique_ptr<Site>& site, size_t 
   index_.insert(index_.begin() + static_cast<ptrdiff_t>(siteIndex), index);
 
   // Clean Sequence Container cache
-  if (getNumberOfSequences() == 0) {
+  if (getNumberOfSequences() == 0)
+  {
     sequenceNames_.resize(n);
     sequenceComments_.resize(n);
-    for (size_t i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i)
+    {
       sequenceNames_[i] = "Seq_" + TextTools::toString(i);
       sequenceContainer_.appendObject(nullptr, sequenceNames_[i]);
     }
-  } else {
+  }
+  else
+  {
     sequenceContainer_.nullify();
   }
 }
@@ -437,18 +462,20 @@ const Sequence& CompressedVectorSiteContainer::sequence(size_t sequencePosition)
   auto name = sequenceContainer_.getObjectName(sequencePosition);
   if (!sequenceContainer_.isAvailableName(name))
     return *sequenceContainer_.getObject(sequencePosition);
-  
+
   // Main loop : for all sites
   size_t n = getNumberOfSites();
   vector<int> sequence(n);
   for (size_t j = 0; j < n; ++j)
+  {
     sequence[j] = (*siteContainer_.getObject(index_[j]))[sequencePosition];
+  }
 
   auto alphaPtr = getAlphabet();
   auto ns = std::make_shared<Sequence>(
         sequenceNames_[sequencePosition],
         sequence,
-	      sequenceComments_[sequencePosition],
+        sequenceComments_[sequencePosition],
         alphaPtr);
 
   sequenceContainer_.addObject_(ns, sequencePosition, sequenceKey(sequencePosition), false);
@@ -483,4 +510,3 @@ size_t CompressedVectorSiteContainer::getSiteIndex_(const Site& site)
 }
 
 /******************************************************************************/
-

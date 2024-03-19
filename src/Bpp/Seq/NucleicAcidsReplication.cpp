@@ -9,8 +9,8 @@ using namespace bpp;
 using namespace std;
 
 NucleicAcidsReplication::NucleicAcidsReplication(
-  std::shared_ptr<const NucleicAlphabet> nuc1,
-  std::shared_ptr<const NucleicAlphabet> nuc2) :
+    std::shared_ptr<const NucleicAlphabet> nuc1,
+    std::shared_ptr<const NucleicAlphabet> nuc2) :
   nuc1_(nuc1), nuc2_(nuc2), trans_()
 {
   trans_[-1] = -1;

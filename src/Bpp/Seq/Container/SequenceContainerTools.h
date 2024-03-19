@@ -6,7 +6,6 @@
 #define BPP_SEQ_CONTAINER_SEQUENCECONTAINERTOOLS_H
 
 
-
 // From the STL:
 #include <string>
 #include <vector>
@@ -34,7 +33,6 @@ public:
   virtual ~SequenceContainerTools() {}
 
 public:
-
   /**
    * @name Work with sequence names
    *
@@ -53,8 +51,10 @@ public:
   static bool hasSequenceWithName(const TemplateSequenceContainerInterface<SequenceType, HashType>& sc, const std::string& name)
   {
     size_t nbSeq = sc.getNumberOfSequences();
-    for (size_t i = 0; i < nbSeq; ++i) {
-      if (sc.sequence(i).getName() == name) {
+    for (size_t i = 0; i < nbSeq; ++i)
+    {
+      if (sc.sequence(i).getName() == name)
+      {
         return true;
       }
     }
@@ -62,7 +62,7 @@ public:
   }
 
   /** @} */
-  
+
   /**
    * @brief Create a container with @f$n@f$ void sequences.
    *
@@ -75,16 +75,15 @@ public:
    * @return A pointer toward a newly created container.
    */
   template<class SequenceType, class HashType>
-  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType, HashType> > createContainerOfSpecifiedSize(std::shared_ptr<const Alphabet>& alphabet, size_t size)
+  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType, HashType>> createContainerOfSpecifiedSize(std::shared_ptr<const Alphabet>& alphabet, size_t size)
   {
-    auto vsc = std::make_unique< TemplateVectorSequenceContainer<SequenceType> >(alphabet);
+    auto vsc = std::make_unique< TemplateVectorSequenceContainer<SequenceType>>(alphabet);
     for (size_t i = 0; i < size; ++i)
     {
       vsc->addSequence(SequenceType(TextTools::toString(i), "", alphabet), false);
     }
     return vsc;
   }
-
 
 
   /**
@@ -100,9 +99,9 @@ public:
    * @throw Exception If two sequence names are not unique.
    */
   template<class SequenceType, class HashType>
-  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType, HashType> > createContainerWithSequenceNames(
-    std::shared_ptr<const Alphabet>& alphabet,
-    const std::vector<std::string>& seqNames)
+  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType, HashType>> createContainerWithSequenceNames(
+      std::shared_ptr<const Alphabet>& alphabet,
+      const std::vector<std::string>& seqNames)
   {
     auto sc = createContainerOfSpecifiedSize<SequenceType, HashType>(alphabet, seqNames.size());
     sc->setSequenceNames(seqNames, true);
@@ -149,9 +148,9 @@ public:
    */
   template<class SequenceType, class HashType>
   static void getSelectedSequences(
-    const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
-    const SequenceSelection& selection,
-    TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
+      const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences,
+      const SequenceSelection& selection,
+      TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
   {
     for (size_t position : selection)
     {
@@ -185,15 +184,20 @@ public:
       TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont,
       bool strict = true)
   {
-    for (const std::string& key : selection) {
-      if (strict) {
+    for (const std::string& key : selection)
+    {
+      if (strict)
+      {
         auto seq = std::make_unique<SequenceType>(sequences.sequence(key));
         outputCont.addSequence(seq->getName(), seq);
-      } else {
-        if (sequences.hasSequence(key)) {
+      }
+      else
+      {
+        if (sequences.hasSequence(key))
+        {
           auto seq = std::make_unique<SequenceType>(sequences.sequence(key));
           outputCont.addSequence(seq->getName(), seq);
-	}
+        }
       }
     }
   }
@@ -229,7 +233,6 @@ public:
   }
 
 
-
   /**
    * @brief Check if all sequences in a SequenceContainer have the same length.
    *
@@ -254,7 +257,6 @@ public:
   }
 
 
-
   /**
    * @brief Compute base counts
    *
@@ -269,14 +271,15 @@ public:
    */
   static void getCounts(const SequenceContainerInterface& sc, std::map<int, unsigned int>& f)
   {
-    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
+    {
       const Sequence& seq = sc.sequence(i);
-      for (size_t j = 0; j < seq.size(); ++j) {
+      for (size_t j = 0; j < seq.size(); ++j)
+      {
         f[seq[j]]++;
       }
     }
   }
-
 
 
   /**
@@ -292,30 +295,33 @@ public:
    * States are stored as their int code.
    */
   static void getFrequencies(
-		  const SequenceContainerInterface& sc,
-		  std::map<int, double>& f,
-		  double pseudoCount = 0)
+      const SequenceContainerInterface& sc,
+      std::map<int, double>& f,
+      double pseudoCount = 0)
   {
     double n = 0;
-    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
+    {
       const Sequence& seq = sc.sequence(i);
       SymbolListTools::getCounts(seq, f, true);
       n += static_cast<double>(seq.size());
     }
 
-    if (pseudoCount != 0) {
+    if (pseudoCount != 0)
+    {
       std::shared_ptr<const Alphabet> pA = sc.getAlphabet();
-      for (int i = 0; i < static_cast<int>(pA->getSize()); ++i) {
+      for (int i = 0; i < static_cast<int>(pA->getSize()); ++i)
+      {
         f[i] += pseudoCount;
       }
       n += pseudoCount * static_cast<double>(pA->getSize());
     }
 
-    for (auto& i : f) {
+    for (auto& i : f)
+    {
       i.second = i.second / n;
     }
   }
-
 
 
   /**
@@ -331,51 +337,59 @@ public:
    * States are stored as their int code.
    */
   static void getFrequencies(
-		  const ProbabilisticSequenceContainerInterface& sc,
-		  std::map<int, double>& f,
-		  double pseudoCount = 0)
+      const ProbabilisticSequenceContainerInterface& sc,
+      std::map<int, double>& f,
+      double pseudoCount = 0)
   {
     double n = 0;
-    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i) {
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
+    {
       const ProbabilisticSequence& seq = sc.sequence(i);
       SymbolListTools::getCounts(seq, f, true);
       n += static_cast<double>(seq.size());
     }
 
-    if (pseudoCount != 0) {
+    if (pseudoCount != 0)
+    {
       std::shared_ptr<const Alphabet> pA = sc.getAlphabet();
-      for (int i = 0; i < static_cast<int>(pA->getSize()); ++i) {
+      for (int i = 0; i < static_cast<int>(pA->getSize()); ++i)
+      {
         f[i] += pseudoCount;
       }
       n += pseudoCount * static_cast<double>(pA->getSize());
     }
 
-    for (auto& i : f) {
+    for (auto& i : f)
+    {
       i.second = i.second / n;
     }
   }
-
 
 
   /**
    * @brief Compute base frequencies of an object implementing the SequenceDataInterface.
    *
    * This method will try to cast the input data and call the corresponding method is any.
-   * An exception will be thrown if the cast failed. 
+   * An exception will be thrown if the cast failed.
    */
   static void getFrequencies(
-		  const SequenceDataInterface& sc,
-		  std::map<int, double>& f,
-		  double pseudoCount = 0)
+      const SequenceDataInterface& sc,
+      std::map<int, double>& f,
+      double pseudoCount = 0)
   {
-    try {
+    try
+    {
       getFrequencies(dynamic_cast<const SequenceContainerInterface&>(sc), f, pseudoCount);
       return;
-    } catch (std::bad_cast&) {}   
-    try {
+    }
+    catch (std::bad_cast&) {}
+    try
+    {
       getFrequencies(dynamic_cast<const ProbabilisticSequenceContainerInterface&>(sc), f, pseudoCount);
-    } catch (std::bad_cast&) {
-    throw Exception("SequenceContainerTools::getFrequencies : unsupported SequenceDataInterface implementation.");
+    }
+    catch (std::bad_cast&)
+    {
+      throw Exception("SequenceContainerTools::getFrequencies : unsupported SequenceDataInterface implementation.");
     }
   }
 
@@ -387,16 +401,16 @@ public:
    */
   template<class SequenceType, class HashType>
   static void append(
-		  TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont1, 
-		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont2)
+      TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont1,
+      const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont2)
   {
     const auto& keys = seqCont2.getSequenceKeys();
-    for (size_t i = 0; i < seqCont2.getNumberOfSequences(); ++i) {
-      auto tm=std::unique_ptr<SequenceType>(seqCont2.sequence(i).clone());
-      seqCont1.addSequence(keys[i],tm);
+    for (size_t i = 0; i < seqCont2.getNumberOfSequences(); ++i)
+    {
+      auto tm = std::unique_ptr<SequenceType>(seqCont2.sequence(i).clone());
+      seqCont1.addSequence(keys[i], tm);
     }
   }
-  
 
 
   /**
@@ -413,9 +427,9 @@ public:
    */
   template<class SequenceType, class HashType>
   static void mergeByKey(
-		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont1,
-		  const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont2,
-		  TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
+      const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont1,
+      const TemplateSequenceContainerInterface<SequenceType, HashType>& seqCont2,
+      TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
   {
     if (seqCont1.getAlphabet()->getAlphabetType() != seqCont2.getAlphabet()->getAlphabetType())
       throw AlphabetMismatchException("SequenceContainerTools::mergeByKey.", seqCont1.getAlphabet(), seqCont2.getAlphabet());
@@ -441,7 +455,8 @@ public:
       TemplateSequenceContainerInterface<SequenceType, HashType>& outputCont)
   {
     std::vector<std::string> sequenceKeys = seqCont.getSequenceKeys();
-    for (size_t i = 0; i < seqCont.getNumberOfSequences(); ++i) {
+    for (size_t i = 0; i < seqCont.getNumberOfSequences(); ++i)
+    {
       std::string seqName = seqCont.sequence(i).getName();
       std::string seqKey = sequenceKeys[i];
       auto alpha = outputCont.getAlphabet();
@@ -459,19 +474,21 @@ public:
    * @throw AlphabetException If input sequences are not registered with a codon alphabet.
    */
   template<class SequenceType>
-  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType> >
+  static std::unique_ptr< TemplateSequenceContainerInterface<SequenceType>>
   getCodonPosition(
-		  const TemplateSequenceContainerInterface<SequenceType, std::string>& sequences,
-		  size_t pos)
+      const TemplateSequenceContainerInterface<SequenceType, std::string>& sequences,
+      size_t pos)
   {
     auto calpha = std::dynamic_pointer_cast<const CodonAlphabet>(sequences.getAlphabet());
     if (!calpha)
       throw AlphabetException("SequenceContainerTools::getCodonPosition. Input sequences should be of type codon.", sequences.getAlphabet());
-    auto newcont = std::make_unique< TemplateVectorSequenceContainer<SequenceType> >(calpha->getNucleicAlphabet());
-    for (size_t i = 0; i < sequences.getNumberOfSequences(); ++i) {
+    auto newcont = std::make_unique< TemplateVectorSequenceContainer<SequenceType>>(calpha->getNucleicAlphabet());
+    for (size_t i = 0; i < sequences.getNumberOfSequences(); ++i)
+    {
       const SequenceType& seq = sequences.sequence(i);
       std::vector<int> newseq(seq.size());
-      for (size_t j = 0; j < seq.size(); ++j) {
+      for (size_t j = 0; j < seq.size(); ++j)
+      {
         newseq[i] = calpha->getNPosition(seq[i], pos);
       }
       std::shared_ptr<const bpp::Alphabet> na = calpha->getNucleicAlphabet();
@@ -480,8 +497,6 @@ public:
     }
     return newcont;
   }
-
-
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCECONTAINERTOOLS_H

@@ -40,8 +40,8 @@ double DefaultNucleotideScore::getIndex(int state1, int state2) const
 {
   if (!alpha_->isUnresolved(state1) && !alpha_->isUnresolved(state2))
     return distanceMatrix_(
-      alpha_->getStateIndex(state1)-1,
-      alpha_->getStateIndex(state2)-1);
+          alpha_->getStateIndex(state1) - 1,
+          alpha_->getStateIndex(state2) - 1);
 
   vector<int> states1 = alpha_->getAlias(state1);
   vector<int> states2 = alpha_->getAlias(state2);
@@ -62,8 +62,8 @@ double DefaultNucleotideScore::getIndex(int state1, int state2) const
 double DefaultNucleotideScore::getIndex(const std::string& state1, const std::string& state2) const
 {
   return distanceMatrix_(
-    alpha_->getStateIndex(state1)-1,
-    alpha_->getStateIndex(state2)-1);
+        alpha_->getStateIndex(state1) - 1,
+        alpha_->getStateIndex(state2) - 1);
 }
 
 const Matrix<double>& DefaultNucleotideScore::getIndexMatrix() const

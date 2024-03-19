@@ -37,7 +37,7 @@ namespace bpp
  * @see Sequence, Site, AlignedSequenceContainer
  *
  */
-template<class SiteType, class SequenceType>  
+template<class SiteType, class SequenceType>
 class TemplateVectorSiteContainer :
   public AbstractTemplateSequenceContainer<SequenceType, std::string>,
   public virtual TemplateSiteContainerInterface<SiteType, SequenceType, std::string>
@@ -49,7 +49,6 @@ protected:
   std::vector<Comments> sequenceComments_;
 
 public:
-
   /**
    * @brief Build a new container from a set of sites.
    *
@@ -59,7 +58,7 @@ public:
    * @throw Exception If sites differ in size or in alphabet.
    */
   TemplateVectorSiteContainer(
-      std::vector<std::unique_ptr<SiteType> >& vs,
+      std::vector<std::unique_ptr<SiteType>>& vs,
       std::shared_ptr<const Alphabet> alphabet,
       bool checkPositions = true) :
     AbstractTemplateSequenceContainer<SequenceType>(alphabet),
@@ -73,15 +72,17 @@ public:
 
     size_t nbSeq = vs[0]->size();
     sequenceComments_.resize(nbSeq);
-    for (size_t i = 0; i < nbSeq; ++i) {
+    for (size_t i = 0; i < nbSeq; ++i)
+    {
       sequenceNames_.push_back("Seq_" + TextTools::toString(i));
       sequenceContainer_.appendObject(nullptr, "Seq_" + TextTools::toString(i));
     }
 
     for (auto& vi : vs)
+    {
       addSite(vi, checkPositions); // This may throw an exception if position argument already exists or is size is not valid.
+    }
   }
-
 
 
   /**
@@ -99,12 +100,12 @@ public:
     sequenceNames_(),
     sequenceComments_(size)
   {
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i)
+    {
       sequenceNames_.push_back("Seq_" + TextTools::toString(i));
       sequenceContainer_.appendObject(nullptr, "Seq_" + TextTools::toString(i));
     }
   }
-
 
 
   /**
@@ -125,20 +126,25 @@ public:
     sequenceComments_(sequenceKeys.size())
   {
     unsigned int i = 0;
-    if (useKeysAsNames) {
-      for (auto key : sequenceKeys) {
+    if (useKeysAsNames)
+    {
+      for (auto key : sequenceKeys)
+      {
         ++i;
         sequenceNames_.push_back(key);
         sequenceContainer_.appendObject(nullptr, key);
       }
-    } else {
-      for (auto key : sequenceKeys) {
+    }
+    else
+    {
+      for (auto key : sequenceKeys)
+      {
         ++i;
         sequenceNames_.push_back("Seq_" + TextTools::toString(i));
         sequenceContainer_.appendObject(nullptr, key);
       }
     }
-  }  
+  }
 
 
   /**
@@ -162,15 +168,17 @@ public:
     sequenceNames_(vsc.sequenceNames_),
     sequenceComments_(vsc.sequenceComments_)
   {
-    for (auto sequenceKey : vsc.getSequenceKeys()) {
+    for (auto sequenceKey : vsc.getSequenceKeys())
+    {
       sequenceContainer_.appendObject(nullptr, sequenceKey);
     }
 
-    for (size_t i = 0; i < vsc.getNumberOfSites(); ++i) {
+    for (size_t i = 0; i < vsc.getNumberOfSites(); ++i)
+    {
       auto sitePtr = std::unique_ptr<SiteType>(vsc.site(i).clone());
       addSite(sitePtr, false); // We assume that positions are already correct.
     }
-  } 
+  }
 
 
   TemplateVectorSiteContainer(const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>&  sc) :
@@ -179,12 +187,14 @@ public:
     sequenceContainer_(),
     sequenceNames_(sc.getSequenceNames()),
     sequenceComments_(sc.getSequenceComments())
-  { 
-    for (auto& sequenceKey : sc.getSequenceKeys()) {
+  {
+    for (auto& sequenceKey : sc.getSequenceKeys())
+    {
       sequenceContainer_.appendObject(nullptr, sequenceKey);
     }
 
-    for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
+    for (size_t i = 0; i < sc.getNumberOfSites(); ++i)
+    {
       std::unique_ptr<SiteType> sitePtr(sc.site(i).clone());
       addSite(sitePtr, false); // We assume that positions are already correct.
     }
@@ -197,7 +207,8 @@ public:
     sequenceNames_(),
     sequenceComments_()
   {
-    for (auto& sequenceKey: sc.getSequenceKeys()) {
+    for (auto& sequenceKey: sc.getSequenceKeys())
+    {
       auto seqPtr = std::make_unique<SequenceType>(sc.sequence(sequenceKey));
       addSequence(sequenceKey, seqPtr);
     }
@@ -211,8 +222,9 @@ public:
     AbstractTemplateSequenceContainer<SequenceType>::operator=(vsc);
     sequenceNames_ = vsc.sequenceNames_;
     sequenceComments_ = vsc.sequenceComments_;
-  
-    for (size_t i = 0; i < vsc.getNumberOfSites(); ++i) {
+
+    for (size_t i = 0; i < vsc.getNumberOfSites(); ++i)
+    {
       auto sitePtr = std::make_unique<SiteType>(vsc.site(i));
       addSite(sitePtr, false); // We assume that positions are already correct.
     }
@@ -227,11 +239,14 @@ public:
     AbstractTemplateSequenceContainer<SequenceType>::operator=(sc);
     sequenceNames_ = sc.sequenceNames_;
     sequenceComments_ = sc.sequenceComments_;
-  
+
     for (auto sequenceKey : sc.getSequenceKeys())
+    {
       sequenceContainer_.appendObject(nullptr, sequenceKey);
-  
-    for (size_t i = 0; i < sc.getNumberOfSites(); ++i) {
+    }
+
+    for (size_t i = 0; i < sc.getNumberOfSites(); ++i)
+    {
       auto sitePtr = std::make_unique<SiteType>(sc.site(i));
       addSite(sitePtr, false); // We assume that positions are already correct.
     }
@@ -246,7 +261,9 @@ public:
     AbstractTemplateSequenceContainer<SequenceType>::operator=(sc);
 
     for (auto sequenceKey: sc.getSequenceKeys())
+    {
       addSequence(sequenceKey, sc.getSequence(sequenceKey));
+    }
 
     reindexSites();
 
@@ -287,7 +304,8 @@ public:
       throw IndexOutOfBoundsException("TemplateVectorSiteContainer::setSite.", sitePosition, 0, getNumberOfSites() - 1);
 
     // Check size:
-    if (site->size() != getNumberOfSequences()) {
+    if (site->size() != getNumberOfSequences())
+    {
       throw SiteException("TemplateVectorSiteContainer::setSite. Site does not have the appropriate length", site.get());
     }
 
@@ -296,13 +314,16 @@ public:
       throw AlphabetMismatchException("TemplateVectorSiteContainer::setSite", getAlphabet(), site->getAlphabet());
 
     // Check coordinate:
-    if (checkCoordinate) {
+    if (checkCoordinate)
+    {
       int coordinate = site->getCoordinate();
       // For all coordinates in vector: throw exception if position already exists
-      for (size_t i = 0; i < getNumberOfSites(); ++i) {
-        if (i != sitePosition && this->site(i).getCoordinate() == coordinate) {
+      for (size_t i = 0; i < getNumberOfSites(); ++i)
+      {
+        if (i != sitePosition && this->site(i).getCoordinate() == coordinate)
+        {
           throw SiteException("TemplateVectorSiteContainer::setSite: Site position already exists in container", site.get());
-	      }
+        }
       }
     }
 
@@ -317,9 +338,9 @@ public:
   {
     // Clean Sequence Container cache
     sequenceContainer_.nullify();
-    
+
     auto sitePtr = siteContainer_.removeObject(sitePosition);
-    std::get_deleter< SwitchDeleter<SiteType> >(sitePtr)->off();
+    std::get_deleter< SwitchDeleter<SiteType>>(sitePtr)->off();
     return std::unique_ptr<SiteType>(sitePtr.get());
   }
 
@@ -329,7 +350,6 @@ public:
     // Clean Sequence Container cache
     sequenceContainer_.nullify();
   }
-
 
 
   void addSite(std::unique_ptr<SiteType>& site, bool checkCoordinate = true) override
@@ -343,10 +363,12 @@ public:
       throw AlphabetMismatchException("TemplateVectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
 
     // Check coordinate:
-    if (checkCoordinate) {
+    if (checkCoordinate)
+    {
       int coordinate = site->getCoordinate();
       // For all positions in vector : throw exception if position already exists
-      for (size_t i = 0; i < getNumberOfSites(); ++i) {
+      for (size_t i = 0; i < getNumberOfSites(); ++i)
+      {
         if (this->site(i).getCoordinate() == coordinate)
           throw SiteException("TemplateVectorSiteContainer::addSite(site, bool): Site position already exists in container", site.get());
       }
@@ -356,14 +378,18 @@ public:
     siteContainer_.appendObject(sitePtr);
 
     // Clean Sequence Container cache
-    if (getNumberOfSequences() == 0) {
+    if (getNumberOfSequences() == 0)
+    {
       sequenceNames_.resize(sitePtr->size());
       sequenceComments_.resize(sitePtr->size());
-      for (size_t i = 0; i < sitePtr->size(); ++i) {
+      for (size_t i = 0; i < sitePtr->size(); ++i)
+      {
         sequenceNames_[i] = "Seq_" + TextTools::toString(i);
         sequenceContainer_.appendObject(nullptr, sequenceNames_[i]);
       }
-    } else {
+    }
+    else
+    {
       sequenceContainer_.nullify();
     }
   }
@@ -383,10 +409,12 @@ public:
       throw AlphabetMismatchException("TemplateVectorSiteContainer::addSite", getAlphabet(), site->getAlphabet());
 
     // Check coordinate:
-    if (checkCoordinate) {
+    if (checkCoordinate)
+    {
       int coordinate = site->getCoordinate();
       // For all positions in vector : throw exception if position already exists
-      for (size_t i = 0; i < getNumberOfSites(); i++) {
+      for (size_t i = 0; i < getNumberOfSites(); i++)
+      {
         if (i != sitePosition && this->site(i).getCoordinate() == coordinate)
           throw SiteException("TemplateVectorSiteContainer::addSite. Site coordinate already exists in container", site.get());
       }
@@ -396,14 +424,18 @@ public:
     siteContainer_.insertObject(sitePtr, sitePosition);
 
     // Clean Sequence Container cache
-    if (getNumberOfSequences() == 0) {
+    if (getNumberOfSequences() == 0)
+    {
       sequenceNames_.resize(sitePtr->size());
       sequenceComments_.resize(sitePtr->size());
-      for (size_t i = 0; i < sitePtr->size(); ++i) {
+      for (size_t i = 0; i < sitePtr->size(); ++i)
+      {
         sequenceNames_[i] = "Seq_" + TextTools::toString(i);
         sequenceContainer_.appendObject(nullptr, sequenceNames_[i]);
       }
-    } else {
+    }
+    else
+    {
       sequenceContainer_.nullify();
     }
   }
@@ -421,7 +453,8 @@ public:
 
   void reindexSites() override
   {
-    for (size_t i = 0; i < getNumberOfSites(); ++i) {
+    for (size_t i = 0; i < getNumberOfSites(); ++i)
+    {
       site_(i).setCoordinate(static_cast<int>(i) + 1);
     }
   }
@@ -429,7 +462,8 @@ public:
   Vint getSiteCoordinates() const override
   {
     Vint coordinates(getNumberOfSites());
-    for (size_t i = 0; i < getNumberOfSites(); ++i) {
+    for (size_t i = 0; i < getNumberOfSites(); ++i)
+    {
       coordinates[i] = site(i).getCoordinate();
     }
     return coordinates;
@@ -440,7 +474,8 @@ public:
     if (vCoordinates.size() != getNumberOfSites())
       throw BadSizeException("TemplateVectorSiteContainer::setSiteCoordinates bad size of coordinates vector", vCoordinates.size(), getNumberOfSites());
 
-    for (size_t i = 0; i < getNumberOfSites(); ++i) {
+    for (size_t i = 0; i < getNumberOfSites(); ++i)
+    {
       site_(i).setCoordinate(vCoordinates[i]);
     }
   }
@@ -453,7 +488,6 @@ public:
    *
    * @{
    */
-
   bool hasSequence(const std::string& sequenceKey) const override
   {
     // Look for sequence key:
@@ -488,15 +522,17 @@ public:
     size_t n = getNumberOfSites();
     std::vector<typename SequenceType::SymbolType> sequence(n);
     for (size_t j = 0; j < n; ++j)
+    {
       sequence[j] = site(j)[sequencePosition];
-    
+    }
+
     auto alphaPtr = getAlphabet();
     auto ns = std::shared_ptr<SequenceType>(
           new SequenceType(
-		  sequenceNames_[sequencePosition],
-                  sequence,
-                  sequenceComments_[sequencePosition],
-                  alphaPtr),
+          sequenceNames_[sequencePosition],
+          sequence,
+          sequenceComments_[sequencePosition],
+          alphaPtr),
           SwitchDeleter<SequenceType>());
 
     sequenceContainer_.addObject_(ns, sequencePosition, sequenceKey(sequencePosition), false);
@@ -504,18 +540,20 @@ public:
     return *ns;
   }
 
- 
+
   std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition) override
   {
     sequence(sequencePosition); // this creates the sequence if it does not exist.
 
     for (size_t i = 0; i < getNumberOfSites(); ++i)
+    {
       site_(i).deleteElement(sequencePosition);
+    }
 
     auto d = static_cast<std::vector<std::string>::difference_type>(sequencePosition);
     sequenceNames_.erase(std::next(sequenceNames_.begin(), d));
     sequenceComments_.erase(std::next(sequenceComments_.begin(), d));
-  
+
     auto seq = sequenceContainer_.removeObject(sequencePosition);
     std::get_deleter<SwitchDeleter<SequenceType>>(seq)->off();
     std::unique_ptr<SequenceType> seq2(seq.get());
@@ -532,13 +570,15 @@ public:
   void deleteSequence(size_t sequencePosition) override
   {
     for (size_t i = 0; i < getNumberOfSites(); ++i)
+    {
       site_(i).deleteElement(sequencePosition);
+    }
 
     auto posN = static_cast<std::vector<std::string>::difference_type>(sequencePosition);
     sequenceNames_.erase(sequenceNames_.begin() + posN);
     auto posC = static_cast<std::vector<Comments>::difference_type>(sequencePosition);
     sequenceComments_.erase(sequenceComments_.begin() + posC);
-  
+
     sequenceContainer_.deleteObject(sequencePosition);
   }
 
@@ -565,7 +605,7 @@ public:
   }
 
   const std::string& sequenceKey(size_t sequencePosition) const override
-  { 
+  {
     return sequenceContainer_.getObjectName(sequencePosition);
   }
 
@@ -580,7 +620,8 @@ public:
       throw DimensionException("TemplateVectorSiteContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
     sequenceContainer_.nullify();
     sequenceNames_ = names;
-    if (updateKeys) {
+    if (updateKeys)
+    {
       setSequenceKeys(names);
     }
   }
@@ -610,7 +651,7 @@ public:
   {
     return site(sitePosition)[getSequencePosition(sequenceKey)];
   }
-  
+
   typename SequenceType::ElementType& valueAt(const std::string& sequenceKey, size_t sitePosition) override
   {
     size_t sequencePosition = getSequencePosition(sequenceKey);
@@ -623,7 +664,7 @@ public:
   {
     return site(sitePosition)[sequencePosition];
   }
-	  
+
   typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t sitePosition) override
   {
     // Reset sequence buffer for this position:
@@ -674,12 +715,14 @@ public:
       throw SequenceNotAlignedException("VectorSiteContainer::setSequence", sequence.get());
 
     // New sequence's alphabet and site container's alphabet matching verification
-   if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
       throw AlphabetMismatchException("VectorSiteContainer::setSequence", getAlphabet(), sequence->getAlphabet());
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); i++)
+    {
       site_(i).addElement(sequencePosition, sequence->getValue(i));
+    }
 
     sequenceContainer_.addObject(std::move(sequence), sequencePosition, sequenceKey);
   }
@@ -703,7 +746,9 @@ public:
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); ++i)
+    {
       site_(i).addElement(sequence->getValue(i));
+    }
 
     // Add name and comments:
     sequenceNames_.push_back(sequence->getName());
@@ -712,7 +757,6 @@ public:
     // Since the sequence is built already, we save it in the cache:
     sequenceContainer_.appendObject(std::move(sequence), sequenceKey);
   }
-
 
 
   void insertSequence(size_t sequencePosition, std::unique_ptr<SequenceType>& sequence, const std::string& sequenceKey) override
@@ -724,12 +768,14 @@ public:
       throw SequenceNotAlignedException("VectorSiteContainer::insertSequence", sequence.get());
 
     // New sequence's alphabet and site container's alphabet matching verification
-   if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
+    if (sequence->getAlphabet()->getAlphabetType() != getAlphabet()->getAlphabetType())
       throw AlphabetMismatchException("VectorSiteContainer::insertSequence", getAlphabet(), sequence->getAlphabet());
 
     // Update elements at each site:
     for (size_t i = 0; i < getNumberOfSites(); ++i)
+    {
       site_(i).addElement(sequencePosition, sequence->getValue(i));
+    }
 
     // Update name and comments:
     sequenceNames_[sequencePosition] = sequence->getName();
@@ -739,14 +785,14 @@ public:
     sequenceContainer_.insertObject(std::move(sequence), sequencePosition, sequenceKey);
   }
 
-  //Needed because of the template class
+  // Needed because of the template class
   using AbstractTemplateSequenceContainer<SequenceType>::getAlphabet;
   using AbstractTemplateSequenceContainer<SequenceType>::getComments;
   /** @} */
 
 protected:
   /**
-   * Get a non-const reference to a site in the container. 
+   * Get a non-const reference to a site in the container.
    * It is a convenient short-cut for use within the class only, as this can potentially mess up the data.
    *
    * @param sitePosition the index of the site to retrieve.
@@ -764,19 +810,18 @@ protected:
     std::shared_ptr<const Alphabet> alphaPtr = getAlphabet();
     SiteType s(alphaPtr);
 
-    for (size_t i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i)
+    {
       std::unique_ptr<SiteType> sitePtr(s.clone());
       addSite(sitePtr, false);
     }
 
     reindexSites();
   }
-
 };
 
-//Aliases:
+// Aliases:
 using VectorSiteContainer = TemplateVectorSiteContainer<Site, Sequence>;
 using ProbabilisticVectorSiteContainer = TemplateVectorSiteContainer<ProbabilisticSite, ProbabilisticSequence>;
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_VECTORSITECONTAINER_H

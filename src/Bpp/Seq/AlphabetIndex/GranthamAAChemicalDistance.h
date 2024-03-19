@@ -6,7 +6,6 @@
 #define BPP_SEQ_ALPHABETINDEX_GRANTHAMAACHEMICALDISTANCE_H
 
 
-
 // from the STL:
 #include <string>
 
@@ -109,7 +108,8 @@ protected:
   void computeIndexMatrix_();
 
 public:
-  void setSymmetric(bool yn) {
+  void setSymmetric(bool yn)
+  {
     sign_ = (yn ? SIGN_NONE : SIGN_ARBITRARY);
     computeIndexMatrix_();
   }
@@ -121,9 +121,10 @@ public:
    *
    * @param yn Tell is the PC1-based sign should be used instead of the arbitrary one.
    */
-  void setPC1Sign(bool yn) {
-     sign_ = (yn ? SIGN_PC1 : SIGN_ARBITRARY);
-     computeIndexMatrix_();
+  void setPC1Sign(bool yn)
+  {
+    sign_ = (yn ? SIGN_PC1 : SIGN_ARBITRARY);
+    computeIndexMatrix_();
   }
 
   static short int SIGN_ARBITRARY;

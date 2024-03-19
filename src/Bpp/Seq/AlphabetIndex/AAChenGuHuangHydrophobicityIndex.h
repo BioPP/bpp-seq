@@ -63,7 +63,8 @@ public:
 
   virtual ~AAChenGuHuangHydrophobicityIndex() {}
 
-  AAChenGuHuangHydrophobicityIndex* clone() const override {
+  AAChenGuHuangHydrophobicityIndex* clone() const override
+  {
     return new AAChenGuHuangHydrophobicityIndex();
   }
 

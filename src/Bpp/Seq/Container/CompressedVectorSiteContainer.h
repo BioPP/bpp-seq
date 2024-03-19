@@ -58,7 +58,7 @@ public:
    * @throw Exception If sites differ in size or in alphabet.
    */
   CompressedVectorSiteContainer(
-      std::vector< std::unique_ptr<Site> >& vs,
+      std::vector< std::unique_ptr<Site>>& vs,
       std::shared_ptr<const Alphabet>& alphabet);
 
   /**
@@ -68,8 +68,8 @@ public:
    * @param alphabet The alphabet for this container.
    */
   CompressedVectorSiteContainer(
-    size_t size,
-    std::shared_ptr<const Alphabet>& alphabet);
+      size_t size,
+      std::shared_ptr<const Alphabet>& alphabet);
 
   /**
    * @brief Build a new empty container with specified sequence names.
@@ -78,8 +78,8 @@ public:
    * @param alphabet The alphabet for this container.
    */
   CompressedVectorSiteContainer(
-    const std::vector<std::string>& names,
-    std::shared_ptr<const Alphabet>& alphabet);
+      const std::vector<std::string>& names,
+      std::shared_ptr<const Alphabet>& alphabet);
 
   /**
    * @brief Build a new empty container.
@@ -121,7 +121,7 @@ public:
   void setSite(size_t sitePosition, std::unique_ptr<Site>& site, bool checkCoordinate = true) override;
 
   std::unique_ptr<Site> removeSite(size_t sitePosition) override;
-  
+
   void deleteSite(size_t sitePosition) override;
 
   void addSite(std::unique_ptr<Site>& site, bool checkCoordinate = false) override;
@@ -132,7 +132,7 @@ public:
 
   size_t getNumberOfSites() const override { return index_.size(); }
 
-  void reindexSites() override ;
+  void reindexSites() override;
 
   Vint getSiteCoordinates() const override;
 
@@ -203,7 +203,8 @@ public:
     throw NotImplementedException("CompressedVectorSiteContainer::deleteSequence.");
   }
 
-  size_t getNumberOfSequences() const override {
+  size_t getNumberOfSequences() const override
+  {
     return sequenceContainer_.getNumberOfObjects();
   }
 
@@ -218,7 +219,7 @@ public:
   }
 
   const std::string& sequenceKey(size_t sequencePosition) const override
-  { 
+  {
     return sequenceContainer_.getObjectName(sequencePosition);
   }
 
@@ -233,7 +234,8 @@ public:
       throw DimensionException("CompressedVectorSiteContainer::setSequenceNames : bad number of names", names.size(), getNumberOfSequences());
     sequenceContainer_.clear();
     sequenceNames_ = names;
-    if (updateKeys) {
+    if (updateKeys)
+    {
       setSequenceKeys(names);
     }
   }
@@ -296,24 +298,24 @@ public:
   {
     return site(sitePosition)[getSequencePosition(sequenceKey)];
   }
-  
+
   int& valueAt(const std::string& sequenceKey, size_t sitePosition) override
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::valueAt (non const).");
   }
-  
+
   const int& valueAt(size_t sequencePosition, size_t sitePosition) const override
   {
     return site(sitePosition)[sequencePosition];
   }
-	 
+
   int& valueAt(size_t sequencePosition, size_t sitePosition) override
   {
     // Implementing this function would involve (partially) decompressing the data...
     throw NotImplementedException("CompressedVectorSiteContainer::valueAt (non const).");
   }
-	
+
   /**
    * @name SequenceData methods.
    *
@@ -339,12 +341,11 @@ public:
     return site(sitePosition).getStateValueAt(sequencePosition, state);
   }
 
-  /** @} */ 
-
+  /** @} */
 
 protected:
   /**
-   * Get a non-const reference to a site in the container. 
+   * Get a non-const reference to a site in the container.
    * It is a convenient short-cut for use within the class only, as this can potentially mess up the data.
    *
    * @param sitePosition the index of the site to retrieve.

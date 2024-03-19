@@ -75,6 +75,5 @@ public:
 };
 
 using AlignmentDataInterface = TemplateAlignmentDataInterface<std::string>;
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_ALIGNEDVALUESCONTAINER_H

@@ -57,7 +57,8 @@ void DCSE::appendAlignmentFromStream(istream& input, SequenceContainerInterface&
     name     = string(line.begin() + static_cast<ptrdiff_t>(endOfSeq + 1), line.end()),
     name     = TextTools::removeFirstWhiteSpaces(name);
     if (name.find("Helix numbering") == name.npos
-        && name.find("mask") == name.npos) {
+        && name.find("mask") == name.npos)
+    {
       auto seqPtr = make_unique<Sequence>(name, sequence, alphaPtr);
       sc.addSequence(name, seqPtr);
     }

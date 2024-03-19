@@ -58,12 +58,12 @@ public:
 public:
   double getIndex(int state) const override
   {
-    return hydropathy_[getAlphabet()->getStateIndex(state)-1];
+    return hydropathy_[getAlphabet()->getStateIndex(state) - 1];
   }
 
   double getIndex(const std::string& state) const override
   {
-    return hydropathy_[getAlphabet()->getStateIndex(state)-1];
+    return hydropathy_[getAlphabet()->getStateIndex(state) - 1];
   }
 
   const std::vector<double>& indexVector() const override { return hydropathy_; }

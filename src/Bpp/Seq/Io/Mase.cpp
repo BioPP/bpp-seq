@@ -47,7 +47,7 @@ void Mase::appendSequencesFromStream(std::istream& input, SequenceContainerInter
         if ((name != "") && (sequence != ""))
         {
           // New sequence creation, and addition in existing VectorSequenceContainer
-	  auto alphaPtr = vsc.getAlphabet();
+          auto alphaPtr = vsc.getAlphabet();
           auto seqPtr = make_unique<Sequence>(name, sequence, seqComments, alphaPtr);
           vsc.addSequence(seqPtr->getName(), seqPtr);
           name = "";
@@ -72,7 +72,7 @@ void Mase::appendSequencesFromStream(std::istream& input, SequenceContainerInter
         comments = false;
       }
       else
-        sequence += temp;                                // Sequence isolation
+        sequence += temp; // Sequence isolation
     }
   }
 

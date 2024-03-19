@@ -162,8 +162,8 @@ unique_ptr<Sequence> GeneticCode::getCodingSequence(
     for (size_t i = initPos; i < sequence.size() - 2; i += 3)
     {
       string codon = nucAlpha->intToChar(sequence[i])
-                     + nucAlpha->intToChar(sequence[i + 1])
-                     + nucAlpha->intToChar(sequence[i + 2]);
+          + nucAlpha->intToChar(sequence[i + 1])
+          + nucAlpha->intToChar(sequence[i + 2]);
       if (isStop(codon))
       {
         stopPos = i;

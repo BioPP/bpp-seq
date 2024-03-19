@@ -6,7 +6,6 @@
 #define BPP_SEQ_ALPHABET_NUCLEICALPHABETSTATE_H
 
 
-
 // From the STL
 #include <string>
 #include <bitset>

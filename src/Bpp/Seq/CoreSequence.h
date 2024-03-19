@@ -6,7 +6,6 @@
 #define BPP_SEQ_CORESEQUENCE_H
 
 
-
 // From the STL:
 #include <string>
 #include <vector>
@@ -28,6 +27,7 @@ class CoreSequenceInterface :
   public virtual Commentable
 {
 public:
+
 public:
   CoreSequenceInterface() {}
 
@@ -64,7 +64,7 @@ public:
    * @{
    */
 
-  
+
   /**
    * @brief Set up the size of a sequence from the right side.
    *
@@ -86,7 +86,6 @@ public:
   virtual void setToSizeL(size_t newSize) = 0;
 
   /** @} */
-
 };
 
 
@@ -129,8 +128,8 @@ public:
 
   AbstractCoreSequence(const AbstractCoreSequence& s) :
     Commentable(s),
-    name_(s.name_) {
-  }
+    name_(s.name_)
+  {}
 
   AbstractCoreSequence& operator=(const AbstractCoreSequence& s)
   {
@@ -142,8 +141,7 @@ public:
   AbstractCoreSequence(const CoreSequenceInterface& s) :
     SimpleCommentable(s.getComments()),
     name_(s.getName())
-  {
-  }
+  {}
 
   AbstractCoreSequence& operator=(const CoreSequenceInterface& s)
   {

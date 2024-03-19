@@ -12,15 +12,17 @@
 using namespace bpp;
 using namespace std;
 
-int main() {
-  //This program reads a protein alignment generated using SimProt
-  //[http://www.uhnresearch.ca/labs/tillier/simprotWEB/] in various file formats
+int main()
+{
+  // This program reads a protein alignment generated using SimProt
+  // [http://www.uhnresearch.ca/labs/tillier/simprotWEB/] in various file formats
   shared_ptr<const Alphabet> alpha = AlphabetTools::PROTEIN_ALPHABET;
   Fasta fasta;
   auto sites1 = fasta.readAlignment("example.fasta", alpha);
-  //test number of seq
+  // test number of seq
   cout << "example.fasta contains " << sites1->getNumberOfSequences() << " sequences" << endl;
-  if (sites1->getNumberOfSequences() != 100) {
+  if (sites1->getNumberOfSequences() != 100)
+  {
     return 1;
   }
 
@@ -38,17 +40,17 @@ int main() {
   cout << "Clustal:  " << sites3->getNumberOfSequences() << "\t" << sites3->getNumberOfSites() << endl;
   cout << "Phylip:   " << sites4->getNumberOfSequences() << "\t" << sites4->getNumberOfSites() << endl;
   cout << "Phylip 3: " << sites5->getNumberOfSequences() << "\t" << sites5->getNumberOfSites() << endl;
-  
-  //Test:
+
+  // Test:
   bool test = sites1->getNumberOfSequences() == sites2->getNumberOfSequences()
-           && sites1->getNumberOfSequences() == sites3->getNumberOfSequences()
-           && sites1->getNumberOfSequences() == sites4->getNumberOfSequences()
-           && sites1->getNumberOfSequences() == sites5->getNumberOfSequences()
-           && sites1->getNumberOfSites()     == sites2->getNumberOfSites()
-           && sites1->getNumberOfSites()     == sites3->getNumberOfSites()
-           && sites1->getNumberOfSites()     == sites4->getNumberOfSites()
-           && sites1->getNumberOfSites()     == sites5->getNumberOfSites();
+      && sites1->getNumberOfSequences() == sites3->getNumberOfSequences()
+      && sites1->getNumberOfSequences() == sites4->getNumberOfSequences()
+      && sites1->getNumberOfSequences() == sites5->getNumberOfSequences()
+      && sites1->getNumberOfSites()     == sites2->getNumberOfSites()
+      && sites1->getNumberOfSites()     == sites3->getNumberOfSites()
+      && sites1->getNumberOfSites()     == sites4->getNumberOfSites()
+      && sites1->getNumberOfSites()     == sites5->getNumberOfSites();
 
   cout << (test ? "Succeeded." : "Failed.") << endl;
-  return (test ? 0 : 1);
+  return test ? 0 : 1;
 }

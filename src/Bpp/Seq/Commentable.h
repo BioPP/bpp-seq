@@ -6,7 +6,6 @@
 #define BPP_SEQ_COMMENTABLE_H
 
 
-
 // From the STL:
 #include <string>
 #include <iostream>
@@ -44,7 +43,7 @@ public:
   virtual void clearComments() = 0;
 };
 
-class SimpleCommentable:
+class SimpleCommentable :
   public virtual Commentable
 {
 protected:
@@ -61,8 +60,7 @@ public:
 
   SimpleCommentable(const SimpleCommentable& com) :
     comments_(com.comments_)
-  {
-  }
+  {}
 
   SimpleCommentable& operator=(const SimpleCommentable& com)
   {
@@ -89,6 +87,5 @@ public:
 
   void clearComments() override { comments_.clear(); }
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_COMMENTABLE_H

@@ -154,7 +154,7 @@ void NexusIOSequence::appendAlignmentFromStream(std::istream& input, SequenceCon
   {
     // Now we resolve the alignment:
     auto resolvedAlignment =
-      SiteContainerTools::resolveDottedAlignment(*alignment, alphaPtr);
+        SiteContainerTools::resolveDottedAlignment(*alignment, alphaPtr);
     for (size_t i = 0; i < resolvedAlignment->getNumberOfSequences(); ++i)
     {
       auto seqPtr = unique_ptr<Sequence>(resolvedAlignment->sequence(i).clone());

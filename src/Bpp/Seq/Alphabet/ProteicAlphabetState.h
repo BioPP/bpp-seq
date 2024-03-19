@@ -6,7 +6,6 @@
 #define BPP_SEQ_ALPHABET_PROTEICALPHABETSTATE_H
 
 
-
 // From the STL
 #include <string>
 

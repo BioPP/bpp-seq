@@ -49,14 +49,11 @@ public:
 };
 
 
-
-
-
 /**
  * @brief Loop over all sites in a SiteContainer.
  */
 template<class SiteType, class SequenceType, class HashType>
-class SimpleTemplateSiteContainerIterator : 
+class SimpleTemplateSiteContainerIterator :
   public AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>
 {
 protected:
@@ -68,7 +65,7 @@ public:
       const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) :
     AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>(sites)
   {}
-	  
+
   virtual ~SimpleTemplateSiteContainerIterator() {}
 
 public:
@@ -83,7 +80,6 @@ public:
   {
     return static_cast<unsigned int>(currentPosition_) < sites_->getNumberOfSites();
   }
-
 };
 
 using SimpleSiteContainerIterator = SimpleTemplateSiteContainerIterator<Site, Sequence, std::string>;
@@ -93,7 +89,7 @@ using SimpleProbabilisticSiteContainerIterator = SimpleTemplateSiteContainerIter
  * @brief Loop over all sites without gaps in a SiteContainer.
  */
 template<class SiteType, class SequenceType, class HashType>
-class NoGapTemplateSiteContainerIterator : 
+class NoGapTemplateSiteContainerIterator :
   public AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>
 {
 protected:
@@ -102,7 +98,7 @@ protected:
 
 public:
   NoGapTemplateSiteContainerIterator(
-      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) : 
+      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) :
     AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>(sites)
   {
     currentPosition_ = nextSiteWithoutGapPosition(-1);
@@ -117,7 +113,7 @@ public:
     currentPosition_ = nextSiteWithoutGapPosition(currentPosition_);
     return s;
   }
-  
+
   bool hasMoreSites() const override
   {
     return currentPosition_ < static_cast<long int>(sites_->getNumberOfSites());
@@ -138,7 +134,6 @@ public:
       position--;
     return position;
   }
-
 };
 
 /**
@@ -146,7 +141,7 @@ public:
  * (i.e. sites without gap and unresolved characters).
  */
 template<class SiteType, class SequenceType, class HashType>
-class CompleteTemplateSiteContainerIterator : 
+class CompleteTemplateSiteContainerIterator :
   public AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>
 {
 protected:
@@ -155,7 +150,7 @@ protected:
 
 public:
   CompleteTemplateSiteContainerIterator(
-      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) : 
+      const TemplateSiteContainerInterface<SiteType, SequenceType, HashType>& sites) :
     AbstractTemplateSiteContainerIterator<SiteType, SequenceType, HashType>(sites)
   {
     currentPosition_ = nextCompleteSitePosition(-1);
@@ -191,7 +186,6 @@ public:
       position--;
     return position;
   }
-
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINERITERATOR_H

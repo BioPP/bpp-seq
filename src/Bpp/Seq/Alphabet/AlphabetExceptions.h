@@ -14,7 +14,6 @@
 
 namespace bpp
 {
-
 /**
  * @brief The alphabet exception base class.
  *
@@ -43,13 +42,13 @@ public:
    */
   AlphabetException(const std::string& text, std::shared_ptr<const Alphabet> alpha);
 
-  AlphabetException(const AlphabetException& ae):
+  AlphabetException(const AlphabetException& ae) :
     Exception(ae),
     alphabet_(ae.alphabet_)
   {}
 
   AlphabetException& operator=(const AlphabetException& ae)
-  { 
+  {
     Exception::operator=(ae);
     alphabet_ = ae.alphabet_;
     return *this;
@@ -148,7 +147,7 @@ public:
  * Typically, this may occur when you try to add a bad sequence to a container,
  * or concatenate two kinds of sequences, and so on.
  */
-class AlphabetMismatchException : 
+class AlphabetMismatchException :
   public Exception
 {
 private:
@@ -164,9 +163,9 @@ public:
    * @param alpha2 A const pointer toward the second alphabet, i.e. the one which does not match with the first.
    */
   AlphabetMismatchException(
-		  const std::string& text,
-		  const Alphabet* alpha1,
-		  const Alphabet* alpha2);
+      const std::string& text,
+      const Alphabet* alpha1,
+      const Alphabet* alpha2);
 
   /**
    * @brief Build a new AlphabetMismatchException object.
@@ -176,18 +175,18 @@ public:
    * @param alpha2 A const smart pointer toward the second alphabet, i.e. the one which does not match with the first.
    */
   AlphabetMismatchException(
-		  const std::string& text,
-		  std::shared_ptr<const Alphabet> alpha1,
-		  std::shared_ptr<const Alphabet> alpha2);
+      const std::string& text,
+      std::shared_ptr<const Alphabet> alpha1,
+      std::shared_ptr<const Alphabet> alpha2);
 
-  AlphabetMismatchException(const AlphabetMismatchException& ame):
+  AlphabetMismatchException(const AlphabetMismatchException& ame) :
     Exception(ame),
     alphabet1_(ame.alphabet1_),
     alphabet2_(ame.alphabet2_)
   {}
 
   AlphabetMismatchException& operator=(const AlphabetMismatchException& ame)
-  { 
+  {
     Exception::operator=(ame);
     alphabet1_ = ame.alphabet1_;
     alphabet2_ = ame.alphabet2_;
@@ -216,7 +215,7 @@ public:
 /**
  * @brief Exception thrown in case no character is available for a certain state in an alphabet.
  */
-class CharStateNotSupportedException : 
+class CharStateNotSupportedException :
   public AlphabetException
 {
 public:

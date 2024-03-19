@@ -7,7 +7,7 @@
 
 #include <Bpp/Clonable.h>
 
-//From the STL:
+// From the STL:
 
 #include <memory>
 
@@ -24,8 +24,8 @@ namespace bpp
  * and setPosition methods (see Site class).
  */
 template<class T>
-class PositionedContainerInterface:
-    public virtual Clonable
+class PositionedContainerInterface :
+  public virtual Clonable
 {
 public:
   PositionedContainerInterface() {}
@@ -87,7 +87,6 @@ public:
    * @param objectIndex The index of the object in the container.
    */
   virtual void deleteObject(size_t objectIndex) = 0;
-
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_POSITIONEDCONTAINER_H

@@ -24,13 +24,11 @@ class AbstractTemplateSequenceContainer :
   public virtual TemplateSequenceContainerInterface<SequenceType, HashType>,
   public SimpleCommentable
 {
-
 protected:
   /**
    * @brief The container's alphabet.
    */
   std::shared_ptr<const Alphabet> alphabet_;
-
 
 public:
   /**
@@ -96,12 +94,11 @@ public:
 public:
   const Alphabet& alphabet() const override
   {
-    if (!alphabet_) throw Exception("AbstractSequenceContainer::alphabet() : no associated alphabet."); 
+    if (!alphabet_) throw Exception("AbstractSequenceContainer::alphabet() : no associated alphabet.");
     return *alphabet_;
   }
-  
+
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
- 
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_ABSTRACTSEQUENCECONTAINER_H

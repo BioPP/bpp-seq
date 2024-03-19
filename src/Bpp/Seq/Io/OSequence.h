@@ -147,7 +147,6 @@ public:
    *                  Any previous content will be lost.
    */
   virtual void writeAlignment(const std::string& path, const ProbabilisticSiteContainerInterface& sc, bool overwrite) const = 0;
-  
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_OSEQUENCE_H

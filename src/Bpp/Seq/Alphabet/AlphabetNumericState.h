@@ -6,7 +6,6 @@
 #define BPP_SEQ_ALPHABET_ALPHABETNUMERICSTATE_H
 
 
-
 // From the STL
 #include <string>
 

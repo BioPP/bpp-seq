@@ -96,10 +96,10 @@ private:
     {
       for (int j = 0; j < 64; j++)
       {
-        vIndex_(getAlphabet()->getStateIndex(i)-1, getAlphabet()->getStateIndex(j)-1) =
-          gencode_->isStop(i) ? 0 :
-          gencode_->isStop(j) ? 0 :
-          protAlphIndex_->getIndex(gencode_->translate(i), gencode_->translate(j));
+        vIndex_(getAlphabet()->getStateIndex(i) - 1, getAlphabet()->getStateIndex(j) - 1) =
+            gencode_->isStop(i) ? 0 :
+            gencode_->isStop(j) ? 0 :
+            protAlphIndex_->getIndex(gencode_->translate(i), gencode_->translate(j));
       }
     }
   }

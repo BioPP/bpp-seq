@@ -21,12 +21,11 @@
 
 namespace bpp
 {
-
 /**
  * @brief A partial implementation of a SymbolList object.
  *
  * This class implements most of the CoreSymbolList interface, with the excpetion of the getStateValueAt function, which depend on the template type.
- * 
+ *
  * @see Alphabet
  */
 template<class T>
@@ -54,7 +53,7 @@ public:
    * @param alpha The alphabet to use.
    */
   AbstractTemplateSymbolList(std::shared_ptr<const Alphabet> alpha) :
-      alphabet_(alpha), content_() {}
+    alphabet_(alpha), content_() {}
 
   /**
    * @brief Build a new SymbolList object with the specified alphabet.
@@ -64,7 +63,7 @@ public:
    * @param alpha    The alphabet to use.
    */
   AbstractTemplateSymbolList(const std::vector<T>& list, std::shared_ptr<const Alphabet> alpha) :
-      alphabet_(alpha), content_()
+    alphabet_(alpha), content_()
   {
     setContent(list);
   }
@@ -119,7 +118,7 @@ public:
 
 public:
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
-  
+
   const Alphabet& alphabet() const override { return *alphabet_; }
 
   size_t size() const override { return content_.size(); }
@@ -196,19 +195,17 @@ public:
 };
 
 
-
-
-
 /**
  * @brief A partial implementation of a EventDrivenSymbolList object.
  *
  * This class implements most of the CoreSymbolList interface, with the excpetion of the getStateValueAt function, which depend on the template type.
- * 
+ *
  * @see Alphabet
  */
 template<class T>
 class AbstractTemplateEventDrivenSymbolList :
-  public virtual AbstractTemplateSymbolList<T>, //Note: this needs to be virtual because of diamond inheritence
+  public virtual AbstractTemplateSymbolList<T>,
+  // Note: this needs to be virtual because of diamond inheritence
   public virtual TemplateEventDrivenCoreSymbolListInterface<T>
 {
 private:
@@ -226,7 +223,7 @@ protected:
    * @param alpha The alphabet to use.
    */
   AbstractTemplateEventDrivenSymbolList(std::shared_ptr<const Alphabet> alpha) :
-      AbstractTemplateSymbolList<T>(alpha), propagateEvents_(true), listeners_() {}
+    AbstractTemplateSymbolList<T>(alpha), propagateEvents_(true), listeners_() {}
 
   /**
    * @brief Build a new EventDrivenSymbolList object with the specified alphabet.
@@ -260,9 +257,12 @@ protected:
   {
     for (size_t i = 0; i < list.listeners_.size(); ++i)
     {
-      if (list.listeners_[i]->isShared()) {
+      if (list.listeners_[i]->isShared())
+      {
         listeners_[i] = list.listeners_[i];
-      } else {
+      }
+      else
+      {
         listeners_[i] = std::shared_ptr<CoreSymbolListListener<T>>(list.listeners_[i]->clone());
       }
     }
@@ -290,9 +290,12 @@ protected:
     listeners_.resize(list.listeners_.size());
     for (size_t i = 0; i < listeners_.size(); ++i)
     {
-      if (list.listeners_[i]->isShared()) {
+      if (list.listeners_[i]->isShared())
+      {
         listeners_[i] = list.listeners_[i];
-      } else {
+      }
+      else
+      {
         listeners_[i] = std::shared_ptr<CoreSymbolListListener<T>>(list.listeners_[i]->clone());
       }
     }
@@ -493,6 +496,5 @@ protected:
   void propagateEvents(bool yn) override { propagateEvents_ = yn; }
   bool propagateEvents() const override { return propagateEvents_; }
 };
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_SYMBOLLIST_H

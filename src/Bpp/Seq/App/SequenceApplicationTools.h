@@ -230,7 +230,7 @@ public:
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    * @return A map of VectorSiteContainer objects according to the description.
    */
-  static std::map<size_t, std::unique_ptr<VectorSiteContainer> >
+  static std::map<size_t, std::unique_ptr<VectorSiteContainer>>
   getSiteContainers(
     std::shared_ptr<const Alphabet> alpha,
     const std::map<std::string, std::string>& params,
@@ -257,7 +257,7 @@ public:
    * @param warn Set the warning level (0: always display warnings, >0 display warnings on demand).
    * @return A map of ProbabilisticVectorSiteContainer objects according to the description.
    */
-  static std::map<size_t, std::unique_ptr<ProbabilisticVectorSiteContainer> >
+  static std::map<size_t, std::unique_ptr<ProbabilisticVectorSiteContainer>>
   getProbabilisticSiteContainers(
     std::shared_ptr<const Alphabet> alpha,
     const std::map<std::string, std::string>& params,
@@ -322,18 +322,18 @@ public:
    * @return A new VectorSiteContainer object containing sites of interest.
    */
   template<class SiteType, class SequenceType>
-  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> >
+  static std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType>>
   getSitesToAnalyse(
-    const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& allSites,
-    const std::map<std::string, std::string>& params,
-    std::string suffix = "",
-    bool suffixIsOptional = true,
-    bool gapAsUnknown = true,
-    bool verbose = true,
-    int warn = 1)
+      const TemplateSiteContainerInterface<SiteType, SequenceType, std::string>& allSites,
+      const std::map<std::string, std::string>& params,
+      std::string suffix = "",
+      bool suffixIsOptional = true,
+      bool gapAsUnknown = true,
+      bool verbose = true,
+      int warn = 1)
   {
     // Fully resolved sites, i.e. without jokers and gaps:
-    std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType> > sitesToAnalyse;
+    std::unique_ptr< TemplateVectorSiteContainer<SiteType, SequenceType>> sitesToAnalyse;
 
     size_t numSeq = allSites.getNumberOfSequences();
 
@@ -343,7 +343,7 @@ public:
 
     if (option == "all")
     {
-      sitesToAnalyse = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType> >(allSites);
+      sitesToAnalyse = std::make_unique< TemplateVectorSiteContainer<SiteType, SequenceType>>(allSites);
       size_t nbSites = sitesToAnalyse->getNumberOfSites();
 
       std::string maxGapOption = ApplicationTools::getStringParameter("input.sequence.max_gap_allowed", params, "100%", suffix, suffixIsOptional, warn);
@@ -393,7 +393,7 @@ public:
         if (verbose)
           ApplicationTools::displayTask("Remove unresolved sites", true);
         for (size_t i = nbSites; i > 0; i--)
-        { 
+        {
           if (verbose)
             ApplicationTools::displayGauge(nbSites - i, nbSites - 1, '=');
 
@@ -432,9 +432,9 @@ public:
 
       if (option == "yes")
       {
-	std::string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, warn);
-	auto nucAlph = ca->getNucleicAlphabet();
-	auto gCode = getGeneticCode(nucAlph, codeDesc);
+        std::string codeDesc = ApplicationTools::getStringParameter("genetic_code", params, "Standard", "", true, warn);
+        auto nucAlph = ca->getNucleicAlphabet();
+        auto gCode = getGeneticCode(nucAlph, codeDesc);
         SiteContainerTools::removeSitesWithStopCodon(*sitesToAnalyse, *gCode);
       }
     }
@@ -444,7 +444,6 @@ public:
 
     return sitesToAnalyse;
   }
-
 
 
   /**

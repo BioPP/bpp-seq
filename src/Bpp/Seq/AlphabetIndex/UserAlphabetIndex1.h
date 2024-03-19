@@ -48,22 +48,22 @@ public:
 public:
   double getIndex(int state) const
   {
-    return index_[alph_->getStateIndex(state)-1];
+    return index_[alph_->getStateIndex(state) - 1];
   }
 
   void setIndex(int state, double val)
   {
-    index_[alph_->getStateIndex(state)-1] = val;
+    index_[alph_->getStateIndex(state) - 1] = val;
   }
 
   double getIndex(const std::string& state) const
   {
-    return index_[alph_->getStateIndex(state)-1];
+    return index_[alph_->getStateIndex(state) - 1];
   }
 
   void setIndex(const std::string& state, double val)
   {
-    index_[alph_->getStateIndex(state)-1] = val;
+    index_[alph_->getStateIndex(state) - 1] = val;
   }
 
   const std::vector<double>& indexVector() const { return index_; }

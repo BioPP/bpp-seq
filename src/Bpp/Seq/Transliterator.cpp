@@ -40,4 +40,3 @@ unique_ptr<Sequence> AbstractReverseTransliterator::reverse(const SequenceInterf
   }
   return rSeq;
 }
-

@@ -11,7 +11,6 @@
 
 namespace bpp
 {
-
 /**
  * @brief The site exception base class.
  *
@@ -40,7 +39,7 @@ public:
     site_(s)
   {}
 
-  SiteException(const SiteException& se):
+  SiteException(const SiteException& se) :
     Exception(se),
     site_(se.site_)
   {}
@@ -72,7 +71,7 @@ class EmptySiteException :
 {
 public:
   EmptySiteException(const std::string& text, const CoreSiteInterface* s) :
-	 SiteException(text, s) {}
+    SiteException(text, s) {}
 
   virtual ~EmptySiteException() {}
 };
@@ -85,7 +84,7 @@ class SiteWithGapException :
 {
 public:
   SiteWithGapException(const std::string& text, const CoreSiteInterface* s) :
-	 SiteException(text, s) {}
+    SiteException(text, s) {}
 
   virtual ~SiteWithGapException() {}
 };

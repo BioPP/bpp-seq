@@ -23,7 +23,7 @@ class TemplateStreamSequenceIterator :
 {
 private:
   std::shared_ptr<const Alphabet> alphabet_;
-  std::shared_ptr< const ISequenceStream<SequenceType> > seqStream_;
+  std::shared_ptr< const ISequenceStream<SequenceType>> seqStream_;
   str::shared_ptr<std::istream> stream_;
   SequenceType* nextSeq_;
 
@@ -31,7 +31,7 @@ public:
   StreamSequenceIterator(
       std::shared_ptr<ISequenceStream> seqStream,
       std::shared_ptr<std::istream> stream,
-      std::shared_ptr<const Alphabet> alphabet):
+      std::shared_ptr<const Alphabet> alphabet) :
     alphabet_(alphabet),
     seqStream_(seqStream),
     stream_(stream),
@@ -85,9 +85,8 @@ public:
   bool hasMoreSequences() const override { return nextSeq_ != 0; }
 };
 
-using StreamSequenceIterator=TemplateStreamSequenceIterator<Sequence>
-using StreamSequenceWithQualityIterator=TemplateStreamSequenceIterator<SequenceWithQuality>
-using StreamProbabilisticSequenceIterator=TemplateStreamSequenceIterator<ProbabilisticSequence>
-
+using StreamSequenceIterator = TemplateStreamSequenceIterator<Sequence>
+    using StreamSequenceWithQualityIterator = TemplateStreamSequenceIterator<SequenceWithQuality>
+    using StreamProbabilisticSequenceIterator = TemplateStreamSequenceIterator<ProbabilisticSequence>
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_STREAMSEQUENCEITERATOR_H

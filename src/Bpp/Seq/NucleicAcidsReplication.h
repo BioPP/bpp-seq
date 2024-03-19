@@ -58,11 +58,11 @@ public:
 
 public:
   std::shared_ptr<const Alphabet> getSourceAlphabet() const override { return nuc1_; }
-  
+
   const Alphabet& sourceAlphabet() const override { return *nuc1_; }
-  
+
   std::shared_ptr<const Alphabet> getTargetAlphabet() const override { return nuc2_; }
-  
+
   const Alphabet& targetAlphabet() const override { return *nuc2_; }
 
   int translate(int state) const override;

@@ -354,11 +354,10 @@ bool SymbolListTools::isConstant(
 }
 
 
-
 void SymbolListTools::getCountsResolveUnknowns(
     const IntSymbolListInterface& list1,
     const IntSymbolListInterface& list2,
-    map< int, map<int, double> >& counts)
+    map< int, map<int, double>>& counts)
 {
   if (list1.size() != list2.size())
     throw DimensionException("SymbolListTools::getCounts: the two lists must have the same size.", list1.size(), list2.size());
@@ -397,11 +396,11 @@ void SymbolListTools::getFrequencies(
 void SymbolListTools::getFrequencies(
     const CruxSymbolListInterface& list1,
     const CruxSymbolListInterface& list2,
-    map<int, map<int, double> >& frequencies,
+    map<int, map<int, double>>& frequencies,
     bool resolveUnknowns)
 {
   double n2 = static_cast<double>(list1.size()) * static_cast<double>(list1.size());
-  map<int, map<int, double> > counts;
+  map<int, map<int, double>> counts;
   getCounts(list1, list2, counts, resolveUnknowns);
 
   for (auto it1 : counts)
@@ -444,16 +443,16 @@ double SymbolListTools::getGCContent(
           total++;
           switch (state)
           {
-          case (7): gc++; break;// G or C
-          case (4): gc += 0.5; break;// A or C
-          case (5): gc += 0.5; break;// A or G
-          case (6): gc += 0.5; break;// C or T
-          case (9): gc += 0.5; break;// G or T
-          case (10): gc += 2. / 3.; break;// A or C or G
-          case (11): gc += 1. / 3.; break;// A or C or T
-          case (12): gc += 1. / 3.; break;// A or G or T
-          case (13): gc += 2. / 3.; break;// C or G or T
-          case (14): gc += 0.5; break;// A or C or G or T
+          case (7): gc++; break; // G or C
+          case (4): gc += 0.5; break; // A or C
+          case (5): gc += 0.5; break; // A or G
+          case (6): gc += 0.5; break; // C or T
+          case (9): gc += 0.5; break; // G or T
+          case (10): gc += 2. / 3.; break; // A or C or G
+          case (11): gc += 1. / 3.; break; // A or C or T
+          case (12): gc += 1. / 3.; break; // A or G or T
+          case (13): gc += 2. / 3.; break; // C or G or T
+          case (14): gc += 0.5; break; // A or C or G or T
           }
         }
       }
@@ -523,7 +522,7 @@ void SymbolListTools::changeUnresolvedCharactersToGaps(IntSymbolListInterface& l
 void SymbolListTools::getCountsResolveUnknowns(
     const ProbabilisticSymbolListInterface& list1,
     const ProbabilisticSymbolListInterface& list2,
-    map< int, map<int, double> >& counts)
+    map< int, map<int, double>>& counts)
 {
   if (list1.size() != list2.size())
     throw DimensionException("SymbolListTools::getCounts: the two lists must have the same size.", list1.size(), list2.size());
@@ -580,8 +579,8 @@ double SymbolListTools::getGCContent(
 }
 
 size_t SymbolListTools::getNumberOfDistinctPositions(
-     const ProbabilisticSymbolListInterface& l1,
-     const ProbabilisticSymbolListInterface& l2)
+    const ProbabilisticSymbolListInterface& l1,
+    const ProbabilisticSymbolListInterface& l2)
 {
   if (l1.getAlphabet()->getAlphabetType() != l2.getAlphabet()->getAlphabetType())
     throw AlphabetMismatchException("SymbolListTools::getNumberOfDistinctPositions.", l1.getAlphabet(), l2.getAlphabet());
@@ -668,7 +667,7 @@ double SymbolListTools::mutualInformation(
     throw DimensionException("SymbolListTools::mutualInformation: lists must have the same size!", list1.size(), list2.size());
   vector<double> p1(list1.getAlphabet()->getSize());
   vector<double> p2(list2.getAlphabet()->getSize());
-  map<int, map<int, double> > p12;
+  map<int, map<int, double>> p12;
   getCounts(list1, list2, p12, resolveUnknown);
   double mi = 0, tot = 0, pxy;
   // We need to correct frequencies for gaps:
@@ -716,7 +715,7 @@ double SymbolListTools::jointEntropy(
     throw Exception("SymbolListTools::jointEntropy: Incorrect specified list, size must be > 0");
   if (list1.size() != list2.size())
     throw DimensionException("SymbolListTools::jointEntropy: lists must have the same size!", list1.size(), list2.size());
-  map<int, map<int, double> > p12;
+  map<int, map<int, double>> p12;
   getCounts(list1, list2, p12, resolveUnknown);
   double tot = 0, pxy, h = 0;
   // We need to correct frequencies for gaps:
@@ -954,4 +953,3 @@ bool SymbolListTools::isDoubleton(const IntSymbolListInterface& list)
 }
 
 /******************************************************************************/
-

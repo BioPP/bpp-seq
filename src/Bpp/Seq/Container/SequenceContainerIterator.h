@@ -60,18 +60,17 @@ public:
 
 public:
   const SequenceType& nextSequence() override
-  {	  {
-    const Sequence& seq = sequences_->sequence(currentPosition_);
-    currentPosition_++;
-    return s;
-  }
-  
-  bool hasMoreSequences() const override
   {
-    return currentPosition_ < sequences_->getNumberOfSequences();
+    {
+      const Sequence& seq = sequences_->sequence(currentPosition_);
+      currentPosition_++;
+      return s;
+    }
+
+    bool hasMoreSequences() const override
+    {
+      return currentPosition_ < sequences_->getNumberOfSequences();
+    }
   }
-
-};
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCECONTAINERITERATOR_H

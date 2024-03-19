@@ -46,6 +46,5 @@ public:
 using ISequenceStream = TemplateISequenceStream<Sequence>;
 using ISequenceWithQualityStream = TemplateISequenceStream<SequenceWithQuality>;
 using IProbabilisticSequenceStream = TemplateISequenceStream<ProbabilisticSequence>;
-
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_ISEQUENCESTREAM_H
