@@ -72,7 +72,7 @@ public:
    * @brief Retrieves complete sites.
    *
    * This function builds a new VectorSiteContainer instance with only complete sites,
-   * i.e. site with fully resolved states (no gap, no unknown caracters).
+   * i.e. site with fully resolved states (no gap, no unknown characters).
    * The container passed as input is not modified, all sites are copied.
    *
    * @param sites The container to analyse.
@@ -377,7 +377,7 @@ public:
    *
    * Sites are specified by their indice, beginning at 0. Sites may be selected multiple times.
    *
-   * @param sites       The container from wich sequences are to be taken.
+   * @param sites       The container from which sequences are to be taken.
    * @param selection   The positions of all sites to retrieve.
    * @param outputSites A container where to add the selected sites. The container must have the same alphabet, number of sequences and sequence keys from the input container.
    */
@@ -401,7 +401,7 @@ public:
    *
    * Sites are specified by their indice, beginning at 0. Sites may be selected multiple times.
    *
-   * @param sites       The container from wich sequences are to be taken.
+   * @param sites       The container from which sequences are to be taken.
    * @param selection   The positions of all sites to retrieve.
    * @return A VectorSiteContainer with the selected sites. Comments from the original container will be copied.
    */
@@ -425,7 +425,7 @@ public:
    * Sites are specified by their indice, beginning at 0. Sites may be selected multiple times.
    * This version takes as input a generic AlignmentData object, and will try various casts.
    *
-   * @param sites       The container from wich sequences are to be taken.
+   * @param sites       The container from which sequences are to be taken.
    * @param selection   The positions of all sites to retrieve.
    * @return A container of the same type as the input one, with the selected sites. Comments from the original container will be copied.
    */
@@ -462,7 +462,7 @@ public:
    * are converted to site positions given the length of the words
    * of the alphabet.
    *
-   * @param sites       The container from wich sequences are to be taken.
+   * @param sites       The container from which sequences are to be taken.
    * @param selection   The positions to retrieve.
    * @param outputSites A container where to add the selected positions. The container must have the same alphabet, number of sequences and sequence keys from the input container.
    */
@@ -506,7 +506,7 @@ public:
    * are converted to site positions given the length of the words
    * of the alphabet.
    *
-   * @param sites       The container from wich sequences are to be taken.
+   * @param sites       The container from which sequences are to be taken.
    * @param selection   The positions of all sites to retrieve.
    * @return A VectorSiteContainer with the selected positions. Comments from the original container will be copied.
    */
@@ -626,7 +626,7 @@ public:
    * Position numbers start at 1.
    *
    * @param seq The sequence to translate.
-   * @return A map with original alignement positions as keys, and translated positions as values.
+   * @return A map with original alignment positions as keys, and translated positions as values.
    */
   static std::map<size_t, size_t> getAlignmentPositions(const Sequence& seq);
 
@@ -645,15 +645,15 @@ public:
   /** @} */
 
   /**
-   * @brief Translate alignement positions from an aligned sequence to the same sequence in a different alignment.
+   * @brief Translate alignment positions from an aligned sequence to the same sequence in a different alignment.
    *
    * Takes each position (starting at 1) in sequence 1, and look for the corresponding position in sequence 2.
    * The two sequences must be the same, excepted for the gaps.
-   * If no sequence contains gaps, or if the gaps are at the same place in both sequences, the translated postion will be the same as the original positions.
+   * If no sequence contains gaps, or if the gaps are at the same place in both sequences, the translated position will be the same as the original positions.
    *
    * @param seq1 The sequence to translate.
    * @param seq2 The reference sequence.
-   * @return A map with original alignement positions as keys, and translated positions as values.
+   * @return A map with original alignment positions as keys, and translated positions as values.
    * @throw AlphabetMismatchException If the sequences do not share the same alphabet.
    * @throw Exception If the sequence do not match.
    */
@@ -880,12 +880,12 @@ public:
   static const std::string SIMILARITY_NOGAP;
 
   /**
-   * @brief Add the content of a site container to an exhisting one.
+   * @brief Add the content of a site container to an existing one.
    *
    * The input containers are supposed to have unique sequence names.
    * If it is not the case, several things can happen:
    * - If the two containers have exactly the same keys in the same order, then the content of the second one will be added as is to the first one.
-   * - If the second container does not have exactly the same sequences keys or in a different order, then a reordered selection of the second contianer is created first,
+   * - If the second container does not have exactly the same sequences keys or in a different order, then a reordered selection of the second container is created first,
    *   and in that case, only the first sequence with a given name will be used and duplicated.
    * In any case, note that the second container should always contains all the sequence names from the first one,
    * otherwise an exception will be thrown.

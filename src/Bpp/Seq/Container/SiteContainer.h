@@ -40,7 +40,7 @@ public:
    * @brief Get a site from the container.
    *
    * @param sitePosition The position of the site in the container.
-   * @return A site objet corresponding to site i in the alignment.
+   * @return A site object corresponding to site i in the alignment.
    * @throw IndexOutOfBoundsException If the specified site does not exists.
    */
   virtual const SiteType& site(size_t sitePosition) const override = 0;

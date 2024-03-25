@@ -35,7 +35,7 @@ public:
 class ProbabilisticSite :
   public virtual ProbabilisticSiteInterface,
   public AbstractCoreSite,
-  public virtual ProbabilisticSymbolList // Diamond inheritence
+  public virtual ProbabilisticSymbolList // Diamond inheritance
 {
 public:
   /**

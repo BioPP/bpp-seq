@@ -44,7 +44,7 @@ public:
    *
    * @param sequence The sequence to be validated against.
    * @param throwException If set to yes, throw an exception if the sequence is not valid.
-   * @return true if this annotation is complient with the given sequence.
+   * @return true if this annotation is compliant with the given sequence.
    */
   virtual bool isValidWith(const SequenceWithAnnotation& sequence, bool throwException = true) const = 0;
 
@@ -52,7 +52,7 @@ public:
    * @brief Merge the input annotation with the current one.
    *
    * @param anno The annotation to fuse.
-   * @return true if the fusion was possible and succesful.
+   * @return true if the fusion was possible and successful.
    */
   virtual bool merge(const SequenceAnnotation& anno) = 0;
 
@@ -75,7 +75,7 @@ public:
  * For programming convenience, the states are stored as integers, but the translation toward
  * and from a char description is easily performed with the Alphabet classes.
  *
- * Sequence objets also contain a name attribute and potentially several comment lines.
+ * Sequence objects also contain a name attribute and potentially several comment lines.
  *
  * The gestion of sequence content is identical to the BasicSequence object, but edition events are
  * properly fired. Listener are therefore properly handled.
@@ -303,7 +303,7 @@ public:
    * @brief Set the whole content of the sequence.
    *
    * @param sequence The new content of the sequence.
-   * @see The Sequence constructor for information about the way sequences are internaly stored.
+   * @see The Sequence constructor for information about the way sequences are internally stored.
    */
   virtual void setContent(const std::string& sequence) override;
 

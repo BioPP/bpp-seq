@@ -65,7 +65,7 @@ bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
   // Global polymorphism checking
   if (SymbolListTools::isConstant(site))
     return false;
-  // initialisation of the 3 sub-sites ot the codon
+  // initialisation of the 3 sub-sites of the codon
   vector<int> pos1, pos2, pos3;
   auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
   for (size_t i = 0; i < site.size(); i++)

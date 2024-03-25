@@ -269,7 +269,7 @@ bool RNY::isResolvedIn(int state1, int state2) const
   case 7: // ---
     return state2 >= 0;
   default:
-    throw BadIntException(state1, "RNY:isResolvedIn : this sould not happen.", this);
+    throw BadIntException(state1, "RNY:isResolvedIn : this should not happen.", this);
   }
 }
 

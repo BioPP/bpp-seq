@@ -90,7 +90,7 @@ public:
   /**
    * @return The number of sequences contained in the specified file.
    *
-   * This methods parses the firt line of the phylip file.
+   * This methods parses the first line of the phylip file.
    * @param path The path of the file to parse.
    */
   unsigned int getNumberOfSequences(const std::string& path) const;

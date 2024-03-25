@@ -18,7 +18,7 @@ namespace bpp
 /**
  * @brief AlphabetIndex1 I/O in BppO format.
  *
- * Enables the instanciation of AlphabetIndex1 objects according to
+ * Enables the instantiation of AlphabetIndex1 objects according to
  * the BppO syntax (see the Bio++ Program Suite
  * manual for a detailed description of this syntax).
  *
@@ -36,7 +36,7 @@ private:
 public:
   /**
    * @param alphabet The alphabet for which indices should be built.
-   * The alphabet will be used to check that the instanciated index is compatible.
+   * The alphabet will be used to check that the instantiated index is compatible.
    * @param message Some text describing what the index is intended for.
    * @param verbose Tell if some messages should be printed while parsing.
    */
@@ -90,7 +90,7 @@ public:
    *
    * @param description A string describing the index in the keyval syntax.
    * @return A new AlphabetIndex1 object according to options specified.
-   * @throw Exception if an error occured.
+   * @throw Exception if an error occurred.
    */
   std::unique_ptr<AlphabetIndex1> read(const std::string& description);
 };

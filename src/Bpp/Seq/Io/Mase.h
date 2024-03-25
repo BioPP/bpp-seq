@@ -207,7 +207,7 @@ public:
 
   const std::string getFormatDescription() const override
   {
-    return "Optional file comments (preceeded by ;;), sequence comments (preceeded by ;), sequence name, sequence";
+    return "Optional file comments (preceded by ;;), sequence comments (preceded by ;), sequence name, sequence";
   }
   /** @} */
 

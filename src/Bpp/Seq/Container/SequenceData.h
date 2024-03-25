@@ -114,7 +114,7 @@ public:
   /**
    * @brief Return a copy of this container, but with no data inside.
    *
-   * This method creates a new SequencedContainer objet.
+   * This method creates a new SequencedContainer object.
    * The class of this container depends on the class implementing this interface.
    *
    * @return A new empty container, with the same alphabet as this one.

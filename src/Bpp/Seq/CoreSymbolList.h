@@ -99,7 +99,7 @@ public:
   /**
    * @name Provide direct access to the list content.
    *
-   * @warning These operators allow you to modifiy the list content.
+   * @warning These operators allow you to modify the list content.
    * No alphabet checking is performed for your modifications, so use with care, or
    * consider using the setContent() method.
    *
@@ -165,7 +165,7 @@ public:
    * @brief Set the whole content of the list.
    *
    * @param list The new content of the list.
-   * @see The list constructor for information about the way lists are internaly stored.
+   * @see The list constructor for information about the way lists are internally stored.
    */
   virtual void setContent(const std::vector<T>& list) = 0;
 
@@ -189,7 +189,7 @@ public:
   /**
    * @brief Add a character at a certain position in the list.
    *
-   * @param pos The postion where to insert the element.
+   * @param pos The position where to insert the element.
    * @param c   The character to add.
    */
   virtual void addElement(size_t pos, const T& c) = 0;
@@ -214,7 +214,7 @@ public:
   /**
    * @name Provide direct access to the list content.
    *
-   * @warning These operators allow you to modifiy the list content.
+   * @warning These operators allow you to modify the list content.
    * No alphabet checking is performed for your modifications, so use with care, or
    * consider using the setContent() method.
    *

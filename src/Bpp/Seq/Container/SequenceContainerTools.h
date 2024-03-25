@@ -141,7 +141,7 @@ public:
    *
    * @author Julien Dutheil
    *
-   * @param sequences The container from wich sequences are to be taken.
+   * @param sequences The container from which sequences are to be taken.
    * @param selection The positions of all sequences to retrieve.
    * @param outputCont A container where the selection should be added.
    * @throw Exception In case of bad sequence name, alphabet mismatch, etc.
@@ -170,7 +170,7 @@ public:
    *
    * @author Julien Dutheil
    *
-   * @param sequences The container from wich sequences are to be taken.
+   * @param sequences The container from which sequences are to be taken.
    * @param selection The names of all sequences to retrieve.
    * @param outputCont A container where the selection should be added.
    * @param strict If yes, trying to select a sequence that is not present
@@ -211,7 +211,7 @@ public:
    * Sequences are specified by their position, beginning at 0.
    * Redundant selection is not checked, so be careful with what you're doing!
    *
-   * @param sequences The container from wich sequences are to be taken.
+   * @param sequences The container from which sequences are to be taken.
    * @param selection The positions of all sequences to retrieve.
    * @return A new container with all selected sequences.
    */

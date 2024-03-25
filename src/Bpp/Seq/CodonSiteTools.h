@@ -70,7 +70,7 @@ public:
    *
    * @param site a Site
    * @param gCode The genetic code according to which stop codons are specified.
-   * @param freqmin a double, allele in frequency stricly lower than freqmin are replaced
+   * @param freqmin a double, allele in frequency strictly lower than freqmin are replaced
    */
   static std::unique_ptr<Site> generateCodonSiteWithoutRareVariant(const Site& site, const GeneticCode& gCode, double freqmin);
 
@@ -104,7 +104,7 @@ public:
    * @f[
    * pi = \frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}
    * @f]
-   * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occuring at the site
+   * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occurring at the site
    * \f$P_{i,j}\f$ the number of synonymous difference between these codons.
    * Be careful: here, pi is not normalized by the number of synonymous sites.
    *
@@ -124,7 +124,7 @@ public:
    * @f[
    * pi = \frac{n}{n-1}\sum_{i,j}x_{i}x_{j}P_{ij}
    * @f]
-   * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occuring at the site
+   * where n is the number of sequence, \f$x_i\f$ and \f$x_j\f$ the frequencies of each codon type occurring at the site
    * \f$P_{i,j}\f$ the number of nonsynonymous difference between these codons.
    * Be careful: here, pi is not normalized by the number of non-synonymous sites.
    * If minchange = false (default option) the different paths are equally weighted.
@@ -166,7 +166,7 @@ public:
   static double meanNumberOfSynonymousPositions(const Site& site, const GeneticCode& gCode, double ratio = 1);
 
   /**
-   * @brief Return the number of subsitutions per codon site
+   * @brief Return the number of substitutions per codon site
    *
    * No recombination is assumed, that is in complex codon homoplasy is assumed.
    * Example:
@@ -181,7 +181,7 @@ public:
    * AGC
    * @endcode
    * Here, 3 substitutions are counted. Assuming that the last codon (AGC) is a recombinant between ATC and AGT
-   * would have lead to counting only 2 subsitutions.
+   * would have lead to counting only 2 substitutions.
    *
    * Rare variants (<= freqmin) can be excluded.
    *
@@ -192,7 +192,7 @@ public:
   static size_t numberOfSubstitutions(const Site& site, const GeneticCode& gCode, double freqmin = 0.);
 
   /**
-   * @brief Return the number of Non Synonymous subsitutions per codon site.
+   * @brief Return the number of Non Synonymous substitutions per codon site.
    *
    * It is assumed that the path linking amino acids only involved one substitution by step.
    *
@@ -211,7 +211,7 @@ public:
    * @brief Return a vector with the number of fixed synonymous and non-synonymous differences per codon site
    *
    * Compute the number of synonymous and non-synonymous differences between
-   * the concensus codon of SiteIn (i) and SiteOut (j), which are fixed within each alignement.
+   * the consensus codon of SiteIn (i) and SiteOut (j), which are fixed within each alignment.
    * Example:
    * @code
    * SiteIn

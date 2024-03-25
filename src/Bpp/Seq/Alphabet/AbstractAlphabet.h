@@ -21,7 +21,7 @@ namespace bpp
  * @brief A partial implementation of the Alphabet interface.
  *
  * It contains a vector of AlphabetState.
- * All methods are based uppon this vector
+ * All methods are based upon this vector
  * but do not provide any method to initialize it.
  * This is up to each constructor of the derived classes.
  *
@@ -140,7 +140,7 @@ public:
    * @brief Get a state at a position in the alphabet_ vector.
    *
    * This method must be overloaded in specialized classes to send back
-   * a reference of the corect type.
+   * a reference of the correct type.
    *
    * @param stateIndex The index of the state in the alphabet_ vector.
    * @throw IndexOutOfBoundsException If the index is invalid.
@@ -151,7 +151,7 @@ public:
    * @brief Get a state at a position in the alphabet_ vector.
    *
    * This method must be overloaded in specialized classes to send back
-   * a reference of the corect type.
+   * a reference of the correct type.
    *
    * @param stateIndex The index of the state in the alphabet_ vector.
    * @throw IndexOutOfBoundsException If the index is invalid.
@@ -162,7 +162,7 @@ public:
    * @brief Get a state by its letter.
    *
    * This method must be overloaded in specialized classes to send back
-   * a reference of the corect type.
+   * a reference of the correct type.
    *
    * @param letter The letter of the state to find.
    * @throw BadCharException If the letter is not in the Alphabet.
@@ -175,7 +175,7 @@ public:
    * @brief Get a state by its num.
    *
    * This method must be overloaded in specialized classes to send back
-   * a reference of the corect type.
+   * a reference of the correct type.
    *
    * @param num The num of the state to find.
    * @throw BadIntException If the num is not in the Alphabet.

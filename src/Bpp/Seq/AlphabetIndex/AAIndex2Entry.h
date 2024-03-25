@@ -28,7 +28,7 @@ public:
    * @param input The input stream to use.
    * @param sym Tell if the matrix is symmetric.
    * This option as an effect only if the matrix is specified as a triangle in the entry.
-   * If sym==true, the oher triangle will be built by symmetry.
+   * If sym==true, the other triangle will be built by symmetry.
    * If sym==false, the other triangle will be set to (-) the given triangle.
    * If the input matrix is square, it will be considered non-symetric.
    * @throw IOException if the stream content does not follow the AAIndex2 database entry format.

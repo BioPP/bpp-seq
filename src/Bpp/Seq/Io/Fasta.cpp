@@ -31,7 +31,7 @@ bool Fasta::nextSequence(istream& input, Sequence& seq) const
     if (input.eof())
       c = '\n';
 
-    // Sequence begining detection
+    // Sequence beginning detection
     if (c == '>')
     {
       // Stop if find a new sequence

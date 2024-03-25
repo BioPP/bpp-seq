@@ -70,7 +70,7 @@ public:
    * the position of each base call on the chromatogram in a vector of
    * int.
    *
-   * @param input The stram to read.
+   * @param input The stream to read.
    * @param seq The sequence to fill.
    * @param pos The vector of positions to fill.
    * @throw Exception IOException and Sequence related exceptions.

@@ -235,7 +235,7 @@ public:
    * @brief Get the subsequence corresponding to the coding part of a given sequence.
    *
    * If lookForInitCodon if set to 'true', the subsequence will start at the first AUG motif,
-   * otherwise the subsequence will start at the begining of the sequence.
+   * otherwise the subsequence will start at the beginning of the sequence.
    * The subsequence ends at the first stop codon (excluded) found, or the end of the sequence.
    *
    * The sequence may have a nucleotide or codon alphabet.

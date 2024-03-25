@@ -201,7 +201,7 @@ method.
   implemented by the Fasta class.
 
 17/08/09 Adam Smith
-* Bug fixed in DefaultAlphabet: unknow state is 37 not 38.
+* Bug fixed in DefaultAlphabet: unknown state is 37 not 38.
 
 04/08/09 Sylvain Gaillard
 * Introduced new classes for Alphabet States
@@ -213,7 +213,7 @@ method.
 * Added SequenceTools::getNumberOfUnresolvedSites
 * Updated SequenceTools::getNumberOfSites,
 	SequenceTools::getNumberOfCompleteSites and SequenceTools::removeGaps to be
-	Alphabet implementation independant.
+	Alphabet implementation independent.
 
 07/07/07 Julien Dutheil
 * Updated GranthamAAChemicalDistance, with a new signed, non-symmetric,
@@ -224,7 +224,7 @@ method.
 
 23/06/09 Julien Dutheil
 * Actualization of the Container classes: now returns references and not
-pointer. Several code updates, including copy contructors.
+pointer. Several code updates, including copy constructors.
 
 17/06/09 Sylvain Gaillard (Glasgow Workshop)
 * Fix DNA/RNA/ProteicAlphabet::getAlias: works now with lower case states.
@@ -294,7 +294,7 @@ pointer. Several code updates, including copy contructors.
   unsigned int).
 
 07/11/08 Julien Dutheil
-* New contructor in VectorSiteContainer now as a tag to disable position
+* New constructor in VectorSiteContainer now as a tag to disable position
   checking, which can turn to be quite slow.
 
 06/11/08 Sylvain Gaillard
@@ -374,12 +374,12 @@ pointer. Several code updates, including copy contructors.
 * Compatibility update (NumCalc)
 
 24/04/07 Benoît Nabholz & Julien Dutheil
-* GeneticCode classes can now translate unknow codons to unknown amino acids.
+* GeneticCode classes can now translate unknown codons to unknown amino acids.
 
 02/04/07 Julien Dutheil
 * VIRTUAL_COV variable changed to NO_VIRTUAL_COV. configure.ac file updated.
   => Default behaviour is now /really/ to use covariant return type with
-	virtual inheritence, even when importing the files in an IDE. To use the old
+	virtual inheritance, even when importing the files in an IDE. To use the old
 	compilers behaviour, one must set the NO_VIRTUAL_COV preproc variable.
 * this modification also solves a problem with the old configure.ac which
   was not correctly updated in version 1.2.0 :(
@@ -405,7 +405,7 @@ AlphabetIndex2 objects from AAIndex1 and AAIndex2 entries, respectively.
 
 18/12/06 Julien Dutheil
 * New alignment tools in SiteContainerTools, including the Needleman and
-Wunsch alogrithm.
+Wunsch algorithm.
 * BLOSUM50 matrix available.
 * Bug fixed in Sequence.h: method setContent is now properly redefined.
 * Bug fixed in ProteicAlphabet->getAbbr(int). The returned result is now

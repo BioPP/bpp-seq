@@ -255,7 +255,7 @@ public:
    * @brief This is a convenient  alias for getNumberOfChars(), returning a size_t
    * instead of unsigned int.
    *
-   * This funcion is typically used il loops over all states of an alphabet.
+   * This function is typically used il loops over all states of an alphabet.
    */
   virtual size_t getNumberOfStates() const = 0;
 

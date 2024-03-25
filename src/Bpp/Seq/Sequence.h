@@ -23,7 +23,7 @@ namespace bpp
  * The states that allowed to be present in the sequence are defined
  * by an alphabet object.
  *
- * Sequence objets also contain a name attribute and potentially several comment lines.
+ * Sequence objects also contain a name attribute and potentially several comment lines.
  * A sequence object is also event-driven, allowing easy extension.
  *
  * @see Alphabet
@@ -52,7 +52,7 @@ public:
    * @brief Set the whole content of the sequence.
    *
    * @param sequence The new content of the sequence.
-   * @see The Sequence constructor for information about the way sequences are internaly stored.
+   * @see The Sequence constructor for information about the way sequences are internally stored.
    */
   virtual void setContent(const std::string& sequence) = 0;
 
@@ -106,7 +106,7 @@ public:
  * For programming convenience, the states are stored as integers, but the translation toward
  * and from a char description is easily performed with the Alphabet classes.
  *
- * Sequence objets also contain a name attribute and potentially several comment lines.
+ * Sequence objects also contain a name attribute and potentially several comment lines.
  *
  * @see Alphabet
  */

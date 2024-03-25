@@ -48,7 +48,7 @@ public:
    * @brief Set the whole content of the list.
    *
    * @param list The new content of the list.
-   * @see The list constructor for information about the way lists are internaly stored.
+   * @see The list constructor for information about the way lists are internally stored.
    */
   virtual void setContent(const std::vector<std::string>& list) = 0;
 
@@ -70,7 +70,7 @@ public:
   /**
    * @brief Add a character at a certain position in the list.
    *
-   * @param pos The postion where to insert the element.
+   * @param pos The position where to insert the element.
    * @param c   The character to add, given as a string.
    */
   virtual void addElement(size_t pos, const std::string& c) = 0;
@@ -108,7 +108,7 @@ public:
  */
 class IntSymbolList :
   public virtual IntSymbolListInterface,
-  public virtual AbstractTemplateSymbolList<int> // This needs to be virtual because of diamond inheritence
+  public virtual AbstractTemplateSymbolList<int> // This needs to be virtual because of diamond inheritance
 {
 public:
   IntSymbolList(std::shared_ptr<const Alphabet> alpha) :

@@ -143,7 +143,7 @@ public:
   SimpleSequencePositionIterator(const Sequence& seq, unsigned int pos = 0) :
     AbstractSequencePositionIterator(seq, pos) {}
   /**
-   * @brief Copie constructor.
+   * @brief Copy constructor.
    *
    * @param it A reference toward a SequencePositionIterator
    */

@@ -17,7 +17,7 @@ namespace bpp
 /**
  * @brief Utilitary methods that deal with the Mase format.
  *
- * This class particularily covers the Mase+ format, which allows
+ * This class particularly covers the Mase+ format, which allows
  * site and sequence selection.
  * Mase+ tags are in the header of the mase file, which is stored
  * in the 'general comment' section of sequence containers.

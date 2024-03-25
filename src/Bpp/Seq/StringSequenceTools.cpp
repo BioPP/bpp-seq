@@ -297,7 +297,7 @@ std::shared_ptr<const Alphabet> StringSequenceTools::getAlphabetFromSequence(con
   }
 
   if (u)
-    throw Exception("Sequence::getAlphabetFromSequence : Unknow character detected in specified sequence");
+    throw Exception("Sequence::getAlphabetFromSequence : Unknown character detected in specified sequence");
   if (r && pd)
     throw Exception("Sequence::getAlphabetFromSequence : Both 'T' and 'U' in the same sequence!");
   if (r && p)

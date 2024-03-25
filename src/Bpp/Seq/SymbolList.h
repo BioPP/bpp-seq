@@ -24,7 +24,7 @@ namespace bpp
 /**
  * @brief A partial implementation of a SymbolList object.
  *
- * This class implements most of the CoreSymbolList interface, with the excpetion of the getStateValueAt function, which depend on the template type.
+ * This class implements most of the CoreSymbolList interface, with the exception of the getStateValueAt function, which depend on the template type.
  *
  * @see Alphabet
  */
@@ -198,14 +198,14 @@ public:
 /**
  * @brief A partial implementation of a EventDrivenSymbolList object.
  *
- * This class implements most of the CoreSymbolList interface, with the excpetion of the getStateValueAt function, which depend on the template type.
+ * This class implements most of the CoreSymbolList interface, with the exception of the getStateValueAt function, which depend on the template type.
  *
  * @see Alphabet
  */
 template<class T>
 class AbstractTemplateEventDrivenSymbolList :
   public virtual AbstractTemplateSymbolList<T>,
-  // Note: this needs to be virtual because of diamond inheritence
+  // Note: this needs to be virtual because of diamond inheritance
   public virtual TemplateEventDrivenCoreSymbolListInterface<T>
 {
 private:

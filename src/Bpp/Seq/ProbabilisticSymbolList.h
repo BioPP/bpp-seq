@@ -85,7 +85,7 @@ public:
   ProbabilisticSymbolList(std::shared_ptr<const Alphabet>& alpha);
 
   /**
-   * @brief Build a new ProbabilisticSymbolList object with the specified alphabet and contant as a DataTable.
+   * @brief Build a new ProbabilisticSymbolList object with the specified alphabet and constant as a DataTable.
    *
    * @param list The content of the site.
    * @param alpha The alphabet to use.
@@ -94,7 +94,7 @@ public:
   ProbabilisticSymbolList(const DTable& list, std::shared_ptr<const Alphabet>& alpha);
 
   /**
-   * @brief Build a new ProbabilisticSymbolList object with the specified alphabet and contant as a VVdouble.
+   * @brief Build a new ProbabilisticSymbolList object with the specified alphabet and constant as a VVdouble.
    *
    * @param list The content of the site.
    * @param alpha The alphabet to use.
@@ -120,7 +120,7 @@ public:
   ProbabilisticSymbolList& operator=(const ProbabilisticSymbolListInterface& list);
 
   /**
-   * @brief The assignement operator.
+   * @brief The assignment operator.
    */
   ProbabilisticSymbolList& operator=(const ProbabilisticSymbolList& list);
 

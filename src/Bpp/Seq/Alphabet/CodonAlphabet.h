@@ -365,7 +365,7 @@ public:
    * @brief Translate a whole sequence from letters alphabet to words alphabet.
    *
    * @param sequence A sequence in letters alphabet.
-   * @param pos the start postion (default 0)
+   * @param pos the start position (default 0)
    * @return The corresponding sequence in words alphabet.
    * @throw AlphabetMismatchException If the sequence alphabet do not match the source alphabet.
    * @throw Exception                 Other kind of error, depending on the implementation.
