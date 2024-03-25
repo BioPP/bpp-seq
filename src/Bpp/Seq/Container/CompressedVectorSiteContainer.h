@@ -31,7 +31,7 @@ namespace bpp
  * The number of sequences is fixed after the first site has been added.
  *
  * @warning Since the data is compressed, the sites given as input are modified. The
- * major pratical consequence is that the 'position' attribute of sites will be lost.
+ * major practical consequence is that the 'position' attribute of sites will be lost.
  * Instead, the position will correspond to the position in the compressed container.
  * In addition, this container may lead to unexpected behavior if used with derived
  * classes of Site.

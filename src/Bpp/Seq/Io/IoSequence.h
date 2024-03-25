@@ -17,7 +17,7 @@ namespace bpp
 /**
  * @brief The IOSequence interface.
  *
- * Interface for sequences input/ouput.
+ * Interface for sequences input/output.
  */
 class IOSequence : public virtual IOFormat
 {
@@ -32,7 +32,7 @@ public:
 /**
  * @brief The IOProbabislisticSequence interface.
  *
- * Interface for probabilistic sequences input/ouput.
+ * Interface for probabilistic sequences input/output.
  */
 class IOProbabilisticSequence : public virtual IOFormat
 {

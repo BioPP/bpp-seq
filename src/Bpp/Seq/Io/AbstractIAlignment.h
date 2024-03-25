@@ -138,7 +138,7 @@ protected:
  */
 class AbstractIAlignment2 :
   public virtual AbstractIAlignment,
-  // In case of diamond inheritence
+  // In case of diamond inheritance
   public virtual ISequence
 {
 public:
@@ -288,7 +288,7 @@ protected:
 
 class AbstractIProbabilisticAlignment2 :
   public virtual AbstractIProbabilisticAlignment,
-  // In case of diamond inheritence
+  // In case of diamond inheritance
   public virtual IProbabilisticSequence
 {
 public:

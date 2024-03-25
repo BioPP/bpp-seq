@@ -458,7 +458,7 @@ const Sequence& CompressedVectorSiteContainer::sequence(size_t sequencePosition)
   if (sequencePosition >= getNumberOfSequences())
     throw IndexOutOfBoundsException("CompressedVectorSiteContainer::getSequence.", sequencePosition, 0, getNumberOfSequences() - 1);
 
-  // If Sequence already exsits
+  // If Sequence already exists
   auto name = sequenceContainer_.getObjectName(sequencePosition);
   if (!sequenceContainer_.isAvailableName(name))
     return *sequenceContainer_.getObject(sequencePosition);

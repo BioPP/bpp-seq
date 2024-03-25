@@ -223,8 +223,8 @@ public:
   /**
    * @brief Inverse and complement a sequence.
    *
-   * This methode is more accurate than calling invert and complement
-   * separatly.
+   * This method is more accurate than calling invert and complement
+   * separately.
    *
    * @param seq The sequence to inverse and complement.
    * @author Sylvain Gaillard
@@ -448,7 +448,7 @@ public:
    * @param motif The motif to find
    * @param strict If true (default) find exactly the motif
    *               If false find compatible match
-   * @return The position of the first occurence of the motif or the seq
+   * @return The position of the first occurrence of the motif or the seq
    * length.
    */
   static size_t findFirstOf(const SequenceInterface& seq, const SequenceInterface& motif, bool strict = true);

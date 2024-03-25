@@ -122,7 +122,7 @@ void SequenceTools::invert(SequenceInterface& seq)
 {
   size_t seq_size = seq.size(); // store seq size for efficiency
   int tmp_state = 0; // to store one state when swapping positions
-  size_t j = seq_size; // symetric position iterator from sequence end
+  size_t j = seq_size; // symmetric position iterator from sequence end
   for (size_t i = 0; i < seq_size / 2; ++i)
   {
     j = seq_size - 1 - i;
@@ -164,7 +164,7 @@ void SequenceTools::invertComplement(SequenceInterface& seq)
   // }
   size_t seq_size = seq.size(); // store seq size for efficiency
   int tmp_state = 0; // to store one state when swapping positions
-  size_t j = seq_size; // symetric position iterator from sequence end
+  size_t j = seq_size; // symmetric position iterator from sequence end
   for (size_t i = 0; i < seq_size / 2; ++i)
   {
     j = seq_size - 1 - i;
@@ -172,7 +172,7 @@ void SequenceTools::invertComplement(SequenceInterface& seq)
     seq.setElement(i, NAR->translate(seq.getValue(j)));
     seq.setElement(j, NAR->translate(tmp_state));
   }
-  if (seq_size % 2)   // treate the state in the middle of odd sequences
+  if (seq_size % 2)   // treat the state in the middle of odd sequences
   {
     seq.setElement(seq_size / 2, NAR->translate(seq.getValue(seq_size / 2)));
   }

@@ -42,7 +42,7 @@ public:
    *
    * @param description A string describing the reader in the keyval syntax.
    * @return A new OSequence object according to options specified.
-   * @throw Exception if an error occured.
+   * @throw Exception if an error occurred.
    */
   std::unique_ptr<OSequence> read(const std::string& description);
 

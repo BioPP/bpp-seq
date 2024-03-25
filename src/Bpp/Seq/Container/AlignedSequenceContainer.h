@@ -122,7 +122,7 @@ public:
   /**
    * @brief Try to coerce a SequenceContainer object into an AlignedSequenceContainer object.
    *
-   * Sequences in osc will be considered alligned, and have the same number of sites.
+   * Sequences in osc will be considered aligned, and have the same number of sites.
    *
    * @param sc The ordered container to coerce.
    * @throw SequenceNotAlignedException If sequences in sc do not have the same length.
@@ -500,7 +500,7 @@ public:
     else
       throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequencePtr.get());
 
-    // Detroys all sites (but keep Site Container at same size)
+    // Destroys all sites (but keep Site Container at same size)
     siteVector_.nullify();
   }
 
@@ -517,7 +517,7 @@ public:
     else
       throw SequenceNotAlignedException("AlignedSequenceContainer::setSequence", sequencePtr.get());
 
-    // Detroys all sites (but keep Site Container at same size)
+    // Destroys all sites (but keep Site Container at same size)
     siteVector_.nullify();
   }
 
@@ -534,7 +534,7 @@ public:
     else
       throw SequenceNotAlignedException("AlignedSequenceContainer::insertSequence", sequencePtr.get());
 
-    // Detroys all sites (but keep Site Container at same size)
+    // Destroys all sites (but keep Site Container at same size)
     siteVector_.nullify();
   }
 

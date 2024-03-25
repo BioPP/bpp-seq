@@ -34,7 +34,7 @@ public:
    *
    * @param input     [in]  The input stream.
    * @param name      [out] Will contain the name of the command.
-   * @param arguments [out] Will contain the arguments of the commans, as raw data. The arguments will not be parsed.
+   * @param arguments [out] Will contain the arguments of the commands, as raw data. The arguments will not be parsed.
    * @param lineBrk   [in]  Tell is the line break should be preserved in the arguments.
    * @return Whether a command was found in the current block.
    * @throw IOException In case of bad format.

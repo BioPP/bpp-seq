@@ -173,7 +173,7 @@ public:
 /**
  * @brief A SequenceWithAnnotation class with quality scores attached.
  *
- * This classes adds some usefull functions to handle quality scores.
+ * This classes adds some useful functions to handle quality scores.
  *
  * @see SequenceQuality
  * @author Sylvain Gaillard, Vincent Cahais, Julien Dutheil
@@ -195,7 +195,7 @@ public:
    *
    * @param alpha    A pointer to an Alphabet
    *
-   * @throw BadCharException if a state is not alowed by the Alphabet
+   * @throw BadCharException if a state is not allowed by the Alphabet
    */
   SequenceWithQuality(
       std::shared_ptr<const Alphabet>& alpha) :
@@ -216,7 +216,7 @@ public:
    * @param sequence The string representing the sequence
    * @param alpha    A pointer to an Alphabet
    *
-   * @throw BadCharException if a state is not alowed by the Alphabet
+   * @throw BadCharException if a state is not allowed by the Alphabet
    */
   SequenceWithQuality(
       const std::string& name,
@@ -240,7 +240,7 @@ public:
    * @param comments Comments to add to the sequence
    * @param alpha    A pointer to an Alphabet
    *
-   * @throw BadCharException if a state is not alowed by the Alphabet
+   * @throw BadCharException if a state is not allowed by the Alphabet
    *
    * @author Vincent Cahais
    */
@@ -267,7 +267,7 @@ public:
    * @param quality The quality scores
    * @param alpha A pointer to an alphabet
    *
-   * @throw BadCharException if a state is not alowed by the Alphabet
+   * @throw BadCharException if a state is not allowed by the Alphabet
    * @throw DimensionException if the number of quality values is not equal
    * to the number of sequence states
    */
@@ -295,7 +295,7 @@ public:
    * @param comments Comments to add to the sequence
    * @param alpha A pointer to an alphabet
    *
-   * @throw BadCharException if a state is not alowed by the Alphabet
+   * @throw BadCharException if a state is not allowed by the Alphabet
    * @throw DimensionException if the number of quality values is not equal
    * to the number of sequence states
    *
@@ -324,7 +324,7 @@ public:
    * @param sequence The sequence in int
    * @param alpha A pointer to an Alphabet
    *
-   * @throw BadIntException if a state is not alowed by the Alphabet
+   * @throw BadIntException if a state is not allowed by the Alphabet
    */
   SequenceWithQuality(
       const std::string& name,
@@ -348,7 +348,7 @@ public:
    * @param comments Comments to add to the sequence
    * @param alpha A pointer to an Alphabet
    *
-   * @throw BadIntException if a state is not alowed by the Alphabet
+   * @throw BadIntException if a state is not allowed by the Alphabet
    *
    * @author Vincent Cahais
    */
@@ -375,7 +375,7 @@ public:
    * @param quality The quality scores
    * @param alpha A pointer to an Alphabet
    *
-   * @throw BadIntException if a state is not alowed by the Alphabet
+   * @throw BadIntException if a state is not allowed by the Alphabet
    * @throw DimensionException if the number of quality values is not equal
    * to the number of sequence states
    */
@@ -403,7 +403,7 @@ public:
    * @param comments Comments to add to the sequence
    * @param alpha A pointer to an Alphabet
    *
-   * @throw BadIntException if a state is not alowed by the Alphabet
+   * @throw BadIntException if a state is not allowed by the Alphabet
    * @throw DimensionException if the number of quality values is not equal
    * to the number of sequence states
    *

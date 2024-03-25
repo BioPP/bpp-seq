@@ -144,7 +144,7 @@ public:
 
   /**
    * @param site A site.
-   * @return True if the site contains one or several unknwn characters.
+   * @return True if the site contains one or several unknown characters.
    */
   static bool hasUnknown(const IntSymbolListInterface& site);
   static bool hasUnknown(const ProbabilisticSymbolListInterface& site);
@@ -347,7 +347,7 @@ public:
 
 
   /**
-   * @brief Count all states in the list, optionaly resolving unknown characters.
+   * @brief Count all states in the list, optionally resolving unknown characters.
    *
    * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
    *
@@ -495,7 +495,7 @@ public:
       std::map< int, std::map<int, double>>& counts);
 
   /**
-   * @brief Count all pairs of states for two lists of the same size, optionaly resolving unknown characters.
+   * @brief Count all pairs of states for two lists of the same size, optionally resolving unknown characters.
    *
    * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
    *

@@ -41,7 +41,7 @@ public:
    *
    * @param description A string describing the reader in the keyval syntax.
    * @return A new ISequenceStream object according to options specified.
-   * @throw Exception if an error occured.
+   * @throw Exception if an error occurred.
    */
   std::unique_ptr<ISequenceStream> read(const std::string& description);
 

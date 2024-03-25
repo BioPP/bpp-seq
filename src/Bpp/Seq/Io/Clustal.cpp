@@ -51,7 +51,7 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SequenceContainerIn
       count = 0;
   }
   if (beginSeq == 0)
-    throw IOException("Clustal::read. Bad intput file.");
+    throw IOException("Clustal::read. Bad input file.");
 
   unsigned int countSequences = 0;
 
@@ -75,7 +75,7 @@ void Clustal::appendAlignmentFromStream(std::istream& input, SequenceContainerIn
     {
       // Complete sequences
       if (TextTools::isEmpty(lineRead))
-        throw IOException("Clustal::read. Bad intput file.");
+        throw IOException("Clustal::read. Bad input file.");
       sequences[i]->append(lineRead.substr(beginSeq));
       getline(input, lineRead, '\n');
     }

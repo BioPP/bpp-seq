@@ -39,7 +39,7 @@ public:
    * @brief Get a subsequence.
    *
    * @param sequence The input sequence.
-   * @param begin    The begining position (included).
+   * @param begin    The beginning position (included).
    * @param end      The ending position (included).
    * @return A string with the subsequence.
    * @throw Exception If position does not not match the interval [0, length].
@@ -69,7 +69,7 @@ public:
   static std::string setToSizeL(const std::string& sequence, size_t size);
 
   /**
-   * @brief Delete all occurence of a character in the sequence.
+   * @brief Delete all occurrence of a character in the sequence.
    *
    * @param sequence The sequence to parse.
    * @param chars    The character to remove.
@@ -78,7 +78,7 @@ public:
   static std::string deleteChar(const std::string& sequence, char chars);
 
   /**
-   * @brief Delete all occurence of several characters in the sequence.
+   * @brief Delete all occurrence of several characters in the sequence.
    *
    * @param sequence The sequence to parse.
    * @param chars    The characters to remove.

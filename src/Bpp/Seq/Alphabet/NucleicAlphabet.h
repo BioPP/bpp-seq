@@ -113,7 +113,7 @@ public:
    *
    * @param code The binary representation as an unsigned char.
    * @return The NucleicAlphabetState.
-   * @throw BadIntException If the code is not a valide state.
+   * @throw BadIntException If the code is not a valid state.
    * @author Sylvain Gaillard
    */
   const NucleicAlphabetState& getStateByBinCode(int code) const
@@ -141,7 +141,7 @@ public:
    *
    * @param s1 the first state as an int
    * @param s2 the second state as an int
-   * @throw BadIntException if one of the states is not valide.
+   * @throw BadIntException if one of the states is not valid.
    * @return The remaining state as an int
    * @author Sylvain Gaillard
    */
@@ -166,7 +166,7 @@ public:
    *
    * @param s1 the first state as a string
    * @param s2 the second state as a string
-   * @throw BadCharException if one of the states is not valide.
+   * @throw BadCharException if one of the states is not valid.
    * @return The remaining state as a string
    * @author Sylvain Gaillard
    */

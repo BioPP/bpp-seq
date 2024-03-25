@@ -307,7 +307,7 @@ public:
    * be changed to 'unknown' character is sequences.
    *
    * - sequence.max_gap_allowed = [57%|30]
-   * If a % sign fallow the number, it is taken to be a frequence (in percent).
+   * If a % sign follows the number, it is taken to be a frequence (in percent).
    * This specify the maximum amount of gaps allowed for each site.
    * Sites not satisfying this amount will be removed.
    * A value of 100% will remove all gap-only sites, a value >100% will keep all sites.

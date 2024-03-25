@@ -23,7 +23,7 @@ namespace bpp
  * - a symmetric one, with \f$I_{i,j} = I_{i,j}\f$,
  * - or a non-symmetric one, with \f$I_{i,j} = -I_{i,j}\f$.
  * In the second case, which one of the two entries between \f$I_{i,j}\f$ and \f$I_{i,j}\f$ is positive is arbitrary by default.
- * It is also possible to use the coordinate on a principal component analysis between the elementary propoerties of the distance instead (setPC1Sign(true)).
+ * It is also possible to use the coordinate on a principal component analysis between the elementary properties of the distance instead (setPC1Sign(true)).
  * The following R code was use in order to get those signs:
  * @code
  * library(seqinr)

@@ -65,7 +65,7 @@ public:
   {}
 
   /**
-   * @name Copy contructors:
+   * @name Copy constructors:
    *
    * @{
    */

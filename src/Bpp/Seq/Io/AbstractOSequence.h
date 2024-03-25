@@ -53,7 +53,7 @@ public:
  */
 class AbstractOSequence2 :
   public virtual AbstractOSequence,
-  // in case for Diamond inheritence
+  // in case for Diamond inheritance
   public virtual OAlignment
 {
 public:

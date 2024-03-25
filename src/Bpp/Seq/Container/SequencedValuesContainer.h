@@ -145,7 +145,7 @@ public:
   /**
    * @brief Return a copy of this container, but with no data inside.
    *
-   * This method creates a new SequencedValuesContainer objet.
+   * This method creates a new SequencedValuesContainer object.
    * The class of this container depends on the derivative class.
    *
    * @return A new empty container, with the same alphabet as this one.

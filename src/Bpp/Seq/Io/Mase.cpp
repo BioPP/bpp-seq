@@ -118,7 +118,7 @@ void Mase::writeSequences(ostream& output, const SequenceContainerInterface& sc)
     comments = sc.sequence(seqKey).getComments();
 
     // Writing all sequence comments in file
-    // If no comments are associated with current sequence, an empy commentary line will be writed
+    // If no comments are associated with current sequence, an empty commentary line will be writed
     if (comments.size() == 0)
     {
       output << ";" << endl;

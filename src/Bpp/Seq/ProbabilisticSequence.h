@@ -46,7 +46,7 @@ public:
  *
  * This is a general purpose container, containing an ordered list of
  * elements.  The states represented by the elements is defined by an
- * alphabet object, which is passed to the contructor by a pointer.
+ * alphabet object, which is passed to the constructor by a pointer.
  *
  * ProbabilisticSequence objects also contain a name attribute and
  * potentially several comment lines.
@@ -56,7 +56,7 @@ public:
 class ProbabilisticSequence :
   public virtual ProbabilisticSequenceInterface,
   public AbstractCoreSequence,
-  public virtual ProbabilisticSymbolList // Diamond inheritence
+  public virtual ProbabilisticSymbolList // Diamond inheritance
 {
 public:
   /**

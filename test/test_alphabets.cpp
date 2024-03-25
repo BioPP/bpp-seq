@@ -16,7 +16,7 @@ using namespace std;
 
 int main()
 {
-  // This is a very simple test that instanciate all alphabet classes.
+  // This is a very simple test that instantiate all alphabet classes.
   auto dna = std::make_shared<DNA>();
   auto rna = std::make_shared<RNA>();
   auto pro = std::make_shared<ProteicAlphabet>();

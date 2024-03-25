@@ -38,7 +38,7 @@ public:
   /**
    * @brief Return a copy of this container, but with no data inside.
    *
-   * This method creates a new SequencedContainer objet.
+   * This method creates a new SequencedContainer object.
    * The class of this container depends on the class implementing this interface.
    *
    * @return A new empty container, with the same alphabet as this one.
@@ -63,7 +63,7 @@ public:
   /**
    * @brief Replace a sequence in the container.
    *
-   * If a sequence is found with the given key, it will be udated with the new one.
+   * If a sequence is found with the given key, it will be updated with the new one.
    * If no sequence with the given key is found, the new sequence will be added to the container.
    *
    * @param sequenceKey The key to which the sequence is associated.
@@ -90,7 +90,7 @@ public:
   virtual std::unique_ptr<SequenceType> removeSequence(const HashType& sequenceKey) = 0;
 
   /**
-   * @brief Get the content of the dataset at a specific position (sequence key, site postion).
+   * @brief Get the content of the dataset at a specific position (sequence key, site position).
    *
    * @param sequenceKey key of the sequence in the container
    * @param sitePosition  index of the site
@@ -99,7 +99,7 @@ public:
   virtual const typename SequenceType::ElementType& valueAt(const HashType& sequenceKey, size_t sitePosition) const = 0;
 
   /**
-   * @brief Get the content of the dataset at a specific position (sequence key, site postion).
+   * @brief Get the content of the dataset at a specific position (sequence key, site position).
    *
    * @param sequenceKey key of the sequence in the container
    * @param sitePosition  index of the site
@@ -160,7 +160,7 @@ public:
   virtual std::unique_ptr<SequenceType> removeSequence(size_t sequencePosition) = 0;
 
   /**
-   * @brief Get the content of the dataset at a specific position (sequence position, site postion).
+   * @brief Get the content of the dataset at a specific position (sequence position, site position).
    *
    * @param sequencePosition index of the sequence in the container
    * @param sitePosition  index of the site
@@ -169,7 +169,7 @@ public:
   virtual const typename SequenceType::ElementType& valueAt(size_t sequencePosition, size_t sitePosition) const = 0;
 
   /**
-   * @brief Get the content of the dataset at a specific position (sequence position, site postion).
+   * @brief Get the content of the dataset at a specific position (sequence position, site position).
    *
    * @param sequencePosition index of the sequence in the container
    * @param sitePosition  index of the site
