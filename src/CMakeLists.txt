@@ -69,6 +69,8 @@ SET(CPP_FILES
   Bpp/Seq/Io/PhredPoly.cpp
   Bpp/Seq/Io/Phylip.cpp
   Bpp/Seq/Io/Stockholm.cpp
+  Bpp/Seq/Io/IoDistanceMatrixFactory.cpp
+  Bpp/Seq/Io/PhylipDistanceMatrixFormat.cpp
   Bpp/Seq/NucleicAcidsReplication.cpp
   Bpp/Seq/ProbabilisticSymbolList.cpp
   Bpp/Seq/ProbabilisticSequence.cpp
