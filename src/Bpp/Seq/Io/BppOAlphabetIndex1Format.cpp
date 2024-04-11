@@ -40,7 +40,7 @@ unique_ptr<AlphabetIndex1> BppOAlphabetIndex1Format::read(const std::string& des
     if (verbose_)
       ApplicationTools::displayResult(message_, description);
 
-    if (AlphabetTools::isCodonAlphabet(alphabet_.get()))
+    if (AlphabetTools::isCodonAlphabet(*alphabet_))
     {
       if (!gencode_)
         throw Exception("BppOAlphabetIndex2Format::read. Missing genetic code for codon alphabet.");
@@ -49,14 +49,14 @@ unique_ptr<AlphabetIndex1> BppOAlphabetIndex1Format::read(const std::string& des
       BppOAlphabetIndex1Format reader1(alphaPtr, message_, false);
 
       shared_ptr<AlphabetIndex1> ai2(reader1.read(description));
-      if (!AlphabetTools::isProteicAlphabet(ai2->getAlphabet().get()))
+      if (!AlphabetTools::isProteicAlphabet(ai2->alphabet()))
         throw Exception("BppOAlphabetIndex2Format::read. Not a Proteic Alphabet for CodonAlphabetIndex1.");
 
       return make_unique<CodonFromProteicAlphabetIndex1>(gencode_, ai2);
     }
 
     // Currently, only protein indices are supported:
-    if (!AlphabetTools::isProteicAlphabet(alphabet_.get()))
+    if (!AlphabetTools::isProteicAlphabet(*alphabet_))
       throw Exception("BppOAlphabetIndex1Format::read. This index is only supported with a protein alphabet.");
     if (name == "GranthamPolarity")
     {

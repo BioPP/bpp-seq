@@ -73,6 +73,8 @@ public:
   }
 
   std::shared_ptr<const Alphabet> getAlphabet() const override { return index_->getAlphabet(); }
+  
+  const Alphabet& alphabet() const override { return index_->alphabet(); }
 
   SimpleIndexDistance* clone() const override { return new SimpleIndexDistance(*this); }
 

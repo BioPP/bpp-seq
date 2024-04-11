@@ -64,6 +64,7 @@ public:
   double getIndex(int state1, int state2) const override;
   double getIndex(const std::string& state1, const std::string& state2) const override;
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alpha_; }
+  const Alphabet& alphabet() const override { return *alpha_; }
   DefaultNucleotideScore* clone() const override { return new DefaultNucleotideScore(*this); }
   const Matrix<double>& getIndexMatrix() const override;
   bool isSymmetric() const override { return true; }

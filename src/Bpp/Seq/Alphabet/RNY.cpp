@@ -23,14 +23,14 @@ RNY::RNY(shared_ptr<const NucleicAlphabet> na) : nuclalph_(na)
 
   string s1;
 
-  if (AlphabetTools::isDNAAlphabet(na.get()))
+  if (AlphabetTools::isDNAAlphabet(*na))
     s1 = "RCT-";
   else
     s1 = "RCU-";
 
   string s2;
 
-  if (AlphabetTools::isRNAAlphabet(na.get()))
+  if (AlphabetTools::isRNAAlphabet(*na))
     s2 = "AGCT-";
   else
     s2 = "AGCU-";
@@ -319,7 +319,7 @@ string RNY::getRNY(const string& pos1, const string& pos2, const string& pos3) c
 
 int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
 {
-  if (!AlphabetTools::isNucleicAlphabet(&alph))
+  if (!AlphabetTools::isNucleicAlphabet(alph))
   {
     throw AlphabetException("RNY::getRNY : Sequence must be Nucleic", &alph);
   }

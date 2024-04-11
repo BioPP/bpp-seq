@@ -50,11 +50,11 @@ void SequenceTools::complement(SequenceInterface& seq)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (AlphabetTools::isDNAAlphabet(&seq.alphabet()))
+  if (AlphabetTools::isDNAAlphabet(seq.alphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (AlphabetTools::isRNAAlphabet(&seq.alphabet()))
+  else if (AlphabetTools::isRNAAlphabet(seq.alphabet()))
   {
     NAR = &RNARep_;
   }
@@ -74,11 +74,11 @@ unique_ptr<Sequence> SequenceTools::getComplement(const SequenceInterface& seque
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (AlphabetTools::isDNAAlphabet(&sequence.alphabet()))
+  if (AlphabetTools::isDNAAlphabet(sequence.alphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (AlphabetTools::isRNAAlphabet(&sequence.alphabet()))
+  else if (AlphabetTools::isRNAAlphabet(sequence.alphabet()))
   {
     NAR = &RNARep_;
   }
@@ -95,7 +95,7 @@ unique_ptr<Sequence> SequenceTools::getComplement(const SequenceInterface& seque
 unique_ptr<Sequence> SequenceTools::transcript(const Sequence& sequence)
 {
   // Alphabet type checking
-  if (!AlphabetTools::isDNAAlphabet(&sequence.alphabet()))
+  if (!AlphabetTools::isDNAAlphabet(sequence.alphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", sequence.getAlphabet());
   }
@@ -108,7 +108,7 @@ unique_ptr<Sequence> SequenceTools::transcript(const Sequence& sequence)
 unique_ptr<Sequence> SequenceTools::reverseTranscript(const Sequence& sequence)
 {
   // Alphabet type checking
-  if (!AlphabetTools::isRNAAlphabet(&sequence.alphabet()))
+  if (!AlphabetTools::isRNAAlphabet(sequence.alphabet()))
   {
     throw AlphabetException ("SequenceTools::reverseTranscript : Sequence must be RNA", sequence.getAlphabet());
   }
@@ -147,11 +147,11 @@ void SequenceTools::invertComplement(SequenceInterface& seq)
 {
   // Alphabet type checking
   NucleicAcidsReplication* NAR;
-  if (AlphabetTools::isDNAAlphabet(&seq.alphabet()))
+  if (AlphabetTools::isDNAAlphabet(seq.alphabet()))
   {
     NAR = &DNARep_;
   }
-  else if (AlphabetTools::isRNAAlphabet(&seq.alphabet()))
+  else if (AlphabetTools::isRNAAlphabet(seq.alphabet()))
   {
     NAR = &RNARep_;
   }
@@ -527,7 +527,7 @@ unique_ptr<Sequence> SequenceTools::subtractHaplotype(
 unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq, int ph)
 {
   // Alphabet type checking
-  if (AlphabetTools::isDNAAlphabet(&seq.alphabet()))
+  if (AlphabetTools::isDNAAlphabet(seq.alphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
   }
@@ -569,7 +569,7 @@ unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq, int p
 unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq)
 {
   // Alphabet type checking
-  if (AlphabetTools::isDNAAlphabet(seq.getAlphabet().get()))
+  if (AlphabetTools::isDNAAlphabet(seq.alphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
   }

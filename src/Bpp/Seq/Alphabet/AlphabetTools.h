@@ -108,67 +108,67 @@ public:
    * @return True if the alphabet is an instantiation of the NucleicAlphabet class.
    * @param alphabet The alphabet to check.
    */
-  static bool isNucleicAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<NucleicAlphabet>(alphabet); }
+  static bool isNucleicAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<NucleicAlphabet>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the DNA class.
    * @param alphabet The alphabet to check.
    */
-  static bool isDNAAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<DNA>(alphabet); }
+  static bool isDNAAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<DNA>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the RNA class.
    * @param alphabet The alphabet to check.
    */
-  static bool isRNAAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<RNA>(alphabet); }
+  static bool isRNAAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<RNA>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the ProteicAlphabet class.
    * @param alphabet The alphabet to check.
    */
-  static bool isProteicAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<ProteicAlphabet>(alphabet); }
+  static bool isProteicAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<ProteicAlphabet>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the Codon class.
    * @param alphabet The alphabet to check.
    */
-  static bool isCodonAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<CodonAlphabet>(alphabet); }
+  static bool isCodonAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<CodonAlphabet>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the WordAlphabet class.
    * @param alphabet The alphabet to check.
    */
-  static bool isWordAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<CoreWordAlphabet>(alphabet); }
+  static bool isWordAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<CoreWordAlphabet>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the RNY class.
    * @param alphabet The alphabet to check.
    */
-  static bool isRNYAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<RNY>(alphabet); }
+  static bool isRNYAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<RNY>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the BinaryAlphabet class.
    * @param alphabet The alphabet to check.
    */
-  static bool isBinaryAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<BinaryAlphabet>(alphabet); }
+  static bool isBinaryAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<BinaryAlphabet>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the ProteicAlphabet class.
    * @param alphabet The alphabet to check.
    */
-  static bool isIntegerAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<IntegerAlphabet>(alphabet); }
+  static bool isIntegerAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<IntegerAlphabet>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the DefaultAlphabet class.
    * @param alphabet The alphabet to check.
    */
-  static bool isDefaultAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
+  static bool isDefaultAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<DefaultAlphabet>(alphabet); }
 
   /**
    * @return True if the alphabet is an instantiation of the Allelic class.
    * @param alphabet The alphabet to check.
    */
-  static bool isAllelicAlphabet(const Alphabet* alphabet) { return alphabetInheritsFrom<AllelicAlphabet>(alphabet); }
+  static bool isAllelicAlphabet(const Alphabet& alphabet) { return alphabetInheritsFrom<AllelicAlphabet>(alphabet); }
 
   /**
    * @brief Tell if two characters match according to a given alphabet.
@@ -198,12 +198,12 @@ public:
 
 private:
   template<class Y>
-  static bool alphabetInheritsFrom(const Alphabet* alphabet)
+  static bool alphabetInheritsFrom(const Alphabet& alphabet)
   {
     try
     {
-      const Y* t = dynamic_cast<const Y*>(alphabet);
-      return t != nullptr;
+      std::ignore = dynamic_cast<const Y&>(alphabet);
+      return true;
     }
     catch (std::exception& e)
     {

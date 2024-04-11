@@ -418,7 +418,7 @@ double SymbolListTools::getGCContent(
     bool ignoreGap)
 {
   auto alphabet = list.getAlphabet();
-  if (!AlphabetTools::isNucleicAlphabet(alphabet.get()))
+  if (!AlphabetTools::isNucleicAlphabet(*alphabet))
     throw AlphabetException("SymbolListTools::getGCContent. Method only works on nucleotides.", alphabet);
   double gc = 0;
   double total = 0;
@@ -547,7 +547,7 @@ double SymbolListTools::getGCContent(
     bool ignoreGap)
 {
   auto alphabet = list.getAlphabet();
-  if (!AlphabetTools::isNucleicAlphabet(alphabet.get()))
+  if (!AlphabetTools::isNucleicAlphabet(*alphabet))
     throw AlphabetException("SymbolListTools::getGCContent. Method only works on nucleotides.", alphabet);
   double gc = 0;
   double total = 0;

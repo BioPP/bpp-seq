@@ -32,7 +32,7 @@ public:
     gencode_(gencode),
     vIndex_(64)
   {
-    if (!AlphabetTools::isProteicAlphabet(protalphindex->getAlphabet().get()))
+    if (!AlphabetTools::isProteicAlphabet(protalphindex->alphabet()))
       throw Exception("CodonFromProteicAlphabetIndex1: Not a Proteic Alphabet for CodonAlphabetIndex1.");
     fillIndex_(protalphindex);
   }
@@ -73,6 +73,11 @@ public:
   std::shared_ptr<const Alphabet> getAlphabet() const override
   {
     return alpha_;
+  }
+
+  const Alphabet& alphabet() const override
+  {
+    return *alpha_;
   }
 
   const std::vector<double>& indexVector() const override

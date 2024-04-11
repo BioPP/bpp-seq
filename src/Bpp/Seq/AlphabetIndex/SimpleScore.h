@@ -62,6 +62,7 @@ public:
   double getIndex(int state1, int state2) const override;
   double getIndex(const std::string& state1, const std::string& state2) const override;
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alphabet_; }
+  const Alphabet& alphabet() const override { return *alphabet_; }
   const Matrix<double>& getIndexMatrix() const override { return distanceMatrix_; }
   bool isSymmetric() const override { return true; }
   /** @} */

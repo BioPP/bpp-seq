@@ -118,7 +118,7 @@ unique_ptr<Sequence> GeneticCode::getCodingSequence(
 {
   size_t initPos = 0;
   size_t stopPos = sequence.size();
-  if (AlphabetTools::isCodonAlphabet(sequence.getAlphabet().get()))
+  if (AlphabetTools::isCodonAlphabet(sequence.alphabet()))
   {
     // Look for AUG(or ATG) codon:
     if (lookForInitCodon)
@@ -143,7 +143,7 @@ unique_ptr<Sequence> GeneticCode::getCodingSequence(
       }
     }
   }
-  else if (AlphabetTools::isNucleicAlphabet(&sequence.alphabet()))
+  else if (AlphabetTools::isNucleicAlphabet(sequence.alphabet()))
   {
     // Look for AUG(or ATG) codon:
     if (lookForInitCodon)

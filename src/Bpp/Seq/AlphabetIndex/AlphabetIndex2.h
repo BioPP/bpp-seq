@@ -38,7 +38,6 @@ public:
    * @param state2 Second state to consider, as a int value in the Alphabet
    * @return The index associated to the pair of states.
    */
-
   virtual double getIndex(int state1, int state2) const = 0;
 
   /**
@@ -48,7 +47,6 @@ public:
    * @param state2 Second state to consider, as a string value.
    * @return The index associated to the pair of states.
    */
-
   virtual double getIndex(const std::string& state1, const std::string& state2) const = 0;
 
   /**
@@ -59,12 +57,19 @@ public:
   virtual std::shared_ptr<const Alphabet> getAlphabet() const = 0;
 
   /**
+   * @brief Get the alphabet associated to this index.
+   *
+   * @return Alphabet The alphabet associated to this index.
+   */
+  virtual const Alphabet& alphabet() const = 0;
+
+  /**
    * @return A matrix object with all indices.
    */
   virtual const Matrix<double>& getIndexMatrix() const = 0;
 
   /**
-   * @return True if the index is symatric (that is, index(i,j) == index(j, i)).
+   * @return True if the index is symetric (that is, index(i,j) == index(j, i)).
    */
   virtual bool isSymmetric() const = 0;
 };
@@ -95,6 +100,8 @@ public:
   }
 
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alpha_; }
+  
+  const Alphabet& alphabet() const override { return *alpha_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_ALPHABETINDEX2_H

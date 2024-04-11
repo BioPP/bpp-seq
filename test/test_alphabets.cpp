@@ -25,17 +25,17 @@ int main()
   auto allelic = std::make_shared<AllelicAlphabet>(dna, 4);
 
   // Testing functions:
-  if (!AlphabetTools::isDNAAlphabet(dna.get()))
+  if (!AlphabetTools::isDNAAlphabet(*dna))
     return 1;
-  if (!AlphabetTools::isRNAAlphabet(rna.get()))
+  if (!AlphabetTools::isRNAAlphabet(*rna))
     return 1;
-  if (!AlphabetTools::isNucleicAlphabet(dna.get()))
+  if (!AlphabetTools::isNucleicAlphabet(*dna))
     return 1;
-  if (!AlphabetTools::isNucleicAlphabet(rna.get()))
+  if (!AlphabetTools::isNucleicAlphabet(*rna))
     return 1;
-  if (!AlphabetTools::isProteicAlphabet(pro.get()))
+  if (!AlphabetTools::isProteicAlphabet(*pro))
     return 1;
-  if (!AlphabetTools::isCodonAlphabet(cdn.get()))
+  if (!AlphabetTools::isCodonAlphabet(*cdn))
     return 1;
 
   for (size_t i = 0; i < allelic->getNumberOfStates(); i++)

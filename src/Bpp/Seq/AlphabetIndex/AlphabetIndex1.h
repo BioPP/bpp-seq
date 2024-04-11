@@ -55,6 +55,13 @@ public:
   virtual std::shared_ptr<const Alphabet> getAlphabet() const = 0;
 
   /**
+   * @brief Get the alphabet associated to this index.
+   *
+   * @return Alphabet The alphabet associated to this index.
+   */
+  virtual const Alphabet& alphabet() const = 0;
+
+  /**
    * @return A vector object with all indices.
    */
   virtual const std::vector<double>& indexVector() const = 0;
@@ -88,6 +95,8 @@ public:
   }
 
   std::shared_ptr<const Alphabet> getAlphabet() const override { return alpha_; }
+  
+  const Alphabet& alphabet() const override { return *alpha_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_ALPHABETINDEX1_H
