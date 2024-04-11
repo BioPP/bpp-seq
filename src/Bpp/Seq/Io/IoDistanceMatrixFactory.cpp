@@ -6,21 +6,22 @@
 #include "IoDistanceMatrixFactory.h"
 
 using namespace bpp;
+using namespace std;
 
-const std::string IODistanceMatrixFactory::PHYLIP_FORMAT = "Phylip";
+const string IODistanceMatrixFactory::PHYLIP_FORMAT = "Phylip";
 
-IDistanceMatrix* IODistanceMatrixFactory::createReader(const std::string& format, bool extended)
+unique_ptr<IDistanceMatrix> IODistanceMatrixFactory::createReader(const std::string& format, bool extended)
 {
   if (format == PHYLIP_FORMAT)
-    return new PhylipDistanceMatrixFormat(extended);
+    return make_unique<PhylipDistanceMatrixFormat>(extended);
   else
     throw Exception("Format " + format + " is not supported for input.");
 }
 
-ODistanceMatrix* IODistanceMatrixFactory::createWriter(const std::string& format, bool extended)
+unique_ptr<ODistanceMatrix> IODistanceMatrixFactory::createWriter(const std::string& format, bool extended)
 {
   if (format == PHYLIP_FORMAT)
-    return new PhylipDistanceMatrixFormat(extended);
+    return make_unique<PhylipDistanceMatrixFormat>(extended);
   else
     throw Exception("Format " + format + " is not supported for output.");
 }
