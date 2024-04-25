@@ -54,7 +54,7 @@ public:
   /**
    * @brief Set the position of this site.
    *
-   * @param position The new position of the site.
+   * @param coordinate The new position of the site.
    */
   virtual void setCoordinate(int coordinate) = 0;
 

@@ -69,9 +69,9 @@ public:
   /**
    * @brief Set all coordinates of sites.
    *
-   * @param vPositions A vector with all site coordinates.
+   * @param vCoordinates A vector with all site coordinates.
    */
-  virtual void setSiteCoordinates(const Vint& coordinates) = 0;
+  virtual void setSiteCoordinates(const Vint& vCoordinates) = 0;
 };
 
 using AlignmentDataInterface = TemplateAlignmentDataInterface<std::string>;

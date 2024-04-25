@@ -136,7 +136,7 @@ public:
 
   Vint getSiteCoordinates() const override;
 
-  void setSiteCoordinates(const Vint& vCoordinates) override;
+  void setSiteCoordinates(const Vint& coordinates) override;
 
 
   /** @} */

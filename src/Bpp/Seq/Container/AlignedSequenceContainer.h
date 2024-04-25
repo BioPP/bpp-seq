@@ -432,14 +432,14 @@ public:
 
   Vint getSiteCoordinates() const override { return coordinates_; }
 
-  void setSiteCoordinates(const Vint& coordinates) override
+  void setSiteCoordinates(const Vint& vCoordinates) override
   {
-    if (coordinates.size() != getNumberOfSites())
-      throw BadSizeException("AlignedSequenceContainer::setSiteCoordinates bad size of positions vector", coordinates.size(), getNumberOfSites());
+    if (vCoordinates.size() != getNumberOfSites())
+      throw BadSizeException("AlignedSequenceContainer::setSiteCoordinates bad size of positions vector", vCoordinates.size(), getNumberOfSites());
 
-    for (size_t i = 0; i < coordinates.size(); ++i)
+    for (size_t i = 0; i < vCoordinates.size(); ++i)
     {
-      coordinates_[i] = coordinates[i];
+      coordinates_[i] = vCoordinates[i];
     }
   }
 
@@ -567,7 +567,7 @@ protected:
   /**
    * @brief Check sequence's size before insertion in sequence container.
    *
-   * @param sequence The sequence to check.
+   * @param sequenceRef The sequence to check.
    * @return True if sequence length = number of sites in container.
    */
   bool checkSize_(const Sequence& sequenceRef) { return sequenceRef.size() == length_; }
