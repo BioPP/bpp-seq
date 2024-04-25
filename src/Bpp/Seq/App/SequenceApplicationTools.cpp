@@ -101,7 +101,7 @@ unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
 
     shared_ptr<Alphabet> inAlphabet = SequenceApplicationTools::getAlphabet(args, suffix, suffixIsOptional, verbose, allowGeneric, warn);
 
-    if (AlphabetTools::isNucleicAlphabet(inAlphabet.get()))
+    if (AlphabetTools::isNucleicAlphabet(*inAlphabet))
     {
       shared_ptr<Alphabet> charsTmp = std::move(chars); // unique -> shared
       chars = make_unique<RNY>(dynamic_pointer_cast<NucleicAlphabet>(charsTmp));
@@ -361,7 +361,7 @@ SequenceApplicationTools::getSiteContainers(
       if (args.find("remove_stop_codons") != args.end())
         args2["input.sequence.remove_stop_codons"] = args["remove_stop_codons"];
 
-      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (AlphabetTools::isCodonAlphabet(alpha.get()) ? 0 : 1));
+      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (AlphabetTools::isCodonAlphabet(*alpha) ? 0 : 1));
 
       auto vsC = getSiteContainer(alpha, args2, "", true, verbose, warn);
 
@@ -447,7 +447,7 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
       if (args.find("remove_stop_codons") != args.end())
         args2["input.sequence.remove_stop_codons"] = args["remove_stop_codons"];
 
-      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (AlphabetTools::isCodonAlphabet(alpha.get()) ? 0 : 1));
+      args2["genetic_code"] = ApplicationTools::getStringParameter("genetic_code", params, "", "", true, (AlphabetTools::isCodonAlphabet(*alpha) ? 0 : 1));
 
       auto vsC = getProbabilisticSiteContainer(alpha, args2, "", true, verbose, warn);
 
@@ -491,7 +491,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
   }
 
   shared_ptr<const Alphabet> alpha2;
-  if (AlphabetTools::isRNYAlphabet(alpha.get()))
+  if (AlphabetTools::isRNYAlphabet(*alpha))
     alpha2 = dynamic_pointer_cast<const RNY>(alpha)->getLetterAlphabet();
   else
     alpha2 = alpha;
@@ -501,7 +501,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
   auto sites = unique_ptr<VectorSiteContainer>();
 
   /// Look for RNY translation
-  if (AlphabetTools::isRNYAlphabet(alpha.get()))
+  if (AlphabetTools::isRNYAlphabet(*alpha))
   {
     sites = make_unique<VectorSiteContainer>(alpha);
     for (size_t i = 0; i < sites2->getNumberOfSequences(); ++i)
@@ -648,7 +648,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
   }
 
   // Probabilistic from Sequence format only possible for Allelic alphabet
-  if (iAln && !AlphabetTools::isAllelicAlphabet(alpha.get()))
+  if (iAln && !AlphabetTools::isAllelicAlphabet(*alpha))
     throw IOException("Bad format");
 
 
@@ -660,11 +660,11 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
   }
 
   shared_ptr<const Alphabet> alpha2;
-  if (AlphabetTools::isRNYAlphabet(alpha.get()))
+  if (AlphabetTools::isRNYAlphabet(*alpha))
     alpha2 = dynamic_pointer_cast<const RNY>(alpha)->getLetterAlphabet();
   else
   {
-    if (AlphabetTools::isAllelicAlphabet(alpha.get()))
+    if (AlphabetTools::isAllelicAlphabet(*alpha))
       alpha2 = dynamic_pointer_cast<const AllelicAlphabet>(alpha)->getStateAlphabet();
     else
       alpha2 = alpha;
@@ -681,7 +681,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
   if (sites)
   {
     /// Look for RNY translation
-    if (AlphabetTools::isRNYAlphabet(alpha2.get()))
+    if (AlphabetTools::isRNYAlphabet(*alpha2))
     {
       unique_ptr<VectorSiteContainer> tmpsites(new VectorSiteContainer(alpha2));
 
@@ -756,7 +756,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
   }
 
   /// Look for Allelic translation
-  if (AlphabetTools::isAllelicAlphabet(alpha.get()))
+  if (AlphabetTools::isAllelicAlphabet(*alpha))
   {
     auto pallsites = unique_ptr<ProbabilisticVectorSiteContainer>(new ProbabilisticVectorSiteContainer(alpha));
 

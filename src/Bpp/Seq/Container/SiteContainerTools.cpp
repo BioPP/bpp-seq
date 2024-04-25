@@ -141,7 +141,7 @@ unique_ptr<SiteContainerInterface> SiteContainerTools::resolveDottedAlignment(
     const SiteContainerInterface& dottedAln,
     std::shared_ptr<const Alphabet>& resolvedAlphabet)
 {
-  if (!AlphabetTools::isDefaultAlphabet(dottedAln.getAlphabet().get()))
+  if (!AlphabetTools::isDefaultAlphabet(dottedAln.alphabet()))
     throw AlphabetException("SiteContainerTools::resolveDottedAlignment. Alignment alphabet should of class 'DefaultAlphabet'.", dottedAln.getAlphabet());
 
   // First we look for the reference sequence:

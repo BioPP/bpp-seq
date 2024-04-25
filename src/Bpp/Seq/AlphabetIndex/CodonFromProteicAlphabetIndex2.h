@@ -37,7 +37,7 @@ public:
     vIndex_(64, 64),
     isSymmetric_(protalphindex->isSymmetric())
   {
-    if (!AlphabetTools::isProteicAlphabet(protalphindex->getAlphabet().get()))
+    if (!AlphabetTools::isProteicAlphabet(protalphindex->alphabet()))
       throw Exception("CodonFromProteicAlphabetIndex2: Not a Proteic Alphabet for CodonAlphabetIndex2.");
     fillIndex_(protalphindex);
   }
@@ -77,6 +77,11 @@ public:
   std::shared_ptr<const Alphabet> getAlphabet() const override
   {
     return alpha_;
+  }
+
+  const Alphabet& alphabet() const override
+  {
+    return *alpha_;
   }
 
   const Matrix<double>& getIndexMatrix() const override

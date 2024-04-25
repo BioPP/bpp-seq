@@ -69,6 +69,8 @@ public:
   const std::vector<double>& indexVector() const { return index_; }
 
   std::shared_ptr<const Alphabet> getAlphabet() const { return alph_; }
+  
+  const Alphabet& alphabet() const { return *alph_; }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_USERALPHABETINDEX1_H

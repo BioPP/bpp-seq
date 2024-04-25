@@ -22,12 +22,12 @@ class UserAlphabetIndex2 :
   public virtual AlphabetIndex2
 {
 private:
-  const Alphabet* alph_;
+  std::shared_ptr<const Alphabet> alph_;
   LinearMatrix<double> index_;
   bool sym_;
 
 public:
-  UserAlphabetIndex2(const Alphabet* alph, const Matrix<double>& mat) :
+  UserAlphabetIndex2(std::shared_ptr<const Alphabet> alph, const Matrix<double>& mat) :
     alph_(alph),
     index_(mat),
     sym_(false)
@@ -73,7 +73,9 @@ public:
 
   LinearMatrix<double>* getIndexMatrix() const { return new LinearMatrix<double>(index_); }
 
-  const Alphabet* getAlphabet() const { return alph_; }
+  std::shared_ptr<const Alphabet> getAlphabet() const { return alph_; }
+  
+  const Alphabet& alphabet() const { return *alph_; }
 
   /**
    * @return True if the index is symatric (that is, index(i,j) == index(j, i)).
