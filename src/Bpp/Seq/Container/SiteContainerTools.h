@@ -748,6 +748,7 @@ public:
       if (index)
         index->push_back(pos);
     }
+    outSites.setSequenceNames(sites.getSequenceNames(),true);
   }
 
 

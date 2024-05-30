@@ -31,9 +31,8 @@ public:
    *
    * Example:
    * @code
-   * IDistanceMatrix * matReader = IODistanceMatrixFactory().createReader(IODistanceMatrixFactory::PHYLIP);
-   * DistanceMatrix * matrix = matReader->read("file.ph");
-   * delete matReader;
+   * auto matReader = IODistanceMatrixFactory().createReader(IODistanceMatrixFactory::PHYLIP);
+   * auto matrix = matReader->read("file.ph");
    * @endcode
    */
   IODistanceMatrixFactory() {}
@@ -62,4 +61,5 @@ public:
   virtual std::unique_ptr<ODistanceMatrix> createWriter(const std::string& format, bool extended = false);
 };
 } // end of namespace bpp.
+
 #endif // BPP_PHYL_LEGACY_IO_IODISTANCEMATRIXFACTORY_H

@@ -376,6 +376,8 @@ SequenceApplicationTools::getSiteContainers(
       }
       mCont.emplace(num, std::move(vsC));
     }
+    else
+      throw Exception("Unknown sequence container name " + contName);
   }
 
   return mCont;
@@ -462,6 +464,9 @@ SequenceApplicationTools::getProbabilisticSiteContainers(
       }
       mCont.emplace(num, std::move(vsC));
     }
+    else
+      throw Exception("Unknown sequence container name " + contName);
+
   }
 
   return mCont;
