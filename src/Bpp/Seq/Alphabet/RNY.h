@@ -16,7 +16,7 @@
  *
  * More explicitly, a quotiented triplet RNY is defined on the alphabet
  *
- * \f[\{C,T,R\} x \{A,C,G,T\} x \{ A,G,Y\}\f].
+ * \f[\{R,C,T\} x \{A,G,C,T\} x \{ A,G,Y\}\f].
  *
  * Triplet "---" is the only triplet defined as gap. Other triplets
  * with "-" are defined as unresolved.

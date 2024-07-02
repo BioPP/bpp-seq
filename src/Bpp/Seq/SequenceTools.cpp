@@ -527,7 +527,7 @@ unique_ptr<Sequence> SequenceTools::subtractHaplotype(
 unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq, int ph)
 {
   // Alphabet type checking
-  if (AlphabetTools::isDNAAlphabet(seq.alphabet()))
+  if (!AlphabetTools::isDNAAlphabet(seq.alphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
   }
@@ -569,7 +569,7 @@ unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq, int p
 unique_ptr<Sequence> SequenceTools::RNYslice(const SequenceInterface& seq)
 {
   // Alphabet type checking
-  if (AlphabetTools::isDNAAlphabet(seq.alphabet()))
+  if (!AlphabetTools::isDNAAlphabet(seq.alphabet()))
   {
     throw AlphabetException ("SequenceTools::transcript : Sequence must be DNA", seq.getAlphabet());
   }

@@ -103,8 +103,8 @@ unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
 
     if (AlphabetTools::isNucleicAlphabet(*inAlphabet))
     {
-      shared_ptr<Alphabet> charsTmp = std::move(chars); // unique -> shared
-      chars = make_unique<RNY>(dynamic_pointer_cast<NucleicAlphabet>(charsTmp));
+      auto inNuc = dynamic_pointer_cast<const NucleicAlphabet>(inAlphabet);
+      chars = make_unique<RNY>(inNuc);
       alphabet = "RNY(" + alphabet + ")";
     }
     else
