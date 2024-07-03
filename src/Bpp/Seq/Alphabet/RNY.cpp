@@ -14,7 +14,7 @@ using namespace bpp;
 
 /****************************************************************************************/
 
-RNY::RNY(shared_ptr<const NucleicAlphabet> na) : nuclalph_(na)
+RNY::RNY( std::shared_ptr<const NucleicAlphabet> na) : nuclalph_(na)
 {
   // Initialization:
   vector<AlphabetState*> states(351, nullptr);

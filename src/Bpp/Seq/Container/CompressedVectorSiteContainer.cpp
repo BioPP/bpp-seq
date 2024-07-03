@@ -15,7 +15,7 @@ using namespace bpp;
 
 CompressedVectorSiteContainer::CompressedVectorSiteContainer(
     std::vector< unique_ptr<Site>>& vs,
-    shared_ptr<const Alphabet>& alphabet) :
+    std::shared_ptr<const Alphabet>& alphabet) :
   AbstractTemplateSequenceContainer<Sequence>(alphabet),
   siteContainer_(),
   sequenceContainer_(),
@@ -44,7 +44,7 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(
 
 CompressedVectorSiteContainer::CompressedVectorSiteContainer(
     size_t size,
-    shared_ptr<const Alphabet>& alphabet) :
+    std::shared_ptr<const Alphabet>& alphabet) :
   AbstractTemplateSequenceContainer<Sequence>(alphabet),
   siteContainer_(),
   sequenceContainer_(),
@@ -64,7 +64,7 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(
 
 CompressedVectorSiteContainer::CompressedVectorSiteContainer(
     const std::vector<std::string>& sequenceKeys,
-    shared_ptr<const Alphabet>& alphabet) :
+    std::shared_ptr<const Alphabet>& alphabet) :
   AbstractTemplateSequenceContainer(alphabet),
   siteContainer_(),
   sequenceContainer_(),
@@ -83,7 +83,7 @@ CompressedVectorSiteContainer::CompressedVectorSiteContainer(
 
 /******************************************************************************/
 
-CompressedVectorSiteContainer::CompressedVectorSiteContainer(shared_ptr<const Alphabet>& alphabet) :
+CompressedVectorSiteContainer::CompressedVectorSiteContainer(std::shared_ptr<const Alphabet>& alphabet) :
   AbstractTemplateSequenceContainer<Sequence>(alphabet),
   siteContainer_(),
   sequenceContainer_(),

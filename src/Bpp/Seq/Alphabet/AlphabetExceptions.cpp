@@ -19,7 +19,7 @@ AlphabetException::AlphabetException(const std::string& text, const Alphabet* al
   Exception("AlphabetException: " + text + "(" + (alpha->getAlphabetType()) + ")"),
   alphabet_(alpha) {}
 
-AlphabetException::AlphabetException(const std::string& text, shared_ptr<const Alphabet> alpha) :
+AlphabetException::AlphabetException(const std::string& text, std::shared_ptr<const Alphabet> alpha) :
   Exception("AlphabetException: " + text + "(" + (alpha->getAlphabetType()) + ")"),
   alphabet_(alpha.get()) {}
 
@@ -29,7 +29,7 @@ BadCharException::BadCharException(const std::string& badChar, const std::string
   AlphabetException("BadCharException: " + badChar + ". " + text, alpha),
   c_(badChar) {}
 
-BadCharException::BadCharException(const std::string& badChar, const std::string& text, shared_ptr<const Alphabet> alpha) :
+BadCharException::BadCharException(const std::string& badChar, const std::string& text, std::shared_ptr<const Alphabet> alpha) :
   AlphabetException("BadCharException: " + badChar + ". " + text, alpha),
   c_(badChar) {}
 
@@ -41,7 +41,7 @@ BadIntException::BadIntException(int badInt, const std::string& text, const Alph
   AlphabetException("BadIntException: " + TextTools::toString(badInt) + ". " + text, alpha),
   i_(badInt) {}
 
-BadIntException::BadIntException(int badInt, const std::string& text, shared_ptr<const Alphabet> alpha) :
+BadIntException::BadIntException(int badInt, const std::string& text, std::shared_ptr<const Alphabet> alpha) :
   AlphabetException("BadIntException: " + TextTools::toString(badInt) + ". " + text, alpha),
   i_(badInt) {}
 
@@ -56,7 +56,7 @@ AlphabetMismatchException::AlphabetMismatchException(const std::string& text, co
 
 /******************************************************************************/
 
-AlphabetMismatchException::AlphabetMismatchException(const std::string& text, shared_ptr<const Alphabet> alpha1, shared_ptr<const Alphabet> alpha2) :
+AlphabetMismatchException::AlphabetMismatchException(const std::string& text, std::shared_ptr<const Alphabet> alpha1, std::shared_ptr<const Alphabet> alpha2) :
   Exception("AlphabetMismatchException: " + text + "(" + alpha1->getAlphabetType() + ", " + alpha2->getAlphabetType() + ")"),
   alphabet1_(alpha1.get()),
   alphabet2_(alpha2.get()) {}
@@ -68,7 +68,7 @@ CharStateNotSupportedException::CharStateNotSupportedException(const string& tex
 
 /******************************************************************************/
 
-CharStateNotSupportedException::CharStateNotSupportedException(const string& text, shared_ptr<const Alphabet> alpha) :
+CharStateNotSupportedException::CharStateNotSupportedException(const string& text, std::shared_ptr<const Alphabet> alpha) :
   AlphabetException("CharStateNotSupportedException: " + text, alpha) {}
 
 /******************************************************************************/

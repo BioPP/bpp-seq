@@ -226,7 +226,7 @@ std::unique_ptr<GeneticCode> SequenceApplicationTools::getGeneticCode(
 /******************************************************************************/
 
 unique_ptr<AlphabetIndex1> SequenceApplicationTools::getAlphabetIndex1(
-    shared_ptr<const Alphabet> alphabet,
+    std::shared_ptr<const Alphabet> alphabet,
     const string& description,
     const string& message,
     bool verbose)
@@ -236,7 +236,7 @@ unique_ptr<AlphabetIndex1> SequenceApplicationTools::getAlphabetIndex1(
 }
 
 unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(
-    shared_ptr<const Alphabet> alphabet,
+    std::shared_ptr<const Alphabet> alphabet,
     const string& description,
     const string& message,
     bool verbose)
@@ -246,8 +246,8 @@ unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(
 }
 
 unique_ptr<AlphabetIndex1> SequenceApplicationTools::getAlphabetIndex1(
-    shared_ptr<const CodonAlphabet> alphabet,
-    shared_ptr<const GeneticCode> gencode,
+    std::shared_ptr<const CodonAlphabet> alphabet,
+    std::shared_ptr<const GeneticCode> gencode,
     const string& description,
     const string& message,
     bool verbose)
@@ -257,8 +257,8 @@ unique_ptr<AlphabetIndex1> SequenceApplicationTools::getAlphabetIndex1(
 }
 
 unique_ptr<AlphabetIndex2> SequenceApplicationTools::getAlphabetIndex2(
-    shared_ptr<const CodonAlphabet> alphabet,
-    shared_ptr<const GeneticCode> gencode,
+    std::shared_ptr<const CodonAlphabet> alphabet,
+    std::shared_ptr<const GeneticCode> gencode,
     const string& description,
     const string& message,
     bool verbose)
@@ -629,7 +629,7 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
 /******************************************************************************/
 
 unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbabilisticSiteContainer(
-    shared_ptr<const Alphabet> alpha,
+    std::shared_ptr<const Alphabet> alpha,
     const map<string, string>& params,
     const string& suffix,
     bool suffixIsOptional,

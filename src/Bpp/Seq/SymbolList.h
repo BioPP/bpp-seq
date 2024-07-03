@@ -149,25 +149,25 @@ public:
     content_.erase(content_.begin() + static_cast<std::ptrdiff_t>(pos), content_.begin() + static_cast<std::ptrdiff_t>(pos + len));
   }
 
-  void addElement(const T& v) override
+  void addElement(const T& c) override
   {
-    content_.push_back(v);
+    content_.push_back(c);
   }
 
-  void addElement(size_t pos, const T& v) override
+  void addElement(size_t pos, const T& c) override
   {
     // test:
     if (pos >= content_.size())
       throw IndexOutOfBoundsException("SymbolList::addElement. Invalid position.", pos, 0, size() - 1);
-    content_.insert(content_.begin() + static_cast<std::ptrdiff_t>(pos), v);
+    content_.insert(content_.begin() + static_cast<std::ptrdiff_t>(pos), c);
   }
 
-  void setElement(size_t pos, const T& v) override
+  void setElement(size_t pos, const T& c) override
   {
     // test:
     if (pos >= content_.size())
       throw IndexOutOfBoundsException("SymbolList::setElement. Invalid position.", pos, 0, size() - 1);
-    content_[pos] = v;
+    content_[pos] = c;
   }
 
   const T& getElement(size_t pos) const override
@@ -333,27 +333,27 @@ public:
     fireAfterSequenceDeleted(event);
   }
 
-  virtual void addElement(const T& v) override
+  virtual void addElement(const T& c) override
   {
     CoreSymbolListInsertionEvent<T> event(this, AbstractTemplateSymbolList<T>::size(), 1);
     fireBeforeSequenceInserted(event);
-    AbstractTemplateSymbolList<T>::addElement(v);
+    AbstractTemplateSymbolList<T>::addElement(c);
     fireAfterSequenceInserted(event);
   }
 
-  virtual void addElement(size_t pos, const T& v) override
+  virtual void addElement(size_t pos, const T& c) override
   {
     CoreSymbolListInsertionEvent<T> event(this, pos, 1);
     fireBeforeSequenceInserted(event);
-    AbstractTemplateSymbolList<T>::addElement(pos, v);
+    AbstractTemplateSymbolList<T>::addElement(pos, c);
     fireAfterSequenceInserted(event);
   }
 
-  virtual void setElement(size_t pos, const T& v) override
+  virtual void setElement(size_t pos, const T& c) override
   {
     CoreSymbolListSubstitutionEvent<T> event(this, pos, pos);
     fireBeforeSequenceSubstituted(event);
-    AbstractTemplateSymbolList<T>::setElement(pos, v);
+    AbstractTemplateSymbolList<T>::setElement(pos, c);
     fireAfterSequenceSubstituted(event);
   }
 

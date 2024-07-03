@@ -12,20 +12,20 @@ using namespace std;
 
 /****************************************************************************************/
 
-ProbabilisticSymbolList::ProbabilisticSymbolList(shared_ptr<const Alphabet>& alpha) :
+ProbabilisticSymbolList::ProbabilisticSymbolList(std::shared_ptr<const Alphabet>& alpha) :
   alphabet_(alpha), content_(alpha->getResolvedChars().size(), 0)
 {
   content_.setRowNames(alphabet_->getResolvedChars());
 }
 
-ProbabilisticSymbolList::ProbabilisticSymbolList(const DTable& list, shared_ptr<const Alphabet>& alpha) :
+ProbabilisticSymbolList::ProbabilisticSymbolList(const DTable& list, std::shared_ptr<const Alphabet>& alpha) :
   alphabet_(alpha), content_(alpha->getResolvedChars().size(), 0)
 {
   content_.setRowNames(alpha->getResolvedChars());
   setContent(list);
 }
 
-ProbabilisticSymbolList::ProbabilisticSymbolList(const vector< vector<double>>& list, shared_ptr<const Alphabet>& alpha) :
+ProbabilisticSymbolList::ProbabilisticSymbolList(const vector< vector<double>>& list, std::shared_ptr<const Alphabet>& alpha) :
   alphabet_(alpha), content_(alpha->getResolvedChars().size(), 0)
 {
   content_.setRowNames(alpha->getResolvedChars());
