@@ -48,6 +48,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.local
+        key: ${{ runner.OS }}-dep-cache-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-dep-cache-
+
+    - name: bpp-core
+      run: git clone https://github.com/BioPP/bpp-core.git . && cd bpp-core &&
+        mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=~/.local .. && sudo make install
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
@@ -63,6 +75,7 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_INSTALL_PREFIX=~/.local
         -S ${{ github.workspace }}
 
     - name: Build
