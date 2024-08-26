@@ -25,61 +25,62 @@ using namespace std;
 namespace bpp
 {
 class BppSequenceApplication :
-  public virtual BppApplication
+	public virtual BppApplication
 {
 public:
-  BppSequenceApplication(int argc, char* argv[], const std::string& name) :
-    BppApplication(argc, argv, name)
-  {}
+BppSequenceApplication(int argc, char* argv[], const std::string& name) :
+	BppApplication(argc, argv, name)
+{
+}
 
 public:
-  /***************************************
-   * @brief Methods to build objects
-   *
-   * @{
-   */
+/***************************************
+ * @brief Methods to build objects
+ *
+ * @{
+ */
 
 
-  /*
-   * @brief get the Alphabet
-   */
-  virtual std::shared_ptr<Alphabet> getAlphabet(
-      const string& suffix = "",
-      bool suffixIsOptional = true,
-      bool allowGeneric = false) const;
+/*
+ * @brief get the Alphabet
+ */
+virtual std::shared_ptr<Alphabet> getAlphabet(
+	const string& suffix = "",
+	bool suffixIsOptional = true,
+	bool allowGeneric = false) const;
 
-  /*
-   * @brief get the GeneticCode
-   */
-  virtual std::shared_ptr<GeneticCode> getGeneticCode(
-      std::shared_ptr<const Alphabet>& alphabet,
-      const string& suffix = "",
-      bool suffixIsOptional = true) const;
+/*
+ * @brief get the GeneticCode
+ */
+virtual std::shared_ptr<GeneticCode> getGeneticCode(
+	std::shared_ptr<const Alphabet>& alphabet,
+	const string& suffix = "",
+	bool suffixIsOptional = true) const;
 
-  /*
-   * @brief Get the std::map of alignments
-   */
-  virtual std::map<size_t, std::unique_ptr<AlignmentDataInterface>>
-  getAlignmentsMap(
-      std::shared_ptr<const Alphabet>& alphabet,
-      bool changeGapsToUnknownCharacters = true,
-      bool optionalData = false,
-      const std::string& prefix = "input.",
-      const std::string& suffix = "",
-      bool suffixIsOptional = true) const;
+/*
+ * @brief Get the std::map of alignments
+ */
+virtual std::map<size_t, std::unique_ptr<AlignmentDataInterface> >
+getAlignmentsMap(
+	std::shared_ptr<const Alphabet>& alphabet,
+	bool changeGapsToUnknownCharacters = true,
+	bool optionalData = false,
+	const std::string& prefix = "input.",
+	const std::string& suffix = "",
+	bool suffixIsOptional = true) const;
 
 
-  /*
-   * @brief Get the std::map of const alignments
-   */
-  virtual std::map<size_t, std::unique_ptr<const AlignmentDataInterface>>
-  getConstAlignmentsMap(
-      std::shared_ptr<const Alphabet>& alphabet,
-      bool changeGapsToUnknownCharacters = true,
-      bool optionalData = false,
-      const std::string& prefix = "input.",
-      const std::string& suffix = "",
-      bool suffixIsOptional = true) const;
+/*
+ * @brief Get the std::map of const alignments
+ */
+virtual std::map<size_t, std::unique_ptr<const AlignmentDataInterface> >
+getConstAlignmentsMap(
+	std::shared_ptr<const Alphabet>& alphabet,
+	bool changeGapsToUnknownCharacters = true,
+	bool optionalData = false,
+	const std::string& prefix = "input.",
+	const std::string& suffix = "",
+	bool suffixIsOptional = true) const;
 };
 } // end of namespace bpp;
 #endif // BPP_SEQ_APP_BPPSEQUENCEAPPLICATION_H

@@ -22,56 +22,58 @@ namespace bpp
  */
 template<class HashType = std::string>
 class TemplateAlignmentDataInterface :
-  public virtual TemplateSequenceDataInterface<HashType>
+	public virtual TemplateSequenceDataInterface<HashType>
 {
 public:
-  TemplateAlignmentDataInterface() {}
-  virtual ~TemplateAlignmentDataInterface() {}
+TemplateAlignmentDataInterface() {
+}
+virtual ~TemplateAlignmentDataInterface() {
+}
 
-  TemplateAlignmentDataInterface* clone() const override = 0;
+TemplateAlignmentDataInterface* clone() const override = 0;
 
 
-  /**
-   * @brief Get a site from a given position.
-   *
-   * @param siteIndex The position
-   */
-  virtual const CoreSiteInterface& site(size_t siteIndex) const = 0;
+/**
+ * @brief Get a site from a given position.
+ *
+ * @param siteIndex The position
+ */
+virtual const CoreSiteInterface& site(size_t siteIndex) const = 0;
 
-  /**
-   * @brief Remove a continuous range of sites in the container.
-   *
-   * @param siteIndex The position of the first site in the container.
-   * @param length The length of the region to delete, starting at pposition siteIndex.
-   * @throw IndexOutOfBoundsException If the specified range is not valid.
-   */
-  virtual void deleteSites(size_t siteIndex, size_t length) = 0;
+/**
+ * @brief Remove a continuous range of sites in the container.
+ *
+ * @param siteIndex The position of the first site in the container.
+ * @param length The length of the region to delete, starting at pposition siteIndex.
+ * @throw IndexOutOfBoundsException If the specified range is not valid.
+ */
+virtual void deleteSites(size_t siteIndex, size_t length) = 0;
 
-  /**
-   * @brief Get the number of aligned positions in the container.
-   *
-   * @return The number of sites in the container.
-   */
-  virtual size_t getNumberOfSites() const = 0;
+/**
+ * @brief Get the number of aligned positions in the container.
+ *
+ * @return The number of sites in the container.
+ */
+virtual size_t getNumberOfSites() const = 0;
 
-  /**
-   * @brief Set all positions attributes.
-   */
-  virtual void reindexSites() = 0;
+/**
+ * @brief Set all positions attributes.
+ */
+virtual void reindexSites() = 0;
 
-  /**
-   * @brief Get all coordinates of sites.
-   *
-   * @return A vector with all site coordinates.
-   */
-  virtual Vint getSiteCoordinates() const = 0;
+/**
+ * @brief Get all coordinates of sites.
+ *
+ * @return A vector with all site coordinates.
+ */
+virtual Vint getSiteCoordinates() const = 0;
 
-  /**
-   * @brief Set all coordinates of sites.
-   *
-   * @param vCoordinates A vector with all site coordinates.
-   */
-  virtual void setSiteCoordinates(const Vint& vCoordinates) = 0;
+/**
+ * @brief Set all coordinates of sites.
+ *
+ * @param vCoordinates A vector with all site coordinates.
+ */
+virtual void setSiteCoordinates(const Vint& vCoordinates) = 0;
 };
 
 using AlignmentDataInterface = TemplateAlignmentDataInterface<std::string>;

@@ -44,79 +44,85 @@ namespace bpp
 class PhredPhd : public ISequenceStream
 {
 public:
-  /**
-   * @brief Build a new PhredPhd object.
-   */
-  PhredPhd() {}
+/**
+ * @brief Build a new PhredPhd object.
+ */
+PhredPhd() {
+}
 
-  virtual ~PhredPhd() {}
+virtual ~PhredPhd() {
+}
 
 public:
-  /**
-   * @name The ISequenceStream interface.
-   *
-   * @{
-   */
-  bool nextSequence(
-      std::istream& input,
-      Sequence& seq
-      ) const;
-  /** @} */
+/**
+ * @name The ISequenceStream interface.
+ *
+ * @{
+ */
+bool nextSequence(
+	std::istream& input,
+	Sequence& seq
+	) const;
+/** @} */
 
-  /**
-   * @brief Read a SequenceWithQuality from stream and store chromatographic positions
-   *
-   * A more complete parser that read a SequenceWithQuality and store
-   * the position of each base call on the chromatogram in a vector of
-   * int.
-   *
-   * @param input The stream to read.
-   * @param seq The sequence to fill.
-   * @param pos The vector of positions to fill.
-   * @throw Exception IOException and Sequence related exceptions.
-   */
-  bool nextSequence(
-      std::istream& input,
-      Sequence& seq,
-      std::vector<size_t>& pos
-      ) const;
+/**
+ * @brief Read a SequenceWithQuality from stream and store chromatographic positions
+ *
+ * A more complete parser that read a SequenceWithQuality and store
+ * the position of each base call on the chromatogram in a vector of
+ * int.
+ *
+ * @param input The stream to read.
+ * @param seq The sequence to fill.
+ * @param pos The vector of positions to fill.
+ * @throw Exception IOException and Sequence related exceptions.
+ */
+bool nextSequence(
+	std::istream& input,
+	Sequence& seq,
+	std::vector<size_t>& pos
+	) const;
 
-  /**
-   * @name The IOFormat interface.
-   *
-   * @{
-   */
-  const std::string getDataType() const { return "SequenceWithQuality"; }
-  const std::string getFormatName() const { return "phd file"; }
-  const std::string getFormatDescription() const
-  {
-    return "Sequences following the phd format as describe in the phred documentation.";
-  }
-  /** @} */
+/**
+ * @name The IOFormat interface.
+ *
+ * @{
+ */
+const std::string getDataType() const {
+	return "SequenceWithQuality";
+}
+const std::string getFormatName() const {
+	return "phd file";
+}
+const std::string getFormatDescription() const
+{
+	return "Sequences following the phd format as describe in the phred documentation.";
+}
+/** @} */
 
 private:
-  /**
-   * @brief Global file parser
-   *
-   * @param input The stream to read
-   * @param name The string to store the sequence name
-   * @param sequence The string to store the sequence
-   * @param qual The vector to store qualities
-   * @param pos The vector to store positions
-   */
-  bool parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<size_t>& pos) const;
+/**
+ * @brief Global file parser
+ *
+ * @param input The stream to read
+ * @param name The string to store the sequence name
+ * @param sequence The string to store the sequence
+ * @param qual The vector to store qualities
+ * @param pos The vector to store positions
+ */
+bool parseFile_(std::istream& input, std::string& name, std::string& sequence, std::vector<int>& qual, std::vector<size_t>& pos) const;
 
-  /**
-   * @brief Parse the DNA part of the file
-   *
-   * Read the DNA part until `END_DNA' or EOF.
-   *
-   * @param input The stream to read
-   * @param sequence The string to store the sequence
-   * @param qual The vector to store qualities
-   * @param pos The vector to store positions
-   */
-  bool parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<size_t>& pos) const;
+/**
+ * @brief Parse the DNA part of the file
+ *
+ * Read the DNA part until `END_DNA' or EOF.
+ *
+ * @param input The stream to read
+ * @param sequence The string to store the sequence
+ * @param qual The vector to store qualities
+ * @param pos The vector to store positions
+ */
+bool parseDNA_(std::istream& input, std::string& sequence, std::vector<int>& qual, std::vector<size_t>& pos) const;
 };
 } // end of namespace bpp
 #endif // BPP_SEQ_IO_PHREDPHD_H

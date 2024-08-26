@@ -10,13 +10,13 @@
 using namespace bpp;
 
 DefaultAlphabet::DefaultAlphabet() :
-  chars_("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
+	chars_("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.?")
 {
-  // Alphabet content definition
-  registerState(new AlphabetState(-1, "-", "Gap"));
+	// Alphabet content definition
+	registerState(new AlphabetState(-1, "-", "Gap"));
 
-  for (size_t i = 0; i < chars_.size(); i++)
-  {
-    registerState(new AlphabetState(static_cast<int>(i), TextTools::toString(chars_[i]), ""));
-  }
+	for (size_t i = 0; i < chars_.size(); i++)
+	{
+		registerState(new AlphabetState(static_cast<int>(i), TextTools::toString(chars_[i]), ""));
+	}
 }

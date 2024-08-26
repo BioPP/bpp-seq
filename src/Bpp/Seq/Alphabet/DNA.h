@@ -22,38 +22,42 @@ namespace bpp
  * Extensive support for generic characters (e.g. 'P', 'Y', etc.) is provided.
  */
 class DNA :
-  public NucleicAlphabet
+	public NucleicAlphabet
 {
 public:
-  /**
-   * @param exclamationMarkCountsAsGap If yes, '!' characters are replaced by gaps.
-   * Otherwise, they are counted as unknown characters.
-   */
-  DNA(bool exclamationMarkCountsAsGap = false);
+/**
+ * @param exclamationMarkCountsAsGap If yes, '!' characters are replaced by gaps.
+ * Otherwise, they are counted as unknown characters.
+ */
+DNA(bool exclamationMarkCountsAsGap = false);
 
-  DNA(const DNA& bia) : NucleicAlphabet(bia) {}
+DNA(const DNA& bia) : NucleicAlphabet(bia) {
+}
 
-  DNA& operator=(const DNA& bia)
-  {
-    NucleicAlphabet::operator=(bia);
-    return *this;
-  }
+DNA& operator=(const DNA& bia)
+{
+	NucleicAlphabet::operator=(bia);
+	return *this;
+}
 
-  DNA* clone() const
-  {
-    return new DNA(*this);
-  }
+DNA* clone() const
+{
+	return new DNA(*this);
+}
 
-  virtual ~DNA() {}
+virtual ~DNA() {
+}
 
 public:
-  bool isResolvedIn(int state1, int state2) const;
+bool isResolvedIn(int state1, int state2) const;
 
-  std::vector<int> getAlias(int state) const;
-  std::vector<std::string> getAlias(const std::string& state) const;
-  int getGeneric(const std::vector<int>& states) const;
-  std::string getGeneric(const std::vector<std::string>& states) const;
-  std::string getAlphabetType() const { return "DNA"; }
+std::vector<int> getAlias(int state) const;
+std::vector<std::string> getAlias(const std::string& state) const;
+int getGeneric(const std::vector<int>& states) const;
+std::string getGeneric(const std::vector<std::string>& states) const;
+std::string getAlphabetType() const {
+	return "DNA";
+}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABET_DNA_H

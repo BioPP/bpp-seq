@@ -29,53 +29,63 @@ namespace bpp
  * using the translate and reverse methods.
  */
 class NucleicAcidsReplication :
-  public ReverseTransliteratorInterface
+	public ReverseTransliteratorInterface
 {
 private:
-  std::shared_ptr<const NucleicAlphabet> nuc1_, nuc2_;
-  mutable std::map<int, int> trans_;
+std::shared_ptr<const NucleicAlphabet> nuc1_, nuc2_;
+mutable std::map<int, int> trans_;
 
 public:
-  NucleicAcidsReplication(
-      std::shared_ptr<const NucleicAlphabet> nuc1,
-      std::shared_ptr<const NucleicAlphabet> nuc2);
+NucleicAcidsReplication(
+	std::shared_ptr<const NucleicAlphabet> nuc1,
+	std::shared_ptr<const NucleicAlphabet> nuc2);
 
-  NucleicAcidsReplication(const NucleicAcidsReplication& nar) :
-    ReverseTransliteratorInterface(nar),
-    nuc1_(nar.nuc1_), nuc2_(nar.nuc2_), trans_(nar.trans_)
-  {}
+NucleicAcidsReplication(const NucleicAcidsReplication& nar) :
+	ReverseTransliteratorInterface(nar),
+	nuc1_(nar.nuc1_), nuc2_(nar.nuc2_), trans_(nar.trans_)
+{
+}
 
-  NucleicAcidsReplication& operator=(const NucleicAcidsReplication& nar)
-  {
-    ReverseTransliteratorInterface::operator=(nar);
-    nuc1_ = nar.nuc1_;
-    nuc2_ = nar.nuc2_;
-    trans_ = nar.trans_;
-    return *this;
-  }
+NucleicAcidsReplication& operator=(const NucleicAcidsReplication& nar)
+{
+	ReverseTransliteratorInterface::operator=(nar);
+	nuc1_ = nar.nuc1_;
+	nuc2_ = nar.nuc2_;
+	trans_ = nar.trans_;
+	return *this;
+}
 
-  virtual ~NucleicAcidsReplication() {}
+virtual ~NucleicAcidsReplication() {
+}
 
 public:
-  std::shared_ptr<const Alphabet> getSourceAlphabet() const override { return nuc1_; }
+std::shared_ptr<const Alphabet> getSourceAlphabet() const override {
+	return nuc1_;
+}
 
-  const Alphabet& sourceAlphabet() const override { return *nuc1_; }
+const Alphabet& sourceAlphabet() const override {
+	return *nuc1_;
+}
 
-  std::shared_ptr<const Alphabet> getTargetAlphabet() const override { return nuc2_; }
+std::shared_ptr<const Alphabet> getTargetAlphabet() const override {
+	return nuc2_;
+}
 
-  const Alphabet& targetAlphabet() const override { return *nuc2_; }
+const Alphabet& targetAlphabet() const override {
+	return *nuc2_;
+}
 
-  int translate(int state) const override;
+int translate(int state) const override;
 
-  std::string translate(const std::string& state) const override;
+std::string translate(const std::string& state) const override;
 
-  std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override;
+std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override;
 
-  int reverse(int state) const override;
+int reverse(int state) const override;
 
-  std::string reverse(const std::string& state) const override;
+std::string reverse(const std::string& state) const override;
 
-  std::unique_ptr<Sequence> reverse(const SequenceInterface& sequence) const override;
+std::unique_ptr<Sequence> reverse(const SequenceInterface& sequence) const override;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_NUCLEICACIDSREPLICATION_H

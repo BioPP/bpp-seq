@@ -19,39 +19,49 @@ namespace bpp
  *
  */
 class BppOAlignmentWriterFormat :
-  public virtual IOFormat
+	public virtual IOFormat
 {
 private:
-  std::map<std::string, std::string> unparsedArguments_;
-  int warningLevel_;
+std::map<std::string, std::string> unparsedArguments_;
+int warningLevel_;
 
 public:
-  BppOAlignmentWriterFormat(int warningLevel) :
-    unparsedArguments_(),
-    warningLevel_(warningLevel) {}
+BppOAlignmentWriterFormat(int warningLevel) :
+	unparsedArguments_(),
+	warningLevel_(warningLevel) {
+}
 
-  virtual ~BppOAlignmentWriterFormat() {}
+virtual ~BppOAlignmentWriterFormat() {
+}
 
 public:
-  const std::string getFormatName() const { return "BppO"; }
+const std::string getFormatName() const {
+	return "BppO";
+}
 
-  const std::string getFormatDescription() const { return "Bpp Options format."; }
+const std::string getFormatDescription() const {
+	return "Bpp Options format.";
+}
 
-  const std::string getDataType() const { return "Alignment writer"; }
+const std::string getDataType() const {
+	return "Alignment writer";
+}
 
-  /**
-   * @brief Read a OAlignment object from a string.
-   *
-   * @param description A string describing the reader in the keyval syntax.
-   * @return A new OAlignment object according to options specified.
-   * @throw Exception if an error occurred.
-   */
-  std::unique_ptr<OAlignment> read(const std::string& description);
+/**
+ * @brief Read a OAlignment object from a string.
+ *
+ * @param description A string describing the reader in the keyval syntax.
+ * @return A new OAlignment object according to options specified.
+ * @throw Exception if an error occurred.
+ */
+std::unique_ptr<OAlignment> read(const std::string& description);
 
-  /**
-   * @return The arguments and their unparsed values from the last call of the read function, if there are any.
-   */
-  virtual const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
+/**
+ * @return The arguments and their unparsed values from the last call of the read function, if there are any.
+ */
+virtual const std::map<std::string, std::string>& getUnparsedArguments() const {
+	return unparsedArguments_;
+}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_BPPOALIGNMENTWRITERFORMAT_H

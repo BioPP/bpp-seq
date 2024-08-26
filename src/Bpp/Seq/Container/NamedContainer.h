@@ -20,75 +20,77 @@ namespace bpp
  */
 template<class T>
 class NamedContainerInterface :
-  public virtual Clonable
+	public virtual Clonable
 {
 public:
-  NamedContainerInterface() {}
-  virtual ~NamedContainerInterface() {}
+NamedContainerInterface() {
+}
+virtual ~NamedContainerInterface() {
+}
 
 protected:
-  /**
-   * @brief Retrieve an object from the container.
-   *
-   * @param name The name of the object.
-   * @return A reference toward the Object with corresponding name.
-   */
-  virtual const std::shared_ptr<T> getObject(const std::string& name) const = 0;
+/**
+ * @brief Retrieve an object from the container.
+ *
+ * @param name The name of the object.
+ * @return A reference toward the Object with corresponding name.
+ */
+virtual const std::shared_ptr<T> getObject(const std::string& name) const = 0;
 
-  virtual std::shared_ptr<T> getObject(const std::string& name) = 0;
+virtual std::shared_ptr<T> getObject(const std::string& name) = 0;
 
-  virtual const T& object(const std::string& name) const = 0;
+virtual const T& object(const std::string& name) const = 0;
 
-  virtual T& object(const std::string& name) = 0;
+virtual T& object(const std::string& name) = 0;
 
-  /**
-   * @brief Check if a object with a given name is present in the
-   * container.
-   *
-   * @param name The name of the object.
-   * @return True if a object with the given name is present in the
-   * container.
-   */
-  virtual bool hasObject(const std::string& name) const = 0;
+/**
+ * @brief Check if a object with a given name is present in the
+ * container.
+ *
+ * @param name The name of the object.
+ * @return True if a object with the given name is present in the
+ * container.
+ */
+virtual bool hasObject(const std::string& name) const = 0;
 
-  /**
-   * @brief Extract and remove a object from the container.
-   *
-   * @param name The name of the object.
+/**
+ * @brief Extract and remove a object from the container.
+ *
+ * @param name The name of the object.
 
-   */
-  virtual std::shared_ptr<T> removeObject(const std::string& name) = 0;
+ */
+virtual std::shared_ptr<T> removeObject(const std::string& name) = 0;
 
-  /**
-   * @brief Remove a object from the container.
-   *
-   * @param name The name of the object.
-   */
+/**
+ * @brief Remove a object from the container.
+ *
+ * @param name The name of the object.
+ */
 
-  virtual void deleteObject(const std::string& name) = 0;
+virtual void deleteObject(const std::string& name) = 0;
 
-  /**
-   * @brief Get all the names of the objects in the container.
-   *
-   * @return A vector of strings with all object names.
-   */
+/**
+ * @brief Get all the names of the objects in the container.
+ *
+ * @return A vector of strings with all object names.
+ */
 
-  virtual std::vector<std::string> getObjectNames() const = 0;
+virtual std::vector<std::string> getObjectNames() const = 0;
 
 public:
-  /**
-   * @brief Get the number of objects in the container.
-   *
-   * @return The number of objects in the container.
-   */
+/**
+ * @brief Get the number of objects in the container.
+ *
+ * @return The number of objects in the container.
+ */
 
-  virtual size_t getSize() const = 0;
+virtual size_t getSize() const = 0;
 
-  /**
-   * @brief Delete all objects in the container.
-   */
+/**
+ * @brief Delete all objects in the container.
+ */
 
-  virtual void clear() = 0;
+virtual void clear() = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_NAMEDCONTAINER_H

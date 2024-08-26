@@ -21,71 +21,77 @@ namespace bpp
 class NumericAlphabet : public AbstractAlphabet
 {
 private:
-  const UniformDiscreteDistribution* pdd_;
+const UniformDiscreteDistribution* pdd_;
 
-  std::map<double, size_t> values_;
-
-public:
-  NumericAlphabet(const UniformDiscreteDistribution&);
-
-  virtual ~NumericAlphabet() { delete pdd_;}
-
-  NumericAlphabet(const NumericAlphabet&);
-
-  NumericAlphabet& operator=(const NumericAlphabet&);
-
-  NumericAlphabet* clone() const
-  {
-    return new NumericAlphabet(*this);
-  }
+std::map<double, size_t> values_;
 
 public:
-  void setState(size_t pos, AlphabetState* st);
-  void registerState(AlphabetState* st);
+NumericAlphabet(const UniformDiscreteDistribution&);
 
-  bool containsGap(const std::string& state) const;
+virtual ~NumericAlphabet() {
+	delete pdd_;
+}
 
-  unsigned int getSize() const;
-  unsigned int getNumberOfTypes() const;
-  int getUnknownCharacterCode() const { return -1; }
-  bool isGap(int state) const;
-  std::vector<int> getAlias(int state) const;
-  std::vector<std::string> getAlias(const std::string& state) const;
-  bool isUnresolved(int state) const;
-  bool isUnresolved(const std::string& state) const;
+NumericAlphabet(const NumericAlphabet&);
 
-  std::string getAlphabetType() const { return "Numeric"; }
+NumericAlphabet& operator=(const NumericAlphabet&);
 
-  AlphabetNumericState& getStateAt(size_t stateIndex);
-  const AlphabetNumericState& getStateAt(size_t stateIndex) const;
+NumericAlphabet* clone() const
+{
+	return new NumericAlphabet(*this);
+}
 
-  /**
-   * @ brief Specific methods
-   *
-   */
+public:
+void setState(size_t pos, AlphabetState* st);
+void registerState(AlphabetState* st);
 
-  /**
-   * @brief Returns the difference between successive values
-   *
-   */
-  double getDelta() const;
+bool containsGap(const std::string& state) const;
 
-  /**
-   * @brief Returns the value for the character number
-   *
-   */
-  double intToValue(int state) const;
+unsigned int getSize() const;
+unsigned int getNumberOfTypes() const;
+int getUnknownCharacterCode() const {
+	return -1;
+}
+bool isGap(int state) const;
+std::vector<int> getAlias(int state) const;
+std::vector<std::string> getAlias(const std::string& state) const;
+bool isUnresolved(int state) const;
+bool isUnresolved(const std::string& state) const;
 
-  /**
-   * @brief Returns the CategoryIndex of the category to which the value belongs.
-   *
-   */
-  size_t getValueIndex(double value) const;
+std::string getAlphabetType() const {
+	return "Numeric";
+}
 
-  /**
-   * @brief Re-update the maps.
-   */
-  void remap();
+AlphabetNumericState& getStateAt(size_t stateIndex);
+const AlphabetNumericState& getStateAt(size_t stateIndex) const;
+
+/**
+ * @ brief Specific methods
+ *
+ */
+
+/**
+ * @brief Returns the difference between successive values
+ *
+ */
+double getDelta() const;
+
+/**
+ * @brief Returns the value for the character number
+ *
+ */
+double intToValue(int state) const;
+
+/**
+ * @brief Returns the CategoryIndex of the category to which the value belongs.
+ *
+ */
+size_t getValueIndex(double value) const;
+
+/**
+ * @brief Re-update the maps.
+ */
+void remap();
 };
 }
 #endif // BPP_SEQ_ALPHABET_NUMERICALPHABET_H

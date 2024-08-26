@@ -19,63 +19,69 @@ namespace bpp
  *
  */
 class LexicalAlphabet :
-  public AbstractAlphabet
+	public AbstractAlphabet
 {
 public:
-  // Constructor and destructor.
-  /**
-   * @brief Builds a new word alphabet from a vector of given words.
-   *
-   * Words unicity is checked.
-   *
-   * @param vocab The vector of words to be used.
-   */
+// Constructor and destructor.
+/**
+ * @brief Builds a new word alphabet from a vector of given words.
+ *
+ * Words unicity is checked.
+ *
+ * @param vocab The vector of words to be used.
+ */
 
-  LexicalAlphabet(const std::vector<std::string>& vocab);
+LexicalAlphabet(const std::vector<std::string>& vocab);
 
-  LexicalAlphabet(const LexicalAlphabet& bia) : AbstractAlphabet(bia) {}
+LexicalAlphabet(const LexicalAlphabet& bia) : AbstractAlphabet(bia) {
+}
 
-  LexicalAlphabet& operator=(const LexicalAlphabet& bia)
-  {
-    AbstractAlphabet::operator=(bia);
-    return *this;
-  }
+LexicalAlphabet& operator=(const LexicalAlphabet& bia)
+{
+	AbstractAlphabet::operator=(bia);
+	return *this;
+}
 
-  LexicalAlphabet* clone() const
-  {
-    return new LexicalAlphabet(*this);
-  }
+LexicalAlphabet* clone() const
+{
+	return new LexicalAlphabet(*this);
+}
 
-  virtual ~LexicalAlphabet() {}
+virtual ~LexicalAlphabet() {
+}
 
 public:
-  /**
-   * @name Methods redefined from Alphabet
-   *
-   * @{
-   */
-  unsigned int getSize() const
-  {
-    return getNumberOfChars() - 2;
-  }
+/**
+ * @name Methods redefined from Alphabet
+ *
+ * @{
+ */
+unsigned int getSize() const
+{
+	return getNumberOfChars() - 2;
+}
 
-  /** @} */
+/** @} */
 
 
-  unsigned int getNumberOfTypes() const
-  {
-    return getNumberOfChars() - 1;
-  }
+unsigned int getNumberOfTypes() const
+{
+	return getNumberOfChars() - 1;
+}
 
-  std::string getAlphabetType() const;
+std::string getAlphabetType() const;
 
-  int getUnknownCharacterCode() const
-  {
-    return static_cast<int>(getSize());
-  }
+int getUnknownCharacterCode() const
+{
+	return static_cast<int>(getSize());
+}
 
-  bool isUnresolved(int state) const { return state == getUnknownCharacterCode(); }
-  bool isUnresolved(const std::string& state) const { return charToInt(state) == getUnknownCharacterCode(); }
+bool isUnresolved(int state) const {
+	return state == getUnknownCharacterCode();
+}
+bool isUnresolved(const std::string& state) const {
+	return charToInt(state) == getUnknownCharacterCode();
+}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABET_LEXICALALPHABET_H

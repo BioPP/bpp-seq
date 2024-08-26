@@ -59,77 +59,85 @@ namespace bpp
  * Data from AAIndex2 database, Accession Number GRAR740104.
  */
 class GranthamAAChemicalDistance :
-  public ProteicAlphabetIndex2
+	public ProteicAlphabetIndex2
 {
 private:
-  LinearMatrix<double> distanceMatrix_;
-  LinearMatrix<double> signMatrix_;
-  LinearMatrix<double> indexMatrix_;
-  short int sign_;
+LinearMatrix<double> distanceMatrix_;
+LinearMatrix<double> signMatrix_;
+LinearMatrix<double> indexMatrix_;
+short int sign_;
 
 public:
-  GranthamAAChemicalDistance();
+GranthamAAChemicalDistance();
 
-  GranthamAAChemicalDistance(const GranthamAAChemicalDistance& gd) :
-    ProteicAlphabetIndex2(gd),
-    distanceMatrix_(gd.distanceMatrix_),
-    signMatrix_(gd.signMatrix_),
-    indexMatrix_(gd.indexMatrix_),
-    sign_(gd.sign_)
-  {}
+GranthamAAChemicalDistance(const GranthamAAChemicalDistance& gd) :
+	ProteicAlphabetIndex2(gd),
+	distanceMatrix_(gd.distanceMatrix_),
+	signMatrix_(gd.signMatrix_),
+	indexMatrix_(gd.indexMatrix_),
+	sign_(gd.sign_)
+{
+}
 
-  GranthamAAChemicalDistance& operator=(const GranthamAAChemicalDistance& gd)
-  {
-    ProteicAlphabetIndex2::operator=(*this);
+GranthamAAChemicalDistance& operator=(const GranthamAAChemicalDistance& gd)
+{
+	ProteicAlphabetIndex2::operator=(*this);
 
-    distanceMatrix_ = gd.distanceMatrix_;
-    signMatrix_ = gd.signMatrix_;
-    indexMatrix_ = gd.indexMatrix_;
-    sign_ = gd.sign_;
-    return *this;
-  }
+	distanceMatrix_ = gd.distanceMatrix_;
+	signMatrix_ = gd.signMatrix_;
+	indexMatrix_ = gd.indexMatrix_;
+	sign_ = gd.sign_;
+	return *this;
+}
 
-  GranthamAAChemicalDistance* clone() const override { return new GranthamAAChemicalDistance(); }
+GranthamAAChemicalDistance* clone() const override {
+	return new GranthamAAChemicalDistance();
+}
 
-  virtual ~GranthamAAChemicalDistance() {}
+virtual ~GranthamAAChemicalDistance() {
+}
 
 public:
-  /**
-   * @name Methods from the AlphabetIndex2 interface.
-   *
-   * @{
-   */
-  double getIndex(int state1, int state2) const override;
-  double getIndex(const std::string& state1, const std::string& state2) const override;
-  const Matrix<double>& getIndexMatrix() const override { return indexMatrix_; }
-  /** @} */
+/**
+ * @name Methods from the AlphabetIndex2 interface.
+ *
+ * @{
+ */
+double getIndex(int state1, int state2) const override;
+double getIndex(const std::string& state1, const std::string& state2) const override;
+const Matrix<double>& getIndexMatrix() const override {
+	return indexMatrix_;
+}
+/** @} */
 
 protected:
-  void computeIndexMatrix_();
+void computeIndexMatrix_();
 
 public:
-  void setSymmetric(bool yn)
-  {
-    sign_ = (yn ? SIGN_NONE : SIGN_ARBITRARY);
-    computeIndexMatrix_();
-  }
-  bool isSymmetric() const override { return sign_ == SIGN_NONE; }
-  /**
-   * @brief The sign of the distance is computed using the coordinate on the first axis
-   * of a principal component analysis with the 3 elementary properties (Volume, Polarity, Composition).
-   * Otherwise, use the default arbitrary sign. Using this option will lead isSymmetric to return false.
-   *
-   * @param yn Tell is the PC1-based sign should be used instead of the arbitrary one.
-   */
-  void setPC1Sign(bool yn)
-  {
-    sign_ = (yn ? SIGN_PC1 : SIGN_ARBITRARY);
-    computeIndexMatrix_();
-  }
+void setSymmetric(bool yn)
+{
+	sign_ = (yn ? SIGN_NONE : SIGN_ARBITRARY);
+	computeIndexMatrix_();
+}
+bool isSymmetric() const override {
+	return sign_ == SIGN_NONE;
+}
+/**
+ * @brief The sign of the distance is computed using the coordinate on the first axis
+ * of a principal component analysis with the 3 elementary properties (Volume, Polarity, Composition).
+ * Otherwise, use the default arbitrary sign. Using this option will lead isSymmetric to return false.
+ *
+ * @param yn Tell is the PC1-based sign should be used instead of the arbitrary one.
+ */
+void setPC1Sign(bool yn)
+{
+	sign_ = (yn ? SIGN_PC1 : SIGN_ARBITRARY);
+	computeIndexMatrix_();
+}
 
-  static short int SIGN_ARBITRARY;
-  static short int SIGN_PC1;
-  static short int SIGN_NONE;
+static short int SIGN_ARBITRARY;
+static short int SIGN_PC1;
+static short int SIGN_NONE;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_GRANTHAMAACHEMICALDISTANCE_H

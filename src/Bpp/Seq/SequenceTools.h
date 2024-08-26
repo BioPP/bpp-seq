@@ -31,27 +31,41 @@ namespace bpp
  * @brief Bowker's homogeneity test results class.
  */
 class BowkerTest :
-  public StatTest
+	public StatTest
 {
 private:
-  double pvalue_;
-  double stat_;
+double pvalue_;
+double stat_;
 
 public:
-  BowkerTest() : pvalue_(1.),
-    stat_(0.) {}
+BowkerTest() : pvalue_(1.),
+	stat_(0.) {
+}
 
-  virtual ~BowkerTest() {}
+virtual ~BowkerTest() {
+}
 
-  BowkerTest* clone() const { return new BowkerTest(*this); }
+BowkerTest* clone() const {
+	return new BowkerTest(*this);
+}
 
 public:
-  std::string getName() const { return "Bowker's test for homogeneity."; }
-  double getStatistic() const { return stat_; }
-  double getPValue() const { return pvalue_; }
+std::string getName() const {
+	return "Bowker's test for homogeneity.";
+}
+double getStatistic() const {
+	return stat_;
+}
+double getPValue() const {
+	return pvalue_;
+}
 
-  void setStatistic(double stat) { stat_ = stat; }
-  void setPValue(double pvalue) { pvalue_ = pvalue; }
+void setStatistic(double stat) {
+	stat_ = stat;
+}
+void setPValue(double pvalue) {
+	pvalue_ = pvalue;
+}
 };
 
 /**
@@ -60,407 +74,409 @@ public:
  * Implement methods to manipulate sequences
  */
 class SequenceTools :
-  public SymbolListTools
+	public SymbolListTools
 {
 private:
-  static std::shared_ptr<RNY> RNY_;
-  static NucleicAcidsReplication DNARep_;
-  static NucleicAcidsReplication RNARep_;
-  static NucleicAcidsReplication transc_;
+static std::shared_ptr<RNY> RNY_;
+static NucleicAcidsReplication DNARep_;
+static NucleicAcidsReplication RNARep_;
+static NucleicAcidsReplication transc_;
 
 public:
-  SequenceTools() {}
-  virtual ~SequenceTools() {}
+SequenceTools() {
+}
+virtual ~SequenceTools() {
+}
 
 public:
-  /**
-   * @param seq1 The first sequence.
-   * @param seq2 The second sequence.
-   * @return True if the two sequences have the same content (and, of course, alphabet).
-   */
-  static bool areSequencesIdentical(const SequenceInterface& seq1, const SequenceInterface& seq2);
+/**
+ * @param seq1 The first sequence.
+ * @param seq2 The second sequence.
+ * @return True if the two sequences have the same content (and, of course, alphabet).
+ */
+static bool areSequencesIdentical(const SequenceInterface& seq1, const SequenceInterface& seq2);
 
-  /**
-   * @brief Get a sub-sequence.
-   *
-   * @param sequence The sequence to trunc.
-   * @param begin    The first position of the subsequence.
-   * @param end      The last position of the subsequence (included).
-   * @param output   A sequence object to be appended with the given subsequence.
-   */
-  static void subseq(const SequenceInterface& sequence, size_t begin, size_t end, SequenceInterface& output)
-  {
-    if (end < begin || end >= sequence.size())
-      throw Exception("SequenceTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
-    std::vector<int> content(end - begin + 1);
-    for (size_t i = 0; i <= end - begin; ++i)
-    {
-      content[i] = sequence[begin + i];
-    }
-    output.append(content);
-  }
+/**
+ * @brief Get a sub-sequence.
+ *
+ * @param sequence The sequence to trunc.
+ * @param begin    The first position of the subsequence.
+ * @param end      The last position of the subsequence (included).
+ * @param output   A sequence object to be appended with the given subsequence.
+ */
+static void subseq(const SequenceInterface& sequence, size_t begin, size_t end, SequenceInterface& output)
+{
+	if (end < begin || end >= sequence.size())
+		throw Exception("SequenceTools::subseq. Invalid coordinates begin=" + TextTools::toString(begin) + ", end=" + TextTools::toString(end) + " for a sequence of size " + TextTools::toString(sequence.size()) + ".");
+	std::vector<int> content(end - begin + 1);
+	for (size_t i = 0; i <= end - begin; ++i)
+	{
+		content[i] = sequence[begin + i];
+	}
+	output.append(content);
+}
 
-  /**
-   * @brief Get a sub-sequence.
-   *
-   * @param sequence The sequence to trunc.
-   * @param begin The first position of the subsequence.
-   * @param end   The last position of the subsequence.
-   * @return A new sequence object with the given subsequence.
-   */
-  template<class SequenceTypeOut>
-  static std::unique_ptr<SequenceTypeOut> subseq(const SequenceInterface& sequence, size_t begin, size_t end)
-  {
-    auto alphaPtr = sequence.getAlphabet();
-    auto seq = std::make_unique<SequenceTypeOut>(alphaPtr);
-    seq->setName(sequence.getName());
-    seq->setComments(sequence.getComments());
-    subseq(sequence, begin, end, *seq);
-    return seq;
-  }
-
-
-  /**
-   * @brief Concatenate two sequences.
-   *
-   * Sequences must have the same name and alphabets.
-   * Only first sequence's commentaries are kept.
-   *
-   * @param seq1 The first sequence.
-   * @param seq2 The second sequence.
-   * @return A new sequence object with the concatenation of the two sequences.
-   * The type of the output sequence is the same as the one of seq1, as it is created using the clone method.
-   * @throw AlphabetMismatchException If the two alphabets do not match.
-   * @throw Exception If the sequence names do not match.
-   */
-  template<class SequenceTypeOut>
-  static std::unique_ptr<SequenceTypeOut> concatenate(const SequenceInterface& seq1, const SequenceInterface& seq2)
-  {
-    // Sequence's alphabets matching verification
-    if ((seq1.alphabet().getAlphabetType()) != (seq2.alphabet().getAlphabetType()))
-      throw AlphabetMismatchException("SequenceTools::concatenate : Sequence's alphabets don't match ", seq1.getAlphabet(), seq2.getAlphabet());
-
-    // Sequence's names matching verification
-    if (seq1.getName() != seq2.getName())
-      throw Exception ("SequenceTools::concatenate : Sequence's names don't match");
-
-    // Concatenate sequences and send result
-    auto concat = std::make_unique<SequenceTypeOut>(seq1);
-    concat->setToSizeR(seq1.size() + seq2.size());
-    for (size_t i = 0; i < seq2.size(); ++i)
-    {
-      (*concat)[seq1.size() + i] = seq2[i];
-    }
-    return concat;
-  }
-
-  /**
-   * @brief Complement the nucleotide sequence itself
-   *
-   * @param seq The sequence to be complemented.
-   * @throw AlphabetException if the sequence is not a nucleotide sequence.
-   * @author Sylvain Gaillard
-   */
-  static void complement(SequenceInterface& seq);
-
-  /**
-   * @brief Get the complementary sequence of a nucleotide sequence.
-   *
-   * @see DNAReplication
-   * @return A new sequence object with the complementary sequence.
-   * @param sequence The sequence to complement.
-   * @throw AlphabetException If the sequence is not a nucleotide sequence.
-   */
-  static std::unique_ptr<Sequence> getComplement(const SequenceInterface& sequence);
-
-  /**
-   * @brief Get the transcription sequence of a DNA sequence.
-   *
-   * Translate DNA sequence into RNA sequence.
-   *
-   * @see DNAReplication
-   * @return sequence A new sequence object with the transcription sequence.
-   * @param sequence The sequence to transcript.
-   * @throw AlphabetException If the sequence is not a DNA sequence.
-   */
-  static std::unique_ptr<Sequence> transcript(const Sequence& sequence);
-
-  /**
-   * @brief Get the reverse-transcription sequence of a RNA sequence.
-   *
-   * Translate RNA sequence into DNA sequence.
-   *
-   * @see DNAReplication
-   * @return sequence A new sequence object with the reverse-transcription sequence.
-   * @param sequence The sequence to reverse-transcript.
-   * @throw AlphabetException If the sequence is not a RNA sequence.
-   */
-  static std::unique_ptr<Sequence> reverseTranscript(const Sequence& sequence);
-
-  /**
-   * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
-   *
-   * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be
-   * inhibited).
-   *
-   * @param seq The sequence to inverse.
-   * @author Sylvain Gaillard
-   */
-  static void invert(SequenceInterface& seq);
-
-  /**
-   * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
-   *
-   * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be
-   * inhibited).
-   *
-   * @param sequence The sequence to inverse.
-   * @return A new sequence object containing the inverted sequence, of the same type as the input sequence (via the clone method).
-   * @author Sylvain Gaillard
-   */
-  static std::unique_ptr<SequenceInterface> getInvert(const SequenceInterface& sequence);
-
-  /**
-   * @brief Inverse and complement a sequence.
-   *
-   * This method is more accurate than calling invert and complement
-   * separately.
-   *
-   * @param seq The sequence to inverse and complement.
-   * @author Sylvain Gaillard
-   */
-  static void invertComplement(SequenceInterface& seq);
-
-  /**
-   * @return The identity percent of 2 sequence.
-   * One match is counted if the two sequences have identical states.
-   * @param seq1 The first sequence.
-   * @param seq2 The second sequence.
-   * @param ignoreGaps If true, only positions without gaps will be used for the counting.
-   * @throw AlphabetMismatchException If the two sequences do not have the same alphabet.
-   * @throw SequenceNotAlignedException If the two sequences do not have the same length.
-   */
-  static double getPercentIdentity(const SequenceInterface& seq1, const SequenceInterface& seq2, bool ignoreGaps = false);
-
-  /**
-   * @return The number of sites in the sequences, <i>i.e.</i> all positions without gaps.
-   *
-   * @param seq The sequence to analyse.
-   */
-  static size_t getNumberOfSites(const SequenceInterface& seq);
-
-  /**
-   * @return The number of complete sites in the sequences, <i>i.e.</i> all positions without gaps and unresolved states (generic characters).
-   *
-   * @param seq The sequence to analyse.
-   */
-  static size_t getNumberOfCompleteSites(const SequenceInterface& seq);
-
-  /**
-   * @brief keep only complete sites in a sequence.
-   *
-   * The deleteElement method of the Sequence object will be used where appropriate.
-   * @param seq The sequence to analyse.
-   */
-  static std::unique_ptr<SequenceInterface> getSequenceWithCompleteSites(const SequenceInterface& seq);
-
-  /**
-   * @return The number of unresolved sites in the sequence.
-   *
-   * @param seq The sequence to analyse.
-   *
-   * @author Sylvain Gaillard
-   */
-  static size_t getNumberOfUnresolvedSites(const SequenceInterface& seq);
+/**
+ * @brief Get a sub-sequence.
+ *
+ * @param sequence The sequence to trunc.
+ * @param begin The first position of the subsequence.
+ * @param end   The last position of the subsequence.
+ * @return A new sequence object with the given subsequence.
+ */
+template<class SequenceTypeOut>
+static std::unique_ptr<SequenceTypeOut> subseq(const SequenceInterface& sequence, size_t begin, size_t end)
+{
+	auto alphaPtr = sequence.getAlphabet();
+	auto seq = std::make_unique<SequenceTypeOut>(alphaPtr);
+	seq->setName(sequence.getName());
+	seq->setComments(sequence.getComments());
+	subseq(sequence, begin, end, *seq);
+	return seq;
+}
 
 
-  /**
-   * @brief Remove gaps from a sequence.
-   *
-   * The deleteElement method of the Sequence object will be used where appropriate.
-   * @param seq The sequence to analyse.
-   */
-  static void removeGaps(SequenceInterface& seq);
+/**
+ * @brief Concatenate two sequences.
+ *
+ * Sequences must have the same name and alphabets.
+ * Only first sequence's commentaries are kept.
+ *
+ * @param seq1 The first sequence.
+ * @param seq2 The second sequence.
+ * @return A new sequence object with the concatenation of the two sequences.
+ * The type of the output sequence is the same as the one of seq1, as it is created using the clone method.
+ * @throw AlphabetMismatchException If the two alphabets do not match.
+ * @throw Exception If the sequence names do not match.
+ */
+template<class SequenceTypeOut>
+static std::unique_ptr<SequenceTypeOut> concatenate(const SequenceInterface& seq1, const SequenceInterface& seq2)
+{
+	// Sequence's alphabets matching verification
+	if ((seq1.alphabet().getAlphabetType()) != (seq2.alphabet().getAlphabetType()))
+		throw AlphabetMismatchException("SequenceTools::concatenate : Sequence's alphabets don't match ", seq1.getAlphabet(), seq2.getAlphabet());
 
-  /**
-   * @brief Get a copy of the sequence without gaps.
-   *
-   * A whole new sequence will be created by adding all non-gap positions.
-   * The original sequence will be cloned to serve as a template.
-   *
-   * @param seq The sequence to analyse.
-   * @return A new sequence object without gaps.
-   */
-  static std::unique_ptr<SequenceInterface> getSequenceWithoutGaps(const SequenceInterface& seq);
+	// Sequence's names matching verification
+	if (seq1.getName() != seq2.getName())
+		throw Exception ("SequenceTools::concatenate : Sequence's names don't match");
 
-  /**
-   * @brief Remove stops from a codon sequence.
-   *
-   * The deleteElement method of the Sequence object will be used where appropriate.
-   * @param seq The sequence to analyse.
-   * @param gCode The genetic code according to which stop codons are specified.
-   * @throw Exception if the input sequence does not have a codon alphabet.
-   */
-  static void removeStops(SequenceInterface& seq, const GeneticCode& gCode);
+	// Concatenate sequences and send result
+	auto concat = std::make_unique<SequenceTypeOut>(seq1);
+	concat->setToSizeR(seq1.size() + seq2.size());
+	for (size_t i = 0; i < seq2.size(); ++i)
+	{
+		(*concat)[seq1.size() + i] = seq2[i];
+	}
+	return concat;
+}
 
-  /**
-   * @brief Get a copy of the codon sequence without stops.
-   *
-   * A whole new sequence will be created by adding all non-stop positions.
-   * The original sequence will be cloned to serve as a template.
-   *
-   * @param seq The sequence to analyse.
-   * @param gCode The genetic code according to which stop codons are specified.
-   * @return A new sequence object without stops.
-   * @throw Exception if the input sequence does not have a codon alphabet.
-   */
-  static std::unique_ptr<SequenceInterface> getSequenceWithoutStops(const SequenceInterface& seq, const GeneticCode& gCode);
+/**
+ * @brief Complement the nucleotide sequence itself
+ *
+ * @param seq The sequence to be complemented.
+ * @throw AlphabetException if the sequence is not a nucleotide sequence.
+ * @author Sylvain Gaillard
+ */
+static void complement(SequenceInterface& seq);
 
-  /**
-   * @brief Replace stop codons by gaps.
-   *
-   * The setElement method of the Sequence object will be used where appropriate.
-   * @param seq The sequence to analyse.
-   * @param gCode The genetic code according to which stop codons are specified.
-   * @throw Exception if the input sequence does not have a codon alphabet.
-   */
-  static void replaceStopsWithGaps(SequenceInterface& seq, const GeneticCode& gCode);
+/**
+ * @brief Get the complementary sequence of a nucleotide sequence.
+ *
+ * @see DNAReplication
+ * @return A new sequence object with the complementary sequence.
+ * @param sequence The sequence to complement.
+ * @throw AlphabetException If the sequence is not a nucleotide sequence.
+ */
+static std::unique_ptr<Sequence> getComplement(const SequenceInterface& sequence);
 
-  /**
-   * @brief Bowker's test for homogeneity.
-   *
-   * Computes the contingency table of occurrence of all pairs of states and test its symmetry using Bowker's (1948) test.
-   *
-   * Reference:<br>
-   * @code
-   * Ababneh F. Bioinformatics 2006 22(10) 1225-1231
-   * @endcode
-   *
-   * @param seq1 The first sequence.
-   * @param seq2 The second sequence.
-   * @return A BowkerTest object with the computed statistic and p-value (computed from a chi square distribution).
-   * @throw SequenceNotAlignedException If the two sequences do not have the same length.
-   */
-  static std::unique_ptr<BowkerTest> bowkerTest(const SequenceInterface& seq1, const SequenceInterface& seq2);
+/**
+ * @brief Get the transcription sequence of a DNA sequence.
+ *
+ * Translate DNA sequence into RNA sequence.
+ *
+ * @see DNAReplication
+ * @return sequence A new sequence object with the transcription sequence.
+ * @param sequence The sequence to transcript.
+ * @throw AlphabetException If the sequence is not a DNA sequence.
+ */
+static std::unique_ptr<Sequence> transcript(const Sequence& sequence);
 
-  /**
-   * @brief Get all putatives haplotypes from an heterozygous sequence.
-   *
-   * @param seq The sequence to resolve
-   * @param hap The vector to fill with the new sequences
-   * @param level The maximum number of states that a generic char must code
-   * (if this number is higher than level, the state will not be resolved).
-   * For instance if level = 3 and Alphabet is DNA, all generic char will be
-   * resolved but N.
-   *
-   * @author Sylvain Gaillard
-   */
-  static void getPutativeHaplotypes(
-      const SequenceInterface& seq,
-      std::vector<std::unique_ptr<SequenceInterface>>& hap,
-      unsigned int level = 2);
+/**
+ * @brief Get the reverse-transcription sequence of a RNA sequence.
+ *
+ * Translate RNA sequence into DNA sequence.
+ *
+ * @see DNAReplication
+ * @return sequence A new sequence object with the reverse-transcription sequence.
+ * @param sequence The sequence to reverse-transcript.
+ * @throw AlphabetException If the sequence is not a RNA sequence.
+ */
+static std::unique_ptr<Sequence> reverseTranscript(const Sequence& sequence);
 
-  /**
-   * @brief Combine two sequences.
-   *
-   * @author Sylvain Gaillard
-   */
-  static std::unique_ptr<Sequence> combineSequences(
-      const SequenceInterface& s1,
-      const SequenceInterface& s2);
+/**
+ * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
+ *
+ * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be
+ * inhibited).
+ *
+ * @param seq The sequence to inverse.
+ * @author Sylvain Gaillard
+ */
+static void invert(SequenceInterface& seq);
 
-  /**
-   * @brief Subtract haplotype from an heterozygous sequence.
-   *
-   * Subtract an haplotype (i.e. a fully resolved sequence) from an heterozygous
-   * sequence to get the other haplotype. The new haplotype could be an unresolved
-   * sequence if unresolved characters in the sequence code for more than 2 states.
-   *
-   * For example:<br>
-   * @code
-   * >heterozygous sequence
-   * ATTCGGGKWTATRYRM
-   * >haplotype
-   * ATTCGGGTATATGCAA
-   * >subtracted haplotype
-   * ATTCGGGGTTATATGC
-   * @endcode
-   *
-   * @param s The heterozygous sequence.
-   * @param h The haplotype to subtract.
-   * @param name The name of the new computed haplotype.
-   * @param level The number of states from which the site is set to fully unresolved.
-   * @throw SequenceNotAlignedException if s and h don't have the same size.
-   *
-   * @author Sylvain Gaillard
-   */
-  static std::unique_ptr<Sequence> subtractHaplotype(
-      const SequenceInterface& s,
-      const SequenceInterface& h,
-      std::string name = "",
-      unsigned int level = 1);
+/**
+ * @brief Inverse a sequence from 5'->3' to 3'->5' and vice-versa.
+ *
+ * ABCDEF becomes FEDCBA, and the sense attribute is changed (may be
+ * inhibited).
+ *
+ * @param sequence The sequence to inverse.
+ * @return A new sequence object containing the inverted sequence, of the same type as the input sequence (via the clone method).
+ * @author Sylvain Gaillard
+ */
+static std::unique_ptr<SequenceInterface> getInvert(const SequenceInterface& sequence);
 
-  /**
-   * @brief Get the RNY decomposition of a DNA sequence
-   *
-   * This function gives the decomposition in the given phase.
-   * In phase 1, the first triplet is centered on the first character.
-   *
-   * @return sequence A new sequence object with the transcription sequence.
-   * @param sequence The sequence to transcript.
-   * @param ph The phase to use (1,2 or 3).
-   * @throw AlphabetException If the sequence is not a DNA sequence.
-   *
-   * @author Laurent Guéguen
-   */
-  static std::unique_ptr<Sequence> RNYslice(const SequenceInterface& sequence, int ph);
+/**
+ * @brief Inverse and complement a sequence.
+ *
+ * This method is more accurate than calling invert and complement
+ * separately.
+ *
+ * @param seq The sequence to inverse and complement.
+ * @author Sylvain Gaillard
+ */
+static void invertComplement(SequenceInterface& seq);
 
-  /**
-   * @brief Get the RNY decomposition of a DNA sequence
-   *
-   * This function gives the alternative succession in
-   * phases 1, 2 and 3.
-   *
-   * @return sequence A new sequence object with the transcription sequence.
-   * @param sequence The sequence to transcript.
-   * @throw AlphabetException If the sequence is not a DNA sequence.
-   *
-   * @author Laurent Guéguen
-   */
-  static std::unique_ptr<Sequence> RNYslice(const SequenceInterface& sequence);
+/**
+ * @return The identity percent of 2 sequence.
+ * One match is counted if the two sequences have identical states.
+ * @param seq1 The first sequence.
+ * @param seq2 The second sequence.
+ * @param ignoreGaps If true, only positions without gaps will be used for the counting.
+ * @throw AlphabetMismatchException If the two sequences do not have the same alphabet.
+ * @throw SequenceNotAlignedException If the two sequences do not have the same length.
+ */
+static double getPercentIdentity(const SequenceInterface& seq1, const SequenceInterface& seq2, bool ignoreGaps = false);
 
-  /**
-   * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.
-   *
-   * @param sequence The sequence to be reduced to CDS part.
-   * @param gCode The genetic code according to which start and stop codons are specified.
-   * @param checkInit If true, then everything before the initiator codon will be removed, together with the initiator codon if includeInit is false.
-   * @param checkStop If true, then everything after the first stop codon will be removed, together with the stop codon if includeStop is false.
-   * @param includeInit Tell if initiator codon should be kept or removed. No effect if checkInit is false.
-   * @param includeStop Tell if stop codon should be kept or removed. No effect if checkStop is false.
-   */
-  static void getCDS(SequenceInterface& sequence, const GeneticCode& gCode, bool checkInit, bool checkStop, bool includeInit = true, bool includeStop = true);
+/**
+ * @return The number of sites in the sequences, <i>i.e.</i> all positions without gaps.
+ *
+ * @param seq The sequence to analyse.
+ */
+static size_t getNumberOfSites(const SequenceInterface& seq);
 
-  /**
-   * @brief Find the position of a motif in a sequence
-   *
-   * @param seq The reference sequence
-   * @param motif The motif to find
-   * @param strict If true (default) find exactly the motif
-   *               If false find compatible match
-   * @return The position of the first occurrence of the motif or the seq
-   * length.
-   */
-  static size_t findFirstOf(const SequenceInterface& seq, const SequenceInterface& motif, bool strict = true);
+/**
+ * @return The number of complete sites in the sequences, <i>i.e.</i> all positions without gaps and unresolved states (generic characters).
+ *
+ * @param seq The sequence to analyse.
+ */
+static size_t getNumberOfCompleteSites(const SequenceInterface& seq);
 
-  /**
-   * @brief Get a random sequence of given size and alphabet, with all state with equal probability.
-   *
-   * @param alphabet The alphabet to use.
-   * @param length The length of the sequence to generate.
-   * @return A pointer toward a new Sequence object.
-   */
-  static std::unique_ptr<Sequence> getRandomSequence(std::shared_ptr<const Alphabet>& alphabet, size_t length);
+/**
+ * @brief keep only complete sites in a sequence.
+ *
+ * The deleteElement method of the Sequence object will be used where appropriate.
+ * @param seq The sequence to analyse.
+ */
+static std::unique_ptr<SequenceInterface> getSequenceWithCompleteSites(const SequenceInterface& seq);
+
+/**
+ * @return The number of unresolved sites in the sequence.
+ *
+ * @param seq The sequence to analyse.
+ *
+ * @author Sylvain Gaillard
+ */
+static size_t getNumberOfUnresolvedSites(const SequenceInterface& seq);
+
+
+/**
+ * @brief Remove gaps from a sequence.
+ *
+ * The deleteElement method of the Sequence object will be used where appropriate.
+ * @param seq The sequence to analyse.
+ */
+static void removeGaps(SequenceInterface& seq);
+
+/**
+ * @brief Get a copy of the sequence without gaps.
+ *
+ * A whole new sequence will be created by adding all non-gap positions.
+ * The original sequence will be cloned to serve as a template.
+ *
+ * @param seq The sequence to analyse.
+ * @return A new sequence object without gaps.
+ */
+static std::unique_ptr<SequenceInterface> getSequenceWithoutGaps(const SequenceInterface& seq);
+
+/**
+ * @brief Remove stops from a codon sequence.
+ *
+ * The deleteElement method of the Sequence object will be used where appropriate.
+ * @param seq The sequence to analyse.
+ * @param gCode The genetic code according to which stop codons are specified.
+ * @throw Exception if the input sequence does not have a codon alphabet.
+ */
+static void removeStops(SequenceInterface& seq, const GeneticCode& gCode);
+
+/**
+ * @brief Get a copy of the codon sequence without stops.
+ *
+ * A whole new sequence will be created by adding all non-stop positions.
+ * The original sequence will be cloned to serve as a template.
+ *
+ * @param seq The sequence to analyse.
+ * @param gCode The genetic code according to which stop codons are specified.
+ * @return A new sequence object without stops.
+ * @throw Exception if the input sequence does not have a codon alphabet.
+ */
+static std::unique_ptr<SequenceInterface> getSequenceWithoutStops(const SequenceInterface& seq, const GeneticCode& gCode);
+
+/**
+ * @brief Replace stop codons by gaps.
+ *
+ * The setElement method of the Sequence object will be used where appropriate.
+ * @param seq The sequence to analyse.
+ * @param gCode The genetic code according to which stop codons are specified.
+ * @throw Exception if the input sequence does not have a codon alphabet.
+ */
+static void replaceStopsWithGaps(SequenceInterface& seq, const GeneticCode& gCode);
+
+/**
+ * @brief Bowker's test for homogeneity.
+ *
+ * Computes the contingency table of occurrence of all pairs of states and test its symmetry using Bowker's (1948) test.
+ *
+ * Reference:<br>
+ * @code
+ * Ababneh F. Bioinformatics 2006 22(10) 1225-1231
+ * @endcode
+ *
+ * @param seq1 The first sequence.
+ * @param seq2 The second sequence.
+ * @return A BowkerTest object with the computed statistic and p-value (computed from a chi square distribution).
+ * @throw SequenceNotAlignedException If the two sequences do not have the same length.
+ */
+static std::unique_ptr<BowkerTest> bowkerTest(const SequenceInterface& seq1, const SequenceInterface& seq2);
+
+/**
+ * @brief Get all putatives haplotypes from an heterozygous sequence.
+ *
+ * @param seq The sequence to resolve
+ * @param hap The vector to fill with the new sequences
+ * @param level The maximum number of states that a generic char must code
+ * (if this number is higher than level, the state will not be resolved).
+ * For instance if level = 3 and Alphabet is DNA, all generic char will be
+ * resolved but N.
+ *
+ * @author Sylvain Gaillard
+ */
+static void getPutativeHaplotypes(
+	const SequenceInterface& seq,
+	std::vector<std::unique_ptr<SequenceInterface> >& hap,
+	unsigned int level = 2);
+
+/**
+ * @brief Combine two sequences.
+ *
+ * @author Sylvain Gaillard
+ */
+static std::unique_ptr<Sequence> combineSequences(
+	const SequenceInterface& s1,
+	const SequenceInterface& s2);
+
+/**
+ * @brief Subtract haplotype from an heterozygous sequence.
+ *
+ * Subtract an haplotype (i.e. a fully resolved sequence) from an heterozygous
+ * sequence to get the other haplotype. The new haplotype could be an unresolved
+ * sequence if unresolved characters in the sequence code for more than 2 states.
+ *
+ * For example:<br>
+ * @code
+ * >heterozygous sequence
+ * ATTCGGGKWTATRYRM
+ * >haplotype
+ * ATTCGGGTATATGCAA
+ * >subtracted haplotype
+ * ATTCGGGGTTATATGC
+ * @endcode
+ *
+ * @param s The heterozygous sequence.
+ * @param h The haplotype to subtract.
+ * @param name The name of the new computed haplotype.
+ * @param level The number of states from which the site is set to fully unresolved.
+ * @throw SequenceNotAlignedException if s and h don't have the same size.
+ *
+ * @author Sylvain Gaillard
+ */
+static std::unique_ptr<Sequence> subtractHaplotype(
+	const SequenceInterface& s,
+	const SequenceInterface& h,
+	std::string name = "",
+	unsigned int level = 1);
+
+/**
+ * @brief Get the RNY decomposition of a DNA sequence
+ *
+ * This function gives the decomposition in the given phase.
+ * In phase 1, the first triplet is centered on the first character.
+ *
+ * @return sequence A new sequence object with the transcription sequence.
+ * @param sequence The sequence to transcript.
+ * @param ph The phase to use (1,2 or 3).
+ * @throw AlphabetException If the sequence is not a DNA sequence.
+ *
+ * @author Laurent Guéguen
+ */
+static std::unique_ptr<Sequence> RNYslice(const SequenceInterface& sequence, int ph);
+
+/**
+ * @brief Get the RNY decomposition of a DNA sequence
+ *
+ * This function gives the alternative succession in
+ * phases 1, 2 and 3.
+ *
+ * @return sequence A new sequence object with the transcription sequence.
+ * @param sequence The sequence to transcript.
+ * @throw AlphabetException If the sequence is not a DNA sequence.
+ *
+ * @author Laurent Guéguen
+ */
+static std::unique_ptr<Sequence> RNYslice(const SequenceInterface& sequence);
+
+/**
+ * @brief Extract CDS part from a codon sequence. Optionally check for intiator and stop codons, or both.
+ *
+ * @param sequence The sequence to be reduced to CDS part.
+ * @param gCode The genetic code according to which start and stop codons are specified.
+ * @param checkInit If true, then everything before the initiator codon will be removed, together with the initiator codon if includeInit is false.
+ * @param checkStop If true, then everything after the first stop codon will be removed, together with the stop codon if includeStop is false.
+ * @param includeInit Tell if initiator codon should be kept or removed. No effect if checkInit is false.
+ * @param includeStop Tell if stop codon should be kept or removed. No effect if checkStop is false.
+ */
+static void getCDS(SequenceInterface& sequence, const GeneticCode& gCode, bool checkInit, bool checkStop, bool includeInit = true, bool includeStop = true);
+
+/**
+ * @brief Find the position of a motif in a sequence
+ *
+ * @param seq The reference sequence
+ * @param motif The motif to find
+ * @param strict If true (default) find exactly the motif
+ *               If false find compatible match
+ * @return The position of the first occurrence of the motif or the seq
+ * length.
+ */
+static size_t findFirstOf(const SequenceInterface& seq, const SequenceInterface& motif, bool strict = true);
+
+/**
+ * @brief Get a random sequence of given size and alphabet, with all state with equal probability.
+ *
+ * @param alphabet The alphabet to use.
+ * @param length The length of the sequence to generate.
+ * @return A pointer toward a new Sequence object.
+ */
+static std::unique_ptr<Sequence> getRandomSequence(std::shared_ptr<const Alphabet>& alphabet, size_t length);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCETOOLS_H

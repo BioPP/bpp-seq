@@ -17,76 +17,85 @@ namespace bpp
  * @see Exception
  */
 class SiteException :
-  public Exception
+	public Exception
 {
 private:
-  /**
-   * @brief A reference toward a site object.
-   */
-  const CoreSiteInterface* site_;
+/**
+ * @brief A reference toward a site object.
+ */
+const CoreSiteInterface* site_;
 
 public:
-  // Class constructor
+// Class constructor
 
-  /**
-   * @brief Build a new SiteException object.
-   *
-   * @param text A message to be passed to the exception hierarchy.
-   * @param s    A const reference toward the site that threw the exception.
-   */
-  SiteException(const std::string& text, const CoreSiteInterface* s) :
-    Exception(text + (s != 0 ? "(" + TextTools::toString(s->getCoordinate()) + ")" : std::string(""))),
-    site_(s)
-  {}
+/**
+ * @brief Build a new SiteException object.
+ *
+ * @param text A message to be passed to the exception hierarchy.
+ * @param s    A const reference toward the site that threw the exception.
+ */
+SiteException(const std::string& text, const CoreSiteInterface* s) :
+	Exception(text + (s != 0 ? "(" + TextTools::toString(s->getCoordinate()) + ")" : std::string(""))),
+	site_(s)
+{
+}
 
-  SiteException(const SiteException& se) :
-    Exception(se),
-    site_(se.site_)
-  {}
+SiteException(const SiteException& se) :
+	Exception(se),
+	site_(se.site_)
+{
+}
 
-  SiteException& operator=(const SiteException& se)
-  {
-    Exception::operator=(se);
-    site_ = se.site_;
-    return *this;
-  }
+SiteException& operator=(const SiteException& se)
+{
+	Exception::operator=(se);
+	site_ = se.site_;
+	return *this;
+}
 
-  // Class destructor
-  virtual ~SiteException() {}
+// Class destructor
+virtual ~SiteException() {
+}
 
 public:
-  /**
-   * @brief Get the site that threw the exception.
-   *
-   * @return A const reference toward the site.
-   */
-  virtual const CoreSiteInterface* getSite() const { return site_; }
+/**
+ * @brief Get the site that threw the exception.
+ *
+ * @return A const reference toward the site.
+ */
+virtual const CoreSiteInterface* getSite() const {
+	return site_;
+}
 };
 
 /**
  * @brief Exception sent when a empty site is found.
  */
 class EmptySiteException :
-  public SiteException
+	public SiteException
 {
 public:
-  EmptySiteException(const std::string& text, const CoreSiteInterface* s) :
-    SiteException(text, s) {}
+EmptySiteException(const std::string& text, const CoreSiteInterface* s) :
+	SiteException(text, s) {
+}
 
-  virtual ~EmptySiteException() {}
+virtual ~EmptySiteException() {
+}
 };
 
 /**
  * @brief Exception sent when a site containing gap is found.
  */
 class SiteWithGapException :
-  public SiteException
+	public SiteException
 {
 public:
-  SiteWithGapException(const std::string& text, const CoreSiteInterface* s) :
-    SiteException(text, s) {}
+SiteWithGapException(const std::string& text, const CoreSiteInterface* s) :
+	SiteException(text, s) {
+}
 
-  virtual ~SiteWithGapException() {}
+virtual ~SiteWithGapException() {
+}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SITEEXCEPTIONS_H

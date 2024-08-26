@@ -21,37 +21,42 @@ namespace bpp
 class PhredPoly : public ISequenceStream
 {
 protected:
-  double ratio_;
+double ratio_;
 
 public:
-  /**
-   * @brief Build a new PhredPoly object.
-   */
-  PhredPoly(double ratio = 0.8);
+/**
+ * @brief Build a new PhredPoly object.
+ */
+PhredPoly(double ratio = 0.8);
 
-  virtual ~PhredPoly() {}
+virtual ~PhredPoly() {
+}
 
 public:
-  /**
-   * @name The AbstractISequence interface.
-   *
-   * @{
-   */
-  bool nextSequence(std::istream& input, Sequence& seq) const;
-  /** @} */
+/**
+ * @name The AbstractISequence interface.
+ *
+ * @{
+ */
+bool nextSequence(std::istream& input, Sequence& seq) const;
+/** @} */
 
-  /**
-   * @name The IOSequence interface.
-   *
-   * @{
-   */
-  const std::string getDataType() const { return "Sequence"; }
-  const std::string getFormatName() const { return "poly file"; }
-  const std::string getFormatDescription() const
-  {
-    return "Sequences following the poly format as describe in the phred documentation.";
-  }
-  /** @} */
+/**
+ * @name The IOSequence interface.
+ *
+ * @{
+ */
+const std::string getDataType() const {
+	return "Sequence";
+}
+const std::string getFormatName() const {
+	return "poly file";
+}
+const std::string getFormatDescription() const
+{
+	return "Sequences following the poly format as describe in the phred documentation.";
+}
+/** @} */
 };
 } // end of namespace bpp
 #endif // BPP_SEQ_IO_PHREDPOLY_H
