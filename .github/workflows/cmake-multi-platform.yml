@@ -57,7 +57,7 @@ jobs:
           ${{ runner.OS }}-dep-cache-
 
     - name: bpp-core
-      run: git clone https://github.com/BioPP/bpp-core.git . && cd bpp-core &&
+      run: mkdir Sources && cd Sources && git clone https://github.com/BioPP/bpp-core.git . && cd bpp-core &&
         mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=~/.local .. && sudo make install
 
     - name: Set reusable strings
