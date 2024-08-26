@@ -48,24 +48,26 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Get bpp-core
+      run: mkdir -p ~/Sources && cd ~/Sources && git clone https://github.com/BioPP/bpp-core.git && cd bpp-core &&
+           
     - name: Cache
-      id: cache-sources
+      id: cache-dep
       uses: actions/cache@v4
       with:
-        path: ~/Sources
-        key: ${{ runner.OS }}-src-cache-${{ hashFiles('**/*.h', '**/*.cpp') }}
+        path: ~/.local
+        key: ${{ runner.OS }}-local-cache-${{ hashFiles('~/Sources/**/*.h', '~/Sources/**/*.cpp') }}
         restore-keys: |
-          ${{ runner.OS }}-src-cache-
+          ${{ runner.OS }}-local-cache-${{ hashFiles('~/Sources/**/*.h', '~/Sources/**/*.cpp') }}
 
     - if: steps.cache-sources.outputs.cache-hit != 'true'
       # No cache is present, we create one
-      name: bpp-core
-      run: mkdir -p ~/Sources && cd ~/Sources && git clone https://github.com/BioPP/bpp-core.git && cd bpp-core &&
-        mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=~/.local .. && make install
-    - if: steps.cache-sources.outputs.cache-hit == 'true'
-      # A cache is present, we update the dependencies
-      name: bpp-core
-      run: cd ~/Sources/bpp-core && git pull && cd build && make install
+      name: local-deps
+      run: |
+        cd ~/Sources/bpp-core && 
+        mkdir build && cd build && 
+        cmake -DCMAKE_INSTALL_PREFIX=~/.local .. &&
+        make install
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
