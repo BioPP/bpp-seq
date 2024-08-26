@@ -57,7 +57,7 @@ jobs:
         restore-keys: |
           ${{ runner.OS }}-src-cache-
 
-    - if: steps.cache-sources.outputs.cache-hit != 'true'
+    - if: steps.cache-sources.outputs.cache-hit == 'true'
       # No cache is present, we create one
       name: bpp-core
       run: mkdir -p Sources && cd Sources && git clone https://github.com/BioPP/bpp-core.git && cd bpp-core &&
