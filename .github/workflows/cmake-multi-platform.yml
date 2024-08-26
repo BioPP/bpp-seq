@@ -53,7 +53,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/Sources
-        key: ${{ runner.OS }}-src-cache-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.OS }}-src-cache-${{ hashFiles('**/*.h', '**/*.cpp') }}
         restore-keys: |
           ${{ runner.OS }}-src-cache-
 
