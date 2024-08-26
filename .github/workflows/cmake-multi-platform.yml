@@ -56,14 +56,15 @@ jobs:
         restore-keys: |
           ${{ runner.OS }}-src-cache-
 
-    - name: bpp-core
+    - if: packages.outputs.cache-hit != 'true'
       # No cache is present, we create one
-      - if: packages.outputs.cache-hit != 'true'
-        run: mkdir -p Sources && cd Sources && git clone https://github.com/BioPP/bpp-core.git && cd bpp-core &&
-          mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=~/.local .. && make install
+      name: bpp-core
+      run: mkdir -p Sources && cd Sources && git clone https://github.com/BioPP/bpp-core.git && cd bpp-core &&
+        mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=~/.local .. && make install
+    - if: packages.outputs.cache-hit = 'true'
       # A cache is present, we update the dependencies
-      - if: packages.outputs.cache-hit = 'true'
-        run: cd Sources/bpp-core && git pull && cd build && make install
+      name: bpp-core
+      run: cd Sources/bpp-core && git pull && cd build && make install
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
