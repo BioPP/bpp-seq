@@ -58,12 +58,12 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.local
-        key: ${{ runner.OS }}-local-cache-${{ hashFiles('~/Sources/**/*.h', '~/Sources/**/*.cpp') }}
+        key: ${{ runner.OS }}-local-cache-${{ hashFiles('**/*.h', '**/*.cpp') }}
         restore-keys: |
-          ${{ runner.OS }}-local-cache-${{ hashFiles('~/Sources/**/*.h', '~/Sources/**/*.cpp') }}
+          ${{ runner.OS }}-local-cache-${{ hashFiles('**/*.h', '**/*.cpp') }}
 
     - if: steps.cache-sources.outputs.cache-hit != 'true'
-      # No cache is present, we create one
+      # No cache is present; we create one
       name: local-deps
       run: |
         cd ~/Sources/bpp-core && 
