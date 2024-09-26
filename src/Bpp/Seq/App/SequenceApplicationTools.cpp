@@ -606,6 +606,21 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
         if (replace)
           selectedSites->reindexSites();
       }
+      if (seln == "Bootstrap")
+      {
+        vSite.resize(nbSites);
+        vector<size_t> vPos;
+        for (size_t p = 0; p < nbSites; ++p)
+        {
+          vPos.push_back(p);
+        }
+
+        RandomTools::getSample(vPos, vSite, true);
+
+        auto sel = SiteContainerTools::getSelectedSites(*sites, vSite);
+        selectedSites = std::move(sel);
+        selectedSites->reindexSites();
+      }
       else
         throw Exception("Unknown site selection description: " + siteSet);
     }
@@ -789,6 +804,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     if (siteSet[0] == '(')
       siteSet = siteSet.substr(1, siteSet.size() - 2);
 
+    bool replace=false;
     vector<size_t> vSite;
     try
     {
@@ -823,7 +839,7 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
       if (seln == "Sample")
       {
         size_t n = ApplicationTools::getParameter<size_t>("n", selArgs, nbSites, "", true, warn + 1);
-        bool replace = ApplicationTools::getBooleanParameter("replace", selArgs, false, "", true, warn + 1);
+        replace = ApplicationTools::getBooleanParameter("replace", selArgs, false, "", true, warn + 1);
 
         vSite.resize(n);
         vector<size_t> vPos;
@@ -833,6 +849,17 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
         }
 
         RandomTools::getSample(vPos, vSite, replace);
+      }
+      if (seln == "Bootstrap")
+      {
+        vSite.resize(nbSites);
+        vector<size_t> vPos;
+        for (size_t p = 0; p < nbSites; ++p)
+        {
+          vPos.push_back(p);
+        }
+
+        RandomTools::getSample(vPos, vSite, true);
       }
       else
         throw Exception("Unknown site selection description: " + siteSet);
@@ -845,6 +872,8 @@ unique_ptr<ProbabilisticVectorSiteContainer> SequenceApplicationTools::getProbab
     auto selectedSites = make_unique<ProbabilisticVectorSiteContainer>(alpha);
 
     SiteContainerTools::getSelectedSites(*psites, vSite, *selectedSites);
+    if (replace)
+      selectedSites->reindexSites();
 
     if (selectedSites && (selectedSites->getNumberOfSites() == 0))
     {
