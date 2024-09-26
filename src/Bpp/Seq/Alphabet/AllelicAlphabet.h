@@ -225,16 +225,6 @@ void computeLikelihoods(const Vdouble& counts, Vdouble& likelihoods) const;
 
 private:
 /**
- * @name Inner utilitary functions
- *
- * @{
- */
-// bool containsUnresolved(const std::string& state) const;
-// bool containsGap(const std::string& state) const;
-
-/** @} */
-
-/**
  * @name Overloaded AbstractAlphabet methods.
  * @{
  */

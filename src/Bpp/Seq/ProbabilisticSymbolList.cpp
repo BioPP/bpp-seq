@@ -54,7 +54,7 @@ ProbabilisticSymbolList::ProbabilisticSymbolList(const CruxSymbolListInterface& 
 	{
 		for (size_t s = 0; s < nbc; ++s)
 		{
-			content_(s, i) = list.getStateValueAt(i, static_cast<int>(s));
+                  content_(s, i) = list.getStateValueAt(i, alphabet_->getIntCodeAt(s));
 		}
 	}
 }

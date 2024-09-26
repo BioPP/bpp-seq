@@ -13,7 +13,11 @@
 
 /**
  * @brief This alphabet is used to deal NumericAlphabet
- * @author Laurent GuÃ©guen
+ *
+ * From a UniformDiscreteDistribution, sets one AlphabetNumericState per catagory of the distribution,
+ * with description & value the category value.
+ *
+ * An gap state is registered first, with value 0.
  */
 
 namespace bpp
@@ -45,14 +49,11 @@ public:
 void setState(size_t pos, AlphabetState* st);
 void registerState(AlphabetState* st);
 
-bool containsGap(const std::string& state) const;
-
 unsigned int getSize() const;
 unsigned int getNumberOfTypes() const;
 int getUnknownCharacterCode() const {
 	return -1;
 }
-bool isGap(int state) const;
 std::vector<int> getAlias(int state) const;
 std::vector<std::string> getAlias(const std::string& state) const;
 bool isUnresolved(int state) const;

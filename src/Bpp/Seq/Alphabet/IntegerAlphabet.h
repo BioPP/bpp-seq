@@ -67,7 +67,7 @@ bool isUnresolved(int state) const {
 }
 
 bool isUnresolved(const std::string& state) const {
-	return state == "-" or state == "?";
+	return state == "?";
 }
 };
 } // end of namespace bpp.

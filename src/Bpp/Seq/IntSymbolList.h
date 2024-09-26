@@ -215,6 +215,15 @@ void setElement(size_t pos, const std::string& c) override
 
 std::string getChar(size_t pos) const override;
 
+  /**
+   * @brief get value of a state at a position
+   *
+   * @param siteIndex index of the looked value in the site
+   * @param state            state in the alphabet
+   *
+   * @return  1 if the content_ at this position is resolved in state, 0 otherwise
+   */
+
 double getStateValueAt(size_t siteIndex, int state) const override
 {
 	if (siteIndex >= content_.size())

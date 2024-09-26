@@ -88,6 +88,8 @@ namespace bpp
  * as several characters can correspond to the same state (for instance X, N and ?
  * in nucleotide alphabets).
  *
+ * The first state (indexed 0) must be a gap.
+ *
  * The alphabet objects may throw several exceptions derived of the AlphabetException
  * class.
  *

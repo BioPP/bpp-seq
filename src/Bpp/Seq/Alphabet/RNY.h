@@ -66,7 +66,7 @@ unsigned int getNumberOfTypes() const {
 int getUnknownCharacterCode() const {
 	return 350;
 }
-bool isGap(int state) const;
+
 bool isResolvedIn(int state1, int state2) const;
 std::vector<int> getAlias(int state) const;
 std::vector<std::string> getAlias(const std::string& state) const;

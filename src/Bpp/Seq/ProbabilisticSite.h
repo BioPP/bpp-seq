@@ -149,7 +149,7 @@ virtual ~ProbabilisticSite() {
 double getStateValueAt(size_t sequencePosition, int state) const
 {
 	if (sequencePosition  >= size()) throw IndexOutOfBoundsException("ProbabilisticSites::getStateValueAt.", sequencePosition, 0, size() - 1);
-	return (*this)[sequencePosition][static_cast<size_t>(state)];
+	return (*this)[sequencePosition][getAlphabet()->getStateIndex(state)-1];
 }
 };
 } // end of namespace bpp.

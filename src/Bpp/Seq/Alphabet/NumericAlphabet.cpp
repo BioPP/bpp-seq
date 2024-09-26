@@ -21,11 +21,15 @@ NumericAlphabet::NumericAlphabet(const UniformDiscreteDistribution& pd) :
 
 	Vdouble vd = pdd_->getCategories();
 
+        // gap
+        registerState(new AlphabetNumericState(-1, 0, "-", "gap"));
+
 	for (size_t i = 0; i < size; ++i)
 	{
-		registerState(new AlphabetNumericState(static_cast<int>(i), vd[i], TextTools::toString(vd[i]), TextTools::toString(vd[i])));
+          registerState(new AlphabetNumericState(static_cast<int>(i), vd[i], TextTools::toString(vd[i]), TextTools::toString(vd[i])));
 	}
 }
+
 
 NumericAlphabet::NumericAlphabet(const NumericAlphabet& na) :
 	AbstractAlphabet(na),
@@ -89,34 +93,24 @@ vector<string> NumericAlphabet::getAlias(const string& state) const
 
 /****************************************************************************************/
 
-bool NumericAlphabet::isGap(int state) const
-{
-	return false;
-}
-
-bool NumericAlphabet::containsGap(const string& state) const
-{
-	return false;
-}
-
 bool NumericAlphabet::isUnresolved(const string& state) const
 {
-	return false;
+  return false;
 }
 
 bool NumericAlphabet::isUnresolved(int state) const
 {
-	return false;
+  return false;
 }
 
 unsigned int NumericAlphabet::getSize() const
 {
-	return static_cast<unsigned int>(values_.size());
+  return static_cast<unsigned int>(values_.size());
 }
 
 unsigned int NumericAlphabet::getNumberOfTypes() const
 {
-	return static_cast<unsigned int>(values_.size());
+  return static_cast<unsigned int>(values_.size());
 }
 
 void NumericAlphabet::remap()

@@ -113,6 +113,8 @@ using AbstractOSequence::writeSequences;
  */
 void appendAlignmentFromStream(std::istream& input, ProbabilisticSequenceContainerInterface& psc) const override;
 
+  using AbstractOProbabilisticAlignment::writeAlignment;
+  
 void writeAlignment(std::ostream& output, const ProbabilisticSiteContainerInterface& psc) const override
 {
 	if (!output)

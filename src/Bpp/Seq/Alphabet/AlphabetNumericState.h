@@ -19,10 +19,10 @@
 namespace bpp
 {
 /**
- * @brief States that do have a double value
+ * @brief States that have a double value in addition to letter & name
  *
- * @author Laurent GuÃ©guen
  */
+  
 class AlphabetNumericState : public AlphabetState
 {
 private:

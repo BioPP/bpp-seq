@@ -212,7 +212,7 @@ void setToSizeL(size_t newSize) override;
 double getStateValueAt(size_t sitePosition, int state) const override
 {
 	if (sitePosition  >= size()) throw IndexOutOfBoundsException("ProbabilisticSequence::getStateValueAt.", sitePosition, 0, size() - 1);
-	return (*this)[sitePosition][static_cast<size_t>(state)];
+	return (*this)[sitePosition][getAlphabet()->getStateIndex(state)-1];
 }
 };
 } // end of namespace bpp

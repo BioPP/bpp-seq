@@ -133,15 +133,10 @@ RNY::RNY( std::shared_ptr<const NucleicAlphabet> na) : nuclalph_(na)
 	}
 
 
-	// --- (350)
-
-	s[0] = s1[3];
-	s[1] = s2[4];
-	s[2] = s3[3];
-	states[350] = new AlphabetState(350, s, s);
-
 	// Register all states:
-	for (size_t i = 0; i < states.size(); ++i)
+        registerState(new AlphabetState(-1, "---", "---")); //put gap first
+        
+	for (size_t i = 0; i < states.size()-1; ++i)
 	{
 		if (states[i])
 			registerState(states[i]);
@@ -156,9 +151,25 @@ vector<int> RNY::getAlias(int state) const
 		throw BadIntException(state, "RNY::getAlias(int): Specified base unknown.", this);
 	vector<int> v;
 
+	int i, j, k;
+        if (state==-1){
+          // ---
+          v.resize(36);
+          for (i = 0; i < 3; ++i)
+          {
+            for (j = 0; j < 4; ++j)
+            {
+              for (k = 0; k < 3; ++k)
+              {
+                v[static_cast<size_t>(12 * i + 3 * j + k)] = 12 * i + 3 * j + k;
+              }
+            }
+          }
+          return(v);
+        }
+
 	int qs = state / 50;
 	int rs = state % 50;
-	int i, j, k;
 
 	switch (qs)
 	{
@@ -217,19 +228,6 @@ vector<int> RNY::getAlias(int state) const
 			}
 		}
 		break;
-	case 7: // ---
-		v.resize(36);
-		for (i = 0; i < 3; ++i)
-		{
-			for (j = 0; j < 4; ++j)
-			{
-				for (k = 0; k < 3; ++k)
-				{
-					v[static_cast<size_t>(12 * i + 3 * j + k)] = 12 * i + 3 * j + k;
-				}
-			}
-		}
-		break;
 	}
 	return v;
 }
@@ -246,6 +244,9 @@ bool RNY::isResolvedIn(int state1, int state2) const
 
 	if (isUnresolved(state2))
 		throw BadIntException(state2, "RNY::isResolvedIn(int, int): Unresolved base.", this);
+
+        if (state1==-1) // ---
+          return true;
 
 	int qs = state1 / 50;
 	int rs = state1 % 50;
@@ -266,8 +267,6 @@ bool RNY::isResolvedIn(int state1, int state2) const
 		return (state2 - rs) % 12 < 3 && (state2 >= rs) &&  (state2 < rs + 27);
 	case 6: // --N
 		return (state2 - rs) % 3 == 0 && (state2 >= rs) &&  (state2 < rs + 36);
-	case 7: // ---
-		return state2 >= 0;
 	default:
 		throw BadIntException(state1, "RNY:isResolvedIn : this should not happen.", this);
 	}
@@ -402,15 +401,12 @@ int RNY::getRNY(int i, int j, int k, const Alphabet& alph) const
 		throw BadCharException(&lk, "RNY::getRNY(int,int;int,alph): Specified base unknown.", this);
 	}
 
-	return 50 * s + r;
+        auto v = 50 * s + r;
+        
+        return(v==350?-1:v);
 }
 
 /****************************************************************************************/
-bool RNY::isGap(int state) const
-{
-	return state == 350;
-}
-
 bool RNY::containsGap(const string& state) const
 {
 	return state.find("-") != string::npos;
@@ -418,12 +414,12 @@ bool RNY::containsGap(const string& state) const
 
 bool RNY::isUnresolved(const string& state) const
 {
-	return containsGap(state);
+  return isUnresolved(charToInt(state));
 }
 
 bool RNY::isUnresolved(int state) const
 {
-	return state >= 50 && state != 350;
+  return state >= 50;
 }
 
 /****************************************************************************************/
@@ -441,6 +437,11 @@ int RNY::charToInt(const string& state) const
 
 string RNY::intToChar(int state) const
 {
+  // --- 
+
+  if (state==-1)
+    return "---";
+
 	int i, j, k, l;
 	for (i = 0; i < 3; ++i)
 	{
@@ -519,12 +520,6 @@ string RNY::intToChar(int state) const
 			return getState(l).getLetter();
 	}
 
-
-	// --- (350)
-
-	l = 350;
-	if (getState(l).getNum() == state)
-		return getState(l).getLetter();
 
 	throw BadIntException(state, "RNY::intToChar: Specified base unknown", this);
 	return "XXX";
