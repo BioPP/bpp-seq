@@ -21,37 +21,41 @@ namespace bpp
  * Extensive support for generic characters (e.g. 'P', 'Y', etc.) is provided.
  */
 class RNA :
-  public NucleicAlphabet
+	public NucleicAlphabet
 {
 public:
-  /**
-   * @param exclamationMarkCountsAsGap If yes, '!' characters are replaced by gaps.
-   * Otherwise, they are counted as unknown characters.
-   */
-  RNA(bool exclamationMarkCountsAsGap = false);
+/**
+ * @param exclamationMarkCountsAsGap If yes, '!' characters are replaced by gaps.
+ * Otherwise, they are counted as unknown characters.
+ */
+RNA(bool exclamationMarkCountsAsGap = false);
 
-  RNA(const RNA& bia) : NucleicAlphabet(bia) {}
+RNA(const RNA& bia) : NucleicAlphabet(bia) {
+}
 
-  RNA& operator=(const RNA& bia)
-  {
-    NucleicAlphabet::operator=(bia);
-    return *this;
-  }
+RNA& operator=(const RNA& bia)
+{
+	NucleicAlphabet::operator=(bia);
+	return *this;
+}
 
-  RNA* clone() const
-  {
-    return new RNA(*this);
-  }
+RNA* clone() const
+{
+	return new RNA(*this);
+}
 
-  virtual ~RNA() {}
+virtual ~RNA() {
+}
 
 public:
-  bool isResolvedIn(int state1, int state2) const;
-  std::vector<int> getAlias(int state) const;
-  std::vector<std::string> getAlias(const std::string& state) const;
-  int getGeneric(const std::vector<int>& states) const;
-  std::string getGeneric(const std::vector<std::string>& states) const;
-  std::string getAlphabetType() const { return "RNA"; }
+bool isResolvedIn(int state1, int state2) const;
+std::vector<int> getAlias(int state) const;
+std::vector<std::string> getAlias(const std::string& state) const;
+int getGeneric(const std::vector<int>& states) const;
+std::string getGeneric(const std::vector<std::string>& states) const;
+std::string getAlphabetType() const {
+	return "RNA";
+}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABET_RNA_H

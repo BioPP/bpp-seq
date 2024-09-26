@@ -27,41 +27,47 @@ namespace bpp
  * Data from AAIndex2 database, Accession Number HENS920104.
  */
 class BLOSUM50 :
-  public ProteicAlphabetIndex2
+	public ProteicAlphabetIndex2
 {
 private:
-  LinearMatrix<double> distanceMatrix_;
+LinearMatrix<double> distanceMatrix_;
 
 public:
-  BLOSUM50();
+BLOSUM50();
 
-  BLOSUM50(const BLOSUM50& blosum) :
-    ProteicAlphabetIndex2(blosum),
-    distanceMatrix_(blosum.distanceMatrix_)
-  {}
+BLOSUM50(const BLOSUM50& blosum) :
+	ProteicAlphabetIndex2(blosum),
+	distanceMatrix_(blosum.distanceMatrix_)
+{
+}
 
-  BLOSUM50& operator=(const BLOSUM50& blosum)
-  {
-    ProteicAlphabetIndex2::operator=(*this);
-    distanceMatrix_ = blosum.distanceMatrix_;
-    return *this;
-  }
+BLOSUM50& operator=(const BLOSUM50& blosum)
+{
+	ProteicAlphabetIndex2::operator=(*this);
+	distanceMatrix_ = blosum.distanceMatrix_;
+	return *this;
+}
 
-  BLOSUM50* clone() const override { return new BLOSUM50(); }
+BLOSUM50* clone() const override {
+	return new BLOSUM50();
+}
 
-  virtual ~BLOSUM50() {}
+virtual ~BLOSUM50() {
+}
 
 public:
-  /**
-   * @name Methods from the AlphabetIndex2 interface.
-   *
-   * @{
-   */
-  double getIndex(int state1, int state2) const override;
-  double getIndex(const std::string& state1, const std::string& state2) const override;
-  const Matrix<double>& getIndexMatrix() const override;
-  bool isSymmetric() const override { return true; }
-  /** @} */
+/**
+ * @name Methods from the AlphabetIndex2 interface.
+ *
+ * @{
+ */
+double getIndex(int state1, int state2) const override;
+double getIndex(const std::string& state1, const std::string& state2) const override;
+const Matrix<double>& getIndexMatrix() const override;
+bool isSymmetric() const override {
+	return true;
+}
+/** @} */
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_BLOSUM50_H

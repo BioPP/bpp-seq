@@ -15,23 +15,23 @@ using namespace std;
 
 unique_ptr<OSequence> BppOSequenceWriterFormat::read(const std::string& description)
 {
-  unparsedArguments_.clear();
-  string format = "";
-  KeyvalTools::parseProcedure(description, format, unparsedArguments_);
-  unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", unparsedArguments_, 100, "", true, warningLevel_);
-  unique_ptr<OSequence> oSeq;
-  if (format == "Fasta")
-  {
-    oSeq.reset(new Fasta(ncol));
-  }
-  else if (format == "Mase")
-  {
-    oSeq.reset(new Mase(ncol));
-  }
-  else
-  {
-    throw IOException("Sequence format '" + format + "' unknown.");
-  }
+	unparsedArguments_.clear();
+	string format = "";
+	KeyvalTools::parseProcedure(description, format, unparsedArguments_);
+	unsigned int ncol = ApplicationTools::getParameter<unsigned int>("length", unparsedArguments_, 100, "", true, warningLevel_);
+	unique_ptr<OSequence> oSeq;
+	if (format == "Fasta")
+	{
+		oSeq.reset(new Fasta(ncol));
+	}
+	else if (format == "Mase")
+	{
+		oSeq.reset(new Mase(ncol));
+	}
+	else
+	{
+		throw IOException("Sequence format '" + format + "' unknown.");
+	}
 
-  return oSeq;
+	return oSeq;
 }

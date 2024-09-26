@@ -31,58 +31,66 @@ namespace bpp
  * Data from AAIndex2 database, Accession Number MIYT790101.
  */
 class MiyataAAChemicalDistance :
-  public ProteicAlphabetIndex2
+	public ProteicAlphabetIndex2
 {
 private:
-  LinearMatrix<double> distanceMatrix_;
-  LinearMatrix<double> indexMatrix_;
-  bool sym_;
+LinearMatrix<double> distanceMatrix_;
+LinearMatrix<double> indexMatrix_;
+bool sym_;
 
 public:
-  MiyataAAChemicalDistance();
+MiyataAAChemicalDistance();
 
-  MiyataAAChemicalDistance(const MiyataAAChemicalDistance& md) :
-    ProteicAlphabetIndex2(md),
-    distanceMatrix_(md.distanceMatrix_),
-    indexMatrix_(md.indexMatrix_),
-    sym_(md.sym_)
-  {}
+MiyataAAChemicalDistance(const MiyataAAChemicalDistance& md) :
+	ProteicAlphabetIndex2(md),
+	distanceMatrix_(md.distanceMatrix_),
+	indexMatrix_(md.indexMatrix_),
+	sym_(md.sym_)
+{
+}
 
-  MiyataAAChemicalDistance& operator=(const MiyataAAChemicalDistance& md)
-  {
-    ProteicAlphabetIndex2::operator=(*this);
+MiyataAAChemicalDistance& operator=(const MiyataAAChemicalDistance& md)
+{
+	ProteicAlphabetIndex2::operator=(*this);
 
-    distanceMatrix_ = md.distanceMatrix_;
-    indexMatrix_ = md.indexMatrix_;
-    sym_ = md.sym_;
-    return *this;
-  }
+	distanceMatrix_ = md.distanceMatrix_;
+	indexMatrix_ = md.indexMatrix_;
+	sym_ = md.sym_;
+	return *this;
+}
 
-  virtual ~MiyataAAChemicalDistance() {}
+virtual ~MiyataAAChemicalDistance() {
+}
 
-  MiyataAAChemicalDistance* clone() const override { return new MiyataAAChemicalDistance(); }
+MiyataAAChemicalDistance* clone() const override {
+	return new MiyataAAChemicalDistance();
+}
 
 public:
-  /**
-   * @name Methods from the AlphabetIndex2 interface.
-   *
-   * @{
-   */
-  double getIndex(int state1, int state2) const override;
-  double getIndex(const std::string& state1, const std::string& state2) const override;
-  const Matrix<double>& getIndexMatrix() const override { return indexMatrix_; }
-  /** @} */
+/**
+ * @name Methods from the AlphabetIndex2 interface.
+ *
+ * @{
+ */
+double getIndex(int state1, int state2) const override;
+double getIndex(const std::string& state1, const std::string& state2) const override;
+const Matrix<double>& getIndexMatrix() const override {
+	return indexMatrix_;
+}
+/** @} */
 
 protected:
-  void computeIndexMatrix_();
+void computeIndexMatrix_();
 
 public:
-  void setSymmetric(bool yn)
-  {
-    sym_ = yn;
-    computeIndexMatrix_();
-  }
-  bool isSymmetric() const override { return sym_; }
+void setSymmetric(bool yn)
+{
+	sym_ = yn;
+	computeIndexMatrix_();
+}
+bool isSymmetric() const override {
+	return sym_;
+}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_MIYATAAACHEMICALDISTANCE_H

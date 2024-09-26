@@ -15,12 +15,14 @@ template<class SequenceType>
 class TemplateSequenceIteratorInterface
 {
 public:
-  TemplateSequenceIteratorInterface() {}
-  virtual ~TemplateSequenceIteratorInterface() {}
+TemplateSequenceIteratorInterface() {
+}
+virtual ~TemplateSequenceIteratorInterface() {
+}
 
 public:
-  virtual std::unique_ptr<SequenceType> nextSequence() = 0;
-  virtual bool hasMoreSequences() const = 0;
+virtual std::unique_ptr<SequenceType> nextSequence() = 0;
+virtual bool hasMoreSequences() const = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCEITERATOR_H

@@ -52,32 +52,38 @@ namespace bpp
 class NucleicAlphabetState : public AlphabetState
 {
 private:
-  int binCode_;
+int binCode_;
 
 public:
-  NucleicAlphabetState(int num, const std::string& letter, unsigned char code, const std::string& name) :
-    AlphabetState(num, letter, name), binCode_(code) {}
+NucleicAlphabetState(int num, const std::string& letter, unsigned char code, const std::string& name) :
+	AlphabetState(num, letter, name), binCode_(code) {
+}
 
-  // Class destructor
-  virtual ~NucleicAlphabetState() {}
+// Class destructor
+virtual ~NucleicAlphabetState() {
+}
 
 public:
-  NucleicAlphabetState* clone() const
-  {
-    return new NucleicAlphabetState(*this);
-  }
-  /**
-   * @brief Get the state's binary representation.
-   *
-   * @return The state's binary representation.
-   */
-  int getBinaryCode() const { return binCode_; }
-  /**
-   * @brief Set the state's binary representation.
-   *
-   * @param code The state's binary representation.
-   */
-  void setBinaryCode(int code) { binCode_ = code; }
+NucleicAlphabetState* clone() const
+{
+	return new NucleicAlphabetState(*this);
+}
+/**
+ * @brief Get the state's binary representation.
+ *
+ * @return The state's binary representation.
+ */
+int getBinaryCode() const {
+	return binCode_;
+}
+/**
+ * @brief Set the state's binary representation.
+ *
+ * @param code The state's binary representation.
+ */
+void setBinaryCode(int code) {
+	binCode_ = code;
+}
 };
 }
 #endif // BPP_SEQ_ALPHABET_NUCLEICALPHABETSTATE_H

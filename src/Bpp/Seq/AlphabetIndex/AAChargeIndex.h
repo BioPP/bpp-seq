@@ -57,55 +57,60 @@ namespace bpp
  * @endcode
  */
 class AAChargeIndex :
-  public ProteicAlphabetIndex1
+	public ProteicAlphabetIndex1
 {
 private:
-  std::vector<double> charge_;
+std::vector<double> charge_;
 
 public:
-  AAChargeIndex() :
-    ProteicAlphabetIndex1(),
-    charge_()
-  {
-    charge_.resize(20);
-    charge_[ 0] =  0.; // A
-    charge_[ 1] =  1.; // R
-    charge_[ 2] =  0.; // N
-    charge_[ 3] = -1.; // D
-    charge_[ 4] =  0.; // C
-    charge_[ 5] =  0.; // Q
-    charge_[ 6] = -1.; // E
-    charge_[ 7] =  0.; // G
-    charge_[ 8] =  1.; // H
-    charge_[ 9] =  0.; // I
-    charge_[10] =  0.; // L
-    charge_[11] =  1.; // K
-    charge_[12] =  0.; // M
-    charge_[13] =  0.; // F
-    charge_[14] =  0.; // P
-    charge_[15] =  0.; // S
-    charge_[16] =  0.; // T
-    charge_[17] =  0.; // W
-    charge_[18] =  0.; // Y
-    charge_[19] =  0.; // V
-  }
+AAChargeIndex() :
+	ProteicAlphabetIndex1(),
+	charge_()
+{
+	charge_.resize(20);
+	charge_[ 0] =  0.;// A
+	charge_[ 1] =  1.;// R
+	charge_[ 2] =  0.;// N
+	charge_[ 3] = -1.; // D
+	charge_[ 4] =  0.;// C
+	charge_[ 5] =  0.;// Q
+	charge_[ 6] = -1.; // E
+	charge_[ 7] =  0.;// G
+	charge_[ 8] =  1.;// H
+	charge_[ 9] =  0.;// I
+	charge_[10] =  0.;// L
+	charge_[11] =  1.;// K
+	charge_[12] =  0.;// M
+	charge_[13] =  0.;// F
+	charge_[14] =  0.;// P
+	charge_[15] =  0.;// S
+	charge_[16] =  0.;// T
+	charge_[17] =  0.;// W
+	charge_[18] =  0.;// Y
+	charge_[19] =  0.;// V
+}
 
-  virtual ~AAChargeIndex() {}
+virtual ~AAChargeIndex() {
+}
 
-  AAChargeIndex* clone() const override { return new AAChargeIndex(); }
+AAChargeIndex* clone() const override {
+	return new AAChargeIndex();
+}
 
 public:
-  double getIndex(int state) const override
-  {
-    return charge_[getAlphabet()->getStateIndex(state) - 1];
-  }
+double getIndex(int state) const override
+{
+	return charge_[getAlphabet()->getStateIndex(state) - 1];
+}
 
-  double getIndex(const std::string& state) const override
-  {
-    return charge_[getAlphabet()->getStateIndex(state) - 1];
-  }
+double getIndex(const std::string& state) const override
+{
+	return charge_[getAlphabet()->getStateIndex(state) - 1];
+}
 
-  const std::vector<double>& indexVector() const override { return charge_; }
+const std::vector<double>& indexVector() const override {
+	return charge_;
+}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_AACHARGEINDEX_H

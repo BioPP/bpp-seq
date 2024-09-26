@@ -21,11 +21,13 @@ namespace bpp
  * This class is an alias for SymbolListTools.
  */
 class SiteTools :
-  public SymbolListTools
+	public SymbolListTools
 {
 public:
-  SiteTools() {}
-  virtual ~SiteTools() {}
+SiteTools() {
+}
+virtual ~SiteTools() {
+}
 };
 }
 #endif // BPP_SEQ_SITETOOLS_H

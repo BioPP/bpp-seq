@@ -47,195 +47,194 @@ namespace bpp
  *
  */
 class AllelicAlphabet :
-  public AbstractAlphabet
+	public AbstractAlphabet
 {
 protected:
-  std::shared_ptr<const Alphabet> alph_;
+std::shared_ptr<const Alphabet> alph_;
 
-  /**
-   * @brief the number of alleles.
-   */
-  unsigned int nbAlleles_;
+/**
+ * @brief the number of alleles.
+ */
+unsigned int nbAlleles_;
 
-  /**
-   * @brief the unknown state number
-   */
-  int nbUnknown_;
-
-public:
-  // Constructor and destructor.
-  /**
-   * @brief Builds a new word alphabet from an  Alphabet
-   */
-  AllelicAlphabet(std::shared_ptr<const Alphabet> alph, unsigned int nbAlleles);
-
-  AllelicAlphabet(const AllelicAlphabet& bia) :
-    AbstractAlphabet(bia),
-    alph_(bia.alph_),
-    nbAlleles_(bia.nbAlleles_),
-    nbUnknown_(bia.nbUnknown_)
-  {}
-
-  AllelicAlphabet* clone() const override
-  {
-    return new AllelicAlphabet(*this);
-  }
-
-  virtual ~AllelicAlphabet() {}
+/**
+ * @brief the unknown state number
+ */
+int nbUnknown_;
 
 public:
-  /**
-   * @name Methods redefined from Alphabet
-   *
-   * @{
-   */
-  int charToInt(const std::string& state) const override
-  {
-    if (state.size() != getStateCodingSize())
-      throw BadCharException(state, "AllelicAlphabet::charToInt", this);
-    else
-      return AbstractAlphabet::charToInt(state);
-  }
+// Constructor and destructor.
+/**
+ * @brief Builds a new word alphabet from an  Alphabet
+ */
+AllelicAlphabet(std::shared_ptr<const Alphabet> alph, unsigned int nbAlleles);
 
-  unsigned int getSize() const override
-  {
-    return getNumberOfChars() - 2;
-  }
+AllelicAlphabet(const AllelicAlphabet& bia) :
+	AbstractAlphabet(bia),
+	alph_(bia.alph_),
+	nbAlleles_(bia.nbAlleles_),
+	nbUnknown_(bia.nbUnknown_)
+{
+}
 
-  unsigned int getNumberOfTypes() const override
-  {
-    return getNumberOfChars() - 1;
-  }
+AllelicAlphabet* clone() const override
+{
+	return new AllelicAlphabet(*this);
+}
 
-  /** @} */
+virtual ~AllelicAlphabet() {
+}
+
+public:
+/**
+ * @name Methods redefined from Alphabet
+ *
+ * @{
+ */
+int charToInt(const std::string& state) const override
+{
+	if (state.size() != getStateCodingSize())
+		throw BadCharException(state, "AllelicAlphabet::charToInt", this);
+	else
+		return AbstractAlphabet::charToInt(state);
+}
+
+unsigned int getSize() const override
+{
+	return getNumberOfChars() - 2;
+}
+
+unsigned int getNumberOfTypes() const override
+{
+	return getNumberOfChars() - 1;
+}
+
+/** @} */
 
 
-  bool isResolvedIn(int state1, int state2) const override;
+bool isResolvedIn(int state1, int state2) const override;
 
-  /**
-   * @brief Returns the number of alleles
-   *
-   */
-  unsigned int getNbAlleles() const
-  {
-    return nbAlleles_;
-  }
+/**
+ * @brief Returns the number of alleles
+ *
+ */
+unsigned int getNbAlleles() const
+{
+	return nbAlleles_;
+}
 
-  /**
-   * @brief Returns Base Alphabet
-   */
-  std::shared_ptr<const Alphabet> getStateAlphabet() const
-  {
-    return alph_;
-  }
+/**
+ * @brief Returns Base Alphabet
+ */
+std::shared_ptr<const Alphabet> getStateAlphabet() const
+{
+	return alph_;
+}
 
-  const Alphabet& stateAlphabet() const
-  {
-    return *alph_;
-  }
+const Alphabet& stateAlphabet() const
+{
+	return *alph_;
+}
 
-  std::string getAlphabetType() const override;
+std::string getAlphabetType() const override;
 
-  int getUnknownCharacterCode() const override
-  {
-    return nbUnknown_;
-  }
+int getUnknownCharacterCode() const override
+{
+	return nbUnknown_;
+}
 
-  bool isUnresolved(int state) const override { return state == getUnknownCharacterCode(); }
+bool isUnresolved(int state) const override {
+	return state == getUnknownCharacterCode();
+}
 
-  bool isUnresolved(const std::string& state) const override { return charToInt(state) == getUnknownCharacterCode(); }
+bool isUnresolved(const std::string& state) const override {
+	return charToInt(state) == getUnknownCharacterCode();
+}
 
-  std::vector<int> getAlias(int state) const override;
+std::vector<int> getAlias(int state) const override;
 
-  std::vector<std::string> getAlias(const std::string& state) const override;
+std::vector<std::string> getAlias(const std::string& state) const override;
 
-  int getGeneric(const std::vector<int>& states) const override
-  {
-    return states[0];
-  }
+int getGeneric(const std::vector<int>& states) const override
+{
+	return states[0];
+}
 
-  std::string getGeneric(const std::vector<std::string>& states) const override
-  {
-    return states[0];
-  }
+std::string getGeneric(const std::vector<std::string>& states) const override
+{
+	return states[0];
+}
 
-  class AllelicTransliterator : public AbstractTransliterator
-  {
+class AllelicTransliterator : public AbstractTransliterator
+{
 private:
-    std::shared_ptr<const AllelicAlphabet> alph_;
+std::shared_ptr<const AllelicAlphabet> alph_;
 
 public:
-    AllelicTransliterator(std::shared_ptr<const AllelicAlphabet> alph) :
-      AbstractTransliterator(), alph_(alph)
-    {}
+AllelicTransliterator(std::shared_ptr<const AllelicAlphabet> alph) :
+	AbstractTransliterator(), alph_(alph)
+{
+}
 
-    std::shared_ptr<const Alphabet> getSourceAlphabet() const override
-    {
-      return alph_->getStateAlphabet();
-    }
-    std::shared_ptr<const Alphabet> getTargetAlphabet() const override { return alph_; }
+std::shared_ptr<const Alphabet> getSourceAlphabet() const override
+{
+	return alph_->getStateAlphabet();
+}
+std::shared_ptr<const Alphabet> getTargetAlphabet() const override {
+	return alph_;
+}
 
-    std::string translate(const std::string& state) const override
-    {
-      return getTargetAlphabet()->intToChar(getSourceAlphabet()->charToInt(state));
-    }
+std::string translate(const std::string& state) const override
+{
+	return getTargetAlphabet()->intToChar(getSourceAlphabet()->charToInt(state));
+}
 
-    /**
-     * @brief States of the original alphabet are the first ones of
-     * the allelic alphabet.
-     */
-    int translate(int state) const override
-    {
-      return state;
-    }
+/**
+ * @brief States of the original alphabet are the first ones of
+ * the allelic alphabet.
+ */
+int translate(int state) const override
+{
+	return state;
+}
 
-    std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override
-    {
-      return AbstractTransliterator::translate(sequence);
-    }
-  };
+std::unique_ptr<Sequence> translate(const SequenceInterface& sequence) const override
+{
+	return AbstractTransliterator::translate(sequence);
+}
+};
 
-  /**
-   * @brief Convert a CoreSequence in StateAlphabet to a
-   * ProbabilisticSequence of the likelihoods of the di-allelic
-   * Alphabet (so if counts are not on only two states, the
-   * likelihood is null).
-   *
-   * @param sequence the CoreSequence to be converted.
-   *
-   *  Gaps are directly translated in vectors of 1.
-   */
-  std::unique_ptr<ProbabilisticSequence> convertFromStateAlphabet(const CoreSequenceInterface& sequence) const;
+/**
+ * @brief Convert a CoreSequence in StateAlphabet to a
+ * ProbabilisticSequence of the likelihoods of the di-allelic
+ * Alphabet (so if counts are not on only two states, the
+ * likelihood is null).
+ *
+ * @param sequence the CoreSequence to be converted.
+ *
+ *  Gaps are directly translated in vectors of 1.
+ */
+std::unique_ptr<ProbabilisticSequence> convertFromStateAlphabet(const CoreSequenceInterface& sequence) const;
 
-  /**
-   * @brief Fills the vector of the likelihoods of a vector of
-   * counts in the states alphabet, given the di-alleless.
-   *
-   */
-  void computeLikelihoods(const Vdouble& counts, Vdouble& likelihoods) const;
+/**
+ * @brief Fills the vector of the likelihoods of a vector of
+ * counts in the states alphabet, given the di-alleless.
+ *
+ */
+void computeLikelihoods(const Vdouble& counts, Vdouble& likelihoods) const;
 
 private:
-  /**
-   * @name Inner utilitary functions
-   *
-   * @{
-   */
-  // bool containsUnresolved(const std::string& state) const;
-  // bool containsGap(const std::string& state) const;
+/**
+ * @name Overloaded AbstractAlphabet methods.
+ * @{
+ */
+unsigned int getStateCodingSize() const override
+{
+	auto x = 2 * ((unsigned int)alph_->getStateCodingSize() + (unsigned int)std::to_string(nbAlleles_).size());
+	return x;
+}
 
-  /** @} */
-
-  /**
-   * @name Overloaded AbstractAlphabet methods.
-   * @{
-   */
-  unsigned int getStateCodingSize() const override
-  {
-    auto x = 2 * ((unsigned int)alph_->getStateCodingSize() + (unsigned int)std::to_string(nbAlleles_).size());
-    return x;
-  }
-
-  /** @} */
+/** @} */
 };
 } // end of namespace bpp.
 
