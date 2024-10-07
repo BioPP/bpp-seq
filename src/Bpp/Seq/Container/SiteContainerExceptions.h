@@ -18,43 +18,43 @@ namespace bpp
  * @see Exception
  */
 class SiteNotFoundException :
-	public Exception
+  public Exception
 {
 protected:
-/**
- * @brief The id of the site that was to be found.
- */
-const std::string id;
+  /**
+   * @brief The id of the site that was to be found.
+   */
+  const std::string id;
 
 public:
-// Class constructor
+  // Class constructor
 
-/**
- * @brief Build a new SiteNotFoundException object.
- *
- * @param text A message to be passed to the exception hierarchy.
- * @param sId  A the id of the site that was to be found.
- */
-SiteNotFoundException(const char*   text, const char* sId = "");
+  /**
+   * @brief Build a new SiteNotFoundException object.
+   *
+   * @param text A message to be passed to the exception hierarchy.
+   * @param sId  A the id of the site that was to be found.
+   */
+  SiteNotFoundException(const char*   text, const char* sId = "");
 
-/**
- * @brief Build a new SiteNotFoundException object.
- *
- * @param text A message to be passed to the exception hierarchy.
- * @param sId  A the id of the site that was to be found.
- */
-SiteNotFoundException(const std::string& text, const std::string& sId = "");
+  /**
+   * @brief Build a new SiteNotFoundException object.
+   *
+   * @param text A message to be passed to the exception hierarchy.
+   * @param sId  A the id of the site that was to be found.
+   */
+  SiteNotFoundException(const std::string& text, const std::string& sId = "");
 
-// Class destructor
-~SiteNotFoundException();
+  // Class destructor
+  ~SiteNotFoundException();
 
 public:
-/**
- * @brief Get the id of the site that was to be found.
- *
- * @return The id of the site that was to be found.
- */
-virtual const std::string getSiteId() const;
+  /**
+   * @brief Get the id of the site that was to be found.
+   *
+   * @return The id of the site that was to be found.
+   */
+  virtual const std::string getSiteId() const;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SITECONTAINEREXCEPTIONS_H

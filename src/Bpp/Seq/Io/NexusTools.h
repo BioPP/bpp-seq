@@ -23,23 +23,23 @@ namespace bpp
 class NexusTools
 {
 public:
-/**
- * @param input The input stream.
- * @return A string containing the next line in the file wichi is not empty and is no a comment line.
- */
-static std::string getNextNonCommentLine(std::istream& input);
+  /**
+   * @param input The input stream.
+   * @return A string containing the next line in the file wichi is not empty and is no a comment line.
+   */
+  static std::string getNextNonCommentLine(std::istream& input);
 
-/**
- * @brief parse the next command name within a block.
- *
- * @param input     [in]  The input stream.
- * @param name      [out] Will contain the name of the command.
- * @param arguments [out] Will contain the arguments of the commands, as raw data. The arguments will not be parsed.
- * @param lineBrk   [in]  Tell is the line break should be preserved in the arguments.
- * @return Whether a command was found in the current block.
- * @throw IOException In case of bad format.
- */
-static bool getNextCommand(std::istream& input, std::string& name, std::string& arguments, bool lineBrk = true);
+  /**
+   * @brief parse the next command name within a block.
+   *
+   * @param input     [in]  The input stream.
+   * @param name      [out] Will contain the name of the command.
+   * @param arguments [out] Will contain the arguments of the commands, as raw data. The arguments will not be parsed.
+   * @param lineBrk   [in]  Tell is the line break should be preserved in the arguments.
+   * @return Whether a command was found in the current block.
+   * @throw IOException In case of bad format.
+   */
+  static bool getNextCommand(std::istream& input, std::string& name, std::string& arguments, bool lineBrk = true);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_NEXUSTOOLS_H

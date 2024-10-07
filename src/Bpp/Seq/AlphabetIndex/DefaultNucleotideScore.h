@@ -21,64 +21,68 @@ namespace bpp
  * @brief Default Substitution Matrix for nucleotide alignments.
  */
 class DefaultNucleotideScore :
-	public virtual AlphabetIndex2
+  public virtual AlphabetIndex2
 {
 private:
-LinearMatrix<double> distanceMatrix_;
-std::shared_ptr<const NucleicAlphabet> alpha_;
+  LinearMatrix<double> distanceMatrix_;
+  std::shared_ptr<const NucleicAlphabet> alpha_;
 
 public:
-/**
- * @brief Build a new DefaultNucleotideScore object.
- *
- * @param alphabet The alphabet to use.
- */
-DefaultNucleotideScore(const NucleicAlphabet* alphabet);
+  /**
+   * @brief Build a new DefaultNucleotideScore object.
+   *
+   * @param alphabet The alphabet to use.
+   */
+  DefaultNucleotideScore(const NucleicAlphabet* alphabet);
 
-DefaultNucleotideScore(const DefaultNucleotideScore& dns) :
-	distanceMatrix_(dns.distanceMatrix_),
-	alpha_(dns.alpha_) {
-}
+  DefaultNucleotideScore(const DefaultNucleotideScore& dns) :
+    distanceMatrix_(dns.distanceMatrix_),
+    alpha_(dns.alpha_)
+  {}
 
-DefaultNucleotideScore& operator=(const DefaultNucleotideScore& dns)
-{
-	distanceMatrix_ = dns.distanceMatrix_;
-	alpha_ = dns.alpha_;
-	return *this;
-}
+  DefaultNucleotideScore& operator=(const DefaultNucleotideScore& dns)
+  {
+    distanceMatrix_ = dns.distanceMatrix_;
+    alpha_ = dns.alpha_;
+    return *this;
+  }
 
-virtual ~DefaultNucleotideScore() {
-}
+  virtual ~DefaultNucleotideScore()
+  {}
 
 public:
-/**
- * @name Methods from the AlphabetIndex2 interface.
- *
- * @{
- */
-/**
- * @copydoc bpp::AlphabetIndex2::getIndex()
- *
- * If states are unresolved, takes the best score of all possible matches
- * and divides it by the number of different states.
- * @author Sylvain Gaillard
- */
-double getIndex(int state1, int state2) const override;
-double getIndex(const std::string& state1, const std::string& state2) const override;
-std::shared_ptr<const Alphabet> getAlphabet() const override {
-	return alpha_;
-}
-const Alphabet& alphabet() const override {
-	return *alpha_;
-}
-DefaultNucleotideScore* clone() const override {
-	return new DefaultNucleotideScore(*this);
-}
-const Matrix<double>& getIndexMatrix() const override;
-bool isSymmetric() const override {
-	return true;
-}
-/** @} */
+  /**
+   * @name Methods from the AlphabetIndex2 interface.
+   *
+   * @{
+   */
+  /**
+   * @copydoc bpp::AlphabetIndex2::getIndex()
+   *
+   * If states are unresolved, takes the best score of all possible matches
+   * and divides it by the number of different states.
+   * @author Sylvain Gaillard
+   */
+  double getIndex(int state1, int state2) const override;
+  double getIndex(const std::string& state1, const std::string& state2) const override;
+  std::shared_ptr<const Alphabet> getAlphabet() const override
+  {
+    return alpha_;
+  }
+  const Alphabet& alphabet() const override
+  {
+    return *alpha_;
+  }
+  DefaultNucleotideScore* clone() const override
+  {
+    return new DefaultNucleotideScore(*this);
+  }
+  const Matrix<double>& getIndexMatrix() const override;
+  bool isSymmetric() const override
+  {
+    return true;
+  }
+  /** @} */
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_DEFAULTNUCLEOTIDESCORE_H

@@ -17,35 +17,33 @@ namespace bpp
  */
 template<class SequenceType, class HashType = std::string>
 class AbstractTemplateSequenceContainerIterator :
-	public virtual TemplateSequenceIteratorInterface<const SequenceType>
+  public virtual TemplateSequenceIteratorInterface<const SequenceType>
 {
 protected:
-const TemplateSequenceContainerInterface<SequenceType, HashType>* sequences_;
-size_t currentPosition_;
+  const TemplateSequenceContainerInterface<SequenceType, HashType>* sequences_;
+  size_t currentPosition_;
 
 public:
-AbstractTemplateSequenceContainerIterator(const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences) :
-	sequences_(&sequences),
-	currentPosition_(0)
-{
-}
+  AbstractTemplateSequenceContainerIterator(const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences) :
+    sequences_(&sequences),
+    currentPosition_(0)
+  {}
 
 
-AbstractTemplateSequenceContainerIterator(const AbstractTemplateSequenceContainerIterator& atsi) :
-	sequences_(atsi.sequences_),
-	currentPosition_(atsi.currentPosition_)
-{
-}
+  AbstractTemplateSequenceContainerIterator(const AbstractTemplateSequenceContainerIterator& atsi) :
+    sequences_(atsi.sequences_),
+    currentPosition_(atsi.currentPosition_)
+  {}
 
-AbstractSequenceContainerIterator& operator=(const AbstractTemplateSequenceContainerIterator& atsi)
-{
-	sequences_ = atsi.sequences_;
-	currentPosition_ = atsi.currentPosition_;
-	return *this;
-}
+  AbstractSequenceContainerIterator& operator=(const AbstractTemplateSequenceContainerIterator& atsi)
+  {
+    sequences_ = atsi.sequences_;
+    currentPosition_ = atsi.currentPosition_;
+    return *this;
+  }
 
-virtual ~AbstractTemplateSequenceContainerIterator() {
-}
+  virtual ~AbstractTemplateSequenceContainerIterator()
+  {}
 };
 
 /**
@@ -53,29 +51,29 @@ virtual ~AbstractTemplateSequenceContainerIterator() {
  */
 template<class SequenceType, class HashType = std::string>
 class SimpleTemplateSequenceContainerIterator :
-	public AbstractTemplateSequenceContainerIterator<SequenceType, HashType>
+  public AbstractTemplateSequenceContainerIterator<SequenceType, HashType>
 {
 public:
-SimpleSequenceContainerIterator(const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences) :
-	AbstractTemplateSequenceContainerIterator<SequenceType, HashType>(&sequences) {
-}
+  SimpleSequenceContainerIterator(const TemplateSequenceContainerInterface<SequenceType, HashType>& sequences) :
+    AbstractTemplateSequenceContainerIterator<SequenceType, HashType>(&sequences)
+  {}
 
-virtual ~SimpleTemplateSequenceContainerIterator() {
-}
+  virtual ~SimpleTemplateSequenceContainerIterator()
+  {}
 
 public:
-const SequenceType& nextSequence() override
-{
-	{
-		const Sequence& seq = sequences_->sequence(currentPosition_);
-		currentPosition_++;
-		return s;
-	}
+  const SequenceType& nextSequence() override
+  {
+    {
+      const Sequence& seq = sequences_->sequence(currentPosition_);
+      currentPosition_++;
+      return s;
+    }
 
-	bool hasMoreSequences() const override
-	{
-		return currentPosition_ < sequences_->getNumberOfSequences();
-	}
-}
+    bool hasMoreSequences() const override
+    {
+      return currentPosition_ < sequences_->getNumberOfSequences();
+    }
+  }
 } // end of namespace bpp.
 #endif // BPP_SEQ_CONTAINER_SEQUENCECONTAINERITERATOR_H

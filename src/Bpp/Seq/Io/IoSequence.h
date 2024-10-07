@@ -22,15 +22,16 @@ namespace bpp
 class IOSequence : public virtual IOFormat
 {
 public:
-IOSequence() {
-}
-virtual ~IOSequence() {
-}
+  IOSequence()
+  {}
+  virtual ~IOSequence()
+  {}
 
 public:
-const std::string getDataType() const {
-	return "Sequence container";
-}
+  const std::string getDataType() const
+  {
+    return "Sequence container";
+  }
 };
 
 /**
@@ -41,15 +42,16 @@ const std::string getDataType() const {
 class IOProbabilisticSequence : public virtual IOFormat
 {
 public:
-IOProbabilisticSequence() {
-}
-virtual ~IOProbabilisticSequence() {
-}
+  IOProbabilisticSequence()
+  {}
+  virtual ~IOProbabilisticSequence()
+  {}
 
 public:
-const std::string getDataType() const {
-	return "Probabilistic sequence container";
-}
+  const std::string getDataType() const
+  {
+    return "Probabilistic sequence container";
+  }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_IOSEQUENCE_H

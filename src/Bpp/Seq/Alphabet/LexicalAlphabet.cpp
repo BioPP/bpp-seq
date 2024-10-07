@@ -15,45 +15,45 @@ using namespace bpp;
 using namespace std;
 
 LexicalAlphabet::LexicalAlphabet(const vector<std::string>& vocab) :
-	AbstractAlphabet()
+  AbstractAlphabet()
 {
-	if (vocab.size() == 0)
-		throw Exception("LexicalAlphabet::LexicalAlphabet: not constructible from empty vocabulary.");
+  if (vocab.size() == 0)
+    throw Exception("LexicalAlphabet::LexicalAlphabet: not constructible from empty vocabulary.");
 
-	size_t t = vocab[0].size();
+  size_t t = vocab[0].size();
 
-	string s = "";
-	for (size_t i = 0; i < t; i++)
-	{
-		s += "-";
-	}
+  string s = "";
+  for (size_t i = 0; i < t; i++)
+  {
+    s += "-";
+  }
 
-	registerState(new AlphabetState(-1, s, "gap"));
+  registerState(new AlphabetState(-1, s, "gap"));
 
 
-	for (size_t i = 0; i < vocab.size(); ++i)
-	{
-		if (t != vocab[i].size())
-			throw Exception("LexicalAlphabet: several lengths in vocabulary.");
+  for (size_t i = 0; i < vocab.size(); ++i)
+  {
+    if (t != vocab[i].size())
+      throw Exception("LexicalAlphabet: several lengths in vocabulary.");
 
-		try
-		{
-			string s2 = getName(vocab[i]);
-			throw Exception("LexicalAlphabet : " + vocab[i] + " defined twice.");
-		}
-		catch (BadCharException& e)
-		{}
+    try
+    {
+      string s2 = getName(vocab[i]);
+      throw Exception("LexicalAlphabet : " + vocab[i] + " defined twice.");
+    }
+    catch (BadCharException& e)
+    {}
 
-		registerState(new AlphabetState(static_cast<int>(i), vocab[i], vocab[i]));
-	}
+    registerState(new AlphabetState(static_cast<int>(i), vocab[i], vocab[i]));
+  }
 
-	s = "";
-	for (size_t i = 0; i < t; i++)
-	{
-		s += "?";
-	}
+  s = "";
+  for (size_t i = 0; i < t; i++)
+  {
+    s += "?";
+  }
 
-	registerState(new AlphabetState(static_cast<int>(vocab.size()), s, "Unresolved word"));
+  registerState(new AlphabetState(static_cast<int>(vocab.size()), s, "Unresolved word"));
 }
 
 
@@ -61,17 +61,17 @@ LexicalAlphabet::LexicalAlphabet(const vector<std::string>& vocab) :
 
 std::string LexicalAlphabet::getAlphabetType() const
 {
-	string s = "Lexicon(";
+  string s = "Lexicon(";
 
-	for (size_t i = 1; i < getNumberOfStates() - 1; i++)
-	{
-		if (i != 1)
-			s += ",";
+  for (size_t i = 1; i < getNumberOfStates() - 1; i++)
+  {
+    if (i != 1)
+      s += ",";
 
-		s += getStateAt(i).getLetter();
-	}
+    s += getStateAt(i).getLetter();
+  }
 
-	s += ")";
+  s += ")";
 
-	return s;
+  return s;
 }

@@ -18,40 +18,42 @@ namespace bpp
  * Names should therefore not contain more than one consecutive space.
  */
 class PhylipDistanceMatrixFormat :
-	public AbstractIDistanceMatrix,
-	public AbstractODistanceMatrix
+  public AbstractIDistanceMatrix,
+  public AbstractODistanceMatrix
 {
 private:
-bool extended_;
+  bool extended_;
 
 public:
-PhylipDistanceMatrixFormat(bool extended = false) : extended_(extended) {
-}
-virtual ~PhylipDistanceMatrixFormat() {
-}
+  PhylipDistanceMatrixFormat(bool extended = false) : extended_(extended)
+  {}
+  virtual ~PhylipDistanceMatrixFormat()
+  {}
 
 public:
-const std::string getFormatName() const {
-	return "Phylip";
-}
+  const std::string getFormatName() const
+  {
+    return "Phylip";
+  }
 
-const std::string getFormatDescription() const {
-	return "Multiline space-delimited columns.";
-}
+  const std::string getFormatDescription() const
+  {
+    return "Multiline space-delimited columns.";
+  }
 
-std::unique_ptr<DistanceMatrix> readDistanceMatrix(const std::string& path) const
-{
-	return AbstractIDistanceMatrix::readDistanceMatrix(path);
-}
+  std::unique_ptr<DistanceMatrix> readDistanceMatrix(const std::string& path) const
+  {
+    return AbstractIDistanceMatrix::readDistanceMatrix(path);
+  }
 
-std::unique_ptr<DistanceMatrix> readDistanceMatrix(std::istream& in) const;
+  std::unique_ptr<DistanceMatrix> readDistanceMatrix(std::istream& in) const;
 
-void writeDistanceMatrix(const DistanceMatrix& dist, const std::string& path, bool overwrite = true) const
-{
-	AbstractODistanceMatrix::writeDistanceMatrix(dist, path, overwrite);
-}
+  void writeDistanceMatrix(const DistanceMatrix& dist, const std::string& path, bool overwrite = true) const
+  {
+    AbstractODistanceMatrix::writeDistanceMatrix(dist, path, overwrite);
+  }
 
-void writeDistanceMatrix(const DistanceMatrix& dist, std::ostream& out) const;
+  void writeDistanceMatrix(const DistanceMatrix& dist, std::ostream& out) const;
 };
 } // end of namespace bpp.
 #endif // BPP_PHYL_IO_PHYLIPDISTANCEMATRIXFORMAT_H

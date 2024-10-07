@@ -26,23 +26,23 @@ template<class SequenceType>
 class TemplateISequenceStream : public virtual IOSequenceStream
 {
 public:
-TemplateISequenceStream() {
-}
-virtual ~TemplateISequenceStream() {
-}
+  TemplateISequenceStream()
+  {}
+  virtual ~TemplateISequenceStream()
+  {}
 
 public:
-/**
- * @brief Read sequence from stream.
- *
- * Read one sequence from a stream.
- *
- * @param input The stream to read.
- * @param seq The sequence to fill.
- * @return true if a sequence was read or false if not.
- * @throw Exception IOExecption and Sequence related Exceptions.
- */
-virtual bool nextSequence(std::istream& input, SequenceType& seq) const = 0;
+  /**
+   * @brief Read sequence from stream.
+   *
+   * Read one sequence from a stream.
+   *
+   * @param input The stream to read.
+   * @param seq The sequence to fill.
+   * @return true if a sequence was read or false if not.
+   * @throw Exception IOExecption and Sequence related Exceptions.
+   */
+  virtual bool nextSequence(std::istream& input, SequenceType& seq) const = 0;
 };
 
 using ISequenceStream = TemplateISequenceStream<Sequence>;

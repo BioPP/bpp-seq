@@ -32,69 +32,71 @@ namespace bpp
  * @author Julien Dutheil
  */
 class NexusIOSequence :
-	public AbstractIAlignment2,
-	public virtual ISequence
+  public AbstractIAlignment2,
+  public virtual ISequence
 {
 protected:
-/**
- * @brief The maximum number of chars to be written on a line.
- */
-unsigned int charsByLine_;
+  /**
+   * @brief The maximum number of chars to be written on a line.
+   */
+  unsigned int charsByLine_;
 
-bool checkNames_;
-
-public:
-/**
- * @brief Build a new Nexus file reader.
- *
- * @param charsByLine The number of base to display in a row (ignored for now, no writing support).
- * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
- */
-NexusIOSequence(unsigned int charsByLine = 100, bool checkSequenceNames = true) :
-	charsByLine_(charsByLine), checkNames_(checkSequenceNames) {
-}
-
-virtual ~NexusIOSequence() {
-}
+  bool checkNames_;
 
 public:
-/**
- * @name The AbstractIAlignment interface.
- *
- * @{
- */
-void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
-/** @} */
+  /**
+   * @brief Build a new Nexus file reader.
+   *
+   * @param charsByLine The number of base to display in a row (ignored for now, no writing support).
+   * @param checkSequenceNames Tell if the names in the file should be checked for unicity (slower, in o(n*n) where n is the number of sequences).
+   */
+  NexusIOSequence(unsigned int charsByLine = 100, bool checkSequenceNames = true) :
+    charsByLine_(charsByLine), checkNames_(checkSequenceNames)
+  {}
 
-/**
- * @name The IOSequence interface.
- *
- * @{
- */
-const std::string getFormatName() const override;
+  virtual ~NexusIOSequence()
+  {}
 
-const std::string getFormatDescription() const override;
-/** @} */
+public:
+  /**
+   * @name The AbstractIAlignment interface.
+   *
+   * @{
+   */
+  void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
+  /** @} */
 
-/**
- * @return true if the names are to be checked when reading sequences from files.
- */
-bool checkNames() const {
-	return checkNames_;
-}
+  /**
+   * @name The IOSequence interface.
+   *
+   * @{
+   */
+  const std::string getFormatName() const override;
 
-/**
- * @brief Tell whether the sequence names should be checked when reading from files.
- *
- * @param yn whether the sequence names should be checked when reading from files.
- */
-void checkNames(bool yn) {
-	checkNames_ = yn;
-}
+  const std::string getFormatDescription() const override;
+  /** @} */
+
+  /**
+   * @return true if the names are to be checked when reading sequences from files.
+   */
+  bool checkNames() const
+  {
+    return checkNames_;
+  }
+
+  /**
+   * @brief Tell whether the sequence names should be checked when reading from files.
+   *
+   * @param yn whether the sequence names should be checked when reading from files.
+   */
+  void checkNames(bool yn)
+  {
+    checkNames_ = yn;
+  }
 
 private:
-// Reading tools:
-const std::vector<std::string> splitNameAndSequence_(const std::string& s) const;
+  // Reading tools:
+  const std::vector<std::string> splitNameAndSequence_(const std::string& s) const;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_NEXUSIOSEQUENCE_H

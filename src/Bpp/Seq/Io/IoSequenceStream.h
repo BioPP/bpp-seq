@@ -20,10 +20,10 @@ namespace bpp
 class IOSequenceStream : public virtual IOFormat
 {
 public:
-IOSequenceStream() {
-}
-virtual ~IOSequenceStream() {
-}
+  IOSequenceStream()
+  {}
+  virtual ~IOSequenceStream()
+  {}
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_IOSEQUENCESTREAM_H

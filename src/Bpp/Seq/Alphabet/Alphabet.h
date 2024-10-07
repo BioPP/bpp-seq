@@ -66,7 +66,7 @@
 namespace bpp
 {
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"// Disable warning coming from the STL because of std::enable_shared_from_this
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor" // Disable warning coming from the STL because of std::enable_shared_from_this
 /**
  * @brief The Alphabet interface.
  *
@@ -96,350 +96,350 @@ namespace bpp
  * @see AlphabetException, BadCharException, BadIntException
  */
 class Alphabet :
-	public virtual Clonable,
-	public std::enable_shared_from_this<Alphabet>
+  public virtual Clonable,
+  public std::enable_shared_from_this<Alphabet>
 {
 public:
-Alphabet() {
-}
-virtual ~Alphabet() = default;
+  Alphabet()
+  {}
+  virtual ~Alphabet() = default;
 
-/**
- * @name The Clonable interface
- *
- * @{
- */
-Alphabet* clone() const = 0;
-/** @} */
+  /**
+   * @name The Clonable interface
+   *
+   * @{
+   */
+  Alphabet* clone() const = 0;
+  /** @} */
 
 #pragma GCC diagnostic pop
 
 public:
-/**
- * @brief Get the complete name of a state given its int description.
- *
- * In case of several states with identical number (i.e. N and X for nucleic alphabets),
- * this method returns the name of the first found in the vector.
- *
- * @param state The int description of the given state.
- * @return The name of the state.
- * @throw BadIntException When state is not a valid integer.
- */
-virtual std::string getName(int state) const = 0;
+  /**
+   * @brief Get the complete name of a state given its int description.
+   *
+   * In case of several states with identical number (i.e. N and X for nucleic alphabets),
+   * this method returns the name of the first found in the vector.
+   *
+   * @param state The int description of the given state.
+   * @return The name of the state.
+   * @throw BadIntException When state is not a valid integer.
+   */
+  virtual std::string getName(int state) const = 0;
 
-/**
- * @brief Get the complete name of a state given its string description.
- *
- * In case of several states with identical number (i.e. N and X for nucleic alphabets),
- * this method will return the name of the first found in the vector.
- *
- * @param state The string description of the given state.
- * @return The name of the state.
- * @throw BadCharException When state is not a valid char description.
- */
-virtual std::string getName(const std::string& state) const = 0;
+  /**
+   * @brief Get the complete name of a state given its string description.
+   *
+   * In case of several states with identical number (i.e. N and X for nucleic alphabets),
+   * this method will return the name of the first found in the vector.
+   *
+   * @param state The string description of the given state.
+   * @return The name of the state.
+   * @throw BadCharException When state is not a valid char description.
+   */
+  virtual std::string getName(const std::string& state) const = 0;
 
-/**
- * @return The int code of a given state.
- * @param stateIndex The index of the state to fetch.
- */
-virtual int getIntCodeAt(size_t stateIndex) const = 0;
+  /**
+   * @return The int code of a given state.
+   * @param stateIndex The index of the state to fetch.
+   */
+  virtual int getIntCodeAt(size_t stateIndex) const = 0;
 
-/**
- * @return The char code of a given state.
- * @param stateIndex The index of the state to fetch.
- */
-virtual const std::string& getCharCodeAt(size_t stateIndex) const = 0;
+  /**
+   * @return The char code of a given state.
+   * @param stateIndex The index of the state to fetch.
+   */
+  virtual const std::string& getCharCodeAt(size_t stateIndex) const = 0;
 
-/**
- * @return The indices of the states with corresponding int code.
- */
-virtual size_t getStateIndex(int state) const = 0;
+  /**
+   * @return The indices of the states with corresponding int code.
+   */
+  virtual size_t getStateIndex(int state) const = 0;
 
-/**
- * @return The index of the state with corresponding char code.
- */
-virtual size_t getStateIndex(const std::string& state) const = 0;
+  /**
+   * @return The index of the state with corresponding char code.
+   */
+  virtual size_t getStateIndex(const std::string& state) const = 0;
 
-/**
- * @name Tests
- *
- * @{
- */
+  /**
+   * @name Tests
+   *
+   * @{
+   */
 
-/**
- * @brief Tell if a state (specified by its int description) is allowed by the
- * the alphabet.
- *
- * @param state The int description.
- * @return 'true' if the state in known.
- */
-virtual bool isIntInAlphabet(int state) const = 0;
+  /**
+   * @brief Tell if a state (specified by its int description) is allowed by the
+   * the alphabet.
+   *
+   * @param state The int description.
+   * @return 'true' if the state in known.
+   */
+  virtual bool isIntInAlphabet(int state) const = 0;
 
-/**
- * @brief Tell if a state (specified by its string description) is allowed by the
- * the alphabet.
- *
- * @param state The string description.
- * @return 'true' if the state in known.
- */
-virtual bool isCharInAlphabet(const std::string& state) const = 0;
-/** @} */
+  /**
+   * @brief Tell if a state (specified by its string description) is allowed by the
+   * the alphabet.
+   *
+   * @param state The string description.
+   * @return 'true' if the state in known.
+   */
+  virtual bool isCharInAlphabet(const std::string& state) const = 0;
+  /** @} */
 
-/**
- * @name State access
- *
- * @{
- */
+  /**
+   * @name State access
+   *
+   * @{
+   */
 
-/**
- * @brief Get a state given its index.
- *
- * @param stateIndex The index of the state.
- * @return The AlphabetState.
- * @throw IndexOutOfBoundsException When index is not a valid.
- */
-virtual const AlphabetState& getStateAt(size_t stateIndex) const = 0;
+  /**
+   * @brief Get a state given its index.
+   *
+   * @param stateIndex The index of the state.
+   * @return The AlphabetState.
+   * @throw IndexOutOfBoundsException When index is not a valid.
+   */
+  virtual const AlphabetState& getStateAt(size_t stateIndex) const = 0;
 
-/**
- * @brief Get a state given its int description.
- *
- * Note: several states can share the same int values. This function will return one.
- *
- * @param state The int description.
- * @return The AlphabetState.
- * @throw BadIntException When state is not a valid integer.
- */
-virtual const AlphabetState& getState(int state) const = 0;
+  /**
+   * @brief Get a state given its int description.
+   *
+   * Note: several states can share the same int values. This function will return one.
+   *
+   * @param state The int description.
+   * @return The AlphabetState.
+   * @throw BadIntException When state is not a valid integer.
+   */
+  virtual const AlphabetState& getState(int state) const = 0;
 
-/**
- * @brief Get a state given its string description.
- *
- * @param state The string description.
- * @return The AlphabetState.
- * @throw BadCharException When state is not a valid string.
- */
-virtual const AlphabetState& getState(const std::string& state) const = 0;
+  /**
+   * @brief Get a state given its string description.
+   *
+   * @param state The string description.
+   * @return The AlphabetState.
+   * @throw BadCharException When state is not a valid string.
+   */
+  virtual const AlphabetState& getState(const std::string& state) const = 0;
 
-/** @} */
+  /** @} */
 
-/**
- * @name Conversion methods
- *
- * @{
- */
+  /**
+   * @name Conversion methods
+   *
+   * @{
+   */
 
-/**
- * @brief Give the string description of a state given its int description.
- *
- * @param state The int description.
- * @return The string description.
- * @throw BadIntException When state is not a valid integer.
- */
-virtual std::string intToChar(int state) const = 0;
+  /**
+   * @brief Give the string description of a state given its int description.
+   *
+   * @param state The int description.
+   * @return The string description.
+   * @throw BadIntException When state is not a valid integer.
+   */
+  virtual std::string intToChar(int state) const = 0;
 
-/**
- * @brief Give the int description of a state given its string description.
- *
- * @param state The string description.
- * @return The int description.
- * @throw BadCharException When state is not a valid char description.
- */
-virtual int charToInt(const std::string& state) const = 0;
-/** @} */
+  /**
+   * @brief Give the int description of a state given its string description.
+   *
+   * @param state The string description.
+   * @return The int description.
+   * @throw BadCharException When state is not a valid char description.
+   */
+  virtual int charToInt(const std::string& state) const = 0;
+  /** @} */
 
-/**
- * @name Sizes.
- *
- * @{
- */
+  /**
+   * @name Sizes.
+   *
+   * @{
+   */
 
-/**
- * @brief This is a convenient  alias for getNumberOfChars(), returning a size_t
- * instead of unsigned int.
- *
- * This function is typically used il loops over all states of an alphabet.
- */
-virtual size_t getNumberOfStates() const = 0;
+  /**
+   * @brief This is a convenient  alias for getNumberOfChars(), returning a size_t
+   * instead of unsigned int.
+   *
+   * This function is typically used il loops over all states of an alphabet.
+   */
+  virtual size_t getNumberOfStates() const = 0;
 
-/**
- * @brief Get the number of supported characters in this alphabet,
- * including generic characters (e.g. return 20 for DNA alphabet).
- *
- * @return The total number of supported character descriptions.
- */
-virtual unsigned int getNumberOfChars() const = 0;
+  /**
+   * @brief Get the number of supported characters in this alphabet,
+   * including generic characters (e.g. return 20 for DNA alphabet).
+   *
+   * @return The total number of supported character descriptions.
+   */
+  virtual unsigned int getNumberOfChars() const = 0;
 
-/**
- * @brief Get the number of <strong>distinct</strong> states in alphabet (e.g. return 15 for DNA alphabet).
- * This is the number of integers used for state description.
- *
- * @return The number of distinct states.
- */
-virtual unsigned int getNumberOfTypes() const = 0;
+  /**
+   * @brief Get the number of <strong>distinct</strong> states in alphabet (e.g. return 15 for DNA alphabet).
+   * This is the number of integers used for state description.
+   *
+   * @return The number of distinct states.
+   */
+  virtual unsigned int getNumberOfTypes() const = 0;
 
-/**
- * @brief Get the number of <strong>resolved</strong> states in the alphabet (e.g. return 4 for DNA alphabet).
- * This is the method you'll need in most cases.
- *
- * @return The number of resolved states.
- */
-virtual unsigned int getSize() const = 0;
+  /**
+   * @brief Get the number of <strong>resolved</strong> states in the alphabet (e.g. return 4 for DNA alphabet).
+   * This is the method you'll need in most cases.
+   *
+   * @return The number of resolved states.
+   */
+  virtual unsigned int getSize() const = 0;
 
-/** @} */
+  /** @} */
 
-/**
- * @name Utilitary methods
- *
- * @{
- */
+  /**
+   * @name Utilitary methods
+   *
+   * @{
+   */
 
-/**
- * @brief Tells if a given (potentially unresolved) state can be
- * resolved in another resolved state.
- *
- * @param state1 The alias to resolve.
- * @param state2 The candidate for resolution.
- * @return A boolean
- * @throw BadIntException When state is not a valid integer.
- */
+  /**
+   * @brief Tells if a given (potentially unresolved) state can be
+   * resolved in another resolved state.
+   *
+   * @param state1 The alias to resolve.
+   * @param state2 The candidate for resolution.
+   * @return A boolean
+   * @throw BadIntException When state is not a valid integer.
+   */
 
-virtual bool isResolvedIn(int state1, int state2) const = 0;
+  virtual bool isResolvedIn(int state1, int state2) const = 0;
 
-/**
- * @brief Get all resolved states that match a generic state.
- *
- * If the given state is not a generic code then the output vector will contain this unique code.
- *
- * @param state The alias to resolve.
- * @return A vector of resolved states.
- * @throw BadIntException When state is not a valid integer.
- */
-virtual std::vector<int> getAlias(int state) const = 0;
+  /**
+   * @brief Get all resolved states that match a generic state.
+   *
+   * If the given state is not a generic code then the output vector will contain this unique code.
+   *
+   * @param state The alias to resolve.
+   * @return A vector of resolved states.
+   * @throw BadIntException When state is not a valid integer.
+   */
+  virtual std::vector<int> getAlias(int state) const = 0;
 
-/**
- * @brief Get all resolved states that match a generic state.
- *
- * If the given state is not a generic code then the output vector will contain this unique code.
- *
- * @param state The alias to resolve.
- * @return A vector of resolved states.
- * @throw BadCharException When state is not a valid char description.
- */
-virtual std::vector<std::string> getAlias(const std::string& state) const = 0;
+  /**
+   * @brief Get all resolved states that match a generic state.
+   *
+   * If the given state is not a generic code then the output vector will contain this unique code.
+   *
+   * @param state The alias to resolve.
+   * @return A vector of resolved states.
+   * @throw BadCharException When state is not a valid char description.
+   */
+  virtual std::vector<std::string> getAlias(const std::string& state) const = 0;
 
-/**
- * @brief Get the generic state that match a set of states.
- *
- * If the given states contain generic code, each generic code is first resolved and then the new generic state is returned.
- * If only a single resolved state is given the function return this state.
- *
- * @param states A vector of states to resolve.
- * @return A int code for the computed state.
- * @throw BadIntException When a state is not a valid integer.
- */
-virtual int getGeneric(const std::vector<int>& states) const = 0;
+  /**
+   * @brief Get the generic state that match a set of states.
+   *
+   * If the given states contain generic code, each generic code is first resolved and then the new generic state is returned.
+   * If only a single resolved state is given the function return this state.
+   *
+   * @param states A vector of states to resolve.
+   * @return A int code for the computed state.
+   * @throw BadIntException When a state is not a valid integer.
+   */
+  virtual int getGeneric(const std::vector<int>& states) const = 0;
 
-/**
- * @brief Get the generic state that match a set of states.
- *
- * If the given states contain generic code, each generic code is first resolved and then the new generic state is returned.
- * If only a single resolved state is given the function return this state.
- *
- * @param states A vector of states to resolve.
- * @return A string code for the computed state.
- * @throw BadCharException when a state is not a valid char description.
- * @throw CharStateNotSupportedException when the alphabet does not support Char state for unresolved state.
- */
-virtual std::string getGeneric(const std::vector<std::string>& states) const = 0;
+  /**
+   * @brief Get the generic state that match a set of states.
+   *
+   * If the given states contain generic code, each generic code is first resolved and then the new generic state is returned.
+   * If only a single resolved state is given the function return this state.
+   *
+   * @param states A vector of states to resolve.
+   * @return A string code for the computed state.
+   * @throw BadCharException when a state is not a valid char description.
+   * @throw CharStateNotSupportedException when the alphabet does not support Char state for unresolved state.
+   */
+  virtual std::string getGeneric(const std::vector<std::string>& states) const = 0;
 
-/**
- * @return A list of all supported int codes.
- *
- * Note for developers of new alphabets:
- * we return a const reference here since the list is supposed to be
- * stored within the class and should not be modified outside the class.
- */
-virtual const std::vector<int>& getSupportedInts() const = 0;
+  /**
+   * @return A list of all supported int codes.
+   *
+   * Note for developers of new alphabets:
+   * we return a const reference here since the list is supposed to be
+   * stored within the class and should not be modified outside the class.
+   */
+  virtual const std::vector<int>& getSupportedInts() const = 0;
 
-/**
- * @return A list of all supported character codes.
- *
- * Note for developers of new alphabets:
- * we return a const reference here since the list is supposed to be
- * stored within the class and should not be modified outside the class.
- */
-virtual const std::vector<std::string>& getSupportedChars() const = 0;
+  /**
+   * @return A list of all supported character codes.
+   *
+   * Note for developers of new alphabets:
+   * we return a const reference here since the list is supposed to be
+   * stored within the class and should not be modified outside the class.
+   */
+  virtual const std::vector<std::string>& getSupportedChars() const = 0;
 
-/**
- * @return A list of all resolved character codes.
- *
- * Note for developers of new alphabets:
- * we return a const reference here since the list is supposed to be
- * stored within the class and should not be modified outside the class.
- */
-virtual const std::vector<std::string>& getResolvedChars() const = 0;
+  /**
+   * @return A list of all resolved character codes.
+   *
+   * Note for developers of new alphabets:
+   * we return a const reference here since the list is supposed to be
+   * stored within the class and should not be modified outside the class.
+   */
+  virtual const std::vector<std::string>& getResolvedChars() const = 0;
 
-/**
- * @return The int code for unknown characters.
- */
-virtual int getUnknownCharacterCode() const = 0;
+  /**
+   * @return The int code for unknown characters.
+   */
+  virtual int getUnknownCharacterCode() const = 0;
 
-/**
- * @return The int code for gap characters.
- */
-virtual int getGapCharacterCode() const = 0;
+  /**
+   * @return The int code for gap characters.
+   */
+  virtual int getGapCharacterCode() const = 0;
 
-/**
- * @param state The state to test.
- * @return 'True' if the state is a gap.
- */
-virtual bool isGap(int state) const = 0;
+  /**
+   * @param state The state to test.
+   * @return 'True' if the state is a gap.
+   */
+  virtual bool isGap(int state) const = 0;
 
-/**
- * @param state The state to test.
- * @return 'True' if the state is a gap.
- */
-virtual bool isGap(const std::string& state) const = 0;
+  /**
+   * @param state The state to test.
+   * @return 'True' if the state is a gap.
+   */
+  virtual bool isGap(const std::string& state) const = 0;
 
-/**
- * @param state The state to test.
- * @return 'True' if the state is unresolved.
- */
-virtual bool isUnresolved(int state) const = 0;
+  /**
+   * @param state The state to test.
+   * @return 'True' if the state is unresolved.
+   */
+  virtual bool isUnresolved(int state) const = 0;
 
-/**
- * @param state The state to test.
- * @return 'True' if the state is unresolved.
- */
-virtual bool isUnresolved(const std::string& state) const = 0;
+  /**
+   * @param state The state to test.
+   * @return 'True' if the state is unresolved.
+   */
+  virtual bool isUnresolved(const std::string& state) const = 0;
 
-/** @} */
+  /** @} */
 
-/**
- * @brief Identification method.
- *
- * Used to tell if two alphabets describe the same type of sequences.
- * For instance, this method is used by sequence containers to compare two alphabets and
- * allow or deny addition of sequences.
- *
- * @return A text describing the alphabet.
- */
-virtual std::string getAlphabetType() const = 0;
+  /**
+   * @brief Identification method.
+   *
+   * Used to tell if two alphabets describe the same type of sequences.
+   * For instance, this method is used by sequence containers to compare two alphabets and
+   * allow or deny addition of sequences.
+   *
+   * @return A text describing the alphabet.
+   */
+  virtual std::string getAlphabetType() const = 0;
 
-/**
- * @brief Get the size of the string coding a state.
- * @return The size of the string coding each states in the Alphabet.
- * @author Sylvain Gaillard
- */
-virtual unsigned int getStateCodingSize() const = 0;
+  /**
+   * @brief Get the size of the string coding a state.
+   * @return The size of the string coding each states in the Alphabet.
+   * @author Sylvain Gaillard
+   */
+  virtual unsigned int getStateCodingSize() const = 0;
 
-/**
- * @brief Comparison of alphabets
- *
- * @return true If the two instances are of the same class.
- */
-virtual bool equals(const Alphabet& alphabet) const = 0;
+  /**
+   * @brief Comparison of alphabets
+   *
+   * @return true If the two instances are of the same class.
+   */
+  virtual bool equals(const Alphabet& alphabet) const = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABET_ALPHABET_H

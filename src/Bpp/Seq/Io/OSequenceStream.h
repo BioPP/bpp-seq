@@ -22,25 +22,25 @@ namespace bpp
  */
 template<class SequenceType>
 class TemplateOSequenceStream :
-	public virtual IOSequenceStream
+  public virtual IOSequenceStream
 {
 public:
-TemplateOSequenceStream() {
-}
-virtual ~TemplateOSequenceStream() {
-}
+  TemplateOSequenceStream()
+  {}
+  virtual ~TemplateOSequenceStream()
+  {}
 
 public:
-/**
- * @brief Read sequence from stream.
- *
- * Read one sequence from a stream.
- *
- * @param output The stream where write.
- * @param seq The sequence to write.
- * @throw Exception IOExecption.
- */
-virtual void writeSequence(std::ostream& output, const SequenceType& seq) const = 0;
+  /**
+   * @brief Read sequence from stream.
+   *
+   * Read one sequence from a stream.
+   *
+   * @param output The stream where write.
+   * @param seq The sequence to write.
+   * @throw Exception IOExecption.
+   */
+  virtual void writeSequence(std::ostream& output, const SequenceType& seq) const = 0;
 };
 
 using OSequenceStream = TemplateOSequenceStream<Sequence>;

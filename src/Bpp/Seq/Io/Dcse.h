@@ -23,52 +23,52 @@ namespace bpp
  * http://www.psb.ugent.be/rRNA/help/formats/aliformat.html
  */
 class DCSE :
-	public AbstractIAlignment2
+  public AbstractIAlignment2
 {
 public:
-DCSE() {
-}
-virtual ~DCSE() {
-}
+  DCSE()
+  {}
+  virtual ~DCSE()
+  {}
 
 public:
-/**
- * @name The AbstractIAlignment interface.
- *
- * @{
- */
-void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
-/** @} */
+  /**
+   * @name The AbstractIAlignment interface.
+   *
+   * @{
+   */
+  void appendAlignmentFromStream(std::istream& input, SequenceContainerInterface& sc) const override;
+  /** @} */
 
-/**
- * @name The ISequence interface.
- *
- * As a SiteContainer is a subclass of SequenceContainer, we hereby implement the ISequence
- * interface by downcasting the interface.
- *
- * @{
- */
-std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
-{
-	return readAlignment(input, alpha);
-}
+  /**
+   * @name The ISequence interface.
+   *
+   * As a SiteContainer is a subclass of SequenceContainer, we hereby implement the ISequence
+   * interface by downcasting the interface.
+   *
+   * @{
+   */
+  std::unique_ptr<SequenceContainerInterface> readSequences(std::istream& input, std::shared_ptr<const Alphabet> alpha) const override
+  {
+    return readAlignment(input, alpha);
+  }
 
-std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
-{
-	return readAlignment(path, alpha);
-}
-/** @} */
+  std::unique_ptr<SequenceContainerInterface> readSequences(const std::string& path, std::shared_ptr<const Alphabet> alpha) const override
+  {
+    return readAlignment(path, alpha);
+  }
+  /** @} */
 
 
-/**
- * @name The IOSequence interface.
- *
- * @{
- */
-const std::string getFormatName() const override;
+  /**
+   * @name The IOSequence interface.
+   *
+   * @{
+   */
+  const std::string getFormatName() const override;
 
-const std::string getFormatDescription() const override;
-/** @} */
+  const std::string getFormatDescription() const override;
+  /** @} */
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_DCSE_H

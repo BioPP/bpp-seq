@@ -27,66 +27,66 @@ shared_ptr<const DefaultAlphabet> AlphabetTools::DEFAULT_ALPHABET = make_shared<
 
 int AlphabetTools::getType(char state)
 {
-	if (state == '-')
-		return -1;
-	state = static_cast<char>(toupper(static_cast<int>(state))); // toupper works on int
-	bool d = DNA_ALPHABET->isCharInAlphabet(TextTools::toString(state));
-	bool r = RNA_ALPHABET->isCharInAlphabet(TextTools::toString(state));
-	bool p = PROTEIN_ALPHABET->isCharInAlphabet(TextTools::toString(state));
+  if (state == '-')
+    return -1;
+  state = static_cast<char>(toupper(static_cast<int>(state))); // toupper works on int
+  bool d = DNA_ALPHABET->isCharInAlphabet(TextTools::toString(state));
+  bool r = RNA_ALPHABET->isCharInAlphabet(TextTools::toString(state));
+  bool p = PROTEIN_ALPHABET->isCharInAlphabet(TextTools::toString(state));
 
-	if (!d && !r && !p)
-		return 0; // Unknown character
-	else if (d && !r && !p)
-		return 1; // DNA specific
-	else if (!d && r && !p)
-		return 2; // RNA specific
-	else if (!d && !r && p)
-		return 3; // Protein specific
-	else if (d && r && !p)
-		return 4; // Nucleotide specific
-	else if (d && !r && p)
-		return 5; // DNA or Protein specific
-	else if (!d && r && p)
-		return 6; // RNA or Protein specific
-	else
-		return 7; // Non-specific character
+  if (!d && !r && !p)
+    return 0; // Unknown character
+  else if (d && !r && !p)
+    return 1; // DNA specific
+  else if (!d && r && !p)
+    return 2; // RNA specific
+  else if (!d && !r && p)
+    return 3; // Protein specific
+  else if (d && r && !p)
+    return 4; // Nucleotide specific
+  else if (d && !r && p)
+    return 5; // DNA or Protein specific
+  else if (!d && r && p)
+    return 6; // RNA or Protein specific
+  else
+    return 7; // Non-specific character
 }
 
 /**********************************************************************************************/
 
 bool AlphabetTools::checkAlphabetCodingSize(const Alphabet& alphabet)
 {
-	if (alphabet.getNumberOfChars() == 0)
-		return true; // Will this really happen?
-	size_t size = alphabet.intToChar(0).size();
+  if (alphabet.getNumberOfChars() == 0)
+    return true; // Will this really happen?
+  size_t size = alphabet.intToChar(0).size();
 
-	for (size_t i = 1; i < alphabet.getNumberOfTypes(); ++i)
-	{
-		if (alphabet.intToChar(alphabet.getStateAt(i).getNum()).size() != size)
-			return false;
-	}
-	return true;
+  for (size_t i = 1; i < alphabet.getNumberOfTypes(); ++i)
+  {
+    if (alphabet.intToChar(alphabet.getStateAt(i).getNum()).size() != size)
+      return false;
+  }
+  return true;
 }
 
 /**********************************************************************************************/
 
 bool AlphabetTools::checkAlphabetCodingSize(const Alphabet* alphabet)
 {
-	return checkAlphabetCodingSize(*alphabet);
+  return checkAlphabetCodingSize(*alphabet);
 }
 
 /**********************************************************************************************/
 
 unsigned int AlphabetTools::getAlphabetCodingSize(const Alphabet& alphabet)
 {
-	if (!checkAlphabetCodingSize(alphabet))
-		throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().", &alphabet);
-	return static_cast<unsigned int>(alphabet.intToChar(0).size());
+  if (!checkAlphabetCodingSize(alphabet))
+    throw AlphabetException("Bad alphabet in function Alphabet::getAlphabetCodingSize().", &alphabet);
+  return static_cast<unsigned int>(alphabet.intToChar(0).size());
 }
 
 /**********************************************************************************************/
 
 unsigned int AlphabetTools::getAlphabetCodingSize(const Alphabet* alphabet)
 {
-	return getAlphabetCodingSize(*alphabet);
+  return getAlphabetCodingSize(*alphabet);
 }

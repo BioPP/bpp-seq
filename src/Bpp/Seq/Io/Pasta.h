@@ -28,115 +28,117 @@ namespace bpp
  * site.  See implementation of methods below for more details
  */
 class Pasta :
-	public AbstractIProbabilisticAlignment,
-	public AbstractOProbabilisticAlignment,
-	public AbstractOSequence2
+  public AbstractIProbabilisticAlignment,
+  public AbstractOProbabilisticAlignment,
+  public AbstractOSequence2
 {
 protected:
-/**
- * @brief The maximum number of chars to be written on a line.
- */
-unsigned int charsByLine_;   // Number of chars by line (output only)
+  /**
+   * @brief The maximum number of chars to be written on a line.
+   */
+  unsigned int charsByLine_;   // Number of chars by line (output only)
 
-bool extended_;              // If using HUPO-PSI extensions
-bool strictNames_;           // If name is between '>' and first space
-
-public:
-typedef Table<double> DataTable;
-
-/**
- * @brief Build a new Pasta object.
- *
- * @param charsByLine Number of characters per line when writing files.
- * @param extended Tell if we should read general comments and sequence comments in HUPO-PSI format.
- * @param strictSequenceNames Tells if the sequence names should be restricted to the characters between '>' and the first blank one.
- */
-Pasta(unsigned int charsByLine = 100, bool extended = false, bool strictSequenceNames = false) : charsByLine_(charsByLine), extended_(extended), strictNames_(strictSequenceNames) {
-}
-
-// class destructor
-virtual ~Pasta() {
-}
+  bool extended_;              // If using HUPO-PSI extensions
+  bool strictNames_;           // If name is between '>' and first space
 
 public:
-/**
- * @brief Get the format name
- *
- * @return format name
- */
-const std::string getFormatName() const override {
-	return "PASTA file";
-}
-const std::string getFormatDescription() const override
-{
-	return "By rows: alphabet, then Sequence name (preceded by >) in one line, and rows of sequence content.";
-}
+  typedef Table<double> DataTable;
 
-/**
- * @name The "ISequenceStream interface"
- *
- * @{
- */
-bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, const std::vector<size_t>& permutationMap) const;
+  /**
+   * @brief Build a new Pasta object.
+   *
+   * @param charsByLine Number of characters per line when writing files.
+   * @param extended Tell if we should read general comments and sequence comments in HUPO-PSI format.
+   * @param strictSequenceNames Tells if the sequence names should be restricted to the characters between '>' and the first blank one.
+   */
+  Pasta(unsigned int charsByLine = 100, bool extended = false, bool strictSequenceNames = false) : charsByLine_(charsByLine), extended_(extended), strictNames_(strictSequenceNames)
+  {}
 
-/**
- * @}
- */
+  // class destructor
+  virtual ~Pasta()
+  {}
 
-void writeSequence(std::ostream& output, const ProbabilisticSequence& seq, bool header) const;
+public:
+  /**
+   * @brief Get the format name
+   *
+   * @return format name
+   */
+  const std::string getFormatName() const override
+  {
+    return "PASTA file";
+  }
+  const std::string getFormatDescription() const override
+  {
+    return "By rows: alphabet, then Sequence name (preceded by >) in one line, and rows of sequence content.";
+  }
 
-void writeSequence(std::ostream& output, const Sequence& seq, bool header) const;
+  /**
+   * @name The "ISequenceStream interface"
+   *
+   * @{
+   */
+  bool nextSequence(std::istream& input, ProbabilisticSequence& seq, bool hasLabels, const std::vector<size_t>& permutationMap) const;
 
-/**
- * @name The OSequence interface"
- *
- * @{
- */
-void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override
-{
-	for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
-	{
-		writeSequence(output, sc.sequence(i), i == 0);
-	}
-}
+  /**
+   * @}
+   */
 
-using AbstractOSequence::writeSequences;
+  void writeSequence(std::ostream& output, const ProbabilisticSequence& seq, bool header) const;
 
-/**
- * @}
- */
+  void writeSequence(std::ostream& output, const Sequence& seq, bool header) const;
 
-/**
- * @name The "I/OProbabilisticSequence interface"
- *
- * @{
- */
-void appendAlignmentFromStream(std::istream& input, ProbabilisticSequenceContainerInterface& psc) const override;
+  /**
+   * @name The OSequence interface"
+   *
+   * @{
+   */
+  void writeSequences(std::ostream& output, const SequenceContainerInterface& sc) const override
+  {
+    for (size_t i = 0; i < sc.getNumberOfSequences(); ++i)
+    {
+      writeSequence(output, sc.sequence(i), i == 0);
+    }
+  }
+
+  using AbstractOSequence::writeSequences;
+
+  /**
+   * @}
+   */
+
+  /**
+   * @name The "I/OProbabilisticSequence interface"
+   *
+   * @{
+   */
+  void appendAlignmentFromStream(std::istream& input, ProbabilisticSequenceContainerInterface& psc) const override;
 
   using AbstractOProbabilisticAlignment::writeAlignment;
-  
-void writeAlignment(std::ostream& output, const ProbabilisticSiteContainerInterface& psc) const override
-{
-	if (!output)
-		throw IOException("Pasta::write: can't write to ostream output");
 
-	// Main loop : for all sequences in vector container
+  void writeAlignment(std::ostream& output, const ProbabilisticSiteContainerInterface& psc) const override
+  {
+    if (!output)
+      throw IOException("Pasta::write: can't write to ostream output");
 
-	bool first = true;
-	for (size_t i = 0; i < psc.getNumberOfSequences(); ++i)
-	{
-		writeSequence(output, psc.sequence(i), first);
-		first = false;
-	}
-}
-/**
- * @}
- */
-using AbstractOSequence2::writeAlignment;
+    // Main loop : for all sequences in vector container
 
-const std::string getDataType() const override {
-	return "(Probabilistic) sequence container";
-}
+    bool first = true;
+    for (size_t i = 0; i < psc.getNumberOfSequences(); ++i)
+    {
+      writeSequence(output, psc.sequence(i), first);
+      first = false;
+    }
+  }
+  /**
+   * @}
+   */
+  using AbstractOSequence2::writeAlignment;
+
+  const std::string getDataType() const override
+  {
+    return "(Probabilistic) sequence container";
+  }
 };
 } // end of namespace bpp
 #endif // BPP_SEQ_IO_PASTA_H

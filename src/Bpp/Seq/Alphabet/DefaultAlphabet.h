@@ -18,54 +18,60 @@ namespace bpp
  * This should be used by who does not care of the sequence type.
  */
 class DefaultAlphabet :
-	public LetterAlphabet
+  public LetterAlphabet
 {
 protected:
-std::string chars_;
+  std::string chars_;
 
 public:
-// class constructor
-DefaultAlphabet();
+  // class constructor
+  DefaultAlphabet();
 
-DefaultAlphabet(const DefaultAlphabet& bia) : LetterAlphabet(bia), chars_(bia.chars_) {
-}
+  DefaultAlphabet(const DefaultAlphabet& bia) : LetterAlphabet(bia), chars_(bia.chars_)
+  {}
 
-DefaultAlphabet& operator=(const DefaultAlphabet& bia)
-{
-	LetterAlphabet::operator=(bia);
-	chars_ = bia.chars_;
-	return *this;
-}
+  DefaultAlphabet& operator=(const DefaultAlphabet& bia)
+  {
+    LetterAlphabet::operator=(bia);
+    chars_ = bia.chars_;
+    return *this;
+  }
 
-DefaultAlphabet* clone() const
-{
-	return new DefaultAlphabet(*this);
-}
+  DefaultAlphabet* clone() const
+  {
+    return new DefaultAlphabet(*this);
+  }
 
 
-// class destructor
-virtual ~DefaultAlphabet() {
-}
+  // class destructor
+  virtual ~DefaultAlphabet()
+  {}
 
 public:
-unsigned int getSize() const {
-	return 26;
-}
-unsigned int getNumberOfTypes() const {
-	return 27;
-}
-std::string getAlphabetType() const {
-	return "Default";
-}
-int getUnknownCharacterCode() const {
-	return 37;
-}
-bool isUnresolved(int state) const {
-	return state == 37;
-}
-bool isUnresolved(const std::string& state) const {
-	return false;
-}
+  unsigned int getSize() const
+  {
+    return 26;
+  }
+  unsigned int getNumberOfTypes() const
+  {
+    return 27;
+  }
+  std::string getAlphabetType() const
+  {
+    return "Default";
+  }
+  int getUnknownCharacterCode() const
+  {
+    return 37;
+  }
+  bool isUnresolved(int state) const
+  {
+    return state == 37;
+  }
+  bool isUnresolved(const std::string& state) const
+  {
+    return false;
+  }
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABET_DEFAULTALPHABET_H
