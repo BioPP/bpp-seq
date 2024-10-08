@@ -19,37 +19,37 @@ namespace bpp
 class SequenceWalker
 {
 private:
-const SequenceInterface* seq_;
-size_t seqPos_, alnPos_;
-int gap_;
+  const SequenceInterface* seq_;
+  size_t seqPos_, alnPos_;
+  int gap_;
 
 public:
-SequenceWalker(const SequenceInterface& seq) :
-	seq_(&seq), seqPos_(0), alnPos_(0), gap_(seq.getAlphabet()->getGapCharacterCode())
-{
-	if (seq_->size() > 0)
-	{
-		while ((*seq_)[alnPos_] == gap_)
-			++alnPos_;
-	}
-}
-SequenceWalker(const SequenceWalker& walker) :
-	seq_(walker.seq_), seqPos_(walker.seqPos_), alnPos_(walker.alnPos_), gap_(walker.gap_) {
-}
-SequenceWalker& operator=(const SequenceWalker& walker)
-{
-	seq_    = walker.seq_;
-	seqPos_ = walker.seqPos_;
-	alnPos_ = walker.alnPos_;
-	gap_    = walker.gap_;
-	return *this;
-}
-virtual ~SequenceWalker() {
-}
+  SequenceWalker(const SequenceInterface& seq) :
+    seq_(&seq), seqPos_(0), alnPos_(0), gap_(seq.getAlphabet()->getGapCharacterCode())
+  {
+    if (seq_->size() > 0)
+    {
+      while ((*seq_)[alnPos_] == gap_)
+        ++alnPos_;
+    }
+  }
+  SequenceWalker(const SequenceWalker& walker) :
+    seq_(walker.seq_), seqPos_(walker.seqPos_), alnPos_(walker.alnPos_), gap_(walker.gap_)
+  {}
+  SequenceWalker& operator=(const SequenceWalker& walker)
+  {
+    seq_    = walker.seq_;
+    seqPos_ = walker.seqPos_;
+    alnPos_ = walker.alnPos_;
+    gap_    = walker.gap_;
+    return *this;
+  }
+  virtual ~SequenceWalker()
+  {}
 
 public:
-size_t getAlignmentPosition(size_t seqPos);
-size_t getSequencePosition(size_t alnPos);
+  size_t getAlignmentPosition(size_t seqPos);
+  size_t getSequencePosition(size_t alnPos);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SEQUENCEWALKER_H

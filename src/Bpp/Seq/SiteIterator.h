@@ -15,14 +15,14 @@ template<class SiteType>
 class TemplateSiteIteratorInterface
 {
 public:
-TemplateSiteIteratorInterface() {
-}
-virtual ~TemplateSiteIteratorInterface() {
-}
+  TemplateSiteIteratorInterface()
+  {}
+  virtual ~TemplateSiteIteratorInterface()
+  {}
 
 public:
-virtual SiteType& nextSite() = 0;
-virtual bool hasMoreSites() const = 0;
+  virtual SiteType& nextSite() = 0;
+  virtual bool hasMoreSites() const = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_SITEITERATOR_H
