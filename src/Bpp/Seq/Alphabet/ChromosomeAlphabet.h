@@ -35,7 +35,6 @@
 #ifndef BPP_SEQ_ALPHABET_CHROMOSOMEALPHABET_H
 #define BPP_SEQ_ALPHABET_CHROMOSOMEALPHABET_H
 
-#include "AbstractAlphabet.h"
 #include "IntegerAlphabet.h"
 #include <Bpp/Text/StringTokenizer.h>
 #include <Bpp/Text/TextTools.h>
@@ -55,7 +54,7 @@ namespace bpp
  *
  */
 class ChromosomeAlphabet :
-  public AbstractAlphabet
+  public IntegerAlphabet
 {
 private:
   unsigned int MIN_;
@@ -69,11 +68,11 @@ private:
 public:
   // class constructor
   ChromosomeAlphabet(unsigned int min, unsigned int max);
-  ChromosomeAlphabet(const ChromosomeAlphabet& bia) : AbstractAlphabet(bia), MIN_(bia.MIN_),MAX_(bia.MAX_), numOfCompositeStates_(0), compositeAlphabetMap_() {}
+  ChromosomeAlphabet(const ChromosomeAlphabet& bia) : IntegerAlphabet(bia), MIN_(bia.MIN_),MAX_(bia.MAX_), numOfCompositeStates_(0), compositeAlphabetMap_() {}
 
   ChromosomeAlphabet& operator=(const ChromosomeAlphabet& bia)
   {
-    AbstractAlphabet::operator=(bia);
+    IntegerAlphabet::operator=(bia);
     MIN_=bia.MIN_;
     MAX_=bia.MAX_;
     numOfCompositeStates_ = bia.numOfCompositeStates_;

@@ -34,7 +34,7 @@
 
 
 #include "ChromosomeAlphabet.h"
-#include "AbstractAlphabet.h"
+#include "IntegerAlphabet.h"
 #include "AlphabetState.h"
 
 // From Utils:
@@ -42,26 +42,22 @@
 
 using namespace bpp;
 
-ChromosomeAlphabet::ChromosomeAlphabet(unsigned int min, unsigned int max) : MIN_(min),MAX_(max), numOfCompositeStates_(0), compositeAlphabetMap_()
+ChromosomeAlphabet::ChromosomeAlphabet(unsigned int min, unsigned int max)
+  : IntegerAlphabet(max, min), // Explicitly call IntegerAlphabet constructor
+    MIN_(min),
+    MAX_(max),
+    numOfCompositeStates_(0),
+    compositeAlphabetMap_()
 {
   // Alphabet size definition
   //resize(MAX_);
-
-  // Alphabet content definition
-  registerState(new AlphabetState(-1, "-", "Gap"));
-
-  for (int i = static_cast<int>(MIN_); i < static_cast<int>(MAX_)+1; i++)
-  {
-    registerState(new AlphabetState(i, TextTools::toString(i), ""));
-  }
-  registerState(new AlphabetState(static_cast<int>(MAX_)+1, "X", "Unresolved state"));
 }
 
 const AlphabetState& ChromosomeAlphabet::getState(int num) const {
       if (num == 0){
         num = (int)MIN_;
       }
-      return(AbstractAlphabet::getState(num));
+      return(IntegerAlphabet::getState(num));
 
 }
 /********************************************************************************/
