@@ -141,6 +141,8 @@ RNY::RNY( std::shared_ptr<const NucleicAlphabet> na) : nuclalph_(na)
     if (states[i])
       registerState(states[i]);
   }
+
+  registerState(new AlphabetState(350, "NNN", "NNN")); // unresolved
 }
 
 /****************************************************************************************/
@@ -152,7 +154,7 @@ vector<int> RNY::getAlias(int state) const
   vector<int> v;
 
   int i, j, k;
-  if (state == -1)
+  if (state == -1 || state == 350)
   {
     // ---
     v.resize(36);
@@ -246,7 +248,7 @@ bool RNY::isResolvedIn(int state1, int state2) const
   if (isUnresolved(state2))
     throw BadIntException(state2, "RNY::isResolvedIn(int, int): Unresolved base.", this);
 
-  if (state1 == -1) // ---
+  if (state1 == -1 || state1 == 350) // ---
     return true;
 
   int qs = state1 / 50;
@@ -440,7 +442,7 @@ string RNY::intToChar(int state) const
 {
   // ---
 
-  if (state == -1)
+  if (state == -1 || state== 350)
     return "---";
 
   int i, j, k, l;
