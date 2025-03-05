@@ -191,7 +191,6 @@ public:
    *
    * Additional characters are gaps, ie vectors of 0
    */
-
   void setToSizeR(size_t newSize) override;
 
   /*
@@ -200,7 +199,6 @@ public:
    *
    * Additional characters are gaps, ie vectors of 0
    */
-
   void setToSizeL(size_t newSize) override;
 
   double getStateValueAt(size_t sitePosition, int state) const override
