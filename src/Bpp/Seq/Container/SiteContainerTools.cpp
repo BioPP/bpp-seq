@@ -738,6 +738,7 @@ vector<int> SiteContainerTools::getColumnScores(const Matrix<size_t>& positions1
     bool found = false;
     for (size_t j = 0; !found && j < positions2.getNumberOfColumns(); ++j)
     {
+      cout << whichPos << "\t" << positions2(whichSeq, j) << endl;
       if (positions2(whichSeq, j) == whichPos)
       {
         i2 = j;

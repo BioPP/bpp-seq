@@ -14,7 +14,7 @@ using namespace bpp;
 using namespace std;
 
 const string SequenceQuality::QUALITY_SCORE = "Quality score";
-const int SequenceQuality::DEFAULT_QUALITY_VALUE = 20;
+const int SequenceQuality::DEFAULT_QUALITY_VALUE = -2;
 
 /******************************************************************************/
 
