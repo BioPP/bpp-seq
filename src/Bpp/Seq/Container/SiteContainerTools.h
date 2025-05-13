@@ -529,20 +529,38 @@ public:
   /**
    * @brief create the consensus sequence of the alignment.
    *
-   * In case of ambiguity (for instance a AATT site), one state will be chosen arbitrarily.
+   * In case of ambiguity (for instance a AATT site), one state will be chosen arbitrarily
    *
    * @param sc a site container
    * @param name the name of the sequence object that will be created.
    * @param ignoreGap Tell if gap must be counted or not. If not (true option), only fully gapped sites will result in a gap in the consensus sequence.
-   * @param resolveUnknown Tell is unknnown characters must resolved. In a DNA sequence for instance, N will be counted as A=1/4, T=1/4, G=1/4 and C=1/4. Otherwise it will be counted as N=1.
+   * @param resolveUnknown Tell is unknown characters must resolved. In a DNA sequence for instance, N will be counted as A=1/4, T=1/4, G=1/4 and C=1/4. Otherwise it will be counted as N=1.
    * If this option is set to true, a consensus sequence will never contain an unknown character.
    * @return A new Sequence object with the consensus sequence.
    */
+  
   static std::unique_ptr<Sequence> getConsensus(
       const SiteContainerInterface& sc,
       const std::string& name = "consensus",
       bool ignoreGap = true,
       bool resolveUnknown = false);
+
+  /**
+   * @brief Create a sequence through site sampling, proportional to observed frequencies.
+   *
+   * @param sc a site container
+   * @param name the name of the sequence object that will be created.
+   * @param ignoreGap Tell if gap must be counted or not. If not (true option), only fully gapped sites will result in a gap in the consensus sequence, otherwise frequencies of gaps are considered at each site.
+   * @param resolveUnknown Tell is unknown characters must resolved. In a DNA sequence for instance, N will be counted as A=1/4, T=1/4, G=1/4 and C=1/4. Otherwise it will be counted as N=1.
+   * If this option is set to true, a sampled sequence will never contain an unknown character.
+   * @return A new Sequence object with a sequence built through site sampling.
+   */
+  
+  static std::unique_ptr<Sequence> sampleSequence(
+    const SiteContainerInterface& sc,
+    const std::string& name = "consensus",
+    bool ignoreGap = true,
+    bool resolveUnknown = false);
 
   /**
    * @brief Change all gaps to unknown state in a SiteContainer, according to its alphabet.
@@ -955,7 +973,7 @@ public:
   /**
    * @brief Compare an alignment to a reference alignment, and compute the column scores.
    *
-   * Calculations are made according to formula for the "CS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682â2690.
+   * Calculations are made according to formula for the "CS" score in Thompson et al 1999, Nucleic Acids Research (1999):27(13);2682-2690.
    *
    * @param positions1 Alignment index for the test alignment.
    * @param positions2 Alignment index for the reference alignment.
