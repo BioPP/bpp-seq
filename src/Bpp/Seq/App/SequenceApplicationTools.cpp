@@ -605,22 +605,25 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
         if (replace)
           selectedSites->reindexSites();
       }
-      if (seln == "Bootstrap")
-      {
-        vSite.resize(nbSites);
-        vector<size_t> vPos;
-        for (size_t p = 0; p < nbSites; ++p)
-        {
-          vPos.push_back(p);
-        }
-
-        RandomTools::getSample(vPos, vSite, true);
-
-        auto sel = SiteContainerTools::getSelectedSites(*sites, vSite);
-        selectedSites = std::move(sel);
-      }
       else
-        throw Exception("Unknown site selection description: " + siteSet);
+      {
+        if (seln == "Bootstrap")
+        {
+          vSite.resize(nbSites);
+          vector<size_t> vPos;
+          for (size_t p = 0; p < nbSites; ++p)
+          {
+            vPos.push_back(p);
+          }
+          
+          RandomTools::getSample(vPos, vSite, true);
+          
+          auto sel = SiteContainerTools::getSelectedSites(*sites, vSite);
+          selectedSites = std::move(sel);
+        }
+        else
+          throw Exception("Unknown site selection description: " + siteSet);
+      }
     }
 
     if (verbose)
