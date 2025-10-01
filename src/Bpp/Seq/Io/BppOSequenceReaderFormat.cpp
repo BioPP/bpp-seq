@@ -8,8 +8,10 @@
 
 #include "BppOSequenceReaderFormat.h"
 #include "Clustal.h"
+#include "Csv.h"
 #include "Dcse.h"
 #include "Fasta.h"
+#include "FastaCsv.h"
 #include "GenBank.h"
 #include "Mase.h"
 #include "NexusIoSequence.h"
@@ -20,6 +22,8 @@ using namespace std;
 
 unique_ptr<ISequence> BppOSequenceReaderFormat::read(const std::string& description)
 {
+  cerr << "unique_ptr<ISequence> BppOSequenceReaderFormat::read(const std::string& description)" << endl;
+  
   unparsedArguments_.clear();
   string format = "";
   KeyvalTools::parseProcedure(description, format, unparsedArguments_);
@@ -59,11 +63,22 @@ unique_ptr<ISequence> BppOSequenceReaderFormat::read(const std::string& descript
 
     iSeq.reset(new Phylip(extended, sequential, 100, split));
   }
+  else if (format == "Csv")
+  {
+    string sep = ApplicationTools::getStringParameter("sep", unparsedArguments_, ",");
+    iSeq.reset(new Csv(sep));
+  }
   else if (format == "Fasta")
   {
     bool strictNames = ApplicationTools::getBooleanParameter("strict_names", unparsedArguments_, false, "", true, warningLevel_);
     bool extended    = ApplicationTools::getBooleanParameter("extended", unparsedArguments_, false, "", true, warningLevel_);
     iSeq.reset(new Fasta(100, true, extended, strictNames));
+  }
+  else if (format == "FastaCsv")
+  {
+    bool strictNames = ApplicationTools::getBooleanParameter("strict_names", unparsedArguments_, false, "", true, warningLevel_);
+    bool extended    = ApplicationTools::getBooleanParameter("extended", unparsedArguments_, false, "", true, warningLevel_);
+    iSeq.reset(new FastaCsv(100, extended, strictNames));
   }
   else if (format == "Clustal")
   {

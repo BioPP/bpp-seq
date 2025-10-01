@@ -58,7 +58,9 @@ SET(CPP_FILES
   Bpp/Seq/Io/Clustal.cpp
   Bpp/Seq/Io/Dcse.cpp
   Bpp/Seq/Io/Fasta.cpp
+  Bpp/Seq/Io/FastaCsv.cpp
   Bpp/Seq/Io/GenBank.cpp
+  Bpp/Seq/Io/IoDistanceMatrixFactory.cpp
   Bpp/Seq/Io/IoSequenceFactory.cpp
   Bpp/Seq/Io/Mase.cpp
   Bpp/Seq/Io/MaseTools.cpp
@@ -68,9 +70,9 @@ SET(CPP_FILES
   Bpp/Seq/Io/PhredPhd.cpp
   Bpp/Seq/Io/PhredPoly.cpp
   Bpp/Seq/Io/Phylip.cpp
-  Bpp/Seq/Io/Stockholm.cpp
-  Bpp/Seq/Io/IoDistanceMatrixFactory.cpp
   Bpp/Seq/Io/PhylipDistanceMatrixFormat.cpp
+  Bpp/Seq/Io/Stockholm.cpp
+  Bpp/Seq/Io/Csv.cpp
   Bpp/Seq/NucleicAcidsReplication.cpp
   Bpp/Seq/ProbabilisticSymbolList.cpp
   Bpp/Seq/ProbabilisticSequence.cpp
