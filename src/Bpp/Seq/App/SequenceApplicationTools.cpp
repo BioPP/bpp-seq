@@ -117,7 +117,7 @@ unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
     if (args.find("N") == args.end())
       throw Exception("Missing 'N' argument in Integer for size:" + alphabet);
 
-    uint N = TextTools::to<unsigned int>(args["N"]);
+    unsigned int N = TextTools::to<unsigned int>(args["N"]);
     chars = make_unique<IntegerAlphabet>(N);
   }
   else if (alphabet == "Lexicon")
@@ -179,7 +179,7 @@ unique_ptr<Alphabet> SequenceApplicationTools::getAlphabet(
     if (args.find("N") == args.end())
       throw Exception("Missing 'N' argument in Allelic for number of alleles:" + alphabet);
 
-    uint N = TextTools::to<unsigned int>(args["N"]);
+    unsigned int N = TextTools::to<unsigned int>(args["N"]);
 
     args["alphabet"] = args["base"];
 
