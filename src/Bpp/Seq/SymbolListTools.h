@@ -303,7 +303,6 @@ public:
    * @author J. Dutheil
    * @param list The list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @return A map with all states and corresponding counts.
    */
   static void getCountsResolveUnknowns(
       const IntSymbolListInterface& list,
@@ -328,7 +327,6 @@ public:
    * @author J. Dutheil
    * @param list The list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @return A map with all states and corresponding counts.
    */
   static void getCountsResolveUnknowns(
       const ProbabilisticSymbolListInterface& list,
@@ -357,7 +355,6 @@ public:
    * @param list The list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
    * @param resolveUnknowns Tell is unknown characters must be resolved.
-   * @return A map with all states and corresponding counts.
    */
   static void getCounts(
       const CruxSymbolListInterface& list,
@@ -469,7 +466,6 @@ public:
    * @param list1 The first list.
    * @param list2 The second list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @return A map with all states and corresponding counts.
    */
   static void getCountsResolveUnknowns(
       const IntSymbolListInterface& list1,
@@ -489,7 +485,6 @@ public:
    * @param list1 The first list.
    * @param list2 The second list.
    * @param counts The output map to store the counts (existing ocunts will be incremented).
-   * @return A map with all states and corresponding counts.
    */
   static void getCountsResolveUnknowns(
       const ProbabilisticSymbolListInterface& list1,
@@ -511,7 +506,6 @@ public:
    * @param counts The output map to store the counts (existing ocunts will be incremented).
    * @param resolveUnknowns Tell is unknown characters must be resolved.
    * For instance, in DNA, N will be counted as A=1/4,T=1/4,C=1/4,G=1/4.
-   * @return A map with all states and corresponding counts.
    */
   static void getCounts(
       const CruxSymbolListInterface& list1,

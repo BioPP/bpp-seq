@@ -215,7 +215,6 @@ public:
    *
    * @param sequences The container from which sequences are to be taken.
    * @param selection The positions of all sequences to retrieve.
-   * @return A new container with all selected sequences.
    */
   template<class SequenceType, class HashType>
   static void keepOnlySelectedSequences(
