@@ -23,7 +23,7 @@ using namespace std;
 unique_ptr<ISequence> BppOSequenceReaderFormat::read(const std::string& description)
 {
   cerr << "unique_ptr<ISequence> BppOSequenceReaderFormat::read(const std::string& description)" << endl;
-  
+
   unparsedArguments_.clear();
   string format = "";
   KeyvalTools::parseProcedure(description, format, unparsedArguments_);

@@ -30,7 +30,8 @@ endif(NOT NO_DEP_CHECK)
 
 if(NO_DEP_CHECK)
     message(
-        "-- Dependencies checking disabled. Only distribution can be built."
+	STATUS
+        "Dependencies checking disabled. Only distribution can be built."
     )
 else(NO_DEP_CHECK)
     # Libtool-like version number

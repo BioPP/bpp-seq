@@ -50,17 +50,18 @@ void Csv::writeSequences(ostream& output, const SequenceContainerInterface& sc) 
   auto alphaPtr = sc.getAlphabet();
 
   auto len = sc.sequence(seqnames[0]).size();
-  
+
   // Main loop : for all sequences in vector container
   for (size_t i = 0; i < len; ++i)
   {
     vector<string> v;
     for (const auto& name : seqnames)
+    {
       v.push_back(sc.sequence(name).getChar(i));
+    }
 
     datatable.addRow(v);
   }
 
   DataTable::write(datatable, output, sep_);
 }
-

@@ -108,7 +108,7 @@ public:
   {
     return *alpha_;
   }
-  
+
   const ProteicAlphabet& proteicAlphabet() const
   {
     return *alpha_;

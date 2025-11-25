@@ -107,7 +107,7 @@ void FastaCsv::writeSequence(ostream& output, const Sequence& seq) const
   output << endl;
   // Sequence content
   string buffer; // use a buffer to format sequence with states > 1 char
-  for (size_t i = 0; i < seq.size()-1; ++i)
+  for (size_t i = 0; i < seq.size() - 1; ++i)
   {
     buffer += seq.getChar(i) + ",";
     if (buffer.size() >= charsByLine_)
@@ -116,8 +116,8 @@ void FastaCsv::writeSequence(ostream& output, const Sequence& seq) const
       buffer.erase(0, charsByLine_);
     }
   }
-  buffer += seq.getChar(seq.size()-1);
-  
+  buffer += seq.getChar(seq.size() - 1);
+
   output << string(buffer.begin(), buffer.end()) << endl;
 }
 
@@ -206,4 +206,3 @@ void FastaCsv::writeSequences(ostream& output, const SequenceContainerInterface&
 }
 
 /******************************************************************************/
-

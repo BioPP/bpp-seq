@@ -442,7 +442,7 @@ string RNY::intToChar(int state) const
 {
   // ---
 
-  if (state == -1 || state== 350)
+  if (state == -1 || state == 350)
     return "---";
 
   int i, j, k, l;

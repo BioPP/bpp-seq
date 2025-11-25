@@ -22,16 +22,16 @@ namespace bpp
  *
  * Read and write from/to coma separated values files : similar to the
  * Fasta format, but states are separated by ",".
- * 
+ *
  */
 
-  class FastaCsv :
-    public AbstractISequence,
-    public AbstractIAlignment,
-    public AbstractOSequence2,
-    public virtual ISequenceStream,
-    public virtual OSequenceStream
-  {
+class FastaCsv :
+  public AbstractISequence,
+  public AbstractIAlignment,
+  public AbstractOSequence2,
+  public virtual ISequenceStream,
+  public virtual OSequenceStream
+{
 protected:
   /**
    * @brief The maximum number of chars to be written on a line.
@@ -137,7 +137,6 @@ public:
   {
     strictNames_ = yn;
   }
-
-  };
+};
 } // end of namespace bpp.
 #endif // BPP_SEQ_IO_FASTACSV_H

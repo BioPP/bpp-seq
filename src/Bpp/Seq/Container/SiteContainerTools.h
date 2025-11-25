@@ -538,7 +538,7 @@ public:
    * If this option is set to true, a consensus sequence will never contain an unknown character.
    * @return A new Sequence object with the consensus sequence.
    */
-  
+
   static std::unique_ptr<Sequence> getConsensus(
       const SiteContainerInterface& sc,
       const std::string& name = "consensus",
@@ -555,12 +555,12 @@ public:
    * If this option is set to true, a sampled sequence will never contain an unknown character.
    * @return A new Sequence object with a sequence built through site sampling.
    */
-  
+
   static std::unique_ptr<Sequence> sampleSequence(
-    const SiteContainerInterface& sc,
-    const std::string& name = "consensus",
-    bool ignoreGap = true,
-    bool resolveUnknown = false);
+      const SiteContainerInterface& sc,
+      const std::string& name = "consensus",
+      bool ignoreGap = true,
+      bool resolveUnknown = false);
 
   /**
    * @brief Change all gaps to unknown state in a SiteContainer, according to its alphabet.

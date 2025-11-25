@@ -615,9 +615,9 @@ std::unique_ptr<VectorSiteContainer> SequenceApplicationTools::getSiteContainer(
           {
             vPos.push_back(p);
           }
-          
+
           RandomTools::getSample(vPos, vSite, true);
-          
+
           auto sel = SiteContainerTools::getSelectedSites(*sites, vSite);
           selectedSites = std::move(sel);
         }

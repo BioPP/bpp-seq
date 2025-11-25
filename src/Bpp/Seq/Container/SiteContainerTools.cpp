@@ -73,10 +73,10 @@ unique_ptr<Sequence> SiteContainerTools::getConsensus(
 /******************************************************************************/
 
 unique_ptr<Sequence> SiteContainerTools::sampleSequence(
-  const SiteContainerInterface& sc,
-  const std::string& name,
-  bool ignoreGap,
-  bool resolveUnknown)
+    const SiteContainerInterface& sc,
+    const std::string& name,
+    bool ignoreGap,
+    bool resolveUnknown)
 {
   Vint consensus;
   SimpleSiteContainerIterator ssi(sc);
@@ -86,31 +86,33 @@ unique_ptr<Sequence> SiteContainerTools::sampleSequence(
     site = &ssi.nextSite();
     map<int, double> freq;
     SiteTools::getFrequencies(*site, freq, resolveUnknown);
-    if (ignoreGap) //Mgmt of gaps, if requested
+    if (ignoreGap) // Mgmt of gaps, if requested
     {
       const auto& it = freq.find(-1);
-      if (it!=freq.end())
+      if (it != freq.end())
       {
         double v = 1 - it->second;
         freq.erase(-1);
         for (auto& itm : freq)
+        {
           itm.second /= v;
+        }
       }
     }
-    
+
     int cons = -1; // default result
     double max = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.);
     for (auto& it : freq)
     {
       max -= it.second;
-      if (!ignoreGap || it.first!=-1)
+      if (!ignoreGap || it.first != -1)
         cons = it.first;
-      if (max<=0)
+      if (max <= 0)
         break;
     }
     consensus.push_back(cons);
   }
-  
+
   auto alphaPtr = sc.getAlphabet();
   auto seqConsensus = make_unique<Sequence>(name, consensus, alphaPtr);
   return seqConsensus;

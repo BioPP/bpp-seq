@@ -37,12 +37,11 @@ public:
   static inline const std::shared_ptr<const CodonAlphabet> DNA_CODON_ALPHABET = std::make_shared<const CodonAlphabet>(std::dynamic_pointer_cast<const NucleicAlphabet>(DNA_ALPHABET));
   static inline const std::shared_ptr<const CodonAlphabet> RNA_CODON_ALPHABET = std::make_shared<const CodonAlphabet>(std::dynamic_pointer_cast<const NucleicAlphabet>(RNA_ALPHABET));
   static inline const std::shared_ptr<const ProteicAlphabet> PROTEIN_ALPHABET = std::make_shared<const ProteicAlphabet>();
-  static inline const std::shared_ptr<const DefaultAlphabet> DEFAULT_ALPHABET = std::make_shared<const DefaultAlphabet>(); 
-;
+  static inline const std::shared_ptr<const DefaultAlphabet> DEFAULT_ALPHABET = std::make_shared<const DefaultAlphabet>();
 
 public:
   AlphabetTools() = default;
-  
+
   virtual ~AlphabetTools() = default;
 
 public:

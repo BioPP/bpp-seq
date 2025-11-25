@@ -328,7 +328,7 @@ public:
     }
     else
       return std::vector<int>{word / 16, (word / 4) % 4, word % 4}
-      ;
+    ;
   }
 
 

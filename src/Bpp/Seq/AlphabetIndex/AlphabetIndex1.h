@@ -26,7 +26,7 @@ class AlphabetIndex1 :
 {
 public:
   AlphabetIndex1() = default;
-  
+
   virtual ~AlphabetIndex1() = default;
 
 public:
@@ -109,7 +109,6 @@ public:
   {
     return *alpha_;
   }
-
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_ALPHABETINDEX1_H
