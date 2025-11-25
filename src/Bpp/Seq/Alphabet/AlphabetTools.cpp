@@ -16,14 +16,6 @@ using namespace bpp;
 using namespace std;
 
 /**********************************************************************************************/
-shared_ptr<const DNA> AlphabetTools::DNA_ALPHABET = make_shared<const DNA>();
-shared_ptr<const RNA> AlphabetTools::RNA_ALPHABET = make_shared<const RNA>();
-shared_ptr<const CodonAlphabet> AlphabetTools::DNA_CODON_ALPHABET = make_shared<const CodonAlphabet>(dynamic_pointer_cast<const NucleicAlphabet>(DNA_ALPHABET));
-shared_ptr<const CodonAlphabet> AlphabetTools::RNA_CODON_ALPHABET = make_shared<const CodonAlphabet>(dynamic_pointer_cast<const NucleicAlphabet>(RNA_ALPHABET));
-shared_ptr<const ProteicAlphabet> AlphabetTools::PROTEIN_ALPHABET = make_shared<const ProteicAlphabet>();
-shared_ptr<const DefaultAlphabet> AlphabetTools::DEFAULT_ALPHABET = make_shared<const DefaultAlphabet>();
-
-/**********************************************************************************************/
 
 int AlphabetTools::getType(char state)
 {

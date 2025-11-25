@@ -35,23 +35,11 @@ public:
    */
   AAIndex2Entry(std::istream& input, bool sym = true);
 
-  AAIndex2Entry(const AAIndex2Entry& index) :
-    ProteicAlphabetIndex2(*this),
-    property_(index.property_),
-    sym_(index.sym_)
-  {}
+  AAIndex2Entry(const AAIndex2Entry& index) = default;
 
-  AAIndex2Entry& operator=(const AAIndex2Entry& index)
-  {
-    ProteicAlphabetIndex2::operator=(*this);
+  AAIndex2Entry& operator=(const AAIndex2Entry& index) = default;
 
-    property_ = index.property_;
-    sym_ = index.sym_;
-    return *this;
-  }
-
-  virtual ~AAIndex2Entry()
-  {}
+  virtual ~AAIndex2Entry() = default;
 
 public:
   AAIndex2Entry* clone() const override

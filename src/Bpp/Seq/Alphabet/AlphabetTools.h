@@ -22,6 +22,7 @@
 // From the STL :
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace bpp
 {
@@ -31,18 +32,18 @@ namespace bpp
 class AlphabetTools
 {
 public:
-  static std::shared_ptr<const DNA> DNA_ALPHABET;
-  static std::shared_ptr<const RNA> RNA_ALPHABET;
-  static std::shared_ptr<const CodonAlphabet> DNA_CODON_ALPHABET;
-  static std::shared_ptr<const CodonAlphabet> RNA_CODON_ALPHABET;
-  static std::shared_ptr<const ProteicAlphabet> PROTEIN_ALPHABET;
-  static std::shared_ptr<const DefaultAlphabet> DEFAULT_ALPHABET;
+  static inline const std::shared_ptr<const DNA> DNA_ALPHABET = std::make_shared<const DNA>();
+  static inline const std::shared_ptr<const RNA> RNA_ALPHABET = std::make_shared<const RNA>();
+  static inline const std::shared_ptr<const CodonAlphabet> DNA_CODON_ALPHABET = std::make_shared<const CodonAlphabet>(std::dynamic_pointer_cast<const NucleicAlphabet>(DNA_ALPHABET));
+  static inline const std::shared_ptr<const CodonAlphabet> RNA_CODON_ALPHABET = std::make_shared<const CodonAlphabet>(std::dynamic_pointer_cast<const NucleicAlphabet>(RNA_ALPHABET));
+  static inline const std::shared_ptr<const ProteicAlphabet> PROTEIN_ALPHABET = std::make_shared<const ProteicAlphabet>();
+  static inline const std::shared_ptr<const DefaultAlphabet> DEFAULT_ALPHABET = std::make_shared<const DefaultAlphabet>(); 
+;
 
 public:
-  AlphabetTools()
-  {}
-  virtual ~AlphabetTools()
-  {}
+  AlphabetTools() = default;
+  
+  virtual ~AlphabetTools() = default;
 
 public:
   /**

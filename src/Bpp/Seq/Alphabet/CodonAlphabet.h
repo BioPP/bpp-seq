@@ -30,7 +30,7 @@ class CodonAlphabet :
   public AbstractAlphabet
 {
 protected:
-  std::shared_ptr<const NucleicAlphabet> nAlph_;
+  const std::shared_ptr<const NucleicAlphabet> nAlph_;
 
 public:
   // Constructor and destructor.
@@ -40,25 +40,16 @@ public:
    *
    * @param alpha The nucleic alphabet to be used.
    */
-  CodonAlphabet(std::shared_ptr<const NucleicAlphabet> alpha) :
+  CodonAlphabet(const std::shared_ptr<const NucleicAlphabet> alpha) :
     AbstractAlphabet(),
     nAlph_(alpha)
   {
     build_();
   }
 
-  CodonAlphabet(const CodonAlphabet& bia) :
-    AbstractAlphabet(bia),
-    nAlph_(bia.nAlph_)
-  {}
+  CodonAlphabet(const CodonAlphabet& bia) = default;
 
-  CodonAlphabet& operator=(const CodonAlphabet& bia)
-  {
-    AbstractAlphabet::operator=(bia);
-    nAlph_ = bia.nAlph_;
-
-    return *this;
-  }
+  CodonAlphabet& operator=(const CodonAlphabet& bia) = default;
 
   CodonAlphabet* clone() const override
   {

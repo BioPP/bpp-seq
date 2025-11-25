@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: CECILL-2.1
 
-#include "../Alphabet/AlphabetTools.h"
 #include "AAIndex2Entry.h"
 
 using namespace bpp;

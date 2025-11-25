@@ -25,10 +25,9 @@ class AlphabetIndex1 :
   public virtual Clonable
 {
 public:
-  AlphabetIndex1()
-  {}
-  virtual ~AlphabetIndex1()
-  {}
+  AlphabetIndex1() = default;
+  
+  virtual ~AlphabetIndex1() = default;
 
 public:
   virtual AlphabetIndex1* clone() const override = 0;
@@ -81,24 +80,22 @@ private:
   std::shared_ptr<const ProteicAlphabet> alpha_;
 
 public:
-  ProteicAlphabetIndex1() : alpha_(AlphabetTools::PROTEIN_ALPHABET)
-  {}
-  virtual ~ProteicAlphabetIndex1()
-  {}
+  ProteicAlphabetIndex1() : alpha_(AlphabetTools::PROTEIN_ALPHABET) {}
+
+  virtual ~ProteicAlphabetIndex1() {}
 
   virtual ProteicAlphabetIndex1* clone() const override = 0;
 
-  ProteicAlphabetIndex1(const ProteicAlphabetIndex1& pt) :
-    alpha_(pt.alpha_)
-  {}
+  ProteicAlphabetIndex1(const ProteicAlphabetIndex1& pt) = default;
 
-  ProteicAlphabetIndex1& operator=(const ProteicAlphabetIndex1& pt)
-  {
-    alpha_ = pt.alpha_;
-    return *this;
-  }
+  ProteicAlphabetIndex1& operator=(const ProteicAlphabetIndex1& pt) = default;
 
   std::shared_ptr<const Alphabet> getAlphabet() const override
+  {
+    return alpha_;
+  }
+
+  std::shared_ptr<const ProteicAlphabet> getProteicAlphabet() const
   {
     return alpha_;
   }
@@ -107,6 +104,12 @@ public:
   {
     return *alpha_;
   }
+
+  const ProteicAlphabet& proteicAlphabet() const
+  {
+    return *alpha_;
+  }
+
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_ALPHABETINDEX_ALPHABETINDEX1_H
