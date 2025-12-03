@@ -30,7 +30,7 @@ class CodonAlphabet :
   public AbstractAlphabet
 {
 protected:
-  const std::shared_ptr<const NucleicAlphabet> nAlph_;
+  std::shared_ptr<const NucleicAlphabet> nAlph_; //Note: this cannot be const, otherwise copy-constructor cannot work.
 
 public:
   // Constructor and destructor.
