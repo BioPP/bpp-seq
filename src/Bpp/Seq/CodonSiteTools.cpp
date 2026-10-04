@@ -53,40 +53,56 @@ bool CodonSiteTools::hasStop(const Site& site, const GeneticCode& gCode)
 
 /******************************************************************************/
 
-bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
+vector<bool> CodonSiteTools::arePositionsPolymorphic(const Site& site)
 {
   // Alphabet checking
   if (!AlphabetTools::isCodonAlphabet(site.alphabet()))
-    throw AlphabetException("CodonSiteTools::isMonoSitePolymorphic: alphabet is not CodonAlphabet", site.getAlphabet());
+    throw AlphabetException("CodonSiteTools::arePositionsPolymorphic: alphabet is not CodonAlphabet", site.getAlphabet());
+  
   // Empty site checking
   if (site.size() == 0)
-    throw EmptySiteException("CodonSiteTools::isMonoSitePolymorphic: Incorrect specified site", &site);
+    throw EmptySiteException("CodonSiteTools::arePositionsPolymorphic: Incorrect specified site", &site);
+
+  vector<bool> results({false, false, false});
 
   // Global polymorphism checking
   if (SymbolListTools::isConstant(site))
-    return false;
+    return results;
+
   // initialisation of the 3 sub-sites of the codon
-  vector<int> pos1, pos2, pos3;
   auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
-  for (size_t i = 0; i < site.size(); i++)
+  vector<int> states({ca->getFirstPosition(site[0]), ca->getSecondPosition(site[0]), ca->getThirdPosition(site[0])});
+  unsigned int nbPol = 0;
+  for (size_t i = 1; i < site.size(); i++)
   {
-    pos1.push_back(ca->getFirstPosition(site[i]));
-    pos2.push_back(ca->getSecondPosition(site[i]));
-    pos3.push_back(ca->getThirdPosition(site[i]));
+    if (!results[0] && ca->getFirstPosition(site[i]) != states[0]) {
+      results[0] = true;
+      nbPol++;
+    }
+    if (!results[1] && ca->getSecondPosition(site[i]) != states[1]) {
+      results[1] = true;
+      nbPol++;
+    }
+    if (!results[2] && ca->getThirdPosition(site[i]) != states[2]) {
+      results[2] = true;
+      nbPol++;
+    }
+    if (nbPol == 3) { //all sites polymorphic, no need to check further
+      return results;
+    }
   }
-  shared_ptr<const Alphabet> na = ca->getNucleicAlphabet();
-  Site s1(pos1, na), s2(pos2, na), s3(pos3, na);
-  // polymorphism checking for each sub-sites
-  size_t nbpol = 0;
-  if (!SymbolListTools::isConstant(s1))
-    nbpol++;
-  if (!SymbolListTools::isConstant(s2))
-    nbpol++;
-  if (!SymbolListTools::isConstant(s3))
-    nbpol++;
-  if (nbpol > 1)
-    return false;
-  return true;
+  return results;
+}
+
+/******************************************************************************/
+
+bool CodonSiteTools::isMonoSitePolymorphic(const Site& site)
+{
+  auto posPol = arePositionsPolymorphic(site);
+  unsigned int nbPol = 0;
+  for (bool x : posPol)
+    if (x) nbPol++;
+  return nbPol == 1;
 }
 
 /******************************************************************************/
@@ -443,11 +459,11 @@ double CodonSiteTools::piSynonymous(const Site& site, const GeneticCode& gCode, 
   map<int, double> freq;
   SymbolListTools::getFrequencies(site, freq);
   double pi = 0;
-  for (map<int, double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++)
+  for (auto it1 : freq)
   {
-    for (map<int, double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++)
+    for (auto it2 : freq)
     {
-      pi += (it1->second) * (it2->second) * (numberOfSynonymousDifferences(it1->first, it2->first, gCode, minchange));
+      pi += (it1.second) * (it2.second) * (numberOfSynonymousDifferences(it1.first, it2.first, gCode, minchange));
     }
   }
   double n = static_cast<double>(site.size());
@@ -477,13 +493,13 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
   SymbolListTools::getFrequencies(site, freq);
   auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
   double pi = 0;
-  for (map<int, double>::iterator it1 = freq.begin(); it1 != freq.end(); it1++)
+  for (auto it1 : freq)
   {
-    for (map<int, double>::iterator it2 = freq.begin(); it2 != freq.end(); it2++)
+    for (auto it2 : freq)
     {
-      double nbtot = static_cast<double>(numberOfDifferences(it1->first, it2->first, *ca));
-      double nbsyn = numberOfSynonymousDifferences(it1->first, it2->first, gCode, minchange);
-      pi += (it1->second) * (it2->second) * (nbtot - nbsyn);
+      double nbtot = static_cast<double>(numberOfDifferences(it1.first, it2.first, *ca));
+      double nbsyn = numberOfSynonymousDifferences(it1.first, it2.first, gCode, minchange);
+      pi += (it1.second) * (it2.second) * (nbtot - nbsyn);
     }
   }
 
@@ -493,14 +509,17 @@ double CodonSiteTools::piNonSynonymous(const Site& site, const GeneticCode& gCod
 
 /******************************************************************************/
 
-double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCode, double ratio)
+vector<double> CodonSiteTools::numbersOfSynonymousPositions(int i, const GeneticCode& gCode, double ratio)
 {
   auto ca = gCode.getCodonAlphabet();
+  vector<double> nbSynPos({0.0, 0.0, 0.0});
+
   if (gCode.isStop(i))
-    return 0;
+    return nbSynPos;
+
   if (ca->isUnresolved(i))
-    return 0;
-  double nbsynpos = 0.0;
+    return nbSynPos;
+  
   vector<int> codon = ca->getPositions(i);
   int acid = gCode.translate(i);
   for (size_t pos = 0; pos < 3; ++pos)
@@ -509,9 +528,11 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCo
     {
       if (an == codon[pos])
         continue;
+
       vector<int> mutcodon = codon;
       mutcodon[pos] = an;
       int intcodon = ca->getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
+    
       if (gCode.isStop(intcodon))
         continue;
       int altacid = gCode.translate(intcodon);
@@ -520,16 +541,24 @@ double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCo
         if (((codon[pos] == 0 || codon[pos] == 2) && (mutcodon[pos] == 1 || mutcodon[pos] == 3)) ||
             ((codon[pos] == 1 || codon[pos] == 3) && (mutcodon[pos] == 0 || mutcodon[pos] == 2))) // if it is a transversion
         {
-          nbsynpos = nbsynpos + 1 / (ratio + 2);
+          nbSynPos[pos] += (1 / (ratio + 2));
         }
         else // if transition
         {
-          nbsynpos = nbsynpos + ratio / (ratio + 2);
-        }
+          nbSynPos[pos] += (ratio / (ratio + 2));
+	}
       }
     }
   }
-  return nbsynpos;
+  return nbSynPos;
+}
+
+/******************************************************************************/
+
+double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCode, double ratio)
+{
+  auto nbSynPos = numbersOfSynonymousPositions(i, gCode, ratio);
+  return std::accumulate(nbSynPos.begin(), nbSynPos.end(), 0);
 }
 
 /******************************************************************************/
@@ -639,14 +668,14 @@ size_t CodonSiteTools::numberOfNonSynonymousSubstitutions(const Site& site, cons
 
   auto ca = dynamic_pointer_cast<const CodonAlphabet>(site.getAlphabet());
 
-  for (map<int, size_t>::iterator it1 = count.begin(); it1 != count.end(); it1++)
+  for (auto it1 : count)
   {
     size_t Nmin = 10;
-    for (map<int, size_t>::iterator it2 = count.begin(); it2 != count.end(); it2++)
+    for (auto it2 : count)
     {
-      size_t Ntot = numberOfDifferences(it1->first, it2->first, *ca);
-      size_t Ns = (size_t)numberOfSynonymousDifferences(it1->first, it2->first, gCode, true);
-      if (Nmin > Ntot - Ns && it1->first != it2->first)
+      size_t Ntot = numberOfDifferences(it1.first, it2.first, *ca);
+      size_t Ns = (size_t)numberOfSynonymousDifferences(it1.first, it2.first, gCode, true);
+      if (Nmin > Ntot - Ns && it1.first != it2.first)
         Nmin = Ntot - Ns;
     }
     NaSup += Nmin;
@@ -791,7 +820,11 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
 
 bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& gCode)
 {
-  if (!SymbolListTools::isConstant(site, true))
+  if (SymbolListTools::isConstant(site, true))
+  {
+    return gCode.isFourFoldDegenerated(site.getValue(0));
+  }
+  else
   {
     /** If non-synonymous mutation **/
     if (!(CodonSiteTools::isSynonymousPolymorphic(site, gCode)))
@@ -804,18 +837,8 @@ bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& 
         return false;
       }
     }
+    return true;
   }
-  else
-  {
-    for (size_t i = 0; i < site.size(); i++)
-    {
-      if (!(gCode.isFourFoldDegenerated(site.getValue(i))))
-      {
-        return false;
-      }
-    }
-  }
-  return true;
 }
 
 /******************************************************************************/

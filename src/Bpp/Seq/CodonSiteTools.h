@@ -48,9 +48,18 @@ public:
   static bool hasStop(const Site& site, const GeneticCode& gCode);
 
   /**
-   * @brief Method to know if a polymorphic codon site is polymorphic at only one site
+   * @brief Method to know whether each position within a codon site are polymorphic.
    *
-   * @param site a Site
+   * @param site a codon site
+   * @return a vector containing three boolean, one for each position. Boolean are equal to 'true' is the corresponding position is polymorphic.
+   */
+  static std::vector<bool> arePositionsPolymorphic(const Site& site);
+
+  /**
+   * @brief Method to know whether a polymorphic codon site is polymorphic at only one position
+   *
+   * @param site a codon site
+   * @return true if one and only one position is polymorphic.
    */
   static bool isMonoSitePolymorphic(const Site& site);
 
@@ -139,7 +148,7 @@ public:
   static double piNonSynonymous(const Site& site, const GeneticCode& gCode, bool minchange = false);
 
   /**
-   * @brief Return the number of synonymous positions of a codon
+   * @brief Return the number of synonymous positions for eahc position of a codon
    *
    * A site is consider as x% synonymous if x% of the possible mutations are synonymous
    * Transition/transversion ratio can be taken into account (use the variable ratio)
@@ -149,6 +158,22 @@ public:
    * @param i a int
    * @param gCode a GeneticCode
    * @param ratio a double set by default to 1
+   * @return the number of synonymous positions for each codon position. Each number is either 0, 1, or something in between.
+   */
+  static std::vector<double> numbersOfSynonymousPositions(int i, const GeneticCode& gCode,  double ratio = 1.0);
+
+  /**
+   * @brief Return the total number of synonymous positions of a codon
+   *
+   * A site is consider as x% synonymous if x% of the possible mutations are synonymous
+   * Transition/transversion ratio can be taken into account (use the variable ratio)
+   *
+   * Unresolved codons and stop codon will return a value of 0.
+   *
+   * @param i a int
+   * @param gCode a GeneticCode
+   * @param ratio a double set by default to 1
+   * @return the total number of synonymous positions for the codon
    */
   static double numberOfSynonymousPositions(int i, const GeneticCode& gCode,  double ratio = 1.0);
 

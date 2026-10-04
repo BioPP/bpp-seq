@@ -82,7 +82,7 @@ std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid
 
 /**********************************************************************************************/
 
-bool GeneticCode::isFourFoldDegenerated(int val) const
+bool GeneticCode::isZeroFoldDegenerated(int val, size_t pos) const
 {
   if (isStop(val))
     return false;
@@ -90,13 +90,43 @@ bool GeneticCode::isFourFoldDegenerated(int val) const
   vector<int> codon = codonAlphabet_->getPositions(val);
   int acid = translate(val);
 
-  // test all the substitution on third codon position
+  // test all substitution at each codon position
   for (int an = 0; an < 4; an++)
   {
-    if (an == codon[2])
+    if (an == codon[pos])
       continue;
     vector<int> mutcodon = codon;
-    mutcodon[2] = an;
+    mutcodon[pos] = an;
+    int intcodon = codonAlphabet_->getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
+    if (isStop(intcodon))
+      return false;
+    int altacid = translate(intcodon);
+    if (altacid == acid) // if synonymous
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**********************************************************************************************/
+
+bool GeneticCode::isFourFoldDegenerated(int val, size_t pos) const
+{
+  if (isStop(val))
+    return false;
+
+  vector<int> codon = codonAlphabet_->getPositions(val);
+  int acid = translate(val);
+
+  // test all substitutions at the codon position
+  for (int an = 0; an < 4; an++)
+  {
+    if (an == codon[pos])
+      continue;
+    vector<int> mutcodon = codon;
+    mutcodon[pos] = an;
     int intcodon = codonAlphabet_->getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
     if (isStop(intcodon))
       return false;
