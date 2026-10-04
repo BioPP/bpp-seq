@@ -257,7 +257,7 @@ public:
    * (that is, if a mutation at the given position of the given codon systematically changes the aminoacid).
    * @author Julien Dutheil
    * @param codon The codon to test.
-   * @param pos   The position within the codon.
+   * @param pos   The position within the codon. 1, 2, or 3.
    */
   bool isZeroFoldDegenerated(int codon, size_t pos) const;
 
@@ -266,7 +266,7 @@ public:
    * (that is, if a mutation at the given position of the given codon does not change the aminoacid).
    * @author Benoit Nabholz, Annabelle Haudry, Julien Dutheil
    * @param codon The codon to test.
-   * @param pos   The position within the codon (typically, only the third position can be fourfold degenerated).
+   * @param pos   The position within the codon (typically, only the third position can be fourfold degenerated). 1, 2 or 3.
    */
   bool isFourFoldDegenerated(int codon, size_t pos = 3) const;
 

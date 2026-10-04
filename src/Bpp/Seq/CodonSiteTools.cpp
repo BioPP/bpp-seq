@@ -850,21 +850,42 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
 
 /******************************************************************************/
 
-bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& gCode)
+bool CodonSiteTools::isZeroFoldDegenerated(const Site& site, const GeneticCode& gCode, size_t pos)
 {
   if (SymbolListTools::isConstant(site, true))
   {
-    return gCode.isFourFoldDegenerated(site.getValue(0));
+    return gCode.isZeroFoldDegenerated(site.getValue(0), pos);
+  }
+  else
+  {
+    for (size_t i = 0; i < site.size(); i++)
+    {
+      if (!(gCode.isZeroFoldDegenerated(site.getValue(i), pos)))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
+/******************************************************************************/
+
+bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& gCode, size_t pos, bool mustBeSynonymousPolymorphic)
+{
+  if (SymbolListTools::isConstant(site, true))
+  {
+    return gCode.isFourFoldDegenerated(site.getValue(0), pos);
   }
   else
   {
     /** If non-synonymous mutation **/
-    if (!(CodonSiteTools::isSynonymousPolymorphic(site, gCode)))
+    if (mustBeSynonymousPolymorphic && !(CodonSiteTools::isSynonymousPolymorphic(site, gCode)))
       return false;
 
     for (size_t i = 0; i < site.size(); i++)
     {
-      if (!(gCode.isFourFoldDegenerated(site.getValue(i))))
+      if (!(gCode.isFourFoldDegenerated(site.getValue(i), pos)))
       {
         return false;
       }
