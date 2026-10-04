@@ -178,6 +178,22 @@ public:
   static double numberOfSynonymousPositions(int i, const GeneticCode& gCode,  double ratio = 1.0);
 
   /**
+   * @brief Return the mean numbesr of synonymous positions for each position in a codon
+   *
+   * A site is consider as x% synonymous if x% of the possible mutations are synonymous
+   * Transition/transversion ratio can be taken into account (use the variable ratio)
+   * The mean is computed over the VectorSite.
+   *
+   * Unresolved and stop codons are counted as 0.
+   *
+   * @param site a Site
+   * @param gCode a GeneticCode
+   * @param ratio a double, set by default to 1
+   * @return a vector of three averages, one per position
+   */
+  static std::vector<double> meanNumbersOfSynonymousPositions(const Site& site, const GeneticCode& gCode, double ratio = 1);
+
+  /**
    * @brief Return the mean number of synonymous positions per codon site
    *
    * A site is consider as x% synonymous if x% of the possible mutations are synonymous
@@ -189,6 +205,7 @@ public:
    * @param site a Site
    * @param gCode a GeneticCode
    * @param ratio a double, set by default to 1
+   * @return the average number of synonymous positions over the three positions and over all codons in the site
    */
   static double meanNumberOfSynonymousPositions(const Site& site, const GeneticCode& gCode, double ratio = 1);
 
