@@ -82,10 +82,10 @@ std::vector<std::string> GeneticCode::getSynonymous(const std::string& aminoacid
 
 /**********************************************************************************************/
 
-bool GeneticCode::isZeroFoldDegenerated(int val, size_t pos) const
+bool GeneticCode::isZeroFoldDegenerate(int val, size_t pos) const
 {
-  if (pos < 1 || pos > 3)
-    throw IndexOutOfBoundsException ("GeneticCode::isZeroFoldDegenerated. Invalid codon position.", pos, 1, 3);
+  if (pos > 2)
+    throw IndexOutOfBoundsException ("GeneticCode::isZeroFoldDegenerate. Invalid codon position.", pos, 0, 2);
   
   if (isStop(val))
     return false;
@@ -96,10 +96,10 @@ bool GeneticCode::isZeroFoldDegenerated(int val, size_t pos) const
   // test all substitution at each codon position
   for (int an = 0; an < 4; an++)
   {
-    if (an == codon[pos - 1])
+    if (an == codon[pos])
       continue;
     vector<int> mutcodon = codon;
-    mutcodon[pos - 1] = an;
+    mutcodon[pos] = an;
     int intcodon = codonAlphabet_->getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
     if (isStop(intcodon))
       return false;
@@ -115,10 +115,10 @@ bool GeneticCode::isZeroFoldDegenerated(int val, size_t pos) const
 
 /**********************************************************************************************/
 
-bool GeneticCode::isFourFoldDegenerated(int val, size_t pos) const
+bool GeneticCode::isFourFoldDegenerate(int val, size_t pos) const
 {
-  if (pos < 1 || pos > 3)
-    throw IndexOutOfBoundsException ("GeneticCode::isFourFoldDegenerated. Invalid codon position.", pos, 1, 3);
+  if (pos > 2)
+    throw IndexOutOfBoundsException ("GeneticCode::isFourFoldDegenerate. Invalid codon position.", pos, 0, 2);
   
   if (isStop(val))
     return false;
@@ -129,10 +129,10 @@ bool GeneticCode::isFourFoldDegenerated(int val, size_t pos) const
   // test all substitutions at the codon position
   for (int an = 0; an < 4; an++)
   {
-    if (an == codon[pos - 1])
+    if (an == codon[pos])
       continue;
     vector<int> mutcodon = codon;
-    mutcodon[pos - 1] = an;
+    mutcodon[pos] = an;
     int intcodon = codonAlphabet_->getCodon(mutcodon[0], mutcodon[1], mutcodon[2]);
     if (isStop(intcodon))
       return false;

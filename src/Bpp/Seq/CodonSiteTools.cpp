@@ -541,11 +541,11 @@ vector<double> CodonSiteTools::numbersOfSynonymousPositions(int i, const Genetic
         if (((codon[pos] == 0 || codon[pos] == 2) && (mutcodon[pos] == 1 || mutcodon[pos] == 3)) ||
             ((codon[pos] == 1 || codon[pos] == 3) && (mutcodon[pos] == 0 || mutcodon[pos] == 2))) // if it is a transversion
         {
-          nbSynPos[pos] += (1 / (ratio + 2));
+          nbSynPos[pos] += (1. / (ratio + 2.));
         }
         else // if transition
         {
-          nbSynPos[pos] += (ratio / (ratio + 2));
+          nbSynPos[pos] += (ratio / (ratio + 2.));
 	}
       }
     }
@@ -558,7 +558,7 @@ vector<double> CodonSiteTools::numbersOfSynonymousPositions(int i, const Genetic
 double CodonSiteTools::numberOfSynonymousPositions(int i, const GeneticCode& gCode, double ratio)
 {
   auto nbSynPos = numbersOfSynonymousPositions(i, gCode, ratio);
-  return std::accumulate(nbSynPos.begin(), nbSynPos.end(), 0);
+  return std::accumulate(nbSynPos.begin(), nbSynPos.end(), 0.);
 }
 
 /******************************************************************************/
@@ -850,17 +850,17 @@ vector<size_t> CodonSiteTools::fixedDifferences(const Site& siteIn, const Site& 
 
 /******************************************************************************/
 
-bool CodonSiteTools::isZeroFoldDegenerated(const Site& site, const GeneticCode& gCode, size_t pos)
+bool CodonSiteTools::isZeroFoldDegenerate(const Site& site, const GeneticCode& gCode, size_t pos)
 {
   if (SymbolListTools::isConstant(site, true))
   {
-    return gCode.isZeroFoldDegenerated(site.getValue(0), pos);
+    return gCode.isZeroFoldDegenerate(site.getValue(0), pos);
   }
   else
   {
     for (size_t i = 0; i < site.size(); i++)
     {
-      if (!(gCode.isZeroFoldDegenerated(site.getValue(i), pos)))
+      if (!(gCode.isZeroFoldDegenerate(site.getValue(i), pos)))
       {
         return false;
       }
@@ -871,11 +871,11 @@ bool CodonSiteTools::isZeroFoldDegenerated(const Site& site, const GeneticCode& 
 
 /******************************************************************************/
 
-bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& gCode, size_t pos, bool mustBeSynonymousPolymorphic)
+bool CodonSiteTools::isFourFoldDegenerate(const Site& site, const GeneticCode& gCode, size_t pos, bool mustBeSynonymousPolymorphic)
 {
   if (SymbolListTools::isConstant(site, true))
   {
-    return gCode.isFourFoldDegenerated(site.getValue(0), pos);
+    return gCode.isFourFoldDegenerate(site.getValue(0), pos);
   }
   else
   {
@@ -885,7 +885,7 @@ bool CodonSiteTools::isFourFoldDegenerated(const Site& site, const GeneticCode& 
 
     for (size_t i = 0; i < site.size(); i++)
     {
-      if (!(gCode.isFourFoldDegenerated(site.getValue(i), pos)))
+      if (!(gCode.isFourFoldDegenerate(site.getValue(i), pos)))
       {
         return false;
       }

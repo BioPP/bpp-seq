@@ -305,6 +305,9 @@ public:
 
   int getNPosition(int codon, size_t pos) const override
   {
+    if (pos > 2) 
+      throw IndexOutOfBoundsException ("CodonAlphabet::getNPosition. Invalid codon position.", pos, 0, 2);
+    
     if (isUnresolved(codon))
       return nAlph_->getUnknownCharacterCode();
     else

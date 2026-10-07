@@ -48,7 +48,7 @@ public:
   static bool hasStop(const Site& site, const GeneticCode& gCode);
 
   /**
-   * @brief Method to know whether each position within a codon site are polymorphic.
+   * @brief Method to know whether each position within a codon site is polymorphic.
    *
    * @param site a codon site
    * @return a vector containing three boolean, one for each position. Boolean are equal to 'true' is the corresponding position is polymorphic.
@@ -287,27 +287,26 @@ public:
   static std::vector<size_t> fixedDifferences(const Site& siteIn, const Site& siteOut, int i, int j, const GeneticCode& gCode);
 
  /**
-   * @return True if all sequences have a erofold degenerated codon in the site at the given codon position.
+   * @return True if all sequences have a zerofold degenerate codon in the site at the given codon position.
    * (that is, if a mutation at the given position systematically changes the aminoacid).
-   * @author Benoit Nabholz, Annabelle Haudry, Julien Dutheil
+   * @author Julien Dutheil
    * @param site The site to analyze.
    * @param gCode The genetic code to use.
-   * @param pos The codon position to check. 1,2 or 3. By default set to 3, as only 3rd codon position can be 4-fold degenerated in known genetic codes.
-   *   This is the original behavior of the function. When set to false, the only requirement is that each codon present in the site is itself 4-fold degenerated at the given position.
+   * @param pos The codon position to check. 0,1 or 2.
    */
-  static bool isZeroFoldDegenerated(const Site& site, const GeneticCode& gCode, size_t pos);
+  static bool isZeroFoldDegenerate(const Site& site, const GeneticCode& gCode, size_t pos);
 
   /**
-   * @return True if all sequences have a fourfold degenerated codon in the site
+   * @return True if all sequences have a fourfold degenerate codon in the site
    * (that is, if a mutation in the given position never changes the aminoacid).
    * @author Benoit Nabholz, Annabelle Haudry, Julien Dutheil
    * @param site The site to analyze.
    * @param gCode The genetic code to use.
-   * @param pos The codon position to check. 1,2 or 3. By default set to 3, as only 3rd codon position can be 4-fold degenerated in known genetic codes.
-   * @param mustBeSynonymousPolymorphic In addition, a site is only considered 4-fold degenerated is there is no non-synonymous mutations at other positions.
-   *   This is the original behavior of the function. When set to false, the only requirement is that each codon present in the site is itself 4-fold degenerated at the given position.
+   * @param pos The codon position to check. 0, 1 or 2. By default set to 2, as only 3rd codon position can be 4-fold degenerate in known genetic codes.
+   * @param mustBeSynonymousPolymorphic In addition, a site is only considered 4-fold degenerate is there is no non-synonymous mutations at other positions.
+   *   This is the original behavior of the function. When set to false, the only requirement is that each codon present in the site is itself 4-fold degenerate at the given position.
    */
-  static bool isFourFoldDegenerated(const Site& site, const GeneticCode& gCode, size_t pos = 3, bool mustBeSynonymousPolymorphic = true);
+  static bool isFourFoldDegenerate(const Site& site, const GeneticCode& gCode, size_t pos = 2, bool mustBeSynonymousPolymorphic = true);
 };
 } // end of namespace bpp.
 #endif // BPP_SEQ_CODONSITETOOLS_H

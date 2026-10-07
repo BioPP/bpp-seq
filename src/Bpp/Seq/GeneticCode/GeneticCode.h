@@ -253,22 +253,22 @@ public:
   std::vector<std::string> getSynonymous(const std::string& aminoacid) const;
 
   /**
-   * @return True if the specified codon is zerofold degenerated
+   * @return True if the specified codon is zerofold degenerate
    * (that is, if a mutation at the given position of the given codon systematically changes the aminoacid).
    * @author Julien Dutheil
    * @param codon The codon to test.
-   * @param pos   The position within the codon. 1, 2, or 3.
+   * @param pos   The 0-based position within the codon. 0, 1, or 2.
    */
-  bool isZeroFoldDegenerated(int codon, size_t pos) const;
+  bool isZeroFoldDegenerate(int codon, size_t pos) const;
 
   /**
-   * @return True if the specified codon is fourfold degenerated
+   * @return True if the specified codon is fourfold degenerate
    * (that is, if a mutation at the given position of the given codon does not change the aminoacid).
    * @author Benoit Nabholz, Annabelle Haudry, Julien Dutheil
    * @param codon The codon to test.
-   * @param pos   The position within the codon (typically, only the third position can be fourfold degenerated). 1, 2 or 3.
+   * @param pos   The position within the codon (typically, only the third position can be fourfold degenerate). 0, 1 or 2.
    */
-  bool isFourFoldDegenerated(int codon, size_t pos = 3) const;
+  bool isFourFoldDegenerate(int codon, size_t pos = 2) const;
 
   /**
    * @brief Get the subsequence corresponding to the coding part of a given sequence.
