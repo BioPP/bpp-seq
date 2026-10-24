@@ -174,7 +174,7 @@ public:
     MappedNamedContainer<T>::addObject(newObject, name, true);
     VectorPositionedContainer<T>::insertObject(newObject, objectIndex);
     vNames_.insert(vNames_.begin() + static_cast<std::ptrdiff_t>(objectIndex), name);
-    for (auto it : mNames_)
+    for (auto& it : mNames_)
     {
       if (it.second >= objectIndex)
         it.second++;
@@ -196,7 +196,7 @@ public:
     std::shared_ptr<T> obj = VectorPositionedContainer<T>::removeObject(objectIndex);
     MappedNamedContainer<T>::removeObject(vNames_[objectIndex]);
     mNames_.erase(vNames_[objectIndex]);
-    for (auto it : mNames_)
+    for (auto& it : mNames_)
     {
       if (it.second > objectIndex)
         it.second--;
@@ -211,7 +211,7 @@ public:
     MappedNamedContainer<T>::deleteObject(vNames_[objectIndex]);
 
     mNames_.erase(vNames_[objectIndex]);
-    for (auto it : mNames_)
+    for (auto& it : mNames_)
     {
       if (it.second > objectIndex)
         it.second--;

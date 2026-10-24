@@ -550,9 +550,10 @@ public:
       site_(i).deleteElement(sequencePosition);
     }
 
-    auto d = static_cast<std::vector<std::string>::difference_type>(sequencePosition);
-    sequenceNames_.erase(std::next(sequenceNames_.begin(), d));
-    sequenceComments_.erase(std::next(sequenceComments_.begin(), d));
+    auto posN = static_cast<std::vector<std::string>::difference_type>(sequencePosition);
+    sequenceNames_.erase(std::next(sequenceNames_.begin(), posN));
+    auto posC = static_cast<std::vector<Comments>::difference_type>(sequencePosition);
+    sequenceComments_.erase(std::next(sequenceComments_.begin(), posC));
 
     auto seq = sequenceContainer_.removeObject(sequencePosition);
     std::get_deleter<SwitchDeleter<SequenceType>>(seq)->off();

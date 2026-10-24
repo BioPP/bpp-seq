@@ -897,7 +897,7 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
     {
       if (!binary_search(selection.begin(), selection.end(), name))
       {
-        allSequences.removeSequence(name);
+        allSequences.deleteSequence(name);
         if (verbose)
         {
           ApplicationTools::displayResult("Discard sequence", name);
@@ -915,7 +915,7 @@ void SequenceApplicationTools::restrictSelectedSequencesByName(
     {
       if (binary_search(seqNames.begin(), seqNames.end(), name))
       {
-        allSequences.removeSequence(name);
+        allSequences.deleteSequence(name);
         if (verbose)
         {
           ApplicationTools::displayResult("Discard sequence", name);
